@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -25,16 +26,19 @@ public class SquidUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Squid 3.0");
 
         Parent root = FXMLLoader.load(getClass().getResource("SquidUIController.fxml"));
 
         Scene scene = new Scene(root);
 
+        primaryStage.getIcons().add(new Image("org/cirdles/squid/SquidLogo.png"));
+
+        primaryStage.setMinHeight(600.0);
+        primaryStage.setMinWidth(650.0);
+        primaryStage.setTitle("Squid 3.0");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        //primaryStage.setOnCloseRequest(e -> Platform.exit());
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
             Platform.exit();
             System.exit(0);
