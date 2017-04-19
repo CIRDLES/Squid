@@ -27,18 +27,16 @@ import javafx.scene.text.Font;
 public class SquidUIController implements Initializable {
 
     @FXML
-    private Color x2;
-    @FXML
-    private Font x1;
-    @FXML
     private Color x4;
     @FXML
     private Font x3;
     @FXML
-    private AnchorPane anchorView;
+    private Pane centerPane;
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -48,7 +46,7 @@ public class SquidUIController implements Initializable {
             splashScreen.setId("AboutSquid");
             VBox.setVgrow(splashScreen, Priority.ALWAYS);
             HBox.setHgrow(splashScreen, Priority.ALWAYS);
-            anchorView.getChildren().set(0, splashScreen);
+            centerPane.getChildren().set(0, splashScreen);
             splashScreen.setVisible(true);
         } catch (IOException iOException) {
         }
