@@ -9,6 +9,9 @@
 // Note however, that you may define your own "run" and "debug" task if you
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
+
+apply plugin: "application"
+
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.cirdles.squid.SquidUI'
 }
@@ -21,4 +24,14 @@ dependencies {
     //
     // You can read more about how to add dependency here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
+}
+
+task fatAppJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': mainClass
+    }
+
+    baseName = 'Squid3'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }

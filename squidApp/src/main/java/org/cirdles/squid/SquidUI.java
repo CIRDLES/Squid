@@ -11,10 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -31,10 +27,10 @@ public class SquidUI extends Application {
 
         Scene scene = new Scene(root);
 
-        primaryStage.getIcons().add(new Image("org/cirdles/squid/SquidLogo.png"));
+        primaryStage.getIcons().add(new Image("org/cirdles/squid/SquidLogoSansText.png"));
 
-        primaryStage.setMinHeight(600.0);
-        primaryStage.setMinWidth(650.0);
+        primaryStage.setMinHeight(675.0);
+        primaryStage.setMinWidth(935.0);
         primaryStage.setTitle("Squid 3.0");
         primaryStage.setScene(scene);
         primaryStage.show();

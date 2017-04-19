@@ -30,12 +30,12 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="450.0" styleClass="main-Pain" stylesheets="@about.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.AboutSquidController">
    <children>
-      <Label layoutX="126.0" layoutY="22.0" styleClass="main-Text-Color" text="About" textAlignment="CENTER">
+      <Label layoutX="104.0" layoutY="19.0" prefHeight="89.0" prefWidth="242.0" styleClass="main-Text-Color" text="Squid3" textAlignment="CENTER">
          <font>
             <Font size="72.0" />
          </font>
       </Label>
-      <Line endX="150.0" fill="#a42525" layoutX="224.0" layoutY="107.0" startX="-150.0" styleClass="bars" />
+      <Line endX="125.0" fill="#a42525" layoutX="224.0" layoutY="107.0" startX="-125.0" styleClass="bars" />
       <Label alignment="TOP_CENTER" layoutX="162.0" layoutY="266.0" stylesheets="@about.css" text="Squid V 0.01" textAlignment="CENTER">
          <styleClass>
             <String fx:value="project-Title" />
