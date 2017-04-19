@@ -10,20 +10,30 @@
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
 
+import java.text.SimpleDateFormat
+import java.util.Date
+import org.apache.tools.ant.filters.*
+
 apply plugin: "application"
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.cirdles.squid.SquidUI'
 }
 
+mainClassName = 'org.cirdles.squid.SquidUI'
+
+repositories {
+    maven {
+        url "http://bits.netbeans.org/maven2/"
+        url "http://jcenter.bintray.com/"
+        url "https://jitpack.io"
+    }
+    mavenCentral()
+}
+
 dependencies {
-    // TODO: Add dependencies here
-    //   but note that JUnit should have already been added in parent.gradle.
-    //   By default, only the Maven Central Repository is specified in
-    //   parent.gradle.
-    //
-    // You can read more about how to add dependency here:
-    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
+    compile project(":squidCore")
+    compile "com.github.cirdles:Commons:-SNAPSHOT"
 }
 
 task fatAppJar(type: Jar) {
@@ -34,4 +44,15 @@ task fatAppJar(type: Jar) {
     baseName = 'Squid3'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+
+def timestamp() {
+    new SimpleDateFormat("dd MMMM yyyy").format(new Date())
+}
+
+processResources {
+    filter ReplaceTokens, tokens: [
+        "pom.version": version,
+        "timestamp": timestamp()
+    ]
 }

@@ -5,8 +5,12 @@
  */
 package org.cirdles.squid;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +22,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.cirdles.commons.util.ResourceExtractor;
 
 /**
  * FXML Controller class
@@ -27,20 +32,17 @@ import javafx.scene.text.Font;
 public class SquidUIController implements Initializable {
 
     @FXML
-    private Color x4;
-    @FXML
-    private Font x3;
-    @FXML
     private Pane centerPane;
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         try {
             Pane splashScreen = FXMLLoader.load(getClass().getResource("aboutSquid.fxml"));
             splashScreen.setId("AboutSquid");
@@ -51,7 +53,6 @@ public class SquidUIController implements Initializable {
         } catch (IOException iOException) {
         }
 
+    }
 
-    }    
-    
 }
