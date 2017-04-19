@@ -56,3 +56,15 @@ processResources {
         "timestamp": timestamp()
     ]
 }
+
+
+
+//processResources {
+//    from('src/main/resources/org/cirdles/squid') {
+//        include '*.txt'
+//        filter(ReplaceTokens, tokens: [
+//        "pom.version": version,
+//        "timestamp": timestamp()
+//    ])
+//    }
+//}
