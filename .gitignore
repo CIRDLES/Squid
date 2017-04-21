@@ -38,7 +38,7 @@ test_*
 *.zip
 
 # Resources
-!squidApp/src/main/resources/org/cirdles/squid/version.txt
+!squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
 
 # MACOS
 .DS_Store
