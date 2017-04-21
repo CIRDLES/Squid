@@ -17,10 +17,10 @@ import org.apache.tools.ant.filters.*
 apply plugin: "application"
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'org.cirdles.squid.SquidUI'
+    ext.mainClass = 'org.cirdles.squid.gui.SquidUI'
 }
 
-mainClassName = 'org.cirdles.squid.SquidUI'
+mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
 repositories {
     maven {
@@ -51,20 +51,12 @@ def timestamp() {
 }
 
 processResources {
-    filter ReplaceTokens, tokens: [
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.txt'
+        filter ReplaceTokens, tokens: [
         "pom.version": version,
         "timestamp": timestamp()
-    ]
+        ]
+    }
 }
 
-
-
-//processResources {
-//    from('src/main/resources/org/cirdles/squid') {
-//        include '*.txt'
-//        filter(ReplaceTokens, tokens: [
-//        "pom.version": version,
-//        "timestamp": timestamp()
-//    ])
-//    }
-//}

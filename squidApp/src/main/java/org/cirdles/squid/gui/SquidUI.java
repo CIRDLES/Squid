@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid;
+package org.cirdles.squid.gui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class SquidUI extends Application {
 
         Scene scene = new Scene(root);
 
-        primaryStage.getIcons().add(new Image("org/cirdles/squid/SquidLogoSansText.png"));
+        primaryStage.getIcons().add(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png"));
 
         primaryStage.setMinHeight(675.0);
         primaryStage.setMinWidth(935.0);

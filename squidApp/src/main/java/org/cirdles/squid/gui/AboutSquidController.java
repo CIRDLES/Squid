@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid;
+package org.cirdles.squid.gui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,14 +25,17 @@ import org.cirdles.commons.util.ResourceExtractor;
 public class AboutSquidController implements Initializable {
 
     @FXML
-    private Label version;
+    private Label versionText;
+    @FXML
+    private Label buildDate;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        version.setText("version:  " + SquidUI.VERSION);
+        versionText.setText(" Squid3 v " + SquidUI.VERSION);
+        buildDate.setText("Release Date: " + SquidUI.RELEASE_DATE);
     }
 
 }
