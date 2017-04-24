@@ -13,8 +13,9 @@
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
-        <Menu mnemonicParsing="false" text="Manage Prawn Files">
+        <Menu mnemonicParsing="false" text="Project Files">
           <items>
+                  <MenuItem mnemonicParsing="false" onAction="#newSquidProjectAction" text="New Squid Project" />
             <MenuItem mnemonicParsing="false" text="Open…" />
             <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />

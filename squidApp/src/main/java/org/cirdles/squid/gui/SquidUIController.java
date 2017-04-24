@@ -5,24 +5,23 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import org.cirdles.commons.util.ResourceExtractor;
+import javafx.stage.FileChooser;
+import org.cirdles.calamari.core.PrawnFileHandler;
+import org.cirdles.calamari.prawn.PrawnFileFilter;
+import org.cirdles.calamari.utilities.FileHelper;
+import org.cirdles.squid.projects.SquidProject;
 
 /**
  * FXML Controller class
@@ -53,6 +52,15 @@ public class SquidUIController implements Initializable {
         } catch (IOException iOException) {
         }
 
+    }
+
+    @FXML
+    private void newSquidProjectAction(ActionEvent event) {
+        SquidProject squidProject = new SquidProject();
+        
+        SquidUI.initCalamari(squidProject.getPrawnFileHandler());
+        
+        File prawnFIle = squidProject.selectPrawnFile();
     }
 
 }

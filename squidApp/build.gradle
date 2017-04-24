@@ -24,8 +24,6 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
 repositories {
     maven {
-        url "http://bits.netbeans.org/maven2/"
-        url "http://jcenter.bintray.com/"
         url "https://jitpack.io"
     }
     mavenCentral()
