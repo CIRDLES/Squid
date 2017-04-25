@@ -17,8 +17,15 @@ package org.cirdles.squid.projects;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.stage.FileChooser;
+import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.core.PrawnFileHandler;
+import org.cirdles.calamari.shrimp.ShrimpFractionExpressionInterface;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -55,6 +62,18 @@ public class SquidProject {
         }
 
         return prawnFile;
+    }
+    
+    public List<ShrimpFractionExpressionInterface>  extractShrimpFractionsFromPrawnFileData(){
+        List<ShrimpFractionExpressionInterface> myShrimpFractions = new ArrayList<>(); 
+        try {
+           myShrimpFractions =
+                    prawnFileHandler.extractShrimpFractionsFromPrawnFile(prawnFileHandler.getCurrentPrawnFileLocation(),true, false, "T");
+        } catch (IOException | JAXBException | SAXException ex) {
+            Logger.getLogger(SquidProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return myShrimpFractions;
     }
 
 }

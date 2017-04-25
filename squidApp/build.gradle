@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     compile project(":squidCore")
-    compile "com.github.cirdles:Commons:-SNAPSHOT"
+
 }
 
 task fatAppJar(type: Jar) {

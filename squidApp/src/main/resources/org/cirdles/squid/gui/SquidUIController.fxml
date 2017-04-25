@@ -16,7 +16,7 @@
         <Menu mnemonicParsing="false" text="Project Files">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#newSquidProjectAction" text="New Squid Project" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
+            <MenuItem mnemonicParsing="false" text="Open Squid Project" />
             <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Close" />
@@ -25,17 +25,17 @@
             <MenuItem mnemonicParsing="false" text="Quit" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Manage Expressions">
+        <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Manage Expressions">
           <items>
             <MenuItem mnemonicParsing="false" text="New" />
           </items>
         </Menu>
-            <Menu mnemonicParsing="false" text="Manage Tasks">
+            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Manage Tasks">
               <items>
                 <MenuItem mnemonicParsing="false" text="New Task" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Manage Analysis">
+            <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Manage Analysis">
               <items>
                 <MenuItem mnemonicParsing="false" text="Reduce Data" />
                   <MenuItem mnemonicParsing="false" text="Reference Material Task" />
@@ -55,18 +55,22 @@
         </Menu>
       </menus>
     </MenuBar>
-      <Pane prefHeight="571.0" prefWidth="900.0">
+      <Pane fx:id="mainPane" prefHeight="571.0" prefWidth="900.0">
          <children>
-            <HBox prefHeight="551.0" prefWidth="900.0">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Pane prefHeight="551.0" prefWidth="248.0" />
-                  <Pane fx:id="centerPane" prefHeight="551.0" prefWidth="471.0">
+                  <HBox prefHeight="551.0" prefWidth="900.0">
                      <children>
-                        <AnchorPane prefHeight="551.0" prefWidth="471.0" />
+                        <Pane prefHeight="551.0" prefWidth="248.0" />
+                        <Pane fx:id="centerPane" prefHeight="551.0" prefWidth="471.0">
+                           <children>
+                              <AnchorPane prefHeight="551.0" prefWidth="471.0" />
+                           </children>
+                        </Pane>
                      </children>
-                  </Pane>
+                  </HBox>
                </children>
-            </HBox>
+            </AnchorPane>
          </children>
       </Pane>
   </children>

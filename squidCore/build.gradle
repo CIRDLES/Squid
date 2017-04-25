@@ -21,5 +21,6 @@ repositories {
 }
 
 dependencies {
+    compile "com.github.cirdles:Commons:-SNAPSHOT"
     compile 'com.github.bowring.Calamari:core:v1.4.0'
 }
