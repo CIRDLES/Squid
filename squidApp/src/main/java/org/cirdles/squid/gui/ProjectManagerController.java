@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import com.sun.javafx.property.adapter.PropertyDescriptor;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
@@ -30,7 +29,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.util.Callback;
 import org.cirdles.calamari.shrimp.ShrimpFractionExpressionInterface;
 
 /**
@@ -50,6 +48,8 @@ public class ProjectManagerController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
