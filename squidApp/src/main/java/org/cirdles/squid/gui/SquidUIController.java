@@ -51,7 +51,7 @@ public class SquidUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         try {
-            Pane splashScreen = FXMLLoader.load(getClass().getResource("aboutSquid.fxml"));
+            Pane splashScreen = FXMLLoader.load(getClass().getResource("AboutSquid.fxml"));
             splashScreen.setId("AboutSquid");
             VBox.setVgrow(splashScreen, Priority.ALWAYS);
             HBox.setHgrow(splashScreen, Priority.ALWAYS);
