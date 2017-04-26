@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -26,10 +27,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javax.xml.bind.JAXBException;
+import org.cirdles.calamari.prawn.PrawnFile;
+import org.cirdles.calamari.prawn.PrawnFile.Run;
 import org.cirdles.calamari.shrimp.ShrimpFractionExpressionInterface;
+import org.xml.sax.SAXException;
 
 /**
  * FXML Controller class
@@ -42,12 +48,15 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private TextField orignalPrawnFileName;
     @FXML
-    private ListView<ShrimpFractionExpressionInterface> shrimpFractionList;
+    private ListView<Run> shrimpFractionList;
     @FXML
     private TextField selectedFractionText;
+    @FXML
+    private Label softwareVersionLabel;
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -59,37 +68,44 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private void selectPrawnFileAction(ActionEvent event) {
 
-        File prawnFile = SquidUIController.squidProject.selectPrawnFile();
-        if (prawnFile != null) {
-            orignalPrawnFileName.setText(prawnFile.getName());
+        File prawnXMLFile = SquidUIController.squidProject.selectPrawnFile();
+        if (prawnXMLFile != null) {
+            orignalPrawnFileName.setText(prawnXMLFile.getName());
             // proceed 
-            myShrimpFractions = SquidUIController.squidProject.extractShrimpFractionsFromPrawnFileData();
+            try {
+                PrawnFile prawnFile = SquidUIController.squidProject.deserializePrawnData();
+                
+                String shrimpSoftwareVersion = prawnFile.getSoftwareVersion();
+                softwareVersionLabel.setText("Software Version: " + shrimpSoftwareVersion);
+                
+                int runsCount = prawnFile.getRuns();
 
-            // prepare to list fractions
-            ObservableList<ShrimpFractionExpressionInterface> shrimpFractions = FXCollections.observableArrayList(myShrimpFractions);
+                ObservableList<Run> shrimpRuns = FXCollections.observableArrayList(prawnFile.getRun());
+                shrimpFractionList.setItems(shrimpRuns);
+                shrimpFractionList.setCellFactory((ListView<Run> param) -> {
+                    ListCell<Run> cell = new ListCell<Run>() {
 
-            shrimpFractionList.setItems(shrimpFractions);
-            shrimpFractionList.setCellFactory((ListView<ShrimpFractionExpressionInterface> param) -> {
-                ListCell<ShrimpFractionExpressionInterface> cell = new ListCell<ShrimpFractionExpressionInterface>() {
-
-                    @Override
-                    protected void updateItem(ShrimpFractionExpressionInterface t, boolean bln) {
-                        super.updateItem(t, bln);
-                        if (t != null) {
-                            setText(t.getFractionID());
+                        @Override
+                        protected void updateItem(Run run, boolean bln) {
+                            super.updateItem(run, bln);
+                            if (run != null) {
+                                setText(run.getPar().get(0).getValue());
+                            }
                         }
+
+                    };
+
+                    return cell;
+                });
+                shrimpFractionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Run>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Run> observable, Run oldValue, Run newValue) {
+                         selectedFractionText.setText(newValue.getPar().get(0).getValue() + "  " + newValue.getSet().getPar().get(0).getValue());
                     }
+                });
 
-                };
-
-                return cell;
-            });
-            shrimpFractionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ShrimpFractionExpressionInterface>() {
-                @Override
-                public void changed(ObservableValue<? extends ShrimpFractionExpressionInterface> observable, ShrimpFractionExpressionInterface oldValue, ShrimpFractionExpressionInterface newValue) {
-                    selectedFractionText.setText(newValue.getFractionID() + "  " + ((newValue.isReferenceMaterial() ? "ref mat" : "unknown")));
-                }
-            });
+            } catch (IOException | JAXBException | SAXException iOException) {
+            }
         }
 
     }

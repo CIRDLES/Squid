@@ -11,15 +11,16 @@
    <children>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
          <children>
-            <Label layoutX="75.0" layoutY="28.0" text="Project Name:" />
-            <TextField layoutX="172.0" layoutY="23.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
-            <Label layoutX="75.0" layoutY="64.0" prefHeight="17.0" prefWidth="91.0" text="Analyst Name:" />
-            <TextField layoutX="172.0" layoutY="59.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
-            <Button layoutX="172.0" layoutY="104.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="322.0" text="Select Prawn XML file for pre-processing" />
-            <Label layoutX="19.0" layoutY="154.0" text="Original Prawn XML file:" />
-            <TextField fx:id="orignalPrawnFileName" layoutX="172.0" layoutY="149.0" prefHeight="27.0" prefWidth="322.0" promptText="none chosen" />
+            <Label layoutX="19.0" layoutY="27.0" text="Project Name:" />
+            <TextField layoutX="116.0" layoutY="22.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
+            <Label layoutX="19.0" layoutY="61.0" prefHeight="17.0" prefWidth="91.0" text="Analyst Name:" />
+            <TextField layoutX="116.0" layoutY="56.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
+            <Button layoutX="556.0" layoutY="22.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="322.0" text="Select Prawn XML file for pre-processing" />
+            <Label layoutX="457.0" layoutY="61.0" text="Prawn XML file:" />
+            <TextField fx:id="orignalPrawnFileName" layoutX="556.0" layoutY="56.0" prefHeight="27.0" prefWidth="322.0" promptText="none chosen" />
             <ListView fx:id="shrimpFractionList" layoutX="172.0" layoutY="200.0" prefHeight="277.0" prefWidth="322.0" />
             <TextField fx:id="selectedFractionText" layoutX="539.0" layoutY="200.0" prefHeight="27.0" prefWidth="306.0" />
+            <Label fx:id="softwareVersionLabel" layoutX="19.0" layoutY="97.0" prefHeight="17.0" prefWidth="416.0" text="Software Version:" />
          </children>
       </AnchorPane>
    </children>
