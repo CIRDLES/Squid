@@ -80,7 +80,7 @@ public class SquidProject {
     public PrawnFile deserializePrawnData()
             throws IOException, JAXBException, SAXException{
         //TODO: refactor 
-        return prawnFileHandler.unmarshallRawDataXML(prawnFileHandler.getCurrentPrawnFileLocation());
+        return prawnFileHandler.unmarshallCurrentPrawnFileXML();
     }
 
 }

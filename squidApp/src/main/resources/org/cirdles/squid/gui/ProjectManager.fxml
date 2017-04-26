@@ -18,7 +18,7 @@
             <Button layoutX="556.0" layoutY="22.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="322.0" text="Select Prawn XML file for pre-processing" />
             <Label layoutX="457.0" layoutY="61.0" text="Prawn XML file:" />
             <TextField fx:id="orignalPrawnFileName" layoutX="556.0" layoutY="56.0" prefHeight="27.0" prefWidth="322.0" promptText="none chosen" />
-            <ListView fx:id="shrimpFractionList" layoutX="172.0" layoutY="200.0" prefHeight="277.0" prefWidth="322.0" />
+            <ListView fx:id="shrimpFractionList" layoutX="18.0" layoutY="200.0" prefHeight="277.0" prefWidth="505.0" stylesheets="@about.css" />
             <TextField fx:id="selectedFractionText" layoutX="539.0" layoutY="200.0" prefHeight="27.0" prefWidth="306.0" />
             <Label fx:id="softwareVersionLabel" layoutX="19.0" layoutY="97.0" prefHeight="17.0" prefWidth="416.0" text="Software Version:" />
          </children>

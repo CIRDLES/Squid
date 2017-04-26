@@ -74,10 +74,10 @@ public class ProjectManagerController implements Initializable {
             // proceed 
             try {
                 PrawnFile prawnFile = SquidUIController.squidProject.deserializePrawnData();
-                
+
                 String shrimpSoftwareVersion = prawnFile.getSoftwareVersion();
                 softwareVersionLabel.setText("Software Version: " + shrimpSoftwareVersion);
-                
+
                 int runsCount = prawnFile.getRuns();
 
                 ObservableList<Run> shrimpRuns = FXCollections.observableArrayList(prawnFile.getRun());
@@ -89,7 +89,12 @@ public class ProjectManagerController implements Initializable {
                         protected void updateItem(Run run, boolean bln) {
                             super.updateItem(run, bln);
                             if (run != null) {
-                                setText(run.getPar().get(0).getValue());
+                                setText(
+                                        String.format("%1$-" + 15 + "s", run.getPar().get(0).getValue()) // name
+                                        + "\t  " + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(0).getValue())//date
+                                        + "\t  " + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(1).getValue()) //time
+                                        + "\t  " + run.getPar().get(2).getValue()
+                                        + "\t  " + run.getPar().get(3).getValue());
                             }
                         }
 
@@ -100,7 +105,7 @@ public class ProjectManagerController implements Initializable {
                 shrimpFractionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Run>() {
                     @Override
                     public void changed(ObservableValue<? extends Run> observable, Run oldValue, Run newValue) {
-                         selectedFractionText.setText(newValue.getPar().get(0).getValue() + "  " + newValue.getSet().getPar().get(0).getValue());
+                        selectedFractionText.setText(newValue.getPar().get(0).getValue() + "  " + newValue.getSet().getPar().get(0).getValue());
                     }
                 });
 
