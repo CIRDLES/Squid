@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.core.PrawnFileHandler;
@@ -35,6 +37,8 @@ import org.xml.sax.SAXException;
 public class SquidProject {
 
     private final PrawnFileHandler prawnFileHandler;
+    private File prawnFileFile;
+    private PrawnFile prawnFile;
 
     public SquidProject() {
         prawnFileHandler = new PrawnFileHandler();
@@ -47,40 +51,36 @@ public class SquidProject {
         return prawnFileHandler;
     }
 
-    public File selectPrawnFile() {
+    public void selectPrawnFile()
+            throws IOException, JAXBException,SAXException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Prawn XML file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
         fileChooser.setInitialDirectory(prawnFileHandler.currentPrawnFileLocationFolder());
 
-        File prawnFile = fileChooser.showOpenDialog(null);
+        prawnFileFile = fileChooser.showOpenDialog(null);
 
-        if (prawnFile != null) {
-            try {
-                prawnFileHandler.setCurrentPrawnFileLocation(prawnFile.getCanonicalPath());
-            } catch (IOException iOException) {
-            }
+        if (prawnFileFile != null) {
+                prawnFileHandler.setCurrentPrawnFileLocation(prawnFileFile.getCanonicalPath());
+                prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
         }
-
-        return prawnFile;
-    }
-
-    public List<ShrimpFractionExpressionInterface> extractShrimpFractionsFromPrawnFileData() {
-        List<ShrimpFractionExpressionInterface> myShrimpFractions = new ArrayList<>();
-        try {
-            myShrimpFractions
-                    = prawnFileHandler.extractShrimpFractionsFromPrawnFile(prawnFileHandler.getCurrentPrawnFileLocation(), true, false, "T");
-        } catch (IOException | JAXBException | SAXException ex) {
-            Logger.getLogger(SquidProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return myShrimpFractions;
     }
 
     public PrawnFile deserializePrawnData()
             throws IOException, JAXBException, SAXException{
-        //TODO: refactor 
         return prawnFileHandler.unmarshallCurrentPrawnFileXML();
+    }
+    
+    public String getPrawnXMLFileName(){
+        return prawnFileFile.getName();
+    }
+    
+    public String getPrawnFileShrimpSoftwareVersionName(){
+        return prawnFile.getSoftwareVersion();
+    }
+    
+    public ObservableList<PrawnFile.Run> getListOfPrawnFileRuns(){
+        return FXCollections.observableArrayList(prawnFile.getRun());
     }
 
 }

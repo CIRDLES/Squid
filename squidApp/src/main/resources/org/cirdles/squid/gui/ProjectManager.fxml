@@ -11,16 +11,21 @@
    <children>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
          <children>
-            <Label layoutX="19.0" layoutY="27.0" text="Project Name:" />
-            <TextField layoutX="116.0" layoutY="22.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
-            <Label layoutX="19.0" layoutY="61.0" prefHeight="17.0" prefWidth="91.0" text="Analyst Name:" />
-            <TextField layoutX="116.0" layoutY="56.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
-            <Button layoutX="556.0" layoutY="22.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="322.0" text="Select Prawn XML file for pre-processing" />
-            <Label layoutX="457.0" layoutY="61.0" text="Prawn XML file:" />
-            <TextField fx:id="orignalPrawnFileName" layoutX="556.0" layoutY="56.0" prefHeight="27.0" prefWidth="322.0" promptText="none chosen" />
-            <ListView fx:id="shrimpFractionList" layoutX="18.0" layoutY="200.0" prefHeight="277.0" prefWidth="505.0" stylesheets="@about.css" />
+            <Label layoutX="19.0" layoutY="14.0" text="Project Name:" />
+            <TextField layoutX="116.0" layoutY="9.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
+            <Label layoutX="462.0" layoutY="13.0" prefHeight="17.0" prefWidth="91.0" text="Analyst Name:" />
+            <TextField layoutX="562.0" layoutY="8.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
+            <Button layoutX="116.0" layoutY="44.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Select Prawn XML file for pre-processing" />
+            <Label layoutX="116.0" layoutY="84.0" text="Prawn XML file:" />
+            <TextField fx:id="orignalPrawnFileName" layoutX="215.0" layoutY="79.0" prefHeight="27.0" prefWidth="553.0" promptText="none chosen" />
+            <ListView fx:id="shrimpFractionList" layoutX="15.0" layoutY="201.0" prefHeight="296.0" prefWidth="505.0" />
             <TextField fx:id="selectedFractionText" layoutX="539.0" layoutY="200.0" prefHeight="27.0" prefWidth="306.0" />
-            <Label fx:id="softwareVersionLabel" layoutX="19.0" layoutY="97.0" prefHeight="17.0" prefWidth="416.0" text="Software Version:" />
+            <Label fx:id="softwareVersionLabel" layoutX="116.0" layoutY="113.0" prefHeight="17.0" prefWidth="416.0" text="Software Version:" />
+            <Label layoutX="22.0" layoutY="133.0" text="Spots:" />
+            <Label fx:id="headerLabel" layoutX="22.0" layoutY="179.0" prefHeight="17.0" prefWidth="488.0" text="Header label" />
+            <Label layoutX="34.0" layoutY="154.0" text="Filter by typing spot name:" />
+            <TextField fx:id="filterSpotName" layoutX="205.0" layoutY="149.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="96.0" />
+            <Label fx:id="spotsShownLabel" layoutX="316.0" layoutY="154.0" prefHeight="17.0" prefWidth="137.0" text="0/0 shown" />
          </children>
       </AnchorPane>
    </children>
