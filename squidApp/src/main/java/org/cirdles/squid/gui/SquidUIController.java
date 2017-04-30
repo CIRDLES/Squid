@@ -31,6 +31,7 @@ import javafx.scene.layout.VBox;
 import org.cirdles.squid.fileManagement.CalamariFileManager;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.utilities.BrowserControl;
+import static org.cirdles.squid.utilities.BrowserControl.urlEncode;
 
 /**
  * FXML Controller class
@@ -111,7 +112,19 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void contributeIssueOnGitHubAction(ActionEvent event) {
-        BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?");
+        String version = "Squid3 Version: " + SquidUI.VERSION;
+        String javaVersion = "Java Version: " + System.getProperties().getProperty("java.version");
+        String operatingSystem = "OS: " + System.getProperties().getProperty("os.name") + " " + System.getProperties().getProperty("os.version");
+
+        StringBuilder issueBody = new StringBuilder();
+        issueBody.append(urlEncode(version + "\n"));
+        issueBody.append(urlEncode(javaVersion + "\n"));
+        issueBody.append(urlEncode(operatingSystem + "\n"));
+        issueBody.append(urlEncode("==================================" + "\n"));
+
+        BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody.toString());
     }
+
+    
 
 }

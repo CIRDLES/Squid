@@ -17,8 +17,10 @@ package org.cirdles.squid.utilities;
 
 import java.awt.Desktop;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 /**
  *
@@ -33,6 +35,14 @@ public class BrowserControl {
             desktop.browse(oURL);
         } catch (URISyntaxException | IOException e) {
             // act dumb for now
+        }
+    }
+    
+    public static String urlEncode(String text) {
+        try {
+            return URLEncoder.encode(text, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
