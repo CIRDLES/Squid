@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cirdles.org.
+ * Copyright 2017 CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,39 +17,33 @@ package org.cirdles.squid.gui;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.prawn.PrawnFile.Run;
+import org.cirdles.squid.gui.RunsViewModel.ShrimpFractionListCell;
+import org.cirdles.squid.gui.RunsViewModel.SpotNameMatcher;
 import org.xml.sax.SAXException;
 
 /**
  * FXML Controller class
  *
- * @author bowring
+ * @see
+ * <a href="https://courses.bekwam.net/public_tutorials/bkcourse_filterlistapp.html" target="_blank">Bekwam.net</a>
+ * @author James F. Bowring
  */
 public class ProjectManagerController implements Initializable {
 
@@ -57,21 +51,27 @@ public class ProjectManagerController implements Initializable {
     private TextField orignalPrawnFileName;
     @FXML
     private ListView<Run> shrimpFractionList;
-
+    @FXML
+    private ListView<Run> shrimpRefMatList;
     @FXML
     private TextField selectedFractionText;
     @FXML
     private Label softwareVersionLabel;
-
-    private ObservableList<Run> shrimpRuns;
     @FXML
     private Label headerLabel;
     @FXML
     private TextField filterSpotName;
-
-    private final RunsModel runsModel = new RunsModel();
     @FXML
     private Label spotsShownLabel;
+    @FXML
+    private Label headerLabelRefMat;
+    private static final String spotListStyleSpecs = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
+    @FXML
+    private Button saveSpotNameButton;
+
+    private ObservableList<Run> shrimpRuns;
+    private ObservableList<Run> shrimpRunsRefMat;
+    private final RunsViewModel runsModel = new RunsViewModel();
 
     /**
      * Initializes the controller class.
@@ -82,6 +82,7 @@ public class ProjectManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         orignalPrawnFileName.setEditable(false);
+        setUpShrimpFractionListHeaders();
     }
 
     @FXML
@@ -97,6 +98,7 @@ public class ProjectManagerController implements Initializable {
                     + SquidUIController.squidProject.getPrawnFileShrimpSoftwareVersionName());
 
             shrimpRuns = SquidUIController.squidProject.getListOfPrawnFileRuns();
+            shrimpRunsRefMat = FXCollections.observableArrayList();
 
             setUpShrimpFractionList();
 
@@ -104,22 +106,38 @@ public class ProjectManagerController implements Initializable {
         }
     }
 
-    private void setUpShrimpFractionList() {
+    private void setUpShrimpFractionListHeaders() {
 
-        headerLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';");
+        headerLabel.setStyle(spotListStyleSpecs);
         headerLabel.setText(
-                String.format("%1$-" + 20 + "s", "Name")
+                String.format("%1$-" + 20 + "s", "Spot Name")
                 + String.format("%1$-" + 12 + "s", "Date")
                 + String.format("%1$-" + 12 + "s", "Time")
                 + String.format("%1$-" + 6 + "s", "Peaks")
                 + String.format("%1$-" + 6 + "s", "Scans"));
 
-        shrimpFractionList.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';");
+        headerLabelRefMat.setStyle(spotListStyleSpecs);
+        headerLabelRefMat.setText(
+                String.format("%1$-" + 20 + "s", "Ref Mat Name")
+                + String.format("%1$-" + 12 + "s", "Date")
+                + String.format("%1$-" + 12 + "s", "Time")
+                + String.format("%1$-" + 6 + "s", "Peaks")
+                + String.format("%1$-" + 6 + "s", "Scans"));
+    }
+
+    private void setUpShrimpFractionList() {
+
+        shrimpFractionList.setStyle(spotListStyleSpecs);
 
         shrimpFractionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Run>() {
             @Override
             public void changed(ObservableValue<? extends Run> observable, Run oldValue, Run newValue) {
-                selectedFractionText.setText(newValue.getPar().get(0).getValue() + "  " + newValue.getSet().getPar().get(0).getValue());
+                try {
+                    selectedFractionText.setText(newValue.getPar().get(0).getValue());
+                    saveSpotNameButton.setUserData(newValue);
+                } catch (Exception e) {
+                    selectedFractionText.setText("");
+                }
             }
         });
 
@@ -132,6 +150,15 @@ public class ProjectManagerController implements Initializable {
         spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
 
         shrimpFractionList.itemsProperty().bind(runsModel.viewableShrimpRunsProperty());
+
+        // display of selected reference materials
+        shrimpRefMatList.setStyle(spotListStyleSpecs);
+
+        shrimpRefMatList.setCellFactory(
+                (lv)
+                -> new ShrimpFractionListCell()
+        );
+
     }
 
     @FXML
@@ -142,68 +169,17 @@ public class ProjectManagerController implements Initializable {
         spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
     }
 
-    public class RunsModel {
-
-        public RunsModel() {
-        }
-
-        private final ObservableList<Run> shrimpRuns
-                = FXCollections.observableArrayList();
-
-        public ReadOnlyObjectProperty<ObservableList<Run>> shrimpRunsProperty() {
-            return new SimpleObjectProperty<>(shrimpRuns);
-        }
-
-        private final FilteredList<Run> viewableShrimpRuns = new FilteredList<>(shrimpRuns);
-
-        public ReadOnlyObjectProperty<ObservableList<Run>> viewableShrimpRunsProperty() {
-            return new SimpleObjectProperty<>(viewableShrimpRuns);
-        }
-
-        public ObjectProperty<Predicate<? super Run>> filterProperty() {
-            return viewableShrimpRuns.predicateProperty();
-        }
-
-        public void addRunsList(List<Run> myShrimpRuns) {
-            shrimpRuns.clear();
-            viewableShrimpRuns.clear();
-            this.shrimpRuns.addAll(myShrimpRuns);
-        }
-        
-        public String showFilteredOverAllCount(){
-            return viewableShrimpRuns.size() + " / " + shrimpRuns.size() + " shown";
+    @FXML
+    private void saveSpotNameAction(ActionEvent event) {
+        if (saveSpotNameButton.getUserData() != null) {
+            ((Run) saveSpotNameButton.getUserData()).getPar().get(0).setValue(selectedFractionText.getText().trim().toUpperCase(Locale.US));
+            shrimpFractionList.refresh();
+            shrimpRefMatList.refresh();
         }
     }
 
-    static class SpotNameMatcher implements Predicate<Run> {
-
-        private final String spotName;
-
-        public SpotNameMatcher(String spotName) {
-            this.spotName = spotName;
-        }
-
-        @Override
-        public boolean test(Run run) {
-            return run.getPar().get(0).getValue().startsWith(spotName);
-        }
+    @FXML
+    private void setFilteredSpotsToRefMatAction(ActionEvent event) {               
+        shrimpRefMatList.setItems(runsModel.getViewableShrimpRuns());
     }
-
-    static class ShrimpFractionListCell extends ListCell<Run> {
-
-        @Override
-        protected void updateItem(Run run, boolean empty) {
-            super.updateItem(run, empty);
-            if (run == null || empty) {
-                setText(null);
-            } else {
-                setText(
-                        String.format("%1$-" + 20 + "s", run.getPar().get(0).getValue()) // name
-                        + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(0).getValue())//date
-                        + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(1).getValue()) //time
-                        + String.format("%1$-" + 6 + "s", run.getPar().get(2).getValue()) //peaks
-                        + String.format("%1$-" + 6 + "s", run.getPar().get(3).getValue())); //scans
-            }
-        }
-    };
 }
