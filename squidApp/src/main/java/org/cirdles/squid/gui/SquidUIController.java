@@ -23,7 +23,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -31,6 +30,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.cirdles.squid.fileManagement.CalamariFileManager;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.utilities.BrowserControl;
 
 /**
  * FXML Controller class
@@ -84,7 +84,7 @@ public class SquidUIController implements Initializable {
         manageExpressionsMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
-        newSquidProjectMenuItem.setDisable(true);
+        newSquidProjectMenuItem.setDisable(false);
         openSquidProjectMenuItem.setDisable(true);
         openRecentSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -107,6 +107,11 @@ public class SquidUIController implements Initializable {
         } catch (IOException iOException) {
         }
 
+    }
+
+    @FXML
+    private void contributeIssueOnGitHubAction(ActionEvent event) {
+        BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?");
     }
 
 }
