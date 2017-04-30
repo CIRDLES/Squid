@@ -17,17 +17,16 @@ package org.cirdles.squid.projects;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.core.PrawnFileHandler;
 import org.cirdles.calamari.prawn.PrawnFile;
-import org.cirdles.calamari.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.calamari.prawn.PrawnFile.Run;
 import org.xml.sax.SAXException;
 
 /**
@@ -80,7 +79,24 @@ public class SquidProject {
     }
     
     public ObservableList<PrawnFile.Run> getListOfPrawnFileRuns(){
+        preProcessRunsForDuplicateSpotNames();
         return FXCollections.observableArrayList(prawnFile.getRun());
+    }
+    
+    private void preProcessRunsForDuplicateSpotNames(){
+        List<Run> runs = prawnFile.getRun();
+        Map<String, Integer> spotNameCountMap = new HashMap<>();
+        for (int i = 0; i < runs.size(); i ++){
+            String spotName = runs.get(i).getPar().get(0).getValue();
+            if (spotNameCountMap.containsKey(spotName)){
+                int count = spotNameCountMap.get(spotName);
+                count ++;
+                spotNameCountMap.put(spotName, count);
+                runs.get(i).getPar().get(0).setValue(spotName + "-DUP-" + count);
+            } else {
+                spotNameCountMap.put(spotName, 0);
+            }
+        }     
     }
 
 }

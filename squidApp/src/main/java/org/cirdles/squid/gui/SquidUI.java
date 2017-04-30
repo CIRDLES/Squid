@@ -30,7 +30,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.cirdles.commons.util.ResourceExtractor;
 
-
 /**
  *
  * @author James F. Bowring
@@ -39,6 +38,7 @@ public class SquidUI extends Application {
 
     public static final String VERSION;
     public static final String RELEASE_DATE;
+    public static SquidAboutWindow squidAboutWindow;
 
     static {
         ResourceExtractor squidResourceExtractor
@@ -90,6 +90,8 @@ public class SquidUI extends Application {
             System.exit(0);
         });
 
+        squidAboutWindow = new SquidAboutWindow(primaryStage);
+        squidAboutWindow.loadAboutWindow();
     }
 
     /**

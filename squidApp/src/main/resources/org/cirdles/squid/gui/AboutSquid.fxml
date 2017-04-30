@@ -26,13 +26,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
+
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="450.0" styleClass="main-Pain" stylesheets="@about.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.AboutSquidController">
    <children>
       <Label fx:id="versionText" alignment="CENTER" layoutX="85.0" layoutY="235.0" prefHeight="45.0" prefWidth="258.0" stylesheets="@about.css" text="Squid V 0.0.1" textAlignment="CENTER">
          <styleClass>
             <String fx:value="project-Title" />
             <String fx:value="main-Text-Color" />
-         </styleClass></Label>
+         </styleClass>
+      </Label>
       <ImageView fitHeight="75.0" fitWidth="156.0" layoutX="262.0" layoutY="467.0" pickOnBounds="true" preserveRatio="true" scaleX="0.75" scaleY="0.75">
          <image>
             <Image url="@images/cirdles-logov2.png" />

@@ -7,30 +7,31 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+<Pane prefHeight="675.0" prefWidth="935.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
    <children>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="900.0">
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="675.0" prefWidth="935.0">
          <children>
             <Label layoutX="19.0" layoutY="14.0" text="Project Name:" />
             <TextField layoutX="116.0" layoutY="9.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
-            <Label layoutX="462.0" layoutY="13.0" prefHeight="17.0" prefWidth="91.0" text="Analyst Name:" />
-            <TextField layoutX="562.0" layoutY="8.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
+            <Label layoutX="494.0" layoutY="13.0" prefHeight="17.0" prefWidth="91.0" text="Analyst Name:" />
+            <TextField layoutX="594.0" layoutY="8.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
             <Button layoutX="116.0" layoutY="44.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Select Prawn XML file for pre-processing" />
             <Label layoutX="116.0" layoutY="84.0" text="Prawn XML file:" />
             <TextField fx:id="orignalPrawnFileName" layoutX="215.0" layoutY="79.0" prefHeight="27.0" prefWidth="551.0" promptText="none chosen" />
-            <ListView fx:id="shrimpFractionList" layoutX="15.0" layoutY="201.0" prefHeight="296.0" prefWidth="428.0" />
-            <TextField fx:id="selectedFractionText" layoutX="157.0" layoutY="502.0" prefHeight="27.0" prefWidth="122.0" />
+            <ListView fx:id="shrimpFractionList" layoutX="15.0" layoutY="201.0" prefHeight="296.0" prefWidth="435.0" />
+            <TextField fx:id="selectedSpotNameText" layoutX="157.0" layoutY="502.0" prefHeight="27.0" prefWidth="122.0" />
             <Label fx:id="softwareVersionLabel" layoutX="116.0" layoutY="113.0" prefHeight="17.0" prefWidth="416.0" text="Software Version:" />
-            <Label layoutX="22.0" layoutY="133.0" text="Spots:" />
-            <Label fx:id="headerLabel" layoutX="22.0" layoutY="183.0" prefHeight="17.0" prefWidth="416.0" text="Header label" />
-            <Label layoutX="34.0" layoutY="154.0" text="Filter by typing spot name:" />
-            <TextField fx:id="filterSpotName" layoutX="205.0" layoutY="149.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="96.0" />
-            <Label fx:id="spotsShownLabel" layoutX="316.0" layoutY="154.0" prefHeight="17.0" prefWidth="137.0" text="0/0 shown" />
-            <ListView fx:id="shrimpRefMatList" layoutX="455.0" layoutY="201.0" prefHeight="296.0" prefWidth="428.0" />
-            <Button layoutX="455.0" layoutY="149.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="27.0" prefWidth="428.0" text="Set filtered spots as Reference Material" />
-            <Label fx:id="headerLabelRefMat" layoutX="461.0" layoutY="183.0" prefHeight="17.0" prefWidth="416.0" text="Header label" />
+            <Label layoutX="22.0" layoutY="133.0" text="Spots (note duplicates are suffixed with 'DUP-n'):" />
+            <Label fx:id="headerLabel" layoutX="22.0" layoutY="183.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+            <Label layoutX="34.0" layoutY="159.0" text="Filter by typing spot name:" />
+            <TextField fx:id="filterSpotName" layoutX="205.0" layoutY="154.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="96.0" />
+            <Label fx:id="spotsShownLabel" layoutX="316.0" layoutY="159.0" prefHeight="17.0" prefWidth="137.0" text="0/0 shown" />
+            <ListView fx:id="shrimpRefMatList" layoutX="480.0" layoutY="201.0" prefHeight="296.0" prefWidth="435.0" />
+            <Button layoutX="514.0" layoutY="154.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="27.0" prefWidth="358.0" text="Set filtered spots as Reference Material" />
+            <Label fx:id="headerLabelRefMat" layoutX="486.0" layoutY="183.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
             <Label layoutX="49.0" layoutY="507.0" text="Edit Spot Name:" />
             <Button fx:id="saveSpotNameButton" layoutX="293.0" layoutY="502.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Spot Name" />
+            <Label layoutX="480.0" layoutY="133.0" text="Reference Material Spots:" />
          </children>
       </AnchorPane>
    </children>

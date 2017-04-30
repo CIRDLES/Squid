@@ -26,6 +26,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ListCell;
 import org.cirdles.calamari.prawn.PrawnFile;
+import org.cirdles.calamari.prawn.PrawnFile.Run;
 
 /**
  *
@@ -57,6 +58,18 @@ public class RunsViewModel {
         shrimpRuns.clear();
         viewableShrimpRuns.clear();
         this.shrimpRuns.addAll(myShrimpRuns);
+    }
+
+    /**
+     * Remove a run (ShrimpRun or spot) from the model
+     *
+     * Will also affect viewableShrimpRuns if the Player being removed adheres
+     * to the filter
+     *
+     * @param run - the run to remove
+     */
+    public void remove(Run run) {
+        shrimpRuns.remove(run);
     }
 
     public String showFilteredOverAllCount() {

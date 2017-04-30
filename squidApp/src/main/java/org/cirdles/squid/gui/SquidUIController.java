@@ -18,6 +18,7 @@ package org.cirdles.squid.gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,15 +44,11 @@ public class SquidUIController implements Initializable {
     public static SquidProject squidProject;
 
     @FXML
-    private Pane centerPane;
-    @FXML
     private Menu manageExpressionsMenu;
     @FXML
     private Menu manageTasksMenu;
     @FXML
     private Menu manageAnalysisMenu;
-    @FXML
-    private Pane mainPane;
     @FXML
     private MenuItem newSquidProjectMenuItem;
     @FXML
@@ -62,6 +59,11 @@ public class SquidUIController implements Initializable {
     private MenuItem saveAsSquidProjectMenuItem;
     @FXML
     private MenuItem closeSquidProjectMenuItem;
+    @FXML
+    private Menu manageRatiosMenu;
+
+    @FXML
+    private Pane mainPane;
 
     /**
      * Initializes the controller class.
@@ -72,17 +74,8 @@ public class SquidUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        try {
-            Pane splashScreen = FXMLLoader.load(getClass().getResource("AboutSquid.fxml"));
-            splashScreen.setId("AboutSquid");
-            VBox.setVgrow(splashScreen, Priority.ALWAYS);
-            HBox.setHgrow(splashScreen, Priority.ALWAYS);
-            centerPane.getChildren().set(0, splashScreen);
-            splashScreen.setVisible(true);
-        } catch (IOException iOException) {
-        }
-
         manageExpressionsMenu.setDisable(true);
+        manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
         newSquidProjectMenuItem.setDisable(false);
@@ -90,13 +83,14 @@ public class SquidUIController implements Initializable {
         openRecentSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
-
     }
 
     @FXML
     private void newSquidProjectAction(ActionEvent event) {
+        newSquidProjectMenuItem.setDisable(true);
+
         squidProject = new SquidProject();
-        CalamariFileManager.initCalamariFiles(squidProject.getPrawnFileHandler(), "1.4.0");
+        CalamariFileManager.initCalamariFiles(squidProject.getPrawnFileHandler(), "1.4.2");
 
         try {
             Pane projectManagerUI = FXMLLoader.load(getClass().getResource("ProjectManager.fxml"));
@@ -107,7 +101,6 @@ public class SquidUIController implements Initializable {
             projectManagerUI.setVisible(true);
         } catch (IOException iOException) {
         }
-
     }
 
     @FXML
@@ -125,6 +118,19 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody.toString());
     }
 
-    
+    @FXML
+    private void quitAction(ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    private void onlineHelpAction(ActionEvent event) {
+        BrowserControl.showURI("https://github.com/CIRDLES/Squid/wiki");
+    }
+
+    @FXML
+    private void aboutSquidAction(ActionEvent event) {
+        SquidUI.squidAboutWindow.loadAboutWindow();
+    }
 
 }

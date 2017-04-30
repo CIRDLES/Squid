@@ -28,8 +28,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javax.xml.bind.JAXBException;
@@ -54,7 +56,7 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private ListView<Run> shrimpRefMatList;
     @FXML
-    private TextField selectedFractionText;
+    private TextField selectedSpotNameText;
     @FXML
     private Label softwareVersionLabel;
     @FXML
@@ -133,10 +135,10 @@ public class ProjectManagerController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Run> observable, Run oldValue, Run newValue) {
                 try {
-                    selectedFractionText.setText(newValue.getPar().get(0).getValue());
+                    selectedSpotNameText.setText(newValue.getPar().get(0).getValue());
                     saveSpotNameButton.setUserData(newValue);
                 } catch (Exception e) {
-                    selectedFractionText.setText("");
+                    selectedSpotNameText.setText("");
                 }
             }
         });
@@ -150,6 +152,8 @@ public class ProjectManagerController implements Initializable {
         spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
 
         shrimpFractionList.itemsProperty().bind(runsModel.viewableShrimpRunsProperty());
+        
+        shrimpFractionList.setContextMenu( createContextMenu() );
 
         // display of selected reference materials
         shrimpRefMatList.setStyle(spotListStyleSpecs);
@@ -159,6 +163,20 @@ public class ProjectManagerController implements Initializable {
                 -> new ShrimpFractionListCell()
         );
 
+    }
+
+    private ContextMenu createContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem menuItem = new MenuItem("Remove this spot.");
+        menuItem.setOnAction((evt) -> {
+            Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
+            if (selectedRun != null) {
+                runsModel.remove(selectedRun);
+                shrimpRunsRefMat.remove(selectedRun);
+            }
+        });
+        contextMenu.getItems().add(menuItem);
+        return contextMenu;
     }
 
     @FXML
@@ -172,14 +190,15 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private void saveSpotNameAction(ActionEvent event) {
         if (saveSpotNameButton.getUserData() != null) {
-            ((Run) saveSpotNameButton.getUserData()).getPar().get(0).setValue(selectedFractionText.getText().trim().toUpperCase(Locale.US));
+            ((Run) saveSpotNameButton.getUserData()).getPar().get(0).setValue(selectedSpotNameText.getText().trim().toUpperCase(Locale.US));
             shrimpFractionList.refresh();
             shrimpRefMatList.refresh();
         }
     }
 
     @FXML
-    private void setFilteredSpotsToRefMatAction(ActionEvent event) {               
-        shrimpRefMatList.setItems(runsModel.getViewableShrimpRuns());
+    private void setFilteredSpotsToRefMatAction(ActionEvent event) {
+        shrimpRunsRefMat = runsModel.getViewableShrimpRuns();
+        shrimpRefMatList.setItems(shrimpRunsRefMat);
     }
 }
