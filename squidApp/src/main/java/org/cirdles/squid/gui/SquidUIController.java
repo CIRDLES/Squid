@@ -24,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -50,6 +51,16 @@ public class SquidUIController implements Initializable {
     private Menu manageAnalysisMenu;
     @FXML
     private Pane mainPane;
+    @FXML
+    private MenuItem newSquidProjectMenuItem;
+    @FXML
+    private MenuItem openSquidProjectMenuItem;
+    @FXML
+    private Menu openRecentSquidProjectMenuItem;
+    @FXML
+    private MenuItem saveAsSquidProjectMenuItem;
+    @FXML
+    private MenuItem closeSquidProjectMenuItem;
 
     /**
      * Initializes the controller class.
@@ -73,6 +84,11 @@ public class SquidUIController implements Initializable {
         manageExpressionsMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
+        newSquidProjectMenuItem.setDisable(true);
+        openSquidProjectMenuItem.setDisable(true);
+        openRecentSquidProjectMenuItem.setDisable(true);
+        saveAsSquidProjectMenuItem.setDisable(true);
+        closeSquidProjectMenuItem.setDisable(true);
 
     }
 

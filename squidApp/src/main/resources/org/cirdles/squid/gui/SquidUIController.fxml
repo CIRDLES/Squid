@@ -15,14 +15,14 @@
       <menus>
         <Menu mnemonicParsing="false" text="Project Files">
           <items>
-                  <MenuItem mnemonicParsing="false" onAction="#newSquidProjectAction" text="New Squid Project" />
-            <MenuItem mnemonicParsing="false" text="Open Squid Project" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
+                  <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="New Squid Project" />
+            <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" text="Open Squid Project" />
+            <Menu fx:id="openRecentSquidProjectMenuItem" mnemonicParsing="false" text="Open Recent Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" text="Save As…" />
+            <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" text="Close Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
+            <MenuItem mnemonicParsing="false" text="Quit Squid" />
           </items>
         </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Manage Expressions">
