@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -42,7 +43,7 @@ public class SquidUI extends Application {
 
     public static Window primaryStageWindow;
     public static SquidAboutWindow squidAboutWindow;
-    public static StringBuilder aboutWindowContent;
+    public static StringBuilder aboutWindowContent = new StringBuilder();
 
     public static ResourceExtractor squidResourceExtractor
             = new ResourceExtractor(SquidUI.class);
@@ -74,7 +75,7 @@ public class SquidUI extends Application {
         RELEASE_DATE = releaseDate;
 
         // get content for about window
-        resourcePath = squidResourceExtractor.extractResourceAsPath("./content/aboutContent.txt");
+        resourcePath = squidResourceExtractor.extractResourceAsPath("/org/cirdles/squid/gui/content/aboutContent.txt");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
             aboutWindowContent = new StringBuilder();
             String thisLine;
