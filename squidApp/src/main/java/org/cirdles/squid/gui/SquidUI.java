@@ -27,6 +27,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import org.cirdles.commons.util.ResourceExtractor;
 
@@ -38,12 +39,15 @@ public class SquidUI extends Application {
 
     public static final String VERSION;
     public static final String RELEASE_DATE;
+
+    public static Window primaryStageWindow;
     public static SquidAboutWindow squidAboutWindow;
+    public static StringBuilder aboutWindowContent;
+
+    public static ResourceExtractor squidResourceExtractor
+            = new ResourceExtractor(SquidUI.class);
 
     static {
-        ResourceExtractor squidResourceExtractor
-                = new ResourceExtractor(SquidUI.class);
-
         String version = "version";
         String releaseDate = "date";
 
@@ -68,6 +72,21 @@ public class SquidUI extends Application {
 
         VERSION = version;
         RELEASE_DATE = releaseDate;
+
+        // get content for about window
+        resourcePath = squidResourceExtractor.extractResourceAsPath("./content/aboutContent.txt");
+        try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
+            aboutWindowContent = new StringBuilder();
+            String thisLine;
+
+            while ((thisLine = reader.readLine()) != null) {
+                aboutWindowContent.append(thisLine);
+            }
+
+        } catch (IOException x) {
+            System.err.format("IOException: %s%n", x);
+        }
+
     }
 
     @Override
@@ -84,6 +103,8 @@ public class SquidUI extends Application {
         primaryStage.setTitle("Squid 3.0");
         primaryStage.setScene(scene);
         primaryStage.show();
+        // this produces non-null window after .show()
+        this.primaryStageWindow = primaryStage.getScene().getWindow();
 
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
             Platform.exit();

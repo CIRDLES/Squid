@@ -23,6 +23,7 @@ import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.core.PrawnFileHandler;
 import org.cirdles.calamari.prawn.PrawnFile;
@@ -36,11 +37,103 @@ import org.xml.sax.SAXException;
 public class SquidProject {
 
     private final PrawnFileHandler prawnFileHandler;
-    private File prawnFileFile;
+    private File prawnXMLFile;
     private PrawnFile prawnFile;
+    private String filterForRefMatSpotNames = "";
 
     public SquidProject() {
         prawnFileHandler = new PrawnFileHandler();
+    }
+
+    public boolean selectPrawnFile(Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+        boolean retVal = false;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Prawn XML file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
+        fileChooser.setInitialDirectory(prawnFileHandler.currentPrawnFileLocationFolder());
+
+        File prawnXMLFileNew = fileChooser.showOpenDialog(ownerWindow);
+
+        if (prawnXMLFileNew != null) {
+            retVal = true;
+            prawnXMLFile = prawnXMLFileNew;
+            prawnFileHandler.setCurrentPrawnFileLocation(prawnXMLFile.getCanonicalPath());
+            prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
+        }
+
+        return retVal;
+    }
+
+    public boolean savePrawnFile(Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+
+        preProcessRunsForDuplicateSpotNames();
+
+        boolean retVal = false;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Prawn XML file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
+        fileChooser.setInitialDirectory(prawnFileHandler.currentPrawnFileLocationFolder());
+        fileChooser.setInitialFileName(prawnXMLFile.getName() + "-REV");
+
+        File prawnXMLFileNew = fileChooser.showSaveDialog(ownerWindow);
+
+        if (prawnXMLFileNew != null) {
+            retVal = true;
+            prawnXMLFile = prawnXMLFileNew;
+            prawnFileHandler.setCurrentPrawnFileLocation(prawnXMLFile.getCanonicalPath());
+            serializePrawnData(prawnFileHandler.getCurrentPrawnFileLocation());
+        }
+
+        return retVal;
+    }
+
+    public PrawnFile deserializePrawnData()
+            throws IOException, JAXBException, SAXException {
+        return prawnFileHandler.unmarshallCurrentPrawnFileXML();
+    }
+
+    private void serializePrawnData(String fileName)
+            throws IOException, JAXBException, SAXException {
+        prawnFileHandler.writeRawDataFileAsXML(prawnFile, fileName);
+    }
+
+    public String getPrawnXMLFileName() {
+        return prawnXMLFile.getName();
+    }
+
+    public String getPrawnFileShrimpSoftwareVersionName() {
+        return prawnFile.getSoftwareVersion();
+    }
+
+    public ObservableList<PrawnFile.Run> getListOfPrawnFileRuns() {
+        preProcessRunsForDuplicateSpotNames();
+        return FXCollections.observableArrayList(prawnFile.getRun());
+    }
+
+    private void preProcessRunsForDuplicateSpotNames() {
+        List<Run> runs = prawnFile.getRun();
+        Map<String, Integer> spotNameCountMap = new HashMap<>();
+        for (int i = 0; i < runs.size(); i++) {
+            String spotName = runs.get(i).getPar().get(0).getValue();
+            if (spotNameCountMap.containsKey(spotName)) {
+                int count = spotNameCountMap.get(spotName);
+                count++;
+                spotNameCountMap.put(spotName, count);
+                runs.get(i).getPar().get(0).setValue(spotName + "-DUP-" + count);
+            } else {
+                spotNameCountMap.put(spotName, 0);
+            }
+        }
+    }
+
+    public void removeRunFromPrawnFile(Run run) {
+        prawnFile.getRun().remove(run);
+
+        // save new count
+        prawnFile.setRuns((short) (prawnFile.getRun().size()));
     }
 
     /**
@@ -50,53 +143,18 @@ public class SquidProject {
         return prawnFileHandler;
     }
 
-    public void selectPrawnFile()
-            throws IOException, JAXBException,SAXException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Prawn XML file");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
-        fileChooser.setInitialDirectory(prawnFileHandler.currentPrawnFileLocationFolder());
-
-        prawnFileFile = fileChooser.showOpenDialog(null);
-
-        if (prawnFileFile != null) {
-                prawnFileHandler.setCurrentPrawnFileLocation(prawnFileFile.getCanonicalPath());
-                prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
-        }
+    /**
+     * @return the filterForRefMatSpotNames
+     */
+    public String getFilterForRefMatSpotNames() {
+        return filterForRefMatSpotNames;
     }
 
-    public PrawnFile deserializePrawnData()
-            throws IOException, JAXBException, SAXException{
-        return prawnFileHandler.unmarshallCurrentPrawnFileXML();
-    }
-    
-    public String getPrawnXMLFileName(){
-        return prawnFileFile.getName();
-    }
-    
-    public String getPrawnFileShrimpSoftwareVersionName(){
-        return prawnFile.getSoftwareVersion();
-    }
-    
-    public ObservableList<PrawnFile.Run> getListOfPrawnFileRuns(){
-        preProcessRunsForDuplicateSpotNames();
-        return FXCollections.observableArrayList(prawnFile.getRun());
-    }
-    
-    private void preProcessRunsForDuplicateSpotNames(){
-        List<Run> runs = prawnFile.getRun();
-        Map<String, Integer> spotNameCountMap = new HashMap<>();
-        for (int i = 0; i < runs.size(); i ++){
-            String spotName = runs.get(i).getPar().get(0).getValue();
-            if (spotNameCountMap.containsKey(spotName)){
-                int count = spotNameCountMap.get(spotName);
-                count ++;
-                spotNameCountMap.put(spotName, count);
-                runs.get(i).getPar().get(0).setValue(spotName + "-DUP-" + count);
-            } else {
-                spotNameCountMap.put(spotName, 0);
-            }
-        }     
+    /**
+     * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
+     */
+    public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
+        this.filterForRefMatSpotNames = filterForRefMatSpotNames;
     }
 
 }

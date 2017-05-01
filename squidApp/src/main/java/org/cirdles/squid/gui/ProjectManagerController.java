@@ -38,6 +38,8 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.prawn.PrawnFile.Run;
 import org.cirdles.squid.gui.RunsViewModel.ShrimpFractionListCell;
 import org.cirdles.squid.gui.RunsViewModel.SpotNameMatcher;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.xml.sax.SAXException;
 
 /**
@@ -49,6 +51,11 @@ import org.xml.sax.SAXException;
  */
 public class ProjectManagerController implements Initializable {
 
+    
+    private ObservableList<Run> shrimpRuns;
+    private ObservableList<Run> shrimpRunsRefMat;
+    private final RunsViewModel runsModel = new RunsViewModel();
+    
     @FXML
     private TextField orignalPrawnFileName;
     @FXML
@@ -70,10 +77,10 @@ public class ProjectManagerController implements Initializable {
     private static final String spotListStyleSpecs = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
     @FXML
     private Button saveSpotNameButton;
-
-    private ObservableList<Run> shrimpRuns;
-    private ObservableList<Run> shrimpRunsRefMat;
-    private final RunsViewModel runsModel = new RunsViewModel();
+    @FXML
+    private Button savePrawnFileButton;
+    @FXML
+    private Button setFilteredSpotsAsRefMatButton;
 
     /**
      * Initializes the controller class.
@@ -85,27 +92,36 @@ public class ProjectManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         orignalPrawnFileName.setEditable(false);
         setUpShrimpFractionListHeaders();
+        savePrawnFileButton.setDisable(true);
+        saveSpotNameButton.setDisable(true);
+        setFilteredSpotsAsRefMatButton.setDisable(true);
     }
 
     @FXML
     private void selectPrawnFileAction(ActionEvent event) {
 
         try {
-            SquidUIController.squidProject.selectPrawnFile();
+            if (squidProject.selectPrawnFile(primaryStageWindow)) {
 
-            orignalPrawnFileName.setText(SquidUIController.squidProject.getPrawnXMLFileName());
+                orignalPrawnFileName.setText(squidProject.getPrawnXMLFileName());
 
-            softwareVersionLabel.setText(
-                    "Software Version: "
-                    + SquidUIController.squidProject.getPrawnFileShrimpSoftwareVersionName());
+                softwareVersionLabel.setText(
+                        "Software Version: "
+                        + squidProject.getPrawnFileShrimpSoftwareVersionName());
 
-            shrimpRuns = SquidUIController.squidProject.getListOfPrawnFileRuns();
-            shrimpRunsRefMat = FXCollections.observableArrayList();
+                shrimpRuns = squidProject.getListOfPrawnFileRuns();
+                shrimpRunsRefMat = FXCollections.observableArrayList();
 
-            setUpShrimpFractionList();
+                setUpShrimpFractionList();
+
+                savePrawnFileButton.setDisable(false);
+                saveSpotNameButton.setDisable(false);
+                setFilteredSpotsAsRefMatButton.setDisable(false);
+            }
 
         } catch (IOException | JAXBException | SAXException iOException) {
         }
+
     }
 
     private void setUpShrimpFractionListHeaders() {
@@ -152,8 +168,8 @@ public class ProjectManagerController implements Initializable {
         spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
 
         shrimpFractionList.itemsProperty().bind(runsModel.viewableShrimpRunsProperty());
-        
-        shrimpFractionList.setContextMenu( createContextMenu() );
+
+        shrimpFractionList.setContextMenu(createContextMenu());
 
         // display of selected reference materials
         shrimpRefMatList.setStyle(spotListStyleSpecs);
@@ -173,6 +189,8 @@ public class ProjectManagerController implements Initializable {
             if (selectedRun != null) {
                 runsModel.remove(selectedRun);
                 shrimpRunsRefMat.remove(selectedRun);
+                squidProject.removeRunFromPrawnFile(selectedRun);
+                spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
             }
         });
         contextMenu.getItems().add(menuItem);
@@ -185,6 +203,8 @@ public class ProjectManagerController implements Initializable {
         Predicate<Run> filter = new SpotNameMatcher(filterString);
         runsModel.filterProperty().set(filter);
         spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
+        
+        squidProject.setFilterForRefMatSpotNames(filterString);
     }
 
     @FXML
@@ -200,5 +220,16 @@ public class ProjectManagerController implements Initializable {
     private void setFilteredSpotsToRefMatAction(ActionEvent event) {
         shrimpRunsRefMat = runsModel.getViewableShrimpRuns();
         shrimpRefMatList.setItems(shrimpRunsRefMat);
+    }
+
+    @FXML
+    private void savePrawnFileAction(ActionEvent event) {
+        try {
+            squidProject.savePrawnFile(primaryStageWindow);
+            orignalPrawnFileName.setText(SquidUIController.squidProject.getPrawnXMLFileName());
+            shrimpFractionList.refresh();
+            shrimpRefMatList.refresh();
+        } catch (IOException | JAXBException | SAXException iOException) {
+        }
     }
 }

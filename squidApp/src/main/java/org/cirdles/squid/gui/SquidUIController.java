@@ -90,7 +90,7 @@ public class SquidUIController implements Initializable {
         newSquidProjectMenuItem.setDisable(true);
 
         squidProject = new SquidProject();
-        CalamariFileManager.initCalamariFiles(squidProject.getPrawnFileHandler(), "1.4.2");
+        CalamariFileManager.initCalamariFiles(squidProject.getPrawnFileHandler(), "1.4.3");
 
         try {
             Pane projectManagerUI = FXMLLoader.load(getClass().getResource("ProjectManager.fxml"));

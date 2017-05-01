@@ -51,7 +51,7 @@ public class SquidAboutWindow {
             aboutWindow.setScene(aboutScene);
 
             aboutWindow.requestFocus();
-            aboutWindow.initOwner(null);
+            aboutWindow.initOwner(primaryStage.getScene().getWindow());
             aboutWindow.initModality(Modality.NONE);
 
             aboutPage.setOnMousePressed(new EventHandler<MouseEvent>() {
