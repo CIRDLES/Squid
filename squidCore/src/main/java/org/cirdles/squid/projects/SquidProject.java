@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,7 +77,7 @@ public class SquidProject {
         fileChooser.setTitle("Save Prawn XML file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
         fileChooser.setInitialDirectory(prawnFileHandler.currentPrawnFileLocationFolder());
-        fileChooser.setInitialFileName(prawnXMLFile.getName() + "-REV");
+        fileChooser.setInitialFileName(prawnXMLFile.getName().toUpperCase(Locale.US).replace(".XML", "-REV.xml"));
 
         File prawnXMLFileNew = fileChooser.showSaveDialog(ownerWindow);
 
