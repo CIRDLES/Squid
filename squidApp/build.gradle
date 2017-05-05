@@ -1,0 +1,62 @@
+// Note: "common.gradle" in the root project contains additional initialization
+//   for this project. This initialization is applied in the "build.gradle"
+//   of the root project.
+
+// NetBeans will automatically add "run" and "debug" tasks relying on the
+// "mainClass" property. You may however define the property prior executing
+// tasks by passing a "-PmainClass=<QUALIFIED_CLASS_NAME>" argument.
+//
+// Note however, that you may define your own "run" and "debug" task if you
+// prefer. In this case NetBeans will not add these tasks but you may rely on
+// your own implementation.
+
+import java.text.SimpleDateFormat
+import java.util.Date
+import org.apache.tools.ant.filters.*
+
+apply plugin: "application"
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'org.cirdles.squid.gui.SquidUI'
+}
+
+mainClassName = 'org.cirdles.squid.gui.SquidUI'
+
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":squidCore")
+    compile 'com.google.inject:guice:4.0'
+    compile 'com.google.inject.extensions:guice-multibindings:4.0'
+
+}
+
+task fatAppJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': mainClass
+    }
+
+    baseName = 'Squid3'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+def timestamp() {
+    new SimpleDateFormat("dd MMMM yyyy").format(new Date())
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.txt'
+        filter ReplaceTokens, tokens: [
+        "pom.version": version,
+        "timestamp": timestamp()
+        ]
+    }
+}
+

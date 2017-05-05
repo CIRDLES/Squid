@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="935.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="Project Files">
+          <items>
+                  <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="New Squid Project" />
+            <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" text="Open Squid Project" />
+            <Menu fx:id="openRecentSquidProjectMenuItem" mnemonicParsing="false" text="Open Recent Squid Project" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" text="Save As…" />
+            <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" text="Close Squid Project" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
+          </items>
+        </Menu>
+            <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Manage Ratios">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Review Masses" />
+                  <MenuItem mnemonicParsing="false" text="Select Ratios" />
+              </items>
+            </Menu>
+        <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Manage Expressions">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+          </items>
+        </Menu>
+            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Manage Tasks">
+              <items>
+                <MenuItem mnemonicParsing="false" text="New Task" />
+              </items>
+            </Menu>
+            <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Manage Analysis">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Reduce Data" />
+                  <MenuItem mnemonicParsing="false" text="Reference Material Task" />
+                  <MenuItem mnemonicParsing="false" text="Unknowns Tasks" />
+              </items>
+            </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
+                  <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
+                  <Menu mnemonicParsing="false" text="Online Resources">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="GitHub Repository" />
+                    </items>
+                  </Menu>
+            <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+      <Pane fx:id="mainPane" prefHeight="645.0" prefWidth="935.0">
+         <children>
+            <ImageView fitHeight="335.0" fitWidth="335.0" layoutX="300.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/SquidLogo.png" />
+               </image>
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+            </ImageView>
+         </children>
+      </Pane>
+  </children>
+</VBox>
