@@ -1,4 +1,4 @@
-<img src="https://github.com/CIRDLES/DRAKE/blob/master/logos/Squid/SquidLogo.ico" width="80">
+<img src="https://github.com/CIRDLES/DRAKE/blob/master/logos/Squid/SquidLogo.ico" width="100">
 
 Squid 3
 =======
