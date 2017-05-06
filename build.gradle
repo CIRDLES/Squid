@@ -6,6 +6,10 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
+}
+
 task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
     title = 'All modules'
     destinationDir = new File(project.buildDir, 'merged-javadoc')
