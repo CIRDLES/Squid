@@ -20,7 +20,14 @@
 }
 
 .backgroundCalamari {
-    -fx-background-color:    #FFF5F5;
+    -fx-background-color:    #ffefef;/*#FFF5F5;*/
+}
+
+.label {
+    -fx-font-size: 12pt;
+    -fx-font-family: "Lucida Sans Bold", "Segoe UI Semibold";
+    -fx-text-fill: black;
+    -fx-opacity: 1;
 }
 
 /* 
@@ -33,7 +40,7 @@
     -fx-border-color: #e2e2e2;
     -fx-border-width: 2;
     -fx-background-radius: 0;
-    -fx-background-color: #ff8f89; /*#ff6961; /*#1d1d1d;*/
+    -fx-background-color: #43ABC9;/*#72b1bf;/*#43ABC9;/*#ff8f89; /*#ff6961; /*#1d1d1d;*/
     -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
     -fx-text-fill: whitesmoke;/*  #d8d8d8;*/
@@ -41,11 +48,11 @@
 }
 
 .button:hover {
-    -fx-background-color: #3a3a3a;
+    -fx-background-color: #007e9b;/*#3a3a3a;*/
 }
 
 .button:pressed, .button:default:hover:pressed {
-    -fx-background-color: white;
+    -fx-background-color: #007e9b;/*white;*/
     -fx-text-fill: #1d1d1d;
 }
 
