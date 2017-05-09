@@ -31,8 +31,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.cirdles.squid.fileManagement.CalamariFileManager;
 import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.utilities.BrowserControl;
-import static org.cirdles.squid.utilities.BrowserControl.urlEncode;
+import org.cirdles.squid.gui.utilities.BrowserControl;
+import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 
 /**
  * FXML Controller class

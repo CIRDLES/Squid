@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="675.0" prefWidth="935.0" styleClass="backgroundCalamari" stylesheets="@projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+<Pane prefHeight="675.0" prefWidth="935.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
    <children>
       <AnchorPane layoutX="7.0" minHeight="0.0" minWidth="0.0" prefHeight="675.0" prefWidth="935.0">
          <children>

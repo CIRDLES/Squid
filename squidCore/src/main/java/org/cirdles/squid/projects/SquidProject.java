@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cirdles.org.
+ * Copyright 2017 CIRDLES.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.cirdles.squid.projects;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author bowring
  */
-public class SquidProject {
+public class SquidProject implements Serializable{
 
     private final PrawnFileHandler prawnFileHandler;
     private File prawnXMLFile;
