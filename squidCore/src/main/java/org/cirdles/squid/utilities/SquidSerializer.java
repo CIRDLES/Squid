@@ -4,12 +4,12 @@
  * Copyright 2017 CIRDLES.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
+ *  you may not use this file except inputStream compliance with the License.
  *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
+ *  Unless required by applicable law or agreed to inputStream writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
@@ -19,7 +19,7 @@ package org.cirdles.squid.utilities;
 
 import java.io.*;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.exceptions.SquidMessageDialog;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 
 /**
  *
@@ -35,24 +35,22 @@ public final class SquidSerializer {
 
     /**
      *
-     * @param o
+     * @param serializableObject
      * @param filename
-     * @throws org.earthtime.exceptions.ETException
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public static void SerializeObjectToFile(Object o, String filename) throws SquidException {
+    public static void SerializeObjectToFile(Object serializableObject, String filename) throws SquidException {
         try {
             // Serialize to a file
-            FileOutputStream out = new FileOutputStream(filename);
-            try (ObjectOutputStream s = new ObjectOutputStream(out)) {
-                s.writeObject(o);
-                s.flush();
+            FileOutputStream outputStream = new FileOutputStream(filename);
+            try (ObjectOutputStream serialized = new ObjectOutputStream(outputStream)) {
+                serialized.writeObject(serializableObject);
+                serialized.flush();
             }
 
-        } catch (FileNotFoundException ex) {
-            throw new SquidException(null, "Cannot serialize to: " + filename);
         } catch (IOException ex) {
-            throw new SquidException(null, "Cannot serialize to: " + filename);
-        }
+            throw new SquidException("Cannot serialize object of " + serializableObject.getClass().getSimpleName() + " to: " + filename);
+        } 
     }
 
     /**
@@ -61,14 +59,14 @@ public final class SquidSerializer {
      * @return
      */
     public static Object GetSerializedObjectFromFile(String filename) {
-        FileInputStream in;
-        ObjectInputStream s;
-        Object o = null;
+        FileInputStream inputStream;
+        ObjectInputStream deserializedInputStream;
+        Object deserializedObject = null;
 
         try {
-            in = new FileInputStream(filename);
-            s = new ObjectInputStream(in);
-            o = s.readObject();
+            inputStream = new FileInputStream(filename);
+            deserializedInputStream = new ObjectInputStream(inputStream);
+            deserializedObject = deserializedInputStream.readObject();
         } catch (FileNotFoundException ex) {
             if (!filename.endsWith(SquidPersistentState.SQUID_PERSISTENT_STATE_FILE_NAME)) {
                 SquidMessageDialog.showWarningDialog(
@@ -80,7 +78,7 @@ public final class SquidSerializer {
                     "The file you are attempting to open is not compatible with this version of Squid3.");
         }
 
-        return o;
+        return deserializedObject;
     }
 
 }

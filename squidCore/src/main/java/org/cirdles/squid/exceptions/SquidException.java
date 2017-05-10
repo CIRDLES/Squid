@@ -15,27 +15,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.cirdles.squid.exceptions;
-
-import java.awt.Component;
 
 /**
  *
  * @author James F. Bowring
  */
 public class SquidException extends Exception {
-    
+
+    private SquidException() {
+    }
+
     public SquidException(String message) {
         super(message);
     }
-    
-    public SquidException(Component parent, String message) {
-        this(message);
+
+    public SquidException(Throwable cause) {
+        super(cause);
     }
-    
-    public SquidException(Component parent, String[] message) {
-        this(String.join(" ", message));
+
+    public SquidException(String message, Throwable cause) {
+        super(message, cause);
     }
-    
+
+    public SquidException(String message, Throwable cause,
+            boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
 }

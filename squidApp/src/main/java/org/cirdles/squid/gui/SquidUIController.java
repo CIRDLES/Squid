@@ -64,6 +64,8 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private Pane mainPane;
+    @FXML
+    private Menu manageReportsMenu;
 
     /**
      * Initializes the controller class.
@@ -78,6 +80,9 @@ public class SquidUIController implements Initializable {
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
+        manageReportsMenu.setDisable(true);
+
+        // Squid project menu items
         newSquidProjectMenuItem.setDisable(false);
         openSquidProjectMenuItem.setDisable(true);
         openRecentSquidProjectMenuItem.setDisable(true);
@@ -113,7 +118,7 @@ public class SquidUIController implements Initializable {
         issueBody.append(urlEncode(version + "\n"));
         issueBody.append(urlEncode(javaVersion + "\n"));
         issueBody.append(urlEncode(operatingSystem + "\n"));
-        issueBody.append(urlEncode("==================================" + "\n"));
+        issueBody.append(urlEncode("\n\nIssue details:\n"));
 
         BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody.toString());
     }

@@ -16,15 +16,15 @@
             <TextField layoutX="132.0" layoutY="9.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
             <Label layoutX="473.0" layoutY="11.0" prefHeight="20.0" prefWidth="118.0" text="Analyst Name:" />
             <TextField layoutX="594.0" layoutY="8.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
-            <Button layoutX="116.0" layoutY="44.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Select Prawn XML file for pre-processing" />
-            <Label layoutX="116.0" layoutY="82.0" text="Prawn XML file:" />
-            <TextField fx:id="orignalPrawnFileName" layoutX="241.0" layoutY="77.0" prefHeight="27.0" prefWidth="525.0" promptText="name of selected Prawn XML file will appear here" />
+            <Button layoutX="130.0" layoutY="44.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Select Prawn XML file for pre-processing" />
+            <Label layoutX="130.0" layoutY="82.0" text="Prawn XML file:" />
+            <TextField fx:id="orignalPrawnFileName" layoutX="255.0" layoutY="77.0" prefHeight="27.0" prefWidth="523.0" promptText="name of selected Prawn XML file will appear here" />
             <ListView fx:id="shrimpFractionList" layoutX="15.0" layoutY="224.0" prefHeight="296.0" prefWidth="435.0">
                <tooltip>
                   <Tooltip text="Right-click spot for removal menu." />
                </tooltip></ListView>
             <TextField fx:id="selectedSpotNameText" layoutX="149.0" layoutY="525.0" prefHeight="27.0" prefWidth="130.0" promptText="no spot selected" />
-            <Label fx:id="softwareVersionLabel" layoutX="242.0" layoutY="106.0" prefHeight="20.0" prefWidth="495.0" text="Software Version:" />
+            <Label fx:id="softwareVersionLabel" layoutX="256.0" layoutY="106.0" prefHeight="20.0" prefWidth="495.0" text="Software Version:" />
             <Label layoutX="22.0" layoutY="141.0" prefHeight="20.0" prefWidth="415.0" text="Spots (note duplicates are suffixed with '-DUP-n'):" />
             <Label fx:id="headerLabel" layoutX="22.0" layoutY="206.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
             <Label layoutX="34.0" layoutY="171.0" text="Filter by typing spot name:" />
