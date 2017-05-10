@@ -27,9 +27,9 @@
             <Label fx:id="softwareVersionLabel" layoutX="256.0" layoutY="106.0" prefHeight="20.0" prefWidth="495.0" text="Software Version:" />
             <Label layoutX="22.0" layoutY="141.0" prefHeight="20.0" prefWidth="415.0" text="Spots (note duplicates are suffixed with '-DUP-n'):" />
             <Label fx:id="headerLabel" layoutX="22.0" layoutY="206.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
-            <Label layoutX="34.0" layoutY="171.0" text="Filter by typing spot name:" />
-            <TextField fx:id="filterSpotName" layoutX="242.0" layoutY="168.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="96.0" promptText="type here" />
-            <Label fx:id="spotsShownLabel" layoutX="341.0" layoutY="171.0" prefHeight="20.0" prefWidth="107.0" text="0/0 shown" />
+            <Label layoutX="30.0" layoutY="171.0" text="Filter by typing spot name:" />
+            <TextField fx:id="filterSpotName" layoutX="233.0" layoutY="168.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="96.0" promptText="type here" />
+            <Label fx:id="spotsShownLabel" layoutX="332.0" layoutY="171.0" prefHeight="20.0" prefWidth="122.0" text="0/0 shown" />
             <ListView fx:id="shrimpRefMatList" layoutX="480.0" layoutY="224.0" prefHeight="296.0" prefWidth="435.0" />
             <Button fx:id="setFilteredSpotsAsRefMatButton" layoutX="514.0" layoutY="166.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="27.0" prefWidth="358.0" text="Set filtered spots as Reference Material" />
             <Label fx:id="headerLabelRefMat" layoutX="486.0" layoutY="206.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
