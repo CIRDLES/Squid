@@ -49,7 +49,7 @@
                      <content>
                         <AnchorPane prefHeight="486.0" prefWidth="908.0" style="-fx-background-color: #f4f4f4;">
                            <children>
-                              <ListView fx:id="shrimpFractionList" layoutX="5.0" layoutY="83.0" prefHeight="310.0" prefWidth="435.0">
+                              <ListView fx:id="shrimpFractionList" layoutX="5.0" layoutY="83.0" prefHeight="300.0" prefWidth="435.0">
                                  <tooltip>
                                     <Tooltip text="Right-click spot for removal menu." />
                                  </tooltip>
@@ -59,13 +59,14 @@
                               <Label layoutX="15.0" layoutY="30.0" text="Filter by typing spot name:" />
                               <TextField fx:id="filterSpotName" layoutX="218.0" layoutY="27.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="71.0" promptText="type here" />
                               <Label fx:id="spotsShownLabel" layoutX="293.0" layoutY="30.0" prefHeight="20.0" prefWidth="146.0" text="0/0 shown" />
-                              <ListView fx:id="shrimpRefMatList" layoutX="465.0" layoutY="83.0" prefHeight="310.0" prefWidth="435.0" />
+                              <ListView fx:id="shrimpRefMatList" layoutX="465.0" layoutY="83.0" prefHeight="300.0" prefWidth="435.0" />
                               <Button fx:id="setFilteredSpotsAsRefMatButton" layoutX="499.0" layoutY="25.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="27.0" prefWidth="358.0" text="Set filtered spots as Reference Material" />
                               <Label fx:id="headerLabelRefMat" layoutX="471.0" layoutY="65.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
                               <Label layoutX="8.0" layoutY="408.0" text="Edit Spot Name:" />
                               <Button fx:id="saveSpotNameButton" layoutX="276.0" layoutY="402.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Spot Name" />
                               <Label layoutX="465.0" text="Reference Material Spots:" />
-                              <Button fx:id="savePrawnFileButton" layoutX="134.0" layoutY="436.0" mnemonicParsing="false" onAction="#savePrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Save modified Prawn data as new Prawn XML file for this Squid Project" />
+                              <Button fx:id="savePrawnFileButton" layoutX="134.0" layoutY="435.0" mnemonicParsing="false" onAction="#savePrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Save modified Prawn data as new Prawn XML file for this Squid Project" />
+                              <Label layoutX="8.0" layoutY="383.0" style="-fx-font-size: 12;" text="Hint: To remove a spot, right mouse-click on it for context menu." />
                            </children>
                         </AnchorPane>
                      </content>
@@ -75,7 +76,7 @@
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </opaqueInsets>
             </TabPane>
-            <Label layoutX="131.0" layoutY="112.0" prefHeight="20.0" prefWidth="415.0" text="Note: spot name duplicates are suffixed with '-DUP-n'" />
+            <Label layoutX="131.0" layoutY="112.0" prefHeight="20.0" prefWidth="415.0" style="-fx-font-size: 14;" text="Note: spot name duplicates are suffixed with '-DUP-n'" />
          </children>
       </AnchorPane>
    </children>

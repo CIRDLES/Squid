@@ -41,7 +41,7 @@ import org.cirdles.squid.utilities.SquidPrefixTree;
  */
 public class SquidProject implements Serializable {
 
-    private final PrawnFileHandler prawnFileHandler;
+    private final transient PrawnFileHandler prawnFileHandler;
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
@@ -49,6 +49,7 @@ public class SquidProject implements Serializable {
 
     public SquidProject() {
         prawnFileHandler = new PrawnFileHandler();
+        this.prawnXMLFile = new File("");
 
         this.filterForRefMatSpotNames = "";
         this.sessionDurationHours = 0.0;
@@ -143,7 +144,7 @@ public class SquidProject implements Serializable {
         long startLast = timeInMillisecondsOfRun(runs.get(runs.size() - 1));
         long sessionDuration = startLast - startFirst;
 
-        sessionDurationHours = sessionDuration / 1000l / 60l / 60l;
+        sessionDurationHours = (double)sessionDuration / 1000 / 60 / 60;
 
     }
 

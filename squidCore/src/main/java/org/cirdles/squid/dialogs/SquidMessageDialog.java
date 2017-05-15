@@ -32,6 +32,10 @@ public class SquidMessageDialog extends Alert {
         initStyle(StageStyle.UTILITY);
     }
     
+    /**
+     * 
+     * @param message 
+     */
     public static void showWarningDialog(String message){
         Alert alert = new SquidMessageDialog(Alert.AlertType.WARNING, message);
         alert.showAndWait();

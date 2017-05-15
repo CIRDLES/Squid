@@ -162,7 +162,7 @@ public class ProjectManagerController implements Initializable {
         // format into rows for summary tab
         summaryStatsLabel.setText("Session summary:\n\t" + summaryStatsString.replaceAll(";", "\n\t"));
 
-        totalAnalysisTimeLabel.setText("Total session time in hours = " + squidProject.getSessionDurationHours());
+        totalAnalysisTimeLabel.setText("Total session time in hours = " + (int)squidProject.getSessionDurationHours());
 
         populateTreeView(rootItem, spotPrefixTree);
     }

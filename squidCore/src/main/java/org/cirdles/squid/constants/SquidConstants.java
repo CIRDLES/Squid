@@ -21,5 +21,8 @@ package org.cirdles.squid.constants;
  */
 public class SquidConstants {
     
+    /**
+     * 
+     */
     public final static String SQUID_USERS_DATA_FOLDER_NAME = "Squid User Data";
 }
