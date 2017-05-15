@@ -25,10 +25,61 @@
 .label {
     -fx-font-size: 12pt;
     -fx-font-family: "Lucida Sans Bold", "Segoe UI Semibold";
+    -fx-font-weight: bold;
     -fx-text-fill: black;
-    -fx-opacity: 1;
+    -fx-opacity: 100;
 }
 
+/*
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 100;
+}
+*/
+.tab-pane
+{
+    -fx-tab-min-width:200px;
+}
+
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: black;
+    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+}
+
+.tab-pane .tab
+{
+    -fx-background-color: white;/*#e6e6e6;*/
+
+}
+.tab-pane .tab:selected
+{
+    -fx-background-color:  #f4f4f4;
+}
+
+/*
+.tab{
+    -fx-background-insets: 0 10 0 10,0,0;
+}
+.tab-pane .tab
+{
+    -fx-background-color: #e6e6e6;
+
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: #3c3c3c;
+}
+
+
+
+.tab:selected .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: #96b946;
+}
+*/
 /* 
  * Metro style Push Button
  * Author: Pedro Duque Vieira

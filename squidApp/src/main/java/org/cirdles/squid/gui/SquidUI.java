@@ -53,7 +53,7 @@ public class SquidUI extends Application {
         String releaseDate = "date";
 
         // get version number and release date written by pom.xml
-        Path resourcePath = squidResourceExtractor.extractResourceAsPath("version.txt");
+        Path resourcePath = SquidUI.squidResourceExtractor.extractResourceAsPath("version.txt");
         Charset charset = Charset.forName("US-ASCII");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
             String line = reader.readLine();
@@ -75,13 +75,13 @@ public class SquidUI extends Application {
         RELEASE_DATE = releaseDate;
 
         // get content for about window
-        resourcePath = squidResourceExtractor.extractResourceAsPath("/org/cirdles/squid/gui/content/aboutContent.txt");
+        resourcePath = SquidUI.squidResourceExtractor.extractResourceAsPath("/org/cirdles/squid/gui/content/aboutContent.txt");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
-            aboutWindowContent = new StringBuilder();
+            SquidUI.aboutWindowContent = new StringBuilder();
             String thisLine;
 
             while ((thisLine = reader.readLine()) != null) {
-                aboutWindowContent.append(thisLine);
+                SquidUI.aboutWindowContent.append(thisLine);
             }
 
         } catch (IOException x) {
@@ -105,15 +105,14 @@ public class SquidUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         // this produces non-null window after .show()
-        this.primaryStageWindow = primaryStage.getScene().getWindow();
+        SquidUI.primaryStageWindow = primaryStage.getScene().getWindow();
 
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
             Platform.exit();
             System.exit(0);
         });
 
-        squidAboutWindow = new SquidAboutWindow(primaryStage);
-        squidAboutWindow.loadAboutWindow();
+        SquidUI.squidAboutWindow = new SquidAboutWindow(primaryStage);
     }
 
     /**

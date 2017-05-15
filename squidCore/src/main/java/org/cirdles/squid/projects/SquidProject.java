@@ -18,6 +18,8 @@ package org.cirdles.squid.projects;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -31,20 +33,25 @@ import org.cirdles.calamari.core.PrawnFileHandler;
 import org.cirdles.calamari.prawn.PrawnFile;
 import org.cirdles.calamari.prawn.PrawnFile.Run;
 import org.xml.sax.SAXException;
+import org.cirdles.squid.utilities.SquidPrefixTree;
 
 /**
  *
  * @author bowring
  */
-public class SquidProject implements Serializable{
+public class SquidProject implements Serializable {
 
     private final PrawnFileHandler prawnFileHandler;
     private File prawnXMLFile;
     private PrawnFile prawnFile;
-    private String filterForRefMatSpotNames = "";
+    private String filterForRefMatSpotNames;
+    private double sessionDurationHours;
 
     public SquidProject() {
         prawnFileHandler = new PrawnFileHandler();
+
+        this.filterForRefMatSpotNames = "";
+        this.sessionDurationHours = 0.0;
     }
 
     public boolean selectPrawnFile(Window ownerWindow)
@@ -71,7 +78,7 @@ public class SquidProject implements Serializable{
     public boolean savePrawnFile(Window ownerWindow)
             throws IOException, JAXBException, SAXException {
 
-        preProcessRunsForDuplicateSpotNames();
+        preProcessSession();
 
         boolean retVal = false;
         FileChooser fileChooser = new FileChooser();
@@ -111,11 +118,12 @@ public class SquidProject implements Serializable{
     }
 
     public ObservableList<PrawnFile.Run> getListOfPrawnFileRuns() {
-        preProcessRunsForDuplicateSpotNames();
+        preProcessSession();
         return FXCollections.observableArrayList(prawnFile.getRun());
     }
 
-    private void preProcessRunsForDuplicateSpotNames() {
+    private void preProcessSession() {
+
         List<Run> runs = prawnFile.getRun();
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
@@ -129,6 +137,29 @@ public class SquidProject implements Serializable{
                 spotNameCountMap.put(spotName, 0);
             }
         }
+
+        // determine time in hours for session
+        long startFirst = timeInMillisecondsOfRun(runs.get(0));
+        long startLast = timeInMillisecondsOfRun(runs.get(runs.size() - 1));
+        long sessionDuration = startLast - startFirst;
+
+        sessionDurationHours = sessionDuration / 1000l / 60l / 60l;
+
+    }
+
+    private long timeInMillisecondsOfRun(Run run) {
+        String startDateTime = run.getSet().getPar().get(0).getValue()
+                + " " + run.getSet().getPar().get(1).getValue()
+                + (Integer.parseInt(run.getSet().getPar().get(1).getValue().substring(0, 2)) < 12 ? " AM" : " PM");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss aa");
+        long milliseconds = 0l;
+        try {
+            milliseconds = dateFormat.parse(startDateTime).getTime();
+        } catch (ParseException parseException) {
+        }
+
+        return milliseconds;
     }
 
     public void removeRunFromPrawnFile(Run run) {
@@ -136,6 +167,20 @@ public class SquidProject implements Serializable{
 
         // save new count
         prawnFile.setRuns((short) (prawnFile.getRun().size()));
+    }
+
+    public SquidPrefixTree generatePrefixTreeFromSpotNames() {
+        SquidPrefixTree prefixTree = new SquidPrefixTree();
+
+        for (int i = 0; i < prawnFile.getRun().size(); i++) {
+            SquidPrefixTree leafParent = prefixTree.insert(prawnFile.getRun().get(i).getPar().get(0).getValue());
+            leafParent.getChildren().get(0).setCountOfSpecies(Integer.parseInt(prawnFile.getRun().get(i).getPar().get(2).getValue()));
+            leafParent.getChildren().get(0).setCountOfScans(Integer.parseInt(prawnFile.getRun().get(i).getPar().get(3).getValue()));
+        }
+
+        prefixTree.prepareStatistics();
+
+        return prefixTree;
     }
 
     /**
@@ -157,6 +202,13 @@ public class SquidProject implements Serializable{
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+    }
+
+    /**
+     * @return the sessionDurationHours
+     */
+    public double getSessionDurationHours() {
+        return sessionDurationHours;
     }
 
 }

@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="675.0" prefWidth="935.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+<Pane prefHeight="650.0" prefWidth="935.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
    <children>
-      <AnchorPane layoutX="7.0" minHeight="0.0" minWidth="0.0" prefHeight="675.0" prefWidth="935.0">
+      <AnchorPane layoutX="7.0" layoutY="-7.0" minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="935.0">
          <children>
             <Label layoutX="22.0" layoutY="11.0" text="Project Name:" />
             <TextField layoutX="132.0" layoutY="9.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
@@ -19,24 +23,59 @@
             <Button layoutX="130.0" layoutY="44.0" mnemonicParsing="false" onAction="#selectPrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Select Prawn XML file for pre-processing" />
             <Label layoutX="130.0" layoutY="82.0" text="Prawn XML file:" />
             <TextField fx:id="orignalPrawnFileName" layoutX="255.0" layoutY="77.0" prefHeight="27.0" prefWidth="523.0" promptText="name of selected Prawn XML file will appear here" />
-            <ListView fx:id="shrimpFractionList" layoutX="15.0" layoutY="224.0" prefHeight="296.0" prefWidth="435.0">
-               <tooltip>
-                  <Tooltip text="Right-click spot for removal menu." />
-               </tooltip></ListView>
-            <TextField fx:id="selectedSpotNameText" layoutX="149.0" layoutY="525.0" prefHeight="27.0" prefWidth="130.0" promptText="no spot selected" />
-            <Label fx:id="softwareVersionLabel" layoutX="256.0" layoutY="106.0" prefHeight="20.0" prefWidth="495.0" text="Software Version:" />
-            <Label layoutX="22.0" layoutY="141.0" prefHeight="20.0" prefWidth="415.0" text="Spots (note duplicates are suffixed with '-DUP-n'):" />
-            <Label fx:id="headerLabel" layoutX="22.0" layoutY="206.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
-            <Label layoutX="30.0" layoutY="171.0" text="Filter by typing spot name:" />
-            <TextField fx:id="filterSpotName" layoutX="233.0" layoutY="168.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="96.0" promptText="type here" />
-            <Label fx:id="spotsShownLabel" layoutX="332.0" layoutY="171.0" prefHeight="20.0" prefWidth="122.0" text="0/0 shown" />
-            <ListView fx:id="shrimpRefMatList" layoutX="480.0" layoutY="224.0" prefHeight="296.0" prefWidth="435.0" />
-            <Button fx:id="setFilteredSpotsAsRefMatButton" layoutX="514.0" layoutY="166.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="27.0" prefWidth="358.0" text="Set filtered spots as Reference Material" />
-            <Label fx:id="headerLabelRefMat" layoutX="486.0" layoutY="206.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
-            <Label layoutX="22.0" layoutY="529.0" text="Edit Spot Name:" />
-            <Button fx:id="saveSpotNameButton" layoutX="290.0" layoutY="523.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Spot Name" />
-            <Label layoutX="480.0" layoutY="141.0" text="Reference Material Spots:" />
-            <Button fx:id="savePrawnFileButton" layoutX="143.0" layoutY="596.0" mnemonicParsing="false" onAction="#savePrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Save modified Prawn data as new Prawn XML file for this Squid Project" />
+            <TabPane fx:id="prawnFileTabPane" layoutX="6.0" layoutY="146.0" prefHeight="501.0" prefWidth="912.0">
+               <tabs>
+                  <Tab closable="false" text="Session Summary">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="458.0" prefWidth="912.0" style="-fx-background-color: #f4f4f4;">
+                           <children>
+                              <Label fx:id="softwareVersionLabel" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="824.0" text="Software Version:" />
+                              <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" layoutX="14.0" layoutY="41.0" prefHeight="99.0" prefWidth="824.0" text="Summary of analyses, duplicates, species, spots" />
+                              <Label fx:id="totalAnalysisTimeLabel" layoutX="14.0" layoutY="146.0" prefHeight="20.0" prefWidth="824.0" text="Total analysis time in hours" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab closable="false" text="Session Audit">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f4f4f4;">
+                           <children>
+                              <TreeView fx:id="prawnAuditTree" layoutX="3.0" layoutY="3.0" prefHeight="459.0" prefWidth="903.0" style="-fx-background-color: #f4f4f4;" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab closable="false" text="Manage Spots">
+                     <content>
+                        <AnchorPane prefHeight="486.0" prefWidth="908.0" style="-fx-background-color: #f4f4f4;">
+                           <children>
+                              <ListView fx:id="shrimpFractionList" layoutX="5.0" layoutY="83.0" prefHeight="310.0" prefWidth="435.0">
+                                 <tooltip>
+                                    <Tooltip text="Right-click spot for removal menu." />
+                                 </tooltip>
+                              </ListView>
+                              <TextField fx:id="selectedSpotNameText" layoutX="135.0" layoutY="404.0" prefHeight="27.0" prefWidth="130.0" promptText="no spot selected" />
+                              <Label fx:id="headerLabel" layoutX="11.0" layoutY="65.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+                              <Label layoutX="15.0" layoutY="30.0" text="Filter by typing spot name:" />
+                              <TextField fx:id="filterSpotName" layoutX="218.0" layoutY="27.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="71.0" promptText="type here" />
+                              <Label fx:id="spotsShownLabel" layoutX="293.0" layoutY="30.0" prefHeight="20.0" prefWidth="146.0" text="0/0 shown" />
+                              <ListView fx:id="shrimpRefMatList" layoutX="465.0" layoutY="83.0" prefHeight="310.0" prefWidth="435.0" />
+                              <Button fx:id="setFilteredSpotsAsRefMatButton" layoutX="499.0" layoutY="25.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="27.0" prefWidth="358.0" text="Set filtered spots as Reference Material" />
+                              <Label fx:id="headerLabelRefMat" layoutX="471.0" layoutY="65.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+                              <Label layoutX="8.0" layoutY="408.0" text="Edit Spot Name:" />
+                              <Button fx:id="saveSpotNameButton" layoutX="276.0" layoutY="402.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Spot Name" />
+                              <Label layoutX="465.0" text="Reference Material Spots:" />
+                              <Button fx:id="savePrawnFileButton" layoutX="134.0" layoutY="436.0" mnemonicParsing="false" onAction="#savePrawnFileAction" prefHeight="27.0" prefWidth="650.0" text="Save modified Prawn data as new Prawn XML file for this Squid Project" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+               </tabs>
+               <opaqueInsets>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </opaqueInsets>
+            </TabPane>
+            <Label layoutX="131.0" layoutY="112.0" prefHeight="20.0" prefWidth="415.0" text="Note: spot name duplicates are suffixed with '-DUP-n'" />
          </children>
       </AnchorPane>
    </children>
