@@ -32,8 +32,12 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.core.PrawnFileHandler;
 import org.cirdles.calamari.prawn.PrawnFile;
 import org.cirdles.calamari.prawn.PrawnFile.Run;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.utilities.SquidPersistentState;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
+import org.cirdles.squid.utilities.SquidSerializer;
 
 /**
  *
@@ -42,17 +46,27 @@ import org.cirdles.squid.utilities.SquidPrefixTree;
 public class SquidProject implements Serializable {
 
     private final transient PrawnFileHandler prawnFileHandler;
+    private String projectName;
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
     private double sessionDurationHours;
 
     public SquidProject() {
-        prawnFileHandler = new PrawnFileHandler();
+        this.prawnFileHandler = new PrawnFileHandler();
+        this.projectName = "no_name";
         this.prawnXMLFile = new File("");
 
         this.filterForRefMatSpotNames = "";
         this.sessionDurationHours = 0.0;
+    }
+
+    public void serializeSquidProject() {
+        try {
+            SquidSerializer.SerializeObjectToFile(this, "TESTPROJECT.squid");
+        } catch (SquidException ex) {
+            SquidMessageDialog.showWarningDialog(ex.getMessage());
+        }
     }
 
     public boolean selectPrawnFile(Window ownerWindow)
@@ -144,7 +158,7 @@ public class SquidProject implements Serializable {
         long startLast = timeInMillisecondsOfRun(runs.get(runs.size() - 1));
         long sessionDuration = startLast - startFirst;
 
-        sessionDurationHours = (double)sessionDuration / 1000 / 60 / 60;
+        sessionDurationHours = (double) sessionDuration / 1000 / 60 / 60;
 
     }
 
@@ -189,6 +203,20 @@ public class SquidProject implements Serializable {
      */
     public PrawnFileHandler getPrawnFileHandler() {
         return prawnFileHandler;
+    }
+
+    /**
+     * @return the projectName
+     */
+    public String getProjectName() {
+        return projectName;
+    }
+
+    /**
+     * @param projectName the projectName to set
+     */
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     /**

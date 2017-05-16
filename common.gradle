@@ -6,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '0.0.1'
+String mavenVersion = '0.0.2'
 
 
 sourceCompatibility = '1.8'

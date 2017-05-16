@@ -17,10 +17,10 @@
         <Menu mnemonicParsing="false" text="Project Files">
           <items>
                   <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="New Squid Project" />
-            <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" text="Open Squid Project" />
+            <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
             <Menu fx:id="openRecentSquidProjectMenuItem" mnemonicParsing="false" text="Open Recent Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" text="Save As…" />
+            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save As…" />
             <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" text="Close Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />

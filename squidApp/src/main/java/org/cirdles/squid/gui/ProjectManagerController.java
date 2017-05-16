@@ -124,27 +124,30 @@ public class ProjectManagerController implements Initializable {
 
         try {
             if (squidProject.selectPrawnFile(primaryStageWindow)) {
-
-                orignalPrawnFileName.setText(squidProject.getPrawnXMLFileName());
-
-                softwareVersionLabel.setText(
-                        "Software Version: "
-                        + squidProject.getPrawnFileShrimpSoftwareVersionName());
-
-                shrimpRuns = squidProject.getListOfPrawnFileRuns();
-                shrimpRunsRefMat = FXCollections.observableArrayList();
-
-                setUpShrimpFractionList();
-
-                savePrawnFileButton.setDisable(false);
-                saveSpotNameButton.setDisable(false);
-                setFilteredSpotsAsRefMatButton.setDisable(false);
-
-                setUpPrawnFileAuditTreeView();
+                setUpPrawnFile();
             }
 
         } catch (IOException | JAXBException | SAXException iOException) {
         }
+    }
+
+    private void setUpPrawnFile() {
+        orignalPrawnFileName.setText(squidProject.getPrawnXMLFileName());
+
+        softwareVersionLabel.setText(
+                "Software Version: "
+                + squidProject.getPrawnFileShrimpSoftwareVersionName());
+
+        shrimpRuns = squidProject.getListOfPrawnFileRuns();
+        shrimpRunsRefMat = FXCollections.observableArrayList();
+
+        setUpShrimpFractionList();
+
+        savePrawnFileButton.setDisable(false);
+        saveSpotNameButton.setDisable(false);
+        setFilteredSpotsAsRefMatButton.setDisable(false);
+
+        setUpPrawnFileAuditTreeView();
     }
 
     private void setUpPrawnFileAuditTreeView() {

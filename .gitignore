@@ -36,6 +36,7 @@ nbproject/
 test_*
 *.ser
 *.zip
+*.squid
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
