@@ -37,7 +37,9 @@
 */
 .tab-pane
 {
-    -fx-tab-min-width:200px;
+    -fx-tab-min-width:225px;
+    -fx-border-color: black;
+    -fx-border-width: 1;
 }
 
 .tab .tab-label { 

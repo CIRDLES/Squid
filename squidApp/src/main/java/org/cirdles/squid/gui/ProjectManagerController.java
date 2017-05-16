@@ -162,7 +162,7 @@ public class ProjectManagerController implements Initializable {
         // format into rows for summary tab
         summaryStatsLabel.setText("Session summary:\n\t" + summaryStatsString.replaceAll(";", "\n\t"));
 
-        totalAnalysisTimeLabel.setText("Total session time in hours = " + (int)squidProject.getSessionDurationHours());
+        totalAnalysisTimeLabel.setText("Total session time in hours = " + (int) squidProject.getSessionDurationHours());
 
         populateTreeView(rootItem, spotPrefixTree);
     }
@@ -189,7 +189,7 @@ public class ProjectManagerController implements Initializable {
                         + " Dups=" + String.format("%1$ 2d", children.get(i).getParent().getCountOfDups())
                         + " Species=" + String.format("%1$ 2d", children.get(i).getCountOfSpecies())
                         + " Scans=" + String.format("%1$ 2d", children.get(i).getCountOfScans())
-                        + ((String)(children.size() > 1 ? " ** see duplicates below **" : ""))
+                        + ((String) (children.size() > 1 ? " ** see duplicates below **" : ""))
                 );
             }
         }
@@ -260,7 +260,7 @@ public class ProjectManagerController implements Initializable {
 
         shrimpFractionList.itemsProperty().bind(runsModel.viewableShrimpRunsProperty());
 
-        shrimpFractionList.setContextMenu(createContextMenu());
+        shrimpFractionList.setContextMenu(createAllSpotsViewContextMenu());
 
         // display of selected reference materials
         shrimpRefMatList.setStyle(SPOT_LIST_CSS_STYLE_SPECS);
@@ -270,9 +270,11 @@ public class ProjectManagerController implements Initializable {
                 -> new ShrimpFractionListCell()
         );
 
+        shrimpRefMatList.setContextMenu(createRefMatSpotsViewContextMenu());
+
     }
 
-    private ContextMenu createContextMenu() {
+    private ContextMenu createAllSpotsViewContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Remove this spot.");
         menuItem.setOnAction((evt) -> {
@@ -283,6 +285,17 @@ public class ProjectManagerController implements Initializable {
                 squidProject.removeRunFromPrawnFile(selectedRun);
                 spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
             }
+        });
+        contextMenu.getItems().add(menuItem);
+        return contextMenu;
+    }
+
+    private ContextMenu createRefMatSpotsViewContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem menuItem = new MenuItem("Clear list.");
+        menuItem.setOnAction((evt) -> {
+            shrimpRunsRefMat.clear();
+            shrimpRefMatList.setItems(shrimpRunsRefMat);
         });
         contextMenu.getItems().add(menuItem);
         return contextMenu;
