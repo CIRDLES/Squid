@@ -74,11 +74,6 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab closable="false" text="4. Split or Join Prawn files">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                  </Tab>
                </tabs>
                <opaqueInsets>
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />

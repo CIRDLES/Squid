@@ -16,11 +16,16 @@
       <menus>
         <Menu mnemonicParsing="false" text="Project Files">
           <items>
-                  <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="New Squid Project" />
+                  <Menu mnemonicParsing="false" text="New Squid Project">
+                    <items>
+                        <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="Using single Prawn XML file" />
+                        <MenuItem mnemonicParsing="false" text="Merging two Prawn XML files" />
+                    </items>
+                  </Menu>
             <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
             <Menu fx:id="openRecentSquidProjectMenuItem" mnemonicParsing="false" text="Open Recent Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save As…" />
+            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid Project as ..." />
             <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" text="Close Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
