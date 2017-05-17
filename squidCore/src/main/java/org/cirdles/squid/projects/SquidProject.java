@@ -17,6 +17,8 @@ package org.cirdles.squid.projects;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,7 +47,9 @@ import org.cirdles.squid.utilities.SquidSerializer;
  */
 public class SquidProject implements Serializable {
 
-    private final transient PrawnFileHandler prawnFileHandler;
+    private static final long serialVersionUID = 7099919411562934142L;
+
+    private transient PrawnFileHandler prawnFileHandler;
     private String projectName;
     private File prawnXMLFile;
     private PrawnFile prawnFile;
@@ -54,19 +58,58 @@ public class SquidProject implements Serializable {
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
-        this.projectName = "no_name";
+        this.projectName = "NO_NAME";
         this.prawnXMLFile = new File("");
+        this.prawnFile = null;
 
         this.filterForRefMatSpotNames = "";
         this.sessionDurationHours = 0.0;
     }
 
-    public void serializeSquidProject() {
+    public void serializeSquidProject(String projectFileName) {
         try {
-            SquidSerializer.SerializeObjectToFile(this, "TESTPROJECT.squid");
+            SquidSerializer.SerializeObjectToFile(this, projectFileName);
         } catch (SquidException ex) {
             SquidMessageDialog.showWarningDialog(ex.getMessage());
         }
+    }
+
+    public static String selectProjectFile(Window ownerWindow)
+            throws IOException{
+        String retVal = "";
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Project '.squid' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
+        fileChooser.setInitialDirectory(null);
+
+        File projectFileNew = fileChooser.showOpenDialog(ownerWindow);
+
+        if (projectFileNew != null) {
+            retVal = projectFileNew.getCanonicalPath();
+        }
+
+        return retVal;
+    }
+
+    public boolean saveProjectFile(Window ownerWindow)
+            throws IOException {
+
+        boolean retVal = false;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Project '.squid' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
+        fileChooser.setInitialDirectory(null);
+        fileChooser.setInitialFileName(projectName.toUpperCase(Locale.US) + ".squid");
+
+        File projectFileNew = fileChooser.showSaveDialog(ownerWindow);
+
+        if (projectFileNew != null) {
+            retVal = true;
+            serializeSquidProject(projectFileNew.getCanonicalPath());
+        }
+
+        return retVal;
     }
 
     public boolean selectPrawnFile(Window ownerWindow)
@@ -112,6 +155,10 @@ public class SquidProject implements Serializable {
         }
 
         return retVal;
+    }
+
+    public boolean prawnFileExists() {
+        return prawnFile != null;
     }
 
     public PrawnFile deserializePrawnData()
@@ -203,6 +250,13 @@ public class SquidProject implements Serializable {
      */
     public PrawnFileHandler getPrawnFileHandler() {
         return prawnFileHandler;
+    }
+
+    /**
+     * @param prawnFileHandler the prawnFileHandler to set
+     */
+    public void setPrawnFileHandler(PrawnFileHandler prawnFileHandler) {
+        this.prawnFileHandler = prawnFileHandler;
     }
 
     /**

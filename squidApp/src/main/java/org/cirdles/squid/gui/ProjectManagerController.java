@@ -100,6 +100,8 @@ public class ProjectManagerController implements Initializable {
     private Label summaryStatsLabel;
     @FXML
     private Label totalAnalysisTimeLabel;
+    @FXML
+    private TextField projectNameText;
 
     /**
      * Initializes the controller class.
@@ -116,6 +118,11 @@ public class ProjectManagerController implements Initializable {
         setFilteredSpotsAsRefMatButton.setDisable(true);
 
         prawnFileTabPane.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
+        
+        // detect if project opened from menu
+        if (squidProject.prawnFileExists()){
+            setUpPrawnFile();
+        }
 
     }
 
@@ -132,6 +139,8 @@ public class ProjectManagerController implements Initializable {
     }
 
     private void setUpPrawnFile() {
+        projectNameText.setText(squidProject.getProjectName());
+        
         orignalPrawnFileName.setText(squidProject.getPrawnXMLFileName());
 
         softwareVersionLabel.setText(

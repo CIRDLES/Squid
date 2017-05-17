@@ -29,7 +29,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.cirdles.calamari.prawn.PrawnFile;
+import org.cirdles.calamari.core.PrawnFileHandler;
 import org.cirdles.squid.fileManagement.CalamariFileManager;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
@@ -86,9 +86,9 @@ public class SquidUIController implements Initializable {
 
         // Squid project menu items
         newSquidProjectMenuItem.setDisable(false);
-        openSquidProjectMenuItem.setDisable(true);
+        openSquidProjectMenuItem.setDisable(false);
         openRecentSquidProjectMenuItem.setDisable(true);
-        saveAsSquidProjectMenuItem.setDisable(true);
+        saveAsSquidProjectMenuItem.setDisable(false);
         closeSquidProjectMenuItem.setDisable(true);
     }
 
@@ -148,13 +148,21 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void saveAsSquidProjectMenuItemAction(ActionEvent event) {
-        squidProject.serializeSquidProject();
+        try {
+            squidProject.saveProjectFile(SquidUI.primaryStageWindow);
+        } catch (IOException ex) {
+        }
     }
 
     @FXML
     private void openSquidProjectMenuItemAction(ActionEvent event) {
-        squidProject = (SquidProject) SquidSerializer.GetSerializedObjectFromFile("TESTPROJECT.squid");
-        launchProjectManager();
+        try {
+            String projectFileName = SquidProject.selectProjectFile(SquidUI.primaryStageWindow);
+            squidProject = (SquidProject) SquidSerializer.GetSerializedObjectFromFile(projectFileName);
+            squidProject.setPrawnFileHandler(new PrawnFileHandler());
+            launchProjectManager();
+        } catch (IOException iOException) {
+        }
     }
 
 }

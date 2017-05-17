@@ -19,7 +19,7 @@
 }
 
 .backgroundCalamari {
-    -fx-background-color:    #ffefef;/*#FFF5F5;*/
+    -fx-background-color:    #ffefef;
 }
 
 .label {
@@ -37,7 +37,7 @@
 */
 .tab-pane
 {
-    -fx-tab-min-width:225px;
+    -fx-tab-min-width:200px;
     -fx-border-color: black;
     -fx-border-width: 1;
 }
