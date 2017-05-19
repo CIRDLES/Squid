@@ -17,13 +17,14 @@ package org.cirdles.squid.gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,6 +47,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.prawn.PrawnFile.Run;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.RunsViewModel.ShrimpFractionListCell;
 import org.cirdles.squid.gui.RunsViewModel.SpotNameMatcher;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -62,8 +64,9 @@ import org.xml.sax.SAXException;
  */
 public class ProjectManagerController implements Initializable {
 
-    private ObservableList<Run> shrimpRuns;
-    private ObservableList<Run> shrimpRunsRefMat;
+    private static final String SPOT_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
+    private static ObservableList<Run> shrimpRuns;
+    private static ObservableList<Run> shrimpRunsRefMat;
     private final RunsViewModel runsModel = new RunsViewModel();
 
     @FXML
@@ -79,12 +82,9 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private Label headerLabel;
     @FXML
-    private TextField filterSpotName;
-    @FXML
     private Label spotsShownLabel;
     @FXML
     private Label headerLabelRefMat;
-    private static final String SPOT_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
     @FXML
     private Button saveSpotNameButton;
     @FXML
@@ -93,7 +93,6 @@ public class ProjectManagerController implements Initializable {
     private Button setFilteredSpotsAsRefMatButton;
     @FXML
     private TreeView<String> prawnAuditTree;
-
     @FXML
     private TabPane prawnFileTabPane;
     @FXML
@@ -102,6 +101,10 @@ public class ProjectManagerController implements Initializable {
     private Label totalAnalysisTimeLabel;
     @FXML
     private TextField projectNameText;
+    @FXML
+    private TextField analystNameText;
+    @FXML
+    private TextField filterSpotNameText;
 
     /**
      * Initializes the controller class.
@@ -118,29 +121,17 @@ public class ProjectManagerController implements Initializable {
         setFilteredSpotsAsRefMatButton.setDisable(true);
 
         prawnFileTabPane.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
-        
-        // detect if project opened from menu
-        if (squidProject.prawnFileExists()){
+
+        // detect if project opened from menu by deserialization
+        if (squidProject.prawnFileExists()) {
             setUpPrawnFile();
-        }
-
-    }
-
-    @FXML
-    private void selectPrawnFileAction(ActionEvent event) {
-
-        try {
-            if (squidProject.selectPrawnFile(primaryStageWindow)) {
-                setUpPrawnFile();
-            }
-
-        } catch (IOException | JAXBException | SAXException iOException) {
         }
     }
 
     private void setUpPrawnFile() {
         projectNameText.setText(squidProject.getProjectName());
-        
+        analystNameText.setText(squidProject.getAnalystName());
+
         orignalPrawnFileName.setText(squidProject.getPrawnXMLFileName());
 
         softwareVersionLabel.setText(
@@ -148,7 +139,8 @@ public class ProjectManagerController implements Initializable {
                 + squidProject.getPrawnFileShrimpSoftwareVersionName());
 
         shrimpRuns = squidProject.getListOfPrawnFileRuns();
-        shrimpRunsRefMat = FXCollections.observableArrayList();
+        shrimpRunsRefMat = squidProject.getShrimpRunsRefMat();
+        shrimpRefMatList.setItems(shrimpRunsRefMat);
 
         setUpShrimpFractionList();
 
@@ -176,10 +168,10 @@ public class ProjectManagerController implements Initializable {
 
         totalAnalysisTimeLabel.setText("Total session time in hours = " + (int) squidProject.getSessionDurationHours());
 
-        populateTreeView(rootItem, spotPrefixTree);
+        populatePrefixTreeView(rootItem, spotPrefixTree);
     }
 
-    private void populateTreeView(TreeItem<String> parentItem, SquidPrefixTree squidPrefixTree) {
+    private void populatePrefixTreeView(TreeItem<String> parentItem, SquidPrefixTree squidPrefixTree) {
 
         List<SquidPrefixTree> children = squidPrefixTree.getChildren();
 
@@ -193,7 +185,7 @@ public class ProjectManagerController implements Initializable {
                 parentItem.getChildren().add(item);
 
                 if (children.get(i).hasChildren()) {
-                    populateTreeView(item, children.get(i));
+                    populatePrefixTreeView(item, children.get(i));
                 }
 
             } else {
@@ -299,6 +291,16 @@ public class ProjectManagerController implements Initializable {
             }
         });
         contextMenu.getItems().add(menuItem);
+
+        menuItem = new MenuItem("Split Prawn file starting with this run.");
+        menuItem.setOnAction((evt) -> {
+            Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
+            if (selectedRun != null) {
+                SquidMessageDialog.showInfoDialog("Coming soon!");
+            }
+        });
+        contextMenu.getItems().add(menuItem);
+
         return contextMenu;
     }
 
@@ -315,12 +317,14 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void filterSpotNameKeyReleased(KeyEvent event) {
-        String filterString = filterSpotName.getText().toUpperCase(Locale.US).trim();
+        filterRuns();
+    }
+
+    private void filterRuns() {
+        String filterString = filterSpotNameText.getText().toUpperCase(Locale.US).trim();
         Predicate<Run> filter = new SpotNameMatcher(filterString);
         runsModel.filterProperty().set(filter);
         spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
-
-        squidProject.setFilterForRefMatSpotNames(filterString);
     }
 
     @FXML
@@ -337,6 +341,7 @@ public class ProjectManagerController implements Initializable {
     private void setFilteredSpotsToRefMatAction(ActionEvent event) {
         shrimpRunsRefMat = runsModel.getViewableShrimpRuns();
         shrimpRefMatList.setItems(shrimpRunsRefMat);
+        squidProject.setFilterForRefMatSpotNames(filterSpotNameText.getText().toUpperCase(Locale.US).trim());
     }
 
     @FXML
@@ -350,4 +355,16 @@ public class ProjectManagerController implements Initializable {
         } catch (IOException | JAXBException | SAXException iOException) {
         }
     }
+
+    /**
+     * Saves underlying List to squidProject so it can be serialized
+     */
+    public static void saveProjectData() {
+        List<Run> plainListRefMat = new ArrayList<>(shrimpRunsRefMat.size());
+        for (Run r : shrimpRunsRefMat) {
+            plainListRefMat.add(r);
+        }
+        squidProject.setShrimpRunsRefMat(plainListRefMat);
+    }
+
 }

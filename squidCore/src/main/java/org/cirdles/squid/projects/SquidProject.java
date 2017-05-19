@@ -22,6 +22,7 @@ import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -51,9 +52,11 @@ public class SquidProject implements Serializable {
 
     private transient PrawnFileHandler prawnFileHandler;
     private String projectName;
+    private String analystName;
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
+    private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
 
     public SquidProject() {
@@ -63,6 +66,8 @@ public class SquidProject implements Serializable {
         this.prawnFile = null;
 
         this.filterForRefMatSpotNames = "";
+
+        this.shrimpRunsRefMat = new ArrayList<>();
         this.sessionDurationHours = 0.0;
     }
 
@@ -75,7 +80,7 @@ public class SquidProject implements Serializable {
     }
 
     public static String selectProjectFile(Window ownerWindow)
-            throws IOException{
+            throws IOException {
         String retVal = "";
 
         FileChooser fileChooser = new FileChooser();
@@ -126,11 +131,16 @@ public class SquidProject implements Serializable {
         if (prawnXMLFileNew != null) {
             retVal = true;
             prawnXMLFile = prawnXMLFileNew;
-            prawnFileHandler.setCurrentPrawnFileLocation(prawnXMLFile.getCanonicalPath());
+            updatePrawnFileHandlerWithFileLocation();
             prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
         }
 
         return retVal;
+    }
+
+    public void updatePrawnFileHandlerWithFileLocation()
+            throws IOException {
+        prawnFileHandler.setCurrentPrawnFileLocation(prawnXMLFile.getCanonicalPath());
     }
 
     public boolean savePrawnFile(Window ownerWindow)
@@ -179,7 +189,7 @@ public class SquidProject implements Serializable {
         return prawnFile.getSoftwareVersion();
     }
 
-    public ObservableList<PrawnFile.Run> getListOfPrawnFileRuns() {
+    public ObservableList<Run> getListOfPrawnFileRuns() {
         preProcessSession();
         return FXCollections.observableArrayList(prawnFile.getRun());
     }
@@ -274,6 +284,20 @@ public class SquidProject implements Serializable {
     }
 
     /**
+     * @return the analystName
+     */
+    public String getAnalystName() {
+        return analystName;
+    }
+
+    /**
+     * @param analystName the analystName to set
+     */
+    public void setAnalystName(String analystName) {
+        this.analystName = analystName;
+    }
+
+    /**
      * @return the filterForRefMatSpotNames
      */
     public String getFilterForRefMatSpotNames() {
@@ -285,6 +309,20 @@ public class SquidProject implements Serializable {
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+    }
+
+    /**
+     * @return OservableList of shrimpRunsRefMat, since only List can be serialized
+     */
+    public ObservableList<Run> getShrimpRunsRefMat() {
+        return FXCollections.observableArrayList(shrimpRunsRefMat);
+    }
+
+    /**
+     * @param shrimpRunsRefMat the shrimpRunsRefMat to set
+     */
+    public void setShrimpRunsRefMat(List<Run> shrimpRunsRefMat) {
+        this.shrimpRunsRefMat = shrimpRunsRefMat;
     }
 
     /**

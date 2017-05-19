@@ -40,5 +40,14 @@ public class SquidMessageDialog extends Alert {
         Alert alert = new SquidMessageDialog(Alert.AlertType.WARNING, message);
         alert.showAndWait();
     }
+    
+        /**
+     * 
+     * @param message 
+     */
+    public static void showInfoDialog(String message){
+        Alert alert = new SquidMessageDialog(Alert.AlertType.INFORMATION, message);
+        alert.showAndWait();
+    }
 
 }
