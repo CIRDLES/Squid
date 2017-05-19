@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.utilities;
+package org.cirdles.squid.gui.utilities;
 
 import java.awt.Desktop;
 import java.io.IOException;

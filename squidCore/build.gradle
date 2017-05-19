@@ -13,6 +13,8 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = ''
 }
 
+apply plugin: 'antlr'
+
 repositories {
     maven {
         url "https://jitpack.io"
@@ -22,5 +24,28 @@ repositories {
 
 dependencies {
     compile "com.github.cirdles:Commons:-SNAPSHOT"
-    compile 'com.github.bowring.Calamari:core:v1.4.3'
+    compile 'com.github.bowring.Calamari:core:v1.4.5'
+    
+    antlr "org.antlr:antlr4:4.6"
+    compile 'org.antlr:antlr4-runtime:4.6'
+   
+}
+
+sourceSets {
+    main {
+        antlr {
+            srcDirs = ["src/main/antlr"]
+        }
+    }
+}
+
+generateGrammarSource {
+    maxHeapSize = "64m"
+    arguments += ["-visitor", "-long-messages"]
+}
+
+
+configurations.all {
+    // Check for updates every build
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }

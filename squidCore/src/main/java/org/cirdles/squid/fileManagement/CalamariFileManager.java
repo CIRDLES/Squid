@@ -32,13 +32,17 @@ import org.cirdles.commons.util.ResourceExtractor;
  */
 public class CalamariFileManager {
 
-    public static void initCalamariFiles(PrawnFileHandler prawnFileHandler, String calamariVersion) {
+    private static File exampleFolder;
+/**
+ * Provides a clean copy of two example Prawn XML files every time Squid runs.
+ */
+    public static void initExamplePrawnFiles() {
         ResourceExtractor prawnFileResourceExtractor
                 = new ResourceExtractor(PrawnFile.class);
 
         Path listOfPrawnFiles = prawnFileResourceExtractor.extractResourceAsPath("listOfPrawnFiles.txt");
         if (listOfPrawnFiles != null) {
-            File exampleFolder = new File("ExamplePrawnXMLFiles");
+            exampleFolder = new File("ExamplePrawnXMLFiles");
             try {
                 if (exampleFolder.exists()) {
                     FileUtilities.recursiveDelete(exampleFolder.toPath());
@@ -61,15 +65,21 @@ public class CalamariFileManager {
                 }
             } catch (IOException iOException) {
             }
-            try {
-                // point to directory, but no default choice
-                prawnFileHandler.setCurrentPrawnFileLocation(exampleFolder.getCanonicalPath());
-            } catch (IOException iOException) {
-            }
+
+        }
+    }
+
+    public static void initProjectFiles(PrawnFileHandler prawnFileHandler, String calamariVersion) {
+        try {
+            // point to directory, but no default choice
+            prawnFileHandler.setCurrentPrawnFileLocation(exampleFolder.getCanonicalPath());
+        } catch (IOException iOException) {
         }
 
         File defaultCalamariReportsFolder = new File("CalamariReports_v" + calamariVersion);
-        prawnFileHandler.getReportsEngine().setFolderToWriteCalamariReports(defaultCalamariReportsFolder);
+
+        prawnFileHandler.getReportsEngine()
+                .setFolderToWriteCalamariReports(defaultCalamariReportsFolder);
         if (!defaultCalamariReportsFolder.exists()) {
             if (!defaultCalamariReportsFolder.mkdir()) {
                 System.out.println("Failed to make Calamari reports directory");

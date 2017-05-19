@@ -10,20 +10,27 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="935.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
-        <Menu mnemonicParsing="false" text="Project Files">
+        <Menu mnemonicParsing="false" text="Project">
           <items>
-                  <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="New Squid Project" />
-            <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" text="Open Squid Project" />
+                  <Menu mnemonicParsing="false" text="New Squid Project">
+                    <items>
+                        <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="From a single Prawn XML file" />
+                        <MenuItem fx:id="newSquidProjectByMergeMenuItem" mnemonicParsing="false" onAction="#newSquidProjectByMergeAction" text="By Joining two Prawn XML files" />
+                    </items>
+                  </Menu>
+            <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
             <Menu fx:id="openRecentSquidProjectMenuItem" mnemonicParsing="false" text="Open Recent Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" text="Save As…" />
-            <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" text="Close Squid Project" />
+                  <MenuItem fx:id="saveSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveSquidProjectMenuItemAction" text="Save Squid Project" />
+            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid Project as ..." />
+            <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" onAction="#closeSquidProjectMenuItemClose" text="Close Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="projectManagerMenuItem" mnemonicParsing="false" text="Project Manager" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
           </items>
         </Menu>
@@ -48,6 +55,11 @@
                 <MenuItem mnemonicParsing="false" text="Reduce Data" />
                   <MenuItem mnemonicParsing="false" text="Reference Material Task" />
                   <MenuItem mnemonicParsing="false" text="Unknowns Tasks" />
+              </items>
+            </Menu>
+            <Menu fx:id="manageReportsMenu" mnemonicParsing="false" text="Manage Reports">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Specify Report Layout" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">
