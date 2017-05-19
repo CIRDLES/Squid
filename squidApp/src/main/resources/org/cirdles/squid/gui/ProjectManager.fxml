@@ -65,9 +65,9 @@
                               <Button fx:id="saveSpotNameButton" layoutX="278.0" layoutY="402.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Spot Name" />
                               <Label layoutX="465.0" layoutY="3.0" prefHeight="20.0" prefWidth="366.0" text="Reference Material Spots for this Project:" />
                               <Button fx:id="savePrawnFileButton" layoutX="5.0" layoutY="434.0" mnemonicParsing="false" onAction="#savePrawnFileAction" prefHeight="31.0" prefWidth="435.0" text="Save modified Prawn data as new Prawn XML file." />
-                              <Label layoutX="8.0" layoutY="383.0" style="-fx-font-size: 12;" text="Hint: To remove a spot, right mouse-click on it for context menu." />
+                              <Label layoutX="8.0" layoutY="383.0" style="-fx-font-size: 11;" text="Hint: To remove a spot or split session, right mouse-click on spot for context menu." />
                               <Label layoutX="5.0" layoutY="3.0" text="All Spots:" />
-                              <Label layoutX="465.0" layoutY="383.0" style="-fx-font-size: 12;" text="Hint: To clear the list, right mouse-click on it for context menu." />
+                              <Label layoutX="465.0" layoutY="383.0" style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it for context menu." />
                               <Label layoutX="531.0" layoutY="409.0" prefHeight="44.0" prefWidth="303.0" style="-fx-text-fill: red; -fx-background-color: white; -fx-border-color: black;" text="&#9;Next steps: &#9;Save Project &#10;&#9;&#9;&#9;&#9;Manage Ratios" wrapText="true" />
                            </children>
                         </AnchorPane>
