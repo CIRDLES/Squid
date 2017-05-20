@@ -7,7 +7,7 @@ Squid 3
 
 Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
-##Attention: Squid 2.5 Users
+## Attention: Squid 2.5 Users
 
 We encourage you to download
 and evaluate the latest release, the ".jar" file found <a href="https://github.com/CIRDLES/Squid/releases" target="_blank">here</a>.  
