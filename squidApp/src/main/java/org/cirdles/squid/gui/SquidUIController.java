@@ -220,7 +220,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void onlineHelpAction(ActionEvent event) {
-        BrowserControl.showURI("https://github.com/CIRDLES/Squid/wiki");
+        BrowserControl.showURI("http://cirdles.org/projects/squid/#Development");
     }
 
     @FXML
