@@ -17,6 +17,7 @@ package org.cirdles.squid.dialogs;
 
 import javafx.scene.control.Alert;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 /**
  *
@@ -25,28 +26,34 @@ import javafx.stage.StageStyle;
 public class SquidMessageDialog extends Alert {
 
     //http://stackoverflow.com/questions/26341152/controlsfx-dialogs-deprecated-for-what/32618003#32618003
-    private SquidMessageDialog(Alert.AlertType alertType, String message) {
+    private SquidMessageDialog(Alert.AlertType alertType, String message, String headerText, Window owner) {
         super(alertType);
-        setTitle("Squid3 Message");
+        setTitle("Squid3 Alert");
         setContentText(message);
-        initStyle(StageStyle.UTILITY);
+        setHeaderText(headerText);
+        initOwner(owner);
+        initStyle(StageStyle.DECORATED);
+        getDialogPane().setPrefSize(500, 350);
+
     }
-    
+
     /**
-     * 
-     * @param message 
+     *
+     * @param message
+     * @param owner
      */
-    public static void showWarningDialog(String message){
-        Alert alert = new SquidMessageDialog(Alert.AlertType.WARNING, message);
+    public static void showWarningDialog(String message, Window owner) {
+        Alert alert = new SquidMessageDialog(Alert.AlertType.WARNING, message, "Squid3 warns you that:", owner);
         alert.showAndWait();
     }
-    
-        /**
-     * 
-     * @param message 
+
+    /**
+     *
+     * @param message
+     * @param owner
      */
-    public static void showInfoDialog(String message){
-        Alert alert = new SquidMessageDialog(Alert.AlertType.INFORMATION, message);
+    public static void showInfoDialog(String message, Window owner) {
+        Alert alert = new SquidMessageDialog(Alert.AlertType.INFORMATION, message, "Squid3 informs you that:", owner);
         alert.showAndWait();
     }
 
