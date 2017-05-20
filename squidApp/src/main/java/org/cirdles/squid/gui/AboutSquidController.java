@@ -15,17 +15,13 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import org.cirdles.commons.util.ResourceExtractor;
+import org.cirdles.squid.gui.utilities.BrowserControl;
 
 /**
  * FXML Controller class
@@ -49,6 +45,16 @@ public class AboutSquidController implements Initializable {
         versionText.setText(" Squid3 v " + SquidUI.VERSION);
         buildDate.setText("Release Date: " + SquidUI.RELEASE_DATE);
         aboutDetailsLabel.setText(SquidUI.aboutWindowContent.toString());
+    }
+
+    @FXML
+    private void visitSquidOnCirdlesAction(ActionEvent event) {
+        BrowserControl.showURI("http://cirdles.org/projects/squid/");
+    }
+
+    @FXML
+    private void visitUsOnGithubAction(ActionEvent event) {
+        BrowserControl.showURI("https://github.com/CIRDLES/Squid");
     }
 
 }
