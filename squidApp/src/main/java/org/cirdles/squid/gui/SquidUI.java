@@ -99,8 +99,8 @@ public class SquidUI extends Application {
 
         primaryStage.getIcons().add(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png"));
 
-        primaryStage.setMinHeight(675.0);
-        primaryStage.setMinWidth(935.0);
+        primaryStage.setMinHeight(650.0);
+        primaryStage.setMinWidth(925.0);
         primaryStage.setTitle("Squid 3.0");
         primaryStage.setScene(scene);
         primaryStage.show();
