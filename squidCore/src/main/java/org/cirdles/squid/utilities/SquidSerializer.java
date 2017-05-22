@@ -71,11 +71,11 @@ public final class SquidSerializer {
             if (!filename.endsWith(SquidPersistentState.SQUID_PERSISTENT_STATE_FILE_NAME)) {
                 SquidMessageDialog.showWarningDialog(
                     "The file you are attempting to open does not exist:\n"
-                            + " " + filename);
+                            + " " + filename, null);
             }
         } catch (IOException | ClassNotFoundException ex) {
             SquidMessageDialog.showWarningDialog(
-                    "The file you are attempting to open is not compatible with this version of Squid3.");
+                    "The file you are attempting to open is not compatible with this version of Squid3.", null);
         }
 
         return deserializedObject;

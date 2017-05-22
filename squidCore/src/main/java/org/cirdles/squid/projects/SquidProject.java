@@ -17,8 +17,6 @@ package org.cirdles.squid.projects;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,8 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javax.xml.bind.JAXBException;
@@ -37,7 +34,6 @@ import org.cirdles.calamari.prawn.PrawnFile;
 import org.cirdles.calamari.prawn.PrawnFile.Run;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.utilities.SquidPersistentState;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
 import org.cirdles.squid.utilities.SquidSerializer;
@@ -75,7 +71,7 @@ public class SquidProject implements Serializable {
         try {
             SquidSerializer.SerializeObjectToFile(this, projectFileName);
         } catch (SquidException ex) {
-            SquidMessageDialog.showWarningDialog(ex.getMessage());
+            SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
         }
     }
 
@@ -138,6 +134,55 @@ public class SquidProject implements Serializable {
         return retVal;
     }
 
+    public boolean selectAndMergeTwoPrawnFile(Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+        boolean retVal = false;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Two Prawn XML files");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
+        fileChooser.setInitialDirectory(prawnFileHandler.currentPrawnFileLocationFolder());
+
+        List<File> prawnXMLFilesNew = fileChooser.showOpenMultipleDialog(ownerWindow);
+
+        if (prawnXMLFilesNew != null) {
+            if (prawnXMLFilesNew.size() == 2) {
+
+                PrawnFile prawnFile1 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(0).getCanonicalPath());
+                PrawnFile prawnFile2 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(1).getCanonicalPath());
+
+                long start1 = timeInMillisecondsOfRun(prawnFile1.getRun().get(0));
+                long start2 = timeInMillisecondsOfRun(prawnFile2.getRun().get(0));
+
+                if (start1 > start2) {
+                    prawnFile2.getRun().addAll(prawnFile1.getRun());
+                    prawnFile2.setRuns((short) prawnFile2.getRun().size());
+                    prawnXMLFile = new File(
+                            prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "")
+                            + "-JOIN-"
+                            + prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "") + ".xml");
+                    prawnFile = prawnFile2;
+                } else {
+                    prawnFile1.getRun().addAll(prawnFile2.getRun());
+                    prawnFile1.setRuns((short) prawnFile1.getRun().size());
+                    prawnXMLFile = new File(
+                            prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "")
+                            + "-JOIN-"
+                            + prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "") + ".xml");
+                    prawnFile = prawnFile1;
+                }
+
+                updatePrawnFileHandlerWithFileLocation();
+                serializePrawnData(prawnFileHandler.getCurrentPrawnFileLocation());
+                prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
+
+                retVal = true;
+            }
+        }
+
+        return retVal;
+    }
+
     public void updatePrawnFileHandlerWithFileLocation()
             throws IOException {
         prawnFileHandler.setCurrentPrawnFileLocation(prawnXMLFile.getCanonicalPath());
@@ -146,7 +191,7 @@ public class SquidProject implements Serializable {
     public boolean savePrawnFile(Window ownerWindow)
             throws IOException, JAXBException, SAXException {
 
-        preProcessSession();
+        preProcessPrawnSession();
 
         boolean retVal = false;
         FileChooser fileChooser = new FileChooser();
@@ -189,12 +234,11 @@ public class SquidProject implements Serializable {
         return prawnFile.getSoftwareVersion();
     }
 
-    public ObservableList<Run> getListOfPrawnFileRuns() {
-        preProcessSession();
-        return FXCollections.observableArrayList(prawnFile.getRun());
+    public List<Run> getPrawnFileRuns() {
+        return prawnFile.getRun();
     }
 
-    private void preProcessSession() {
+    public void preProcessPrawnSession() {
 
         List<Run> runs = prawnFile.getRun();
         Map<String, Integer> spotNameCountMap = new HashMap<>();
@@ -238,7 +282,7 @@ public class SquidProject implements Serializable {
         prawnFile.getRun().remove(run);
 
         // save new count
-        prawnFile.setRuns((short) (prawnFile.getRun().size()));
+        prawnFile.setRuns((short) prawnFile.getRun().size());
     }
 
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
@@ -253,6 +297,66 @@ public class SquidProject implements Serializable {
         prefixTree.prepareStatistics();
 
         return prefixTree;
+    }
+
+    /**
+     * Splits the current PrawnFile into two sets of runs based on the index of
+     * the run supplied and writes out two prawn xml files in the same folder as
+     * the original.
+     *
+     * @param run
+     * @param useOriginalData, when true, the original unedited file is used,
+     * otherwise the edited file is used.
+     * @return String [2] containing the file names of the two Prawn XML files
+     * written as a result of the split.
+     */
+    public String[] splitPrawnFileAtRun(Run run, boolean useOriginalData) {
+        String[] retVal = new String[2];
+        retVal[0] = prawnFileHandler.getCurrentPrawnFileLocation().replace(".xml", "-PART-A.xml").replace(".XML", "-PART-A.xml");
+        retVal[1] = prawnFileHandler.getCurrentPrawnFileLocation().replace(".xml", "-PART-B.xml").replace(".XML", "-PART-B.xml");
+
+        // get index from original prawnFile
+        int indexOfRun = prawnFile.getRun().indexOf(run);
+
+        List<Run> runs = prawnFile.getRun();
+        List<Run> runsCopy;
+
+        if (useOriginalData) {
+            PrawnFile prawnFileOriginal = null;
+            try {
+                prawnFileOriginal = deserializePrawnData();
+            } catch (IOException | JAXBException | SAXException iOException) {
+            }
+            runsCopy = new CopyOnWriteArrayList<>(prawnFileOriginal.getRun());
+        } else {
+            runsCopy = new CopyOnWriteArrayList<>(runs);
+        }
+
+        List<Run> first = runsCopy.subList(0, indexOfRun);
+        List<Run> second = runsCopy.subList(indexOfRun, runs.size());
+
+        // keep first
+        runs.clear();
+        runs.addAll(first);
+        prawnFile.setRuns((short) runs.size());
+        try {
+            prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[0]);
+        } catch (JAXBException jAXBException) {
+        }
+
+        runs.clear();
+        runs.addAll(second);
+        prawnFile.setRuns((short) runs.size());
+        try {
+            prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[1]);
+        } catch (JAXBException jAXBException) {
+        }
+
+        // restore list
+        runs.addAll(first);
+        prawnFile.setRuns((short) runs.size());
+
+        return retVal;
     }
 
     /**
@@ -312,10 +416,10 @@ public class SquidProject implements Serializable {
     }
 
     /**
-     * @return OservableList of shrimpRunsRefMat, since only List can be serialized
+     * @return shrimpRunsRefMat - list of reference material runs
      */
-    public ObservableList<Run> getShrimpRunsRefMat() {
-        return FXCollections.observableArrayList(shrimpRunsRefMat);
+    public List<Run> getShrimpRunsRefMat() {
+        return shrimpRunsRefMat;
     }
 
     /**

@@ -18,13 +18,13 @@ package org.cirdles.squid.gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -129,6 +129,9 @@ public class ProjectManagerController implements Initializable {
     }
 
     private void setUpPrawnFile() {
+        // first prepare the session
+        squidProject.preProcessPrawnSession();
+
         projectNameText.setText(squidProject.getProjectName());
         analystNameText.setText(squidProject.getAnalystName());
 
@@ -138,8 +141,8 @@ public class ProjectManagerController implements Initializable {
                 "Software Version: "
                 + squidProject.getPrawnFileShrimpSoftwareVersionName());
 
-        shrimpRuns = squidProject.getListOfPrawnFileRuns();
-        shrimpRunsRefMat = squidProject.getShrimpRunsRefMat();
+        shrimpRuns = FXCollections.observableArrayList(squidProject.getPrawnFileRuns());
+        shrimpRunsRefMat = FXCollections.observableArrayList(squidProject.getShrimpRunsRefMat());
         shrimpRefMatList.setItems(shrimpRunsRefMat);
 
         setUpShrimpFractionList();
@@ -292,11 +295,34 @@ public class ProjectManagerController implements Initializable {
         });
         contextMenu.getItems().add(menuItem);
 
-        menuItem = new MenuItem("Split Prawn file starting with this run.");
+        menuItem = new MenuItem("Split Prawn file starting with this run, using original unedited and without duplicates noted.");
         menuItem.setOnAction((evt) -> {
             Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
             if (selectedRun != null) {
-                SquidMessageDialog.showInfoDialog("Coming soon!");
+                String[] splitNames = squidProject.splitPrawnFileAtRun(selectedRun, true);
+                SquidMessageDialog.showInfoDialog(
+                        "Two Prawn XML files have been written:\n\n"
+                        + "\t" + splitNames[0] + "\n"
+                        + "\t" + splitNames[1] + "\n\n"
+                        + "Create a new Squid Proejct with each of these Prawn XML files.",
+                        primaryStageWindow
+                );
+            }
+        });
+        contextMenu.getItems().add(menuItem);
+
+        menuItem = new MenuItem("Split Prawn file starting with this run, using this edited list with duplicates noted.");
+        menuItem.setOnAction((evt) -> {
+            Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
+            if (selectedRun != null) {
+                String[] splitNames = squidProject.splitPrawnFileAtRun(selectedRun, false);
+                SquidMessageDialog.showInfoDialog(
+                        "Two Prawn XML files have been written:\n\n"
+                        + "\t" + splitNames[0] + "\n"
+                        + "\t" + splitNames[1] + "\n\n"
+                        + "Create a new Squid Proejct with each of these Prawn XML files.",
+                        primaryStageWindow
+                );
             }
         });
         contextMenu.getItems().add(menuItem);

@@ -11,18 +11,22 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane prefHeight="650.0" prefWidth="935.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+<Pane prefHeight="650.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
    <children>
-      <AnchorPane layoutX="7.0" layoutY="-7.0" minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="935.0">
+      <AnchorPane layoutX="-2.0" minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="925.0">
          <children>
             <Label layoutX="9.0" layoutY="11.0" text="Project Name:" />
             <TextField fx:id="projectNameText" layoutX="119.0" layoutY="9.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
             <Label layoutX="473.0" layoutY="11.0" prefHeight="20.0" prefWidth="118.0" text="Analyst Name:" />
             <TextField fx:id="analystNameText" layoutX="594.0" layoutY="8.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
-            <Label layoutX="132.0" layoutY="49.0" text="Prawn XML file:" />
-            <TextField fx:id="orignalPrawnFileName" layoutX="257.0" layoutY="44.0" prefHeight="27.0" prefWidth="523.0" promptText="name of selected Prawn XML file will appear here" />
-            <TabPane fx:id="prawnFileTabPane" layoutX="7.0" layoutY="140.0" prefHeight="505.0" prefWidth="910.0">
+            <Label layoutX="9.0" layoutY="48.0" text="Prawn XML file:" />
+            <TextField fx:id="orignalPrawnFileName" layoutX="134.0" layoutY="43.0" prefHeight="27.0" prefWidth="783.0" promptText="name of selected Prawn XML file will appear here">
+               <font>
+                  <Font name="Lucida Sans Regular" size="12.0" />
+               </font></TextField>
+            <TabPane fx:id="prawnFileTabPane" layoutX="11.0" layoutY="135.0" prefHeight="505.0" prefWidth="910.0">
                <tabs>
                   <Tab closable="false" text="1: Session Summary">
                     <content>
@@ -39,7 +43,7 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f4f4f4;">
                            <children>
-                              <TreeView fx:id="prawnAuditTree" layoutX="4.0" layoutY="3.0" prefHeight="465.0" prefWidth="900.0" style="-fx-background-color: #f4f4f4;" />
+                              <TreeView fx:id="prawnAuditTree" layoutX="4.0" layoutY="3.0" prefHeight="464.0" prefWidth="901.0" style="-fx-background-color: #f4f4f4;" />
                            </children>
                         </AnchorPane>
                     </content>
@@ -78,7 +82,7 @@
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </opaqueInsets>
             </TabPane>
-            <Label layoutX="133.0" layoutY="79.0" prefHeight="20.0" prefWidth="415.0" style="-fx-font-size: 14;" text="Note: spot name duplicates are suffixed with '-DUP-n'" />
+            <Label layoutX="15.0" layoutY="113.0" prefHeight="20.0" prefWidth="415.0" style="-fx-font-size: 14;" text="Note: spot name duplicates are suffixed with '-DUP-n'" />
          </children>
       </AnchorPane>
    </children>

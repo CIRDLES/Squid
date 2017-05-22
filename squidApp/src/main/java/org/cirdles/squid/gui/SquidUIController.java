@@ -141,13 +141,35 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
             }
         } catch (IOException | JAXBException | SAXException anException) {
-            SquidMessageDialog.showWarningDialog("Squid encountered an error while trying to open the selected file(s).");
+            SquidMessageDialog.showWarningDialog(
+                    "Squid encountered an error while trying to open the selected file.",
+                    primaryStageWindow);
         }
     }
 
     @FXML
     private void newSquidProjectByMergeAction(ActionEvent event) {
-        SquidMessageDialog.showInfoDialog("Coming soon!");
+        SquidMessageDialog.showInfoDialog(
+                "To merge two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
+                + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
+                + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
+                + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
+                primaryStageWindow);
+
+        squidProject = new SquidProject();
+
+        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler(), "1.4.5");
+
+        try {
+            if (squidProject.selectAndMergeTwoPrawnFile(primaryStageWindow)) {
+                launchProjectManager();
+            }
+        } catch (IOException | JAXBException | SAXException anException) {
+            SquidMessageDialog.showWarningDialog(
+                    "Squid encountered an error while trying to open and join the selected files.",
+                    primaryStageWindow);
+        }
+
     }
 
     @FXML
@@ -198,7 +220,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void onlineHelpAction(ActionEvent event) {
-        BrowserControl.showURI("https://github.com/CIRDLES/Squid/wiki");
+        BrowserControl.showURI("http://cirdles.org/projects/squid/#Development");
     }
 
     @FXML
