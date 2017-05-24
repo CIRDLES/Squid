@@ -134,15 +134,24 @@ public class SquidUIController implements Initializable {
     private void newSquidProjectAction(ActionEvent event) {
         squidProject = new SquidProject();
 
-        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler(), "1.4.5");
+        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler());
 
         try {
             if (squidProject.selectPrawnFile(primaryStageWindow)) {
                 launchProjectManager();
             }
         } catch (IOException | JAXBException | SAXException anException) {
+            String message = anException.getMessage();
+            if (message == null){
+                try {
+                    message = anException.getCause().getMessage();
+                } catch (Exception e) {
+                }
+            }
+            
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open the selected file.",
+                    "Squid encountered an error while trying to open the selected file:\n\n"
+                    + message,
                     primaryStageWindow);
         }
     }
@@ -158,15 +167,24 @@ public class SquidUIController implements Initializable {
 
         squidProject = new SquidProject();
 
-        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler(), "1.4.5");
+        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler());
 
         try {
             if (squidProject.selectAndMergeTwoPrawnFile(primaryStageWindow)) {
                 launchProjectManager();
             }
         } catch (IOException | JAXBException | SAXException anException) {
+            String message = anException.getMessage();
+            if (message == null){
+                try {
+                    message = anException.getCause().getMessage();
+                } catch (Exception e) {
+                }
+            }
+            
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open and join the selected files.",
+                    "Squid encountered an error while trying to open and join the selected files:\n\n"
+                    + message,
                     primaryStageWindow);
         }
 

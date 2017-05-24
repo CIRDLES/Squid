@@ -125,10 +125,14 @@ public class SquidProject implements Serializable {
         File prawnXMLFileNew = fileChooser.showOpenDialog(ownerWindow);
 
         if (prawnXMLFileNew != null) {
-            retVal = true;
-            prawnXMLFile = prawnXMLFileNew;
-            updatePrawnFileHandlerWithFileLocation();
-            prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
+            if (prawnXMLFileNew.getName().toLowerCase(Locale.US).endsWith(".xml")) {
+                retVal = true;
+                prawnXMLFile = prawnXMLFileNew;
+                updatePrawnFileHandlerWithFileLocation();
+                prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
+            } else {
+                throw new IOException("Filename does not end with '.xml'");
+            }
         }
 
         return retVal;

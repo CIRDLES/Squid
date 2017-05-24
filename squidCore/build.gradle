@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     compile "com.github.cirdles:Commons:-SNAPSHOT"
-    compile 'com.github.bowring.Calamari:core:v1.4.5'
+    compile 'com.github.bowring.Calamari:core:v1.4.8'
     
     antlr "org.antlr:antlr4:4.6"
     compile 'org.antlr:antlr4-runtime:4.6'

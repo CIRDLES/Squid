@@ -69,14 +69,14 @@ public class CalamariFileManager {
         }
     }
 
-    public static void initProjectFiles(PrawnFileHandler prawnFileHandler, String calamariVersion) {
+    public static void initProjectFiles(PrawnFileHandler prawnFileHandler) {
         try {
             // point to directory, but no default choice
             prawnFileHandler.setCurrentPrawnFileLocation(exampleFolder.getCanonicalPath());
         } catch (IOException iOException) {
         }
 
-        File defaultCalamariReportsFolder = new File("CalamariReports_v" + calamariVersion);
+        File defaultCalamariReportsFolder = new File("CalamariReports_v" + PrawnFileHandler.VERSION);
 
         prawnFileHandler.getReportsEngine()
                 .setFolderToWriteCalamariReports(defaultCalamariReportsFolder);
