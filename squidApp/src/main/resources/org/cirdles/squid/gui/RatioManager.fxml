@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="935.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatioManagerController">
+   <children>
+      <AnchorPane fx:id="anchorPane" prefHeight="675.0" prefWidth="935.0" style="-fx-background-color: white;">
+         <children>
+            <Canvas fx:id="canvas1" height="98.0" layoutX="776.0" layoutY="540.0" width="122.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</Pane>

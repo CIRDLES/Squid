@@ -181,6 +181,8 @@ public class SquidProject implements Serializable {
                 prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
 
                 retVal = true;
+            } else {
+                throw new IOException("Please choose exactly 2 files to merge.");
             }
         }
 

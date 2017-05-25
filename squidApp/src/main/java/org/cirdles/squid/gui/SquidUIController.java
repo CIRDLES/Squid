@@ -19,10 +19,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
@@ -74,11 +76,13 @@ public class SquidUIController implements Initializable {
     @FXML
     private MenuItem projectManagerMenuItem;
 
-    private Pane projectManagerUI;
     @FXML
     private MenuItem saveSquidProjectMenuItem;
     @FXML
     private MenuItem newSquidProjectByMergeMenuItem;
+
+    private static Pane projectManagerUI;
+    private static Pane ratioManagerUI;
 
     /**
      * Initializes the controller class.
@@ -111,8 +115,7 @@ public class SquidUIController implements Initializable {
     private void launchProjectManager() {
 
         try {
-            // prevent stacking of project panes
-            mainPane.getChildren().remove(projectManagerUI);
+            removeAllManagers();
 
             projectManagerUI = FXMLLoader.load(getClass().getResource("ProjectManager.fxml"));
             projectManagerUI.setId("ProjectManager");
@@ -121,12 +124,34 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(projectManagerUI);
             projectManagerUI.setVisible(true);
 
+            launchRatioManager();
+
             saveAsSquidProjectMenuItem.setDisable(false);
             closeSquidProjectMenuItem.setDisable(false);
+            projectManagerMenuItem.setDisable(false);
+            
+            manageRatiosMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println(">>>>   " + iOException.getMessage());
         }
+
+    }
+
+    private void removeAllManagers() {
+        // prevent stacking of project panes
+        mainPane.getChildren().remove(projectManagerUI);
+        mainPane.getChildren().remove(ratioManagerUI);
+
+        saveAsSquidProjectMenuItem.setDisable(true);
+        closeSquidProjectMenuItem.setDisable(true);
+        projectManagerMenuItem.setDisable(true);
+        
+        manageExpressionsMenu.setDisable(true);
+        manageRatiosMenu.setDisable(true);
+        manageTasksMenu.setDisable(true);
+        manageAnalysisMenu.setDisable(true);
+        manageReportsMenu.setDisable(true);
 
     }
 
@@ -142,13 +167,13 @@ public class SquidUIController implements Initializable {
             }
         } catch (IOException | JAXBException | SAXException anException) {
             String message = anException.getMessage();
-            if (message == null){
+            if (message == null) {
                 try {
                     message = anException.getCause().getMessage();
                 } catch (Exception e) {
                 }
             }
-            
+
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
                     + message,
@@ -175,13 +200,13 @@ public class SquidUIController implements Initializable {
             }
         } catch (IOException | JAXBException | SAXException anException) {
             String message = anException.getMessage();
-            if (message == null){
+            if (message == null) {
                 try {
                     message = anException.getCause().getMessage();
                 } catch (Exception e) {
                 }
             }
-            
+
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open and join the selected files:\n\n"
                     + message,
@@ -219,12 +244,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void closeSquidProjectMenuItemClose(ActionEvent event) {
-        mainPane.getChildren().remove(projectManagerUI);
-
-        saveAsSquidProjectMenuItem.setDisable(true);
-        closeSquidProjectMenuItem.setDisable(true);
-        projectManagerMenuItem.setDisable(true);
-
+        removeAllManagers();
     }
 
     @FXML
@@ -259,6 +279,44 @@ public class SquidUIController implements Initializable {
         issueBody.append(urlEncode("\n\nIssue details:\n"));
 
         BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody.toString());
+    }
+
+    @FXML
+    private void reviewMassesMenuItemAction(ActionEvent event) {
+        showManager(ratioManagerUI);
+    }
+
+    private void launchRatioManager() {
+
+        try {
+            ratioManagerUI = FXMLLoader.load(getClass().getResource("RatioManager.fxml"));
+            ratioManagerUI.setId("RatioManager");
+            VBox.setVgrow(ratioManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(ratioManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(ratioManagerUI);
+            ratioManagerUI.setVisible(false);
+
+//            saveAsSquidProjectMenuItem.setDisable(false);
+//            closeSquidProjectMenuItem.setDisable(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println(">>>>   " + iOException.getMessage());
+        }
+    }
+
+    @FXML
+    private void projectManagerMenuItemAction(ActionEvent event) {
+        showManager(projectManagerUI);
+    }
+
+    private void showManager(Node myManager) {
+        for (Node manager : mainPane.getChildren()) {
+            manager.setVisible(false);
+        }
+        
+        // logo
+        mainPane.getChildren().get(0).setVisible(true);
+
+        myManager.setVisible(true);
     }
 
 }
