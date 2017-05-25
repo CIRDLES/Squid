@@ -38,57 +38,8 @@ import org.cirdles.commons.util.ResourceExtractor;
  */
 public class SquidUI extends Application {
 
-    public static final String VERSION;
-    public static final String RELEASE_DATE;
-
     public static Window primaryStageWindow;
     public static SquidAboutWindow squidAboutWindow;
-    public static StringBuilder aboutWindowContent = new StringBuilder();
-
-    public static ResourceExtractor squidResourceExtractor
-            = new ResourceExtractor(SquidUI.class);
-
-    static {
-        String version = "version";
-        String releaseDate = "date";
-
-        // get version number and release date written by pom.xml
-        Path resourcePath = SquidUI.squidResourceExtractor.extractResourceAsPath("version.txt");
-        Charset charset = Charset.forName("US-ASCII");
-        try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
-            String line = reader.readLine();
-            if (line != null) {
-                String[] versionText = line.split("=");
-                version = versionText[1];
-            }
-
-            line = reader.readLine();
-            if (line != null) {
-                String[] versionDate = line.split("=");
-                releaseDate = versionDate[1];
-            }
-        } catch (IOException x) {
-            System.err.format("IOException: %s%n", x);
-        }
-
-        VERSION = version;
-        RELEASE_DATE = releaseDate;
-
-        // get content for about window
-        resourcePath = SquidUI.squidResourceExtractor.extractResourceAsPath("/org/cirdles/squid/gui/content/aboutContent.txt");
-        try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
-            SquidUI.aboutWindowContent = new StringBuilder();
-            String thisLine;
-
-            while ((thisLine = reader.readLine()) != null) {
-                SquidUI.aboutWindowContent.append(thisLine);
-            }
-
-        } catch (IOException x) {
-            System.err.format("IOException: %s%n", x);
-        }
-
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {

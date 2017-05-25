@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +32,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.core.PrawnFileHandler;
+import org.cirdles.squid.Squid;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.fileManagement.CalamariFileManager;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -268,7 +268,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void contributeIssueOnGitHubAction(ActionEvent event) {
-        String version = "Squid3 Version: " + SquidUI.VERSION;
+        String version = "Squid3 Version: " + Squid.VERSION;
         String javaVersion = "Java Version: " + System.getProperties().getProperty("java.version");
         String operatingSystem = "OS: " + System.getProperties().getProperty("os.name") + " " + System.getProperties().getProperty("os.version");
 
