@@ -45,7 +45,7 @@ public class AboutSquidController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         versionText.setText(" Squid3 v " + Squid.VERSION);
         buildDate.setText("Release Date: " + Squid.RELEASE_DATE);
-        aboutDetailsLabel.setText(Squid.aboutWindowContent.toString());
+        aboutDetailsLabel.setText(Squid.ABOUT_WINDOW_CONTENT.toString());
     }
 
     @FXML

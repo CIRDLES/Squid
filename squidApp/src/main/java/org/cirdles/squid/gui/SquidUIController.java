@@ -34,12 +34,13 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.core.PrawnFileHandler;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
-import org.cirdles.squid.fileManagement.CalamariFileManager;
+import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
-import org.cirdles.squid.utilities.SquidSerializer;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
 
 /**
@@ -109,7 +110,7 @@ public class SquidUIController implements Initializable {
         projectManagerMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
 
-        CalamariFileManager.initExamplePrawnFiles();
+        CalamariFileUtilities.initExamplePrawnFiles();
     }
 
     private void launchProjectManager() {
@@ -129,7 +130,7 @@ public class SquidUIController implements Initializable {
             saveAsSquidProjectMenuItem.setDisable(false);
             closeSquidProjectMenuItem.setDisable(false);
             projectManagerMenuItem.setDisable(false);
-            
+
             manageRatiosMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
@@ -146,32 +147,39 @@ public class SquidUIController implements Initializable {
         saveAsSquidProjectMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
         projectManagerMenuItem.setDisable(true);
-        
+
         manageExpressionsMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 
+        // logo
+        mainPane.getChildren().get(0).setVisible(true);
+
+    }
+
+    private void prepareForNewProject() {
+        removeAllManagers();
+
+        squidProject = new SquidProject();
+
+        CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
+
     }
 
     @FXML
     private void newSquidProjectAction(ActionEvent event) {
-        squidProject = new SquidProject();
-
-        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler());
+        prepareForNewProject();
 
         try {
-            if (squidProject.selectPrawnFile(primaryStageWindow)) {
+            if (FileHandler.selectPrawnFile(squidProject, primaryStageWindow)) {
                 launchProjectManager();
             }
         } catch (IOException | JAXBException | SAXException anException) {
             String message = anException.getMessage();
             if (message == null) {
-                try {
-                    message = anException.getCause().getMessage();
-                } catch (Exception e) {
-                }
+                message = anException.getCause().getMessage();
             }
 
             SquidMessageDialog.showWarningDialog(
@@ -183,6 +191,8 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void newSquidProjectByMergeAction(ActionEvent event) {
+        prepareForNewProject();
+
         SquidMessageDialog.showInfoDialog(
                 "To merge two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
                 + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
@@ -190,21 +200,14 @@ public class SquidUIController implements Initializable {
                 + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
                 primaryStageWindow);
 
-        squidProject = new SquidProject();
-
-        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler());
-
         try {
-            if (squidProject.selectAndMergeTwoPrawnFile(primaryStageWindow)) {
+            if (FileHandler.selectForMergeTwoPrawnFiles(squidProject, primaryStageWindow)) {
                 launchProjectManager();
             }
         } catch (IOException | JAXBException | SAXException anException) {
             String message = anException.getMessage();
             if (message == null) {
-                try {
-                    message = anException.getCause().getMessage();
-                } catch (Exception e) {
-                }
+                message = anException.getCause().getMessage();
             }
 
             SquidMessageDialog.showWarningDialog(
@@ -220,7 +223,7 @@ public class SquidUIController implements Initializable {
         if (squidProject != null) {
             ProjectManagerController.saveProjectData();
             try {
-                squidProject.saveProjectFile(SquidUI.primaryStageWindow);
+                FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
             } catch (IOException ex) {
             }
         }
@@ -228,10 +231,12 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void openSquidProjectMenuItemAction(ActionEvent event) {
+        removeAllManagers();
+
         try {
-            String projectFileName = SquidProject.selectProjectFile(SquidUI.primaryStageWindow);
+            String projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
             if (!"".equals(projectFileName)) {
-                squidProject = (SquidProject) SquidSerializer.GetSerializedObjectFromFile(projectFileName);
+                squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName);
                 if (squidProject != null) {
                     squidProject.setPrawnFileHandler(new PrawnFileHandler());
                     squidProject.updatePrawnFileHandlerWithFileLocation();
@@ -312,7 +317,7 @@ public class SquidUIController implements Initializable {
         for (Node manager : mainPane.getChildren()) {
             manager.setVisible(false);
         }
-        
+
         // logo
         mainPane.getChildren().get(0).setVisible(true);
 

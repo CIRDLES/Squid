@@ -29,12 +29,6 @@ public class RawDataViewForShrimp extends AbstractDataView {
 
     /**
      *
-     */
-    public static int DEFAULT_WIDTH_OF_PANE = 128;
-    private double[] myOnPeakOneSigmas;
-
-    /**
-     *
      * @param sampleSessionDataView
      * @param tripoliFraction
      * @param rawIsotopeDataModel

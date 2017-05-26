@@ -15,12 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -30,16 +24,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import org.cirdles.commons.util.ResourceExtractor;
 
 /**
  *
  * @author James F. Bowring
  */
-public class SquidUI extends Application {
+public final class SquidUI extends Application {
 
-    public static Window primaryStageWindow;
-    public static SquidAboutWindow squidAboutWindow;
+    protected static Window primaryStageWindow;
+    protected static SquidAboutWindow squidAboutWindow;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -56,14 +49,14 @@ public class SquidUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         // this produces non-null window after .show()
-        SquidUI.primaryStageWindow = primaryStage.getScene().getWindow();
+        primaryStageWindow = primaryStage.getScene().getWindow();
 
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
             Platform.exit();
             System.exit(0);
         });
 
-        SquidUI.squidAboutWindow = new SquidAboutWindow(primaryStage);
+        squidAboutWindow = new SquidAboutWindow(primaryStage);
     }
 
     /**

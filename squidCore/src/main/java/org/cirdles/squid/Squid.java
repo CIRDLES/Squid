@@ -32,9 +32,9 @@ public final class Squid {
     public static final String VERSION;
     public static final String RELEASE_DATE;
 
-    public static StringBuilder aboutWindowContent = new StringBuilder();
+    public static final StringBuilder ABOUT_WINDOW_CONTENT = new StringBuilder();
 
-    public static ResourceExtractor squidResourceExtractor
+    public static final ResourceExtractor SQUID_RESOURCE_EXTRACTOR
             = new ResourceExtractor(Squid.class);
 
     static {
@@ -42,7 +42,7 @@ public final class Squid {
         String releaseDate = "date";
 
         // get version number and release date written by pom.xml
-        Path resourcePath = Squid.squidResourceExtractor.extractResourceAsPath("version.txt");
+        Path resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("version.txt");
         Charset charset = Charset.forName("US-ASCII");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
             String line = reader.readLine();
@@ -64,13 +64,12 @@ public final class Squid {
         RELEASE_DATE = releaseDate;
 
         // get content for about window
-        resourcePath = Squid.squidResourceExtractor.extractResourceAsPath("/org/cirdles/squid/docs/aboutContent.txt");
+        resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/aboutContent.txt");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
-            Squid.aboutWindowContent = new StringBuilder();
             String thisLine;
 
             while ((thisLine = reader.readLine()) != null) {
-                Squid.aboutWindowContent.append(thisLine);
+                Squid.ABOUT_WINDOW_CONTENT.append(thisLine);
             }
 
         } catch (IOException x) {

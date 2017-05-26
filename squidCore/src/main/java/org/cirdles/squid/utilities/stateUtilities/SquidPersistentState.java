@@ -15,7 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.cirdles.squid.utilities;
+package org.cirdles.squid.utilities.stateUtilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class SquidPersistentState implements Serializable {
     // class variables
     //private static final long serialVersionUID = -2957701651505126654L;
     public static final String SQUID_PERSISTENT_STATE_FILE_NAME = "SquidPersistentState.ser";
-    private static SquidPersistentState instance = (SquidPersistentState) SquidSerializer.GetSerializedObjectFromFile(SQUID_PERSISTENT_STATE_FILE_NAME);
+    private static SquidPersistentState instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SQUID_PERSISTENT_STATE_FILE_NAME);
     private static final int MRU_COUNT = 10;
 
     // instance variables
@@ -68,7 +68,7 @@ public class SquidPersistentState implements Serializable {
     public void serializeSelf() {
         // save initial persistent state serialized file
         try {
-            SquidSerializer.SerializeObjectToFile(this, getMySerializedName());
+            SquidSerializer.serializeObjectToFile(this, getMySerializedName());
         } catch (SquidException squidException) {
         }
     }
@@ -101,7 +101,7 @@ public class SquidPersistentState implements Serializable {
 
         // save
         try {
-            SquidSerializer.SerializeObjectToFile(this, SQUID_PERSISTENT_STATE_FILE_NAME);
+            SquidSerializer.serializeObjectToFile(this, SQUID_PERSISTENT_STATE_FILE_NAME);
         } catch (SquidException squidException) {
         }
 
@@ -118,9 +118,9 @@ public class SquidPersistentState implements Serializable {
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }
-        if (instance == null) {
-            instance = new SquidPersistentState();
-        }
+//        if (instance == null) {
+//            instance = new SquidPersistentState();
+//        }
 
         return instance;
     }

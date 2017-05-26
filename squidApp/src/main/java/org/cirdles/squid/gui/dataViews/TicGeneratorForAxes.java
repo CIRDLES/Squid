@@ -31,7 +31,7 @@ public class TicGeneratorForAxes {
     /**
      * 
      */
-    public static int indexOfFirstMajorTic = 0;
+    private static int indexOfFirstMajorTic = 0;
 
     /**
      * 
@@ -76,7 +76,6 @@ public class TicGeneratorForAxes {
                 String val = tics[i].toPlainString();
                 if ( (val.length() > 2) && val.endsWith( "000" ) ) {
                     indexOfFirstMajorTic = i;
-//                System.out.println("val3  " + val + "   " + indexOfFirstMajorTic);
                     break;
                 }
             }
@@ -85,7 +84,6 @@ public class TicGeneratorForAxes {
                     String val = tics[i].toPlainString();
                     if ( (val.length() > 1) && val.endsWith( "00" ) ) {
                         indexOfFirstMajorTic = i;
-//                    System.out.println("val2  " + val + "   " + indexOfFirstMajorTic);
                         break;
                     }
                 }
@@ -95,7 +93,6 @@ public class TicGeneratorForAxes {
                     String val = tics[i].toPlainString();
                     if ( (val.length() > 1) && val.endsWith( "0" ) ) {
                         indexOfFirstMajorTic = i;
-//                    System.out.println("val1  " + val + "   " + indexOfFirstMajorTic);
                         break;
                     }
                 }

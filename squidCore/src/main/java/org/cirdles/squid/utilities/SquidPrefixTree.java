@@ -73,11 +73,11 @@ public class SquidPrefixTree {
                 SquidPrefixTree leaf = new SquidPrefixTree(LEAF);
                 leaf.parent = target;
                 target.children.add(leaf);
-                if (target.stringValue.toUpperCase(Locale.US).contains("-DUP-")){
+                if (target.stringValue.toUpperCase(Locale.US).contains("-DUP-")) {
                     leaf.countOfDups = 1;
                 }
             }
-            
+
         }
 
         return target;
@@ -128,12 +128,8 @@ public class SquidPrefixTree {
     }
 
     private void sortChildren(List<SquidPrefixTree> children) {
-        Collections.sort(children, new Comparator<SquidPrefixTree>() {
-            @Override
-            public int compare(SquidPrefixTree pt1, SquidPrefixTree pt2) {
-                return (pt1.getCharValue().compareTo(pt2.charValue));
-            }
-        });
+        Collections.sort(children, (SquidPrefixTree pt1, SquidPrefixTree pt2)
+                -> (pt1.getCharValue().compareTo(pt2.charValue)));
     }
 
     private int countAnalysisLeaves() {
@@ -186,7 +182,7 @@ public class SquidPrefixTree {
         int retVal = 0;
         for (int i = 0; i < children.size(); i++) {
             if (children.get(i).charValue.compareTo(LEAF) == 0) {
-                retVal+= children.get(i).countOfDups;
+                retVal += children.get(i).countOfDups;
             } else {
                 int childCountOfDups = children.get(i).countDups();
                 // sum leaves recursively
@@ -201,14 +197,24 @@ public class SquidPrefixTree {
     }
 
     private void updateFrequencyMap(Map<Integer, Integer> targetMap, Map<Integer, Integer> sourceMap) {
-        for (Integer i : sourceMap.keySet()) {
-            int count = sourceMap.get(i);
-            if (targetMap.containsKey(i)) {
-                targetMap.put(i, targetMap.get(i) + count);
+        for (Map.Entry<Integer, Integer> entry : sourceMap.entrySet()) {
+            int key = entry.getKey();
+            int count = entry.getValue();
+            if (targetMap.containsKey(key)) {
+                targetMap.put(key, targetMap.get(key) + count);
             } else {
-                targetMap.put(i, count);
+                targetMap.put(key, count);
             }
         }
+////
+////        for (Integer i : sourceMap.keySet()) {
+////            int count = sourceMap.get(i);
+////            if (targetMap.containsKey(i)) {
+////                targetMap.put(i, targetMap.get(i) + count);
+////            } else {
+////                targetMap.put(i, count);
+////            }
+////        }
     }
 
     public boolean hasChildren() {

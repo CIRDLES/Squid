@@ -29,7 +29,7 @@ import javafx.stage.StageStyle;
  *
  * @author James F. Bowring
  */
-public class SquidAboutWindow {
+public final class SquidAboutWindow {
 
     private Stage primaryStage;
     private double xOffset = 0;
