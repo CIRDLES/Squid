@@ -16,10 +16,11 @@
 package org.cirdles.squid.gui;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
@@ -48,21 +49,19 @@ public class RatioManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        AbstractDataView canvas = new RawDataViewForShrimp(new Rectangle(25, 25, 5000, 150), squidProject);
         scrolledAnchorPane.setPrefWidth(5100);
-        scrolledAnchorPane.getChildren().add(canvas);
-        GraphicsContext gc1 = canvas.getGraphicsContext2D();
-        canvas.preparePanel();
-        canvas.paint(gc1);
-
-
-//        AbstractDataView canvas2 = new RawDataViewForShrimp(new Rectangle(50, 100, 800, 100), squidProject);
-//        anchorPane.getChildren().add(canvas2);
-//        GraphicsContext gc2 = canvas2.getGraphicsContext2D();
-//        canvas2.preparePanel();
-//        canvas2.paint(gc2);
+        scrolledAnchorPane.setPrefHeight(1700);
+        int massCounter = 0;
+        for (Entry<String, List<List<Double>>> entry : squidProject.getMassTimeSeries().entrySet()) {
+            AbstractDataView canvas = new RawDataViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, 5000, 150), entry.getKey(), entry.getValue());
+            scrolledAnchorPane.getChildren().add(canvas);
+            GraphicsContext gc1 = canvas.getGraphicsContext2D();
+            canvas.preparePanel();
+            canvas.paint(gc1);
+            
+            massCounter ++;
+        }
 
     }
 
- 
 }

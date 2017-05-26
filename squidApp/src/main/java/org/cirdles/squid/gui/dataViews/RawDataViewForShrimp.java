@@ -29,21 +29,19 @@ import org.cirdles.squid.projects.SquidProject;
  */
 public class RawDataViewForShrimp extends AbstractDataView {
 
-    private SquidProject squidProject;
+     List<List<Double>> massData;
     private String massKey = "NONE";
 
     /**
      *
-     * @param sampleSessionDataView
-     * @param tripoliFraction
-     * @param rawIsotopeDataModel
      * @param bounds
-     * @param invokeMouseListener
+     * @param massData
      */
     public RawDataViewForShrimp(///
-            Rectangle bounds, SquidProject squidProject) {
+            Rectangle bounds, String massKey, List<List<Double>> massData) {
         super(bounds);
-        this.squidProject = squidProject;
+        this.massKey = massKey;
+        this.massData = massData;
     }
 
     /**
@@ -66,51 +64,22 @@ public class RawDataViewForShrimp extends AbstractDataView {
             g2d.lineTo(mapX(myOnPeakNormalizedAquireTimes[i]), mapY(myOnPeakData[i]));
 
             // every 6 scans
-            if (((i + 1) % 6 == 0) && (i < (myOnPeakData.length - 1))) {
-                double runX = mapX((myOnPeakNormalizedAquireTimes[i] + myOnPeakNormalizedAquireTimes[i + 1]) / 2.0);
+            if ((i + 1) % 6 == 0) {
                 g2d.setStroke(Paint.valueOf("Red"));
-                g2d.setLineWidth(1.0);
-                g2d.strokeLine(runX, 0, runX, height);
+                g2d.setLineWidth(0.5);
+
+                if (i < (myOnPeakData.length - 1)) {
+                    double runX = mapX((myOnPeakNormalizedAquireTimes[i] + myOnPeakNormalizedAquireTimes[i + 1]) / 2.0);
+                    g2d.strokeLine(runX, 0, runX, height);
+                }
+
+                g2d.strokeText(String.valueOf((int) ((i + 1) / 6)), mapX(myOnPeakNormalizedAquireTimes[i - 4]), height - 2);
                 g2d.setStroke(Paint.valueOf("BLACK"));
                 g2d.setLineWidth(1.5);
             }
 
-//            g2d.setStroke(new BasicStroke(0.5f));
-//            g2d.setPaint(determineDataColor(i, Color.GRAY));
-//            g2d.draw(pointTrace);
-//
-//            Shape intensity = new java.awt.geom.Ellipse2D.Double( //
-//                    mapX(myOnPeakNormalizedAquireTimes[i]) - 1, mapY(myOnPeakData[i]) - 1, 2, 2);
-//            g2d.setStroke(new BasicStroke(1.5f));
-//            g2d.setPaint(determineDataColor(i, Color.black));
-//            g2d.draw(intensity);
             g2d.strokeOval(mapX(myOnPeakNormalizedAquireTimes[i]) - 2, mapY(myOnPeakData[i]) - 2, 4, 4);
-//
-//            // uncertainty
-//            Shape plusMinusOneSigma = new Line2D.Double(//
-//                    mapX(myOnPeakNormalizedAquireTimes[i]),// 
-//                    mapY(myOnPeakData[i] - myOnPeakOneSigmas[i]),//
-//                    mapX(myOnPeakNormalizedAquireTimes[i]),// 
-//                    mapY(myOnPeakData[i] + myOnPeakOneSigmas[i]));
-//            g2d.setStroke(new BasicStroke(1.0f));
-//            g2d.draw(plusMinusOneSigma);
-//
-//            // tips of uncertainty
-//            Shape plusOneSigmaTip = new Line2D.Double(//
-//                    mapX(myOnPeakNormalizedAquireTimes[i]) - 1,// 
-//                    mapY(myOnPeakData[i] + myOnPeakOneSigmas[i]),//
-//                    mapX(myOnPeakNormalizedAquireTimes[i]) + 1,// 
-//                    mapY(myOnPeakData[i] + myOnPeakOneSigmas[i]));
-//
-//            Shape minusOneSigmaTip = new Line2D.Double(//
-//                    mapX(myOnPeakNormalizedAquireTimes[i]) - 1,// 
-//                    mapY(myOnPeakData[i] - myOnPeakOneSigmas[i]),//
-//                    mapX(myOnPeakNormalizedAquireTimes[i]) + 1,// 
-//                    mapY(myOnPeakData[i] - myOnPeakOneSigmas[i]));
-//
-//            g2d.setStroke(new BasicStroke(1.0f));
-//            g2d.draw(plusOneSigmaTip);
-//            g2d.draw(minusOneSigmaTip);
+
         }
 
         g2d.stroke();
@@ -123,19 +92,14 @@ public class RawDataViewForShrimp extends AbstractDataView {
      */
     @Override
     public void preparePanel() {
-        //196Zr2O => [[195.765627, 195.765511, 195.763746, 195.76466, 195.764639, 195.764332], [1.289488671E12, 1.289488854E12, 1.289489035E12, 1.289489217E12, 1.289489399E12, 1.289489581E12]]
 
         myOnPeakData = new double[]{195.765627, 195.765511, 195.763746, 195.76466, 195.764639, 195.764332};
 
         myOnPeakNormalizedAquireTimes = new double[]{1.289488671E12, 1.289488854E12, 1.289489035E12, 1.289489217E12, 1.289489399E12, 1.289489581E12};
 
-        massKey = (String) squidProject.getMassTimeSeries().keySet().toArray()[5];
+        myOnPeakData = massData.get(0).stream().mapToDouble(Double::doubleValue).toArray();
 
-        List<Double> peaksList = squidProject.getMassTimeSeries().get(massKey).get(0);
-        myOnPeakData = peaksList.stream().mapToDouble(Double::doubleValue).toArray();
-
-        List<Double> timesList = squidProject.getMassTimeSeries().get(massKey).get(1);
-        myOnPeakNormalizedAquireTimes = timesList.stream().mapToDouble(Double::doubleValue).toArray();
+        myOnPeakNormalizedAquireTimes = massData.get(1).stream().mapToDouble(Double::doubleValue).toArray();
 
         setDisplayOffsetY(0.0);
 
