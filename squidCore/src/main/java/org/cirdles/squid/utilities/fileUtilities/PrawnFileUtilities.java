@@ -17,7 +17,14 @@ package org.cirdles.squid.utilities.fileUtilities;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import org.cirdles.calamari.prawn.PrawnFile;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.cirdles.calamari.prawn.PrawnFile.Run;
+import org.cirdles.calamari.prawn.PrawnFile.Run.RunTable.Entry;
+import org.cirdles.calamari.prawn.PrawnFile.Run.Set.Scan;
+import org.cirdles.calamari.prawn.PrawnFile.Run.Set.Scan.Measurement;
 
 /**
  *
@@ -25,7 +32,7 @@ import org.cirdles.calamari.prawn.PrawnFile;
  */
 public final class PrawnFileUtilities {
 
-    public static long timeInMillisecondsOfRun(PrawnFile.Run run) {
+    public static long timeInMillisecondsOfRun(Run run) {
         String startDateTime = run.getSet().getPar().get(0).getValue()
                 + " " + run.getSet().getPar().get(1).getValue()
                 + (Integer.parseInt(run.getSet().getPar().get(1).getValue().substring(0, 2)) < 12 ? " AM" : " PM");
@@ -39,5 +46,42 @@ public final class PrawnFileUtilities {
 
         return milliseconds;
     }
-    
+
+    public static Map<String, List<List<Double>>> extractMassTimeSeries(List<Run> runs) {
+        Map<String, List<List<Double>>> massTimeSeries = new HashMap<>();
+
+        // prepare map from first run table
+        List<Entry> entries = runs.get(0).getRunTable().getEntry();
+        for (Entry entry : entries) {
+            List<List<Double>> data = new ArrayList<>();
+            // element 0 = amu, 1 = timestamp
+            data.add(new ArrayList<>());
+            data.add(new ArrayList<>());
+
+            String massLabel = entry.getPar().get(0).getValue();
+
+            massTimeSeries.put(massLabel, data);
+        }       
+
+        for (Run run : runs) {
+            long runStartTime = timeInMillisecondsOfRun(run);
+            List<Scan> scans = run.getSet().getScan();
+            for (Scan scan : scans) {
+                List<Measurement> measurements = scan.getMeasurement();
+                for (Measurement measurement : measurements) {
+                    double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
+                    double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
+                    long measurementTime = runStartTime + (long) timeStampSec * 1000l;
+
+                    String massLabel = measurement.getData().get(0).getName();
+
+                    massTimeSeries.get(massLabel).get(0).add(trimMass);
+                    massTimeSeries.get(massLabel).get(1).add((double) measurementTime);
+                }
+            }
+        }
+
+        return massTimeSeries;
+    }
+
 }

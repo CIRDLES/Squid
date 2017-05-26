@@ -17,15 +17,20 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
+import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import org.cirdles.squid.projects.SquidProject;
 
 /**
  *
  * @author James F. Bowring
  */
 public class RawDataViewForShrimp extends AbstractDataView {
+
+    private SquidProject squidProject;
+    private String massKey = "NONE";
 
     /**
      *
@@ -36,8 +41,9 @@ public class RawDataViewForShrimp extends AbstractDataView {
      * @param invokeMouseListener
      */
     public RawDataViewForShrimp(///
-            Rectangle bounds) {
+            Rectangle bounds, SquidProject squidProject) {
         super(bounds);
+        this.squidProject = squidProject;
     }
 
     /**
@@ -47,15 +53,27 @@ public class RawDataViewForShrimp extends AbstractDataView {
     @Override
     public void paint(GraphicsContext g2d) {
         super.paint(g2d);
-        
+
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(1.5);
+
+        g2d.strokeText(massKey, 10, 15);
 
         g2d.beginPath();
         g2d.moveTo(mapX(myOnPeakNormalizedAquireTimes[0]), mapY(myOnPeakData[0]));
         for (int i = 0; i < myOnPeakData.length; i++) {
             // line tracing through points
-             g2d.lineTo(mapX(myOnPeakNormalizedAquireTimes[i]), mapY(myOnPeakData[i]));
+            g2d.lineTo(mapX(myOnPeakNormalizedAquireTimes[i]), mapY(myOnPeakData[i]));
+
+            // every 6 scans
+            if (((i + 1) % 6 == 0) && (i < (myOnPeakData.length - 1))) {
+                double runX = mapX((myOnPeakNormalizedAquireTimes[i] + myOnPeakNormalizedAquireTimes[i + 1]) / 2.0);
+                g2d.setStroke(Paint.valueOf("Red"));
+                g2d.setLineWidth(1.0);
+                g2d.strokeLine(runX, 0, runX, height);
+                g2d.setStroke(Paint.valueOf("BLACK"));
+                g2d.setLineWidth(1.5);
+            }
 
 //            g2d.setStroke(new BasicStroke(0.5f));
 //            g2d.setPaint(determineDataColor(i, Color.GRAY));
@@ -66,8 +84,7 @@ public class RawDataViewForShrimp extends AbstractDataView {
 //            g2d.setStroke(new BasicStroke(1.5f));
 //            g2d.setPaint(determineDataColor(i, Color.black));
 //            g2d.draw(intensity);
-
-              g2d.strokeOval(mapX(myOnPeakNormalizedAquireTimes[i]) - 2, mapY(myOnPeakData[i]) - 2, 4, 4);
+            g2d.strokeOval(mapX(myOnPeakNormalizedAquireTimes[i]) - 2, mapY(myOnPeakData[i]) - 2, 4, 4);
 //
 //            // uncertainty
 //            Shape plusMinusOneSigma = new Line2D.Double(//
@@ -106,10 +123,19 @@ public class RawDataViewForShrimp extends AbstractDataView {
      */
     @Override
     public void preparePanel() {
+        //196Zr2O => [[195.765627, 195.765511, 195.763746, 195.76466, 195.764639, 195.764332], [1.289488671E12, 1.289488854E12, 1.289489035E12, 1.289489217E12, 1.289489399E12, 1.289489581E12]]
 
-        myOnPeakData = new double[]{121634,121678,121642,121661,121644,121594,121653,121591,121582,121592};
+        myOnPeakData = new double[]{195.765627, 195.765511, 195.763746, 195.76466, 195.764639, 195.764332};
 
-        myOnPeakNormalizedAquireTimes = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        myOnPeakNormalizedAquireTimes = new double[]{1.289488671E12, 1.289488854E12, 1.289489035E12, 1.289489217E12, 1.289489399E12, 1.289489581E12};
+
+        massKey = (String) squidProject.getMassTimeSeries().keySet().toArray()[5];
+
+        List<Double> peaksList = squidProject.getMassTimeSeries().get(massKey).get(0);
+        myOnPeakData = peaksList.stream().mapToDouble(Double::doubleValue).toArray();
+
+        List<Double> timesList = squidProject.getMassTimeSeries().get(massKey).get(1);
+        myOnPeakNormalizedAquireTimes = timesList.stream().mapToDouble(Double::doubleValue).toArray();
 
         setDisplayOffsetY(0.0);
 
@@ -118,7 +144,7 @@ public class RawDataViewForShrimp extends AbstractDataView {
         // X-axis lays out time evenly spaced
         minX = myOnPeakNormalizedAquireTimes[0];
         maxX = myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1];
-        double xMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minX, maxX, 0.05);
+        double xMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minX, maxX, 0.005);
         minX -= xMarginStretch;
         maxX += xMarginStretch;
 

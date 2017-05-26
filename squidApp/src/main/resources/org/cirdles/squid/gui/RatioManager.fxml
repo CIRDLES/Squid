@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
@@ -8,7 +8,11 @@
    <children>
       <AnchorPane fx:id="anchorPane" prefHeight="675.0" prefWidth="935.0" style="-fx-background-color: white;">
          <children>
-            <Canvas fx:id="canvas1" height="98.0" layoutX="776.0" layoutY="540.0" width="122.0" />
+            <ScrollPane layoutX="14.0" layoutY="174.0" prefHeight="200.0" prefWidth="906.0">
+              <content>
+                <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="889.0" />
+              </content>
+            </ScrollPane>
          </children>
       </AnchorPane>
    </children>

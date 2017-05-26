@@ -23,6 +23,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.RawDataViewForShrimp;
 
@@ -34,9 +35,9 @@ import org.cirdles.squid.gui.dataViews.RawDataViewForShrimp;
 public class RatioManagerController implements Initializable {
 
     @FXML
-    private Canvas canvas1;
-    @FXML
     private AnchorPane anchorPane;
+    @FXML
+    private AnchorPane scrolledAnchorPane;
 
     /**
      * Initializes the controller class.
@@ -47,18 +48,19 @@ public class RatioManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        AbstractDataView canvas = new RawDataViewForShrimp(new Rectangle(0, 0, 200, 50));
-        anchorPane.getChildren().add(canvas);
+        AbstractDataView canvas = new RawDataViewForShrimp(new Rectangle(25, 25, 5000, 150), squidProject);
+        scrolledAnchorPane.setPrefWidth(5100);
+        scrolledAnchorPane.getChildren().add(canvas);
         GraphicsContext gc1 = canvas.getGraphicsContext2D();
         canvas.preparePanel();
         canvas.paint(gc1);
 
 
-        AbstractDataView canvas2 = new RawDataViewForShrimp(new Rectangle(0, 100, 200, 50));
-        anchorPane.getChildren().add(canvas2);
-        GraphicsContext gc2 = canvas2.getGraphicsContext2D();
-        canvas2.preparePanel();
-        canvas2.paint(gc2);
+//        AbstractDataView canvas2 = new RawDataViewForShrimp(new Rectangle(50, 100, 800, 100), squidProject);
+//        anchorPane.getChildren().add(canvas2);
+//        GraphicsContext gc2 = canvas2.getGraphicsContext2D();
+//        canvas2.preparePanel();
+//        canvas2.paint(gc2);
 
     }
 

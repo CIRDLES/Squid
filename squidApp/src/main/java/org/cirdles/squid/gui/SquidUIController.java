@@ -125,7 +125,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(projectManagerUI);
             projectManagerUI.setVisible(true);
 
-            launchRatioManager();
+            //launchRatioManager();
 
             saveAsSquidProjectMenuItem.setDisable(false);
             closeSquidProjectMenuItem.setDisable(false);
@@ -288,6 +288,9 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void reviewMassesMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(ratioManagerUI);
+        squidProject.extractMassTimeSeriesFromSession();
+        launchRatioManager();
         showManager(ratioManagerUI);
     }
 

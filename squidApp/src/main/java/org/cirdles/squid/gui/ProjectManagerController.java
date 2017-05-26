@@ -171,6 +171,8 @@ public class ProjectManagerController implements Initializable {
         setFilteredSpotsAsRefMatButton.setDisable(false);
 
         setUpPrawnFileAuditTreeView();
+        
+//        squidProject.extractMassTimeSeriesFromSession();
     }
 
     private void setUpPrawnFileAuditTreeView() {
