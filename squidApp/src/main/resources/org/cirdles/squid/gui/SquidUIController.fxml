@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="935.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -25,18 +25,18 @@
             <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
             <Menu fx:id="openRecentSquidProjectMenuItem" mnemonicParsing="false" text="Open Recent Squid Project" />
             <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="projectManagerMenuItem" mnemonicParsing="false" onAction="#projectManagerMenuItemAction" text="Manage Project" />
+            <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="saveSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveSquidProjectMenuItemAction" text="Save Squid Project" />
             <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid Project as ..." />
             <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" onAction="#closeSquidProjectMenuItemClose" text="Close Squid Project" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="projectManagerMenuItem" mnemonicParsing="false" text="Project Manager" />
                   <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
           </items>
         </Menu>
             <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Manage Ratios">
               <items>
-                <MenuItem mnemonicParsing="false" text="Review Masses" />
+                <MenuItem mnemonicParsing="false" onAction="#reviewMassesMenuItemAction" text="Review Masses" />
                   <MenuItem mnemonicParsing="false" text="Select Ratios" />
               </items>
             </Menu>
@@ -76,9 +76,9 @@
         </Menu>
       </menus>
     </MenuBar>
-      <Pane fx:id="mainPane" prefHeight="645.0" prefWidth="935.0">
+      <Pane fx:id="mainPane" prefHeight="645.0" prefWidth="935.0" VBox.vgrow="ALWAYS">
          <children>
-            <ImageView fitHeight="335.0" fitWidth="335.0" layoutX="300.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="squidImageView" fitHeight="333.0" fitWidth="350.0" layoutX="301.0" layoutY="125.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@images/SquidLogo.png" />
                </image>

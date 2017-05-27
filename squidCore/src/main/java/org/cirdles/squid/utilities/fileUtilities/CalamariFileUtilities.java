@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.fileManagement;
+package org.cirdles.squid.utilities.fileUtilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +30,14 @@ import org.cirdles.commons.util.ResourceExtractor;
  *
  * @author bowring
  */
-public class CalamariFileManager {
+public class CalamariFileUtilities {
 
     private static File exampleFolder;
-/**
- * Provides a clean copy of two example Prawn XML files every time Squid runs.
- */
+
+    /**
+     * Provides a clean copy of two example Prawn XML files every time Squid
+     * runs.
+     */
     public static void initExamplePrawnFiles() {
         ResourceExtractor prawnFileResourceExtractor
                 = new ResourceExtractor(PrawnFile.class);
@@ -69,7 +71,7 @@ public class CalamariFileManager {
         }
     }
 
-    public static void initProjectFiles(PrawnFileHandler prawnFileHandler) {
+    public static void initCalamariReportsFolder(PrawnFileHandler prawnFileHandler) {
         try {
             // point to directory, but no default choice
             prawnFileHandler.setCurrentPrawnFileLocation(exampleFolder.getCanonicalPath());
@@ -82,7 +84,7 @@ public class CalamariFileManager {
                 .setFolderToWriteCalamariReports(defaultCalamariReportsFolder);
         if (!defaultCalamariReportsFolder.exists()) {
             if (!defaultCalamariReportsFolder.mkdir()) {
-                System.out.println("Failed to make Calamari reports directory");
+                System.out.println("Failed to make Calamari reports folder.");
             }
         }
     }

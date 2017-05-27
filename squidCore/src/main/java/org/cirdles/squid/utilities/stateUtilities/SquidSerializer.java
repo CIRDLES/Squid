@@ -15,7 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.cirdles.squid.utilities;
+package org.cirdles.squid.utilities.stateUtilities;
 
 import java.io.*;
 import org.cirdles.squid.exceptions.SquidException;
@@ -39,7 +39,7 @@ public final class SquidSerializer {
      * @param filename
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public static void SerializeObjectToFile(Object serializableObject, String filename) throws SquidException {
+    public static void serializeObjectToFile(Object serializableObject, String filename) throws SquidException {
         try {
             // Serialize to a file
             FileOutputStream outputStream = new FileOutputStream(filename);
@@ -50,7 +50,7 @@ public final class SquidSerializer {
 
         } catch (IOException ex) {
             throw new SquidException("Cannot serialize object of " + serializableObject.getClass().getSimpleName() + " to: " + filename);
-        } 
+        }
     }
 
     /**
@@ -58,7 +58,7 @@ public final class SquidSerializer {
      * @param filename
      * @return
      */
-    public static Object GetSerializedObjectFromFile(String filename) {
+    public static Object getSerializedObjectFromFile(String filename) {
         FileInputStream inputStream;
         ObjectInputStream deserializedInputStream;
         Object deserializedObject = null;
@@ -67,11 +67,13 @@ public final class SquidSerializer {
             inputStream = new FileInputStream(filename);
             deserializedInputStream = new ObjectInputStream(inputStream);
             deserializedObject = deserializedInputStream.readObject();
+            inputStream.close();
+            
         } catch (FileNotFoundException ex) {
             if (!filename.endsWith(SquidPersistentState.SQUID_PERSISTENT_STATE_FILE_NAME)) {
                 SquidMessageDialog.showWarningDialog(
-                    "The file you are attempting to open does not exist:\n"
-                            + " " + filename, null);
+                        "The file you are attempting to open does not exist:\n"
+                        + " " + filename, null);
             }
         } catch (IOException ex) {
             SquidMessageDialog.showWarningDialog(

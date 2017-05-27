@@ -44,6 +44,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.prawn.PrawnFile.Run;
@@ -52,6 +53,7 @@ import org.cirdles.squid.gui.RunsViewModel.ShrimpFractionListCell;
 import org.cirdles.squid.gui.RunsViewModel.SpotNameMatcher;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.utilities.SquidPrefixTree;
 import org.xml.sax.SAXException;
 
@@ -105,6 +107,8 @@ public class ProjectManagerController implements Initializable {
     private TextField analystNameText;
     @FXML
     private TextField filterSpotNameText;
+    @FXML
+    private Pane mainProjectManagerPane;
 
     /**
      * Initializes the controller class.
@@ -114,6 +118,10 @@ public class ProjectManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        mainProjectManagerPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        mainProjectManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+
         orignalPrawnFileName.setEditable(false);
         setUpShrimpFractionListHeaders();
         savePrawnFileButton.setDisable(true);
@@ -122,10 +130,28 @@ public class ProjectManagerController implements Initializable {
 
         prawnFileTabPane.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
 
+        setupListeners();
+
         // detect if project opened from menu by deserialization
         if (squidProject.prawnFileExists()) {
             setUpPrawnFile();
         }
+    }
+
+    private void setupListeners() {
+        projectNameText.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                squidProject.setProjectName(projectNameText.getText());
+            }
+        });
+
+        analystNameText.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                squidProject.setAnalystName(analystNameText.getText());
+            }
+        });
     }
 
     private void setUpPrawnFile() {
@@ -152,6 +178,8 @@ public class ProjectManagerController implements Initializable {
         setFilteredSpotsAsRefMatButton.setDisable(false);
 
         setUpPrawnFileAuditTreeView();
+
+//        squidProject.extractMassTimeSeriesFromSession();
     }
 
     private void setUpPrawnFileAuditTreeView() {
@@ -203,16 +231,18 @@ public class ProjectManagerController implements Initializable {
     }
 
     private String buildSummaryDataString(SquidPrefixTree tree) {
-        // build species and scans count string
-        String speciesCounts = "";
+        // build species and scans count string        
+        StringBuilder speciesCountBuffer = new StringBuilder();
         for (Integer count : tree.getMapOfSpeciesFrequencies().keySet()) {
-            speciesCounts += "[" + String.format("%1$ 2d", count) + " in " + String.format("%1$ 3d", tree.getMapOfSpeciesFrequencies().get(count)) + "]";
+            speciesCountBuffer.append("[" + String.format("%1$ 2d", count) + " in " + String.format("%1$ 3d", tree.getMapOfSpeciesFrequencies().get(count)) + "]");
         }
+        String speciesCounts = speciesCountBuffer.toString();
 
-        String scansCounts = "";
+        StringBuilder scansCountsBuffer = new StringBuilder();
         for (Integer count : tree.getMapOfScansFrequencies().keySet()) {
-            scansCounts += "[" + String.format("%1$ 2d", count) + " in " + String.format("%1$ 3d", tree.getMapOfScansFrequencies().get(count)) + "]";
+            scansCountsBuffer.append("[" + String.format("%1$ 2d", count) + " in " + String.format("%1$ 3d", tree.getMapOfScansFrequencies().get(count)) + "]");
         }
+        String scansCounts = scansCountsBuffer.toString();
 
         String summary = " Analyses=" + String.format("%1$ 3d", tree.getCountOfLeaves())
                 + "; Dups=" + String.format("%1$ 3d", tree.getCountOfDups())
@@ -373,7 +403,7 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private void savePrawnFileAction(ActionEvent event) {
         try {
-            squidProject.savePrawnFile(primaryStageWindow);
+            FileHandler.savePrawnFile(squidProject, primaryStageWindow);
             orignalPrawnFileName.setText(SquidUIController.squidProject.getPrawnXMLFileName());
             shrimpFractionList.refresh();
             shrimpRefMatList.refresh();
@@ -390,6 +420,7 @@ public class ProjectManagerController implements Initializable {
         for (Run r : shrimpRunsRefMat) {
             plainListRefMat.add(r);
         }
+
         squidProject.setShrimpRunsRefMat(plainListRefMat);
     }
 

@@ -15,104 +15,50 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import org.cirdles.commons.util.ResourceExtractor;
 
 /**
  *
  * @author James F. Bowring
  */
-public class SquidUI extends Application {
+public final class SquidUI extends Application {
 
-    public static final String VERSION;
-    public static final String RELEASE_DATE;
-
-    public static Window primaryStageWindow;
-    public static SquidAboutWindow squidAboutWindow;
-    public static StringBuilder aboutWindowContent = new StringBuilder();
-
-    public static ResourceExtractor squidResourceExtractor
-            = new ResourceExtractor(SquidUI.class);
-
-    static {
-        String version = "version";
-        String releaseDate = "date";
-
-        // get version number and release date written by pom.xml
-        Path resourcePath = SquidUI.squidResourceExtractor.extractResourceAsPath("version.txt");
-        Charset charset = Charset.forName("US-ASCII");
-        try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
-            String line = reader.readLine();
-            if (line != null) {
-                String[] versionText = line.split("=");
-                version = versionText[1];
-            }
-
-            line = reader.readLine();
-            if (line != null) {
-                String[] versionDate = line.split("=");
-                releaseDate = versionDate[1];
-            }
-        } catch (IOException x) {
-            System.err.format("IOException: %s%n", x);
-        }
-
-        VERSION = version;
-        RELEASE_DATE = releaseDate;
-
-        // get content for about window
-        resourcePath = SquidUI.squidResourceExtractor.extractResourceAsPath("/org/cirdles/squid/gui/content/aboutContent.txt");
-        try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
-            SquidUI.aboutWindowContent = new StringBuilder();
-            String thisLine;
-
-            while ((thisLine = reader.readLine()) != null) {
-                SquidUI.aboutWindowContent.append(thisLine);
-            }
-
-        } catch (IOException x) {
-            System.err.format("IOException: %s%n", x);
-        }
-
-    }
+    protected static Window primaryStageWindow;
+    protected static SquidAboutWindow squidAboutWindow;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Parent root = FXMLLoader.load(getClass().getResource("SquidUIController.fxml"));
-
+        Parent root = new AnchorPane();
         Scene scene = new Scene(root);
-
-        primaryStage.getIcons().add(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png"));
-
-        primaryStage.setMinHeight(650.0);
-        primaryStage.setMinWidth(925.0);
-        primaryStage.setTitle("Squid 3.0");
         primaryStage.setScene(scene);
-        primaryStage.show();
+        primaryStage.getIcons().add(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png"));
+        primaryStage.setTitle("Squid 3.0 pre-release");
+
         // this produces non-null window after .show()
-        SquidUI.primaryStageWindow = primaryStage.getScene().getWindow();
+        primaryStageWindow = primaryStage.getScene().getWindow();
 
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
             Platform.exit();
             System.exit(0);
         });
 
-        SquidUI.squidAboutWindow = new SquidAboutWindow(primaryStage);
+        // postpone loading to allow for stage creation and use in controller
+        scene.setRoot(FXMLLoader.load(getClass().getResource("SquidUIController.fxml")));
+        primaryStage.show();
+        primaryStage.setMinHeight(scene.getHeight() + 15);
+        primaryStage.setMinWidth(scene.getWidth());
+
+        squidAboutWindow = new SquidAboutWindow(primaryStage);
     }
 
     /**
