@@ -53,7 +53,7 @@ public class RawDataViewForShrimp extends AbstractDataView {
         super.paint(g2d);
 
         g2d.setStroke(Paint.valueOf("BLACK"));
-        g2d.setLineWidth(1.5);
+        g2d.setLineWidth(0.5);
 
         g2d.strokeText(massKey, 10, 15);
 
@@ -75,7 +75,7 @@ public class RawDataViewForShrimp extends AbstractDataView {
 
                 g2d.strokeText(String.valueOf((int) ((i + 1) / 6)), mapX(myOnPeakNormalizedAquireTimes[i - 4]), height - 2);
                 g2d.setStroke(Paint.valueOf("BLACK"));
-                g2d.setLineWidth(1.5);
+                g2d.setLineWidth(0.5);
             }
 
             g2d.strokeOval(mapX(myOnPeakNormalizedAquireTimes[i]) - 2, mapY(myOnPeakData[i]) - 2, 4, 4);

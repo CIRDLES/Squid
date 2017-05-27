@@ -21,6 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
@@ -37,17 +38,12 @@ public final class SquidUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Parent root = FXMLLoader.load(getClass().getResource("SquidUIController.fxml"));
-
+        Parent root = new AnchorPane();
         Scene scene = new Scene(root);
-
-        primaryStage.getIcons().add(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png"));
-
-        primaryStage.setMinHeight(650.0);
-        primaryStage.setMinWidth(925.0);
-        primaryStage.setTitle("Squid 3.0");
         primaryStage.setScene(scene);
-        primaryStage.show();
+        primaryStage.getIcons().add(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png"));
+        primaryStage.setTitle("Squid 3.0 pre-release");
+
         // this produces non-null window after .show()
         primaryStageWindow = primaryStage.getScene().getWindow();
 
@@ -55,6 +51,12 @@ public final class SquidUI extends Application {
             Platform.exit();
             System.exit(0);
         });
+
+        // postpone loading to allow for stage creation and use in controller
+        scene.setRoot(FXMLLoader.load(getClass().getResource("SquidUIController.fxml")));
+        primaryStage.show();
+        primaryStage.setMinHeight(scene.getHeight() + 15);
+        primaryStage.setMinWidth(scene.getWidth());
 
         squidAboutWindow = new SquidAboutWindow(primaryStage);
     }

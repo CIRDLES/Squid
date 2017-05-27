@@ -26,6 +26,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -76,11 +77,13 @@ public class SquidUIController implements Initializable {
     private Menu manageReportsMenu;
     @FXML
     private MenuItem projectManagerMenuItem;
-
     @FXML
     private MenuItem saveSquidProjectMenuItem;
     @FXML
     private MenuItem newSquidProjectByMergeMenuItem;
+
+    @FXML
+    private ImageView squidImageView;
 
     private static Pane projectManagerUI;
     private static Pane ratioManagerUI;
@@ -93,6 +96,12 @@ public class SquidUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        // center Logo
+        squidImageView.layoutXProperty().bind(primaryStageWindow.getScene().widthProperty()
+                .divide(2).subtract(squidImageView.getFitWidth() / 2));
+        squidImageView.layoutYProperty().bind(primaryStageWindow.getScene().heightProperty()
+                .divide(2).subtract(squidImageView.getFitHeight() / 2).subtract(60));
 
         manageExpressionsMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
@@ -126,7 +135,6 @@ public class SquidUIController implements Initializable {
             projectManagerUI.setVisible(true);
 
             //launchRatioManager();
-
             saveAsSquidProjectMenuItem.setDisable(false);
             closeSquidProjectMenuItem.setDisable(false);
             projectManagerMenuItem.setDisable(false);

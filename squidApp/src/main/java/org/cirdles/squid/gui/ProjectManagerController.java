@@ -44,6 +44,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javax.xml.bind.JAXBException;
 import org.cirdles.calamari.prawn.PrawnFile.Run;
@@ -106,6 +107,8 @@ public class ProjectManagerController implements Initializable {
     private TextField analystNameText;
     @FXML
     private TextField filterSpotNameText;
+    @FXML
+    private Pane mainProjectManagerPane;
 
     /**
      * Initializes the controller class.
@@ -115,6 +118,10 @@ public class ProjectManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        mainProjectManagerPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        mainProjectManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+
         orignalPrawnFileName.setEditable(false);
         setUpShrimpFractionListHeaders();
         savePrawnFileButton.setDisable(true);
@@ -171,7 +178,7 @@ public class ProjectManagerController implements Initializable {
         setFilteredSpotsAsRefMatButton.setDisable(false);
 
         setUpPrawnFileAuditTreeView();
-        
+
 //        squidProject.extractMassTimeSeriesFromSession();
     }
 

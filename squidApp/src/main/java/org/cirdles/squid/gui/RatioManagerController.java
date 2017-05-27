@@ -22,8 +22,11 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.RawDataViewForShrimp;
@@ -36,9 +39,11 @@ import org.cirdles.squid.gui.dataViews.RawDataViewForShrimp;
 public class RatioManagerController implements Initializable {
 
     @FXML
-    private AnchorPane anchorPane;
-    @FXML
     private AnchorPane scrolledAnchorPane;
+    @FXML
+    private Pane ratioManagerPane;
+    @FXML
+    private ScrollPane ratioManagerScrollPane;
 
     /**
      * Initializes the controller class.
@@ -48,6 +53,12 @@ public class RatioManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        ratioManagerPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        ratioManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+        
+        ratioManagerScrollPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        ratioManagerScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
 
         scrolledAnchorPane.setPrefWidth(5100);
         scrolledAnchorPane.setPrefHeight(1700);
