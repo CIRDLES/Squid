@@ -60,11 +60,12 @@ public class RatioManagerController implements Initializable {
         ratioManagerScrollPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         ratioManagerScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
 
-        scrolledAnchorPane.setPrefWidth(5100);
+        int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 100;
+        scrolledAnchorPane.setPrefWidth(widthOfView + 150);//5100);
         scrolledAnchorPane.setPrefHeight(1700);
         int massCounter = 0;
         for (Entry<String, List<List<Double>>> entry : squidProject.getMassTimeSeries().entrySet()) {
-            AbstractDataView canvas = new RawDataViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, 5000, 150), entry.getKey(), entry.getValue());
+            AbstractDataView canvas = new RawDataViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, widthOfView, 150), entry.getKey(), entry.getValue());
             scrolledAnchorPane.getChildren().add(canvas);
             GraphicsContext gc1 = canvas.getGraphicsContext2D();
             canvas.preparePanel();

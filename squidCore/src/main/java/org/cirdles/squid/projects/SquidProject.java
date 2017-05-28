@@ -47,7 +47,7 @@ public class SquidProject implements Serializable {
     private String filterForRefMatSpotNames;
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
-    private Map<String, List<List<Double>>> massTimeSeries;
+    private transient Map<String, List<List<Double>>> massTimeSeries;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
