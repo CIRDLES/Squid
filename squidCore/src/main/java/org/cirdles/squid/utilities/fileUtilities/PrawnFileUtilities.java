@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-import org.cirdles.calamari.prawn.PrawnFile.Run;
-import org.cirdles.calamari.prawn.PrawnFile.Run.RunTable.Entry;
-import org.cirdles.calamari.prawn.PrawnFile.Run.Set.Scan;
-import org.cirdles.calamari.prawn.PrawnFile.Run.Set.Scan.Measurement;
-import org.cirdles.calamari.shrimp.IsotopeNames;
+import org.cirdles.squid.prawn.PrawnFile.Run;
+import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
+import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan;
+import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan.Measurement;
+import org.cirdles.squid.shrimp.IsotopeNames;
 
 /**
  *

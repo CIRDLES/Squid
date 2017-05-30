@@ -21,9 +21,9 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import org.cirdles.calamari.core.PrawnFileHandler;
-import org.cirdles.calamari.prawn.PrawnFile;
-import org.cirdles.calamari.utilities.FileUtilities;
+import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 
 /**
@@ -78,7 +78,7 @@ public class CalamariFileUtilities {
         } catch (IOException iOException) {
         }
 
-        File defaultCalamariReportsFolder = new File("CalamariReports_v" + PrawnFileHandler.VERSION);
+        File defaultCalamariReportsFolder = new File("CalamariReports_v" );//+ PrawnFileHandler.VERSION);
 
         prawnFileHandler.getReportsEngine()
                 .setFolderToWriteCalamariReports(defaultCalamariReportsFolder);

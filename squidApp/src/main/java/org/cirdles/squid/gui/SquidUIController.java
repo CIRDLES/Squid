@@ -32,7 +32,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.xml.bind.JAXBException;
-import org.cirdles.calamari.core.PrawnFileHandler;
+import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
