@@ -47,7 +47,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javax.xml.bind.JAXBException;
-import org.cirdles.calamari.prawn.PrawnFile.Run;
+import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.RunsViewModel.ShrimpFractionListCell;
 import org.cirdles.squid.gui.RunsViewModel.SpotNameMatcher;

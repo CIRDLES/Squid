@@ -57,11 +57,11 @@ public abstract class AbstractDataView extends Canvas {
     /**
      *
      */
-    protected int topMargin = 0;
+    private int topMargin = 0;
     /**
      *
      */
-    protected int leftMargin = 0;
+    private int leftMargin = 0;
     /**
      *
      */
@@ -81,11 +81,11 @@ public abstract class AbstractDataView extends Canvas {
     /**
      *
      */
-    protected double displayOffsetY = 0;
+    private double displayOffsetY = 0;
     /**
      *
      */
-    protected double displayOffsetX = 0;
+    private double displayOffsetX = 0;
     /**
      *
      */
@@ -102,10 +102,12 @@ public abstract class AbstractDataView extends Canvas {
      *
      * @param bounds
      */
-    protected AbstractDataView(Rectangle bounds) {
+    protected AbstractDataView(Rectangle bounds, int leftMargin, int topMargin) {
         super(bounds.getWidth(), bounds.getHeight());
         x = bounds.getX();
         y = bounds.getY();
+        this.leftMargin = leftMargin;
+        this.topMargin = topMargin;
 
         this.myOnPeakData = null;
 
@@ -115,25 +117,6 @@ public abstract class AbstractDataView extends Canvas {
         graphHeight = (int) height - topMargin;
 
         this.tics = null;
-
-
-    }
-
-    /**
-     *
-     *
-     * @param sampleSessionDataView
-     * @param tripoliFraction
-     * @param bounds
-     * @param invokeMouseListener
-     * @param forStandards the value of forStandards
-     */
-    public AbstractDataView(//
-            JLayeredPane sampleSessionDataView, //
-            Rectangle bounds, //
-            boolean invokeMouseListener,//
-            boolean forStandards) {
-        this(bounds);
     }
 
     /**
@@ -141,18 +124,6 @@ public abstract class AbstractDataView extends Canvas {
      * @param g2d
      */
     protected void paintInit(GraphicsContext g2d) {
-//        RenderingHints rh = g2d.getRenderingHints();
-//        rh.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//        rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-//        g2d.setRenderingHints(rh);
-//
-//        g2d.setPaint(Color.BLACK);
-//        g2d.setStroke(new BasicStroke(1.0f));
-//        g2d.setFont(new Font(
-//                "SansSerif",
-//                Font.BOLD,
-//                10));
-
         relocate(x, y);
         g2d.clearRect(0, 0, width, height);
     }
@@ -165,9 +136,6 @@ public abstract class AbstractDataView extends Canvas {
         paintInit(g2d);
 
         drawBorder(g2d);
-
-        drawTicsYAxisInBackground(g2d);
-
     }
 
     private void drawBorder(GraphicsContext g2d) {
@@ -197,43 +165,6 @@ public abstract class AbstractDataView extends Canvas {
 
     /**
      *
-     * @param g2d
-     */
-    protected void drawTicsYAxisInBackground(GraphicsContext g2d) {
-//        // y -axis tics
-//        Stroke savedStroke = g2d.getStroke();
-//
-//        // tics
-//        if (tics != null) {
-//            for (int i = 0; i < tics.length; i++) {
-//                try {
-//                    Shape ticMark = new Line2D.Double( //
-//                            mapX(minX), mapY(tics[i].doubleValue()), mapX(maxX), mapY(tics[i].doubleValue()));
-//
-//                    g2d.setPaint(new Color(202, 202, 202));//pale gray
-//                    g2d.setStroke(new BasicStroke(0.5f));
-//                    g2d.draw(ticMark);
-//                } catch (Exception e) {
-//                }
-//            }
-//        } else {
-//            double ticWidth = (maxY - minY) / 10;
-//            if (ticWidth > 0.0) {
-//                for (double tic = minY + ticWidth; tic < (maxY * 0.999); tic += ticWidth) {
-//                    Shape ticMark = new Line2D.Double( //
-//                            mapX(minX), mapY(tic), mapX(maxX), mapY(tic));
-//                    g2d.setPaint(new Color(202, 202, 202));//pale gray
-//                    g2d.setStroke(new BasicStroke(0.5f));
-//                    g2d.draw(ticMark);
-//                }
-//            }
-//        }
-//
-//        g2d.setStroke(savedStroke);
-    }
-
-    /**
-     *
      * @param doReScale the value of doReScale
      * @param inLiveMode the value of inLiveMode
      */
@@ -250,62 +181,6 @@ public abstract class AbstractDataView extends Canvas {
      * @param inLiveMode the value of inLiveMode
      */
     public abstract void preparePanel();
-
-    /**
-     * @return the graphWidth
-     */
-    public int getGraphWidth() {
-        return graphWidth;
-    }
-
-    /**
-     * @param graphWidth the graphWidth to set
-     */
-    public void setGraphWidth(int graphWidth) {
-        this.graphWidth = graphWidth;
-    }
-
-    /**
-     * @return the graphHeight
-     */
-    public int getGraphHeight() {
-        return graphHeight;
-    }
-
-    /**
-     * @param graphHeight the graphHeight to set
-     */
-    public void setGraphHeight(int graphHeight) {
-        this.graphHeight = graphHeight;
-    }
-
-    /**
-     * @return the topMargin
-     */
-    public int getTopMargin() {
-        return topMargin;
-    }
-
-    /**
-     * @param topMargin the topMargin to set
-     */
-    public void setTopMargin(int topMargin) {
-        this.topMargin = topMargin;
-    }
-
-    /**
-     * @return the leftMargin
-     */
-    public int getLeftMargin() {
-        return leftMargin;
-    }
-
-    /**
-     * @param leftMargin the leftMargin to set
-     */
-    public void setLeftMargin(int leftMargin) {
-        this.leftMargin = leftMargin;
-    }
 
     /**
      * @return the displayOffsetY
@@ -340,15 +215,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     public double getMinX_Display() {
-        return getMinX() + getDisplayOffsetX();
-    }
-
-    /**
-     *
-     * @param minX
-     */
-    public void setMinX(double minX) {
-        this.minX = minX;
+        return minX + getDisplayOffsetX();
     }
 
     /**
@@ -356,15 +223,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     public double getMaxX_Display() {
-        return getMaxX() + getDisplayOffsetX();
-    }
-
-    /**
-     *
-     * @param maxX
-     */
-    public void setMaxX(double maxX) {
-        this.maxX = maxX;
+        return maxX + getDisplayOffsetX();
     }
 
     /**
@@ -372,15 +231,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     public double getMinY_Display() {
-        return getMinY() + getDisplayOffsetY();
-    }
-
-    /**
-     *
-     * @param minY
-     */
-    public void setMinY(double minY) {
-        this.minY = minY;
+        return minY + getDisplayOffsetY();
     }
 
     /**
@@ -388,15 +239,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     public double getMaxY_Display() {
-        return getMaxY() + getDisplayOffsetY();
-    }
-
-    /**
-     *
-     * @param maxY
-     */
-    public void setMaxY(double maxY) {
-        this.maxY = maxY;
+        return maxY + getDisplayOffsetY();
     }
 
     /**
@@ -413,34 +256,6 @@ public abstract class AbstractDataView extends Canvas {
      */
     public double getRangeY_Display() {
         return (getMaxY_Display() - getMinY_Display());
-    }
-
-    /**
-     * @return the minX
-     */
-    public double getMinX() {
-        return minX;
-    }
-
-    /**
-     * @return the maxX
-     */
-    public double getMaxX() {
-        return maxX;
-    }
-
-    /**
-     * @return the minY
-     */
-    public double getMinY() {
-        return minY;
-    }
-
-    /**
-     * @return the maxY
-     */
-    public double getMaxY() {
-        return maxY;
     }
 
     /**
@@ -465,7 +280,7 @@ public abstract class AbstractDataView extends Canvas {
     protected int convertMouseXToValue(int x) {
         return //
                 (int) Math.round(
-                        (((double) (x - getLeftMargin())) / (double) getGraphWidth()) //
+                        (((double) (x - leftMargin)) / (double) graphWidth) //
                         * getRangeX_Display()//
                         + getMinX_Display());
     }
@@ -480,20 +295,4 @@ public abstract class AbstractDataView extends Canvas {
                 -1 * (((y - topMargin - 1) * getRangeY_Display() / graphHeight) //
                 - getMaxY_Display());
     }
-
-    /**
-     * @param tics the tics to set
-     */
-    public void setTics(BigDecimal[] tics) {
-        this.tics = tics.clone();
-    }
-
-    /**
-     * @return the tics
-     */
-    public BigDecimal[] getTics() {
-        return tics.clone();
-    }
-
-
 }

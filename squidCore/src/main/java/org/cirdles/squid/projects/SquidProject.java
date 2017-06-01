@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
-import org.cirdles.calamari.core.PrawnFileHandler;
-import org.cirdles.calamari.prawn.PrawnFile;
-import org.cirdles.calamari.prawn.PrawnFile.Run;
+import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -47,7 +47,7 @@ public class SquidProject implements Serializable {
     private String filterForRefMatSpotNames;
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
-    private Map<String, List<List<Double>>> massTimeSeries;
+    private transient Map<String, List<List<Double>>> massTimeSeries;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -336,5 +336,4 @@ public class SquidProject implements Serializable {
     public Map<String, List<List<Double>>> getMassTimeSeries() {
         return massTimeSeries;
     }
-
 }

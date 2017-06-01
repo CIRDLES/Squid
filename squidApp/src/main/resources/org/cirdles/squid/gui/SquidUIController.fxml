@@ -42,7 +42,7 @@
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Manage Expressions">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" onAction="#exploreExpressionsMenuItemAction" text="Explore" />
           </items>
         </Menu>
             <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Manage Tasks">

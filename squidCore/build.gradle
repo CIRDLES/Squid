@@ -31,7 +31,11 @@ repositories {
 
 dependencies {
     compile "com.github.cirdles:Commons:-SNAPSHOT"
-    compile 'com.github.bowring.Calamari:core:v1.4.8'
+    compile "org.apache.commons:commons-math3:3.6.1"   
+    compile "com.google.guava:guava:20.0"    
+    compile "com.github.cirdles:LudwigLibrary:-SNAPSHOT"
+    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.9'
+   // compile 'com.github.cirdles.Calamari:core:v1.4.8'
     
     antlr "org.antlr:antlr4:4.6"
     compile 'org.antlr:antlr4-runtime:4.6'

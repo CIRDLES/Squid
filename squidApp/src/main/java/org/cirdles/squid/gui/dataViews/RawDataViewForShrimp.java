@@ -18,10 +18,13 @@
 package org.cirdles.squid.gui.dataViews;
 
 import java.util.List;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import org.cirdles.squid.projects.SquidProject;
+import javafx.scene.text.Font;
+import static javafx.scene.text.Font.font;
+import javafx.scene.text.TextBuilder;
 
 /**
  *
@@ -29,17 +32,18 @@ import org.cirdles.squid.projects.SquidProject;
  */
 public class RawDataViewForShrimp extends AbstractDataView {
 
-     List<List<Double>> massData;
+    List<List<Double>> massData;
     private String massKey = "NONE";
 
     /**
      *
      * @param bounds
+     * @param massKey
      * @param massData
      */
     public RawDataViewForShrimp(///
             Rectangle bounds, String massKey, List<List<Double>> massData) {
-        super(bounds);
+        super(bounds, 100, 0);
         this.massKey = massKey;
         this.massData = massData;
     }
@@ -55,7 +59,8 @@ public class RawDataViewForShrimp extends AbstractDataView {
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(0.5);
 
-        g2d.strokeText(massKey, 10, 15);
+        g2d.setFill(Paint.valueOf("Red"));
+        g2d.fillText(massKey, 10, 15);
 
         g2d.beginPath();
         g2d.moveTo(mapX(myOnPeakNormalizedAquireTimes[0]), mapY(myOnPeakData[0]));
@@ -73,16 +78,32 @@ public class RawDataViewForShrimp extends AbstractDataView {
                     g2d.strokeLine(runX, 0, runX, height);
                 }
 
-                g2d.strokeText(String.valueOf((int) ((i + 1) / 6)), mapX(myOnPeakNormalizedAquireTimes[i - 4]), height - 2);
+                g2d.setFont(Font.font("Lucida Sans", 8));
+                g2d.fillText(String.valueOf((int) ((i + 1) / 6)), mapX(myOnPeakNormalizedAquireTimes[i - 4]), height - 2);
                 g2d.setStroke(Paint.valueOf("BLACK"));
                 g2d.setLineWidth(0.5);
             }
 
-            g2d.strokeOval(mapX(myOnPeakNormalizedAquireTimes[i]) - 2, mapY(myOnPeakData[i]) - 2, 4, 4);
+            g2d.strokeOval(mapX(myOnPeakNormalizedAquireTimes[i]) - 1, mapY(myOnPeakData[i]) - 1, 2, 2);
 
         }
 
         g2d.stroke();
+
+        // tics
+        if (tics != null) {
+            for (int i = 0; i < tics.length; i++) {
+                try {
+                    g2d.strokeLine( //
+                            mapX(minX), mapY(tics[i].doubleValue()), mapX(maxX), mapY(tics[i].doubleValue()));
+
+                    g2d.fillText(tics[i].toPlainString(),//
+                            (float) mapX(minX) - 35f,
+                            (float) mapY(tics[i].doubleValue()) + 2.9f);
+                } catch (Exception e) {
+                }
+            }
+        }
     }
 
     /**
@@ -103,7 +124,7 @@ public class RawDataViewForShrimp extends AbstractDataView {
 
         setDisplayOffsetY(0.0);
 
-        setDisplayOffsetX(0.0);
+        setDisplayOffsetX(100.0);
 
         // X-axis lays out time evenly spaced
         minX = myOnPeakNormalizedAquireTimes[0];
@@ -126,6 +147,8 @@ public class RawDataViewForShrimp extends AbstractDataView {
         double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);
         minY -= yMarginStretch;
         maxY += yMarginStretch;
+
+        tics = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
 
     }
 
