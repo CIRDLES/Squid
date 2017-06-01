@@ -7,3 +7,6 @@ sudo: true
 cache:
   directories:
   - $HOME/.m2
+  
+  after_script:
+  python html2text.py target/site/surefire-report.html
