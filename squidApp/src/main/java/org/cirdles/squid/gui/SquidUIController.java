@@ -87,6 +87,7 @@ public class SquidUIController implements Initializable {
 
     private static Pane projectManagerUI;
     private static Pane ratioManagerUI;
+    private static Pane expressionManagerUI;
 
     /**
      * Initializes the controller class.
@@ -140,6 +141,7 @@ public class SquidUIController implements Initializable {
             projectManagerMenuItem.setDisable(false);
 
             manageRatiosMenu.setDisable(false);
+            manageExpressionsMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println(">>>>   " + iOException.getMessage());
@@ -151,6 +153,7 @@ public class SquidUIController implements Initializable {
         // prevent stacking of project panes
         mainPane.getChildren().remove(projectManagerUI);
         mainPane.getChildren().remove(ratioManagerUI);
+        mainPane.getChildren().remove(expressionManagerUI);
 
         saveAsSquidProjectMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
@@ -333,6 +336,28 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().get(0).setVisible(true);
 
         myManager.setVisible(true);
+    }
+
+    @FXML
+    private void exploreExpressionsMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(expressionManagerUI);
+        launchExpressionManager();
+        showManager(expressionManagerUI);
+    }
+    
+       private void launchExpressionManager() {
+
+        try {
+            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
+            expressionManagerUI.setId("ExpressionManager");
+            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(expressionManagerUI);
+            expressionManagerUI.setVisible(false);
+            
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println(">>>>   " + iOException.getMessage());
+        }
     }
 
 }

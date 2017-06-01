@@ -74,39 +74,6 @@ public class PrawnFileHandler {
     private static final PrawnFileRunFractionParser PRAWN_FILE_RUN_FRACTION_PARSER
             = new PrawnFileRunFractionParser();
 
-//    public static final String VERSION;
-//    public static final String RELEASE_DATE;
-//
-//    static {
-//        ResourceExtractor calamariResourceExtractor
-//                = new ResourceExtractor(PrawnFileHandler.class);
-//
-//        String version = "version";
-//        String releaseDate = "date";
-//
-//        // get version number and release date written by pom.xml
-//        Path resourcePath = calamariResourceExtractor.extractResourceAsPath("version.txt");
-//        Charset charset = Charset.forName("US-ASCII");
-//        try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
-//            String line = reader.readLine();
-//            if (line != null) {
-//                String[] versionText = line.split("=");
-//                version = versionText[1];
-//            }
-//
-//            line = reader.readLine();
-//            if (line != null) {
-//                String[] versionDate = line.split("=");
-//                releaseDate = versionDate[1];
-//            }
-//        } catch (IOException x) {
-//            System.err.format("IOException: %s%n", x);
-//        }
-//
-//        VERSION = version;
-//        RELEASE_DATE = releaseDate;
-//    }
-
     /**
      * Creates a new {@link PrawnFileHandler} using a new reports engine.
      */
