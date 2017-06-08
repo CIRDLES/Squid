@@ -33,6 +33,7 @@ import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.ludwig.squid25.Utilities;
+import org.cirdles.squid.Squid;
 
 /**
  * Calamari's reports engine.
@@ -64,7 +65,8 @@ public class CalamariReportsEngine {
      *
      */
     public CalamariReportsEngine() {
-        folderToWriteCalamariReports = new File(System.getProperty("user.dir"));
+       // folderToWriteCalamariReports = new File(System.getProperty("user.dir"));
+       folderToWriteCalamariReports = Squid.defaultCalamariReportsFolder;
         nameOfPrawnXMLFile = "";
     }
 

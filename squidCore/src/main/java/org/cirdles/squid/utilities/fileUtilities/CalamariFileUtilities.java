@@ -25,6 +25,7 @@ import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
+import org.cirdles.squid.Squid;
 
 /**
  *
@@ -78,14 +79,8 @@ public class CalamariFileUtilities {
         } catch (IOException iOException) {
         }
 
-        File defaultCalamariReportsFolder = new File("CalamariReports_v" );//+ PrawnFileHandler.VERSION);
-
         prawnFileHandler.getReportsEngine()
-                .setFolderToWriteCalamariReports(defaultCalamariReportsFolder);
-        if (!defaultCalamariReportsFolder.exists()) {
-            if (!defaultCalamariReportsFolder.mkdir()) {
-                System.out.println("Failed to make Calamari reports folder.");
-            }
-        }
+                .setFolderToWriteCalamariReports(Squid.defaultCalamariReportsFolder);
+
     }
 }

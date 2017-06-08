@@ -1,15 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="ratioManagerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatioManagerController">
+
+<AnchorPane fx:id="ratioAnchorPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatioManagerController">
    <children>
-      <ScrollPane fx:id="ratioManagerScrollPane" prefHeight="640.0" prefWidth="935.0">
-        <content>
-          <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="935.0" />
-        </content>
-      </ScrollPane>
+      <TabPane fx:id="ratiosTabPane" stylesheets="@css/projectManager.css">
+         <tabs>
+            <Tab text="Ratios etc">
+               <content>
+                  <Pane fx:id="ratioManagerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0">
+                     <children>
+                        <ScrollPane fx:id="ratioManagerScrollPane" prefHeight="640.0" prefWidth="935.0">
+                          <content>
+                            <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="935.0" />
+                          </content>
+                        </ScrollPane>
+                     </children>
+                  </Pane>
+               </content>
+            </Tab>
+            <Tab text="Process Stage Calamari">
+              <content>
+                <AnchorPane fx:id="calamariTabAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: white;">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="66.0" prefHeight="17.0" prefWidth="250.0" stylesheets="@../../../../../../../../../Calamari/appfx/src/main/resources/org/cirdles/calamari/newcss.css" text="Normalise Ion Counts for SBM?" />
+                        <Label alignment="CENTER_RIGHT" layoutX="37.0" layoutY="101.0" prefHeight="17.0" prefWidth="250.0" stylesheets="@../../../../../../../../../Calamari/appfx/src/main/resources/org/cirdles/calamari/newcss.css" text="Select Ratio Calculation Method:" />
+                        <Label alignment="CENTER_RIGHT" layoutX="37.0" layoutY="132.0" prefHeight="41.0" prefWidth="250.0" stylesheets="@../../../../../../../../../Calamari/appfx/src/main/resources/org/cirdles/calamari/newcss.css" text="Select Case-Insensitive First Letter of Reference Material Name:" wrapText="true" />
+                        <HBox layoutX="312.0" layoutY="66.0">
+                           <children>
+                              <RadioButton mnemonicParsing="false" prefWidth="50.0" selected="true" text="Yes">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="toggleGroupSMB" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton mnemonicParsing="false" prefHeight="12.0" prefWidth="50.0" text="No" toggleGroup="$toggleGroupSMB" />
+                           </children>
+                        </HBox>
+                        <HBox layoutX="312.0" layoutY="101.0">
+                           <children>
+                              <RadioButton mnemonicParsing="false" prefHeight="18.0" prefWidth="249.0" text="Linear regression to burn mid-time">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="toggleGroupRatioCalcMethod" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton mnemonicParsing="false" prefHeight="18.0" prefWidth="212.0" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
+                           </children>
+                        </HBox>
+                        <ChoiceBox fx:id="referenceMaterialFistLetterChoiceBox" layoutX="312.0" layoutY="139.0" prefHeight="27.0" prefWidth="62.0" />
+                        <Button fx:id="reduceDataButton" layoutX="101.0" layoutY="208.0" mnemonicParsing="false" onAction="#handleReduceDataButtonAction" prefHeight="31.0" prefWidth="522.0" text="Reduce Data and Produce Reports" />
+                        <ProgressIndicator fx:id="reduceDataProgressIndicator" layoutX="644.0" layoutY="208.0" progress="0.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+         </tabs>
+      </TabPane>
    </children>
-</Pane>
+</AnchorPane>

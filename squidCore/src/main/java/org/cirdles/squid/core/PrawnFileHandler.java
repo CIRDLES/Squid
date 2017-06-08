@@ -15,11 +15,11 @@
  */
 package org.cirdles.squid.core;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -57,19 +57,21 @@ import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.commons.util.ResourceExtractor;
 import org.xml.sax.SAXException;
 
 /**
  * Handles common operations involving Prawn files.
  */
-public class PrawnFileHandler {
+public class PrawnFileHandler implements Serializable {
+
+    private static final long serialVersionUID = -581339876224458493L;
 
     private transient Unmarshaller jaxbUnmarshaller;
     private transient Marshaller jaxbMarshaller;
-    private String currentPrawnFileLocation;
     private transient Consumer<Integer> progressSubscriber;
     private transient CalamariReportsEngine reportsEngine;
+
+    private String currentPrawnFileLocation;
 
     private static final PrawnFileRunFractionParser PRAWN_FILE_RUN_FRACTION_PARSER
             = new PrawnFileRunFractionParser();

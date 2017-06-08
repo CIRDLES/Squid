@@ -19,17 +19,27 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javax.swing.JOptionPane;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.RawDataViewForShrimp;
+import org.cirdles.squid.tasks.storedTasks.SquidBodorkosTask1;
 
 /**
  * FXML Controller class
@@ -44,6 +54,22 @@ public class RatioManagerController implements Initializable {
     private Pane ratioManagerPane;
     @FXML
     private ScrollPane ratioManagerScrollPane;
+    @FXML
+    private ToggleGroup toggleGroupRatioCalcMethod;
+    @FXML
+    private ChoiceBox<String> referenceMaterialFistLetterChoiceBox;
+    @FXML
+    private Button reduceDataButton;
+    @FXML
+    private ProgressIndicator reduceDataProgressIndicator;
+    @FXML
+    private TabPane ratiosTabPane;
+    @FXML
+    private AnchorPane ratioAnchorPane;
+    @FXML
+    private AnchorPane calamariTabAnchorPane;
+    @FXML
+    private ToggleGroup toggleGroupSMB;
 
     /**
      * Initializes the controller class.
@@ -53,12 +79,24 @@ public class RatioManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        ratioAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        ratioAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+
+        ratiosTabPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        ratiosTabPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+
         ratioManagerPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         ratioManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
-        
+
         ratioManagerScrollPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         ratioManagerScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+
+        calamariTabAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        calamariTabAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+        
+        ObservableList<String> refMatFistLetterChoiceBoxItems = FXCollections.observableArrayList("A", "T");
+        referenceMaterialFistLetterChoiceBox.setItems(refMatFistLetterChoiceBoxItems);
+        referenceMaterialFistLetterChoiceBox.setValue("T");
 
         int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 100;
         scrolledAnchorPane.setPrefWidth(widthOfView + 150);//5100);
@@ -70,10 +108,30 @@ public class RatioManagerController implements Initializable {
             GraphicsContext gc1 = canvas.getGraphicsContext2D();
             canvas.preparePanel();
             canvas.paint(gc1);
-            
-            massCounter ++;
+
+            massCounter++;
         }
 
+    }
+
+    @FXML
+    private void handleReduceDataButtonAction(ActionEvent event) {
+        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
+            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
+            new ReduceDataWorker(
+                    squidProject.getPrawnFileHandler(),
+                    true,//normalizeIonCountsToSBM,
+                    false,//useLinearRegressionToCalculateRatios,
+                    "T",//(String) referenceMaterialFirstLetterComboBox.getSelectedItem(),
+                    new SquidBodorkosTask1(), // temporarily hard-wired
+                    reduceDataProgressIndicator).execute();
+        } else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Please specify a Prawn XML file for processing.",
+                    "Calamari Warning",
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }
 
 }

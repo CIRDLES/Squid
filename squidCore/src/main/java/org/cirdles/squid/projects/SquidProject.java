@@ -39,7 +39,7 @@ public class SquidProject implements Serializable {
 
     private static final long serialVersionUID = 7099919411562934142L;
 
-    private transient PrawnFileHandler prawnFileHandler = new PrawnFileHandler();
+    private PrawnFileHandler prawnFileHandler = new PrawnFileHandler();
     private String projectName;
     private String analystName;
     private File prawnXMLFile;
