@@ -26,60 +26,54 @@ import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
  *
  * @author James F. Bowring
  */
-public enum RawRatioNamesSHRIMP implements Serializable{
+public enum RawRatioNamesSHRIMP implements Serializable {
 
     // raw ratios
-
     /**
      *
      */
     r204_206w("r204_206w", "204 / 206", IsotopeNames.Pb204, IsotopeNames.Pb206),
-
     /**
      *
      */
     r207_206w("r207_206w", "207 / 206", IsotopeNames.Pb207, IsotopeNames.Pb206),
-
     /**
      *
      */
     r208_206w("r208_206w", "208 / 206", IsotopeNames.Pb208, IsotopeNames.Pb206),
-
     /**
      *
      */
     r238_196w("r238_196w", "238 / 196", IsotopeNames.U238, IsotopeNames.Zr2O196),
-
     /**
      *
      */
     r206_238w("r206_238w", "206 / 238", IsotopeNames.Pb206, IsotopeNames.U238),
-
     /**
      *
      */
     r254_238w("r254_238w", "254 / 238", IsotopeNames.UO254, IsotopeNames.U238),
-
     /**
      *
      */
     r248_254w("r248_254w", "248 / 254", IsotopeNames.ThO248, IsotopeNames.UO254),
-
     /**
      *
      */
     r206_270w("r206_270w", "206 / 270", IsotopeNames.Pb206, IsotopeNames.UO270),
-
     /**
      *
      */
     r270_254w("r270_254w", "270 / 254", IsotopeNames.UO270, IsotopeNames.UO254),
-
     /**
      *
      */
-    r206_254w("r206_254w", "206 / 254", IsotopeNames.Pb206, IsotopeNames.UO254);
-    
+    r206_254w("r206_254w", "206 / 254", IsotopeNames.Pb206, IsotopeNames.UO254),
+    /**
+     *
+     */
+    r238_206w("r238_206w", "238 / 206", IsotopeNames.U238, IsotopeNames.Pb206);
+
     private final String name;
     private final String displayName;
     private final IsotopeNames numerator;
@@ -96,10 +90,10 @@ public enum RawRatioNamesSHRIMP implements Serializable{
      *
      * @return
      */
-    public ExpressionTreeInterface getExpression(){
+    public ExpressionTreeInterface getExpression() {
         return ExpressionTreeWithRatiosInterface.buildRatioExpression(this);
     }
-    
+
     /**
      *
      * @return
@@ -115,7 +109,7 @@ public enum RawRatioNamesSHRIMP implements Serializable{
     public String getDisplayName() {
         return displayName;
     }
-    
+
     /**
      *
      * @return

@@ -186,6 +186,7 @@ public class PrawnFileRunFractionParser {
         isotopicRatios.put(RawRatioNamesSHRIMP.r206_270w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r206_270w));
         isotopicRatios.put(RawRatioNamesSHRIMP.r270_254w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r270_254w));
         isotopicRatios.put(RawRatioNamesSHRIMP.r206_254w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r206_254w));
+        isotopicRatios.put(RawRatioNamesSHRIMP.r238_206w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r238_206w));
 
     }
 
