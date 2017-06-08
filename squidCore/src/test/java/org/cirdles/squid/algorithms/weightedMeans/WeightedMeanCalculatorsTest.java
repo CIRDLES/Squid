@@ -1,8 +1,9 @@
-package org.cirdles.squid.algorithms;
+package org.cirdles.squid.algorithms.weightedMeans;
 
 import org.junit.Test;
 
 import java.util.Arrays;
+import org.cirdles.squid.utilities.conversionUtilities.MatrixConverters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +40,7 @@ public class WeightedMeanCalculatorsTest {
         expectedCovSlopeInter = 0.0;
         expectedMswd = 1.2623509241318576;
         expectedProbFit = 0.2853957071615587;
-        WeightedMeanCalculators.WtdLinCorrResults results = WeightedMeanCalculators.wtdLinCorr(y, sigRho, x);
+        WtdLinCorrResults results = WeightedMeanCalculators.wtdLinCorr(y, sigRho, x);
 
 
         assertEquals(expectedBad, results.isBad());
@@ -78,7 +79,7 @@ public class WeightedMeanCalculatorsTest {
         double expectedSlopeInterceptCov = -2.8336583202677104E-8;
         double expectedMswd = 1.2623509241318576;
         double expectedProb = 0.2853957071615587;
-        WeightedMeanCalculators.WeightedLinearCorrResults results = WeightedMeanCalculators.weightedLinearCorr(y, x, sigmaRhoY);
+        WeightedLinearCorrResults results = WeightedMeanCalculators.weightedLinearCorr(y, x, sigmaRhoY);
 
         assertEquals(expectedBad, results.isBad());
         assertEquals(expectedSlope, results.getSlope(), 0.0);
@@ -113,7 +114,7 @@ public class WeightedMeanCalculatorsTest {
                 {0.0, 0.0, 2.402286708582975E-7, 5.066985524519384E-7, 2.445257865122999E-7},
                 {0.0, 0.0, 0.0, 2.445257865122999E-7, 5.121736019206806E-7}};
 
-        result = WeightedMeanCalculators.convertCorrelationsToCovariances(correlations);
+        result = MatrixConverters.convertCorrelationsToCovariances(correlations);
         for (int i = 0; i < result.length; ++i)
         {
             assertTrue(Arrays.equals(expectedResult[i], result[i]));
@@ -138,7 +139,7 @@ public class WeightedMeanCalculatorsTest {
                             {0.0, 0.0, 2.402286708582975E-7, 5.066985524519384E-7, 2.445257865122999E-7},
                             {0.0, 0.0, 0.0, 2.445257865122999E-7, 5.121736019206806E-7}};
 
-        WeightedMeanCalculators.WtdAvCorrResults results = WeightedMeanCalculators.wtdAvCorr(values, varCov);
+        WtdAvCorrResults results = WeightedMeanCalculators.wtdAvCorr(values, varCov);
         expectedBad = false;
         expectedMeanVal = 0.05925183517876606;
         expectedSigmaMeanVal = 4.076591732406797E-4;
@@ -159,7 +160,7 @@ public class WeightedMeanCalculatorsTest {
     public void deletePoint() throws Exception {
 
         int rejPoint;
-        WeightedMeanCalculators.DeletePointResults results;
+        DeletePointResults results;
         double[] y1, y2ExpResult, y2Result, x1, x2ExpResult, x2Result;
         double[][] sigRho1, sigRho2ExpResult, sigRho2Result;
 

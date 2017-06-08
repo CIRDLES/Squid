@@ -23,12 +23,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
 import org.cirdles.squid.algorithms.PoissonLimitsCountLessThanEqual100;
-import org.cirdles.squid.algorithms.WeightedMeanCalculators;
-import static org.cirdles.squid.algorithms.WeightedMeanCalculators.wtdLinCorr;
-import static org.cirdles.squid.constants.CalamariConstants.HARD_WIRED_INDEX_OF_BACKGROUND;
-import static org.cirdles.squid.constants.SquidConstants.SQUID_ERROR_VALUE;
-import static org.cirdles.squid.constants.SquidConstants.SQUID_TINY_VALUE;
+import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
+import static org.cirdles.squid.constants.Squid3Constants.HARD_WIRED_INDEX_OF_BACKGROUND;
 import org.cirdles.squid.shrimp.IsotopeNames;
 import org.cirdles.squid.shrimp.IsotopeRatioModelSHRIMP;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
@@ -36,6 +35,7 @@ import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.ludwig.squid25.Utilities;
+import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 
 /**
  * Parses run fractions from Prawn files into
@@ -623,7 +623,7 @@ public class PrawnFileRunFractionParser {
                             }
 
                             // step 4 **************************************************************************
-                            WeightedMeanCalculators.WtdLinCorrResults wtdLinCorrResults;
+                            WtdLinCorrResults wtdLinCorrResults;
                             double ratioMean;
                             double ratioMeanSig;
 

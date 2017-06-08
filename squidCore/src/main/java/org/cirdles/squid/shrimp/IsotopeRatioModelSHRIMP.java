@@ -18,7 +18,8 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import static org.cirdles.squid.constants.SquidConstants.SQUID_UPPER_LIMIT_1_SIGMA_PERCENT;
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_UPPER_LIMIT_1_SIGMA_PERCENT;
+
 
 /**
  *

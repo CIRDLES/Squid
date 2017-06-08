@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
-import static org.cirdles.squid.constants.CalamariConstants.DEFAULT_PRAWNFILE_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.shrimp.IsotopeRatioModelSHRIMP;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.ShrimpFraction;

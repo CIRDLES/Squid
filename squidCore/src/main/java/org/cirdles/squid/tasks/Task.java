@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import org.cirdles.squid.algorithms.WeightedMeanCalculators;
-import static org.cirdles.squid.algorithms.WeightedMeanCalculators.wtdLinCorr;
-import static org.cirdles.squid.constants.SquidConstants.SQUID_ERROR_VALUE;
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
+import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
+import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.shrimp.IsotopeNames;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMPXMLConverter;
@@ -356,7 +356,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
                 }
             }
 
-            WeightedMeanCalculators.WtdLinCorrResults wtdLinCorrResults;
+            WtdLinCorrResults wtdLinCorrResults;
             double meanEq;
             double meanEqSig;
 
