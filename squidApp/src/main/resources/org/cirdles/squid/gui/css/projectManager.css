@@ -13,23 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+*{
+    Primary: #afbdc4;
+    P-Light: #e1eff7;
+    P-Dark: #808d94;
+    /*Text fill to use on Primary Primary Colors */
+    P-Text: #212121;
+    P-Alt-Text: #000000;
+    /*(Main-Logo Color)*/
+    Secondary : #ff6e40;
+    S-Light: #ffa06d;
+    S-Dark: #c53d13;
+    /*on s-dark only use S-Dark-Text*/
+    S-Dark-Text: #ffffff;
 
+    S-Text: #3e2723;
+    S-Alt-Text: #000000;
+
+    Hexagon_Color: #3a4c88
+}
 .background {
-    -fx-background-color: #EAFDFF;
+    -fx-background-color: Primary;
 }
 
 .backgroundCalamari {
-    -fx-background-color:    #ffefef;
+    -fx-background-color:    P-Light;
 }
+
 
 .label {
     -fx-font-size: 12pt;
     -fx-font-family: "Lucida Sans Bold", "Segoe UI Semibold";
     -fx-font-weight: bold;
-    -fx-text-fill: black;
+    -fx-text-fill: P-Text;
     -fx-opacity: 100;
 }
+.headerLabel{
+    -fx-font-size: 32pt;
+}
+.sessionSummaryData{
+    -fx-padding: 0 0 0 64px;
+}
 
+.inputTextFields{
+    -fx-background-color: transparent;
+    -fx-border-color: S-light;
+    -fx-padding: 16px 0 8px 0px;
+    -fx-border-width: 0 0 2 0;
+    -fx-pref-width: 256px;
+    /* below is just p-text with an bit of transparency */
+    -fx-prompt-text-fill: rgba(33,33,33,.75);
+}
+
+.inputTextVbox{
+    -fx-padding: 0 0 0 10;
+    -fx-margin: 0 0 50px 0;
+}
 /*
 .tab-pane .tab-header-area .tab-header-background {
     -fx-opacity: 100;
@@ -37,29 +76,52 @@
 */
 .tab-pane
 {
+    -fx-margin: 0 8 0 8;
     -fx-tab-min-width:275px;
-    -fx-border-color: black;
-    -fx-border-width: 1;
-}
+    -fx-stroke-width: 0px;
+    -fx-border-color: transparent;
+    -fx-background-color: P-Light;
 
+}
+.tab-pane *.tab-header-background {
+    -fx-background-color: P-Light;
+    -fx-alignment: CENTER;
+
+}
+.ancPanes {
+    -fx-background-color: Primary;
+}
 .tab .tab-label { 
     -fx-alignment: CENTER;
-    -fx-text-fill: black;
+    -fx-text-fill: S-Text;
     -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
+    -fx-border-radius: 0px;
 }
-
+.tab-pane:top *.tab-header-area{
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+}
 .tab-pane .tab
 {
-    -fx-background-color: white;/*#e6e6e6;*/
+    -fx-background-color: P-Dark;/*#e6e6e6;*/
 
 }
 .tab-pane .tab:selected
 {
-    -fx-background-color:  #f4f4f4;
+    -fx-background-color:  Primary;
+
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
+.next-steps{
+    -fx-background-color: S-Dark;
+    -fx-text-fill: S-Dark-Text;
+}
 /*
 .tab{
     -fx-background-insets: 0 10 0 10,0,0;
@@ -92,7 +154,7 @@
     -fx-border-color: #e2e2e2;
     -fx-border-width: 2;
     -fx-background-radius: 0;
-    -fx-background-color: #43ABC9;/*#72b1bf;/*#43ABC9;/*#ff8f89; /*#ff6961; /*#1d1d1d;*/
+    -fx-background-color: Secondary;/*#72b1bf;/*#43ABC9;/*#ff8f89; /*#ff6961; /*#1d1d1d;*/
     -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
     -fx-text-fill: whitesmoke;/*  #d8d8d8;*/
@@ -100,12 +162,12 @@
 }
 
 .button:hover {
-    -fx-background-color: #007e9b;/*#3a3a3a;*/
+    -fx-background-color: S-Light;/*#3a3a3a;*/
 }
 
 .button:pressed, .button:default:hover:pressed {
-    -fx-background-color: #007e9b;/*white;*/
-    -fx-text-fill: #1d1d1d;
+    -fx-background-color: S-Dark;/*white;*/
+    -fx-text-fill: S-Dark-Text;
 }
 
 .button:focused {
