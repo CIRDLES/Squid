@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="ratioManagerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatioManagerController">
+   <children>
+      <ScrollPane fx:id="ratioManagerScrollPane" prefHeight="640.0" prefWidth="935.0">
+        <content>
+          <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="935.0" />
+        </content>
+      </ScrollPane>
+   </children>
+</Pane>

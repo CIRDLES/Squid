@@ -21,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import org.cirdles.squid.Squid;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 
 /**
@@ -42,9 +43,9 @@ public class AboutSquidController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        versionText.setText(" Squid3 v " + SquidUI.VERSION);
-        buildDate.setText("Release Date: " + SquidUI.RELEASE_DATE);
-        aboutDetailsLabel.setText(SquidUI.aboutWindowContent.toString());
+        versionText.setText(" Squid3 v " + Squid.VERSION);
+        buildDate.setText("Release Date: " + Squid.RELEASE_DATE);
+        aboutDetailsLabel.setText(Squid.ABOUT_WINDOW_CONTENT.toString());
     }
 
     @FXML
