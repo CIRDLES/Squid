@@ -13,18 +13,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-
-<AnchorPane fx:id="ratioAnchorPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatioManagerController">
+<AnchorPane fx:id="ratioAnchorPane" prefHeight="640.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatioManagerController">
    <children>
-      <TabPane fx:id="ratiosTabPane" stylesheets="@css/projectManager.css">
+      <TabPane fx:id="ratiosTabPane" prefHeight="640.0" prefWidth="925.0" stylesheets="@css/projectManager.css">
          <tabs>
             <Tab text="Ratios etc">
                <content>
-                  <Pane fx:id="ratioManagerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0">
+                  <Pane fx:id="ratioManagerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="605.0" prefWidth="925.0">
                      <children>
-                        <ScrollPane fx:id="ratioManagerScrollPane" prefHeight="640.0" prefWidth="935.0">
+                        <ScrollPane fx:id="ratioManagerScrollPane" prefHeight="605.0" prefWidth="925.0">
                           <content>
-                            <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="935.0" />
+                            <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="605.0" prefWidth="925.0" />
                           </content>
                         </ScrollPane>
                      </children>
@@ -33,7 +32,7 @@
             </Tab>
             <Tab text="Process Stage Calamari">
               <content>
-                <AnchorPane fx:id="calamariTabAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: white;">
+                <AnchorPane fx:id="calamariTabAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="605.0" prefWidth="925.0" style="-fx-background-color: white;">
                      <children>
                         <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="66.0" prefHeight="17.0" prefWidth="250.0" stylesheets="@../../../../../../../../../Calamari/appfx/src/main/resources/org/cirdles/calamari/newcss.css" text="Normalise Ion Counts for SBM?" />
                         <Label alignment="CENTER_RIGHT" layoutX="37.0" layoutY="101.0" prefHeight="17.0" prefWidth="250.0" stylesheets="@../../../../../../../../../Calamari/appfx/src/main/resources/org/cirdles/calamari/newcss.css" text="Select Ratio Calculation Method:" />

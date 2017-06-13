@@ -48,6 +48,7 @@ public class SquidProject implements Serializable {
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
     private transient Map<String, List<List<Double>>> massTimeSeries;
+    private Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -168,8 +169,8 @@ public class SquidProject implements Serializable {
 
     }
 
-    public void extractMassTimeSeriesFromSession() {
-        massTimeSeries = PrawnFileUtilities.extractMassTimeSeries(prawnFile.getRun());
+    public void createMapOfIndexToMassStationDetails() {
+        mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
     }
 
     public void removeRunFromPrawnFile(Run run) {
@@ -335,5 +336,12 @@ public class SquidProject implements Serializable {
      */
     public Map<String, List<List<Double>>> getMassTimeSeries() {
         return massTimeSeries;
+    }
+
+    /**
+     * @return the mapOfIndexToMassStationDetails
+     */
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
+        return mapOfIndexToMassStationDetails;
     }
 }

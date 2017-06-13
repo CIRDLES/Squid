@@ -300,7 +300,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void reviewMassesMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(ratioManagerUI);
-        squidProject.extractMassTimeSeriesFromSession();
+        squidProject.createMapOfIndexToMassStationDetails();
         launchRatioManager();
         showManager(ratioManagerUI);
     }

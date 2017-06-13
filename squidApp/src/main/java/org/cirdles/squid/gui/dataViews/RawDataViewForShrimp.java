@@ -32,7 +32,9 @@ import javafx.scene.text.TextBuilder;
  */
 public class RawDataViewForShrimp extends AbstractDataView {
 
-    List<List<Double>> massData;
+    private List<Double> measuredTrimMasses;
+    private List<Double> timesOfMeasuredTrimMasses;
+    
     private String massKey = "NONE";
 
     /**
@@ -42,10 +44,11 @@ public class RawDataViewForShrimp extends AbstractDataView {
      * @param massData
      */
     public RawDataViewForShrimp(///
-            Rectangle bounds, String massKey, List<List<Double>> massData) {
+            Rectangle bounds, String massKey, List<Double> measuredTrimMasses, List<Double> timesOfMeasuredTrimMasses) {
         super(bounds, 100, 0);
         this.massKey = massKey;
-        this.massData = massData;
+        this.measuredTrimMasses = measuredTrimMasses;
+        this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
     }
 
     /**
@@ -118,9 +121,9 @@ public class RawDataViewForShrimp extends AbstractDataView {
 
         myOnPeakNormalizedAquireTimes = new double[]{1.289488671E12, 1.289488854E12, 1.289489035E12, 1.289489217E12, 1.289489399E12, 1.289489581E12};
 
-        myOnPeakData = massData.get(0).stream().mapToDouble(Double::doubleValue).toArray();
+        myOnPeakData = measuredTrimMasses.stream().mapToDouble(Double::doubleValue).toArray();
 
-        myOnPeakNormalizedAquireTimes = massData.get(1).stream().mapToDouble(Double::doubleValue).toArray();
+        myOnPeakNormalizedAquireTimes = timesOfMeasuredTrimMasses.stream().mapToDouble(Double::doubleValue).toArray();
 
         setDisplayOffsetY(0.0);
 

@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
@@ -39,6 +40,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.RawDataViewForShrimp;
+import org.cirdles.squid.projects.MassStationDetail;
 import org.cirdles.squid.tasks.storedTasks.SquidBodorkosTask1;
 
 /**
@@ -80,37 +82,66 @@ public class RatioManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ratioAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        ratioAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+        ratioAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
 
         ratiosTabPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        ratiosTabPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+        ratiosTabPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
 
         ratioManagerPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        ratioManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+        ratioManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(65));
 
         ratioManagerScrollPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        ratioManagerScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
+        ratioManagerScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(65));
 
         calamariTabAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        calamariTabAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(29));
-        
+        calamariTabAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+
         ObservableList<String> refMatFistLetterChoiceBoxItems = FXCollections.observableArrayList("A", "T");
         referenceMaterialFistLetterChoiceBox.setItems(refMatFistLetterChoiceBoxItems);
         referenceMaterialFistLetterChoiceBox.setValue("T");
 
-        int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 100;
-        scrolledAnchorPane.setPrefWidth(widthOfView + 150);//5100);
-        scrolledAnchorPane.setPrefHeight(1700);
+        displayMassStationsForReview();
+
+        // original code for plotting mass variations
+        // note must change to only show those with auto-centering on with count_time_sec > 0 in the run table at the mas station
+        int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 350;
+        scrolledAnchorPane.setPrefWidth(widthOfView + 150);
+        scrolledAnchorPane.setPrefHeight(1700);// needs to be based on number of mass stations
         int massCounter = 0;
-        for (Entry<String, List<List<Double>>> entry : squidProject.getMassTimeSeries().entrySet()) {
-            AbstractDataView canvas = new RawDataViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, widthOfView, 150), entry.getKey(), entry.getValue());
-            scrolledAnchorPane.getChildren().add(canvas);
-            GraphicsContext gc1 = canvas.getGraphicsContext2D();
-            canvas.preparePanel();
-            canvas.paint(gc1);
+        for (Entry<Integer, MassStationDetail> entry : squidProject.getMapOfIndexToMassStationDetails().entrySet()) {
+            if (entry.getValue().autoCentered()) {
+                AbstractDataView canvas
+                        = new RawDataViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, widthOfView, 150),
+                                entry.getValue().getMassStationLabel() + "\n > " + entry.getValue().getIsotopeLabel(),
+                                entry.getValue().getMeasuredTrimMasses(),
+                                entry.getValue().getTimesOfMeasuredTrimMasses());
+                scrolledAnchorPane.getChildren().add(canvas);
+                GraphicsContext gc1 = canvas.getGraphicsContext2D();
+                canvas.preparePanel();
+                canvas.paint(gc1);
+
+            } else {
+                List<Double> empty = new ArrayList<>();
+                empty.add(0.0);
+                AbstractDataView canvas
+                        = new RawDataViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, widthOfView, 150),
+                                entry.getValue().getMassStationLabel() + "\n > " + entry.getValue().getIsotopeLabel(),
+                                empty,
+                                empty);
+                scrolledAnchorPane.getChildren().add(canvas);
+                GraphicsContext gc1 = canvas.getGraphicsContext2D();
+                canvas.preparePanel();
+                canvas.paint(gc1);
+            }
 
             massCounter++;
         }
+
+    }
+
+    private void displayMassStationsForReview() {
+        // assume user has got the file healthy - same number of mass stations throughout - check later
+        // let's present the stations from the first run table
 
     }
 
