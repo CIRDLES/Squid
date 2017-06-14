@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="157.0" prefWidth="1024.0" styleClass="backgroundCalamari">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <VBox alignment="CENTER_LEFT" styleClass="inputTextVbox">
+               <children>
+                  <TextField maxWidth="-Infinity" prefHeight="31.0" prefWidth="128.0" promptText="Project Name" styleClass="inputTextFields" />
+                  <TextField maxWidth="-Infinity" promptText="Analyst Name" styleClass="inputTextFields" />
+                  <TextField maxWidth="-Infinity" promptText="File Name" styleClass="inputTextFields" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="25.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+      </VBox>
+      <TabPane maxHeight="1.7976931348623157E308" prefHeight="561.0" prefWidth="1008.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab closable="false" text="1: Session Summary">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="442.0" prefWidth="1006.0" styleClass="ancPanes">
+                     <children>
+                        <VBox layoutX="11.0" layoutY="33.0" prefHeight="227.0" prefWidth="984.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="16.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label styleClass="headerLabel" text="Session Summary" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                                 <children>
+                                    <Label styleClass="sessionSummaryData" text="x Total Analyses" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                                 <children>
+                                    <Label styleClass="sessionSummaryData" text="x Duplicates" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="974.0" styleClass="sessionSummaryData">
+                                 <children>
+                                    <Label text="x Different Species" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="174.0" prefHeight="32.0" prefWidth="974.0">
+                                 <children>
+                                    <Label styleClass="sessionSummaryData" text="x Hours of Total Session Time" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="206.0" prefHeight="32.0" prefWidth="974.0">
+                                 <children>
+                                    <Label styleClass="sessionSummaryData" text="Software Used x" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="BOTTOM_RIGHT" prefHeight="228.0" prefWidth="974.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label text="Squid V 3.0.2" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab closable="false" text="2: Session Audit">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="ancPanes" />
+            </content>
+          </Tab>
+            <Tab closable="false" text="3: Manage Spots">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="ancPanes" />
+              </content>
+            </Tab>
+        </tabs>
+         <VBox.margin>
+            <Insets left="8.0" right="8.0" />
+         </VBox.margin>
+      </TabPane>
+   </children>
+</VBox>

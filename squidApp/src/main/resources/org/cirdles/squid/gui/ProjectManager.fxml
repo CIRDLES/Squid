@@ -18,11 +18,11 @@
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="925.0">
          <children>
             <Label layoutX="9.0" layoutY="11.0" text="Project Name:" />
-            <TextField fx:id="projectNameText" layoutX="119.0" layoutY="9.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
-            <Label layoutX="473.0" layoutY="11.0" prefHeight="20.0" prefWidth="118.0" text="Analyst Name:" />
-            <TextField fx:id="analystNameText" layoutX="594.0" layoutY="8.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
-            <Label layoutX="9.0" layoutY="48.0" text="Prawn XML file:" />
-            <TextField fx:id="orignalPrawnFileName" layoutX="134.0" layoutY="43.0" prefHeight="27.0" prefWidth="783.0" promptText="name of selected Prawn XML file will appear here">
+            <TextField fx:id="projectNameText" layoutX="122.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" styleClass="inputTextFields" />
+            <Label layoutX="386.0" layoutY="11.0" prefHeight="20.0" prefWidth="118.0" text="Analyst Name:" />
+            <TextField fx:id="analystNameText" layoutX="504.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" styleClass="inputTextFields" />
+            <Label layoutX="9.0" layoutY="54.0" text="Prawn File:" />
+            <TextField fx:id="orignalPrawnFileName" layoutX="122.0" layoutY="42.0" prefHeight="41.0" prefWidth="397.0" promptText="name of selected Prawn XML file will appear here" styleClass="inputTextFields">
                <font>
                   <Font name="Lucida Sans Regular" size="12.0" />
                </font></TextField>
@@ -30,10 +30,10 @@
                <tabs>
                   <Tab closable="false" text="1: Session Summary">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="458.0" prefWidth="912.0" style="-fx-background-color: #f4f4f4;">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="458.0" prefWidth="912.0" styleClass="ancPanes">
                            <children>
-                              <Label fx:id="softwareVersionLabel" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="824.0" text="Software Version:" />
-                              <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" layoutX="14.0" layoutY="41.0" prefHeight="99.0" prefWidth="824.0" text="Summary of analyses, duplicates, species, spots" />
+                              <Label fx:id="softwareVersionLabel" layoutX="14.0" layoutY="29.0" prefHeight="20.0" prefWidth="824.0" text="Software Version:" />
+                              <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" layoutX="14.0" layoutY="54.0" prefHeight="99.0" prefWidth="824.0" text="Summary of analyses, duplicates, species, spots" />
                               <Label fx:id="totalAnalysisTimeLabel" layoutX="14.0" layoutY="146.0" prefHeight="20.0" prefWidth="824.0" text="Total analysis time in hours" />
                            </children>
                         </AnchorPane>
@@ -41,16 +41,16 @@
                   </Tab>
                   <Tab closable="false" text="2: Session Audit">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f4f4f4;">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="ancPanes">
                            <children>
-                              <TreeView fx:id="prawnAuditTree" layoutX="4.0" layoutY="3.0" prefHeight="464.0" prefWidth="901.0" style="-fx-background-color: #f4f4f4;" />
+                              <TreeView fx:id="prawnAuditTree" layoutX="4.0" layoutY="3.0" prefHeight="464.0" prefWidth="901.0" styleClass="ancPanes" />
                            </children>
                         </AnchorPane>
                     </content>
                   </Tab>
                   <Tab closable="false" text="3: Manage Spots">
                      <content>
-                        <AnchorPane prefHeight="486.0" prefWidth="908.0" style="-fx-background-color: #f4f4f4;">
+                        <AnchorPane prefHeight="486.0" prefWidth="908.0" styleClass="ancPanes">
                            <children>
                               <ListView fx:id="shrimpFractionList" layoutX="5.0" layoutY="83.0" prefHeight="300.0" prefWidth="435.0">
                                  <tooltip>
@@ -72,7 +72,7 @@
                               <Label layoutX="8.0" layoutY="383.0" style="-fx-font-size: 11;" text="Hint: To remove a spot or split session, right mouse-click on spot for context menu." />
                               <Label layoutX="5.0" layoutY="3.0" text="All Spots:" />
                               <Label layoutX="465.0" layoutY="383.0" style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it for context menu." />
-                              <Label layoutX="531.0" layoutY="409.0" prefHeight="44.0" prefWidth="303.0" style="-fx-text-fill: red; -fx-background-color: white; -fx-border-color: black;" text="&#9;Next steps: &#9;Save Project &#10;&#9;&#9;&#9;&#9;Manage Ratios" wrapText="true" />
+                              <Label layoutX="531.0" layoutY="409.0" prefHeight="44.0" prefWidth="303.0" styleClass="next-steps" text="&#9;Next steps: &#9;Save Project &#10;&#9;&#9;&#9;&#9;Manage Ratios" wrapText="true" />
                            </children>
                         </AnchorPane>
                      </content>
