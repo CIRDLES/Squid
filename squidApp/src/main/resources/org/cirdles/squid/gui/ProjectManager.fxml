@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="650.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+<Pane fx:id="mainProjectManagerPane" prefHeight="640.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
    <children>
-      <AnchorPane layoutX="-2.0" minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="925.0">
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="925.0">
          <children>
             <Label layoutX="9.0" layoutY="11.0" text="Project Name:" />
             <TextField fx:id="projectNameText" layoutX="122.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" styleClass="inputTextFields" />
@@ -26,7 +26,7 @@
                <font>
                   <Font name="Lucida Sans Regular" size="12.0" />
                </font></TextField>
-            <TabPane fx:id="prawnFileTabPane" layoutX="11.0" layoutY="135.0" prefHeight="505.0" prefWidth="910.0">
+            <TabPane fx:id="prawnFileTabPane" layoutX="9.0" layoutY="130.0" prefHeight="505.0" prefWidth="910.0">
                <tabs>
                   <Tab closable="false" text="1: Session Summary">
                     <content>
@@ -82,7 +82,7 @@
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </opaqueInsets>
             </TabPane>
-            <Label layoutX="15.0" layoutY="113.0" prefHeight="20.0" prefWidth="415.0" style="-fx-font-size: 14;" text="Note: spot name duplicates are suffixed with '-DUP-n'" />
+            <Label layoutX="9.0" layoutY="110.0" prefHeight="20.0" prefWidth="415.0" style="-fx-font-size: 14;" text="Note: spot name duplicates are suffixed with '-DUP-n'" />
          </children>
       </AnchorPane>
    </children>

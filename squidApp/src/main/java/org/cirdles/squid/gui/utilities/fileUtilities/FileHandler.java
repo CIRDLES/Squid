@@ -1,0 +1,142 @@
+/*
+ * Copyright 2017 CIRDLES.org.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.cirdles.squid.gui.utilities.fileUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+import javax.xml.bind.JAXBException;
+import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.xml.sax.SAXException;
+
+/**
+ *
+ * @author James F. Bowring
+ */
+public class FileHandler {
+
+    public static String selectProjectFile(Window ownerWindow)
+            throws IOException {
+        String retVal = "";
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Project '.squid' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
+        fileChooser.setInitialDirectory(null);
+
+        File projectFileNew = fileChooser.showOpenDialog(ownerWindow);
+
+        if (projectFileNew != null) {
+            retVal = projectFileNew.getCanonicalPath();
+        }
+
+        return retVal;
+    }
+
+    public static boolean saveProjectFile(SquidProject squidProject, Window ownerWindow)
+            throws IOException {
+
+        boolean retVal = false;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Project '.squid' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
+        fileChooser.setInitialDirectory(null);
+        fileChooser.setInitialFileName(squidProject.getProjectName().toUpperCase(Locale.US) + ".squid");
+
+        File projectFileNew = fileChooser.showSaveDialog(ownerWindow);
+
+        if (projectFileNew != null) {
+            retVal = true;
+            ProjectFileUtilities.serializeSquidProject(squidProject, projectFileNew.getCanonicalPath());
+        }
+
+        return retVal;
+    }
+
+    public static boolean selectPrawnFile(SquidProject squidProject, Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+        boolean retVal = false;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Prawn XML file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
+        fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
+
+        File prawnXMLFileNew = fileChooser.showOpenDialog(ownerWindow);
+
+        if (prawnXMLFileNew != null) {
+            if (prawnXMLFileNew.getName().toLowerCase(Locale.US).endsWith(".xml")) {
+                squidProject.setupPrawnFile(prawnXMLFileNew);
+                retVal = true;
+            } else {
+                throw new IOException("Filename does not end with '.xml'");
+            }
+        }
+
+        return retVal;
+    }
+
+    public static boolean selectForMergeTwoPrawnFiles(SquidProject squidProject, Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+        boolean retVal = false;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Two Prawn XML files");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
+        fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
+
+        List<File> prawnXMLFilesNew = fileChooser.showOpenMultipleDialog(ownerWindow);
+
+        if (prawnXMLFilesNew != null) {
+            if ((prawnXMLFilesNew.size() == 2)
+                    && prawnXMLFilesNew.get(0).getName().toLowerCase(Locale.US).endsWith(".xml")
+                    && prawnXMLFilesNew.get(1).getName().toLowerCase(Locale.US).endsWith(".xml")) {
+                squidProject.setupPrawnFileByMerge(prawnXMLFilesNew);
+                retVal = true;
+            } else {
+                throw new IOException("Please choose exactly 2 Prawn xml files to merge.");
+            }
+        }
+
+        return retVal;
+    }
+
+    public static boolean savePrawnFile(SquidProject squidProject, Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+
+        boolean retVal = false;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Prawn XML file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
+        fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
+        fileChooser.setInitialFileName(squidProject.getPrawnXMLFileName().toUpperCase(Locale.US).replace(".XML", "-REV.xml"));
+
+        File prawnXMLFileNew = fileChooser.showSaveDialog(ownerWindow);
+
+        if (prawnXMLFileNew != null) {
+            squidProject.savePrawnFile(prawnXMLFileNew);
+            retVal = true;
+        }
+
+        return retVal;
+    }
+
+}

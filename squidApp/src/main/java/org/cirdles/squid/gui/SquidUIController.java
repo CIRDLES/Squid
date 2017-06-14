@@ -23,21 +23,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.xml.bind.JAXBException;
-import org.cirdles.calamari.core.PrawnFileHandler;
+import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.Squid;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
-import org.cirdles.squid.fileManagement.CalamariFileManager;
+import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
-import org.cirdles.squid.utilities.SquidSerializer;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
 
 /**
@@ -73,12 +77,17 @@ public class SquidUIController implements Initializable {
     private Menu manageReportsMenu;
     @FXML
     private MenuItem projectManagerMenuItem;
-
-    private Pane projectManagerUI;
     @FXML
     private MenuItem saveSquidProjectMenuItem;
     @FXML
     private MenuItem newSquidProjectByMergeMenuItem;
+
+    @FXML
+    private ImageView squidImageView;
+
+    private static Pane projectManagerUI;
+    private static Pane ratioManagerUI;
+    private static Pane expressionManagerUI;
 
     /**
      * Initializes the controller class.
@@ -88,6 +97,12 @@ public class SquidUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        // center Logo
+        squidImageView.layoutXProperty().bind(primaryStageWindow.getScene().widthProperty()
+                .divide(2).subtract(squidImageView.getFitWidth() / 2));
+        squidImageView.layoutYProperty().bind(primaryStageWindow.getScene().heightProperty()
+                .divide(2).subtract(squidImageView.getFitHeight() / 2).subtract(60));
 
         manageExpressionsMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
@@ -105,14 +120,13 @@ public class SquidUIController implements Initializable {
         projectManagerMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
 
-        CalamariFileManager.initExamplePrawnFiles();
+        CalamariFileUtilities.initExamplePrawnFiles();
     }
 
     private void launchProjectManager() {
 
         try {
-            // prevent stacking of project panes
-            mainPane.getChildren().remove(projectManagerUI);
+            removeAllManagers();
 
             projectManagerUI = FXMLLoader.load(getClass().getResource("ProjectManager.fxml"));
             projectManagerUI.setId("ProjectManager");
@@ -121,8 +135,13 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(projectManagerUI);
             projectManagerUI.setVisible(true);
 
+            //launchRatioManager();
             saveAsSquidProjectMenuItem.setDisable(false);
             closeSquidProjectMenuItem.setDisable(false);
+            projectManagerMenuItem.setDisable(false);
+
+            manageRatiosMenu.setDisable(false);
+            manageExpressionsMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println(">>>>   " + iOException.getMessage());
@@ -130,25 +149,61 @@ public class SquidUIController implements Initializable {
 
     }
 
-    @FXML
-    private void newSquidProjectAction(ActionEvent event) {
+    private void removeAllManagers() {
+        // prevent stacking of project panes
+        mainPane.getChildren().remove(projectManagerUI);
+        mainPane.getChildren().remove(ratioManagerUI);
+        mainPane.getChildren().remove(expressionManagerUI);
+
+        saveAsSquidProjectMenuItem.setDisable(true);
+        closeSquidProjectMenuItem.setDisable(true);
+        projectManagerMenuItem.setDisable(true);
+
+        manageExpressionsMenu.setDisable(true);
+        manageRatiosMenu.setDisable(true);
+        manageTasksMenu.setDisable(true);
+        manageAnalysisMenu.setDisable(true);
+        manageReportsMenu.setDisable(true);
+
+        // logo
+        mainPane.getChildren().get(0).setVisible(true);
+
+    }
+
+    private void prepareForNewProject() {
+        removeAllManagers();
+
         squidProject = new SquidProject();
 
-        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler(), "1.4.5");
+        CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
+
+    }
+
+    @FXML
+    private void newSquidProjectAction(ActionEvent event) {
+        prepareForNewProject();
 
         try {
-            if (squidProject.selectPrawnFile(primaryStageWindow)) {
+            if (FileHandler.selectPrawnFile(squidProject, primaryStageWindow)) {
                 launchProjectManager();
             }
         } catch (IOException | JAXBException | SAXException anException) {
+            String message = anException.getMessage();
+            if (message == null) {
+                message = anException.getCause().getMessage();
+            }
+
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open the selected file.",
+                    "Squid encountered an error while trying to open the selected file:\n\n"
+                    + message,
                     primaryStageWindow);
         }
     }
 
     @FXML
     private void newSquidProjectByMergeAction(ActionEvent event) {
+        prepareForNewProject();
+
         SquidMessageDialog.showInfoDialog(
                 "To merge two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
                 + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
@@ -156,17 +211,19 @@ public class SquidUIController implements Initializable {
                 + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
                 primaryStageWindow);
 
-        squidProject = new SquidProject();
-
-        CalamariFileManager.initProjectFiles(squidProject.getPrawnFileHandler(), "1.4.5");
-
         try {
-            if (squidProject.selectAndMergeTwoPrawnFile(primaryStageWindow)) {
+            if (FileHandler.selectForMergeTwoPrawnFiles(squidProject, primaryStageWindow)) {
                 launchProjectManager();
             }
         } catch (IOException | JAXBException | SAXException anException) {
+            String message = anException.getMessage();
+            if (message == null) {
+                message = anException.getCause().getMessage();
+            }
+
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open and join the selected files.",
+                    "Squid encountered an error while trying to open and join the selected files:\n\n"
+                    + message,
                     primaryStageWindow);
         }
 
@@ -177,7 +234,7 @@ public class SquidUIController implements Initializable {
         if (squidProject != null) {
             ProjectManagerController.saveProjectData();
             try {
-                squidProject.saveProjectFile(SquidUI.primaryStageWindow);
+                FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
             } catch (IOException ex) {
             }
         }
@@ -185,10 +242,12 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void openSquidProjectMenuItemAction(ActionEvent event) {
+        removeAllManagers();
+
         try {
-            String projectFileName = SquidProject.selectProjectFile(SquidUI.primaryStageWindow);
+            String projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
             if (!"".equals(projectFileName)) {
-                squidProject = (SquidProject) SquidSerializer.GetSerializedObjectFromFile(projectFileName);
+                squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName);
                 if (squidProject != null) {
                     squidProject.setPrawnFileHandler(new PrawnFileHandler());
                     squidProject.updatePrawnFileHandlerWithFileLocation();
@@ -201,12 +260,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void closeSquidProjectMenuItemClose(ActionEvent event) {
-        mainPane.getChildren().remove(projectManagerUI);
-
-        saveAsSquidProjectMenuItem.setDisable(true);
-        closeSquidProjectMenuItem.setDisable(true);
-        projectManagerMenuItem.setDisable(true);
-
+        removeAllManagers();
     }
 
     @FXML
@@ -230,7 +284,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void contributeIssueOnGitHubAction(ActionEvent event) {
-        String version = "Squid3 Version: " + SquidUI.VERSION;
+        String version = "Squid3 Version: " + Squid.VERSION;
         String javaVersion = "Java Version: " + System.getProperties().getProperty("java.version");
         String operatingSystem = "OS: " + System.getProperties().getProperty("os.name") + " " + System.getProperties().getProperty("os.version");
 
@@ -241,6 +295,69 @@ public class SquidUIController implements Initializable {
         issueBody.append(urlEncode("\n\nIssue details:\n"));
 
         BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody.toString());
+    }
+
+    @FXML
+    private void reviewMassesMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(ratioManagerUI);
+        squidProject.extractMassTimeSeriesFromSession();
+        launchRatioManager();
+        showManager(ratioManagerUI);
+    }
+
+    private void launchRatioManager() {
+
+        try {
+            ratioManagerUI = FXMLLoader.load(getClass().getResource("RatioManager.fxml"));
+            ratioManagerUI.setId("RatioManager");
+            VBox.setVgrow(ratioManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(ratioManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(ratioManagerUI);
+            ratioManagerUI.setVisible(false);
+
+//            saveAsSquidProjectMenuItem.setDisable(false);
+//            closeSquidProjectMenuItem.setDisable(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println(">>>>   " + iOException.getMessage());
+        }
+    }
+
+    @FXML
+    private void projectManagerMenuItemAction(ActionEvent event) {
+        showManager(projectManagerUI);
+    }
+
+    private void showManager(Node myManager) {
+        for (Node manager : mainPane.getChildren()) {
+            manager.setVisible(false);
+        }
+
+        // logo
+        mainPane.getChildren().get(0).setVisible(true);
+
+        myManager.setVisible(true);
+    }
+
+    @FXML
+    private void exploreExpressionsMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(expressionManagerUI);
+        launchExpressionManager();
+        showManager(expressionManagerUI);
+    }
+    
+       private void launchExpressionManager() {
+
+        try {
+            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
+            expressionManagerUI.setId("ExpressionManager");
+            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(expressionManagerUI);
+            expressionManagerUI.setVisible(false);
+            
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println(">>>>   " + iOException.getMessage());
+        }
     }
 
 }

@@ -25,8 +25,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ListCell;
-import org.cirdles.calamari.prawn.PrawnFile;
-import org.cirdles.calamari.prawn.PrawnFile.Run;
+import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.prawn.PrawnFile.Run;
 
 /**
  *
