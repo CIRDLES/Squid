@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,9 +41,12 @@ public class SquidProject implements Serializable {
 
     private static final long serialVersionUID = 7099919411562934142L;
 
+    private transient SquidPrefixTree prefixTree;
+
     private PrawnFileHandler prawnFileHandler = new PrawnFileHandler();
     private String projectName;
     private String analystName;
+    private String projectNotes;
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
@@ -144,12 +149,17 @@ public class SquidProject implements Serializable {
         return prawnFile.getRun();
     }
 
-    public void preProcessPrawnSession() {
-
+    public void processPrawnSessionForDuplicateSpotNames() {
         List<Run> runs = prawnFile.getRun();
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
             String spotName = runs.get(i).getPar().get(0).getValue();
+            // remove existing duplicate label in case editing occurred
+            int indexDUP = spotName.indexOf("-DUP");
+            if (indexDUP > 0) {
+                runs.get(i).getPar().get(0).setValue(spotName.substring(0, spotName.indexOf("-DUP")));
+                spotName = runs.get(i).getPar().get(0).getValue();
+            }
             if (spotNameCountMap.containsKey(spotName)) {
                 int count = spotNameCountMap.get(spotName);
                 count++;
@@ -159,8 +169,14 @@ public class SquidProject implements Serializable {
                 spotNameCountMap.put(spotName, 0);
             }
         }
+    }
+
+    public void preProcessPrawnSession() {
+
+        processPrawnSessionForDuplicateSpotNames();
 
         // determine time in hours for session
+        List<Run> runs = prawnFile.getRun();
         long startFirst = PrawnFileUtilities.timeInMillisecondsOfRun(runs.get(0));
         long startLast = PrawnFileUtilities.timeInMillisecondsOfRun(runs.get(runs.size() - 1));
         long sessionDuration = startLast - startFirst;
@@ -181,7 +197,7 @@ public class SquidProject implements Serializable {
     }
 
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
-        SquidPrefixTree prefixTree = new SquidPrefixTree();
+        prefixTree = new SquidPrefixTree();
 
         for (int i = 0; i < prawnFile.getRun().size(); i++) {
             SquidPrefixTree leafParent = prefixTree.insert(prawnFile.getRun().get(i).getPar().get(0).getValue());
@@ -232,7 +248,11 @@ public class SquidProject implements Serializable {
 
         // keep first
         runs.clear();
-        runs.addAll(first);
+        // preserve order
+        for (Run runF : first) {
+            runs.add(runF);
+        }
+
         prawnFile.setRuns((short) runs.size());
         try {
             prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[0]);
@@ -240,7 +260,10 @@ public class SquidProject implements Serializable {
         }
 
         runs.clear();
-        runs.addAll(second);
+        // preserve order
+        for (Run runS : second) {
+            runs.add(runS);
+        }
         prawnFile.setRuns((short) runs.size());
         try {
             prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[1]);
@@ -248,7 +271,14 @@ public class SquidProject implements Serializable {
         }
 
         // restore list
-        runs.addAll(first);
+        runs.clear();
+        // preserve order
+        for (Run runF : first) {
+            runs.add(runF);
+        }
+        for (Run runS : second) {
+            runs.add(runS);
+        }
         prawnFile.setRuns((short) runs.size());
 
         return retVal;
@@ -294,6 +324,20 @@ public class SquidProject implements Serializable {
      */
     public void setAnalystName(String analystName) {
         this.analystName = analystName;
+    }
+
+    /**
+     * @return the projectNotes
+     */
+    public String getProjectNotes() {
+        return projectNotes;
+    }
+
+    /**
+     * @param projectNotes the projectNotes to set
+     */
+    public void setProjectNotes(String projectNotes) {
+        this.projectNotes = projectNotes;
     }
 
     /**
@@ -343,5 +387,12 @@ public class SquidProject implements Serializable {
      */
     public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
         return mapOfIndexToMassStationDetails;
+    }
+
+    /**
+     * @return the prefixTree
+     */
+    public SquidPrefixTree getPrefixTree() {
+        return prefixTree;
     }
 }

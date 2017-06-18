@@ -217,6 +217,28 @@ public class SquidPrefixTree {
 ////        }
     }
 
+    public String buildSummaryDataString() {
+        // build species and scans count string        
+        StringBuilder speciesCountBuffer = new StringBuilder();
+        for (Integer count : mapOfSpeciesFrequencies.keySet()) {
+            speciesCountBuffer.append("[" + String.format("%1$ 2d", count) + " in " + String.format("%1$ 3d", mapOfSpeciesFrequencies.get(count)) + "]");
+        }
+        String speciesCounts = speciesCountBuffer.toString();
+
+        StringBuilder scansCountsBuffer = new StringBuilder();
+        for (Integer count : mapOfScansFrequencies.keySet()) {
+            scansCountsBuffer.append("[" + String.format("%1$ 2d", count) + " in " + String.format("%1$ 3d", mapOfScansFrequencies.get(count)) + "]");
+        }
+        String scansCounts = scansCountsBuffer.toString();
+
+        String summary = " Analyses=" + String.format("%1$ 3d", countOfLeaves)
+                + "; Dups=" + String.format("%1$ 3d", countOfDups)
+                + "; Species:" + speciesCounts
+                + "; Scans:" + scansCounts;
+
+        return summary;
+    }
+
     public boolean hasChildren() {
         return children.size() > 0;
     }
