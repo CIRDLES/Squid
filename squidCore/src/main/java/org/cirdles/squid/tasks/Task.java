@@ -226,6 +226,13 @@ public class Task implements TaskInterface, XMLSerializerInterface {
                 isotopeIndices[2 * i] = shrimpFraction.getIndexOfSpeciesByName(ratiosOfInterest.get(i).getNumerator());
                 isotopeIndices[2 * i + 1] = shrimpFraction.getIndexOfSpeciesByName(ratiosOfInterest.get(i).getDenominator());
             }
+            
+            //TODO June 2017 temp hack until expression checking is in place
+            for (int i = 0 ; i < isotopeIndices.length; i ++){
+                if (isotopeIndices[i] == -1){
+                    throw new SquidException("Missing Isotope");
+                }
+            }
 
             int sIndx = shrimpFraction.getReducedPkHt().length - 1;
             double[][] pkInterp = new double[sIndx][shrimpFraction.getReducedPkHt()[0].length];

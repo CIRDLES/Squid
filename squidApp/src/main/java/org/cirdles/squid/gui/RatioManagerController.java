@@ -75,7 +75,7 @@ public class RatioManagerController implements Initializable {
         calamariTabAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         calamariTabAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
 
-        ObservableList<String> refMatFistLetterChoiceBoxItems = FXCollections.observableArrayList("A", "T");
+        ObservableList<String> refMatFistLetterChoiceBoxItems = FXCollections.observableArrayList("0", "A", "M", "T");
         referenceMaterialFistLetterChoiceBox.setItems(refMatFistLetterChoiceBoxItems);
         referenceMaterialFistLetterChoiceBox.setValue("T");
 
@@ -89,7 +89,7 @@ public class RatioManagerController implements Initializable {
                     squidProject.getPrawnFileHandler(),
                     true,//normalizeIonCountsToSBM,
                     false,//useLinearRegressionToCalculateRatios,
-                    "T",//(String) referenceMaterialFirstLetterComboBox.getSelectedItem(),
+                    referenceMaterialFistLetterChoiceBox.getValue(),
                     new SquidBodorkosTask1(), // temporarily hard-wired
                     reduceDataProgressIndicator).execute();
         } else {
