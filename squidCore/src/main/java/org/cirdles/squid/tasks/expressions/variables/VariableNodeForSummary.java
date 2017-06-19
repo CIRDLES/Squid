@@ -18,6 +18,7 @@ package org.cirdles.squid.tasks.expressions.variables;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -70,7 +71,7 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, XMLSeria
      * @return
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task)throws SquidException  {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);

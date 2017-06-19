@@ -16,6 +16,7 @@
 package org.cirdles.squid.tasks.expressions;
 
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 
@@ -30,8 +31,9 @@ public interface ExpressionTreeInterface {
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the double[][]
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task);
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException;
 
     /**
      *
@@ -83,11 +85,14 @@ public interface ExpressionTreeInterface {
      * @param objects
      * @return
      */
-    public static double[] convertObjectArrayToDoubles(Object[] objects) {
+    public static double[] convertObjectArrayToDoubles(Object[] objects) throws SquidException {
+        if (objects == null) {
+            throw new SquidException("Failed to retirieve data.");
+        }
         double[] retVal = new double[objects.length];
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] instanceof Integer) {
-                retVal[i] =  (double)((Integer)objects[i]);        
+                retVal[i] = (double) ((Integer) objects[i]);
             } else {
                 retVal[i] = (double) objects[i];
             }
@@ -100,7 +105,10 @@ public interface ExpressionTreeInterface {
      * @param objects
      * @return
      */
-    public static double[][] convertObjectArrayToDoubles(Object[][] objects) {
+    public static double[][] convertObjectArrayToDoubles(Object[][] objects) throws SquidException {
+        if (objects == null) {
+            throw new SquidException("Failed to retirieve data.");
+        }
         double[][] retVal = new double[objects.length][];
         for (int i = 0; i < objects.length; i++) {
             retVal[i] = convertObjectArrayToDoubles(objects[i]);
@@ -113,7 +121,10 @@ public interface ExpressionTreeInterface {
      * @param types
      * @return
      */
-    public static Object[] convertArrayToObjects(double[] types) {
+    public static Object[] convertArrayToObjects(double[] types) throws SquidException {
+        if (types == null) {
+            throw new SquidException("Failed to retirieve data.");
+        }
         Object[] retVal = new Object[types.length];
         for (int i = 0; i < types.length; i++) {
             retVal[i] = (Object) types[i];
@@ -127,7 +138,10 @@ public interface ExpressionTreeInterface {
      * @param types
      * @return
      */
-    public static Object[][] convertArrayToObjects(double[][] types) {
+    public static Object[][] convertArrayToObjects(double[][] types) throws SquidException {
+        if (types == null) {
+            throw new SquidException("Failed to retirieve data.");
+        }
         Object[][] retVal = new Object[types.length][];
         for (int i = 0; i < types.length; i++) {
             retVal[i] = convertArrayToObjects(types[i]);
@@ -140,7 +154,10 @@ public interface ExpressionTreeInterface {
      * @param objects
      * @return
      */
-    public static boolean[] convertObjectArrayToBooleans(Object[] objects) {
+    public static boolean[] convertObjectArrayToBooleans(Object[] objects) throws SquidException {
+        if (objects == null) {
+            throw new SquidException("Failed to retirieve data.");
+        }
         boolean[] retVal = new boolean[objects.length];
         for (int i = 0; i < objects.length; i++) {
             retVal[i] = (boolean) objects[i];
