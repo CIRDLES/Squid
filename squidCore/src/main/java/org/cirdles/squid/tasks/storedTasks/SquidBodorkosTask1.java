@@ -40,6 +40,7 @@ public class SquidBodorkosTask1 extends Task {
      */
     public SquidBodorkosTask1() {
         super("SquidBodorkosTask1");
+        
         taskExpressionsOrdered.add(CustomExpression_LnUO_U.EXPRESSION);
 
         taskExpressionsOrdered.add(CustomExpression_LnPbR_U.EXPRESSION);
