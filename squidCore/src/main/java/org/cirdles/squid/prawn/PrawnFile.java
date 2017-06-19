@@ -179,6 +179,12 @@ import javax.xml.bind.annotation.XmlValue;
     "sessionQuality",
     "sessionComments",
     "mount",
+    "loginComment",
+    "stdZrU", 
+    "stdUOU", 
+    "stdPbU", 
+    "stdAge", 
+    "stdConcU",
     "run"
 })
 @XmlRootElement(name = "prawn_file")
@@ -213,8 +219,44 @@ public class PrawnFile implements Serializable {
     /**
      *
      */
-    @XmlElement(required = true)
+    @XmlElement(name = "mount", required = true)
     protected String mount;
+
+    /**
+     *
+     */
+    @XmlElement(name = "login_comment")
+    protected String loginComment;
+
+    /**
+     *
+     */
+    @XmlElement(name = "stdZrU", required = false)
+    protected String stdZrU;
+
+    /**
+     *
+     */
+    @XmlElement(name = "stdUOU", required = false)
+    protected String stdUOU;
+
+    /**
+     *
+     */
+    @XmlElement(name = "stdPbU", required = false)
+    protected String stdPbU;
+
+    /**
+     *
+     */
+    @XmlElement(name = "stdAge", required = false)
+    protected String stdAge;
+
+    /**
+     *
+     */
+    @XmlElement(name = "stdConcU", required = false)
+    protected String stdConcU;
 
     /**
      *
@@ -326,6 +368,99 @@ public class PrawnFile implements Serializable {
      */
     public void setMount(String value) {
         this.mount = value;
+    }
+
+    /**
+     * Gets the value of the loginComment property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getLoginComment() {
+        if (loginComment == null){
+            loginComment = "[none provided]";
+        }
+        return loginComment;
+    }
+
+    /**
+     * Sets the value of the loginComment property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setLoginComment(String value) {
+        this.loginComment = value;
+    }
+
+    /**
+     * @return the stdZrU
+     */
+    public String getStdZrU() {
+        return stdZrU;
+    }
+
+    /**
+     * @param stdZrU the stdZrU to set
+     */
+    public void setStdZrU(String stdZrU) {
+        this.stdZrU = stdZrU;
+    }
+
+    /**
+     * @return the stdUOU
+     */
+    public String getStdUOU() {
+        return stdUOU;
+    }
+
+    /**
+     * @param stdUOU the stdUOU to set
+     */
+    public void setStdUOU(String stdUOU) {
+        this.stdUOU = stdUOU;
+    }
+
+    /**
+     * @return the stdPbU
+     */
+    public String getStdPbU() {
+        return stdPbU;
+    }
+
+    /**
+     * @param stdPbU the stdPbU to set
+     */
+    public void setStdPbU(String stdPbU) {
+        this.stdPbU = stdPbU;
+    }
+
+    /**
+     * @return the stdAge
+     */
+    public String getStdAge() {
+        return stdAge;
+    }
+
+    /**
+     * @param stdAge the stdAge to set
+     */
+    public void setStdAge(String stdAge) {
+        this.stdAge = stdAge;
+    }
+
+    /**
+     * @return the stdConcU
+     */
+    public String getStdConcU() {
+        return stdConcU;
+    }
+
+    /**
+     * @param stdConcU the stdConcU to set
+     */
+    public void setStdConcU(String stdConcU) {
+        this.stdConcU = stdConcU;
     }
 
     /**

@@ -54,6 +54,9 @@ public class ProjectManagerController implements Initializable {
     private Pane mainProjectManagerPane;
     @FXML
     private TextArea projectNotesText;
+    @FXML
+    private Label loginCommentLabel;
+
 
     /**
      * Initializes the controller class.
@@ -113,6 +116,10 @@ public class ProjectManagerController implements Initializable {
         softwareVersionLabel.setText(
                 "Software Version: "
                 + squidProject.getPrawnFileShrimpSoftwareVersionName());
+        
+        loginCommentLabel.setText(
+                "Login Comment: "
+                + squidProject.getPrawnFileLoginComment());
 
         extractSummaryStatsFromPrawnFile();
     }

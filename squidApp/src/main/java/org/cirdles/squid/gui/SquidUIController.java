@@ -87,6 +87,7 @@ public class SquidUIController implements Initializable {
 
     private static Pane projectManagerUI;
     private static Pane sessionAuditUI;
+    private static Pane massesAuditUI;
     private static Pane spotManagerUI;
     private static Pane ratioManagerUI;
     private static Pane expressionManagerUI;
@@ -158,6 +159,7 @@ public class SquidUIController implements Initializable {
         // prevent stacking of project panes
         mainPane.getChildren().remove(projectManagerUI);
         mainPane.getChildren().remove(sessionAuditUI);
+        mainPane.getChildren().remove(massesAuditUI);
         mainPane.getChildren().remove(spotManagerUI);
         mainPane.getChildren().remove(ratioManagerUI);
         mainPane.getChildren().remove(expressionManagerUI);
@@ -304,28 +306,6 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody.toString());
     }
 
-    @FXML
-    private void reviewMassesMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(ratioManagerUI);
-        squidProject.createMapOfIndexToMassStationDetails();
-        launchRatioManager();
-        showUI(ratioManagerUI);
-    }
-
-    private void launchRatioManager() {
-        try {
-            ratioManagerUI = FXMLLoader.load(getClass().getResource("RatioManager.fxml"));
-            ratioManagerUI.setId("RatioManager");
-            VBox.setVgrow(ratioManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(ratioManagerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(ratioManagerUI);
-            ratioManagerUI.setVisible(false);
-
-        } catch (IOException | RuntimeException iOException) {
-            System.out.println(">>>>   " + iOException.getMessage());
-        }
-    }
-
     private void launchSessionAudit() {
         try {
             sessionAuditUI = FXMLLoader.load(getClass().getResource("SessionAudit.fxml"));
@@ -335,7 +315,20 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(sessionAuditUI);
             sessionAuditUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            System.out.println(">>>>   " + iOException.getMessage());
+            System.out.println("SessionAudit >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchMassesAudit() {
+        try {
+            massesAuditUI = FXMLLoader.load(getClass().getResource("MassesAudit.fxml"));
+            massesAuditUI.setId("MassesAudit");
+            VBox.setVgrow(massesAuditUI, Priority.ALWAYS);
+            HBox.setHgrow(massesAuditUI, Priority.ALWAYS);
+            mainPane.getChildren().add(massesAuditUI);
+            massesAuditUI.setVisible(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("MassesAudit >>>>   " + iOException.getMessage());
         }
     }
 
@@ -349,6 +342,35 @@ public class SquidUIController implements Initializable {
             spotManagerUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
             System.out.println("SpotManager >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchRatioManager() {
+        try {
+            ratioManagerUI = FXMLLoader.load(getClass().getResource("RatioManager.fxml"));
+            ratioManagerUI.setId("RatioManager");
+            VBox.setVgrow(ratioManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(ratioManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(ratioManagerUI);
+            ratioManagerUI.setVisible(false);
+
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("RatioManager >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchExpressionManager() {
+
+        try {
+            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
+            expressionManagerUI.setId("ExpressionManager");
+            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(expressionManagerUI);
+            expressionManagerUI.setVisible(false);
+
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println(">>>>   " + iOException.getMessage());
         }
     }
 
@@ -375,21 +397,6 @@ public class SquidUIController implements Initializable {
         showUI(expressionManagerUI);
     }
 
-    private void launchExpressionManager() {
-
-        try {
-            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
-            expressionManagerUI.setId("ExpressionManager");
-            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(expressionManagerUI);
-            expressionManagerUI.setVisible(false);
-
-        } catch (IOException | RuntimeException iOException) {
-            System.out.println(">>>>   " + iOException.getMessage());
-        }
-    }
-
     @FXML
     private void auditSessionMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(sessionAuditUI);
@@ -402,6 +409,25 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(spotManagerUI);
         launchSpotManager();
         showUI(spotManagerUI);
+    }
+
+    @FXML
+    private void auditMassesMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(massesAuditUI);
+        squidProject.createMapOfIndexToMassStationDetails();
+        launchMassesAudit();
+        showUI(massesAuditUI);
+    }
+
+    @FXML
+    private void specifyIsotopesMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(ratioManagerUI);
+        launchRatioManager();
+        showUI(ratioManagerUI);
+    }
+
+    @FXML
+    private void selectRatiosMenuItemAction(ActionEvent event) {
     }
 
 }

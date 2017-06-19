@@ -144,6 +144,10 @@ public class SquidProject implements Serializable {
     public String getPrawnFileShrimpSoftwareVersionName() {
         return prawnFile.getSoftwareVersion();
     }
+    
+    public String getPrawnFileLoginComment(){
+        return prawnFile.getLoginComment();
+    }
 
     public List<Run> getPrawnFileRuns() {
         return prawnFile.getRun();

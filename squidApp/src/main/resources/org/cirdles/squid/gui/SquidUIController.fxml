@@ -37,18 +37,19 @@
             <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="Manage Prawn File">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Audit Session" />
-                  <MenuItem mnemonicParsing="false" text="Audit Masses" />
-                  <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots" />
+                  <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Masses" />
+                  <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Edit Spots" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Save Prawn FIle Copy" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Change Prawn FIle" />
                   <MenuItem mnemonicParsing="false" text="Join a Prawn File" />
-                  <MenuItem mnemonicParsing="false" text="Save Prawn FIle Copy" />
               </items>
             </Menu>
             <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Manage Ratios">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#reviewMassesMenuItemAction" text="Review Masses" />
-                  <MenuItem mnemonicParsing="false" text="Select Ratios" />
+                <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Specify Isotopes" />
+                  <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Select Ratios" />
               </items>
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Manage Expressions">
