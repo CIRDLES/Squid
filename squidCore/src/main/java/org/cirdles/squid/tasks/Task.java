@@ -149,7 +149,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
             }
         });
 
-        taskExpressionsOrdered.forEach((expression) -> {
+        for (ExpressionTreeInterface expression : taskExpressionsOrdered) {
             // determine subset of spots to be evaluated - default = all
             List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
             if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {
@@ -159,42 +159,47 @@ public class Task implements TaskInterface, XMLSerializerInterface {
                 spotsForExpression = referenceMaterialSpots;
             }
 
-            // determine type of expression
-            if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
-                try {
-                    double[][] value = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
-                    taskExpressionsEvaluationsPerSpotSet.put(expression.getName(), new SpotSummaryDetails(value, spotsForExpression));
-                } catch (SquidException squidException) {
-                    // TODO: Log and report
-                }
-            } else {
-                // perform expression on each spot
-                spotsForExpression.forEach((spot) -> {
-                    try {
-                        if (((ExpressionTree) expression).hasRatiosOfInterest()) {
-                            // case of Squid switch "NU"
-                            TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel
-                                    = evaluateTaskExpressionsPerSpotPerScan(expression, spot);
-                            // save scan-specific results
-                            spot.getTaskExpressionsForScansEvaluated().add(taskExpressionEvaluatedPerSpotPerScanModel);
-                            // save spot-specific results
-                            double[][] value = new double[][]{{taskExpressionEvaluatedPerSpotPerScanModel.getRatioVal(),
-                                taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
-                            spot.getTaskExpressionsEvaluationsPerSpot().put(expression.getName(), value);
-                        } else {
-                            List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
-                            singleSpot.add(spot);
-                            double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
-                            spot.getTaskExpressionsEvaluationsPerSpot().put(expression.getName(), value);
-                        }
-                    } catch (SquidException squidException) {
-                        // TODO: Log and report
-                    }
-                });
+            try {
+                evauateExpressionForSpotSet(expression, spotsForExpression);
+            } catch (SquidException squidException) {
+                // TODO - log and report failure of expression
+                JOptionPane.showMessageDialog(null,
+                        "Expression failed: " + expression.getName() + " because: " + squidException.getMessage());
             }
+        }
+    }
 
-        });
+    private void evauateExpressionForSpotSet(ExpressionTreeInterface expression, List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
+        // determine type of expression
+        if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
+            double[][] value = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
+            taskExpressionsEvaluationsPerSpotSet.put(expression.getName(), new SpotSummaryDetails(value, spotsForExpression));
+        } else {
+            // perform expression on each spot
+            for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+                evaluateExpressionForSpot(expression, spot);
+            }
+        }
+    }
 
+    private void evaluateExpressionForSpot(ExpressionTreeInterface expression, ShrimpFractionExpressionInterface spot) throws SquidException {
+
+        if (((ExpressionTree) expression).hasRatiosOfInterest()) {
+            // case of Squid switch "NU"
+            TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel
+                    = evaluateTaskExpressionsPerSpotPerScan(expression, spot);
+            // save scan-specific results
+            spot.getTaskExpressionsForScansEvaluated().add(taskExpressionEvaluatedPerSpotPerScanModel);
+            // save spot-specific results
+            double[][] value = new double[][]{{taskExpressionEvaluatedPerSpotPerScanModel.getRatioVal(),
+                taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
+            spot.getTaskExpressionsEvaluationsPerSpot().put(expression.getName(), value);
+        } else {
+            List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
+            singleSpot.add(spot);
+            double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
+            spot.getTaskExpressionsEvaluationsPerSpot().put(expression.getName(), value);
+        }
     }
 
     /**

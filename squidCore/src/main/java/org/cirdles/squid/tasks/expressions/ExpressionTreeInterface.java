@@ -87,7 +87,7 @@ public interface ExpressionTreeInterface {
      */
     public static double[] convertObjectArrayToDoubles(Object[] objects) throws SquidException {
         if (objects == null) {
-            throw new SquidException("Failed to retirieve data.");
+            throw new SquidException("Failed to retrieve data.");
         }
         double[] retVal = new double[objects.length];
         for (int i = 0; i < objects.length; i++) {
@@ -107,7 +107,7 @@ public interface ExpressionTreeInterface {
      */
     public static double[][] convertObjectArrayToDoubles(Object[][] objects) throws SquidException {
         if (objects == null) {
-            throw new SquidException("Failed to retirieve data.");
+            throw new SquidException("Failed to retrieve data.");
         }
         double[][] retVal = new double[objects.length][];
         for (int i = 0; i < objects.length; i++) {
@@ -123,7 +123,7 @@ public interface ExpressionTreeInterface {
      */
     public static Object[] convertArrayToObjects(double[] types) throws SquidException {
         if (types == null) {
-            throw new SquidException("Failed to retirieve data.");
+            throw new SquidException("Failed to retrieve data.");
         }
         Object[] retVal = new Object[types.length];
         for (int i = 0; i < types.length; i++) {
@@ -140,7 +140,7 @@ public interface ExpressionTreeInterface {
      */
     public static Object[][] convertArrayToObjects(double[][] types) throws SquidException {
         if (types == null) {
-            throw new SquidException("Failed to retirieve data.");
+            throw new SquidException("Failed to retrieve data.");
         }
         Object[][] retVal = new Object[types.length][];
         for (int i = 0; i < types.length; i++) {
@@ -156,7 +156,7 @@ public interface ExpressionTreeInterface {
      */
     public static boolean[] convertObjectArrayToBooleans(Object[] objects) throws SquidException {
         if (objects == null) {
-            throw new SquidException("Failed to retirieve data.");
+            throw new SquidException("Failed to retrieve data.");
         }
         boolean[] retVal = new boolean[objects.length];
         for (int i = 0; i < objects.length; i++) {
