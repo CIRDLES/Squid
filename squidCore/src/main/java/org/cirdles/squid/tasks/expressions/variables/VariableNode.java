@@ -84,7 +84,8 @@ public class VariableNode implements ExpressionTreeInterface, XMLSerializerInter
                 retVal[i] = convertArrayToObjects(values);
             }
 
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException methodException) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException    methodException) {
+            throw new SquidException("Could not find variable " + name);
         }
 
         return retVal;
