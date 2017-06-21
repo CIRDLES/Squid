@@ -43,7 +43,7 @@
             </VBox>
          </children>
       </VBox>
-      <TabPane fx:id="prawnFileTabPane" maxHeight="1.7976931348623157E308" prefHeight="582.0" prefWidth="1008.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane maxHeight="1.7976931348623157E308" prefHeight="582.0" prefWidth="1008.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab closable="false" text="1: Session Summary">
             <content>
@@ -107,10 +107,10 @@
                      <children>
                         <VBox prefWidth="500.0">
                            <children>
-                              <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="99.0" prefWidth="200.0" spacing="16.0">
+                              <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="99.0" prefWidth="200.0">
                                  <children>
-                                    <TextField fx:id="filterSpotNameText" prefHeight="47.0" prefWidth="201.0" promptText="Filter by Spot Name" styleClass="inputTextFields" />
-                                    <Label fx:id="spotsShownLabel" styleClass="shownLabel" text="0/0 shown" />
+                                    <TextField fx:id="filterSpotNameText" promptText="Filter by Spot Name" styleClass="inputTextFields" />
+                                    <Label fx:id="spotsShownLabel" text="0/0 shown" />
                                  </children>
                               </HBox>
                               <Label fx:id="headerLabel" prefHeight="17.0" prefWidth="428.0" text="Header label" />
@@ -121,7 +121,7 @@
                               </ListView>
                               <HBox alignment="CENTER" prefHeight="69.0" prefWidth="500.0">
                                  <children>
-                                    <TextField fx:id="selectedSpotNameText" prefHeight="28.0" prefWidth="169.0" promptText="Edit Spot Name" styleClass="inputTextFields" />
+                                    <TextField fx:id="selectedSpotNameText" promptText="Edit Spot Name" styleClass="inputTextFields" />
                                     <Button fx:id="saveSpotNameButton" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Name" />
                                  </children>
                               </HBox>
