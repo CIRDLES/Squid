@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="mainProjectManagerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+   <children>
+      <VBox prefHeight="157.0" prefWidth="1024.0" styleClass="backgroundCalamari">
+         <children>
+            <VBox alignment="CENTER_LEFT" styleClass="inputTextVbox">
+               <children>
+                  <TextField fx:id="projectNameText" maxWidth="-Infinity" prefHeight="31.0" prefWidth="128.0" promptText="Project Name">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <styleClass>
+                        <String fx:value="inputTextFields" />
+                        <String fx:value="projectNameAnName" />
+                     </styleClass>
+                  </TextField>
+                  <TextField fx:id="analystNameText" maxWidth="-Infinity" prefWidth="211.0" promptText="Analyst Name">
+                     <styleClass>
+                        <String fx:value="inputTextFields" />
+                        <String fx:value="projectNameAnName" />
+                     </styleClass></TextField>
+                  <TextField fx:id="orignalPrawnFileName" maxWidth="-Infinity" prefHeight="47.0" prefWidth="1005.0" promptText="File Name" styleClass="inputFileField" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="25.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+      </VBox>
+      <TabPane fx:id="prawnFileTabPane" maxHeight="1.7976931348623157E308" prefHeight="582.0" prefWidth="1008.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab closable="false" text="1: Session Summary">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="442.0" prefWidth="1006.0" styleClass="ancPanes">
+                     <children>
+                        <VBox layoutX="11.0" layoutY="33.0" prefHeight="227.0" prefWidth="984.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="16.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label styleClass="headerLabel" text="Session Summary" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                                 <children>
+                                    <Label styleClass="sessionSummaryData" text="x Total Analyses" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                                 <children>
+                                    <Label styleClass="sessionSummaryData" text="x Duplicates" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="974.0" styleClass="sessionSummaryData">
+                                 <children>
+                                    <Label text="x Different Species" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="174.0" prefHeight="32.0" prefWidth="974.0">
+                                 <children>
+                                    <Label fx:id="totalAnalysisTimeLabel" styleClass="sessionSummaryData" text="x Hours of Total Session Time" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="206.0" prefHeight="32.0" prefWidth="974.0">
+                                 <children>
+                                    <Label fx:id="softwareVersionLabel" styleClass="sessionSummaryData" text="Software Used x" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="BOTTOM_RIGHT" prefHeight="228.0" prefWidth="974.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" prefHeight="99.0" prefWidth="824.0" text="Summary of analyses, duplicates, species, spots" />
+                                    <Label text="Squid V 3.0.2" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab closable="false" text="2: Session Audit">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="ancPanes">
+                     <children>
+                        <TreeView fx:id="prawnAuditTree" layoutX="7.0" layoutY="4.0" prefHeight="538.0" prefWidth="994.0" styleClass="ancPanes" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab closable="false" text="3: Manage Spots">
+              <content>
+                  <HBox styleClass="ancPanes">
+                     <children>
+                        <VBox prefWidth="500.0">
+                           <children>
+                              <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="99.0" prefWidth="200.0" spacing="16.0">
+                                 <children>
+                                    <TextField fx:id="filterSpotNameText" prefHeight="47.0" prefWidth="201.0" promptText="Filter by Spot Name" styleClass="inputTextFields" />
+                                    <Label fx:id="spotsShownLabel" styleClass="shownLabel" text="0/0 shown" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="headerLabel" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+                              <ListView fx:id="shrimpFractionList" prefHeight="300.0" prefWidth="435.0">
+                                 <tooltip>
+                                    <Tooltip text="Right-click spot for removal menu." />
+                                 </tooltip>
+                              </ListView>
+                              <HBox alignment="CENTER" prefHeight="69.0" prefWidth="500.0">
+                                 <children>
+                                    <TextField fx:id="selectedSpotNameText" prefHeight="28.0" prefWidth="169.0" promptText="Edit Spot Name" styleClass="inputTextFields" />
+                                    <Button fx:id="saveSpotNameButton" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Name" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="30.0" prefWidth="500.0">
+                                 <children>
+                                    <Button fx:id="savePrawnFileButton" mnemonicParsing="false" onAction="#savePrawnFileAction" text="Save as New Prawn File" />
+                                    <Button fx:id="setFilteredSpotsAsRefMatButton" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" text="Set Filtered Spots to Reference " />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <VBox prefWidth="500.0">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label styleClass="referenceHeader" text="Reference Material for this Project" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="headerLabelRefMat" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+                              <ListView fx:id="shrimpRefMatList" prefHeight="300.0" prefWidth="435.0" />
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label prefHeight="59.0" prefWidth="303.0" styleClass="next-steps" text="&#9;Next steps: &#9;Save Project &#10;&#9;&#9;&#9;&#9;Manage Ratios" wrapText="true" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+              </content>
+            </Tab>
+        </tabs>
+         <VBox.margin>
+            <Insets left="8.0" right="8.0" />
+         </VBox.margin>
+      </TabPane>
+   </children>
+</VBox>

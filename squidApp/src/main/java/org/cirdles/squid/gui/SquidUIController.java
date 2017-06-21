@@ -129,6 +129,7 @@ public class SquidUIController implements Initializable {
             removeAllManagers();
 
             projectManagerUI = FXMLLoader.load(getClass().getResource("ProjectManager.fxml"));
+            // projectManagerUI = FXMLLoader.load(getClass().getResource("main.fxml"));
             projectManagerUI.setId("ProjectManager");
             VBox.setVgrow(projectManagerUI, Priority.ALWAYS);
             HBox.setHgrow(projectManagerUI, Priority.ALWAYS);

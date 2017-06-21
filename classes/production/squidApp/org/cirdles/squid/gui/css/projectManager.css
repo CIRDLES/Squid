@@ -37,7 +37,7 @@
 }
 
 .backgroundCalamari {
-    -fx-background-color: derive(P-Light, 25%);
+    -fx-background-color: P-Light;
 }
 
 
@@ -59,16 +59,12 @@
 }
 
 .inputTextFields{
-    -fx-background-color: transparent;
+    -fx-background-color: rgba(200,200,200, .75);
     -fx-border-color: S-light;
     -fx-padding: 16px 0 8px 0px;
     -fx-border-width: 0 0 2 0;
     /* below is just p-text with an bit of transparency */
     -fx-prompt-text-fill: rgba(33,33,33,.75);
-}
-
-inputTextFields:selected{
-    -fx-border-color: derive(S-light, 20%)
 }
 
 .projectNameAnName{
@@ -107,16 +103,16 @@ inputTextFields:selected{
     -fx-tab-min-width:275px;
     -fx-stroke-width: 0px;
     -fx-border-color: transparent;
-    -fx-background-color: derive(P-Light, 25%);
+    -fx-background-color: P-Light;
 
 }
 .tab-pane *.tab-header-background {
-    -fx-background-color:derive(P-Light, 25%);
+    -fx-background-color: P-Light;
     -fx-alignment: CENTER;
 
 }
 .ancPanes {
-    -fx-background-color: derive(Primary, 30%);
+    -fx-background-color: Primary;
 }
 
 .manageSpotsVBoxes{
@@ -140,15 +136,11 @@ inputTextFields:selected{
 .tab-pane .tab
 {
     -fx-background-color: P-Dark;/*#e6e6e6;*/
-    -fx-text-fill: white;
 
-}
-.tab-pane .tab:selected .tab-label{
-    -fx-text-fill: P-text;
 }
 .tab-pane .tab:selected
 {
-    -fx-background-color: derive(Primary, 30%);
+    -fx-background-color:  Primary;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
@@ -184,10 +176,6 @@ inputTextFields:selected{
  * Author: Pedro Duque Vieira
  * http://pixelduke.wordpress.com/2012/10/23/jmetro-windows-8-controls-on-java/
  */
-.shownLabel{
-    -fx-font-size: 30px;
-    
-}
 .button {
     -fx-padding: 5 22 5 22;   
     -fx-border-color: #e2e2e2;

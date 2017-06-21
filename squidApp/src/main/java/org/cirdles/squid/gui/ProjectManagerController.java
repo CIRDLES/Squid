@@ -110,6 +110,14 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private Pane mainProjectManagerPane;
 
+    // TODO
+    // Change FXML file textfield into a text label.
+    // Change behavior when loading file auto inserting NO_NAME as project name.
+    // Remove Rounded borders from tabs
+    // Update text boxes in Tab 3
+    // Add double click spot name to edit it in row.
+    // De-clutter layout.
+    // Change the 5 manage X menus to one menu item with 5 nested items.
     /**
      * Initializes the controller class.
      *
