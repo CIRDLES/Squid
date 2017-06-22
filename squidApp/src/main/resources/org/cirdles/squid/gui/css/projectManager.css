@@ -19,7 +19,7 @@
 }
 
 .backgroundCalamari {
-    -fx-background-color:    #ffefef;
+    -fx-background-color:    #F0F8FF;
 }
 
 .label {
@@ -129,4 +129,10 @@
 
 .button:default:hover {
     -fx-background-color: derive(-fx-focus-color,30%);
+}
+
+.menu-bar .label {
+    -fx-font-size: 10pt;
+    -fx-text-fill: black;
+    -fx-opacity: 1.0;
 }

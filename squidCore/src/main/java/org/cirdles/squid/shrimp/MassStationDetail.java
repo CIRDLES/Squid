@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.projects;
+package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,6 +40,8 @@ public class MassStationDetail implements Serializable {
     private String isotopeLabel;
     private List<Double> measuredTrimMasses;
     private List<Double> timesOfMeasuredTrimMasses;
+    private List<Integer> indicesOfScansAtMeasurementTimes;
+    private List<Integer> indicesOfRunsAtMeasurementTimes;
 
     private MassStationDetail() {
     }
@@ -49,8 +51,10 @@ public class MassStationDetail implements Serializable {
         this.centeringTimeSec = centeringTimeSec;
         this.isotopeLabel = isotopeLabel;
 
-        measuredTrimMasses = new ArrayList<>();
-        timesOfMeasuredTrimMasses = new ArrayList<>();
+        this.measuredTrimMasses = new ArrayList<>();
+        this.timesOfMeasuredTrimMasses = new ArrayList<>();
+        this.indicesOfScansAtMeasurementTimes = new ArrayList<>();
+        this.indicesOfRunsAtMeasurementTimes = new ArrayList<>();
     }
 
     public boolean autoCentered() {
@@ -90,6 +94,27 @@ public class MassStationDetail implements Serializable {
      */
     public List<Double> getTimesOfMeasuredTrimMasses() {
         return timesOfMeasuredTrimMasses;
+    }
+
+    /**
+     * @return the indicesOfScansAtMeasurementTimes
+     */
+    public List<Integer> getIndicesOfScansAtMeasurementTimes() {
+        return indicesOfScansAtMeasurementTimes;
+    }
+
+    /**
+     * @return the indicesOfRunsAtMeasurementTimes
+     */
+    public List<Integer> getIndicesOfRunsAtMeasurementTimes() {
+        return indicesOfRunsAtMeasurementTimes;
+    }
+
+    /**
+     * @param indicesOfRunsAtMeasurementTimes the indicesOfRunsAtMeasurementTimes to set
+     */
+    public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
+        this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
     }
 
 }

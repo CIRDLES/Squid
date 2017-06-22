@@ -29,8 +29,9 @@ import javafx.scene.shape.Rectangle;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
-import org.cirdles.squid.gui.dataViews.RawDataViewForShrimp;
-import org.cirdles.squid.projects.MassStationDetail;
+import org.cirdles.squid.gui.dataViews.MassStationAuditViewForShrimp;
+import org.cirdles.squid.gui.dataViews.SummaryRawDataViewForShrimp;
+import org.cirdles.squid.shrimp.MassStationDetail;
 
 /**
  * FXML Controller class
@@ -64,41 +65,59 @@ public class MassesAuditController implements Initializable {
     private void displayMassStationsForReview() {
         // assume user has got the file healthy - same number of mass stations throughout - check later
         // let's present the stations from the first run table
+        
+        int heightOfMassPlot = 150;
 
         // original code for plotting mass variations
         // note must change to only show those with auto-centering on with count_time_sec > 0 in the run table at the mas station
         int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 350;
         scrolledAnchorPane.setPrefWidth(widthOfView + 150);
-        scrolledAnchorPane.setPrefHeight(1700);// needs to be based on number of mass stations
+
+//        scrolledAnchorPane.setPrefHeight(3700);// needs to be based on number of mass stations        
+//        AbstractDataView canvas = new SummaryRawDataViewForShrimp(
+//                new Rectangle(25, 25, widthOfView, 3500), 
+//                squidProject.getMapOfIndexToMassStationDetails());
+//        scrolledAnchorPane.getChildren().add(canvas);
+//                GraphicsContext gc1 = canvas.getGraphicsContext2D();
+//                canvas.preparePanel();
+//                canvas.paint(gc1);
         int massCounter = 0;
         for (Map.Entry<Integer, MassStationDetail> entry : squidProject.getMapOfIndexToMassStationDetails().entrySet()) {
             if (entry.getValue().autoCentered()) {
                 AbstractDataView canvas
-                        = new RawDataViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, widthOfView, 150),
-                                entry.getValue().getMassStationLabel() + "\n > " + entry.getValue().getIsotopeLabel(),
+                        = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                                entry.getValue().getMassStationLabel(),
                                 entry.getValue().getMeasuredTrimMasses(),
-                                entry.getValue().getTimesOfMeasuredTrimMasses());
+                                entry.getValue().getTimesOfMeasuredTrimMasses(),
+                                entry.getValue().getIndicesOfScansAtMeasurementTimes(),
+                                entry.getValue().getIndicesOfRunsAtMeasurementTimes());
+
                 scrolledAnchorPane.getChildren().add(canvas);
                 GraphicsContext gc1 = canvas.getGraphicsContext2D();
                 canvas.preparePanel();
                 canvas.paint(gc1);
 
-            } else {
-                List<Double> empty = new ArrayList<>();
-                empty.add(0.0);
-                AbstractDataView canvas
-                        = new RawDataViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, widthOfView, 150),
-                                entry.getValue().getMassStationLabel() + "\n > " + entry.getValue().getIsotopeLabel(),
-                                empty,
-                                empty);
-                scrolledAnchorPane.getChildren().add(canvas);
-                GraphicsContext gc1 = canvas.getGraphicsContext2D();
-                canvas.preparePanel();
-                canvas.paint(gc1);
+                massCounter++;
+
             }
+//            else {
+//                List<Double> empty = new ArrayList<>();
+//                empty.add(0.0);
+//                AbstractDataView canvas
+//                        = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, widthOfView, 150),
+//                                entry.getValue().getMassStationLabel() + "\n > " + entry.getValue().getIsotopeLabel(),
+//                                empty,
+//                                empty);
+//                scrolledAnchorPane.getChildren().add(canvas);
+//                GraphicsContext gc1 = canvas.getGraphicsContext2D();
+//                canvas.preparePanel();
+//                canvas.paint(gc1);
+//            }
 
-            massCounter++;
+//            massCounter++;
         }
+
+        scrolledAnchorPane.setPrefHeight((massCounter * heightOfMassPlot) + 50);
 
     }
 

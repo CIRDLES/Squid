@@ -11,15 +11,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionManagerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionManagerController">
    <children>
       <SplitPane dividerPositions="0.35917721518987344" layoutX="-1.0" orientation="VERTICAL" prefHeight="634.0" prefWidth="925.0">
          <items>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="235.0" prefWidth="923.0">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="235.0" prefWidth="923.0" styleClass="backgroundCalamari">
                <children>
                   <SplitPane dividerPositions="0.3505050505050505" layoutX="1.0" layoutY="-4.0" prefHeight="210.0" prefWidth="925.0">
                      <items>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="backgroundCalamari">
                            <children>
                               <ListView id="browser" fx:id="expressionListView" layoutX="30.0" layoutY="31.0" prefHeight="164.0" prefWidth="216.0">
                                  <opaqueInsets>
@@ -36,7 +36,7 @@
                               </Label>
                            </children>
                         </AnchorPane>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="226.0" prefWidth="509.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="226.0" prefWidth="509.0" styleClass="backgroundCalamari">
                            <children>
                               <TextField fx:id="expressionText" layoutX="33.0" layoutY="121.0" prefHeight="32.0" prefWidth="452.0" promptText="enter expression" />
                               <Button alignment="CENTER" layoutX="145.0" layoutY="164.0" onAction="#handleParseButtonAction" prefHeight="31.0" prefWidth="229.0" text="Parse Expression" textAlignment="CENTER" />
@@ -50,7 +50,7 @@
                   </SplitPane>
                </children>
             </AnchorPane>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="321.0" prefWidth="925.0">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="321.0" prefWidth="925.0" styleClass="backgroundCalamari">
                <children>
                   <WebView id="browser" fx:id="browser" layoutX="14.0" layoutY="14.0" prefHeight="340.0" prefWidth="900.0" stylesheets="@../../../../../../../../../Calamari/appfx/src/main/resources/org/cirdles/calamari/newcss.css">
                      <effect>

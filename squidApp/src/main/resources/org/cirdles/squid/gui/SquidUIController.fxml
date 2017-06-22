@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -34,7 +34,7 @@
             <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
           </items>
         </Menu>
-            <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="Manage Prawn File">
+            <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="PrawnFile">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Audit Session" />
                   <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Masses" />
@@ -46,30 +46,30 @@
                   <MenuItem mnemonicParsing="false" text="Join a Prawn File" />
               </items>
             </Menu>
-            <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Manage Ratios">
+            <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Ratios">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Specify Isotopes" />
                   <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Select Ratios" />
               </items>
             </Menu>
-        <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Manage Expressions">
+        <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#exploreExpressionsMenuItemAction" text="Explore" />
           </items>
         </Menu>
-            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Manage Tasks">
+            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Tasks">
               <items>
                 <MenuItem mnemonicParsing="false" text="New Task" />
               </items>
             </Menu>
-            <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Manage Analysis">
+            <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Analysis">
               <items>
-                <MenuItem mnemonicParsing="false" text="Reduce Data" />
+                <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" />
                   <MenuItem mnemonicParsing="false" text="Reference Material Task" />
                   <MenuItem mnemonicParsing="false" text="Unknowns Tasks" />
               </items>
             </Menu>
-            <Menu fx:id="manageReportsMenu" mnemonicParsing="false" text="Manage Reports">
+            <Menu fx:id="manageReportsMenu" mnemonicParsing="false" text="Reports">
               <items>
                 <MenuItem mnemonicParsing="false" text="Specify Report Layout" />
               </items>

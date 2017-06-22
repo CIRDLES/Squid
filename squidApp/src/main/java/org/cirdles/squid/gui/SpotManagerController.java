@@ -273,12 +273,16 @@ public class SpotManagerController implements Initializable {
      * Saves underlying List to squidProject so it can be serialized
      */
     public static void saveProjectData() {
-        List<PrawnFile.Run> plainListRefMat = new ArrayList<>(shrimpRunsRefMat.size());
-        for (PrawnFile.Run r : shrimpRunsRefMat) {
-            plainListRefMat.add(r);
-        }
+        if (shrimpRunsRefMat != null) {
+            List<PrawnFile.Run> plainListRefMat = new ArrayList<>(shrimpRunsRefMat.size());
+            for (PrawnFile.Run r : shrimpRunsRefMat) {
+                plainListRefMat.add(r);
+            }
 
-        squidProject.setShrimpRunsRefMat(plainListRefMat);
+            squidProject.setShrimpRunsRefMat(plainListRefMat);
+        } else {
+            squidProject.setShrimpRunsRefMat(new ArrayList<>());
+        }
     }
 
 }

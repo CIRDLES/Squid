@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.projects;
 
+import org.cirdles.squid.shrimp.MassStationDetail;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;

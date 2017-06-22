@@ -26,7 +26,7 @@ import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
 import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan;
 import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan.Measurement;
-import org.cirdles.squid.projects.MassStationDetail;
+import org.cirdles.squid.shrimp.MassStationDetail;
 
 /**
  *
@@ -76,6 +76,7 @@ public final class PrawnFileUtilities {
         }
         
         // collect mass variations by time for all runs
+        int runIndex = 1;
         for (Run run : runs) {
             long runStartTime = timeInMillisecondsOfRun(run);
             List<Scan> scans = run.getSet().getScan();
@@ -91,10 +92,13 @@ public final class PrawnFileUtilities {
                     MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
                     massStationDetail.getMeasuredTrimMasses().add(trimMass);
                     massStationDetail.getTimesOfMeasuredTrimMasses().add((double) measurementTime);
+                    massStationDetail.getIndicesOfScansAtMeasurementTimes().add((int) scan.getNumber());
+                    massStationDetail.getIndicesOfRunsAtMeasurementTimes().add(runIndex);
                     
                     index++;
                 }
             }
+            runIndex++;
         }
 
         return mapOfIndexToMassStationDetails;

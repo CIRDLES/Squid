@@ -37,12 +37,8 @@ import org.cirdles.squid.tasks.storedTasks.SquidBodorkosTask1;
  *
  * @author James F. Bowring
  */
-public class RatioManagerController implements Initializable {
+public class AnalysisManagerController implements Initializable {
 
-    @FXML
-    private ChoiceBox<String> referenceMaterialFistLetterChoiceBox;
-    @FXML
-    private ProgressIndicator reduceDataProgressIndicator;
     @FXML
     private AnchorPane calamariTabAnchorPane;
     @FXML
@@ -50,7 +46,11 @@ public class RatioManagerController implements Initializable {
     @FXML
     private ToggleGroup toggleGroupRatioCalcMethod;
     @FXML
+    private ChoiceBox<String> referenceMaterialFistLetterChoiceBox;
+    @FXML
     private Button reduceDataButton;
+    @FXML
+    private ProgressIndicator reduceDataProgressIndicator;
 
     /**
      * Initializes the controller class.

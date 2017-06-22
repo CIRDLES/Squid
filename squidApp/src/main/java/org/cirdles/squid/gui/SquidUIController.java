@@ -91,6 +91,7 @@ public class SquidUIController implements Initializable {
     private static Pane spotManagerUI;
     private static Pane ratioManagerUI;
     private static Pane expressionManagerUI;
+    private static Pane analysisManagerUI;
     @FXML
     private Menu managePrawnFileMenu;
 
@@ -148,6 +149,7 @@ public class SquidUIController implements Initializable {
             managePrawnFileMenu.setDisable(false);
             manageRatiosMenu.setDisable(false);
             manageExpressionsMenu.setDisable(false);
+            manageAnalysisMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println(">>>>   " + iOException.getMessage());
@@ -163,12 +165,14 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(spotManagerUI);
         mainPane.getChildren().remove(ratioManagerUI);
         mainPane.getChildren().remove(expressionManagerUI);
+        mainPane.getChildren().remove(analysisManagerUI);
 
         saveAsSquidProjectMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
         projectManagerMenuItem.setDisable(true);
 
         manageExpressionsMenu.setDisable(true);
+        managePrawnFileMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
@@ -370,7 +374,21 @@ public class SquidUIController implements Initializable {
             expressionManagerUI.setVisible(false);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println(">>>>   " + iOException.getMessage());
+            System.out.println("ExpressionManager >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchAnalysisManager() {
+        try {
+            analysisManagerUI = FXMLLoader.load(getClass().getResource("AnalysisManager.fxml"));
+            analysisManagerUI.setId("AnalysisManager");
+            VBox.setVgrow(analysisManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(analysisManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(analysisManagerUI);
+            analysisManagerUI.setVisible(false);
+
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("AnalysisManager >>>>   " + iOException.getMessage());
         }
     }
 
@@ -421,13 +439,20 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void specifyIsotopesMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(ratioManagerUI);
-        launchRatioManager();
-        showUI(ratioManagerUI);
+//        mainPane.getChildren().remove(ratioManagerUI);
+//        launchRatioManager();
+//        showUI(ratioManagerUI);
     }
 
     @FXML
     private void selectRatiosMenuItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void reduceDataMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(analysisManagerUI);
+        launchAnalysisManager();
+        showUI(analysisManagerUI);
     }
 
 }

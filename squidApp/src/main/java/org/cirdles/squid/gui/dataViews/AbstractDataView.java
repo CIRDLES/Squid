@@ -139,6 +139,11 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     private void drawBorder(GraphicsContext g2d) {
+        // fill it in
+        g2d.setFill(Paint.valueOf("WHITE"));
+        g2d.fillRect(0, 0, width, height);
+
+        // draw bordere
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(1);
         g2d.strokeRect(0, 0, width, height);
