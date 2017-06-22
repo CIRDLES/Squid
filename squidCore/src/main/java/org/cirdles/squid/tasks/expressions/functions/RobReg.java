@@ -55,6 +55,7 @@ public class RobReg extends Function {
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][3] array of slope, slopeErr, y-Intercept, y-IntErr
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
     public Object[][] eval(
