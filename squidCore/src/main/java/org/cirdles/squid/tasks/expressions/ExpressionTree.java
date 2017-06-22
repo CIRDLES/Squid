@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.IsotopeNames;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMPXMLConverter;
@@ -216,7 +217,7 @@ public class ExpressionTree
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException{
         return operation == null ? new Object[][]{{0.0, 0.0}} : operation.eval(childrenET, shrimpFractions, task);
     }
 

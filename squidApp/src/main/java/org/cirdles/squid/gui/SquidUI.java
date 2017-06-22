@@ -32,12 +32,15 @@ import javafx.stage.WindowEvent;
  */
 public final class SquidUI extends Application {
 
+    public static final String SPOT_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
     protected static Window primaryStageWindow;
     protected static SquidAboutWindow squidAboutWindow;
+    protected static Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        this.primaryStage = primaryStage;
         Parent root = new AnchorPane();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -59,6 +62,10 @@ public final class SquidUI extends Application {
         primaryStage.setMinWidth(scene.getWidth());
 
         squidAboutWindow = new SquidAboutWindow(primaryStage);
+    }
+    
+    public static void updateStageTitle(String title){
+        primaryStage.setTitle(title);
     }
 
     /**

@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -71,7 +72,7 @@ public class VariableNode implements ExpressionTreeInterface, XMLSerializerInter
      * @return
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         Object[][] retVal = new Object[shrimpFractions.size()][];
 
         try {
@@ -83,7 +84,8 @@ public class VariableNode implements ExpressionTreeInterface, XMLSerializerInter
                 retVal[i] = convertArrayToObjects(values);
             }
 
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException methodException) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException    methodException) {
+            throw new SquidException("Could not find variable " + name);
         }
 
         return retVal;

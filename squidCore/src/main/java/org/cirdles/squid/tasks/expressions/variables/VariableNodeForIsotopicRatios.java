@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -70,7 +71,7 @@ public class VariableNodeForIsotopicRatios implements ExpressionTreeInterface, X
      * @return
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         Object[][] retVal = new Object[shrimpFractions.size()][];
 
         try {

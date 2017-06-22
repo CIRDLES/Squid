@@ -15,35 +15,24 @@
  */
 package org.cirdles.squid.utilities.fileUtilities;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
 import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan;
 import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan.Measurement;
-import org.cirdles.squid.shrimp.IsotopeNames;
+import org.cirdles.squid.shrimp.MassStationDetail;
 
 /**
  *
  * @author James F. Bowring
  */
 public final class PrawnFileUtilities {
-
-    private static Map<String, IsotopeNames> prawnMassNameMap = new HashMap<>();
-
-    static {
-        // provide a map from prawn names to isotope names
-        for (IsotopeNames isotope : IsotopeNames.values()) {
-            prawnMassNameMap.put(isotope.getPrawnName().toUpperCase(Locale.US), isotope);
-        }
-    }
 
     public static long timeInMillisecondsOfRun(Run run) {
         String startDateTime = run.getSet().getPar().get(0).getValue()
@@ -60,65 +49,58 @@ public final class PrawnFileUtilities {
         return milliseconds;
     }
 
-    public static Map<String, List<List<Double>>> extractMassTimeSeries(List<Run> runs) {
-        Map<String, List<List<Double>>> massTimeSeries;
-        massTimeSeries = new TreeMap<>(
-                new Comparator<String>() {
-            @Override
-            public int compare(String prawnMassName1, String prawnMassName2) {
-                // workaround until prawn names list is stable
-                IsotopeNames prawnMassIN1 = prawnMassNameMap.get(prawnMassName1.toUpperCase(Locale.US));
-                double atomicMass1 = 0;
-                if (prawnMassIN1 != null){
-                    atomicMass1 = prawnMassIN1.getAtomicMass();
-                } else{
-                    atomicMass1 = (double)(prawnMassName1.toLowerCase(Locale.US).contains("k") ? 0 :   Double.parseDouble(prawnMassName1.replaceAll("\\D+","")));
-                }
-                
-                IsotopeNames prawnMassIN2 = prawnMassNameMap.get(prawnMassName2.toUpperCase(Locale.US));
-                double atomicMass2 = 0;
-                if (prawnMassIN2 != null){
-                    atomicMass2 = prawnMassIN2.getAtomicMass();
-                } else {
-                    atomicMass2 = (double)(prawnMassName2.toLowerCase(Locale.US).contains("k") ? 0 :   Double.parseDouble(prawnMassName2.replaceAll("\\D+","")));
-                }
-                
-                return Double.compare(atomicMass1,atomicMass2);
-            }
-        });
+    /**
+     * Builds sorted map based on index of mass station to MassStationDetail
+     * from first run table and assumes all run tables have identical labels
+     * across all runs.
+     *
+     * @return Map<Integer, MassStationDetail>
+     */
+    public static Map<Integer, MassStationDetail> createMapOfIndexToMassStationDetails(List<Run> runs) {
+        Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = new TreeMap<>();
 
         // prepare map from first run table
         List<Entry> entries = runs.get(0).getRunTable().getEntry();
+        int index = 0;
         for (Entry entry : entries) {
-            List<List<Double>> data = new ArrayList<>();
-            // element 0 = amu, 1 = timestamp
-            data.add(new ArrayList<>());
-            data.add(new ArrayList<>());
+            String massStationLabel = entry.getPar().get(0).getValue();
+            double atomicMassUnit = Double.parseDouble(entry.getPar().get(1).getValue());
+            double centeringTimeSec = Double.parseDouble(entry.getPar().get(7).getValue());
+            String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(0, RoundingMode.HALF_UP).toPlainString();
+            
+            MassStationDetail massStationDetail = 
+                    new MassStationDetail(massStationLabel, centeringTimeSec, isotopeLabel);
 
-            String massLabel = entry.getPar().get(0).getValue();
-
-            massTimeSeries.put(massLabel, data);
+            mapOfIndexToMassStationDetails.put(index, massStationDetail);
+            index ++;
         }
-
+        
+        // collect mass variations by time for all runs
+        int runIndex = 1;
         for (Run run : runs) {
             long runStartTime = timeInMillisecondsOfRun(run);
             List<Scan> scans = run.getSet().getScan();
             for (Scan scan : scans) {
                 List<Measurement> measurements = scan.getMeasurement();
+                index = 0;
+                // assume measurements are in same order and length as  runtable mass station
                 for (Measurement measurement : measurements) {
                     double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
                     double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
                     long measurementTime = runStartTime + (long) timeStampSec * 1000l;
-
-                    String massLabel = measurement.getData().get(0).getName();
-
-                    massTimeSeries.get(massLabel).get(0).add(trimMass);
-                    massTimeSeries.get(massLabel).get(1).add((double) measurementTime);
+                    
+                    MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
+                    massStationDetail.getMeasuredTrimMasses().add(trimMass);
+                    massStationDetail.getTimesOfMeasuredTrimMasses().add((double) measurementTime);
+                    massStationDetail.getIndicesOfScansAtMeasurementTimes().add((int) scan.getNumber());
+                    massStationDetail.getIndicesOfRunsAtMeasurementTimes().add(runIndex);
+                    
+                    index++;
                 }
             }
+            runIndex++;
         }
 
-        return massTimeSeries;
+        return mapOfIndexToMassStationDetails;
     }
-
 }

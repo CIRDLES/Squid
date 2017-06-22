@@ -16,11 +16,11 @@
 package org.cirdles.squid;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import javafx.stage.Window;
 import org.cirdles.commons.util.ResourceExtractor;
 
 /**
@@ -31,6 +31,7 @@ public final class Squid {
 
     public static final String VERSION;
     public static final String RELEASE_DATE;
+    public static final File defaultCalamariReportsFolder;
 
     public static final StringBuilder ABOUT_WINDOW_CONTENT = new StringBuilder();
 
@@ -74,6 +75,13 @@ public final class Squid {
 
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
+        }
+        
+        defaultCalamariReportsFolder = new File("Squid3_Reports_v" + VERSION);
+        if (!defaultCalamariReportsFolder.exists()) {
+            if (!defaultCalamariReportsFolder.mkdir()) {
+                System.out.println("Failed to make Squid Reports folder.");
+            }
         }
 
     }

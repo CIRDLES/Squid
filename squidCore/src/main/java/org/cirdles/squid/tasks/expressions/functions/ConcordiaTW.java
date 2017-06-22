@@ -16,6 +16,7 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -30,8 +31,8 @@ public class ConcordiaTW extends Function {
 
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and
- returning "Age" and "AgeErr" and encoding the labels for each cell of the
- values array produced by eval.
+     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
+     * values array produced by eval.
      *
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
@@ -59,15 +60,15 @@ public class ConcordiaTW extends Function {
      */
     @Override
     public Object[][] eval(
-            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
+            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task)throws SquidException{
 
         Object[][] retVal;
         try {
             double[] ratioXAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] ratioYAndUnct = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] concordiaTW
-                    = org.cirdles.ludwig.isoplot3.Pub.concordiaTW(1.0 / ratioXAndUnct[0], ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1]);
-            retVal = new Object[][]{convertArrayToObjects( concordiaTW)};
+                    = org.cirdles.ludwig.isoplot3.Pub.concordiaTW(ratioXAndUnct[0], ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1]);
+            retVal = new Object[][]{convertArrayToObjects(concordiaTW)};
         } catch (ArithmeticException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0}};
         }
@@ -95,4 +96,4 @@ public class ConcordiaTW extends Function {
 
         return retVal;
     }
-}
+        }

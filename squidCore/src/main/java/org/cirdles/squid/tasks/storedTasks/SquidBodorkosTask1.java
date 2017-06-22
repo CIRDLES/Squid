@@ -40,6 +40,7 @@ public class SquidBodorkosTask1 extends Task {
      */
     public SquidBodorkosTask1() {
         super("SquidBodorkosTask1");
+        
         taskExpressionsOrdered.add(CustomExpression_LnUO_U.EXPRESSION);
 
         taskExpressionsOrdered.add(CustomExpression_LnPbR_U.EXPRESSION);
@@ -63,7 +64,7 @@ public class SquidBodorkosTask1 extends Task {
         taskExpressionsOrdered.add(CustomExpression_Mean7_6.EXPRESSION);
         
         taskExpressionsOrdered.add(CustomExpression_RawConcAge.EXPRESSION);
-
+        
         // experiment
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(SquidExpressionMinus3.EXPRESSION, "SquidExpressionMinus3.xml");
 //        ExpressionTreeInterface test = new ExpressionTree();

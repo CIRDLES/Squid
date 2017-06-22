@@ -19,7 +19,7 @@ package org.cirdles.squid.constants;
  *
  * @author bowring
  */
-public final class CalamariConstants {
+public final class Squid3Constants {
 
     /**
      *
@@ -37,16 +37,18 @@ public final class CalamariConstants {
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
             + "                                https://raw.githubusercontent.com/CIRDLES/ShrimpXSD/master/SHRIMP_PRAWN.xsd\">";
-    
+
     /**
      *
      */
-    public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA 
+    public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA
             = "https://raw.githubusercontent.com/CIRDLES/ShrimpXSD/master/SHRIMP_PRAWN.xsd";
-    
+
     /**
      *
      */
     public static final String DEFAULT_PRAWNFILE_NAME = "NO_NAME_";
+
+    public static final String SQUID_USERS_DATA_FOLDER_NAME = "Squid User Data";
 
 }

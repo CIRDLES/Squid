@@ -86,8 +86,14 @@ public class SquidUIController implements Initializable {
     private ImageView squidImageView;
 
     private static Pane projectManagerUI;
+    private static Pane sessionAuditUI;
+    private static Pane massesAuditUI;
+    private static Pane spotManagerUI;
     private static Pane ratioManagerUI;
     private static Pane expressionManagerUI;
+    private static Pane analysisManagerUI;
+    @FXML
+    private Menu managePrawnFileMenu;
 
     /**
      * Initializes the controller class.
@@ -105,6 +111,7 @@ public class SquidUIController implements Initializable {
                 .divide(2).subtract(squidImageView.getFitHeight() / 2).subtract(60));
 
         manageExpressionsMenu.setDisable(true);
+        managePrawnFileMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
@@ -135,13 +142,14 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(projectManagerUI);
             projectManagerUI.setVisible(true);
 
-            //launchRatioManager();
             saveAsSquidProjectMenuItem.setDisable(false);
             closeSquidProjectMenuItem.setDisable(false);
             projectManagerMenuItem.setDisable(false);
 
+            managePrawnFileMenu.setDisable(false);
             manageRatiosMenu.setDisable(false);
             manageExpressionsMenu.setDisable(false);
+            manageAnalysisMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println(">>>>   " + iOException.getMessage());
@@ -152,14 +160,19 @@ public class SquidUIController implements Initializable {
     private void removeAllManagers() {
         // prevent stacking of project panes
         mainPane.getChildren().remove(projectManagerUI);
+        mainPane.getChildren().remove(sessionAuditUI);
+        mainPane.getChildren().remove(massesAuditUI);
+        mainPane.getChildren().remove(spotManagerUI);
         mainPane.getChildren().remove(ratioManagerUI);
         mainPane.getChildren().remove(expressionManagerUI);
+        mainPane.getChildren().remove(analysisManagerUI);
 
         saveAsSquidProjectMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
         projectManagerMenuItem.setDisable(true);
 
         manageExpressionsMenu.setDisable(true);
+        managePrawnFileMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
@@ -232,7 +245,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void saveAsSquidProjectMenuItemAction(ActionEvent event) {
         if (squidProject != null) {
-            ProjectManagerController.saveProjectData();
+            SpotManagerController.saveProjectData();
             try {
                 FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
             } catch (IOException ex) {
@@ -297,16 +310,46 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody.toString());
     }
 
-    @FXML
-    private void reviewMassesMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(ratioManagerUI);
-        squidProject.extractMassTimeSeriesFromSession();
-        launchRatioManager();
-        showManager(ratioManagerUI);
+    private void launchSessionAudit() {
+        try {
+            sessionAuditUI = FXMLLoader.load(getClass().getResource("SessionAudit.fxml"));
+            sessionAuditUI.setId("SessionAudit");
+            VBox.setVgrow(sessionAuditUI, Priority.ALWAYS);
+            HBox.setHgrow(sessionAuditUI, Priority.ALWAYS);
+            mainPane.getChildren().add(sessionAuditUI);
+            sessionAuditUI.setVisible(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("SessionAudit >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchMassesAudit() {
+        try {
+            massesAuditUI = FXMLLoader.load(getClass().getResource("MassesAudit.fxml"));
+            massesAuditUI.setId("MassesAudit");
+            VBox.setVgrow(massesAuditUI, Priority.ALWAYS);
+            HBox.setHgrow(massesAuditUI, Priority.ALWAYS);
+            mainPane.getChildren().add(massesAuditUI);
+            massesAuditUI.setVisible(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("MassesAudit >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchSpotManager() {
+        try {
+            spotManagerUI = FXMLLoader.load(getClass().getResource("SpotManager.fxml"));
+            spotManagerUI.setId("SpotManager");
+            VBox.setVgrow(spotManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(spotManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(spotManagerUI);
+            spotManagerUI.setVisible(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("SpotManager >>>>   " + iOException.getMessage());
+        }
     }
 
     private void launchRatioManager() {
-
         try {
             ratioManagerUI = FXMLLoader.load(getClass().getResource("RatioManager.fxml"));
             ratioManagerUI.setId("RatioManager");
@@ -315,19 +358,46 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(ratioManagerUI);
             ratioManagerUI.setVisible(false);
 
-//            saveAsSquidProjectMenuItem.setDisable(false);
-//            closeSquidProjectMenuItem.setDisable(false);
         } catch (IOException | RuntimeException iOException) {
-            System.out.println(">>>>   " + iOException.getMessage());
+            System.out.println("RatioManager >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchExpressionManager() {
+
+        try {
+            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
+            expressionManagerUI.setId("ExpressionManager");
+            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(expressionManagerUI);
+            expressionManagerUI.setVisible(false);
+
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("ExpressionManager >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchAnalysisManager() {
+        try {
+            analysisManagerUI = FXMLLoader.load(getClass().getResource("AnalysisManager.fxml"));
+            analysisManagerUI.setId("AnalysisManager");
+            VBox.setVgrow(analysisManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(analysisManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(analysisManagerUI);
+            analysisManagerUI.setVisible(false);
+
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("AnalysisManager >>>>   " + iOException.getMessage());
         }
     }
 
     @FXML
     private void projectManagerMenuItemAction(ActionEvent event) {
-        showManager(projectManagerUI);
+        showUI(projectManagerUI);
     }
 
-    private void showManager(Node myManager) {
+    private void showUI(Node myManager) {
         for (Node manager : mainPane.getChildren()) {
             manager.setVisible(false);
         }
@@ -342,22 +412,47 @@ public class SquidUIController implements Initializable {
     private void exploreExpressionsMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(expressionManagerUI);
         launchExpressionManager();
-        showManager(expressionManagerUI);
+        showUI(expressionManagerUI);
     }
-    
-       private void launchExpressionManager() {
 
-        try {
-            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
-            expressionManagerUI.setId("ExpressionManager");
-            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(expressionManagerUI);
-            expressionManagerUI.setVisible(false);
-            
-        } catch (IOException | RuntimeException iOException) {
-            System.out.println(">>>>   " + iOException.getMessage());
-        }
+    @FXML
+    private void auditSessionMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(sessionAuditUI);
+        launchSessionAudit();
+        showUI(sessionAuditUI);
+    }
+
+    @FXML
+    private void manageSpotsMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(spotManagerUI);
+        launchSpotManager();
+        showUI(spotManagerUI);
+    }
+
+    @FXML
+    private void auditMassesMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(massesAuditUI);
+        squidProject.createMapOfIndexToMassStationDetails();
+        launchMassesAudit();
+        showUI(massesAuditUI);
+    }
+
+    @FXML
+    private void specifyIsotopesMenuItemAction(ActionEvent event) {
+//        mainPane.getChildren().remove(ratioManagerUI);
+//        launchRatioManager();
+//        showUI(ratioManagerUI);
+    }
+
+    @FXML
+    private void selectRatiosMenuItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void reduceDataMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(analysisManagerUI);
+        launchAnalysisManager();
+        showUI(analysisManagerUI);
     }
 
 }

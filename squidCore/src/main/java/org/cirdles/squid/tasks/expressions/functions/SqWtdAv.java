@@ -16,6 +16,7 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -60,7 +61,7 @@ public class SqWtdAv extends Function {
      */
     @Override
     public Object[][] eval(
-            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
+            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task)throws SquidException{
 
         Object[][] retVal;
         try {

@@ -35,7 +35,7 @@ public class CustomExpression_RawConcAge {
 
     static {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(0, new VariableNodeForIsotopicRatios(RawRatioNamesSHRIMP.r206_238w.getName()));
+                .addChild(0, new VariableNodeForIsotopicRatios(RawRatioNamesSHRIMP.r238_206w.getName()));
         ((ExpressionTreeBuilderInterface) EXPRESSION)
                 .addChild(new VariableNodeForIsotopicRatios(RawRatioNamesSHRIMP.r207_206w.getName()));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.concordiaTW());

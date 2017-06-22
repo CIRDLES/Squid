@@ -16,6 +16,7 @@
 package org.cirdles.squid.tasks.expressions;
 
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 
@@ -31,8 +32,9 @@ public interface OperationOrFunctionInterface {
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the double[][]
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public abstract Object[][] eval(List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task);
+    public abstract Object[][] eval(List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException;
 
     /**
      * @return the precedence
