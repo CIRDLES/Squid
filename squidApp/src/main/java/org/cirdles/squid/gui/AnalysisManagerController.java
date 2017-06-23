@@ -72,22 +72,25 @@ public class AnalysisManagerController implements Initializable {
 
     @FXML
     private void handleReduceDataButtonAction(ActionEvent event) {
-        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
-            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
-            new ReduceDataWorker(
-                    squidProject.getPrawnFileHandler(),
-                    true,//normalizeIonCountsToSBM,
-                    false,//useLinearRegressionToCalculateRatios,
-                    referenceMaterialFistLetterChoiceBox.getValue(),
-                    new SquidBodorkosTask1(), // temporarily hard-wired
-                    reduceDataProgressIndicator).execute();
-        } else {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Please specify a Prawn XML file for processing.",
-                    "Calamari Warning",
-                    JOptionPane.WARNING_MESSAGE);
-        }
+        
+        squidProject.testRunOfSpecs();
+//        
+//        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
+//            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
+//            new ReduceDataWorker(
+//                    squidProject.getPrawnFileHandler(),
+//                    true,//normalizeIonCountsToSBM,
+//                    false,//useLinearRegressionToCalculateRatios,
+//                    referenceMaterialFistLetterChoiceBox.getValue(),
+//                    new SquidBodorkosTask1(), // temporarily hard-wired
+//                    reduceDataProgressIndicator).execute();
+//        } else {
+//            JOptionPane.showMessageDialog(
+//                    null,
+//                    "Please specify a Prawn XML file for processing.",
+//                    "Calamari Warning",
+//                    JOptionPane.WARNING_MESSAGE);
+//        }
     }
 
 }

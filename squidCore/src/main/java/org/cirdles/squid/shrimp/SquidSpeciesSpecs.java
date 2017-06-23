@@ -15,20 +15,24 @@
  */
 package org.cirdles.squid.shrimp;
 
+import java.io.Serializable;
+
 /**
  *
  * @author James F. Bowring
  */
-public class SquidSpeciesSpecs implements Comparable<SquidSpeciesSpecs> {
+public class SquidSpeciesSpecs implements Comparable<SquidSpeciesSpecs>, Serializable {
+
+    private static final long serialVersionUID = 3001823455775925098L;
 
     private int massStationIndex;
-    private String massStationName;
+    private String massStationSpeciesName;
     private String isotopeName;
     private String elementName;
 
     public SquidSpeciesSpecs(int massStationIndex, String massStationName, String isotopeName, String elementName) {
         this.massStationIndex = massStationIndex;
-        this.massStationName = massStationName;
+        this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
         this.elementName = elementName;
     }
@@ -43,9 +47,9 @@ public class SquidSpeciesSpecs implements Comparable<SquidSpeciesSpecs> {
         boolean retVal = false;
 
         if (speciesSpecs instanceof SquidSpeciesSpecs) {
-            retVal = massStationIndex == ((SquidSpeciesSpecs)speciesSpecs).getMassStationIndex();
+            retVal = massStationIndex == ((SquidSpeciesSpecs) speciesSpecs).getMassStationIndex();
         }
-        
+
         return retVal;
     }
 
@@ -69,17 +73,17 @@ public class SquidSpeciesSpecs implements Comparable<SquidSpeciesSpecs> {
     }
 
     /**
-     * @return the massStationName
+     * @return the massStationSpeciesName
      */
-    public String getMassStationName() {
-        return massStationName;
+    public String getMassStationSpeciesName() {
+        return massStationSpeciesName;
     }
 
     /**
-     * @param massStationName the massStationName to set
+     * @param massStationSpeciesName the massStationSpeciesName to set
      */
-    public void setMassStationName(String massStationName) {
-        this.massStationName = massStationName;
+    public void setMassStationSpeciesName(String massStationSpeciesName) {
+        this.massStationSpeciesName = massStationSpeciesName;
     }
 
     /**

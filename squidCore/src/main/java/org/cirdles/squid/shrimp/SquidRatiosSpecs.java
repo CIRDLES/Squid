@@ -15,11 +15,15 @@
  */
 package org.cirdles.squid.shrimp;
 
+import java.io.Serializable;
+
 /**
  *
  * @author James F. Bowring
  */
-public class SquidRatiosSpecs {
+public class SquidRatiosSpecs implements Serializable {
+
+    private static final long serialVersionUID = -2944080263487487243L;
 
     private String ratioName;
     private SquidSpeciesSpecs numerator;
@@ -72,7 +76,5 @@ public class SquidRatiosSpecs {
     public void setDenominator(SquidSpeciesSpecs denominator) {
         this.denominator = denominator;
     }
-    
-    
-    
+
 }

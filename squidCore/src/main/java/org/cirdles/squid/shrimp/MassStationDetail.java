@@ -27,14 +27,6 @@ import javafx.beans.property.SimpleStringProperty;
 public class MassStationDetail implements Serializable {
 
     private static final long serialVersionUID = -874679604916998001L;
-//    private void readObject(
-//            ObjectInputStream stream)
-//            throws IOException, ClassNotFoundException {
-//        stream.defaultReadObject();
-//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(MassStationDetail.class.getCanonicalName()));
-//        long theSUID = myObject.getSerialVersionUID();
-//        System.out.println("Customized De-serialization of MassStationDetail " + theSUID);
-//    }
 
     private final SimpleStringProperty massStationLabel;
     private final SimpleStringProperty isotopeLabel;

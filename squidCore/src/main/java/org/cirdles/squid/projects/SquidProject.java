@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +28,9 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
+import org.cirdles.squid.shrimp.SquidRatiosSpecs;
+import org.cirdles.squid.shrimp.SquidSessionSpecs;
+import org.cirdles.squid.shrimp.SquidSpeciesSpecs;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -54,6 +55,7 @@ public class SquidProject implements Serializable {
     private String filterForRefMatSpotNames;
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
+    private SquidSessionSpecs squidSessionSpecs;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -65,8 +67,33 @@ public class SquidProject implements Serializable {
 
         this.shrimpRunsRefMat = new ArrayList<>();
         this.sessionDurationHours = 0.0;
+        
+        setupSquidSessionSpecs();
     }
 
+    private void setupSquidSessionSpecs(){
+        List<SquidSpeciesSpecs> squidSpeciesSpecsList = new ArrayList<>();
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(0, "196Zr2O", "196", "Zr2O"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(1, "204Pb", "204", "Pb"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(2, "Bkgnd", "Bkgnd", "Bkgnd"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(3, "206Pb", "206", "Pb"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(4, "207Pb", "207", "Pb"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(5, "208Pb", "208", "Pb"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(6, "238U", "238", "U"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(7, "248ThO", "248", "ThO"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(8, "254UO", "254", "UO"));
+        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(9, "270UO2", "270", "UO2"));
+        
+        List<SquidRatiosSpecs> squidRatiosSpecsList = new ArrayList<>();
+        squidRatiosSpecsList.add(new SquidRatiosSpecs(projectName, squidSpeciesSpecsList.get(0), squidSpeciesSpecsList.get(1)));
+        
+        squidSessionSpecs = new SquidSessionSpecs(squidSpeciesSpecsList, squidRatiosSpecsList, true, false, "T");
+    }
+    
+    public void testRunOfSpecs(){
+        prawnFileHandler.processRunFractions(prawnFile, squidSessionSpecs);
+    }
+    
     public void setupPrawnFile(File prawnXMLFileNew)
             throws IOException, JAXBException, SAXException {
 
@@ -402,5 +429,19 @@ public class SquidProject implements Serializable {
      */
     public SquidPrefixTree getPrefixTree() {
         return prefixTree;
+    }
+
+    /**
+     * @return the squidSessionSpecs
+     */
+    public SquidSessionSpecs getSquidSessionSpecs() {
+        return squidSessionSpecs;
+    }
+
+    /**
+     * @param squidSessionSpecs the squidSessionSpecs to set
+     */
+    public void setSquidSessionSpecs(SquidSessionSpecs squidSessionSpecs) {
+        this.squidSessionSpecs = squidSessionSpecs;
     }
 }

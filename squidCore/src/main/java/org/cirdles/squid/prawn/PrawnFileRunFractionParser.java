@@ -32,10 +32,12 @@ import org.cirdles.squid.shrimp.IsotopeNames;
 import org.cirdles.squid.shrimp.IsotopeRatioModelSHRIMP;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.ShrimpFraction;
-import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
+import org.cirdles.squid.prawn.PrawnFile.Run;
+import org.cirdles.squid.shrimp.SquidSessionSpecs;
+import org.cirdles.squid.shrimp.SquidSpeciesSpecs;
 
 /**
  * Parses run fractions from Prawn files into
@@ -80,17 +82,27 @@ public class PrawnFileRunFractionParser {
 
     /**
      *
-     * @param runFraction the value of runFraction
-     * @param useSBM the value of useSBM
-     * @param userLinFits the value of userLinFits
-     * @param referenceMaterialLetter the value of referenceMaterialLetter
-     * @param task the value of task
+     * @param runFraction
+     * @param useSBM
+     * @param userLinFits
+     * @param referenceMaterialLetter
      * @return the org.cirdles.squid.shrimp.ShrimpFraction
      */
-    public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, String referenceMaterialLetter, TaskInterface task) {
+    public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, String referenceMaterialLetter) {
+        SquidSessionSpecs squidSessionSpecs = new SquidSessionSpecs(
+                null, null, useSBM, userLinFits, referenceMaterialLetter);
+
+        return processRunFraction(runFraction, squidSessionSpecs);
+    }
+
+    public ShrimpFraction processRunFraction(Run runFraction, SquidSessionSpecs squidSessionSpecs) {
+
+        boolean useSBM = squidSessionSpecs.isUseSBM();
+        boolean userLinFits = squidSessionSpecs.isUserLinFits();
+        String referenceMaterialNameFilter = squidSessionSpecs.getReferenceMaterialNameFilter();
 
         ShrimpFraction shrimpFraction = null;
-        prepareRunFractionMetaData(runFraction);
+        prepareRunFractionMetaData(runFraction, squidSessionSpecs);
         if (nScans > 1) {
             parseRunFractionData();
             calculateTotalPerSpeciesCPS();
@@ -121,14 +133,14 @@ public class PrawnFileRunFractionParser {
 
             // determine reference material status
             // hard coded for now
-            if (fractionID.toUpperCase(Locale.US).startsWith(referenceMaterialLetter.toUpperCase(Locale.US))) {
+            if (fractionID.toUpperCase(Locale.US).startsWith(referenceMaterialNameFilter.toUpperCase(Locale.US))) {
                 shrimpFraction.setReferenceMaterial(true);
             }
         }
         return shrimpFraction;
     }
 
-    private void prepareRunFractionMetaData(PrawnFile.Run runFraction) {
+    private void prepareRunFractionMetaData(PrawnFile.Run runFraction, SquidSessionSpecs squidSessionSpecs) {
         fractionID = runFraction.getPar().get(0).getValue();
         nSpecies = Integer.parseInt(runFraction.getPar().get(2).getValue());
         nScans = Integer.parseInt(runFraction.getPar().get(3).getValue());
@@ -139,8 +151,8 @@ public class PrawnFileRunFractionParser {
         String[] firstIntegrations = runFraction.getSet().getScan().get(0).getMeasurement().get(0).getData().get(0).getValue().split(",");
         peakMeasurementsCount = firstIntegrations.length;
 
-        String dateTime = runFraction.getSet().getPar().get(0).getValue() 
-                + " " + runFraction.getSet().getPar().get(1).getValue() 
+        String dateTime = runFraction.getSet().getPar().get(0).getValue()
+                + " " + runFraction.getSet().getPar().get(1).getValue()
                 + (Integer.parseInt(runFraction.getSet().getPar().get(1).getValue().substring(0, 2)) < 12 ? " AM" : " PM");
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss aa");
@@ -150,9 +162,17 @@ public class PrawnFileRunFractionParser {
         }
 
         namesOfSpecies = new String[nSpecies];
+        if (squidSessionSpecs.getSquidSpeciesSpecsList().isEmpty()) {
+            // back compatible
+            for (int i = 0; i < nSpecies; i++) {
+                namesOfSpecies[i] = runTableEntries.get(i).getPar().get(0).getValue();
+            }
+        } else {
+            namesOfSpecies = squidSessionSpecs.getSquidSpeciesNames();
+        }
+
         countTimeSec = new double[nSpecies];
         for (int i = 0; i < nSpecies; i++) {
-            namesOfSpecies[i] = runTableEntries.get(i).getPar().get(0).getValue();
             countTimeSec[i] = Double.parseDouble(runTableEntries.get(i).getPar().get(4).getValue());
         }
 
