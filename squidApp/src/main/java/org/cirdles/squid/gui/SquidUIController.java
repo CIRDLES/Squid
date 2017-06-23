@@ -89,7 +89,8 @@ public class SquidUIController implements Initializable {
     private static Pane sessionAuditUI;
     private static Pane massesAuditUI;
     private static Pane spotManagerUI;
-    private static Pane ratioManagerUI;
+    private static Pane isotopesManagerUI;
+    private static Pane ratiosManagerUI;
     private static Pane expressionManagerUI;
     private static Pane analysisManagerUI;
     @FXML
@@ -163,7 +164,8 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(sessionAuditUI);
         mainPane.getChildren().remove(massesAuditUI);
         mainPane.getChildren().remove(spotManagerUI);
-        mainPane.getChildren().remove(ratioManagerUI);
+        mainPane.getChildren().remove(isotopesManagerUI);
+        mainPane.getChildren().remove(ratiosManagerUI);
         mainPane.getChildren().remove(expressionManagerUI);
         mainPane.getChildren().remove(analysisManagerUI);
 
@@ -349,14 +351,27 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchRatioManager() {
+    private void launchIsotopesManager() {
         try {
-            ratioManagerUI = FXMLLoader.load(getClass().getResource("RatioManager.fxml"));
-            ratioManagerUI.setId("RatioManager");
-            VBox.setVgrow(ratioManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(ratioManagerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(ratioManagerUI);
-            ratioManagerUI.setVisible(false);
+            isotopesManagerUI = FXMLLoader.load(getClass().getResource("IsotopesManager.fxml"));
+            isotopesManagerUI.setId("IsotopesManager");
+            VBox.setVgrow(isotopesManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(isotopesManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(isotopesManagerUI);
+            isotopesManagerUI.setVisible(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchRatiosManager() {
+        try {
+            ratiosManagerUI = FXMLLoader.load(getClass().getResource("RatiosManager.fxml"));
+            ratiosManagerUI.setId("RatiosManager");
+            VBox.setVgrow(ratiosManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(ratiosManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(ratiosManagerUI);
+            ratiosManagerUI.setVisible(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("RatioManager >>>>   " + iOException.getMessage());
@@ -439,13 +454,16 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void specifyIsotopesMenuItemAction(ActionEvent event) {
-//        mainPane.getChildren().remove(ratioManagerUI);
-//        launchRatioManager();
-//        showUI(ratioManagerUI);
+        mainPane.getChildren().remove(isotopesManagerUI);
+        launchIsotopesManager();
+        showUI(isotopesManagerUI);
     }
 
     @FXML
     private void selectRatiosMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(ratiosManagerUI);
+        launchRatiosManager();
+        showUI(ratiosManagerUI);
     }
 
     @FXML
