@@ -67,9 +67,10 @@ public final class PrawnFileUtilities {
             double atomicMassUnit = Double.parseDouble(entry.getPar().get(1).getValue());
             double centeringTimeSec = Double.parseDouble(entry.getPar().get(7).getValue());
             String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(0, RoundingMode.HALF_UP).toPlainString();
-            
+            String elementLabel = massStationLabel.replace(isotopeLabel, "");
+
             MassStationDetail massStationDetail = 
-                    new MassStationDetail(massStationLabel, centeringTimeSec, isotopeLabel);
+                    new MassStationDetail(massStationLabel, centeringTimeSec, isotopeLabel, elementLabel);
 
             mapOfIndexToMassStationDetails.put(index, massStationDetail);
             index ++;
@@ -100,7 +101,7 @@ public final class PrawnFileUtilities {
             }
             runIndex++;
         }
-
+        
         return mapOfIndexToMassStationDetails;
     }
 }

@@ -61,14 +61,6 @@ public class IsotopeRatioModelSHRIMP implements Serializable{
      *
      * @return
      */
-    public boolean numeratorAtomicRatioLessThanDenominator() {
-        return (numerator.getAtomicMass() < denominator.getAtomicMass());
-    }
-
-    /**
-     *
-     * @return
-     */
     public String prettyPrintSimpleName() {
         return Integer.toString(numerator.getAtomicMass()) + "/" + Integer.toString(denominator.getAtomicMass());
     }

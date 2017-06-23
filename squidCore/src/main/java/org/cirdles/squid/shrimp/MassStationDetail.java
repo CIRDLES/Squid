@@ -18,6 +18,7 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
@@ -35,22 +36,22 @@ public class MassStationDetail implements Serializable {
 //        System.out.println("Customized De-serialization of MassStationDetail " + theSUID);
 //    }
 
-    private String massStationLabel;
+    private final SimpleStringProperty massStationLabel;
+    private final SimpleStringProperty isotopeLabel;
+    private final SimpleStringProperty elementLabel;
+
     private double centeringTimeSec;
-    private String isotopeLabel;
     private List<Double> measuredTrimMasses;
     private List<Double> timesOfMeasuredTrimMasses;
     private List<Integer> indicesOfScansAtMeasurementTimes;
     private List<Integer> indicesOfRunsAtMeasurementTimes;
 
-    private MassStationDetail() {
-    }
+    public MassStationDetail(String massStationLabel, double centeringTimeSec, String isotopeLabel, String elementLabel) {
+        this.massStationLabel = new SimpleStringProperty(massStationLabel);
+        this.isotopeLabel = new SimpleStringProperty(isotopeLabel);
+        this.elementLabel = new SimpleStringProperty(elementLabel);
 
-    public MassStationDetail(String massStationLabel, double centeringTimeSec, String isotopeLabel) {
-        this.massStationLabel = massStationLabel;
         this.centeringTimeSec = centeringTimeSec;
-        this.isotopeLabel = isotopeLabel;
-
         this.measuredTrimMasses = new ArrayList<>();
         this.timesOfMeasuredTrimMasses = new ArrayList<>();
         this.indicesOfScansAtMeasurementTimes = new ArrayList<>();
@@ -65,7 +66,7 @@ public class MassStationDetail implements Serializable {
      * @return the massStationLabel
      */
     public String getMassStationLabel() {
-        return massStationLabel;
+        return massStationLabel.get();
     }
 
     /**
@@ -79,7 +80,14 @@ public class MassStationDetail implements Serializable {
      * @return the isotopeLabel
      */
     public String getIsotopeLabel() {
-        return isotopeLabel;
+        return isotopeLabel.get();
+    }
+
+    /**
+     * @return the elementLabel
+     */
+    public String getElementLabel() {
+        return elementLabel.get();
     }
 
     /**
@@ -111,7 +119,8 @@ public class MassStationDetail implements Serializable {
     }
 
     /**
-     * @param indicesOfRunsAtMeasurementTimes the indicesOfRunsAtMeasurementTimes to set
+     * @param indicesOfRunsAtMeasurementTimes the
+     * indicesOfRunsAtMeasurementTimes to set
      */
     public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;

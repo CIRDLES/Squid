@@ -455,6 +455,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void specifyIsotopesMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(isotopesManagerUI);
+        squidProject.createMapOfIndexToMassStationDetails();
         launchIsotopesManager();
         showUI(isotopesManagerUI);
     }

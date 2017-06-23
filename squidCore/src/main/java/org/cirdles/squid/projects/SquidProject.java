@@ -43,6 +43,7 @@ public class SquidProject implements Serializable {
     private static final long serialVersionUID = 7099919411562934142L;
 
     private transient SquidPrefixTree prefixTree;
+    private transient Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
 
     private PrawnFileHandler prawnFileHandler = new PrawnFileHandler();
     private String projectName;
@@ -53,8 +54,6 @@ public class SquidProject implements Serializable {
     private String filterForRefMatSpotNames;
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
-    private transient Map<String, List<List<Double>>> massTimeSeries;
-    private Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -145,8 +144,8 @@ public class SquidProject implements Serializable {
     public String getPrawnFileShrimpSoftwareVersionName() {
         return prawnFile.getSoftwareVersion();
     }
-    
-    public String getPrawnFileLoginComment(){
+
+    public String getPrawnFileLoginComment() {
         return prawnFile.getLoginComment();
     }
 
@@ -381,17 +380,21 @@ public class SquidProject implements Serializable {
     }
 
     /**
-     * @return the massTimeSeries
+     * @return the mapOfIndexToMassStationDetails
      */
-    public Map<String, List<List<Double>>> getMassTimeSeries() {
-        return massTimeSeries;
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
+        return mapOfIndexToMassStationDetails;
     }
 
     /**
      * @return the mapOfIndexToMassStationDetails
      */
-    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
-        return mapOfIndexToMassStationDetails;
+    public List<MassStationDetail> makeListOfMassStationDetails() {
+        List<MassStationDetail> listOfassStationDetails = new ArrayList<>();
+        for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
+            listOfassStationDetails.add(entry.getValue());
+        }
+        return listOfassStationDetails;
     }
 
     /**

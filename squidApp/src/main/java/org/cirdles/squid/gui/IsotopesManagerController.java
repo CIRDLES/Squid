@@ -17,10 +17,17 @@ package org.cirdles.squid.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.shrimp.MassStationDetail;
 
 /**
  * FXML Controller class
@@ -31,6 +38,14 @@ public class IsotopesManagerController implements Initializable {
 
     @FXML
     private AnchorPane isotopesManagerAnchorPane;
+    @FXML
+    private TableView<MassStationDetail> isotopesTableView;
+    @FXML
+    private TableColumn<MassStationDetail, String> massLabelColumn;
+    @FXML
+    private TableColumn<MassStationDetail, String> elementLabelColumn;
+    @FXML
+    private TableColumn<MassStationDetail, String> isotopeLabelColumn;
 
     /**
      * Initializes the controller class.
@@ -39,6 +54,21 @@ public class IsotopesManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         isotopesManagerAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         isotopesManagerAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+
+        setupIsotopeTable();
+    }
+
+    private void setupIsotopeTable() {
+        ObservableList<MassStationDetail> massStationsData
+                = FXCollections.observableArrayList(SquidUIController.squidProject.makeListOfMassStationDetails());
+
+        massLabelColumn.setCellValueFactory(new PropertyValueFactory<>("massStationLabel"));
+        elementLabelColumn.setCellValueFactory(new PropertyValueFactory<>("elementLabel"));
+        isotopeLabelColumn.setCellValueFactory(new PropertyValueFactory<>("isotopeLabel"));
+
+        isotopesTableView.setItems(massStationsData);
+        isotopesTableView.setFixedCellSize(25);
+        isotopesTableView.prefHeightProperty().bind(Bindings.size(isotopesTableView.getItems()).multiply(isotopesTableView.getFixedCellSize()).add(30));
     }
 
 }
