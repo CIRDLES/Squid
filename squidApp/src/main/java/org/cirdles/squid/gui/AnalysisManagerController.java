@@ -72,8 +72,11 @@ public class AnalysisManagerController implements Initializable {
 
     @FXML
     private void handleReduceDataButtonAction(ActionEvent event) {
-        
-        squidProject.testRunOfSpecs();
+
+        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
+            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
+            squidProject.testRunOfSessionModel();
+        }
 //        
 //        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
 //            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();

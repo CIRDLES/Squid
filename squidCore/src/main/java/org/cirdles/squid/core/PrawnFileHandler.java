@@ -56,7 +56,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidSessionSpecs;
+import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.xml.sax.SAXException;
 
@@ -165,7 +165,7 @@ public class PrawnFileHandler implements Serializable {
         return shrimpFractions;
     }
 
-    public List<ShrimpFractionExpressionInterface> processRunFractions(PrawnFile prawnFile, SquidSessionSpecs squidSessionSpecs) {
+    public List<ShrimpFractionExpressionInterface> processRunFractions(PrawnFile prawnFile, SquidSessionModel squidSessionSpecs) {
         List<ShrimpFractionExpressionInterface> shrimpFractions = new ArrayList<>();
         for (int f = 0; f < prawnFile.getRun().size(); f++) {
             PrawnFile.Run runFraction = prawnFile.getRun().get(f);

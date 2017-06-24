@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author James F. Bowring
  */
-public class SquidSpeciesSpecs implements Comparable<SquidSpeciesSpecs>, Serializable {
+public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Serializable {
 
     private static final long serialVersionUID = 3001823455775925098L;
 
@@ -30,7 +30,7 @@ public class SquidSpeciesSpecs implements Comparable<SquidSpeciesSpecs>, Seriali
     private String isotopeName;
     private String elementName;
 
-    public SquidSpeciesSpecs(int massStationIndex, String massStationName, String isotopeName, String elementName) {
+    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
@@ -38,16 +38,16 @@ public class SquidSpeciesSpecs implements Comparable<SquidSpeciesSpecs>, Seriali
     }
 
     @Override
-    public int compareTo(SquidSpeciesSpecs speciesSpecs) {
-        return Integer.compare(massStationIndex, speciesSpecs.getMassStationIndex());
+    public int compareTo(SquidSpeciesModel squidSpeciesModel) {
+        return Integer.compare(massStationIndex, squidSpeciesModel.getMassStationIndex());
     }
 
     @Override
-    public boolean equals(Object speciesSpecs) {
+    public boolean equals(Object squidSpeciesModel) {
         boolean retVal = false;
 
-        if (speciesSpecs instanceof SquidSpeciesSpecs) {
-            retVal = massStationIndex == ((SquidSpeciesSpecs) speciesSpecs).getMassStationIndex();
+        if (squidSpeciesModel instanceof SquidSpeciesModel) {
+            retVal = massStationIndex == ((SquidSpeciesModel) squidSpeciesModel).getMassStationIndex();
         }
 
         return retVal;

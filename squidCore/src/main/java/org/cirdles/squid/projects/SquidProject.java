@@ -28,9 +28,12 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
-import org.cirdles.squid.shrimp.SquidRatiosSpecs;
-import org.cirdles.squid.shrimp.SquidSessionSpecs;
-import org.cirdles.squid.shrimp.SquidSpeciesSpecs;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.shrimp.SquidSessionModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.storedTasks.SquidBodorkosTask1;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -55,7 +58,7 @@ public class SquidProject implements Serializable {
     private String filterForRefMatSpotNames;
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
-    private SquidSessionSpecs squidSessionSpecs;
+    private SquidSessionModel squidSessionModel;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -67,33 +70,46 @@ public class SquidProject implements Serializable {
 
         this.shrimpRunsRefMat = new ArrayList<>();
         this.sessionDurationHours = 0.0;
-        
+
         setupSquidSessionSpecs();
     }
 
-    private void setupSquidSessionSpecs(){
-        List<SquidSpeciesSpecs> squidSpeciesSpecsList = new ArrayList<>();
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(0, "196Zr2O", "196", "Zr2O"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(1, "204Pb", "204", "Pb"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(2, "Bkgnd", "Bkgnd", "Bkgnd"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(3, "206Pb", "206", "Pb"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(4, "207Pb", "207", "Pb"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(5, "208Pb", "208", "Pb"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(6, "238U", "238", "U"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(7, "248ThO", "248", "ThO"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(8, "254UO", "254", "UO"));
-        squidSpeciesSpecsList.add(new SquidSpeciesSpecs(9, "270UO2", "270", "UO2"));
-        
-        List<SquidRatiosSpecs> squidRatiosSpecsList = new ArrayList<>();
-        squidRatiosSpecsList.add(new SquidRatiosSpecs(projectName, squidSpeciesSpecsList.get(0), squidSpeciesSpecsList.get(1)));
-        
-        squidSessionSpecs = new SquidSessionSpecs(squidSpeciesSpecsList, squidRatiosSpecsList, true, false, "T");
+    private void setupSquidSessionSpecs() {
+        List<SquidSpeciesModel> squidSpeciesModelList = new ArrayList<>();
+        squidSpeciesModelList.add(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(1, "204Pb", "204", "Pb"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(2, "Bkgnd", "Bkgnd", "Bkgnd"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(3, "206Pb", "206", "Pb"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(4, "207Pb", "207", "Pb"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(5, "208Pb", "208", "Pb"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(6, "238U", "238", "U"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(7, "248ThO", "248", "ThO"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(8, "254UO", "254", "UO"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(9, "270UO2", "270", "UO2"));
+
+        List<SquidRatiosModel> squidRatiosModelList = new ArrayList<>();
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3), 0));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(4), squidSpeciesModelList.get(3), 1));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(5), squidSpeciesModelList.get(3), 2));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(0), 3));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(6), 4));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(8), squidSpeciesModelList.get(6), 5));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(7), squidSpeciesModelList.get(8), 6));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(9), 7));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(9), squidSpeciesModelList.get(8), 8));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(8), 9));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
+
+        squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
     }
-    
-    public void testRunOfSpecs(){
-        prawnFileHandler.processRunFractions(prawnFile, squidSessionSpecs);
+
+    public void testRunOfSessionModel() {
+        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, squidSessionModel);
+
+        TaskInterface squidBodorkosTask1 = new SquidBodorkosTask1();
+        squidBodorkosTask1.evaluateTaskExpressions(shrimpFractions);
     }
-    
+
     public void setupPrawnFile(File prawnXMLFileNew)
             throws IOException, JAXBException, SAXException {
 
@@ -432,16 +448,16 @@ public class SquidProject implements Serializable {
     }
 
     /**
-     * @return the squidSessionSpecs
+     * @return the squidSessionModel
      */
-    public SquidSessionSpecs getSquidSessionSpecs() {
-        return squidSessionSpecs;
+    public SquidSessionModel getSquidSessionModel() {
+        return squidSessionModel;
     }
 
     /**
-     * @param squidSessionSpecs the squidSessionSpecs to set
+     * @param squidSessionModel the squidSessionModel to set
      */
-    public void setSquidSessionSpecs(SquidSessionSpecs squidSessionSpecs) {
-        this.squidSessionSpecs = squidSessionSpecs;
+    public void setSquidSessionModel(SquidSessionModel squidSessionModel) {
+        this.squidSessionModel = squidSessionModel;
     }
 }

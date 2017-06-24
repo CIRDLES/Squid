@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
@@ -36,8 +37,8 @@ import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import org.cirdles.squid.prawn.PrawnFile.Run;
-import org.cirdles.squid.shrimp.SquidSessionSpecs;
-import org.cirdles.squid.shrimp.SquidSpeciesSpecs;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.shrimp.SquidSessionModel;
 
 /**
  * Parses run fractions from Prawn files into
@@ -69,6 +70,7 @@ public class PrawnFileRunFractionParser {
     private double[] totalCps;
     private Map<IsotopeNames, Integer> indexToSpeciesMap;
     private Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios;
+    private SortedSet<SquidRatiosModel> isotopicRatiosII;
 
     private double[][] reducedPkHt;
     private double[][] reducedPkHtFerr;
@@ -89,13 +91,13 @@ public class PrawnFileRunFractionParser {
      * @return the org.cirdles.squid.shrimp.ShrimpFraction
      */
     public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, String referenceMaterialLetter) {
-        SquidSessionSpecs squidSessionSpecs = new SquidSessionSpecs(
+        SquidSessionModel squidSessionSpecs = new SquidSessionModel(
                 null, null, useSBM, userLinFits, referenceMaterialLetter);
 
         return processRunFraction(runFraction, squidSessionSpecs);
     }
 
-    public ShrimpFraction processRunFraction(Run runFraction, SquidSessionSpecs squidSessionSpecs) {
+    public ShrimpFraction processRunFraction(Run runFraction, SquidSessionModel squidSessionSpecs) {
 
         boolean useSBM = squidSessionSpecs.isUseSBM();
         boolean userLinFits = squidSessionSpecs.isUserLinFits();
@@ -109,7 +111,7 @@ public class PrawnFileRunFractionParser {
             calculateIsotopicRatios(useSBM, userLinFits);
             calculateInterpolatedPeakHeights();
 
-            shrimpFraction = new ShrimpFraction(fractionID, isotopicRatios);
+            shrimpFraction = new ShrimpFraction(fractionID, isotopicRatios, isotopicRatiosII);
             shrimpFraction.setDateTimeMilliseconds(dateTimeMilliseconds);
             shrimpFraction.setDeadTimeNanoseconds(deadTimeNanoseconds);
             shrimpFraction.setSbmZeroCps(sbmZeroCps);
@@ -140,7 +142,7 @@ public class PrawnFileRunFractionParser {
         return shrimpFraction;
     }
 
-    private void prepareRunFractionMetaData(PrawnFile.Run runFraction, SquidSessionSpecs squidSessionSpecs) {
+    private void prepareRunFractionMetaData(PrawnFile.Run runFraction, SquidSessionModel squidSessionSpecs) {
         fractionID = runFraction.getPar().get(0).getValue();
         nSpecies = Integer.parseInt(runFraction.getPar().get(2).getValue());
         nScans = Integer.parseInt(runFraction.getPar().get(3).getValue());
@@ -162,7 +164,7 @@ public class PrawnFileRunFractionParser {
         }
 
         namesOfSpecies = new String[nSpecies];
-        if (squidSessionSpecs.getSquidSpeciesSpecsList().isEmpty()) {
+        if (squidSessionSpecs.getSquidSpeciesModelList().isEmpty()) {
             // back compatible
             for (int i = 0; i < nSpecies; i++) {
                 namesOfSpecies[i] = runTableEntries.get(i).getPar().get(0).getValue();
@@ -207,6 +209,8 @@ public class PrawnFileRunFractionParser {
         isotopicRatios.put(RawRatioNamesSHRIMP.r270_254w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r270_254w));
         isotopicRatios.put(RawRatioNamesSHRIMP.r206_254w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r206_254w));
         isotopicRatios.put(RawRatioNamesSHRIMP.r238_206w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r238_206w));
+        
+        isotopicRatiosII = squidSessionSpecs.produceRatiosCopySortedSet();
 
     }
 
@@ -393,10 +397,10 @@ public class PrawnFileRunFractionParser {
         // April 2017 per Bodorkos
         int sigFigs = 12;
 
-        isotopicRatios.forEach((rawRatioName, isotopicRatioModel) -> {
+        isotopicRatiosII.forEach((isotopicRatioModel) -> {
             int nDod = nScans - 1;
-            int NUM = indexToSpeciesMap.get(isotopicRatioModel.getNumerator());
-            int DEN = indexToSpeciesMap.get(isotopicRatioModel.getDenominator());
+            int NUM = isotopicRatioModel.getNumerator().getMassStationIndex();
+            int DEN = isotopicRatioModel.getDenominator().getMassStationIndex();
 
             // test that ratio is legal
             if ((DEN < nSpecies) && (NUM < nSpecies)) {

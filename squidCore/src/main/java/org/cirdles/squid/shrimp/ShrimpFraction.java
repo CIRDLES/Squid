@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 
 /**
@@ -39,6 +42,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private String[] namesOfSpecies;
     private int peakMeasurementsCount;
     private Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios;
+    private SortedSet<SquidRatiosModel> isotopicRatiosII;
     private int[][] rawPeakData;
     private int[][] rawSBMData;
     private double[][] totalCounts;
@@ -75,6 +79,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         namesOfSpecies = new String[0];
         peakMeasurementsCount = 0;
         isotopicRatios = new HashMap<>();
+        isotopicRatiosII = new TreeSet<>();
         rawPeakData = new int[0][0];
         rawSBMData = new int[0][0];
         totalCounts = new double[0][0];
@@ -101,11 +106,13 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      *
      * @param fractionID
      * @param isotopicRatios
+     * @param isotopicRatiosII
      */
-    public ShrimpFraction(String fractionID, Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios) {
+    public ShrimpFraction(String fractionID, Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios, SortedSet<SquidRatiosModel> isotopicRatiosII) {
         this();
         this.fractionID = fractionID;
         this.isotopicRatios = isotopicRatios;
+        this.isotopicRatiosII = isotopicRatiosII;
     }
 
     /**
@@ -275,12 +282,12 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         double[][] ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
         return ratioAndUnct;
     }
-
+    
     /**
-     * @param isotopicRatios the isotopicRatios to set
+     * @return the isotopicRatiosII
      */
-    public void setIsotopicRatios(Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios) {
-        this.isotopicRatios = isotopicRatios;
+    public SortedSet<SquidRatiosModel> getIsotopicRatiosII() {
+        return isotopicRatiosII;
     }
 
     /**

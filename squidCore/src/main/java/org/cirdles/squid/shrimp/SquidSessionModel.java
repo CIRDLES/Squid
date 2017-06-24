@@ -18,12 +18,14 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  *
  * @author James F. Bowring
  */
-public class SquidSessionSpecs implements Serializable {
+public class SquidSessionModel implements Serializable {
 
     private static final long serialVersionUID = -2969849117024998190L;
 //    
@@ -31,63 +33,71 @@ public class SquidSessionSpecs implements Serializable {
 //            ObjectInputStream stream)
 //            throws IOException, ClassNotFoundException {
 //        stream.defaultReadObject();
-//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SquidSessionSpecs.class.getCanonicalName()));
+//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SquidSessionModel.class.getCanonicalName()));
 //        long theSUID = myObject.getSerialVersionUID();
-//        System.out.println("Customized De-serialization of SquidSessionSpecs " + theSUID);
+//        System.out.println("Customized De-serialization of SquidSessionModel " + theSUID);
 //    }
 
-    private List<SquidSpeciesSpecs> squidSpeciesSpecsList;
-    private List<SquidRatiosSpecs> squidRatiosSpecsList;
+    private List<SquidSpeciesModel> squidSpeciesModelList;
+    private List<SquidRatiosModel> squidRatiosModelList;
     private boolean useSBM;
     private boolean userLinFits;
     private String referenceMaterialNameFilter;
 
-    public SquidSessionSpecs(List<SquidSpeciesSpecs> squidSpeciesSpecsList, List<SquidRatiosSpecs> squidRatiosSpecsList, boolean useSBM, boolean userLinFits, String referenceMaterialNameFilter) {
-        this.squidSpeciesSpecsList = squidSpeciesSpecsList == null ? new ArrayList<>() : squidSpeciesSpecsList;
-        this.squidRatiosSpecsList = squidRatiosSpecsList == null ? new ArrayList<>() : squidRatiosSpecsList;
+    public SquidSessionModel(List<SquidSpeciesModel> squidSpeciesSpecsList, List<SquidRatiosModel> squidRatiosSpecsList, boolean useSBM, boolean userLinFits, String referenceMaterialNameFilter) {
+        this.squidSpeciesModelList = squidSpeciesSpecsList == null ? new ArrayList<>() : squidSpeciesSpecsList;
+        this.squidRatiosModelList = squidRatiosSpecsList == null ? new ArrayList<>() : squidRatiosSpecsList;
         this.useSBM = useSBM;
         this.userLinFits = userLinFits;
         this.referenceMaterialNameFilter = referenceMaterialNameFilter;
     }
 
-    /**
-     * @return the squidSpeciesSpecsList
-     */
-    public List<SquidSpeciesSpecs> getSquidSpeciesSpecsList() {
-        return squidSpeciesSpecsList;
+    public SortedSet<SquidRatiosModel> produceRatiosCopySortedSet() {
+        SortedSet<SquidRatiosModel> isotopicRatiosII = new TreeSet<>();
+        for (SquidRatiosModel srm : squidRatiosModelList) {
+            isotopicRatiosII.add(srm.copy());
+        }
+        return isotopicRatiosII;
     }
 
     /**
-     * @return the squidSpeciesSpecsList
+     * @return the squidSpeciesModelList
+     */
+    public List<SquidSpeciesModel> getSquidSpeciesModelList() {
+        return squidSpeciesModelList;
+    }
+
+    /**
+     * @return the squidSpeciesModelList
      */
     public String[] getSquidSpeciesNames() {
-        String[] squidSpeciesNames = new String[squidSpeciesSpecsList.size()];
-        for (int i = 0; i < squidSpeciesSpecsList.size(); i++) {
-            squidSpeciesNames[i] = squidSpeciesSpecsList.get(i).getMassStationSpeciesName();
+        String[] squidSpeciesNames = new String[squidSpeciesModelList.size()];
+        for (int i = 0; i < squidSpeciesModelList.size(); i++) {
+            squidSpeciesNames[i] = squidSpeciesModelList.get(i).getMassStationSpeciesName();
         }
 
         return squidSpeciesNames;
     }
 
     /**
-     * @param squidSpeciesSpecsList the squidSpeciesSpecsList to set
+     * @param squidSpeciesModelList the squidSpeciesModelList to set
      */
-    public void setSquidSpeciesSpecsList(List<SquidSpeciesSpecs> squidSpeciesSpecsList) {
-        this.squidSpeciesSpecsList = squidSpeciesSpecsList;
+    public void setSquidSpeciesModelList(List<SquidSpeciesModel> squidSpeciesModelList) {
+        this.squidSpeciesModelList = squidSpeciesModelList;
     }
 
     /**
-     * @return the squidRatiosSpecsList
+     * @return the squidRatiosModelList
      */
-    public List<SquidRatiosSpecs> getSquidRatiosSpecsList() {
-        return squidRatiosSpecsList;
+    public List<SquidRatiosModel> getSquidRatiosModelList() {
+        return squidRatiosModelList;
     }
 
     /**
-     * @param squidRatiosSpecsList the squidRatiosSpecsList to set
+     * @param squidRatiosModelList the squidRatiosModelList to set
      */
-    public void setSquidRatiosSpecsList(List<SquidRatiosSpecs> squidRatiosSpecsList) {
-        this.squidRatiosSpecsList = squidRatiosSpecsList;
+    public void setSquidRatiosModelList(List<SquidRatiosModel> squidRatiosModelList) {
+        this.squidRatiosModelList = squidRatiosModelList;
     }
 
     /**
