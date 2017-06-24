@@ -18,7 +18,6 @@ package org.cirdles.squid.prawn;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -29,7 +28,6 @@ import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
 import org.cirdles.squid.algorithms.PoissonLimitsCountLessThanEqual100;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import static org.cirdles.squid.constants.Squid3Constants.HARD_WIRED_INDEX_OF_BACKGROUND;
-import org.cirdles.squid.shrimp.IsotopeNames;
 import org.cirdles.squid.shrimp.IsotopeRatioModelSHRIMP;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -68,7 +66,6 @@ public class PrawnFileRunFractionParser {
     private double[][] sbmCps;
     private double[][] pkFerr;
     private double[] totalCps;
-    private Map<IsotopeNames, Integer> indexToSpeciesMap;
     private Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios;
     private SortedSet<SquidRatiosModel> isotopicRatiosII;
 
@@ -185,17 +182,6 @@ public class PrawnFileRunFractionParser {
         pkFerr = new double[nScans][nSpecies];
 
         // april 2016 hard-wired for prototype **********************************
-        indexToSpeciesMap = new HashMap<>();
-        indexToSpeciesMap.put(IsotopeNames.Zr2O196, 0);
-        indexToSpeciesMap.put(IsotopeNames.Pb204, 1);
-        indexToSpeciesMap.put(IsotopeNames.BKGND, 2);
-        indexToSpeciesMap.put(IsotopeNames.Pb206, 3);
-        indexToSpeciesMap.put(IsotopeNames.Pb207, 4);
-        indexToSpeciesMap.put(IsotopeNames.Pb208, 5);
-        indexToSpeciesMap.put(IsotopeNames.U238, 6);
-        indexToSpeciesMap.put(IsotopeNames.ThO248, 7);
-        indexToSpeciesMap.put(IsotopeNames.UO254, 8);
-        indexToSpeciesMap.put(IsotopeNames.UO270, 9);
 
         isotopicRatios = new TreeMap<>();
         isotopicRatios.put(RawRatioNamesSHRIMP.r204_206w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r204_206w));

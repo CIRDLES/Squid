@@ -116,23 +116,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     *
-     * @param speciesName
-     * @return
-     */
-    @Override
-    public int getIndexOfSpeciesByName(IsotopeNames speciesName) {
-        int retVal = -1;
-
-        for (int i = 0; i < namesOfSpecies.length; i++) {
-            if (namesOfSpecies[i].compareToIgnoreCase(speciesName.getPrawnName()) == 0) {
-                retVal = i;
-            }
-        }
-        return retVal;
-    }
-
-    /**
      * @return the fractionID
      */
     @Override
@@ -277,8 +260,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return double [1][2] containing ratio value and 1-sigma abs uncertainty
      */
     @Override
-    public double[][] getIsotopicRatioValuesByStringName(String name) {
-        IsotopeRatioModelSHRIMP ratio = isotopicRatios.get(RawRatioNamesSHRIMP.valueOf(name));
+    public double[][] getIsotopicRatioValuesByStringName(String name) {        
+        SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);   
         double[][] ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
         return ratioAndUnct;
     }

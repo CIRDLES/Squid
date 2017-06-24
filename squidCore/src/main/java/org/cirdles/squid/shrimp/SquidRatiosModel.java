@@ -17,8 +17,15 @@ package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_UPPER_LIMIT_1_SIGMA_PERCENT;
+import org.cirdles.squid.tasks.expressions.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.operations.Operation;
 
 /**
  *
@@ -48,8 +55,7 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
         this.denominator = denominator;
         this.reportingOrderIndex = reportingOrderIndex;
 
-        // June 2017 - historical artifact during refactoring
-        this.ratioName = "r" + numerator.getIsotopeName() + "_" + denominator.getIsotopeName() + "w";
+        this.ratioName = numerator.getIsotopeName() + "/" + denominator.getIsotopeName();
 
         this.ratEqTime = new ArrayList<>();
         this.ratEqVal = new ArrayList<>();
@@ -84,6 +90,43 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     public SquidRatiosModel copy() {
         SquidRatiosModel copy = new SquidRatiosModel(numerator, denominator, reportingOrderIndex);
         return copy;
+    }
+
+    public static ExpressionTreeInterface buildRatioExpression(String ratioName) {
+        // format of ratioName is "nnn/mmm"
+        ExpressionTreeInterface ratioExpression
+                = new ExpressionTree(
+                        ratioName,
+                        new ShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
+                        new ShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
+                        Operation.divide());
+
+        ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
+        return ratioExpression;
+    }
+
+    public static SquidSpeciesModel findNumerator(String ratioName) {
+        String[] parts = ratioName.split("/");
+        return SquidSpeciesModel.knownSquidSpeciesModels.get(parts[0]);
+    }
+
+    public static SquidSpeciesModel findDenominator(String ratioName) {
+        String[] parts = ratioName.split("/");
+        return SquidSpeciesModel.knownSquidSpeciesModels.get(parts[1]);
+    }
+
+    public static SquidRatiosModel findSquidRatiosModelByName(SortedSet<SquidRatiosModel> isotopicRatios, String ratioName) {
+        SquidRatiosModel retVal = null;
+        Iterator<SquidRatiosModel> iterator = isotopicRatios.iterator();
+        while (iterator.hasNext()) {
+            SquidRatiosModel model = iterator.next();
+            if (model.getRatioName().equals(ratioName)) {
+                retVal = model;
+                break;
+            }
+        }
+
+        return retVal;
     }
 
     /**

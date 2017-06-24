@@ -76,7 +76,7 @@ public class CalamariReportsEngine {
      * @param shrimpFractions the value of shrimpFractions
      * @throws java.io.IOException
      */
-    protected void produceReports(List<ShrimpFractionExpressionInterface> shrimpFractions) throws IOException {
+    public void produceReports(List<ShrimpFractionExpressionInterface> shrimpFractions) throws IOException {
 
         if (shrimpFractions.size() > 0) {
             // gather general info for all runs  from first fraction

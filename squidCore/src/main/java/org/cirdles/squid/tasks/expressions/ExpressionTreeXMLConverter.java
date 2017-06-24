@@ -205,7 +205,7 @@ public class ExpressionTreeXMLConverter implements Converter {
             reader.moveUp();
             reader.moveUp();
         }
-        expressionTree.setRatiosOfInterest(ratiosOfInterest);
+//////        expressionTree.setRatiosOfInterest(ratiosOfInterest);
         reader.moveUp();
 
         return expressionTree;

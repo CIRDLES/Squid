@@ -16,6 +16,8 @@
 package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -29,12 +31,16 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
     private String massStationSpeciesName;
     private String isotopeName;
     private String elementName;
+    
+    public static Map<String, SquidSpeciesModel> knownSquidSpeciesModels = new HashMap<>();
 
     public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
         this.elementName = elementName;
+        
+        knownSquidSpeciesModels.put(isotopeName, this);
     }
 
     @Override

@@ -17,12 +17,14 @@
 package org.cirdles.squid.core;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -109,7 +111,13 @@ public class PrawnFileHandlerIT {
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3),10));
 
         SquidSessionModel squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
-        prawnFileHandler.processRunFractions(prawnFileData, squidSessionModel);
+        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFileData, squidSessionModel);
+        
+        try {
+            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
+        } catch (IOException iOException) {
+        }
+        
 //        prawnFileHandler.writeReportsFromPrawnFile(prawnFile.getAbsolutePath(), // prawnFileLocation
 //                true,   // useSBM
 //                false,  // userLinFits

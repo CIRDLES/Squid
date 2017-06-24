@@ -188,10 +188,10 @@ public class PrawnFileHandler implements Serializable {
             }
         }
         
-        try {
-            reportsEngine.produceReports(shrimpFractions);
-        } catch (IOException iOException) {
-        }
+//        try {
+//            reportsEngine.produceReports(shrimpFractions);
+//        } catch (IOException iOException) {
+//        }
         return shrimpFractions;
     }
 

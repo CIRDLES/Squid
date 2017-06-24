@@ -91,7 +91,7 @@ public enum RawRatioNamesSHRIMP implements Serializable {
      * @return
      */
     public ExpressionTreeInterface getExpression() {
-        return ExpressionTreeWithRatiosInterface.buildRatioExpression(this);
+        return null;//ExpressionTreeWithRatiosInterface.buildRatioExpression(this);
     }
 
     /**

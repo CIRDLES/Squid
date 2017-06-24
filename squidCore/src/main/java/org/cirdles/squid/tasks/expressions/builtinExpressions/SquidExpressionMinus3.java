@@ -15,7 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -35,13 +35,13 @@ public class SquidExpressionMinus3 {
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("232/238");
 
     static {
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add(RawRatioNamesSHRIMP.r254_238w);
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add(RawRatioNamesSHRIMP.r248_254w);
+        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
+        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("248/254");
 
         ExpressionTreeInterface term1 = new ExpressionTree(
                 "0.03446 * 254/238",
                 new ConstantNode("0.03446", 0.03446),
-                RawRatioNamesSHRIMP.r254_238w.getExpression(),
+                SquidRatiosModel.buildRatioExpression("254/238"),
                 Operation.multiply());
         ExpressionTreeInterface term2 = new ExpressionTree(
                 "0.03446 * 254/238 + 0.868",
@@ -50,7 +50,7 @@ public class SquidExpressionMinus3 {
                 Operation.add());
 
         ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, term2);
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(RawRatioNamesSHRIMP.r248_254w.getExpression());
+        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(SquidRatiosModel.buildRatioExpression("248/254"));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.multiply());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);

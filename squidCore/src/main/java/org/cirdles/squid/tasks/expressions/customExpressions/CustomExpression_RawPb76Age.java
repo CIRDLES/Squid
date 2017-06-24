@@ -35,7 +35,7 @@ public class CustomExpression_RawPb76Age {
 
     static {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(0, new VariableNodeForIsotopicRatios(RawRatioNamesSHRIMP.r207_206w.getName()));
+                .addChild(0, new VariableNodeForIsotopicRatios("207/206"));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.agePb76());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);

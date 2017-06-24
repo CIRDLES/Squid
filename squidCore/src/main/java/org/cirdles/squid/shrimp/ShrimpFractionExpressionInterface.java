@@ -26,13 +26,6 @@ import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterfa
 public interface ShrimpFractionExpressionInterface {
 
     /**
-     *
-     * @param speciesName
-     * @return
-     */
-    public int getIndexOfSpeciesByName(IsotopeNames speciesName);
-
-    /**
      * @return the referenceMaterial
      */
     public boolean isReferenceMaterial();

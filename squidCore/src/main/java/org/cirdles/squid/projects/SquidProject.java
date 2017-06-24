@@ -108,6 +108,11 @@ public class SquidProject implements Serializable {
 
         TaskInterface squidBodorkosTask1 = new SquidBodorkosTask1();
         squidBodorkosTask1.evaluateTaskExpressions(shrimpFractions);
+
+        try {
+            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
+        } catch (IOException iOException) {
+        }
     }
 
     public void setupPrawnFile(File prawnXMLFileNew)

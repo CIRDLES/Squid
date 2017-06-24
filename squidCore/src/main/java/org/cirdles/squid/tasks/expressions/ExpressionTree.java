@@ -21,10 +21,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.shrimp.IsotopeNames;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.RawRatioNamesSHRIMPXMLConverter;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -75,7 +76,7 @@ public class ExpressionTree
     /**
      *
      */
-    protected List<RawRatioNamesSHRIMP> ratiosOfInterest;
+    protected List<String> ratiosOfInterest;
 
     /**
      *
@@ -129,7 +130,7 @@ public class ExpressionTree
      * @param operation the value of operation
      */
     public ExpressionTree(String prettyName, ExpressionTreeInterface leftET, ExpressionTreeInterface rightET, OperationOrFunctionInterface operation) {
-        this(prettyName, leftET, rightET, operation, new ArrayList<RawRatioNamesSHRIMP>());
+        this(prettyName, leftET, rightET, operation, new ArrayList<String>());
     }
 
     /**
@@ -140,7 +141,7 @@ public class ExpressionTree
      * @param operation the value of operation
      * @param ratiosOfInterest the value of ratiosOfInterest
      */
-    private ExpressionTree(String prettyName, ExpressionTreeInterface leftET, ExpressionTreeInterface rightET, OperationOrFunctionInterface operation, List<RawRatioNamesSHRIMP> ratiosOfInterest) {
+    private ExpressionTree(String prettyName, ExpressionTreeInterface leftET, ExpressionTreeInterface rightET, OperationOrFunctionInterface operation, List<String> ratiosOfInterest) {
         this.name = prettyName;
         this.childrenET = new ArrayList<>();
         populateChildrenET(leftET, rightET);
@@ -226,12 +227,12 @@ public class ExpressionTree
      * @return
      */
     @Override
-    public Set extractUniqueSpeciesNumbers() {
+    public Set<SquidSpeciesModel> extractUniqueSpeciesNumbers() {
         // assume acquisition order is atomic weight order
-        Set<IsotopeNames> eqPkUndupeOrd = new TreeSet<>();
+        Set<SquidSpeciesModel> eqPkUndupeOrd = new TreeSet<>();
         for (int i = 0; i < ratiosOfInterest.size(); i++) {
-            eqPkUndupeOrd.add(ratiosOfInterest.get(i).getNumerator());
-            eqPkUndupeOrd.add(ratiosOfInterest.get(i).getDenominator());
+            eqPkUndupeOrd.add(SquidRatiosModel.findNumerator(ratiosOfInterest.get(i)));
+            eqPkUndupeOrd.add(SquidRatiosModel.findDenominator(ratiosOfInterest.get(i)));
         }
         return eqPkUndupeOrd;
     }
@@ -404,14 +405,14 @@ public class ExpressionTree
      * @return the ratiosOfInterest
      */
     @Override
-    public List<RawRatioNamesSHRIMP> getRatiosOfInterest() {
+    public List<String> getRatiosOfInterest() {
         return ratiosOfInterest;
     }
 
     /**
      * @param ratiosOfInterest the ratiosOfInterest to set
      */
-    public void setRatiosOfInterest(List<RawRatioNamesSHRIMP> ratiosOfInterest) {
+    public void setRatiosOfInterest(List<String> ratiosOfInterest) {
         this.ratiosOfInterest = ratiosOfInterest;
     }
 
