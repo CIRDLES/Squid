@@ -141,9 +141,4 @@ public interface ShrimpFractionExpressionInterface {
      * @return the pkFerr
      */
     public double[][] getPkFerr();
-
-    /**
-     * @return the isotopicRatios
-     */
-    public Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> getIsotopicRatios();
 }

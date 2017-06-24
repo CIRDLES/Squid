@@ -15,17 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions;
 
-import java.io.IOException;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
-import org.cirdles.squid.tasks.expressions.functions.Ln;
-import org.cirdles.squid.tasks.expressions.operations.Add;
-import org.cirdles.squid.tasks.expressions.operations.Divide;
-import org.cirdles.squid.tasks.expressions.operations.Multiply;
-import org.cirdles.squid.tasks.expressions.operations.Operation;
-import org.cirdles.squid.tasks.expressions.operations.Subtract;
-
 
 /**
  *

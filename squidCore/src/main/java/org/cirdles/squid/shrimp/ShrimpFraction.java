@@ -41,7 +41,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double[] countTimeSec;
     private String[] namesOfSpecies;
     private int peakMeasurementsCount;
-    private Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios;
     private SortedSet<SquidRatiosModel> isotopicRatiosII;
     private int[][] rawPeakData;
     private int[][] rawSBMData;
@@ -78,7 +77,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         countTimeSec = new double[0];
         namesOfSpecies = new String[0];
         peakMeasurementsCount = 0;
-        isotopicRatios = new HashMap<>();
         isotopicRatiosII = new TreeSet<>();
         rawPeakData = new int[0][0];
         rawSBMData = new int[0][0];
@@ -108,10 +106,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @param isotopicRatios
      * @param isotopicRatiosII
      */
-    public ShrimpFraction(String fractionID, Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios, SortedSet<SquidRatiosModel> isotopicRatiosII) {
+    public ShrimpFraction(String fractionID, SortedSet<SquidRatiosModel> isotopicRatiosII) {
         this();
         this.fractionID = fractionID;
-        this.isotopicRatios = isotopicRatios;
         this.isotopicRatiosII = isotopicRatiosII;
     }
 
@@ -243,14 +240,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     public void setPeakMeasurementsCount(int peakMeasurementsCount) {
         this.peakMeasurementsCount = peakMeasurementsCount;
-    }
-
-    /**
-     * @return the isotopicRatios
-     */
-    @Override
-    public Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> getIsotopicRatios() {
-        return isotopicRatios;
     }
 
     /**

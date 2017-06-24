@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMPXMLConverter;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -180,9 +178,6 @@ public class ExpressionTree
         xstream.alias("operation", Pow.class);
 
         xstream.alias("function", Ln.class);
-
-        xstream.registerConverter(new RawRatioNamesSHRIMPXMLConverter());
-        xstream.alias("ratio", RawRatioNamesSHRIMP.class);
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);

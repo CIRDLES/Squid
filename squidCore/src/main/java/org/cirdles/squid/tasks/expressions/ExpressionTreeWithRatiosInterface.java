@@ -18,7 +18,6 @@ package org.cirdles.squid.tasks.expressions;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import java.util.List;
 import java.util.Set;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 

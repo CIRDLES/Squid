@@ -28,8 +28,6 @@ import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMPXMLConverter;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -111,9 +109,6 @@ public class Task implements TaskInterface, XMLSerializerInterface {
         xstream.alias("operation", Pow.class);
 
         xstream.alias("function", Ln.class);
-
-        xstream.registerConverter(new RawRatioNamesSHRIMPXMLConverter());
-        xstream.alias("ratio", RawRatioNamesSHRIMP.class);
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);

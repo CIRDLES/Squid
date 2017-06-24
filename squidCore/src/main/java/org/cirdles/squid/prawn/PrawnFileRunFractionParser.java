@@ -20,16 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
 import org.cirdles.squid.algorithms.PoissonLimitsCountLessThanEqual100;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import static org.cirdles.squid.constants.Squid3Constants.HARD_WIRED_INDEX_OF_BACKGROUND;
-import org.cirdles.squid.shrimp.IsotopeRatioModelSHRIMP;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.ludwig.squid25.Utilities;
@@ -66,7 +62,6 @@ public class PrawnFileRunFractionParser {
     private double[][] sbmCps;
     private double[][] pkFerr;
     private double[] totalCps;
-    private Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios;
     private SortedSet<SquidRatiosModel> isotopicRatiosII;
 
     private double[][] reducedPkHt;
@@ -108,7 +103,7 @@ public class PrawnFileRunFractionParser {
             calculateIsotopicRatios(useSBM, userLinFits);
             calculateInterpolatedPeakHeights();
 
-            shrimpFraction = new ShrimpFraction(fractionID, isotopicRatios, isotopicRatiosII);
+            shrimpFraction = new ShrimpFraction(fractionID, isotopicRatiosII);
             shrimpFraction.setDateTimeMilliseconds(dateTimeMilliseconds);
             shrimpFraction.setDeadTimeNanoseconds(deadTimeNanoseconds);
             shrimpFraction.setSbmZeroCps(sbmZeroCps);
@@ -180,24 +175,8 @@ public class PrawnFileRunFractionParser {
         pkNetCps = new double[nScans][nSpecies];
         sbmCps = new double[nScans][nSpecies];
         pkFerr = new double[nScans][nSpecies];
-
-        // april 2016 hard-wired for prototype **********************************
-
-        isotopicRatios = new TreeMap<>();
-        isotopicRatios.put(RawRatioNamesSHRIMP.r204_206w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r204_206w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r207_206w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r207_206w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r208_206w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r208_206w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r238_196w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r238_196w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r206_238w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r206_238w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r254_238w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r254_238w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r248_254w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r248_254w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r206_270w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r206_270w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r270_254w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r270_254w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r206_254w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r206_254w));
-        isotopicRatios.put(RawRatioNamesSHRIMP.r238_206w, new IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP.r238_206w));
         
         isotopicRatiosII = squidSessionSpecs.produceRatiosCopySortedSet();
-
     }
 
     /**

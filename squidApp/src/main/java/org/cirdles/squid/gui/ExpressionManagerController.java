@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,7 +28,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionWriterMathML;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
@@ -70,8 +71,10 @@ public class ExpressionManagerController implements Initializable {
                 SquidExpressionMinus3.EXPRESSION,
                 SquidExpressionMinus4.EXPRESSION);
 
-        for (RawRatioNamesSHRIMP ratioName : RawRatioNamesSHRIMP.values()) {
-            items.add(ratioName.getExpression());
+        Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
+        while (ratioNameIterator.hasNext()){
+            String ratioName = ratioNameIterator.next();
+            items.add(SquidRatiosModel.buildRatioExpression(ratioName));
         }
 
         expressionListView.setItems(items);
