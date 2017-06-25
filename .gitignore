@@ -37,6 +37,7 @@ test_*
 *.ser
 *.zip
 *.squid
+*.xls
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt

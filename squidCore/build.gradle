@@ -38,6 +38,11 @@ dependencies {
     
     antlr "org.antlr:antlr4:4.6"
     compile 'org.antlr:antlr4-runtime:4.6'
+    
+    // https://mvnrepository.com/artifact/org.apache.poi/poi
+    compile group: 'org.apache.poi', name: 'poi', version: '3.16'
+    // https://mvnrepository.com/artifact/org.apache.tika/tika-core
+    //compile group: 'org.apache.tika', name: 'tika-core', version: '1.15'
    
 }
 
