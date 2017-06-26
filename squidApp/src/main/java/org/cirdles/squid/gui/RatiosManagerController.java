@@ -18,9 +18,9 @@ package org.cirdles.squid.gui;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,6 +33,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 
 /**
@@ -47,6 +48,8 @@ public class RatiosManagerController implements Initializable {
     @FXML
     private GridPane ratiosGridPane;
 
+    private List<SquidRatiosModel> squidRatiosModelList;
+
     /**
      * Initializes the controller class.
      *
@@ -59,11 +62,14 @@ public class RatiosManagerController implements Initializable {
         manageRatiosAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         manageRatiosAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
 
-        prepaareRatioGrid();
+        squidRatiosModelList = new ArrayList<>();
+        prepareRatioGrid();
     }
 
-    private void prepaareRatioGrid() {
+    private void prepareRatioGrid() {
         List<SquidSpeciesModel> squidSpeciesList = SquidUIController.squidProject.getSquidSpeciesModelList();
+
+        int indexOfBackgroundSpeicies = -1;
 
         int rows = 0;
         try {
@@ -77,26 +83,29 @@ public class RatiosManagerController implements Initializable {
             ratiosGridPane.add(new Label(squidSpeciesList.get(i).getIsotopeName()), 0, i + 1);
             ratiosGridPane.add(new Label(squidSpeciesList.get(i).getIsotopeName()), i + 1, 0);
 
-           // if (i < (squidSpeciesList.size() - rows)) {
-                RowConstraints con = new RowConstraints();
-                con.setPrefHeight(25);
-                ratiosGridPane.getRowConstraints().add(con);
+            if (squidSpeciesList.get(i).getIsBackground()) {
+                indexOfBackgroundSpeicies = squidSpeciesList.get(i).getMassStationIndex();
+            }
 
-                ColumnConstraints colcon = new ColumnConstraints();
-                colcon.setPrefWidth(70);
-                colcon.setHalignment(HPos.CENTER);
-                ratiosGridPane.getColumnConstraints().add(colcon);
-           // }
+            RowConstraints con = new RowConstraints();
+            con.setPrefHeight(25);
+            ratiosGridPane.getRowConstraints().add(con);
+
+            ColumnConstraints colcon = new ColumnConstraints();
+            colcon.setPrefWidth(70);
+            colcon.setHalignment(HPos.CENTER);
+            ratiosGridPane.getColumnConstraints().add(colcon);
 
         }
 
         for (int i = 0; i < squidSpeciesList.size(); i++) {
             for (int j = 0; j < squidSpeciesList.size(); j++) {
-                if (i != j) {
-                    Button ratioButton = new SquidRatioButton(squidSpeciesList.get(i).getIsotopeName() + "/" + squidSpeciesList.get(j).getIsotopeName(), true);
+                if ((i != j) && (i != indexOfBackgroundSpeicies) && (j != indexOfBackgroundSpeicies)) {
+                    Button ratioButton = new SquidRatioButton(squidSpeciesList.get(i), squidSpeciesList.get(j), false);
                     ratioButton.setPrefWidth(70);
-                    ratioButton.setStyle("-fx-padding: 5 5 5 5;   \n"
-                            + "    -fx-border-width: 0;\n"
+                    ratioButton.setStyle("-fx-padding: 0 0 0 0;   \n"
+                            + "    -fx-border-width: 1;\n"
+                            + "    -fx-border-color: #e2e2e2;\n"
                             + "    -fx-background-radius: 0;\n"
                             + "    -fx-background-color: #43ABC9;/*#72b1bf;/*#43ABC9;/*#ff8f89; /*#ff6961; /*#1d1d1d;*/\n"
                             + "    -fx-font-family: \"Lucida Sans Bold\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
@@ -105,7 +114,7 @@ public class RatiosManagerController implements Initializable {
                             + "    -fx-text-fill: whitesmoke;/*  #d8d8d8;*/\n"
                     );
 
-                    ratiosGridPane.add(ratioButton, j+1, i+1);
+                    ratiosGridPane.add(ratioButton, j + 1, i + 1);
                 }
             }
         }
@@ -116,33 +125,41 @@ public class RatiosManagerController implements Initializable {
 
     class SquidRatioButton extends Button {
 
-        private String ratioName;
-        private boolean selected;
+        private SquidRatiosModel ratioModel;
 
-        public SquidRatioButton(String ratioName, boolean selected) {
-            super(selected ? ratioName : "");
+        public SquidRatioButton(SquidSpeciesModel numerator, SquidSpeciesModel denominator, boolean selected) {
+            super();
+            
+            ratioModel = new SquidRatiosModel(numerator, denominator, 0);
+            if (selected) {
+                squidRatiosModelList.add(ratioModel);
+            }
 
-            this.ratioName = ratioName;
-            this.selected = selected;
+            setText(selected ? ratioModel.getRatioName() : "");
 
-            setOnAction(new SquidButtonEventHandler(ratioName, selected));
+            setOnAction(new SquidButtonEventHandler(ratioModel, selected));
         }
     }
 
     class SquidButtonEventHandler implements EventHandler {
 
-        private String ratioName;
+        private SquidRatiosModel ratioModel;
         private boolean selected;
 
-        public SquidButtonEventHandler(String ratioName, boolean selected) {
-            this.ratioName = ratioName;
+        public SquidButtonEventHandler(SquidRatiosModel ratioModel, boolean selected) {
+            this.ratioModel = ratioModel;
             this.selected = selected;
         }
 
         @Override
         public void handle(Event event) {
             selected = !selected;
-            ((Button) event.getSource()).setText(selected ? ratioName : "");            
+            ((Button) event.getSource()).setText(selected ? ratioModel.getRatioName() : "");
+            if (selected){
+                squidRatiosModelList.add(ratioModel);
+            } else {
+                squidRatiosModelList.remove(ratioModel);
+            }
         }
     }
 

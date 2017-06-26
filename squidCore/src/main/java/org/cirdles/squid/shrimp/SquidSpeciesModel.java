@@ -27,6 +27,8 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
 
     private static final long serialVersionUID = 3001823455775925098L;
 
+    public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
+
     private int massStationIndex;
     private String massStationSpeciesName;
     private String isotopeName;
@@ -81,7 +83,7 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
             ssm.setIsBackground(true);
         }
 
-       return retVal;
+        return retVal;
     }
 
     /**
@@ -118,7 +120,7 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
     public String getIsotopeName() {
         String retVal = isotopeName;
         if (isBackground) {
-            retVal = "BKG";
+            retVal = SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
         }
         return retVal;
     }
@@ -127,7 +129,7 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
      * @param isotopeName the isotopeName to set
      */
     public void setIsotopeName(String isotopeName) {
-        if (isotopeName.compareToIgnoreCase("BKG") != 0) {
+        if (isotopeName.compareToIgnoreCase(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL) != 0) {
             this.isotopeName = isotopeName;
         }
     }

@@ -41,6 +41,7 @@ import javafx.util.Callback;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 
 /**
  * FXML Controller class
@@ -91,11 +92,19 @@ public class IsotopesManagerController implements Initializable {
         isotopeLabelColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<MassStationDetail, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<MassStationDetail, String> editEvent) {
-                ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow())).setIsotopeLabel(editEvent.getNewValue());
-                SquidSpeciesModel ssm
-                        = SquidUIController.squidProject.getSquidSpeciesModelList()
-                                .get(editEvent.getTablePosition().getRow());
-                ssm.setIsotopeName(editEvent.getNewValue());
+                String editIsotopeName = editEvent.getNewValue();
+                if (editIsotopeName.compareToIgnoreCase(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL) != 0) {
+                    ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
+                            .setIsotopeLabel(editIsotopeName);
+                    SquidSpeciesModel ssm
+                            = SquidUIController.squidProject.getSquidSpeciesModelList()
+                                    .get(editEvent.getTablePosition().getRow());
+                    ssm.setIsotopeName(editIsotopeName);
+                } else {
+                    ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
+                            .setIsotopeLabel(editEvent.getOldValue());
+                    isotopesTableView.refresh();
+                }
             }
         });
 
@@ -108,12 +117,12 @@ public class IsotopesManagerController implements Initializable {
                 selectAsBackgroundMenuItem.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        row.getItem().setIsotopeLabel("BKG");
+                        row.getItem().setIsotopeLabel(SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
                         SquidSpeciesModel ssm
                                 = SquidUIController.squidProject.getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
                         int previousIndex = SquidSpeciesModel.selectBackgroundSpecies(ssm);
-                        if (previousIndex >=0){
+                        if (previousIndex >= 0) {
                             massStationsData.get(previousIndex).setIsotopeLabel(
                                     SquidUIController.squidProject.getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
                         }
@@ -125,13 +134,12 @@ public class IsotopesManagerController implements Initializable {
                 final MenuItem deSelectAsBackgroundMenuItem = new MenuItem("De-select as Background");
                 deSelectAsBackgroundMenuItem.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
-                    public void handle(ActionEvent event) {                       
+                    public void handle(ActionEvent event) {
                         SquidSpeciesModel ssm
                                 = SquidUIController.squidProject.getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
                         ssm.setIsBackground(false);
                         row.getItem().setIsotopeLabel(ssm.getIsotopeName());
-                        
                         isotopesTableView.refresh();
                     }
                 });

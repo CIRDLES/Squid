@@ -74,7 +74,7 @@ public class SquidProject implements Serializable {
         this.sessionDurationHours = 0.0;
 
         squidSpeciesModelList = new ArrayList<>();
-        //setupSquidSessionSpecs();
+
     }
 
     private void buildSquidSpeciesModelListFromMassStationDetails() {
