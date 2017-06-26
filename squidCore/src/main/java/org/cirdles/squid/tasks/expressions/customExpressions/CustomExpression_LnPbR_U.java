@@ -15,7 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -36,7 +36,7 @@ public class CustomExpression_LnPbR_U {
     static {
         ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
 
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, SquidRatiosModel.buildRatioExpression("206/238"));
+        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, SquidProject.buildRatioExpression("206/238"));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.ln());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);

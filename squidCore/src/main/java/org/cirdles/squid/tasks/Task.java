@@ -28,6 +28,7 @@ import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -155,16 +156,16 @@ public class Task implements TaskInterface, XMLSerializerInterface {
             }
 
             try {
-                evauateExpressionForSpotSet(expression, spotsForExpression);
+                evaluateExpressionForSpotSet(expression, spotsForExpression);
             } catch (SquidException squidException) {
                 // TODO - log and report failure of expression
-                JOptionPane.showMessageDialog(null,
-                        "Expression failed: " + expression.getName() + " because: " + squidException.getMessage());
+//                JOptionPane.showMessageDialog(null,
+//                        "Expression failed: " + expression.getName() + " because: " + squidException.getMessage());
             }
         }
     }
 
-    private void evauateExpressionForSpotSet(ExpressionTreeInterface expression, List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
+    private void evaluateExpressionForSpotSet(ExpressionTreeInterface expression, List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // determine type of expression
         if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
             double[][] value = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
@@ -218,13 +219,21 @@ public class Task implements TaskInterface, XMLSerializerInterface {
 
             int[] isotopeIndices = new int[ratiosOfInterest.size() * 2];
             for (int i = 0; i < ratiosOfInterest.size(); i++) {
-                isotopeIndices[2 * i] = SquidRatiosModel.findNumerator(ratiosOfInterest.get(i)).getMassStationIndex();
-                isotopeIndices[2 * i + 1] = SquidRatiosModel.findDenominator(ratiosOfInterest.get(i)).getMassStationIndex();
+                if (SquidProject.findNumerator(ratiosOfInterest.get(i)) != null) {
+                    isotopeIndices[2 * i] = SquidProject.findNumerator(ratiosOfInterest.get(i)).getMassStationIndex();
+                } else {
+                    isotopeIndices[2 * i] = -1;
+                }
+                if (SquidProject.findDenominator(ratiosOfInterest.get(i)) != null) {
+                    isotopeIndices[2 * i + 1] = SquidProject.findDenominator(ratiosOfInterest.get(i)).getMassStationIndex();
+                } else {
+                    isotopeIndices[2 * i + 1] = -1;
+                }
             }
-            
+
             //TODO June 2017 temp hack until expression checking is in place
-            for (int i = 0 ; i < isotopeIndices.length; i ++){
-                if (isotopeIndices[i] == -1){
+            for (int i = 0; i < isotopeIndices.length; i++) {
+                if (isotopeIndices[i] == -1) {
                     throw new SquidException("Missing Isotope");
                 }
             }

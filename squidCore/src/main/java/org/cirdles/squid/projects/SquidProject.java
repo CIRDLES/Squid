@@ -33,6 +33,11 @@ import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.storedTasks.SquidBodorkosTask1;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
@@ -60,7 +65,8 @@ public class SquidProject implements Serializable {
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
     private SquidSessionModel squidSessionModel;
-    private List<SquidSpeciesModel> squidSpeciesModelList;
+    private static List<SquidSpeciesModel> squidSpeciesModelList;
+    protected boolean[][] tableOfSelectedRatiosByMassStationIndex;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -74,6 +80,7 @@ public class SquidProject implements Serializable {
         this.sessionDurationHours = 0.0;
 
         squidSpeciesModelList = new ArrayList<>();
+        tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
 
     }
 
@@ -82,17 +89,20 @@ public class SquidProject implements Serializable {
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
             SquidSpeciesModel spm = new SquidSpeciesModel(
                     entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(), entry.getValue().getElementLabel(), entry.getValue().getIsBackground());
-            
+
             squidSpeciesModelList.add(spm);
         }
+        if (tableOfSelectedRatiosByMassStationIndex.length == 0) {
+            tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+        }
     }
-        
+
     public void createMapOfIndexToMassStationDetails() {
         mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
-        
+
         // update these if squidSpeciesModelList exists
-        if (squidSpeciesModelList.size() > 0){
-            for (SquidSpeciesModel ssm : squidSpeciesModelList){
+        if (squidSpeciesModelList.size() > 0) {
+            for (SquidSpeciesModel ssm : squidSpeciesModelList) {
                 MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
                 // only these two fields change
                 massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
@@ -119,6 +129,64 @@ public class SquidProject implements Serializable {
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
 
         squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
+    }
+
+    public static int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm) {
+        // there is at most one
+        int retVal = -1;
+
+        for (SquidSpeciesModel squidSpeciesModel : squidSpeciesModelList) {
+            if (squidSpeciesModel.getIsBackground()) {
+                squidSpeciesModel.setIsBackground(false);
+                retVal = squidSpeciesModel.getMassStationIndex();
+                break;
+            }
+        }
+
+        if (ssm != null) {
+            ssm.setIsBackground(true);
+        }
+
+        return retVal;
+    }
+
+    public static ExpressionTreeInterface buildRatioExpression(String ratioName) {
+        // format of ratioName is "nnn/mmm"
+        ExpressionTreeInterface ratioExpression = null;
+        if ((findNumerator(ratioName) != null) & (findDenominator(ratioName) != null)) {
+            ratioExpression
+                    = new ExpressionTree(
+                            ratioName,
+                            new ShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
+                            new ShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
+                            Operation.divide());
+
+            ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
+        }
+        return ratioExpression;
+    }
+
+    public static SquidSpeciesModel findNumerator(String ratioName) {
+        String[] parts = ratioName.split("/");
+        return lookUpSpeciesByName(parts[0]);
+    }
+
+    public static SquidSpeciesModel findDenominator(String ratioName) {
+        String[] parts = ratioName.split("/");
+        return lookUpSpeciesByName(parts[1]);
+    }
+
+    public static SquidSpeciesModel lookUpSpeciesByName(String isotopeName) {
+        SquidSpeciesModel retVal = null;
+
+        for (SquidSpeciesModel squidSpeciesModel : squidSpeciesModelList) {
+            if (squidSpeciesModel.getIsotopeName().compareToIgnoreCase(isotopeName) == 0) {
+                retVal = squidSpeciesModel;
+                break;
+            }
+        }
+
+        return retVal;
     }
 
     public void testRunOfSessionModel() {
@@ -485,5 +553,12 @@ public class SquidProject implements Serializable {
      */
     public List<SquidSpeciesModel> getSquidSpeciesModelList() {
         return squidSpeciesModelList;
+    }
+
+    /**
+     * @return the tableOfSelectedRatiosByMassStationIndex
+     */
+    public boolean[][] getTableOfSelectedRatiosByMassStationIndex() {
+        return tableOfSelectedRatiosByMassStationIndex;
     }
 }

@@ -26,6 +26,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
@@ -142,7 +143,7 @@ public class ExpressionParser {
         Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
         while (ratioNameIterator.hasNext()) {
             String ratioName = ratioNameIterator.next();
-            NAMED_EXPRESSIONS_MAP.put("[\"" + ratioName + "\"]",SquidRatiosModel.buildRatioExpression(ratioName));
+            NAMED_EXPRESSIONS_MAP.put("[\"" + ratioName + "\"]", SquidProject.buildRatioExpression(ratioName));
         }
     }
 

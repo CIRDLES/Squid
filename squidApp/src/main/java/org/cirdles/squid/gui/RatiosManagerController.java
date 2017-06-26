@@ -33,6 +33,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 
@@ -98,14 +99,34 @@ public class RatiosManagerController implements Initializable {
 
         }
 
+        // temp approach to pre-saved ratios
+        // boolean array 0,0 is true if initialized
+        if (!SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[0][0]) {
+            String[] savedRatios = new String[]{"204/206", "207/206", "208/206", "A/B"};
+            for (int i = 0; i < savedRatios.length; i++) {
+                String[] ratio = savedRatios[i].split("/");
+                if ((SquidProject.lookUpSpeciesByName(ratio[0]) != null)
+                        && SquidProject.lookUpSpeciesByName(ratio[1]) !=null) {
+                    int num = SquidProject.lookUpSpeciesByName(ratio[0]).getMassStationIndex();
+                    int den = SquidProject.lookUpSpeciesByName(ratio[1]).getMassStationIndex();
+                    SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[num][den] = true;
+                }
+            }
+            SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[0][0] = true;
+        }
+
         for (int i = 0; i < squidSpeciesList.size(); i++) {
             for (int j = 0; j < squidSpeciesList.size(); j++) {
                 if ((i != j) && (i != indexOfBackgroundSpeicies) && (j != indexOfBackgroundSpeicies)) {
-                    Button ratioButton = new SquidRatioButton(squidSpeciesList.get(i), squidSpeciesList.get(j), false);
+                    Button ratioButton = new SquidRatioButton(
+                            i, j,
+                            squidSpeciesList.get(i).getIsotopeName() + "/" + squidSpeciesList.get(j).getIsotopeName(),
+                            SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[i][j]);
+
                     ratioButton.setPrefWidth(70);
                     ratioButton.setStyle("-fx-padding: 0 0 0 0;   \n"
                             + "    -fx-border-width: 1;\n"
-                            + "    -fx-border-color: #e2e2e2;\n"
+                            + "    -fx-border-color: black;\n"
                             + "    -fx-background-radius: 0;\n"
                             + "    -fx-background-color: #43ABC9;/*#72b1bf;/*#43ABC9;/*#ff8f89; /*#ff6961; /*#1d1d1d;*/\n"
                             + "    -fx-font-family: \"Lucida Sans Bold\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
@@ -125,41 +146,36 @@ public class RatiosManagerController implements Initializable {
 
     class SquidRatioButton extends Button {
 
-        private SquidRatiosModel ratioModel;
+        public SquidRatioButton(int row, int col, String ratioName, boolean selected) {
+            super(selected ? ratioName : "");
 
-        public SquidRatioButton(SquidSpeciesModel numerator, SquidSpeciesModel denominator, boolean selected) {
-            super();
-            
-            ratioModel = new SquidRatiosModel(numerator, denominator, 0);
-            if (selected) {
-                squidRatiosModelList.add(ratioModel);
-            }
+            setHeight(25);
 
-            setText(selected ? ratioModel.getRatioName() : "");
-
-            setOnAction(new SquidButtonEventHandler(ratioModel, selected));
+            setOnAction(new SquidButtonEventHandler(row, col, ratioName, selected));
         }
     }
 
     class SquidButtonEventHandler implements EventHandler {
 
-        private SquidRatiosModel ratioModel;
+        private int row;
+        private int col;
+        private String ratioName;
         private boolean selected;
 
-        public SquidButtonEventHandler(SquidRatiosModel ratioModel, boolean selected) {
-            this.ratioModel = ratioModel;
+        public SquidButtonEventHandler(int row, int col, String ratioName, boolean selected) {
+            this.row = row;
+            this.col = col;
+            this.ratioName = ratioName;
             this.selected = selected;
         }
 
         @Override
         public void handle(Event event) {
             selected = !selected;
-            ((Button) event.getSource()).setText(selected ? ratioModel.getRatioName() : "");
-            if (selected){
-                squidRatiosModelList.add(ratioModel);
-            } else {
-                squidRatiosModelList.remove(ratioModel);
-            }
+            ((Button) event.getSource()).setText(selected ? ratioName : "");
+
+            SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[row][col] = selected;
+
         }
     }
 

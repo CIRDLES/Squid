@@ -35,16 +35,12 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
     private String elementName;
     private boolean isBackground;
 
-    public static Map<String, SquidSpeciesModel> knownSquidSpeciesModels = new HashMap<>();
-
     public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
         this.elementName = elementName;
         this.isBackground = isBackground;
-
-        knownSquidSpeciesModels.put(isotopeName, this);
     }
 
     @Override
@@ -66,24 +62,6 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
     @Override
     public int hashCode() {
         return super.hashCode();
-    }
-
-    public static int selectBackgroundSpecies(SquidSpeciesModel ssm) {
-        // there is at most one
-        int retVal = -1;
-        for (Map.Entry<String, SquidSpeciesModel> entry : knownSquidSpeciesModels.entrySet()) {
-            if (entry.getValue().getIsBackground()) {
-                entry.getValue().setIsBackground(false);
-                retVal = entry.getValue().getMassStationIndex();
-                break;
-            }
-        }
-
-        if (ssm != null) {
-            ssm.setIsBackground(true);
-        }
-
-        return retVal;
     }
 
     /**

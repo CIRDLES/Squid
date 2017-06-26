@@ -39,6 +39,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
@@ -121,7 +122,7 @@ public class IsotopesManagerController implements Initializable {
                         SquidSpeciesModel ssm
                                 = SquidUIController.squidProject.getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
-                        int previousIndex = SquidSpeciesModel.selectBackgroundSpecies(ssm);
+                        int previousIndex = SquidProject.selectBackgroundSpeciesReturnPreviousIndex(ssm);
                         if (previousIndex >= 0) {
                             massStationsData.get(previousIndex).setIsotopeLabel(
                                     SquidUIController.squidProject.getSquidSpeciesModelList().get(previousIndex).getIsotopeName());

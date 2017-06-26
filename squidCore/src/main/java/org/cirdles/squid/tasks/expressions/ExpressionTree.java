@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -39,7 +40,6 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Pow;
 import org.cirdles.squid.tasks.expressions.operations.Subtract;
-
 
 /**
  *
@@ -213,7 +213,7 @@ public class ExpressionTree
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException{
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         return operation == null ? new Object[][]{{0.0, 0.0}} : operation.eval(childrenET, shrimpFractions, task);
     }
 
@@ -226,8 +226,8 @@ public class ExpressionTree
         // assume acquisition order is atomic weight order
         Set<SquidSpeciesModel> eqPkUndupeOrd = new TreeSet<>();
         for (int i = 0; i < ratiosOfInterest.size(); i++) {
-            eqPkUndupeOrd.add(SquidRatiosModel.findNumerator(ratiosOfInterest.get(i)));
-            eqPkUndupeOrd.add(SquidRatiosModel.findDenominator(ratiosOfInterest.get(i)));
+            eqPkUndupeOrd.add(SquidProject.findNumerator(ratiosOfInterest.get(i)));
+            eqPkUndupeOrd.add(SquidProject.findDenominator(ratiosOfInterest.get(i)));
         }
         return eqPkUndupeOrd;
     }
@@ -462,7 +462,8 @@ public class ExpressionTree
     }
 
     /**
-     * @param squidSwitchSTReferenceMaterialCalculation the squidSwitchSTReferenceMaterialCalculation to set
+     * @param squidSwitchSTReferenceMaterialCalculation the
+     * squidSwitchSTReferenceMaterialCalculation to set
      */
     public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
         this.squidSwitchSTReferenceMaterialCalculation = squidSwitchSTReferenceMaterialCalculation;
@@ -476,7 +477,8 @@ public class ExpressionTree
     }
 
     /**
-     * @param squidSwitchSAUnknownCalculation the squidSwitchSAUnknownCalculation to set
+     * @param squidSwitchSAUnknownCalculation the
+     * squidSwitchSAUnknownCalculation to set
      */
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
         this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;

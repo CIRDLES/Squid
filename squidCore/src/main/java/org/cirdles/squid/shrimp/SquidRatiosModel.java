@@ -98,28 +98,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
         return copy;
     }
 
-    public static ExpressionTreeInterface buildRatioExpression(String ratioName) {
-        // format of ratioName is "nnn/mmm"
-        ExpressionTreeInterface ratioExpression
-                = new ExpressionTree(
-                        ratioName,
-                        new ShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
-                        new ShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
-                        Operation.divide());
-
-        ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
-        return ratioExpression;
-    }
-
-    public static SquidSpeciesModel findNumerator(String ratioName) {
-        String[] parts = ratioName.split("/");
-        return SquidSpeciesModel.knownSquidSpeciesModels.get(parts[0]);
-    }
-
-    public static SquidSpeciesModel findDenominator(String ratioName) {
-        String[] parts = ratioName.split("/");
-        return SquidSpeciesModel.knownSquidSpeciesModels.get(parts[1]);
-    }
 
     public static SquidRatiosModel findSquidRatiosModelByName(SortedSet<SquidRatiosModel> isotopicRatios, String ratioName) {
         SquidRatiosModel retVal = null;
