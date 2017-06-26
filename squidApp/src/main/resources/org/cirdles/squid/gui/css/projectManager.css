@@ -14,14 +14,15 @@
  * limitations under the License.gg
  */
 *{
-    Primary: #bdbdbd;
+    Primary: #cfd8dc;
     P-Light: #efefef;
-    P-Dark: #7d7d7d;
+    P-Dark: #9ea7ea;
     /*Text fill to use on Primary Primary Colors */
     P-Text: #212121;
     P-Alt-Text: #000000;
     /*(Main-Logo Color)*/
-    Secondary : #ff6e40;
+
+    Secondary : #FB6D42;
     S-Light: #ffa06d;
     S-Dark: #c53d13;
     /*on s-dark only use S-Dark-Text*/
@@ -30,14 +31,33 @@
     S-Text: #3e2723;
     S-Alt-Text: #000000;
 
-    Hexagon_Color: #3a4c88
+    Hexagon_Color: #3a4c88;
+    main-color: #666666;
+    accent-color: #dd2222;
+    not-accent: #976868
+}
+
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent Secondary transparent;
+    -fx-padding: 16 0 8 0;
+    -fx-border-radius: 0;
+}
+
+.text-field:focused {
+    -fx-border-color: transparent transparent P-Text transparent;
+}
+
+.text-field *.label{
+    -fx-text-color: P-Alt-Text;
 }
 .background {
     -fx-background-color: Primary;
 }
 
 .backgroundCalamari {
-    -fx-background-color: derive(P-Light, 25%);
+    -fx-background-color: derive(Primary, 30%);
 }
 
 
@@ -58,18 +78,18 @@
     -fx-padding: 0 0 0 64px;
 }
 
-.inputTextFields{
-    -fx-background-color: transparent;
-    -fx-border-color: S-light;
-    -fx-padding: 16px 0 8px 0px;
-    -fx-border-width: 0 0 2 0;
-    /* below is just p-text with an bit of transparency */
-    -fx-prompt-text-fill: rgba(33,33,33,.75);
-}
+/*.inputTextFields{*/
+    /*-fx-background-color: transparent;*/
+    /*-fx-border-color: S-light;*/
+    /*-fx-padding: 16px 0 8px 0px;*/
+    /*-fx-border-width: 0 0 2 0;*/
+    /*!* below is just p-text with an bit of transparency *!*/
+    /*-fx-prompt-text-fill: rgba(33,33,33,.75);*/
+/*}*/
 
-inputTextFields:selected{
-    -fx-border-color: derive(S-light, 20%)
-}
+/*inputTextFields:selected{*/
+    /*-fx-border-color: derive(S-light, 20%)*/
+/*}*/
 
 .projectNameAnName{
     -fx-pref-width: 256px;
@@ -80,13 +100,13 @@ inputTextFields:selected{
     -fx-pref-width: 256px;
 }
 
-.inputFileField{
-    -fx-background-color: transparent;
-    -fx-border-color: S-light;
-    -fx-padding: 16px 0 8px 0px;
-    -fx-border-width: 0 0 2 0;
-    -fx-prompt-text-fill: rgba(33,33,33,.75);
-}
+/*.inputFileField{*/
+    /*-fx-background-color: transparent;*/
+    /*-fx-border-color: S-light;*/
+    /*-fx-padding: 16px 0 8px 0px;*/
+    /*-fx-border-width: 0 0 2 0;*/
+    /*-fx-prompt-text-fill: rgba(33,33,33,.75);*/
+/*}*/
 
 .inputTextVbox{
     -fx-padding: 10px 20px 0 10px;
@@ -107,16 +127,16 @@ inputTextFields:selected{
     -fx-tab-min-width:275px;
     -fx-stroke-width: 0px;
     -fx-border-color: transparent;
-    -fx-background-color: derive(P-Light, 25%);
+    -fx-background-color: P-Light;
 
 }
 .tab-pane *.tab-header-background {
-    -fx-background-color:derive(P-Light, 25%);
+    -fx-background-color: derive(P-Light, 25%);
     -fx-alignment: CENTER;
 
 }
 .ancPanes {
-    -fx-background-color: derive(Primary, 30%);
+    -fx-background-color: derive(P-Light, 30%);
 }
 
 .manageSpotsVBoxes{
@@ -124,7 +144,7 @@ inputTextFields:selected{
 }
 .tab .tab-label {
     -fx-alignment: CENTER;
-    -fx-text-fill: S-Text;
+    /*-fx-text-fill: S-Text;*/
     -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
@@ -148,7 +168,8 @@ inputTextFields:selected{
 }
 .tab-pane .tab:selected
 {
-    -fx-background-color: derive(Primary, 30%);
+    -fx-background-color: P-Light;
+    /*-fx-background-color: derive(P-Light, 25%);*/
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
@@ -186,14 +207,14 @@ inputTextFields:selected{
  */
 .shownLabel{
     -fx-font-size: 30px;
-    
+
 }
 .button {
-    -fx-padding: 5 22 5 22;   
+    -fx-padding: 5 22 5 22;
     -fx-border-color: #e2e2e2;
     -fx-border-width: 2;
     -fx-background-radius: 0;
-    -fx-background-color: Secondary;/*#72b1bf;/*#43ABC9;/*#ff8f89; /*#ff6961; /*#1d1d1d;*/
+    -fx-background-color: Secondary;/*#72b1bf;!*#43ABC9;!*#ff8f89; !*#ff6961; !*#1d1d1d;*/
     -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
     -fx-text-fill: whitesmoke;/*  #d8d8d8;*/
@@ -230,4 +251,23 @@ inputTextFields:selected{
 
 .button:default:hover {
     -fx-background-color: derive(-fx-focus-color,30%);
+}
+.button:default {
+    -fx-border-width: 0;
+    -fx-border-color: #8187ff;
+    -fx-border-radius: 2;
+    -fx-background-color: #8187ff;
+    -fx-background-radius: 2;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+    -fx-padding: 0 16 0 16;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,.5), 10.75, 0, 0, 3.0);
+}
+.button:default:hover{
+    -fx-background-color: derive(#8187ff, 40%);
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,.5), 10.75, 0, 0, 4.0);
+}
+.button:default:pressed, .button:default:hover:pressed{
+    -fx-background-color: derive(#8187ff, -20%);
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,.5), 1, 0, 0, 0);
 }
