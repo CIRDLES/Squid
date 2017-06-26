@@ -47,6 +47,7 @@ public class SquidProject implements Serializable {
     private static final long serialVersionUID = 7099919411562934142L;
 
     private transient SquidPrefixTree prefixTree;
+    // cannot be serialized because of JavaFX private final SimpleStringProperty fields
     private transient Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
 
     private PrawnFileHandler prawnFileHandler = new PrawnFileHandler();
@@ -59,6 +60,7 @@ public class SquidProject implements Serializable {
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
     private SquidSessionModel squidSessionModel;
+    private List<SquidSpeciesModel> squidSpeciesModelList;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -71,21 +73,37 @@ public class SquidProject implements Serializable {
         this.shrimpRunsRefMat = new ArrayList<>();
         this.sessionDurationHours = 0.0;
 
-        setupSquidSessionSpecs();
+        squidSpeciesModelList = new ArrayList<>();
+        //setupSquidSessionSpecs();
     }
 
-    private void setupSquidSessionSpecs() {
-        List<SquidSpeciesModel> squidSpeciesModelList = new ArrayList<>();
-        squidSpeciesModelList.add(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(1, "204Pb", "204", "Pb"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(2, "Bkgnd", "Bkgnd", "Bkgnd"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(3, "206Pb", "206", "Pb"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(4, "207Pb", "207", "Pb"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(5, "208Pb", "208", "Pb"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(6, "238U", "238", "U"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(7, "248ThO", "248", "ThO"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(8, "254UO", "254", "UO"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(9, "270UO2", "270", "UO2"));
+    private void buildSquidSpeciesModelListFromMassStationDetails() {
+        squidSpeciesModelList = new ArrayList<>();
+        for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
+            SquidSpeciesModel spm = new SquidSpeciesModel(
+                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(), entry.getValue().getElementLabel(), entry.getValue().getIsBackground());
+            
+            squidSpeciesModelList.add(spm);
+        }
+    }
+        
+    public void createMapOfIndexToMassStationDetails() {
+        mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
+        
+        // update these if squidSpeciesModelList exists
+        if (squidSpeciesModelList.size() > 0){
+            for (SquidSpeciesModel ssm : squidSpeciesModelList){
+                MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+                // only these two fields change
+                massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+                massStationDetail.setIsBackground(ssm.getIsBackground());
+            }
+        }
+    }
+
+    public void setupSquidSessionSpecs() {
+        createMapOfIndexToMassStationDetails();
+        buildSquidSpeciesModelListFromMassStationDetails();
 
         List<SquidRatiosModel> squidRatiosModelList = new ArrayList<>();
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3), 0));
@@ -235,10 +253,6 @@ public class SquidProject implements Serializable {
 
         sessionDurationHours = (double) sessionDuration / 1000 / 60 / 60;
 
-    }
-
-    public void createMapOfIndexToMassStationDetails() {
-        mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
     }
 
     public void removeRunFromPrawnFile(Run run) {
@@ -464,5 +478,12 @@ public class SquidProject implements Serializable {
      */
     public void setSquidSessionModel(SquidSessionModel squidSessionModel) {
         this.squidSessionModel = squidSessionModel;
+    }
+
+    /**
+     * @return the squidSpeciesModelList
+     */
+    public List<SquidSpeciesModel> getSquidSpeciesModelList() {
+        return squidSpeciesModelList;
     }
 }

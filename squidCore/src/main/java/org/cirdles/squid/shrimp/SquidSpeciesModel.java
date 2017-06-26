@@ -31,15 +31,17 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
     private String massStationSpeciesName;
     private String isotopeName;
     private String elementName;
-    
+    private boolean isBackground;
+
     public static Map<String, SquidSpeciesModel> knownSquidSpeciesModels = new HashMap<>();
 
-    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName) {
+    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
         this.elementName = elementName;
-        
+        this.isBackground = isBackground;
+
         knownSquidSpeciesModels.put(isotopeName, this);
     }
 
@@ -62,6 +64,24 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    public static int selectBackgroundSpecies(SquidSpeciesModel ssm) {
+        // there is at most one
+        int retVal = -1;
+        for (Map.Entry<String, SquidSpeciesModel> entry : knownSquidSpeciesModels.entrySet()) {
+            if (entry.getValue().getIsBackground()) {
+                entry.getValue().setIsBackground(false);
+                retVal = entry.getValue().getMassStationIndex();
+                break;
+            }
+        }
+
+        if (ssm != null) {
+            ssm.setIsBackground(true);
+        }
+
+       return retVal;
     }
 
     /**
@@ -96,14 +116,20 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
      * @return the isotopeName
      */
     public String getIsotopeName() {
-        return isotopeName;
+        String retVal = isotopeName;
+        if (isBackground) {
+            retVal = "BKG";
+        }
+        return retVal;
     }
 
     /**
      * @param isotopeName the isotopeName to set
      */
     public void setIsotopeName(String isotopeName) {
-        this.isotopeName = isotopeName;
+        if (isotopeName.compareToIgnoreCase("BKG") != 0) {
+            this.isotopeName = isotopeName;
+        }
     }
 
     /**
@@ -118,6 +144,20 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
      */
     public void setElementName(String elementName) {
         this.elementName = elementName;
+    }
+
+    /**
+     * @return the isBackground
+     */
+    public boolean getIsBackground() {
+        return isBackground;
+    }
+
+    /**
+     * @param isBackground the isBackground to set
+     */
+    public void setIsBackground(boolean isBackground) {
+        this.isBackground = isBackground;
     }
 
 }

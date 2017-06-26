@@ -86,16 +86,16 @@ public class PrawnFileHandlerIT {
         PrawnFile prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath());
         
         List<SquidSpeciesModel> squidSpeciesModelList = new ArrayList<>();
-        squidSpeciesModelList.add(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(1, "204Pb", "204", "Pb"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(2, "Bkgnd", "Bkgnd", "Bkgnd"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(3, "206Pb", "206", "Pb"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(4, "207Pb", "207", "Pb"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(5, "208Pb", "208", "Pb"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(6, "238U", "238", "U"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(7, "248ThO", "248", "ThO"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(8, "254UO", "254", "UO"));
-        squidSpeciesModelList.add(new SquidSpeciesModel(9, "270UO2", "270", "UO2"));
+        squidSpeciesModelList.add(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(1, "204Pb", "204", "Pb", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(2, "Bkgnd", "Bkgnd", "Bkgnd", true));
+        squidSpeciesModelList.add(new SquidSpeciesModel(3, "206Pb", "206", "Pb", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(4, "207Pb", "207", "Pb", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(5, "208Pb", "208", "Pb", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(6, "238U", "238", "U", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(7, "248ThO", "248", "ThO", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(8, "254UO", "254", "UO", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(9, "270UO2", "270", "UO2", false));
 
         List<SquidRatiosModel> squidRatiosModelList = new ArrayList<>();
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3),0));

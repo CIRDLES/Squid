@@ -28,26 +28,46 @@ public class MassStationDetail implements Serializable {
 
     private static final long serialVersionUID = -874679604916998001L;
 
+    private int massStationIndex;
+    
     private final SimpleStringProperty massStationLabel;
     private final SimpleStringProperty isotopeLabel;
     private final SimpleStringProperty elementLabel;
+    
+    private boolean isBackground;
 
-    private double centeringTimeSec;
-    private List<Double> measuredTrimMasses;
-    private List<Double> timesOfMeasuredTrimMasses;
-    private List<Integer> indicesOfScansAtMeasurementTimes;
+    private final double centeringTimeSec;
+    private final List<Double> measuredTrimMasses;
+    private final List<Double> timesOfMeasuredTrimMasses;
+    private final List<Integer> indicesOfScansAtMeasurementTimes;
     private List<Integer> indicesOfRunsAtMeasurementTimes;
 
-    public MassStationDetail(String massStationLabel, double centeringTimeSec, String isotopeLabel, String elementLabel) {
+    public MassStationDetail(int massStationIndex, String massStationLabel, double centeringTimeSec, String isotopeLabel, String elementLabel, boolean isBackground) {
+        this.massStationIndex = massStationIndex;
         this.massStationLabel = new SimpleStringProperty(massStationLabel);
         this.isotopeLabel = new SimpleStringProperty(isotopeLabel);
         this.elementLabel = new SimpleStringProperty(elementLabel);
+        this.isBackground = isBackground;
 
         this.centeringTimeSec = centeringTimeSec;
         this.measuredTrimMasses = new ArrayList<>();
         this.timesOfMeasuredTrimMasses = new ArrayList<>();
         this.indicesOfScansAtMeasurementTimes = new ArrayList<>();
         this.indicesOfRunsAtMeasurementTimes = new ArrayList<>();
+    }
+
+    /**
+     * @return the massStationIndex
+     */
+    public int getMassStationIndex() {
+        return massStationIndex;
+    }
+
+    /**
+     * @param massStationIndex the massStationIndex to set
+     */
+    public void setMassStationIndex(int massStationIndex) {
+        this.massStationIndex = massStationIndex;
     }
 
     public boolean autoCentered() {
@@ -74,12 +94,34 @@ public class MassStationDetail implements Serializable {
     public String getIsotopeLabel() {
         return isotopeLabel.get();
     }
+    
+    /**
+     * 
+     * @param label 
+     */
+    public void setIsotopeLabel(String label) {
+        isotopeLabel.set(label);
+    }
 
     /**
      * @return the elementLabel
      */
     public String getElementLabel() {
         return elementLabel.get();
+    }
+
+    /**
+     * @return the backgroundLabel
+     */
+    public boolean getIsBackground() {
+        return isBackground;
+    }
+
+    /**
+     * @param backgroundLabel the backgroundLabel to set
+     */
+    public void setIsBackground(boolean isBackground) {
+        this.isBackground = isBackground;
     }
 
     /**
@@ -117,5 +159,6 @@ public class MassStationDetail implements Serializable {
     public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
     }
+    
 
 }
