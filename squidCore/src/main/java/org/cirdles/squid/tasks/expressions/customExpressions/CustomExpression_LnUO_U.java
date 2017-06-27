@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -34,9 +33,9 @@ public class CustomExpression_LnUO_U {
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("LnUO/U");
 
     static {
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add(RawRatioNamesSHRIMP.r254_238w);
+        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
 
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, RawRatioNamesSHRIMP.r254_238w.getExpression());
+        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, ExpressionTree.squidProject.buildRatioExpression("254/238"));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.ln());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);

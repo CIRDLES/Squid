@@ -39,6 +39,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
@@ -86,7 +87,7 @@ public class SpotManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         spotManagerPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        spotManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+        spotManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         setUpShrimpFractionListHeaders();
         savePrawnFileButton.setDisable(true);

@@ -24,16 +24,16 @@ import java.text.SimpleDateFormat;
 import static java.util.Arrays.asList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
-import org.cirdles.squid.shrimp.IsotopeRatioModelSHRIMP;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
 
 /**
  * Calamari's reports engine.
@@ -65,8 +65,8 @@ public class CalamariReportsEngine {
      *
      */
     public CalamariReportsEngine() {
-       // folderToWriteCalamariReports = new File(System.getProperty("user.dir"));
-       folderToWriteCalamariReports = Squid.defaultCalamariReportsFolder;
+        // folderToWriteCalamariReports = new File(System.getProperty("user.dir"));
+        folderToWriteCalamariReports = Squid.defaultCalamariReportsFolder;
         nameOfPrawnXMLFile = "";
     }
 
@@ -76,7 +76,7 @@ public class CalamariReportsEngine {
      * @param shrimpFractions the value of shrimpFractions
      * @throws java.io.IOException
      */
-    protected void produceReports(List<ShrimpFractionExpressionInterface> shrimpFractions) throws IOException {
+    public void produceReports(List<ShrimpFractionExpressionInterface> shrimpFractions) throws IOException {
 
         if (shrimpFractions.size() > 0) {
             // gather general info for all runs  from first fraction
@@ -345,7 +345,7 @@ public class CalamariReportsEngine {
      */
     private void reportWithinSpotRatiosAtInterpolatedTimes(ShrimpFraction shrimpFraction) {
 
-        int nDodCount = shrimpFraction.getIsotopicRatios().entrySet().iterator().next().getValue().getRatEqTime().size();
+        int nDodCount = shrimpFraction.getIsotopicRatiosII().iterator().next().getRatEqTime().size();
 
         for (int nDodNum = 0; nDodNum < nDodCount; nDodNum++) {
             // need to sort by reference material vs unknown
@@ -355,8 +355,9 @@ public class CalamariReportsEngine {
             dataLine.append(String.valueOf(nDodNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
-            for (Map.Entry<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> entry : shrimpFraction.getIsotopicRatios().entrySet()) {
-                IsotopeRatioModelSHRIMP isotopeRatioModel = entry.getValue();
+            Iterator<SquidRatiosModel> squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
+            while (squidRatiosIterator.hasNext()) {
+                SquidRatiosModel isotopeRatioModel = squidRatiosIterator.next();
                 if (isotopeRatioModel.isActive()) {
                     // July 2016 case of less than nDodCount = rare
                     if (nDodNum < isotopeRatioModel.getRatEqTime().size()) {
@@ -407,8 +408,9 @@ public class CalamariReportsEngine {
         dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
         dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
-        for (Map.Entry<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> entry : shrimpFraction.getIsotopicRatios().entrySet()) {
-            IsotopeRatioModelSHRIMP isotopeRatioModel = entry.getValue();
+        Iterator<SquidRatiosModel> squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
+        while (squidRatiosIterator.hasNext()) {
+            SquidRatiosModel isotopeRatioModel = squidRatiosIterator.next();
             if (isotopeRatioModel.isActive()) {
                 // April 2017 rounding was performed on calculated numbers
                 dataLine.append(", ").append(String.valueOf(isotopeRatioModel.getMinIndex()));
@@ -510,11 +512,13 @@ public class CalamariReportsEngine {
         StringBuilder header = new StringBuilder();
         header.append("Title, Date, Ndod, Type");
 
-        for (Map.Entry<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> entry : shrimpFraction.getIsotopicRatios().entrySet()) {
-            if (entry.getValue().isActive()) {
-                header.append(", ").append(entry.getKey().getDisplayNameNoSpaces()).append(".InterpTime");
-                header.append(", ").append(entry.getKey().getDisplayNameNoSpaces()).append(".Value");
-                header.append(", ").append(entry.getKey().getDisplayNameNoSpaces()).append(".1SigmaAbs");
+        Iterator <SquidRatiosModel> squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
+            while (squidRatiosIterator.hasNext()){
+                SquidRatiosModel entry = squidRatiosIterator.next();
+            if (entry.isActive()) {
+                header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".InterpTime");
+                header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".Value");
+                header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".1SigmaAbs");
             }
         }
 
@@ -538,11 +542,13 @@ public class CalamariReportsEngine {
         header = new StringBuilder();
         header.append("Title, Date, Type");
 
-        for (Map.Entry<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> entry : shrimpFraction.getIsotopicRatios().entrySet()) {
-            if (entry.getValue().isActive()) {
-                header.append(", ").append(entry.getKey().getDisplayNameNoSpaces()).append(".MinIndex");
-                header.append(", ").append(entry.getKey().getDisplayNameNoSpaces()).append(".Value");
-                header.append(", ").append(entry.getKey().getDisplayNameNoSpaces()).append(".1SigmaPct");
+        squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
+            while (squidRatiosIterator.hasNext()){
+                SquidRatiosModel entry = squidRatiosIterator.next();
+            if (entry.isActive()) {
+                header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".MinIndex");
+                header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".Value");
+                header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".1SigmaPct");
             }
         }
 

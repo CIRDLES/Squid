@@ -20,6 +20,7 @@ import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squid.prawn.PrawnFile.Run;
@@ -67,9 +68,11 @@ public final class PrawnFileUtilities {
             double atomicMassUnit = Double.parseDouble(entry.getPar().get(1).getValue());
             double centeringTimeSec = Double.parseDouble(entry.getPar().get(7).getValue());
             String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(0, RoundingMode.HALF_UP).toPlainString();
-            
+            String elementLabel = massStationLabel.replace(isotopeLabel, "");
+
+            boolean isBackground = massStationLabel.toUpperCase(Locale.US).contains("KG");
             MassStationDetail massStationDetail = 
-                    new MassStationDetail(massStationLabel, centeringTimeSec, isotopeLabel);
+                    new MassStationDetail(index, massStationLabel, centeringTimeSec, isotopeLabel, elementLabel, isBackground);
 
             mapOfIndexToMassStationDetails.put(index, massStationDetail);
             index ++;
@@ -100,7 +103,7 @@ public final class PrawnFileUtilities {
             }
             runIndex++;
         }
-
+        
         return mapOfIndexToMassStationDetails;
     }
 }

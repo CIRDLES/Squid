@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.shrimp.IsotopeNames;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMPXMLConverter;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -41,7 +41,6 @@ import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Pow;
 import org.cirdles.squid.tasks.expressions.operations.Subtract;
 
-
 /**
  *
  * @author James F. Bowring
@@ -52,6 +51,7 @@ public class ExpressionTree
         ExpressionTreeWithRatiosInterface,
         XMLSerializerInterface {
 
+    public static SquidProject squidProject;
     /**
      *
      */
@@ -75,7 +75,7 @@ public class ExpressionTree
     /**
      *
      */
-    protected List<RawRatioNamesSHRIMP> ratiosOfInterest;
+    protected List<String> ratiosOfInterest;
 
     /**
      *
@@ -129,7 +129,7 @@ public class ExpressionTree
      * @param operation the value of operation
      */
     public ExpressionTree(String prettyName, ExpressionTreeInterface leftET, ExpressionTreeInterface rightET, OperationOrFunctionInterface operation) {
-        this(prettyName, leftET, rightET, operation, new ArrayList<RawRatioNamesSHRIMP>());
+        this(prettyName, leftET, rightET, operation, new ArrayList<String>());
     }
 
     /**
@@ -140,7 +140,7 @@ public class ExpressionTree
      * @param operation the value of operation
      * @param ratiosOfInterest the value of ratiosOfInterest
      */
-    private ExpressionTree(String prettyName, ExpressionTreeInterface leftET, ExpressionTreeInterface rightET, OperationOrFunctionInterface operation, List<RawRatioNamesSHRIMP> ratiosOfInterest) {
+    private ExpressionTree(String prettyName, ExpressionTreeInterface leftET, ExpressionTreeInterface rightET, OperationOrFunctionInterface operation, List<String> ratiosOfInterest) {
         this.name = prettyName;
         this.childrenET = new ArrayList<>();
         populateChildrenET(leftET, rightET);
@@ -180,9 +180,6 @@ public class ExpressionTree
 
         xstream.alias("function", Ln.class);
 
-        xstream.registerConverter(new RawRatioNamesSHRIMPXMLConverter());
-        xstream.alias("ratio", RawRatioNamesSHRIMP.class);
-
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
     }
@@ -217,23 +214,8 @@ public class ExpressionTree
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException{
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         return operation == null ? new Object[][]{{0.0, 0.0}} : operation.eval(childrenET, shrimpFractions, task);
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public Set extractUniqueSpeciesNumbers() {
-        // assume acquisition order is atomic weight order
-        Set<IsotopeNames> eqPkUndupeOrd = new TreeSet<>();
-        for (int i = 0; i < ratiosOfInterest.size(); i++) {
-            eqPkUndupeOrd.add(ratiosOfInterest.get(i).getNumerator());
-            eqPkUndupeOrd.add(ratiosOfInterest.get(i).getDenominator());
-        }
-        return eqPkUndupeOrd;
     }
 
     /**
@@ -404,14 +386,14 @@ public class ExpressionTree
      * @return the ratiosOfInterest
      */
     @Override
-    public List<RawRatioNamesSHRIMP> getRatiosOfInterest() {
+    public List<String> getRatiosOfInterest() {
         return ratiosOfInterest;
     }
 
     /**
      * @param ratiosOfInterest the ratiosOfInterest to set
      */
-    public void setRatiosOfInterest(List<RawRatioNamesSHRIMP> ratiosOfInterest) {
+    public void setRatiosOfInterest(List<String> ratiosOfInterest) {
         this.ratiosOfInterest = ratiosOfInterest;
     }
 
@@ -466,7 +448,8 @@ public class ExpressionTree
     }
 
     /**
-     * @param squidSwitchSTReferenceMaterialCalculation the squidSwitchSTReferenceMaterialCalculation to set
+     * @param squidSwitchSTReferenceMaterialCalculation the
+     * squidSwitchSTReferenceMaterialCalculation to set
      */
     public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
         this.squidSwitchSTReferenceMaterialCalculation = squidSwitchSTReferenceMaterialCalculation;
@@ -480,7 +463,8 @@ public class ExpressionTree
     }
 
     /**
-     * @param squidSwitchSAUnknownCalculation the squidSwitchSAUnknownCalculation to set
+     * @param squidSwitchSAUnknownCalculation the
+     * squidSwitchSAUnknownCalculation to set
      */
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
         this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;

@@ -18,7 +18,7 @@ package org.cirdles.squid.tasks.expressions;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import java.util.List;
 import java.util.Set;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 
 /**
@@ -30,20 +30,14 @@ public interface ExpressionTreeWithRatiosInterface {
     /**
      * @return the ratiosOfInterest
      */
-    public List<RawRatioNamesSHRIMP> getRatiosOfInterest();
-
-    /**
-     *
-     * @return
-     */
-    public Set extractUniqueSpeciesNumbers();
+    public List<String> getRatiosOfInterest();
 
     /**
      *
      * @param ratio
      * @return
      */
-    public static ExpressionTreeInterface buildRatioExpression(RawRatioNamesSHRIMP ratio) {
+    public static ExpressionTreeInterface buildRatioExpression(SquidRatiosModel ratio) {
         ExpressionTreeInterface ratioExpression
                 = new ExpressionTree(
                         ratio.getDisplayNameNoSpaces(),
@@ -51,7 +45,7 @@ public interface ExpressionTreeWithRatiosInterface {
                         new ShrimpSpeciesNode(ratio.getDenominator(), "getPkInterpScanArray"),
                         Operation.divide());
         
-        ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratio);
+        ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratio.getRatioName());
         return ratioExpression;
     }
 }

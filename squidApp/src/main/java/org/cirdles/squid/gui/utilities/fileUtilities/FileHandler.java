@@ -139,4 +139,26 @@ public class FileHandler {
         return retVal;
     }
 
+    public static boolean selectSquid25TaskFile(SquidProject squidProject, Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+        boolean retVal = false;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Squid 2.5 Task File in Excel '.xls");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 2.5 Excel Task Files", "*.xls"));
+
+        File squidTaskFile = fileChooser.showOpenDialog(ownerWindow);
+
+        if (squidTaskFile != null) {
+            if (squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xls")) {
+                squidProject.setupTaskSquid25File(squidTaskFile);
+                retVal = true;
+            } else {
+                throw new IOException("Filename does not end with '.xls'");
+            }
+        }
+
+        return retVal;
+    }
+
 }

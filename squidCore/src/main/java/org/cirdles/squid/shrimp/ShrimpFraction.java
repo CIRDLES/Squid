@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 
 /**
@@ -38,7 +41,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double[] countTimeSec;
     private String[] namesOfSpecies;
     private int peakMeasurementsCount;
-    private Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios;
+    private SortedSet<SquidRatiosModel> isotopicRatiosII;
     private int[][] rawPeakData;
     private int[][] rawSBMData;
     private double[][] totalCounts;
@@ -74,7 +77,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         countTimeSec = new double[0];
         namesOfSpecies = new String[0];
         peakMeasurementsCount = 0;
-        isotopicRatios = new HashMap<>();
+        isotopicRatiosII = new TreeSet<>();
         rawPeakData = new int[0][0];
         rawSBMData = new int[0][0];
         totalCounts = new double[0][0];
@@ -101,28 +104,12 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      *
      * @param fractionID
      * @param isotopicRatios
+     * @param isotopicRatiosII
      */
-    public ShrimpFraction(String fractionID, Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios) {
+    public ShrimpFraction(String fractionID, SortedSet<SquidRatiosModel> isotopicRatiosII) {
         this();
         this.fractionID = fractionID;
-        this.isotopicRatios = isotopicRatios;
-    }
-
-    /**
-     *
-     * @param speciesName
-     * @return
-     */
-    @Override
-    public int getIndexOfSpeciesByName(IsotopeNames speciesName) {
-        int retVal = -1;
-
-        for (int i = 0; i < namesOfSpecies.length; i++) {
-            if (namesOfSpecies[i].compareToIgnoreCase(speciesName.getPrawnName()) == 0) {
-                retVal = i;
-            }
-        }
-        return retVal;
+        this.isotopicRatiosII = isotopicRatiosII;
     }
 
     /**
@@ -256,31 +243,23 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     * @return the isotopicRatios
-     */
-    @Override
-    public Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> getIsotopicRatios() {
-        return isotopicRatios;
-    }
-
-    /**
      * Used by reflection in expression evaluations by VariableNode, for example
      *
      * @param name
      * @return double [1][2] containing ratio value and 1-sigma abs uncertainty
      */
     @Override
-    public double[][] getIsotopicRatioValuesByStringName(String name) {
-        IsotopeRatioModelSHRIMP ratio = isotopicRatios.get(RawRatioNamesSHRIMP.valueOf(name));
+    public double[][] getIsotopicRatioValuesByStringName(String name) {        
+        SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);   
         double[][] ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
         return ratioAndUnct;
     }
-
+    
     /**
-     * @param isotopicRatios the isotopicRatios to set
+     * @return the isotopicRatiosII
      */
-    public void setIsotopicRatios(Map<RawRatioNamesSHRIMP, IsotopeRatioModelSHRIMP> isotopicRatios) {
-        this.isotopicRatios = isotopicRatios;
+    public SortedSet<SquidRatiosModel> getIsotopicRatiosII() {
+        return isotopicRatiosII;
     }
 
     /**

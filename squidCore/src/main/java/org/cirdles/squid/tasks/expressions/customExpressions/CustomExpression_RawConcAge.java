@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -35,9 +34,9 @@ public class CustomExpression_RawConcAge {
 
     static {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(0, new VariableNodeForIsotopicRatios(RawRatioNamesSHRIMP.r238_206w.getName()));
+                .addChild(0, new VariableNodeForIsotopicRatios("238/206"));
         ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(new VariableNodeForIsotopicRatios(RawRatioNamesSHRIMP.r207_206w.getName()));
+                .addChild(new VariableNodeForIsotopicRatios("207/206"));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.concordiaTW());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);

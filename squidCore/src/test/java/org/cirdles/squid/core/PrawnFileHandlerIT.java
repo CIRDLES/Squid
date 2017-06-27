@@ -17,8 +17,16 @@
 package org.cirdles.squid.core;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.cirdles.commons.util.ResourceExtractor;
+import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.shrimp.SquidSessionModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -73,10 +81,46 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(PRAWN_FILE_RESOURCE);
 
         prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(PRAWN_FILE_RESOURCE);
-        prawnFileHandler.writeReportsFromPrawnFile(prawnFile.getAbsolutePath(), // prawnFileLocation
-                true,   // useSBM
-                false,  // userLinFits
-                "T");   // first letter of reference material                 
+        
+        PrawnFile prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath());
+        
+        List<SquidSpeciesModel> squidSpeciesModelList = new ArrayList<>();
+        squidSpeciesModelList.add(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(1, "204Pb", "204", "Pb", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(2, "Bkgnd", "Bkgnd", "Bkgnd", true));
+        squidSpeciesModelList.add(new SquidSpeciesModel(3, "206Pb", "206", "Pb", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(4, "207Pb", "207", "Pb", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(5, "208Pb", "208", "Pb", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(6, "238U", "238", "U", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(7, "248ThO", "248", "ThO", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(8, "254UO", "254", "UO", false));
+        squidSpeciesModelList.add(new SquidSpeciesModel(9, "270UO2", "270", "UO2", false));
+
+        List<SquidRatiosModel> squidRatiosModelList = new ArrayList<>();
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3),0));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(4), squidSpeciesModelList.get(3),1));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(5), squidSpeciesModelList.get(3),2));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(0),3));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(6),4));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(8), squidSpeciesModelList.get(6),5));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(7), squidSpeciesModelList.get(8),6));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(9),7));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(9), squidSpeciesModelList.get(8),8));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(8),9));
+        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3),10));
+
+        SquidSessionModel squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
+        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFileData, squidSessionModel);
+        
+        try {
+            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
+        } catch (IOException iOException) {
+        }
+        
+//        prawnFileHandler.writeReportsFromPrawnFile(prawnFile.getAbsolutePath(), // prawnFileLocation
+//                true,   // useSBM
+//                false,  // userLinFits
+//                "T");   // first letter of reference material                 
         
         assertThat(reportsFolder.listFiles()).hasSize(1); //Temp Calamari Reports Folder
         assertThat(reportsFolder.listFiles()[0].listFiles()).hasSize(1); //Reports folder with name of this Prawn File

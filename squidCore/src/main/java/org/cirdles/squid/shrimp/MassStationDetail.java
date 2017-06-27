@@ -18,6 +18,7 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
@@ -26,35 +27,47 @@ import java.util.List;
 public class MassStationDetail implements Serializable {
 
     private static final long serialVersionUID = -874679604916998001L;
-//    private void readObject(
-//            ObjectInputStream stream)
-//            throws IOException, ClassNotFoundException {
-//        stream.defaultReadObject();
-//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(MassStationDetail.class.getCanonicalName()));
-//        long theSUID = myObject.getSerialVersionUID();
-//        System.out.println("Customized De-serialization of MassStationDetail " + theSUID);
-//    }
 
-    private String massStationLabel;
-    private double centeringTimeSec;
-    private String isotopeLabel;
-    private List<Double> measuredTrimMasses;
-    private List<Double> timesOfMeasuredTrimMasses;
-    private List<Integer> indicesOfScansAtMeasurementTimes;
+    private int massStationIndex;
+    
+    private final SimpleStringProperty massStationLabel;
+    private final SimpleStringProperty isotopeLabel;
+    private final SimpleStringProperty elementLabel;
+    
+    private boolean isBackground;
+
+    private final double centeringTimeSec;
+    private final List<Double> measuredTrimMasses;
+    private final List<Double> timesOfMeasuredTrimMasses;
+    private final List<Integer> indicesOfScansAtMeasurementTimes;
     private List<Integer> indicesOfRunsAtMeasurementTimes;
 
-    private MassStationDetail() {
-    }
+    public MassStationDetail(int massStationIndex, String massStationLabel, double centeringTimeSec, String isotopeLabel, String elementLabel, boolean isBackground) {
+        this.massStationIndex = massStationIndex;
+        this.massStationLabel = new SimpleStringProperty(massStationLabel);
+        this.isotopeLabel = new SimpleStringProperty(isotopeLabel);
+        this.elementLabel = new SimpleStringProperty(elementLabel);
+        this.isBackground = isBackground;
 
-    public MassStationDetail(String massStationLabel, double centeringTimeSec, String isotopeLabel) {
-        this.massStationLabel = massStationLabel;
         this.centeringTimeSec = centeringTimeSec;
-        this.isotopeLabel = isotopeLabel;
-
         this.measuredTrimMasses = new ArrayList<>();
         this.timesOfMeasuredTrimMasses = new ArrayList<>();
         this.indicesOfScansAtMeasurementTimes = new ArrayList<>();
         this.indicesOfRunsAtMeasurementTimes = new ArrayList<>();
+    }
+
+    /**
+     * @return the massStationIndex
+     */
+    public int getMassStationIndex() {
+        return massStationIndex;
+    }
+
+    /**
+     * @param massStationIndex the massStationIndex to set
+     */
+    public void setMassStationIndex(int massStationIndex) {
+        this.massStationIndex = massStationIndex;
     }
 
     public boolean autoCentered() {
@@ -65,7 +78,7 @@ public class MassStationDetail implements Serializable {
      * @return the massStationLabel
      */
     public String getMassStationLabel() {
-        return massStationLabel;
+        return massStationLabel.get();
     }
 
     /**
@@ -79,7 +92,36 @@ public class MassStationDetail implements Serializable {
      * @return the isotopeLabel
      */
     public String getIsotopeLabel() {
-        return isotopeLabel;
+        return isotopeLabel.get();
+    }
+    
+    /**
+     * 
+     * @param label 
+     */
+    public void setIsotopeLabel(String label) {
+        isotopeLabel.set(label);
+    }
+
+    /**
+     * @return the elementLabel
+     */
+    public String getElementLabel() {
+        return elementLabel.get();
+    }
+
+    /**
+     * @return the backgroundLabel
+     */
+    public boolean getIsBackground() {
+        return isBackground;
+    }
+
+    /**
+     * @param backgroundLabel the backgroundLabel to set
+     */
+    public void setIsBackground(boolean isBackground) {
+        this.isBackground = isBackground;
     }
 
     /**
@@ -111,10 +153,12 @@ public class MassStationDetail implements Serializable {
     }
 
     /**
-     * @param indicesOfRunsAtMeasurementTimes the indicesOfRunsAtMeasurementTimes to set
+     * @param indicesOfRunsAtMeasurementTimes the
+     * indicesOfRunsAtMeasurementTimes to set
      */
     public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
     }
+    
 
 }

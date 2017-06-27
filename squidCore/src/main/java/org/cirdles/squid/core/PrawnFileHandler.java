@@ -56,6 +56,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.xml.sax.SAXException;
 
@@ -141,7 +142,7 @@ public class PrawnFileHandler implements Serializable {
             PrawnFile.Run runFraction = prawnFile.getRun().get(f);
 //            if ((runFraction.getPar().get(0).getValue().compareToIgnoreCase("T.1.1.1") == 0)) {
             ShrimpFraction shrimpFraction
-                    = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, useSBM, userLinFits, referenceMaterialLetter, null);
+                    = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, useSBM, userLinFits, referenceMaterialLetter);
             if (shrimpFraction != null) {
                 shrimpFraction.setSpotNumber(f + 1);
                 shrimpFraction.setNameOfMount(nameOfMount);
@@ -157,10 +158,41 @@ public class PrawnFileHandler implements Serializable {
 
         //March 2017 move task evaluation to here as part of evolution
         // handle task
-        if (task != null) {
-            task.evaluateTaskExpressions(shrimpFractions);
-        }
+        // June 2017 moved to squidproject
+//        if (task != null) {
+//            task.evaluateTaskExpressions(shrimpFractions);
+//        }
 
+        return shrimpFractions;
+    }
+
+    public List<ShrimpFractionExpressionInterface> processRunFractions(PrawnFile prawnFile, SquidSessionModel squidSessionSpecs) {
+        List<ShrimpFractionExpressionInterface> shrimpFractions = new ArrayList<>();
+        for (int f = 0; f < prawnFile.getRun().size(); f++) {
+            PrawnFile.Run runFraction = prawnFile.getRun().get(f);
+
+            ShrimpFraction shrimpFraction
+                    = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
+            if (shrimpFraction != null) {
+                shrimpFraction.setSpotNumber(f + 1);
+                String nameOfMount = prawnFile.getMount();
+                if (nameOfMount == null) {
+                    nameOfMount = "No-Mount-Name";
+                }
+                shrimpFraction.setNameOfMount(nameOfMount);
+                shrimpFractions.add(shrimpFraction);
+            }
+
+            if (progressSubscriber != null) {
+                int progress = (f + 1) * 100 / prawnFile.getRun().size();
+                progressSubscriber.accept(progress);
+            }
+        }
+        
+//        try {
+//            reportsEngine.produceReports(shrimpFractions);
+//        } catch (IOException iOException) {
+//        }
         return shrimpFractions;
     }
 

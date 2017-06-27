@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 CIRDLES.org.
+ * Copyright 2017 CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,31 @@ package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_UPPER_LIMIT_1_SIGMA_PERCENT;
-
+import org.cirdles.squid.tasks.expressions.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.operations.Operation;
 
 /**
  *
  * @author James F. Bowring
  */
-public class IsotopeRatioModelSHRIMP implements Serializable{
+public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosModel> {
 
-    private RawRatioNamesSHRIMP rawRatioName;
-    private IsotopeNames numerator;
-    private IsotopeNames denominator;
+    private static long serialVersionUID = -2944080263487487243L;
+
+    private String ratioName;
+    private SquidSpeciesModel numerator;
+    private SquidSpeciesModel denominator;
+    private int reportingOrderIndex;
+
     private List<Double> ratEqTime;
     private List<Double> ratEqVal;
     // one sigma absolute uncertainties for ratEqVal
@@ -39,15 +51,16 @@ public class IsotopeRatioModelSHRIMP implements Serializable{
     private double ratioFractErr;
     private int minIndex;
     private boolean active;
+    
+    public static Map<String, SquidRatiosModel> knownSquidRatiosModels = new HashMap<>();
 
-    /**
-     *
-     * @param rawRatioName the value of rawRatioName
-     */
-    public IsotopeRatioModelSHRIMP(RawRatioNamesSHRIMP rawRatioName) {
-        this.rawRatioName = rawRatioName;
-        this.numerator = rawRatioName.getNumerator();
-        this.denominator = rawRatioName.getDenominator();
+    public SquidRatiosModel(SquidSpeciesModel numerator, SquidSpeciesModel denominator, int reportingOrderIndex) {
+        this.numerator = numerator;
+        this.denominator = denominator;
+        this.reportingOrderIndex = reportingOrderIndex;
+
+        this.ratioName = numerator.getIsotopeName() + "/" + denominator.getIsotopeName();
+
         this.ratEqTime = new ArrayList<>();
         this.ratEqVal = new ArrayList<>();
         this.ratEqErr = new ArrayList<>();
@@ -55,64 +68,113 @@ public class IsotopeRatioModelSHRIMP implements Serializable{
         this.ratioFractErr = 0;
         this.minIndex = -2;
         this.active = false;
+        
+        knownSquidRatiosModels.put(ratioName, this);
+    }
+
+    @Override
+    public int compareTo(SquidRatiosModel squidRatiosModel) {
+        return Integer.compare(reportingOrderIndex, squidRatiosModel.getReportingOrderIndex());
+    }
+
+    @Override
+    public boolean equals(Object squidRatiosModel) {
+        boolean retVal = false;
+
+        if (squidRatiosModel instanceof SquidRatiosModel) {
+            retVal = reportingOrderIndex == ((SquidRatiosModel) squidRatiosModel).getReportingOrderIndex();
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    public SquidRatiosModel copy() {
+        SquidRatiosModel copy = new SquidRatiosModel(numerator, denominator, reportingOrderIndex);
+        return copy;
+    }
+
+
+    public static SquidRatiosModel findSquidRatiosModelByName(SortedSet<SquidRatiosModel> isotopicRatios, String ratioName) {
+        SquidRatiosModel retVal = null;
+        Iterator<SquidRatiosModel> iterator = isotopicRatios.iterator();
+        while (iterator.hasNext()) {
+            SquidRatiosModel model = iterator.next();
+            if (model.getRatioName().equals(ratioName)) {
+                retVal = model;
+                break;
+            }
+        }
+
+        return retVal;
+    }
+
+    /**
+     * @return the ratioName
+     */
+    public String getRatioName() {
+        return ratioName;
+    }
+
+    /**
+     * @param ratioName the ratioName to set
+     */
+    public void setRatioName(String ratioName) {
+        this.ratioName = ratioName;
     }
 
     /**
      *
      * @return
      */
-    public boolean numeratorAtomicRatioLessThanDenominator() {
-        return (numerator.getAtomicMass() < denominator.getAtomicMass());
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String prettyPrintSimpleName() {
-        return Integer.toString(numerator.getAtomicMass()) + "/" + Integer.toString(denominator.getAtomicMass());
-    }
-
-    /**
-     * @return the rawRatioName
-     */
-    public RawRatioNamesSHRIMP getRawRatioName() {
-        return rawRatioName;
-    }
-
-    /**
-     * @param rawRatioName the rawRatioName to set
-     */
-    public void setRawRatioName(RawRatioNamesSHRIMP rawRatioName) {
-        this.rawRatioName = rawRatioName;
+    public String getDisplayNameNoSpaces() {
+        return numerator.getIsotopeName() + "/" + denominator.getIsotopeName();
     }
 
     /**
      * @return the numerator
      */
-    public IsotopeNames getNumerator() {
+    public SquidSpeciesModel getNumerator() {
         return numerator;
     }
 
     /**
      * @param numerator the numerator to set
      */
-    public void setNumerator(IsotopeNames numerator) {
+    public void setNumerator(SquidSpeciesModel numerator) {
         this.numerator = numerator;
     }
 
     /**
      * @return the denominator
      */
-    public IsotopeNames getDenominator() {
+    public SquidSpeciesModel getDenominator() {
         return denominator;
     }
 
     /**
      * @param denominator the denominator to set
      */
-    public void setDenominator(IsotopeNames denominator) {
+    public void setDenominator(SquidSpeciesModel denominator) {
         this.denominator = denominator;
+    }
+
+    /**
+     * @return the reportingOrderIndex
+     */
+    public int getReportingOrderIndex() {
+        return reportingOrderIndex;
+    }
+
+    /**
+     * @param reportingOrderIndex the reportingOrderIndex to set
+     */
+    public void setReportingOrderIndex(int reportingOrderIndex) {
+        this.reportingOrderIndex = reportingOrderIndex;
     }
 
     /**
@@ -193,8 +255,9 @@ public class IsotopeRatioModelSHRIMP implements Serializable{
         // the value supplied is the 1 sigma percent uncertainty divided by 100
         // we choose to store the 1 sigma absolute as ratioFracErr
 
-        // first determin if  above Squid25 limits
-        double ratioFraErrFiltered = (ratioFractErr * 100.0 > SQUID_UPPER_LIMIT_1_SIGMA_PERCENT) ? SQUID_UPPER_LIMIT_1_SIGMA_PERCENT / 100.0 : ratioFractErr;
+        // first determine if  above Squid25 limits
+        double ratioFraErrFiltered = ((ratioFractErr * 100.0) > SQUID_UPPER_LIMIT_1_SIGMA_PERCENT)
+                ? (SQUID_UPPER_LIMIT_1_SIGMA_PERCENT / 100.0) : ratioFractErr;
 
         this.ratioFractErr = ratioFraErrFiltered * ratioVal;
     }

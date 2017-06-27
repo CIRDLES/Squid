@@ -20,9 +20,6 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
@@ -197,15 +194,15 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         // ratiosOfInterest
         reader.moveDown();
-        List<RawRatioNamesSHRIMP> ratiosOfInterest = new ArrayList<>();
+////        List<RawRatioNamesSHRIMP> ratiosOfInterest = new ArrayList<>();
         while (reader.hasMoreChildren()) {
             reader.moveDown(); // into ratio element
             reader.moveDown(); // into name element
-            ratiosOfInterest.add(RawRatioNamesSHRIMP.valueOf(reader.getValue()));
+////            ratiosOfInterest.add(RawRatioNamesSHRIMP.valueOf(reader.getValue()));
             reader.moveUp();
             reader.moveUp();
         }
-        expressionTree.setRatiosOfInterest(ratiosOfInterest);
+//////        expressionTree.setRatiosOfInterest(ratiosOfInterest);
         reader.moveUp();
 
         return expressionTree;

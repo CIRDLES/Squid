@@ -15,7 +15,9 @@
  */
 package org.cirdles.squid.tasks.storedTasks;
 
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_sec;
 
 /**
@@ -26,9 +28,13 @@ public class ILC_Zircon_10Pk_expFloat_Task extends Task {
 
     /**
      *
+     * @param squidProject
      */
-    public ILC_Zircon_10Pk_expFloat_Task() {
-        super("ILC Zircon 10Pk exp=Float");
+    public ILC_Zircon_10Pk_expFloat_Task(SquidProject squidProject) {
+        super("ILC Zircon 10Pk exp=Float", squidProject);
+        
+        ExpressionTree.squidProject = squidProject;
+        
         taskExpressionsOrdered.add(CustomExpression_Net204cts_sec.EXPRESSION);
 
     }

@@ -23,16 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import javax.swing.JOptionPane;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.shrimp.IsotopeNames;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMP;
-import org.cirdles.squid.shrimp.RawRatioNamesSHRIMPXMLConverter;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
@@ -72,20 +69,23 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      *
      */
     protected Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet;
+    
+    protected transient SquidProject squidProject;
 
     /**
      *
      */
     public Task() {
-        this("NoName");
+        this("NoName", null);
     }
 
     /**
      *
      * @param name
      */
-    public Task(String name) {
+    public Task(String name, SquidProject squidProject) {
         this.name = name;
+        this.squidProject = squidProject;
         this.taskExpressionsOrdered = new ArrayList<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
     }
@@ -111,9 +111,6 @@ public class Task implements TaskInterface, XMLSerializerInterface {
         xstream.alias("operation", Pow.class);
 
         xstream.alias("function", Ln.class);
-
-        xstream.registerConverter(new RawRatioNamesSHRIMPXMLConverter());
-        xstream.alias("ratio", RawRatioNamesSHRIMP.class);
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
@@ -160,16 +157,18 @@ public class Task implements TaskInterface, XMLSerializerInterface {
             }
 
             try {
-                evauateExpressionForSpotSet(expression, spotsForExpression);
+                evaluateExpressionForSpotSet(expression, spotsForExpression);
             } catch (SquidException squidException) {
                 // TODO - log and report failure of expression
-                JOptionPane.showMessageDialog(null,
-                        "Expression failed: " + expression.getName() + " because: " + squidException.getMessage());
+//                JOptionPane.showMessageDialog(null,
+//                        "Expression failed: " + expression.getName() + " because: " + squidException.getMessage());
             }
         }
     }
 
-    private void evauateExpressionForSpotSet(ExpressionTreeInterface expression, List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
+    private void evaluateExpressionForSpotSet(
+            ExpressionTreeInterface expression, 
+            List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // determine type of expression
         if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
             double[][] value = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
@@ -182,7 +181,9 @@ public class Task implements TaskInterface, XMLSerializerInterface {
         }
     }
 
-    private void evaluateExpressionForSpot(ExpressionTreeInterface expression, ShrimpFractionExpressionInterface spot) throws SquidException {
+    private void evaluateExpressionForSpot(
+            ExpressionTreeInterface expression, 
+            ShrimpFractionExpressionInterface spot) throws SquidException {
 
         if (((ExpressionTree) expression).hasRatiosOfInterest()) {
             // case of Squid switch "NU"
@@ -209,7 +210,9 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      * @param shrimpFraction
      */
     private TaskExpressionEvaluatedPerSpotPerScanModelInterface
-            evaluateTaskExpressionsPerSpotPerScan(ExpressionTreeInterface expression, ShrimpFractionExpressionInterface shrimpFraction) throws SquidException {
+            evaluateTaskExpressionsPerSpotPerScan(
+                    ExpressionTreeInterface expression, 
+                    ShrimpFractionExpressionInterface shrimpFraction) throws SquidException {
 
         TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel = null;
         if (shrimpFraction != null) {
@@ -219,17 +222,25 @@ public class Task implements TaskInterface, XMLSerializerInterface {
             singleSpot.add(shrimpFraction);
 
             // first have to build pkInterp etc per expression and then evaluate by scan
-            List<RawRatioNamesSHRIMP> ratiosOfInterest = ((ExpressionTreeWithRatiosInterface) expression).getRatiosOfInterest();
+            List<String> ratiosOfInterest = ((ExpressionTreeWithRatiosInterface) expression).getRatiosOfInterest();
 
             int[] isotopeIndices = new int[ratiosOfInterest.size() * 2];
             for (int i = 0; i < ratiosOfInterest.size(); i++) {
-                isotopeIndices[2 * i] = shrimpFraction.getIndexOfSpeciesByName(ratiosOfInterest.get(i).getNumerator());
-                isotopeIndices[2 * i + 1] = shrimpFraction.getIndexOfSpeciesByName(ratiosOfInterest.get(i).getDenominator());
+                if (squidProject.findNumerator(ratiosOfInterest.get(i)) != null) {
+                    isotopeIndices[2 * i] = squidProject.findNumerator(ratiosOfInterest.get(i)).getMassStationIndex();
+                } else {
+                    isotopeIndices[2 * i] = -1;
+                }
+                if (squidProject.findDenominator(ratiosOfInterest.get(i)) != null) {
+                    isotopeIndices[2 * i + 1] = squidProject.findDenominator(ratiosOfInterest.get(i)).getMassStationIndex();
+                } else {
+                    isotopeIndices[2 * i + 1] = -1;
+                }
             }
-            
+
             //TODO June 2017 temp hack until expression checking is in place
-            for (int i = 0 ; i < isotopeIndices.length; i ++){
-                if (isotopeIndices[i] == -1){
+            for (int i = 0; i < isotopeIndices.length; i++) {
+                if (isotopeIndices[i] == -1) {
                     throw new SquidException("Missing Isotope");
                 }
             }
@@ -311,13 +322,13 @@ public class Task implements TaskInterface, XMLSerializerInterface {
                 if (eqValTmp != 0.0) {
                     // numerical pertubation procedure
                     // EqPkUndupeOrd is here a List of the unique Isotopes in order of acquisition in the expression
-                    Set<IsotopeNames> eqPkUndupeOrd = ((ExpressionTreeWithRatiosInterface) expression).extractUniqueSpeciesNumbers();
-                    Iterator<IsotopeNames> species = eqPkUndupeOrd.iterator();
+                    Set<SquidSpeciesModel> eqPkUndupeOrd = squidProject.extractUniqueSpeciesNumbers(((ExpressionTreeWithRatiosInterface) expression).getRatiosOfInterest());
+                    Iterator<SquidSpeciesModel> species = eqPkUndupeOrd.iterator();
 
                     double fVar = 0.0;
                     while (species.hasNext()) {
-                        IsotopeNames specie = species.next();
-                        int unDupPkOrd = shrimpFraction.getIndexOfSpeciesByName(specie);
+                        SquidSpeciesModel specie = species.next();
+                        int unDupPkOrd = specie.getMassStationIndex();
 
                         // clone pkInterp[scanNum] for use in pertubation
                         double[] perturbed = pkInterp[scanNum].clone();
@@ -348,7 +359,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
                         // reset iterator
                         species = eqPkUndupeOrd.iterator();
                         while (species.hasNext()) {
-                            int unDupPkOrd = shrimpFraction.getIndexOfSpeciesByName(species.next());
+                            int unDupPkOrd = species.next().getMassStationIndex();
 
                             totRatTime += shrimpFraction.getTimeStampSec()[scanNum][unDupPkOrd];
                             numPksInclDupes++;
