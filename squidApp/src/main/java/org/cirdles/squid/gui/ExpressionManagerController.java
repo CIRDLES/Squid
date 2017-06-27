@@ -75,7 +75,7 @@ public class ExpressionManagerController implements Initializable {
         Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
         while (ratioNameIterator.hasNext()){
             String ratioName = ratioNameIterator.next();
-            items.add(SquidProject.buildRatioExpression(ratioName));
+            items.add(SquidUIController.squidProject.buildRatioExpression(ratioName));
         }
 
         expressionListView.setItems(items);
@@ -90,7 +90,7 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void handleParseButtonAction(ActionEvent event) {
-        ExpressionParser expressionParser = new ExpressionParser();
+        ExpressionParser expressionParser = new ExpressionParser(SquidUIController.squidProject);
         ExpressionTreeInterface result = expressionParser.parseExpression(expressionText.getText());
 
         webEngine.loadContent(

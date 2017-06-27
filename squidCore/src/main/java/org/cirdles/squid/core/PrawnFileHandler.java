@@ -158,9 +158,10 @@ public class PrawnFileHandler implements Serializable {
 
         //March 2017 move task evaluation to here as part of evolution
         // handle task
-        if (task != null) {
-            task.evaluateTaskExpressions(shrimpFractions);
-        }
+        // June 2017 moved to squidproject
+//        if (task != null) {
+//            task.evaluateTaskExpressions(shrimpFractions);
+//        }
 
         return shrimpFractions;
     }

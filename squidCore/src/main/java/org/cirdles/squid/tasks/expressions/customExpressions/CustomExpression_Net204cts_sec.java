@@ -15,8 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -35,8 +34,8 @@ public class CustomExpression_Net204cts_sec {
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("Net204cts/sec");
 
     static {
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, new ShrimpSpeciesNode(SquidProject.lookUpSpeciesByName("204"), "getTotalCps"));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ShrimpSpeciesNode(SquidProject.lookUpSpeciesByName("BKG"), "getTotalCps"));
+        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, new ShrimpSpeciesNode(ExpressionTree.squidProject.lookUpSpeciesByName("204"), "getTotalCps"));
+        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ShrimpSpeciesNode(ExpressionTree.squidProject.lookUpSpeciesByName(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL), "getTotalCps"));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.subtract());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);

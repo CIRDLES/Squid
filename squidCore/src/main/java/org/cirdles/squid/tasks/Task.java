@@ -23,14 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import javax.swing.JOptionPane;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
@@ -71,20 +69,23 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      *
      */
     protected Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet;
+    
+    protected transient SquidProject squidProject;
 
     /**
      *
      */
     public Task() {
-        this("NoName");
+        this("NoName", null);
     }
 
     /**
      *
      * @param name
      */
-    public Task(String name) {
+    public Task(String name, SquidProject squidProject) {
         this.name = name;
+        this.squidProject = squidProject;
         this.taskExpressionsOrdered = new ArrayList<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
     }
@@ -165,7 +166,9 @@ public class Task implements TaskInterface, XMLSerializerInterface {
         }
     }
 
-    private void evaluateExpressionForSpotSet(ExpressionTreeInterface expression, List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
+    private void evaluateExpressionForSpotSet(
+            ExpressionTreeInterface expression, 
+            List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // determine type of expression
         if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
             double[][] value = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
@@ -178,7 +181,9 @@ public class Task implements TaskInterface, XMLSerializerInterface {
         }
     }
 
-    private void evaluateExpressionForSpot(ExpressionTreeInterface expression, ShrimpFractionExpressionInterface spot) throws SquidException {
+    private void evaluateExpressionForSpot(
+            ExpressionTreeInterface expression, 
+            ShrimpFractionExpressionInterface spot) throws SquidException {
 
         if (((ExpressionTree) expression).hasRatiosOfInterest()) {
             // case of Squid switch "NU"
@@ -205,7 +210,9 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      * @param shrimpFraction
      */
     private TaskExpressionEvaluatedPerSpotPerScanModelInterface
-            evaluateTaskExpressionsPerSpotPerScan(ExpressionTreeInterface expression, ShrimpFractionExpressionInterface shrimpFraction) throws SquidException {
+            evaluateTaskExpressionsPerSpotPerScan(
+                    ExpressionTreeInterface expression, 
+                    ShrimpFractionExpressionInterface shrimpFraction) throws SquidException {
 
         TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel = null;
         if (shrimpFraction != null) {
@@ -219,13 +226,13 @@ public class Task implements TaskInterface, XMLSerializerInterface {
 
             int[] isotopeIndices = new int[ratiosOfInterest.size() * 2];
             for (int i = 0; i < ratiosOfInterest.size(); i++) {
-                if (SquidProject.findNumerator(ratiosOfInterest.get(i)) != null) {
-                    isotopeIndices[2 * i] = SquidProject.findNumerator(ratiosOfInterest.get(i)).getMassStationIndex();
+                if (squidProject.findNumerator(ratiosOfInterest.get(i)) != null) {
+                    isotopeIndices[2 * i] = squidProject.findNumerator(ratiosOfInterest.get(i)).getMassStationIndex();
                 } else {
                     isotopeIndices[2 * i] = -1;
                 }
-                if (SquidProject.findDenominator(ratiosOfInterest.get(i)) != null) {
-                    isotopeIndices[2 * i + 1] = SquidProject.findDenominator(ratiosOfInterest.get(i)).getMassStationIndex();
+                if (squidProject.findDenominator(ratiosOfInterest.get(i)) != null) {
+                    isotopeIndices[2 * i + 1] = squidProject.findDenominator(ratiosOfInterest.get(i)).getMassStationIndex();
                 } else {
                     isotopeIndices[2 * i + 1] = -1;
                 }
@@ -315,7 +322,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
                 if (eqValTmp != 0.0) {
                     // numerical pertubation procedure
                     // EqPkUndupeOrd is here a List of the unique Isotopes in order of acquisition in the expression
-                    Set<SquidSpeciesModel> eqPkUndupeOrd = ((ExpressionTreeWithRatiosInterface) expression).extractUniqueSpeciesNumbers();
+                    Set<SquidSpeciesModel> eqPkUndupeOrd = squidProject.extractUniqueSpeciesNumbers(((ExpressionTreeWithRatiosInterface) expression).getRatiosOfInterest());
                     Iterator<SquidSpeciesModel> species = eqPkUndupeOrd.iterator();
 
                     double fVar = 0.0;

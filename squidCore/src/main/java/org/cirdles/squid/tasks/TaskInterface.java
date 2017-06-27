@@ -17,6 +17,7 @@ package org.cirdles.squid.tasks;
 
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 /**

@@ -15,7 +15,9 @@
  */
 package org.cirdles.squid.tasks.storedTasks;
 
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
@@ -37,9 +39,12 @@ public class SquidBodorkosTask1 extends Task {
 
     /**
      *
+     * @param squidProject
      */
-    public SquidBodorkosTask1() {
-        super("SquidBodorkosTask1");
+    public SquidBodorkosTask1(SquidProject squidProject) {
+        super("SquidBodorkosTask1", squidProject);
+        
+        ExpressionTree.squidProject = squidProject;
         
         taskExpressionsOrdered.add(CustomExpression_LnUO_U.EXPRESSION);
 

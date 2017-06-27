@@ -34,12 +34,6 @@ public interface ExpressionTreeWithRatiosInterface {
 
     /**
      *
-     * @return
-     */
-    public Set extractUniqueSpeciesNumbers();
-
-    /**
-     *
      * @param ratio
      * @return
      */

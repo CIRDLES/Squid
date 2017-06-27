@@ -48,6 +48,14 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
  * @author James F. Bowring
  */
 public class ExpressionParser {
+    
+    private static SquidProject squidProject;
+
+    public ExpressionParser(SquidProject squidProject) {
+        this.squidProject = squidProject;
+    }
+    
+    
 
     /**
      *
@@ -143,7 +151,7 @@ public class ExpressionParser {
         Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
         while (ratioNameIterator.hasNext()) {
             String ratioName = ratioNameIterator.next();
-            NAMED_EXPRESSIONS_MAP.put("[\"" + ratioName + "\"]", SquidProject.buildRatioExpression(ratioName));
+            NAMED_EXPRESSIONS_MAP.put("[\"" + ratioName + "\"]", squidProject.buildRatioExpression(ratioName));
         }
     }
 

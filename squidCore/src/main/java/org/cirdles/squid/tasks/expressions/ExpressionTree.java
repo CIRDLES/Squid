@@ -51,6 +51,7 @@ public class ExpressionTree
         ExpressionTreeWithRatiosInterface,
         XMLSerializerInterface {
 
+    public static SquidProject squidProject;
     /**
      *
      */
@@ -215,21 +216,6 @@ public class ExpressionTree
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         return operation == null ? new Object[][]{{0.0, 0.0}} : operation.eval(childrenET, shrimpFractions, task);
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public Set<SquidSpeciesModel> extractUniqueSpeciesNumbers() {
-        // assume acquisition order is atomic weight order
-        Set<SquidSpeciesModel> eqPkUndupeOrd = new TreeSet<>();
-        for (int i = 0; i < ratiosOfInterest.size(); i++) {
-            eqPkUndupeOrd.add(SquidProject.findNumerator(ratiosOfInterest.get(i)));
-            eqPkUndupeOrd.add(SquidProject.findDenominator(ratiosOfInterest.get(i)));
-        }
-        return eqPkUndupeOrd;
     }
 
     /**

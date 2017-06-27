@@ -105,10 +105,10 @@ public class RatiosManagerController implements Initializable {
             String[] savedRatios = new String[]{"204/206", "207/206", "208/206", "A/B"};
             for (int i = 0; i < savedRatios.length; i++) {
                 String[] ratio = savedRatios[i].split("/");
-                if ((SquidProject.lookUpSpeciesByName(ratio[0]) != null)
-                        && SquidProject.lookUpSpeciesByName(ratio[1]) !=null) {
-                    int num = SquidProject.lookUpSpeciesByName(ratio[0]).getMassStationIndex();
-                    int den = SquidProject.lookUpSpeciesByName(ratio[1]).getMassStationIndex();
+                if ((SquidUIController.squidProject.lookUpSpeciesByName(ratio[0]) != null)
+                        && SquidUIController.squidProject.lookUpSpeciesByName(ratio[1]) !=null) {
+                    int num = SquidUIController.squidProject.lookUpSpeciesByName(ratio[0]).getMassStationIndex();
+                    int den = SquidUIController.squidProject.lookUpSpeciesByName(ratio[1]).getMassStationIndex();
                     SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[num][den] = true;
                 }
             }

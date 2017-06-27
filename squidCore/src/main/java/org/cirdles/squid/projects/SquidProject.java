@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.core.PrawnFileHandler;
@@ -65,7 +67,7 @@ public class SquidProject implements Serializable {
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
     private SquidSessionModel squidSessionModel;
-    private static List<SquidSpeciesModel> squidSpeciesModelList;
+    private List<SquidSpeciesModel> squidSpeciesModelList;
     protected boolean[][] tableOfSelectedRatiosByMassStationIndex;
 
     public SquidProject() {
@@ -108,13 +110,14 @@ public class SquidProject implements Serializable {
                 massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
                 massStationDetail.setIsBackground(ssm.getIsBackground());
             }
+        } else {
+            buildSquidSpeciesModelListFromMassStationDetails();
         }
     }
 
     public void setupSquidSessionSpecs() {
         createMapOfIndexToMassStationDetails();
-        buildSquidSpeciesModelListFromMassStationDetails();
-
+         
         List<SquidRatiosModel> squidRatiosModelList = new ArrayList<>();
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3), 0));
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(4), squidSpeciesModelList.get(3), 1));
@@ -131,7 +134,7 @@ public class SquidProject implements Serializable {
         squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
     }
 
-    public static int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm) {
+    public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm) {
         // there is at most one
         int retVal = -1;
 
@@ -150,7 +153,7 @@ public class SquidProject implements Serializable {
         return retVal;
     }
 
-    public static ExpressionTreeInterface buildRatioExpression(String ratioName) {
+    public ExpressionTreeInterface buildRatioExpression(String ratioName) {
         // format of ratioName is "nnn/mmm"
         ExpressionTreeInterface ratioExpression = null;
         if ((findNumerator(ratioName) != null) & (findDenominator(ratioName) != null)) {
@@ -166,17 +169,17 @@ public class SquidProject implements Serializable {
         return ratioExpression;
     }
 
-    public static SquidSpeciesModel findNumerator(String ratioName) {
+    public SquidSpeciesModel findNumerator(String ratioName) {
         String[] parts = ratioName.split("/");
         return lookUpSpeciesByName(parts[0]);
     }
 
-    public static SquidSpeciesModel findDenominator(String ratioName) {
+    public SquidSpeciesModel findDenominator(String ratioName) {
         String[] parts = ratioName.split("/");
         return lookUpSpeciesByName(parts[1]);
     }
 
-    public static SquidSpeciesModel lookUpSpeciesByName(String isotopeName) {
+    public SquidSpeciesModel lookUpSpeciesByName(String isotopeName) {
         SquidSpeciesModel retVal = null;
 
         for (SquidSpeciesModel squidSpeciesModel : squidSpeciesModelList) {
@@ -189,10 +192,24 @@ public class SquidProject implements Serializable {
         return retVal;
     }
 
+    /**
+     *
+     * @return
+     */
+    public Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest) {
+        // assume acquisition order is atomic weight order
+        Set<SquidSpeciesModel> eqPkUndupeOrd = new TreeSet<>();
+        for (int i = 0; i < ratiosOfInterest.size(); i++) {
+            eqPkUndupeOrd.add(findNumerator(ratiosOfInterest.get(i)));
+            eqPkUndupeOrd.add(findDenominator(ratiosOfInterest.get(i)));
+        }
+        return eqPkUndupeOrd;
+    }
+
     public void testRunOfSessionModel() {
         List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, squidSessionModel);
 
-        TaskInterface squidBodorkosTask1 = new SquidBodorkosTask1();
+        TaskInterface squidBodorkosTask1 = new SquidBodorkosTask1(this);
         squidBodorkosTask1.evaluateTaskExpressions(shrimpFractions);
 
         try {

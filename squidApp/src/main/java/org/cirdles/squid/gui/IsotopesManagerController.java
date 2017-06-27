@@ -122,7 +122,7 @@ public class IsotopesManagerController implements Initializable {
                         SquidSpeciesModel ssm
                                 = SquidUIController.squidProject.getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
-                        int previousIndex = SquidProject.selectBackgroundSpeciesReturnPreviousIndex(ssm);
+                        int previousIndex = SquidUIController.squidProject.selectBackgroundSpeciesReturnPreviousIndex(ssm);
                         if (previousIndex >= 0) {
                             massStationsData.get(previousIndex).setIsotopeLabel(
                                     SquidUIController.squidProject.getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
