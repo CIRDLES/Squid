@@ -65,6 +65,10 @@ public class ExpressionManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         ExpressionTree.squidProject = SquidUIController.squidProject;
         
+                
+        // Temp hack June 2017 to bring llive ratios into expressions
+        SquidUIController.squidProject.buildSquidRatiossModelListFromMassStationDetails();
+        
         // initialize expressions tab
         ObservableList<ExpressionTreeInterface> items = FXCollections.observableArrayList(
                 CustomExpression_LnPbR_U.EXPRESSION,
@@ -93,7 +97,7 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void handleParseButtonAction(ActionEvent event) {
-        
+                
         ExpressionParser expressionParser = new ExpressionParser(SquidUIController.squidProject);
         ExpressionTreeInterface result = expressionParser.parseExpression(expressionText.getText());
 

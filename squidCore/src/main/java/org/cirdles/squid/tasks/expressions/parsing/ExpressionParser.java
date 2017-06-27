@@ -56,7 +56,7 @@ public class ExpressionParser {
         
         this.squidProject = squidProject;
 
-        Map<String, ExpressionTreeInterface> NAMED_EXPRESSIONS_MAP = new HashMap<>();
+        NAMED_EXPRESSIONS_MAP = new HashMap<>();
 
         NAMED_EXPRESSIONS_MAP.put("[\"Ln254/238\"]", CustomExpression_LnUO_U.EXPRESSION);
         NAMED_EXPRESSIONS_MAP.put("[\"LnUO/U\"]", CustomExpression_LnUO_U.EXPRESSION);

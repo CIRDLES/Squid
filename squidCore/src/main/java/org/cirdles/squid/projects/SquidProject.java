@@ -69,7 +69,8 @@ public class SquidProject implements Serializable {
     private double sessionDurationHours;
     private SquidSessionModel squidSessionModel;
     private List<SquidSpeciesModel> squidSpeciesModelList;
-    protected boolean[][] tableOfSelectedRatiosByMassStationIndex;
+    private List<SquidRatiosModel> squidRatiosModelList;
+    private boolean[][] tableOfSelectedRatiosByMassStationIndex;
     private TaskSquid25 taskSquid25;
 
     public SquidProject() {
@@ -84,8 +85,9 @@ public class SquidProject implements Serializable {
         this.sessionDurationHours = 0.0;
 
         squidSpeciesModelList = new ArrayList<>();
+        squidRatiosModelList = new ArrayList<>();
         tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
-        
+
         taskSquid25 = null;
 
     }
@@ -101,6 +103,23 @@ public class SquidProject implements Serializable {
         if (tableOfSelectedRatiosByMassStationIndex.length == 0) {
             tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
         }
+    }
+
+    public void buildSquidRatiossModelListFromMassStationDetails() {
+        squidRatiosModelList = new ArrayList<>();
+        
+        SquidRatiosModel.knownSquidRatiosModels.clear();
+
+        for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
+            for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
+                if ((tableOfSelectedRatiosByMassStationIndex[row][col])
+                        &&(!squidSpeciesModelList.get(row).getIsBackground())
+                        &&(!squidSpeciesModelList.get(col).getIsBackground())) {
+                    squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(row), squidSpeciesModelList.get(col), 0));
+                }
+            }
+        }
+
     }
 
     public void createMapOfIndexToMassStationDetails() {
@@ -121,8 +140,8 @@ public class SquidProject implements Serializable {
 
     public void setupSquidSessionSpecs() {
         createMapOfIndexToMassStationDetails();
-         
-        List<SquidRatiosModel> squidRatiosModelList = new ArrayList<>();
+
+        squidRatiosModelList = new ArrayList<>();
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3), 0));
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(4), squidSpeciesModelList.get(3), 1));
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(5), squidSpeciesModelList.get(3), 2));
@@ -221,11 +240,11 @@ public class SquidProject implements Serializable {
         } catch (IOException iOException) {
         }
     }
-    
-    public void setupTaskSquid25File(File squidTaskFile){
-        
+
+    public void setupTaskSquid25File(File squidTaskFile) {
+
         taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
-        
+
     }
 
     public void setupPrawnFile(File prawnXMLFileNew)
@@ -583,14 +602,21 @@ public class SquidProject implements Serializable {
     }
 
     /**
+     * @return the squidRatiosModelList
+     */
+    public List<SquidRatiosModel> getSquidRatiosModelList() {
+        return squidRatiosModelList;
+    }
+
+    /**
      * @return the tableOfSelectedRatiosByMassStationIndex
      */
     public boolean[][] getTableOfSelectedRatiosByMassStationIndex() {
         return tableOfSelectedRatiosByMassStationIndex;
     }
-    
+
     public void resetTableOfSelectedRatiosByMassStationIndex() {
-         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+        tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
     }
 
     /**

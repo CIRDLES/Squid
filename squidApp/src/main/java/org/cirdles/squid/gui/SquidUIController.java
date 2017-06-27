@@ -153,7 +153,7 @@ public class SquidUIController implements Initializable {
             manageTasksMenu.setDisable(false);
             manageRatiosMenu.setDisable(false);
             manageExpressionsMenu.setDisable(false);
-            manageAnalysisMenu.setDisable(false);
+//            manageAnalysisMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println(">>>>   " + iOException.getMessage());
