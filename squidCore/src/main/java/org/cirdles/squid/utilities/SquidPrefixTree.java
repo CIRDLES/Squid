@@ -206,15 +206,6 @@ public class SquidPrefixTree {
                 targetMap.put(key, count);
             }
         }
-////
-////        for (Integer i : sourceMap.keySet()) {
-////            int count = sourceMap.get(i);
-////            if (targetMap.containsKey(i)) {
-////                targetMap.put(i, targetMap.get(i) + count);
-////            } else {
-////                targetMap.put(i, count);
-////            }
-////        }
     }
 
     public String buildSummaryDataString() {

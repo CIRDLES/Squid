@@ -46,6 +46,15 @@
                   <MenuItem mnemonicParsing="false" text="Join a Prawn File" />
               </items>
             </Menu>
+            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task">
+              <items>
+                <MenuItem mnemonicParsing="false" text="New Squid3 Task" />
+                  <MenuItem mnemonicParsing="false" onAction="#importSquid25TaskAction" text="Import Task from Squid 2.5 Excel File" />
+                  <MenuItem mnemonicParsing="false" text="Import Task from Squid 3.0 XML File" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Task" />
+              </items>
+            </Menu>
             <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Ratios">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Specify Isotopes" />
@@ -57,14 +66,6 @@
             <MenuItem mnemonicParsing="false" onAction="#exploreExpressionsMenuItemAction" text="Explore" />
           </items>
         </Menu>
-            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Tasks">
-              <items>
-                <MenuItem mnemonicParsing="false" text="New Task" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Import Task from Squid 2.5 Excel File" />
-                  <MenuItem mnemonicParsing="false" text="Import Task from Squid 3.0 XML File" />
-              </items>
-            </Menu>
             <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Analysis">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" />

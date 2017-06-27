@@ -38,6 +38,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
+import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
@@ -68,7 +69,7 @@ public class IsotopesManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         isotopesManagerAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        isotopesManagerAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+        isotopesManagerAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         setupIsotopeTable();
     }

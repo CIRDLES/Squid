@@ -35,6 +35,7 @@ import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.TaskSquid25;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
@@ -69,6 +70,7 @@ public class SquidProject implements Serializable {
     private SquidSessionModel squidSessionModel;
     private List<SquidSpeciesModel> squidSpeciesModelList;
     protected boolean[][] tableOfSelectedRatiosByMassStationIndex;
+    private TaskSquid25 taskSquid25;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -83,6 +85,8 @@ public class SquidProject implements Serializable {
 
         squidSpeciesModelList = new ArrayList<>();
         tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
+        
+        taskSquid25 = null;
 
     }
 
@@ -216,6 +220,12 @@ public class SquidProject implements Serializable {
             prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
         } catch (IOException iOException) {
         }
+    }
+    
+    public void setupTaskSquid25File(File squidTaskFile){
+        
+        taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
+        
     }
 
     public void setupPrawnFile(File prawnXMLFileNew)
@@ -577,5 +587,16 @@ public class SquidProject implements Serializable {
      */
     public boolean[][] getTableOfSelectedRatiosByMassStationIndex() {
         return tableOfSelectedRatiosByMassStationIndex;
+    }
+    
+    public void resetTableOfSelectedRatiosByMassStationIndex() {
+         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+    }
+
+    /**
+     * @return the taskSquid25
+     */
+    public TaskSquid25 getTaskSquid25() {
+        return taskSquid25;
     }
 }

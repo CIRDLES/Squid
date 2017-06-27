@@ -15,14 +15,14 @@
          </tooltip>
       </ListView>
       <TextField fx:id="selectedSpotNameText" layoutX="142.0" layoutY="583.0" prefHeight="27.0" prefWidth="130.0" promptText="no spot selected" />
-      <Label fx:id="headerLabel" layoutX="21.0" layoutY="65.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+      <Label fx:id="headerLabel" layoutX="21.0" layoutY="60.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
       <Label layoutX="21.0" layoutY="33.0" text="Filter by typing spot name:" />
-      <TextField fx:id="filterSpotNameText" layoutX="226.0" layoutY="31.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="25.0" prefWidth="75.0" promptText="type here" />
-      <Label fx:id="spotsShownLabel" layoutX="304.0" layoutY="32.0" prefHeight="20.0" prefWidth="146.0" text="0/0 shown" />
+      <TextField fx:id="filterSpotNameText" layoutX="223.0" layoutY="34.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="25.0" prefWidth="75.0" promptText="type here" />
+      <Label fx:id="spotsShownLabel" layoutX="304.0" layoutY="33.0" prefHeight="20.0" prefWidth="146.0" text="0/0 shown" />
       <ListView fx:id="shrimpRefMatList" layoutX="475.0" layoutY="83.0" prefHeight="468.0" prefWidth="435.0" />
       <Button fx:id="setFilteredSpotsAsRefMatButton" layoutX="475.0" layoutY="29.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="31.0" prefWidth="435.0" text="Set Project's Reference Material spots = filtered spots" />
-      <Label fx:id="headerLabelRefMat" layoutX="481.0" layoutY="65.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
-      <Label layoutX="15.0" layoutY="587.0" text="Edit Spot Name:" />
+      <Label fx:id="headerLabelRefMat" layoutX="481.0" layoutY="60.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+      <Label layoutX="16.0" layoutY="583.0" text="Edit Spot Name:" />
       <Button fx:id="saveSpotNameButton" layoutX="285.0" layoutY="581.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Spot Name" />
       <Label layoutX="475.0" layoutY="3.0" prefHeight="20.0" prefWidth="366.0" text="Reference Material Spots for this Project:" />
       <Button fx:id="savePrawnFileButton" layoutX="472.0" layoutY="581.0" mnemonicParsing="false" onAction="#savePrawnFileAction" prefHeight="27.0" prefWidth="434.0" stylesheets="@css/projectManager.css" text="Save modified Prawn data as new Prawn XML file." />

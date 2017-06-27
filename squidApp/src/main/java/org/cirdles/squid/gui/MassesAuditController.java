@@ -16,8 +16,6 @@
 package org.cirdles.squid.gui;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -26,11 +24,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.MassStationAuditViewForShrimp;
-import org.cirdles.squid.gui.dataViews.SummaryRawDataViewForShrimp;
 import org.cirdles.squid.shrimp.MassStationDetail;
 
 /**
@@ -53,10 +51,10 @@ public class MassesAuditController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         massesAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        massesAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+        massesAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         massesAuditScrollPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        massesAuditScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+        massesAuditScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         displayMassStationsForReview();
 

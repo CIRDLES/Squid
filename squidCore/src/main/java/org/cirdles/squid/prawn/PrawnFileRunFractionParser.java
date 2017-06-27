@@ -162,7 +162,7 @@ public class PrawnFileRunFractionParser {
                 namesOfSpecies[i] = runTableEntries.get(i).getPar().get(0).getValue();
             }
         } else {
-            namesOfSpecies = squidSessionSpecs.getSquidSpeciesNames();
+            namesOfSpecies = squidSessionSpecs.getSquidSpeciesMassStationNames();
         }
 
         countTimeSec = new double[nSpecies];

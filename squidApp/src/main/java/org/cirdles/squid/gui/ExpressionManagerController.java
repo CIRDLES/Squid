@@ -30,6 +30,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionWriterMathML;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
@@ -62,6 +63,8 @@ public class ExpressionManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        ExpressionTree.squidProject = SquidUIController.squidProject;
+        
         // initialize expressions tab
         ObservableList<ExpressionTreeInterface> items = FXCollections.observableArrayList(
                 CustomExpression_LnPbR_U.EXPRESSION,
@@ -90,6 +93,7 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void handleParseButtonAction(ActionEvent event) {
+        
         ExpressionParser expressionParser = new ExpressionParser(SquidUIController.squidProject);
         ExpressionTreeInterface result = expressionParser.parseExpression(expressionText.getText());
 

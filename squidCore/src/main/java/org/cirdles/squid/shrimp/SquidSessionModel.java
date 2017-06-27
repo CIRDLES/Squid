@@ -70,7 +70,7 @@ public class SquidSessionModel implements Serializable {
     /**
      * @return the squidSpeciesModelList
      */
-    public String[] getSquidSpeciesNames() {
+    public String[] getSquidSpeciesMassStationNames() {
         String[] squidSpeciesNames = new String[squidSpeciesModelList.size()];
         for (int i = 0; i < squidSpeciesModelList.size(); i++) {
             squidSpeciesNames[i] = squidSpeciesModelList.get(i).getMassStationSpeciesName();

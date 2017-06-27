@@ -24,6 +24,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.utilities.SquidPrefixTree;
@@ -47,10 +48,10 @@ public class SessionAuditController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         sessionAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        sessionAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+        sessionAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         
         prawnAuditTree.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        prawnAuditTree.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+        prawnAuditTree.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         
         setUpPrawnFileAuditTreeView();
     }

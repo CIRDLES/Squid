@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.utilities.SquidPrefixTree;
@@ -69,7 +70,7 @@ public class ProjectManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         mainProjectManagerPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        mainProjectManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+        mainProjectManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         orignalPrawnFileName.setEditable(false);
 

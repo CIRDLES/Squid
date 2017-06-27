@@ -28,6 +28,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JOptionPane;
+import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.storedTasks.SquidBodorkosTask1;
@@ -62,7 +63,7 @@ public class AnalysisManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         calamariTabAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        calamariTabAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(30));
+        calamariTabAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         ObservableList<String> refMatFistLetterChoiceBoxItems = FXCollections.observableArrayList("0", "A", "M", "T");
         referenceMaterialFistLetterChoiceBox.setItems(refMatFistLetterChoiceBoxItems);

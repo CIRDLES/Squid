@@ -11,19 +11,19 @@
    <children>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="925.0">
          <children>
-            <Label layoutX="9.0" layoutY="11.0" text="Project Name:" />
-            <TextField fx:id="projectNameText" layoutX="135.0" layoutY="9.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
-            <Label layoutX="473.0" layoutY="11.0" prefHeight="20.0" prefWidth="118.0" text="Analyst Name:" />
-            <TextField fx:id="analystNameText" layoutX="594.0" layoutY="8.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
-            <Label layoutX="9.0" layoutY="48.0" text="Prawn XML file:" />
-            <TextField fx:id="orignalPrawnFileName" layoutX="135.0" layoutY="43.0" prefHeight="27.0" prefWidth="783.0" promptText="name of selected Prawn XML file will appear here">
+            <Label layoutX="19.0" layoutY="13.0" text="Project Name:" />
+            <TextField fx:id="projectNameText" layoutX="129.0" layoutY="13.0" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" />
+            <Label layoutX="474.0" layoutY="12.0" prefHeight="20.0" prefWidth="118.0" text="Analyst Name:" />
+            <TextField fx:id="analystNameText" layoutX="592.0" layoutY="13.0" prefHeight="27.0" prefWidth="322.0" promptText="Your name" />
+            <Label layoutX="20.0" layoutY="48.0" text="Prawn XML file:" />
+            <TextField fx:id="orignalPrawnFileName" layoutX="140.0" layoutY="49.0" prefHeight="27.0" prefWidth="775.0" promptText="name of selected Prawn XML file will appear here">
                <font>
                   <Font name="Lucida Sans Regular" size="12.0" />
                </font></TextField>
             <Label fx:id="softwareVersionLabel" layoutX="60.0" layoutY="96.0" prefHeight="20.0" prefWidth="824.0" text="Software Version:" />
-            <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" layoutX="60.0" layoutY="158.0" prefHeight="99.0" prefWidth="824.0" text="Summary of analyses, duplicates, species, spots" />
-            <Label fx:id="totalAnalysisTimeLabel" layoutX="60.0" layoutY="263.0" prefHeight="20.0" prefWidth="824.0" text="Total analysis time in hours" />
-            <TextArea fx:id="projectNotesText" layoutX="61.0" layoutY="335.0" prefHeight="200.0" prefWidth="824.0" promptText="Notes:" />
+            <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" layoutX="60.0" layoutY="158.0" prefHeight="120.0" prefWidth="824.0" text="Summary of analyses, duplicates, species, spots" />
+            <Label fx:id="totalAnalysisTimeLabel" layoutX="60.0" layoutY="280.0" prefHeight="20.0" prefWidth="824.0" text="Total analysis time in hours" />
+            <TextArea fx:id="projectNotesText" layoutX="61.0" layoutY="347.0" prefHeight="200.0" prefWidth="824.0" promptText="Notes:" />
             <Label layoutX="60.0" layoutY="315.0" prefHeight="20.0" prefWidth="107.0" text="Notes:" />
             <Label fx:id="loginCommentLabel" layoutX="60.0" layoutY="123.0" prefHeight="20.0" prefWidth="824.0" text="Login Comment:" />
          </children>
