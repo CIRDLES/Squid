@@ -131,6 +131,7 @@ public class SquidUIController implements Initializable {
         closeSquidProjectMenuItem.setDisable(true);
 
         CalamariFileUtilities.initExamplePrawnFiles();
+        CalamariFileUtilities.loadShrimpPrawnFileSchema();
     }
 
     private void launchProjectManager() {

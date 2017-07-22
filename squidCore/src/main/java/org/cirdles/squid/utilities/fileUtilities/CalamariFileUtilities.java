@@ -34,6 +34,7 @@ import org.cirdles.squid.Squid;
 public class CalamariFileUtilities {
 
     private static File exampleFolder;
+    private static File schemaFolder;
 
     /**
      * Provides a clean copy of two example Prawn XML files every time Squid
@@ -69,6 +70,32 @@ public class CalamariFileUtilities {
             } catch (IOException iOException) {
             }
 
+        }
+    }
+
+    /**
+     * Loads PrawnFIle schema locally for use when Internet connection not available.
+     */
+    public static void loadShrimpPrawnFileSchema() {
+        ResourceExtractor prawnFileResourceExtractor
+                = new ResourceExtractor(Squid.class);
+
+        schemaFolder = new File("Schema");
+        try {
+            if (schemaFolder.exists()) {
+                FileUtilities.recursiveDelete(schemaFolder.toPath());
+            }
+            if (schemaFolder.mkdir()) {
+                File shrimpPrawnFileSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SHRIMP_PRAWN.xsd");
+                File shrimpPrawnFileSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SHRIMP_PRAWN.xsd");
+
+                if (shrimpPrawnFileSchemaResource.renameTo(shrimpPrawnFileSchema)) {
+                    System.out.println("SHRIMP_PRAWN.xsd added.");
+                } else {
+                    System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
+                }
+            }
+        } catch (IOException iOException) {
         }
     }
 
