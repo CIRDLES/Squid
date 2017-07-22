@@ -50,8 +50,8 @@ import javax.xml.bind.PropertyException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_PRAWN_XML_SCHEMA;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_PRAWN_FILES;
+import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -162,7 +162,6 @@ public class PrawnFileHandler implements Serializable {
 //        if (task != null) {
 //            task.evaluateTaskExpressions(shrimpFractions);
 //        }
-
         return shrimpFractions;
     }
 
@@ -188,7 +187,7 @@ public class PrawnFileHandler implements Serializable {
                 progressSubscriber.accept(progress);
             }
         }
-        
+
 //        try {
 //            reportsEngine.produceReports(shrimpFractions);
 //        } catch (IOException iOException) {
@@ -267,7 +266,14 @@ public class PrawnFileHandler implements Serializable {
 
         // force validation against schema
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = sf.newSchema(new URL(URL_STRING_FOR_PRAWN_XML_SCHEMA));
+        // JULY 2017 Team decided to make schema and validation local because of security concerns at Geoscience Australia
+        //Schema schema = sf.newSchema(new URL(URL_STRING_FOR_PRAWN_XML_SCHEMA_REMOTE));
+        File schemaFile = new File(URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL);
+        // during testing
+        if (!schemaFile.isFile()){
+            schemaFile = new File(schemaFile.getAbsolutePath().replace("Core", "App"));
+        }
+        Schema schema = sf.newSchema(schemaFile);
         jaxbUnmarshaller.setSchema(schema);
 
         // test for URL such as "https://raw.githubusercontent.com/bowring/XSD/master/SHRIMP/EXAMPLE_100142_G6147_10111109.43_10.33.37%20AM.xml"
@@ -309,7 +315,9 @@ public class PrawnFileHandler implements Serializable {
             lines.remove(0);
         }
 
-        String[] headerArray = XML_HEADER_FOR_PRAWN_FILES.split("\\n");
+        // July 2017 Team decided to make schema local because of issues of security at Geoscience Australia
+//        String[] headerArray = XML_HEADER_FOR_PRAWN_FILES_USING_REMOTE_SCHEMA.split("\\n");
+        String[] headerArray = Squid3Constants.XML_HEADER_FOR_PRAWN_FILES_USING_LOCAL_SCHEMA.split("\\n");
 
         // add correct header
         for (int i = 0; i < headerArray.length; i++) {

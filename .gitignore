@@ -23,6 +23,8 @@ dependency-reduced-pom.xml
 nbproject/
 .nb-gradle/
 .nb-gradle-properties
+private/
+
 
 # IntelliJ
 .idea/
