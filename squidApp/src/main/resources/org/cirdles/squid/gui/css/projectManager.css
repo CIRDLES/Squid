@@ -65,8 +65,7 @@
 
 .label {
     -fx-font-size: 12pt;
-    -fx-font-family: "Lucida Sans Bold", "Segoe UI Semibold";
-    -fx-font-weight: bold;
+    -fx-font-family: "Lucida Sans", "Segoe UI";
     -fx-text-fill: P-Text;
     -fx-padding: 4 0 4 0;
     -fx-opacity: 100;
