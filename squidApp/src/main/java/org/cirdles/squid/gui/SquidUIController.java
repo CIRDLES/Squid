@@ -45,6 +45,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
@@ -172,6 +173,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(projectManagerUI);
             projectManagerUI.setVisible(true);
 
+            saveSquidProjectMenuItem.setDisable(true);
             saveAsSquidProjectMenuItem.setDisable(false);
             closeSquidProjectMenuItem.setDisable(false);
             projectManagerMenuItem.setDisable(false);
@@ -200,6 +202,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(expressionManagerUI);
         mainPane.getChildren().remove(analysisManagerUI);
 
+        saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
         projectManagerMenuItem.setDisable(true);
@@ -261,6 +264,7 @@ public class SquidUIController implements Initializable {
         try {
             if (FileHandler.selectForMergeTwoPrawnFiles(squidProject, primaryStageWindow)) {
                 launchProjectManager();
+                saveSquidProjectMenuItem.setDisable(false);
             }
         } catch (IOException | JAXBException | SAXException anException) {
             String message = anException.getMessage();
@@ -282,6 +286,7 @@ public class SquidUIController implements Initializable {
             SpotManagerController.saveProjectData();
             try {
                 File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                saveSquidProjectMenuItem.setDisable(false);
                 squidPersistentState.updateProjectListMRU(projectFile);
                 buildProjectMenuMRU();
 
@@ -310,6 +315,7 @@ public class SquidUIController implements Initializable {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 buildProjectMenuMRU();
                 launchProjectManager();
+                saveSquidProjectMenuItem.setDisable(false);
             } else {
                 throw new IOException();
             }
@@ -323,6 +329,13 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void saveSquidProjectMenuItemAction(ActionEvent event) {
+        if (squidProject != null) {
+            SpotManagerController.saveProjectData();
+            try {
+                ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
+            } catch (IOException iOException) {
+            }
+        }
     }
 
     @FXML

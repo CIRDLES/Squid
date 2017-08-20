@@ -101,6 +101,10 @@ public class SquidPersistentState implements Serializable {
 
             // update MRU folder
             MRUProjectFolderPath = projectFileMRU.getParent();
+            
+            // update current file
+            MRUProjectFile = projectFileMRU;
+            
         } catch (IOException iOException) {
         }
 
