@@ -66,7 +66,7 @@ public class CalamariReportsEngine {
      */
     public CalamariReportsEngine() {
         // folderToWriteCalamariReports = new File(System.getProperty("user.dir"));
-        folderToWriteCalamariReports = Squid.defaultCalamariReportsFolder;
+        folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
         nameOfPrawnXMLFile = "";
     }
 

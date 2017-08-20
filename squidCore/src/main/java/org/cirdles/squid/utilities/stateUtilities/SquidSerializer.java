@@ -68,13 +68,11 @@ public final class SquidSerializer {
             deserializedInputStream = new ObjectInputStream(inputStream);
             deserializedObject = deserializedInputStream.readObject();
             inputStream.close();
-            
+
         } catch (FileNotFoundException ex) {
-            if (!filename.endsWith(SquidPersistentState.SQUID_PERSISTENT_STATE_FILE_NAME)) {
-                SquidMessageDialog.showWarningDialog(
-                        "The file you are attempting to open does not exist:\n"
-                        + " " + filename, null);
-            }
+            SquidMessageDialog.showWarningDialog(
+                    "The file you are attempting to open does not exist:\n"
+                    + " " + filename, null);
         } catch (IOException ex) {
             SquidMessageDialog.showWarningDialog(
                     "The file you are attempting to open is not a valid '*.squid' file.", null);

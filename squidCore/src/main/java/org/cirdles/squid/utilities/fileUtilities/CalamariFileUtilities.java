@@ -107,7 +107,7 @@ public class CalamariFileUtilities {
         }
 
         prawnFileHandler.getReportsEngine()
-                .setFolderToWriteCalamariReports(Squid.defaultCalamariReportsFolder);
+                .setFolderToWriteCalamariReports(Squid.DEFAULT_SQUID3_REPORTS_FOLDER);
 
     }
 }

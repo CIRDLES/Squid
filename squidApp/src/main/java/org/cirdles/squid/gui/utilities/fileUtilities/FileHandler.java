@@ -50,10 +50,10 @@ public class FileHandler {
         return retVal;
     }
 
-    public static boolean saveProjectFile(SquidProject squidProject, Window ownerWindow)
+    public static File saveProjectFile(SquidProject squidProject, Window ownerWindow)
             throws IOException {
 
-        boolean retVal = false;
+        File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Project '.squid' file");
@@ -64,7 +64,7 @@ public class FileHandler {
         File projectFileNew = fileChooser.showSaveDialog(ownerWindow);
 
         if (projectFileNew != null) {
-            retVal = true;
+            retVal = projectFileNew;
             ProjectFileUtilities.serializeSquidProject(squidProject, projectFileNew.getCanonicalPath());
         }
 

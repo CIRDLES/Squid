@@ -12,8 +12,6 @@
 // your own implementation.
 
 apply plugin: "application"
-//apply plugin: "war"
-//apply plugin: "com.bmuschko.tomcat"
 
 
 if (!hasProperty('mainClass')) {
@@ -27,16 +25,10 @@ repositories {
         url "https://jitpack.io"
     }
     mavenCentral()
-    
-//    jcenter()
 }
-
 
 dependencies {
     compile project(":squidCore")
-    compile 'com.google.inject:guice:4.0'
-    compile 'com.google.inject.extensions:guice-multibindings:4.0'
-
 }
 
 task fatAppJar(type: Jar) {

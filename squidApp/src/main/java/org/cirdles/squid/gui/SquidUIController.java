@@ -16,11 +16,14 @@
  */
 package org.cirdles.squid.gui;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,6 +45,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
 
@@ -53,6 +57,7 @@ import org.xml.sax.SAXException;
 public class SquidUIController implements Initializable {
 
     public static SquidProject squidProject;
+    public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
 
     @FXML
     private Menu manageExpressionsMenu;
@@ -124,7 +129,7 @@ public class SquidUIController implements Initializable {
         newSquidProjectMenuItem.setDisable(false);
         newSquidProjectByMergeMenuItem.setDisable(false);
         openSquidProjectMenuItem.setDisable(false);
-        openRecentSquidProjectMenuItem.setDisable(true);
+        buildProjectMenuMRU();
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
         projectManagerMenuItem.setDisable(true);
@@ -132,6 +137,27 @@ public class SquidUIController implements Initializable {
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
+    }
+
+    private void buildProjectMenuMRU() {
+        openRecentSquidProjectMenuItem.setDisable(false);
+
+        openRecentSquidProjectMenuItem.getItems().clear();
+        ArrayList<String> mruProjectList = squidPersistentState.getMRUProjectList();
+        for (String projectFileName : mruProjectList) {
+            MenuItem menuItem = new MenuItem(projectFileName);
+            menuItem.setOnAction((ActionEvent t) -> {
+                try {
+                    openProject(menuItem.getText());
+                } catch (IOException iOException) {
+                    squidPersistentState.cleanProjectListMRU();
+                    // remove self safe?
+                    openRecentSquidProjectMenuItem.getItems().remove(menuItem);
+                }
+            });
+            openRecentSquidProjectMenuItem.getItems().add(menuItem);
+        }
+
     }
 
     private void launchProjectManager() {
@@ -255,7 +281,10 @@ public class SquidUIController implements Initializable {
         if (squidProject != null) {
             SpotManagerController.saveProjectData();
             try {
-                FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                squidPersistentState.updateProjectListMRU(projectFile);
+                buildProjectMenuMRU();
+
             } catch (IOException ex) {
             }
         }
@@ -267,15 +296,23 @@ public class SquidUIController implements Initializable {
 
         try {
             String projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
-            if (!"".equals(projectFileName)) {
-                squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName);
-                if (squidProject != null) {
-                    squidProject.setPrawnFileHandler(new PrawnFileHandler());
-                    squidProject.updatePrawnFileHandlerWithFileLocation();
-                    launchProjectManager();
-                }
-            }
+            openProject(projectFileName);
         } catch (IOException iOException) {
+        }
+    }
+
+    private void openProject(String projectFileName) throws IOException {
+        if (!"".equals(projectFileName)) {
+            squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName);
+            if (squidProject != null) {
+                squidProject.setPrawnFileHandler(new PrawnFileHandler());
+                squidProject.updatePrawnFileHandlerWithFileLocation();
+                squidPersistentState.updateProjectListMRU(new File(projectFileName));
+                buildProjectMenuMRU();
+                launchProjectManager();
+            } else {
+                throw new IOException();
+            }
         }
     }
 
