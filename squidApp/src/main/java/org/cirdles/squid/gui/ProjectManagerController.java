@@ -83,25 +83,25 @@ public class ProjectManagerController implements Initializable {
     }
 
     private void setupListeners() {
-        projectNameText.focusedProperty().addListener(new ChangeListener<Boolean>() {
+        projectNameText.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                squidProject.setProjectName(projectNameText.getText());
-                SquidUI.updateStageTitle("Squid 3.0 pre-release" + "  [Project: " + projectNameText.getText() + "]");
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                squidProject.setProjectName(newValue);
+                SquidUI.updateStageTitle("Squid 3.0 pre-release" + "  [Project: " + newValue + "]");
             }
         });
 
-        analystNameText.focusedProperty().addListener(new ChangeListener<Boolean>() {
+        analystNameText.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                squidProject.setAnalystName(analystNameText.getText());
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                squidProject.setAnalystName(newValue);
             }
         });
 
-        projectNotesText.focusedProperty().addListener(new ChangeListener<Boolean>() {
+        projectNotesText.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                squidProject.setProjectNotes(projectNotesText.getText());
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                squidProject.setProjectNotes(newValue);
             }
         });
     }
@@ -112,6 +112,7 @@ public class ProjectManagerController implements Initializable {
 
         projectNameText.setText(squidProject.getProjectName());
         analystNameText.setText(squidProject.getAnalystName());
+        projectNotesText.setText(squidProject.getProjectNotes());
 
         orignalPrawnFileName.setText(squidProject.getPrawnXMLFileName());
 

@@ -33,7 +33,7 @@ public class SquidPersistentState implements Serializable {
     // class variables
     private static final long serialVersionUID = 9131785805774520290L;
     private static final String SQUID_PERSISTENT_STATE_FILE_NAME = "SquidPersistentState.ser";
-    private static SquidPersistentState instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName());
+    private static SquidPersistentState instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
     private static final int MRU_COUNT = 10;
 
     // instance variables
@@ -41,6 +41,7 @@ public class SquidPersistentState implements Serializable {
     private File MRUProjectFile;
     private ArrayList<String> MRUProjectList;
     private String MRUProjectFolderPath;
+    private String MRUPrawnFileFolderPath;
 
     /**
      *
@@ -59,6 +60,8 @@ public class SquidPersistentState implements Serializable {
         }
 
         MRUProjectFile = null;
+        MRUProjectFolderPath = "";
+        MRUPrawnFileFolderPath = "";
 
         serializeSelf();
     }
@@ -211,6 +214,20 @@ public class SquidPersistentState implements Serializable {
      */
     public void setMRUProjectFolderPath(String MRUProjectFolderPath) {
         this.MRUProjectFolderPath = MRUProjectFolderPath;
+    }
+
+    /**
+     * @return the MRUPrawnFileFolderPath
+     */
+    public String getMRUPrawnFileFolderPath() {
+        return MRUPrawnFileFolderPath;
+    }
+
+    /**
+     * @param MRUPrawnFileFolderPath the MRUPrawnFileFolderPath to set
+     */
+    public void setMRUPrawnFileFolderPath(String MRUPrawnFileFolderPath) {
+        this.MRUPrawnFileFolderPath = MRUPrawnFileFolderPath;
     }
 
     /**

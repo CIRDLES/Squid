@@ -418,6 +418,16 @@ public class PrawnFileHandler implements Serializable {
     public String getCurrentPrawnFileLocation() {
         return currentPrawnFileLocation;
     }
+    
+    public String getCurrentPrawnFileLocationFolder(){
+        String retVal = "";
+        File prawnFileLocation = new File(currentPrawnFileLocation);
+        if (prawnFileLocation.exists()){
+            retVal = prawnFileLocation.getParent();
+        }
+        
+        return retVal;
+    }
 
     /**
      *

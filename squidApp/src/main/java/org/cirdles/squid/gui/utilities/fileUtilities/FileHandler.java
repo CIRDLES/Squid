@@ -32,14 +32,15 @@ import org.xml.sax.SAXException;
  */
 public class FileHandler {
 
-    public static String selectProjectFile(Window ownerWindow)
+    public static String selectProjectFile(String projectFolderPathMRU, Window ownerWindow)
             throws IOException {
         String retVal = "";
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Project '.squid' file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
-        fileChooser.setInitialDirectory(null);
+        File initDirectory = new File(projectFolderPathMRU);
+        fileChooser.setInitialDirectory(initDirectory.exists()? initDirectory : null);
 
         File projectFileNew = fileChooser.showOpenDialog(ownerWindow);
 
@@ -71,21 +72,22 @@ public class FileHandler {
         return retVal;
     }
 
-    public static boolean selectPrawnFile(SquidProject squidProject, Window ownerWindow)
+    public static File selectPrawnFile(String prawnFileFolderMRU, Window ownerWindow)
             throws IOException, JAXBException, SAXException {
-        boolean retVal = false;
+        File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Prawn XML file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
-        fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
+        File initDirectory = new File(prawnFileFolderMRU);
+        fileChooser.setInitialDirectory(initDirectory.exists()? initDirectory : null);
 
         File prawnXMLFileNew = fileChooser.showOpenDialog(ownerWindow);
 
         if (prawnXMLFileNew != null) {
             if (prawnXMLFileNew.getName().toLowerCase(Locale.US).endsWith(".xml")) {
-                squidProject.setupPrawnFile(prawnXMLFileNew);
-                retVal = true;
+//                squidProject.setupPrawnFile(prawnXMLFileNew);
+                retVal = prawnXMLFileNew;
             } else {
                 throw new IOException("Filename does not end with '.xml'");
             }
