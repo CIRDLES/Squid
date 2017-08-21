@@ -19,7 +19,7 @@
                   <Menu mnemonicParsing="false" text="New Squid Project">
                     <items>
                         <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="From a single Prawn XML file" />
-                        <MenuItem fx:id="newSquidProjectByMergeMenuItem" mnemonicParsing="false" onAction="#newSquidProjectByMergeAction" text="By Joining two Prawn XML files" />
+                        <MenuItem fx:id="newSquidProjectByJoinMenuItem" mnemonicParsing="false" onAction="#newSquidProjectByJoinAction" text="By Joining two Prawn XML files" />
                     </items>
                   </Menu>
             <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
@@ -40,9 +40,8 @@
                   <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Masses" />
                   <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Edit Spots" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Prawn FIle Copy" />
+                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Prawn File as ..." />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="changePrawnFileMenuItem" mnemonicParsing="false" onAction="#changePrawnFileMenuItemAction" text="Change Prawn FIle" />
                   <MenuItem fx:id="joinPrawnFileMenuItem" mnemonicParsing="false" onAction="#joinPrawnFileMenuItemAction" text="Join a Prawn File" />
               </items>
             </Menu>

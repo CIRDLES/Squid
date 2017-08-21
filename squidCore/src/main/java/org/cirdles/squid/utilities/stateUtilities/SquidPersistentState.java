@@ -91,24 +91,26 @@ public class SquidPersistentState implements Serializable {
      */
     public void updateProjectListMRU(File projectFileMRU) {
 
-        try {
-            // remove if exists in MRU list
-            String MRUProjectFileName = projectFileMRU.getCanonicalPath();
-            MRUProjectList.remove(MRUProjectFileName);
-            MRUProjectList.add(0, MRUProjectFileName);
+        if (projectFileMRU != null) {
+            try {
+                // remove if exists in MRU list
+                String MRUProjectFileName = projectFileMRU.getCanonicalPath();
+                MRUProjectList.remove(MRUProjectFileName);
+                MRUProjectList.add(0, MRUProjectFileName);
 
-            // trim list
-            if (MRUProjectList.size() > MRU_COUNT) {
-                MRUProjectList.remove(MRU_COUNT);
+                // trim list
+                if (MRUProjectList.size() > MRU_COUNT) {
+                    MRUProjectList.remove(MRU_COUNT);
+                }
+
+                // update MRU folder
+                MRUProjectFolderPath = projectFileMRU.getParent();
+
+                // update current file
+                MRUProjectFile = projectFileMRU;
+
+            } catch (IOException iOException) {
             }
-
-            // update MRU folder
-            MRUProjectFolderPath = projectFileMRU.getParent();
-            
-            // update current file
-            MRUProjectFile = projectFileMRU;
-            
-        } catch (IOException iOException) {
         }
 
         // save

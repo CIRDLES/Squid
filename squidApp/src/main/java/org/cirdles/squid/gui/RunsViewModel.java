@@ -73,7 +73,7 @@ public class RunsViewModel {
     }
 
     public String showFilteredOverAllCount() {
-        return viewableShrimpRuns.size() + " / " + shrimpRuns.size() + " shown";
+        return " : " + viewableShrimpRuns.size() + " / " + shrimpRuns.size() + " shown";
     }
 
     static class SpotNameMatcher implements Predicate<PrawnFile.Run> {

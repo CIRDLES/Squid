@@ -20,10 +20,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -87,13 +87,11 @@ public class SquidUIController implements Initializable {
     @FXML
     private MenuItem saveSquidProjectMenuItem;
     @FXML
-    private MenuItem newSquidProjectByMergeMenuItem;
+    private MenuItem newSquidProjectByJoinMenuItem;
     @FXML
     private Menu managePrawnFileMenu;
     @FXML
     private MenuItem savePrawnFileCopyMenuItem;
-    @FXML
-    private MenuItem changePrawnFileMenuItem;
     @FXML
     private MenuItem joinPrawnFileMenuItem;
 
@@ -134,17 +132,16 @@ public class SquidUIController implements Initializable {
 
         // Squid project menu items
         newSquidProjectMenuItem.setDisable(false);
-        newSquidProjectByMergeMenuItem.setDisable(false);
+        newSquidProjectByJoinMenuItem.setDisable(false);
         openSquidProjectMenuItem.setDisable(false);
         buildProjectMenuMRU();
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
         projectManagerMenuItem.setDisable(true);
         closeSquidProjectMenuItem.setDisable(true);
-        
+
         // Prawn File Menu Items
-        savePrawnFileCopyMenuItem.setDisable(true);
-        changePrawnFileMenuItem.setDisable(true);
+        savePrawnFileCopyMenuItem.setDisable(false);
         joinPrawnFileMenuItem.setDisable(true);
 
         CalamariFileUtilities.initExamplePrawnFiles();
@@ -252,6 +249,7 @@ public class SquidUIController implements Initializable {
             if (prawnXMLFileNew != null) {
                 squidProject.setupPrawnFile(prawnXMLFileNew);
                 launchProjectManager();
+                saveSquidProjectMenuItem.setDisable(true);
             }
         } catch (IOException | JAXBException | SAXException anException) {
             String message = anException.getMessage();
@@ -267,20 +265,22 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void newSquidProjectByMergeAction(ActionEvent event) {
+    private void newSquidProjectByJoinAction(ActionEvent event) {
         prepareForNewProject();
 
         SquidMessageDialog.showInfoDialog(
-                "To merge two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
+                "To join two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
                 + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
                 + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
                 + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
                 primaryStageWindow);
 
         try {
-            if (FileHandler.selectForMergeTwoPrawnFiles(squidProject, primaryStageWindow)) {
+            List<File> prawnXMLFilesNew = FileHandler.selectForJoinTwoPrawnFiles(squidPersistentState.getMRUPrawnFileFolderPath(), primaryStageWindow);
+            if (prawnXMLFilesNew.size() == 2) {
+                squidProject.setupPrawnFileByJoin(prawnXMLFilesNew);
                 launchProjectManager();
-                saveSquidProjectMenuItem.setDisable(false);
+                saveSquidProjectMenuItem.setDisable(true);
             }
         } catch (IOException | JAXBException | SAXException anException) {
             String message = anException.getMessage();
@@ -333,6 +333,7 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
             } else {
+                saveSquidProjectMenuItem.setDisable(true);
                 throw new IOException();
             }
         }
@@ -494,7 +495,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void projectManagerMenuItemAction(ActionEvent event) {
-        showUI(projectManagerUI);
+        launchProjectManager();
     }
 
     private void showUI(Node myManager) {
@@ -573,16 +574,18 @@ public class SquidUIController implements Initializable {
     private void manageTaskMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(taskManagerUI);
         launchTaskManager();
-//        showUI(taskManagerUI);
     }
 
     @FXML
     private void savePrawnFileCopyMenuItemAction(ActionEvent event) {
+        try {
+            File prawnXMLFileNew = FileHandler.savePrawnFile(squidProject, primaryStageWindow);
+            squidProject.setupPrawnFile(prawnXMLFileNew);
+            launchProjectManager();
+        } catch (IOException | JAXBException | SAXException iOException) {
+        }
     }
 
-    @FXML
-    private void changePrawnFileMenuItemAction(ActionEvent event) {
-    }
 
     @FXML
     private void joinPrawnFileMenuItemAction(ActionEvent event) {

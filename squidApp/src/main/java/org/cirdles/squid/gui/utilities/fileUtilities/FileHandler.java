@@ -17,6 +17,7 @@ package org.cirdles.squid.gui.utilities.fileUtilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javafx.stage.FileChooser;
@@ -96,14 +97,15 @@ public class FileHandler {
         return retVal;
     }
 
-    public static boolean selectForMergeTwoPrawnFiles(SquidProject squidProject, Window ownerWindow)
+    public static List<File> selectForJoinTwoPrawnFiles(String prawnFileFolderMRU, Window ownerWindow)
             throws IOException, JAXBException, SAXException {
-        boolean retVal = false;
+        List<File> retVal = new ArrayList<>();
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Two Prawn XML files");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
-        fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
+        File initDirectory = new File(prawnFileFolderMRU);
+        fileChooser.setInitialDirectory(initDirectory.exists()? initDirectory : null);
 
         List<File> prawnXMLFilesNew = fileChooser.showOpenMultipleDialog(ownerWindow);
 
@@ -111,8 +113,8 @@ public class FileHandler {
             if ((prawnXMLFilesNew.size() == 2)
                     && prawnXMLFilesNew.get(0).getName().toLowerCase(Locale.US).endsWith(".xml")
                     && prawnXMLFilesNew.get(1).getName().toLowerCase(Locale.US).endsWith(".xml")) {
-                squidProject.setupPrawnFileByMerge(prawnXMLFilesNew);
-                retVal = true;
+//                squidProject.setupPrawnFileByJoin(prawnXMLFilesNew);
+                retVal = prawnXMLFilesNew;
             } else {
                 throw new IOException("Please choose exactly 2 Prawn xml files to merge.");
             }
@@ -121,10 +123,10 @@ public class FileHandler {
         return retVal;
     }
 
-    public static boolean savePrawnFile(SquidProject squidProject, Window ownerWindow)
+    public static File savePrawnFile(SquidProject squidProject, Window ownerWindow)
             throws IOException, JAXBException, SAXException {
 
-        boolean retVal = false;
+        File retVal = null;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Prawn XML file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
@@ -135,7 +137,7 @@ public class FileHandler {
 
         if (prawnXMLFileNew != null) {
             squidProject.savePrawnFile(prawnXMLFileNew);
-            retVal = true;
+            retVal = prawnXMLFileNew;
         }
 
         return retVal;
