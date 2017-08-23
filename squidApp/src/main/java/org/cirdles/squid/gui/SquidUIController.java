@@ -92,8 +92,6 @@ public class SquidUIController implements Initializable {
     private Menu managePrawnFileMenu;
     @FXML
     private MenuItem savePrawnFileCopyMenuItem;
-    @FXML
-    private MenuItem joinPrawnFileMenuItem;
 
     @FXML
     private ImageView squidImageView;
@@ -107,6 +105,12 @@ public class SquidUIController implements Initializable {
     private static Pane ratiosManagerUI;
     private static Pane expressionManagerUI;
     private static Pane analysisManagerUI;
+    @FXML
+    private MenuItem newSquid3TaskMenuItem;
+    @FXML
+    private MenuItem importSquid25TaskMenuItem;
+    @FXML
+    private MenuItem exportSquid3TaskMenuItem;
 
     /**
      * Initializes the controller class.
@@ -142,7 +146,12 @@ public class SquidUIController implements Initializable {
 
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
-        joinPrawnFileMenuItem.setDisable(true);
+        
+        //Task menu
+        newSquid3TaskMenuItem.setDisable(true);
+        importSquid25TaskMenuItem.setDisable(true);
+        exportSquid3TaskMenuItem.setDisable(true);
+        
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
@@ -561,16 +570,6 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void importSquid25TaskAction(ActionEvent event) {
-        try {
-            if (FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow)) {
-                launchTaskManager();
-            }
-        } catch (IOException | JAXBException | SAXException iOException) {
-        }
-    }
-
-    @FXML
     private void manageTaskMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(taskManagerUI);
         launchTaskManager();
@@ -586,9 +585,24 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    @FXML
+    private void newSquid3TaskMenuItemAction(ActionEvent event) {
+    }
 
     @FXML
-    private void joinPrawnFileMenuItemAction(ActionEvent event) {
+    private void importSquid25TaskMenuItemAction(ActionEvent event) {
+        try {
+            File squidTaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
+            if (squidTaskFile != null) {
+                squidProject.setupTaskSquid25File(squidTaskFile);
+                launchTaskManager();
+            }
+        } catch (IOException | JAXBException | SAXException iOException) {
+        }
+    }
+
+    @FXML
+    private void exportSquid3TaskMenuItemAction(ActionEvent event) {
     }
 
 }

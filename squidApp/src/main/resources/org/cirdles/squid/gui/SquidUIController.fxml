@@ -41,15 +41,15 @@
                   <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Edit Spots" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Prawn File as ..." />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="joinPrawnFileMenuItem" mnemonicParsing="false" onAction="#joinPrawnFileMenuItemAction" text="Join a Prawn File" />
               </items>
             </Menu>
             <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task">
               <items>
-                <MenuItem mnemonicParsing="false" text="New Squid3 Task" />
-                  <MenuItem mnemonicParsing="false" onAction="#importSquid25TaskAction" text="Import Task from Squid 2.5 Excel File" />
-                  <MenuItem mnemonicParsing="false" text="Import Task from Squid 3.0 XML File" />
+                <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid3 Task" />
+                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Import Task from Squid 2.5 Excel File" />
+                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Import Task from Squid 3.0 XML File" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="exportSquid3TaskMenuItem" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Export Squid3 Task" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Task" />
               </items>
