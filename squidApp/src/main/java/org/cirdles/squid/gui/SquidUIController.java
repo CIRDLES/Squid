@@ -146,12 +146,11 @@ public class SquidUIController implements Initializable {
 
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
-        
+
         //Task menu
         newSquid3TaskMenuItem.setDisable(true);
         importSquid25TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
-        
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
@@ -579,8 +578,10 @@ public class SquidUIController implements Initializable {
     private void savePrawnFileCopyMenuItemAction(ActionEvent event) {
         try {
             File prawnXMLFileNew = FileHandler.savePrawnFile(squidProject, primaryStageWindow);
-            squidProject.setupPrawnFile(prawnXMLFileNew);
-            launchProjectManager();
+            if (prawnXMLFileNew != null) {
+                squidProject.setupPrawnFile(prawnXMLFileNew);
+                launchProjectManager();
+            }
         } catch (IOException | JAXBException | SAXException iOException) {
         }
     }
