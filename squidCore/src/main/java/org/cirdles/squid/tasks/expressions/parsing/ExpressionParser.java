@@ -148,6 +148,7 @@ public class ExpressionParser {
         FUNCTIONS_MAP.put("robreg", "robReg");
         FUNCTIONS_MAP.put("and", "and");
         FUNCTIONS_MAP.put("if", "sqif");
+        FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
     }
 
     private ExpressionTreeInterface buildTree(List<String> parsedRPNreversed) {
