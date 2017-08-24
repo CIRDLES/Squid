@@ -250,6 +250,22 @@ public class SquidProject implements Serializable {
 
     }
 
+    public void extractTask25Ratios() {
+        if (getTaskSquid25() != null) {
+            resetTableOfSelectedRatiosByMassStationIndex();
+            String[] savedRatios = getTaskSquid25().getRatioNames();
+            for (int i = 0; i < savedRatios.length; i++) {
+                String[] ratio = savedRatios[i].split("/");
+                if ((lookUpSpeciesByName(ratio[0]) != null)
+                        && lookUpSpeciesByName(ratio[1]) != null) {
+                    int num = lookUpSpeciesByName(ratio[0]).getMassStationIndex();
+                    int den = lookUpSpeciesByName(ratio[1]).getMassStationIndex();
+                    getTableOfSelectedRatiosByMassStationIndex()[num][den] = true;
+                }
+            }
+        }
+    }
+
     public void setupPrawnFile(File prawnXMLFileNew)
             throws IOException, JAXBException, SAXException {
 
@@ -327,7 +343,7 @@ public class SquidProject implements Serializable {
     public String getPrawnXMLFileName() {
         return prawnXMLFile.getName();
     }
-    
+
     public String getPrawnXMLFilePath() {
         return prawnXMLFile.getAbsolutePath();
     }
@@ -628,6 +644,20 @@ public class SquidProject implements Serializable {
 
     public void resetTableOfSelectedRatiosByMassStationIndex() {
         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+    }
+
+    public boolean isEmptyTableOfSelectedRatiosByMassStationIndex() {
+        boolean retVal = true;
+
+        if (tableOfSelectedRatiosByMassStationIndex != null) {
+            for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
+                for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
+                    retVal &= !tableOfSelectedRatiosByMassStationIndex[row][col];
+                }
+            }
+        }
+
+        return retVal;
     }
 
     /**

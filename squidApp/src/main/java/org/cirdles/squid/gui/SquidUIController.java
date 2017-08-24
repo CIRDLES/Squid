@@ -596,6 +596,7 @@ public class SquidUIController implements Initializable {
             File squidTaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
             if (squidTaskFile != null) {
                 squidProject.setupTaskSquid25File(squidTaskFile);
+                SquidUIController.squidProject.extractTask25Ratios();
                 launchTaskManager();
             }
         } catch (IOException | JAXBException | SAXException iOException) {

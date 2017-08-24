@@ -52,14 +52,14 @@ public class RatiosManagerController implements Initializable {
     private AnchorPane manageRatiosAnchorPane;
     @FXML
     private GridPane ratiosGridPane;
-    
-    private final int  BUTTON_WIDTH = 70;
-    private final int  BUTTON_HEIGHT = 30;
+
+    private final int BUTTON_WIDTH = 70;
+    private final int BUTTON_HEIGHT = 30;
 
     private List<SquidRatiosModel> squidRatiosModelList;
     private List<SquidSpeciesModel> squidSpeciesList;
     private int indexOfBackgroundSpecies;
-    
+
     @FXML
     private ToolBar toolbar;
     @FXML
@@ -108,7 +108,7 @@ public class RatiosManagerController implements Initializable {
         }
 
         populateRatioGrid();
-                
+
         ratiosGridPane.setLayoutX(25);
 
     }
@@ -144,20 +144,8 @@ public class RatiosManagerController implements Initializable {
 
     @FXML
     private void useTaskRatiosButtonAction(ActionEvent event) {
-        if (SquidUIController.squidProject.getTaskSquid25() != null) {
-            SquidUIController.squidProject.resetTableOfSelectedRatiosByMassStationIndex();
-            String[] savedRatios = SquidUIController.squidProject.getTaskSquid25().getRatioNames();
-            for (int i = 0; i < savedRatios.length; i++) {
-                String[] ratio = savedRatios[i].split("/");
-                if ((SquidUIController.squidProject.lookUpSpeciesByName(ratio[0]) != null)
-                        && SquidUIController.squidProject.lookUpSpeciesByName(ratio[1]) != null) {
-                    int num = SquidUIController.squidProject.lookUpSpeciesByName(ratio[0]).getMassStationIndex();
-                    int den = SquidUIController.squidProject.lookUpSpeciesByName(ratio[1]).getMassStationIndex();
-                    SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[num][den] = true;
-                }
-            }
-            populateRatioGrid();
-        }
+        SquidUIController.squidProject.extractTask25Ratios();
+        populateRatioGrid();
     }
 
     @FXML
