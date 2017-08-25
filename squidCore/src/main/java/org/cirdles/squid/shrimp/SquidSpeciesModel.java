@@ -15,15 +15,20 @@
  */
 package org.cirdles.squid.shrimp;
 
+import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring
  */
-public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Serializable {
+public class SquidSpeciesModel implements
+        Comparable<SquidSpeciesModel>,
+        Serializable,
+        XMLSerializerInterface {
 
     private static final long serialVersionUID = 3001823455775925098L;
 
@@ -34,6 +39,10 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
     private String isotopeName;
     private String elementName;
     private boolean isBackground;
+
+    public SquidSpeciesModel() {
+        this(-1, "NONE", "NONE", "NONE", false);
+    }
 
     public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground) {
         this.massStationIndex = massStationIndex;
@@ -62,6 +71,12 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    @Override
+    public void customizeXstream(XStream xstream) {
+        xstream.registerConverter(new SquidSpeciesModelXMLConverter());
+        xstream.alias("SquidSpeciesModel", SquidSpeciesModel.class);
     }
 
     /**
@@ -138,6 +153,12 @@ public class SquidSpeciesModel implements Comparable<SquidSpeciesModel>, Seriali
      */
     public void setIsBackground(boolean isBackground) {
         this.isBackground = isBackground;
+    }
+    
+    public static void main(String[] args) {
+        SquidSpeciesModel test = new SquidSpeciesModel();
+        
+        ((XMLSerializerInterface)test).serializeXMLObject(test, "XXXXX.xml");
     }
 
 }
