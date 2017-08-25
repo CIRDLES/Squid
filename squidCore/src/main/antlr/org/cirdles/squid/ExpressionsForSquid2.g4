@@ -71,7 +71,12 @@ expr:   FUNCTION '(' exprList? ')'    // func call like f(), f(x), f(1,2)
     ;
 exprList : expr (',' expr)* ;   // arg list
 
-FUNCTION : 'ln' | 'Ln' | 'sqrt' | 'Sqrt' | 'exp' | 'Exp' | 'RobReg';
+FUNCTION : 
+    'ln' | 'Ln' | 
+    'sqrt' | 'Sqrt' | 
+    'exp' | 'Exp' | 
+    'RobReg' | 'robReg' | 'robreg' |
+    'sqBiweight' ;
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 

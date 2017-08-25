@@ -43,7 +43,7 @@
                   <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Prawn File as ..." />
               </items>
             </Menu>
-            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task">
+            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
               <items>
                 <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid3 Task" />
                   <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Import Task from Squid 2.5 Excel File" />

@@ -34,14 +34,14 @@ public class TaskSquid25 implements Serializable {
 
     private static final long serialVersionUID = -2805382700088270719L;
 
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(TaskSquid25.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of TaskSquid25 " + theSUID);
-    }
+//    private void readObject(
+//            ObjectInputStream stream)
+//            throws IOException, ClassNotFoundException {
+//        stream.defaultReadObject();
+//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(TaskSquid25.class.getCanonicalName()));
+//        long theSUID = myObject.getSerialVersionUID();
+//        System.out.println("Customized De-serialization of TaskSquid25 " + theSUID);
+//    }
     private String squidVersion;
     private String squidTaskFileName;
     private String taskType;

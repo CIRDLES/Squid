@@ -50,10 +50,10 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 public class ExpressionParser {
 
     private SquidProject squidProject;
-    private  Map<String, ExpressionTreeInterface> NAMED_EXPRESSIONS_MAP;
+    private Map<String, ExpressionTreeInterface> NAMED_EXPRESSIONS_MAP;
 
     public ExpressionParser(SquidProject squidProject) {
-        
+
         this.squidProject = squidProject;
 
         NAMED_EXPRESSIONS_MAP = new HashMap<>();
@@ -139,16 +139,29 @@ public class ExpressionParser {
 
         FUNCTIONS_MAP.put("ln", "ln");
         FUNCTIONS_MAP.put("Ln", "ln");
+
         FUNCTIONS_MAP.put("sqrt", "sqrt");
         FUNCTIONS_MAP.put("Sqrt", "sqrt");
+
         FUNCTIONS_MAP.put("exp", "exp");
         FUNCTIONS_MAP.put("Exp", "exp");
+
         FUNCTIONS_MAP.put("robReg", "robReg");
         FUNCTIONS_MAP.put("RobReg", "robReg");
         FUNCTIONS_MAP.put("robreg", "robReg");
+
         FUNCTIONS_MAP.put("and", "and");
+
         FUNCTIONS_MAP.put("if", "sqif");
+
         FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
+
+        FUNCTIONS_MAP.put("agePb76", "agePb76");
+
+        FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
+
+        FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
+
     }
 
     private ExpressionTreeInterface buildTree(List<String> parsedRPNreversed) {
