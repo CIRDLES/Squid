@@ -45,13 +45,14 @@
             </Menu>
             <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
               <items>
-                <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid3 Task" />
+                  <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="View Current Task" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid Task" />
+                  <MenuItem fx:id="selectSquid3TaskFromLibraryMenuItem" mnemonicParsing="false" onAction="#selectSquid3TaskFromLibraryMenuItemAction" text="Select Squid Task from Library" />
+                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Import Task from Squid 3 XML File" />
                   <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Import Task from Squid 2.5 Excel File" />
-                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Import Task from Squid 3.0 XML File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="exportSquid3TaskMenuItem" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Export Squid3 Task" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Task" />
               </items>
             </Menu>
             <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Ratios">

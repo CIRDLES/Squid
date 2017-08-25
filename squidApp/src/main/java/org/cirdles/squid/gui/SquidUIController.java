@@ -111,6 +111,8 @@ public class SquidUIController implements Initializable {
     private MenuItem importSquid25TaskMenuItem;
     @FXML
     private MenuItem exportSquid3TaskMenuItem;
+    @FXML
+    private MenuItem selectSquid3TaskFromLibraryMenuItem;
 
     /**
      * Initializes the controller class.
@@ -149,6 +151,7 @@ public class SquidUIController implements Initializable {
 
         //Task menu
         newSquid3TaskMenuItem.setDisable(true);
+        selectSquid3TaskFromLibraryMenuItem.setDisable(true);
         importSquid25TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
 
@@ -605,6 +608,10 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void exportSquid3TaskMenuItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void selectSquid3TaskFromLibraryMenuItemAction(ActionEvent event) {
     }
 
 }
