@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 
 /**
  * A <code>OperationXMLConverter</code> is used to marshal and unmarshal data
@@ -60,7 +61,7 @@ public class OperationXMLConverter implements Converter {
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return clazz.equals(Operation.class);
+        return Operation.class.isAssignableFrom(clazz);
     }
 
     /**
@@ -80,10 +81,10 @@ public class OperationXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        Operation operation = (Operation) value;
+        OperationOrFunctionInterface operation = (Operation) value;
 
         writer.startNode("name");
-        writer.setValue(operation.getName());
+        writer.setValue(((Operation)operation).getName());
         writer.endNode();
     }
 

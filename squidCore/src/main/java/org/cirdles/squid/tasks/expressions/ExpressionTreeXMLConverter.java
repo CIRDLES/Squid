@@ -85,26 +85,16 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         ExpressionTree expressionTree = (ExpressionTree) value;
 
-        if (!expressionTree.rootExpressionTree) {
-            writer.startNode("ExpressionTree");
-        }
+//        if (!expressionTree.rootExpressionTree) {
+//            writer.startNode("ExpressionTree");
+//        }
 
         writer.startNode("name");
         writer.setValue(expressionTree.getName());
         writer.endNode();
 
-        writer.startNode("leftET");
-        ExpressionTreeInterface leftET = expressionTree.getLeftET();
-        if (leftET != null) {
-            context.convertAnother(leftET);
-        }
-        writer.endNode();
-
-        writer.startNode("rightET");
-        ExpressionTreeInterface rightET = expressionTree.getRightET();
-        if (rightET != null) {
-            context.convertAnother(rightET);
-        }
+        writer.startNode("childrenET");
+        context.convertAnother(expressionTree.getChildrenET());
         writer.endNode();
 
         writer.startNode("operation");
@@ -115,9 +105,9 @@ public class ExpressionTreeXMLConverter implements Converter {
         context.convertAnother(expressionTree.getRatiosOfInterest());
         writer.endNode();
 
-        if (!expressionTree.rootExpressionTree) {
-            writer.endNode();
-        }
+//        if (!expressionTree.rootExpressionTree) {
+//            writer.endNode();
+//        }
 
     }
 

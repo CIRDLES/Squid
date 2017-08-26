@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -33,6 +34,7 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializer
 
     private SquidSpeciesModel squidSpeciesModel;
     private String methodNameForShrimpFraction;
+    // used for parsing expressions
     private ExpressionTreeInterface parentET;
 
     /**
@@ -70,10 +72,14 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializer
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
         xstream.alias("ShrimpSpeciesNode", ShrimpSpeciesNode.class);
+
+        xstream.registerConverter(new SquidSpeciesModelXMLConverter());
+        xstream.alias("SquidSpeciesModel", SquidSpeciesModel.class);
     }
 
     /**
      * Assumes a one-element list of shrimpFractions
+     *
      * @param shrimpFractions the value of shrimpFraction
      * @return the double[][]
      */
@@ -82,8 +88,8 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializer
         double retVal = 0.0;
         Integer index = squidSpeciesModel.getMassStationIndex();
         if (index != -1) {
-            double[] isotopeValues = 
-                    methodFactory(shrimpFractions.get(0), methodNameForShrimpFraction);
+            double[] isotopeValues
+                    = methodFactory(shrimpFractions.get(0), methodNameForShrimpFraction);
             if (index < isotopeValues.length) {
                 retVal = isotopeValues[index];
             }
@@ -147,10 +153,32 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializer
     }
 
     /**
+     * @param squidSpeciesModel
      * @param name the name to set
      */
     public void setsquidSpeciesModel(SquidSpeciesModel squidSpeciesModel) {
         this.squidSpeciesModel = squidSpeciesModel;
+    }
+
+    /**
+     * @return the squidSpeciesModel
+     */
+    public SquidSpeciesModel getSquidSpeciesModel() {
+        return squidSpeciesModel;
+    }
+
+    /**
+     * @return the methodNameForShrimpFraction
+     */
+    public String getMethodNameForShrimpFraction() {
+        return methodNameForShrimpFraction;
+    }
+
+    /**
+     * @param methodNameForShrimpFraction the methodNameForShrimpFraction to set
+     */
+    public void setMethodNameForShrimpFraction(String methodNameForShrimpFraction) {
+        this.methodNameForShrimpFraction = methodNameForShrimpFraction;
     }
 
     @Override
@@ -199,5 +227,11 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializer
     @Override
     public int argumentCount() {
         return 0;
+    }
+
+    public static void main(String[] args) {
+        ShrimpSpeciesNode test = new ShrimpSpeciesNode(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O", false), "getPkInterpScanArray");
+
+        ((XMLSerializerInterface) test).serializeXMLObject(test, "ShrimpSpeciesNode.xml");
     }
 }

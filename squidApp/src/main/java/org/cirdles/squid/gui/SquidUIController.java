@@ -133,7 +133,7 @@ public class SquidUIController implements Initializable {
         managePrawnFileMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
-        manageAnalysisMenu.setDisable(true);
+        manageAnalysisMenu.setDisable(false);
         manageReportsMenu.setDisable(true);
 
         // Squid project menu items
@@ -234,7 +234,7 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
-        manageAnalysisMenu.setDisable(true);
+        manageAnalysisMenu.setDisable(false);
         manageReportsMenu.setDisable(true);
 
         // logo

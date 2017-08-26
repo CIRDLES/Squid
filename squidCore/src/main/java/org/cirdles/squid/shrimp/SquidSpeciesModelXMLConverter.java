@@ -68,12 +68,12 @@ public class SquidSpeciesModelXMLConverter implements Converter {
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>ShrimpSpeciesNode</code>, <code>
+     * @pre     <code>value</code> is a valid <code>SquidSpeciesModel</code>, <code>
      *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
      * <code>context</code> is a valid <code>MarshallingContext</code>
      * @post    <code>value</code> is written to the XML file specified via
      * <code>writer</code>
-     * @param value   <code>ShrimpSpeciesNode</code> that you wish to write to a
+     * @param value   <code>SquidSpeciesModel</code> that you wish to write to a
      * file
      * @param writer stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
@@ -107,16 +107,16 @@ public class SquidSpeciesModelXMLConverter implements Converter {
     }
 
     /**
-     * reads a <code>shrimpSpeciesNode</code> from the XML file specified
+     * reads a <code>SquidSpeciesModel</code> from the XML file specified
      * through <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>ShrimpSpeciesNode</code>
-     * @post the <code>ShrimpSpeciesNode</code> is read from the XML file and
+     * @pre     <code>reader</code> leads to a valid <code>SquidSpeciesModel</code>
+     * @post the <code>SquidSpeciesModel</code> is read from the XML file and
      * returned
      * @param reader stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic
      * data
-     * @return  <code>ShrimpSpeciesNode</code> - <code>ShrimpSpeciesNode</code>
+     * @return  <code>SquidSpeciesModel</code> - <code>SquidSpeciesModel</code>
      * read from file specified by <code>reader</code>
      */
     @Override

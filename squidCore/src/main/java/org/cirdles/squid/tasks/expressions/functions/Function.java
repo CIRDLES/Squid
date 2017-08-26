@@ -68,9 +68,7 @@ public abstract class Function
      */
     @Override
     public void customizeXstream(XStream xstream) {
-//        xstream.registerConverter(new OperationXMLConverter());
-//        xstream.alias("operation", Function.class);
-//        xstream.alias("operation", this.getClass());
+        xstream.registerConverter(new FunctionXMLConverter());
     }
 
     /**

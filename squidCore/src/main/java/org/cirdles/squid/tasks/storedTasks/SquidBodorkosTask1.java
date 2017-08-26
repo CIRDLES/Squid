@@ -45,9 +45,9 @@ public class SquidBodorkosTask1 extends Task {
      */
     public SquidBodorkosTask1(SquidProject squidProject) {
         super("SquidBodorkosTask1", squidProject);
-        
+
         ExpressionTree.squidProject = squidProject;
-        
+
         taskExpressionsOrdered.add(CustomExpression_LnUO_U.EXPRESSION);
 
         taskExpressionsOrdered.add(CustomExpression_LnPbR_U.EXPRESSION);
@@ -57,23 +57,36 @@ public class SquidBodorkosTask1 extends Task {
         taskExpressionsOrdered.add(SquidExpressionMinus4.EXPRESSION);
 
         taskExpressionsOrdered.add(SquidExpressionMinus3.EXPRESSION);
-        
+
         taskExpressionsOrdered.add(CustomExpression_Net204cts_sec.EXPRESSION);
-        
+
         taskExpressionsOrdered.add(CustomExpression_Net204BiWt.EXPRESSION);
-        
+
         taskExpressionsOrdered.add(CustomExpression_Expo.EXPRESSION);
-        
+
         taskExpressionsOrdered.add(CustomExpression_TestIf.EXPRESSION);
-        
+
         taskExpressionsOrdered.add(CustomExpression_RawPb76Age.EXPRESSION);
-        
+
         taskExpressionsOrdered.add(CustomExpression_Mean7_6.EXPRESSION);
-        
+
         taskExpressionsOrdered.add(CustomExpression_RawConcAge.EXPRESSION);
-        
+
         // experiment
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(SquidExpressionMinus3.EXPRESSION, "SquidExpressionMinus3.xml");
+        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnUO_U.EXPRESSION, "CustomExpression_LnUO_U.xml");
+        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnPbR_U.EXPRESSION, "CustomExpression_LnPbR_U.xml");
+        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(SquidExpressionMinus1.EXPRESSION, "SquidExpressionMinus1.xml");
+        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(SquidExpressionMinus4.EXPRESSION, "SquidExpressionMinus4.xml");
+        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(SquidExpressionMinus3.EXPRESSION, "SquidExpressionMinus3.xml");
+//
+//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Net204cts_sec.EXPRESSION, "CustomExpression_Net204cts_sec.xml");
+//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Net204BiWt.EXPRESSION, "CustomExpression_Net204BiWt.xml");
+//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Expo.EXPRESSION, "CustomExpression_Expo.xml");
+//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_TestIf.EXPRESSION, "CustomExpression_TestIf.xml");
+//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_RawPb76Age.EXPRESSION, "CustomExpression_RawPb76Age.xml");
+//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Mean7_6.EXPRESSION, "CustomExpression_Mean7_6.xml");
+//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_RawConcAge.EXPRESSION, "CustomExpression_RawConcAge.xml");
+
 //        ExpressionTreeInterface test = new ExpressionTree();
 //        test = (ExpressionTreeInterface)((XMLSerializerInterface) test).readXMLObject("SquidExpressionMinus3.xml", false);
 //        ((ExpressionTree) test).setName("TESTSquidExpressionMinus3");

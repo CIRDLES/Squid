@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 
 /**
  * A <code>ConstantNodeXMLConverter</code> is used to marshal and unmarshal data
@@ -81,16 +82,19 @@ public class ConstantNodeXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        ConstantNode constantNode = (ConstantNode) value;
+        ExpressionTreeInterface constantNode = (ConstantNode) value;
 
-        writer.startNode("ConstantNode");
-            writer.startNode("name");
-            writer.setValue(constantNode.getName());
-            writer.endNode();
+        writer.startNode("name");
+        writer.setValue(constantNode.getName());
+        writer.endNode();
 
-            writer.startNode("value");
-           // writer.setValue(Double.toString(constantNode.getValue()));
-            writer.endNode();
+        writer.startNode("value");
+        Object myValue = ((ConstantNode) constantNode).getValue();
+        if (myValue instanceof Double) {
+            writer.setValue(Double.toString((Double) ((ConstantNode) constantNode).getValue()));
+        } else { // boolean
+            writer.setValue(Boolean.toString((Boolean) ((ConstantNode) constantNode).getValue()));
+        }
         writer.endNode();
 
     }

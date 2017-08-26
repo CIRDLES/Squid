@@ -18,28 +18,20 @@ package org.cirdles.squid.tasks.expressions;
 import com.thoughtworks.xstream.XStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.Function;
-import org.cirdles.squid.tasks.expressions.functions.Ln;
+import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
-import org.cirdles.squid.tasks.expressions.operations.Add;
-import org.cirdles.squid.tasks.expressions.operations.Divide;
-import org.cirdles.squid.tasks.expressions.operations.Multiply;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
-import org.cirdles.squid.tasks.expressions.operations.Pow;
-import org.cirdles.squid.tasks.expressions.operations.Subtract;
 
 /**
  *
@@ -60,7 +52,7 @@ public class ExpressionTree
     /**
      *
      */
-    protected List<ExpressionTreeInterface> childrenET;
+    private List<ExpressionTreeInterface> childrenET;
 
     /**
      *
@@ -171,17 +163,14 @@ public class ExpressionTree
         xstream.alias("ConstantNode", ConstantNode.class);
 
         xstream.registerConverter(new OperationXMLConverter());
-        xstream.alias("operation", Operation.class);
-        xstream.alias("operation", Add.class);
-        xstream.alias("operation", Subtract.class);
-        xstream.alias("operation", Multiply.class);
-        xstream.alias("operation", Divide.class);
-        xstream.alias("operation", Pow.class);
-
-        xstream.alias("function", Ln.class);
+        xstream.registerConverter(new FunctionXMLConverter());
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
+        
+        // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
+        xstream.setMode(XStream.NO_REFERENCES);
+
     }
 
     /**
@@ -199,7 +188,7 @@ public class ExpressionTree
                 + " xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
                 + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
                 + " xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
-                + "                 https://raw.githubusercontent.com/cirdles/Calamari/expressions/src/main/resources/SquidExpressionModelXMLSchema.xsd\">";
+                + "                 https://raw.githubusercontent.com/CIRDLES/Calamari/master/src/main/resources/SquidExpressionModelXMLSchema.xsd\">";
 
         xmlR = xmlR.replaceFirst("<ExpressionTree>",
                 header);
@@ -288,6 +277,20 @@ public class ExpressionTree
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the childrenET
+     */
+    public List<ExpressionTreeInterface> getChildrenET() {
+        return childrenET;
+    }
+
+    /**
+     * @param childrenET the childrenET to set
+     */
+    public void setChildrenET(List<ExpressionTreeInterface> childrenET) {
+        this.childrenET = childrenET;
     }
 
     /**
@@ -468,5 +471,47 @@ public class ExpressionTree
      */
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
         this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
+    }
+
+    public static void main(String[] args) {
+//        ExpressionTreeInterface EXPRESSION = new ExpressionTree("Net204cts/sec");
+//
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "DummyMass", "204", "Pb", false), "getTotalCps"));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "BKG", "204", "Pb", true), "getTotalCps"));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.subtract());
+//
+//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
+//        
+
+        ExpressionTreeInterface EXPRESSION = new ExpressionTree("206/238 Calib Const");
+
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
+//
+//        ExpressionTreeInterface r254_238wSquared = new ExpressionTree("254/238^2", new ExpressionTree(
+//                            "254/238",
+//                            new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "254Mass", "254", "Pb", false), "getPkInterpScanArray"),
+//                            new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "238Mass", "238", "U", false), "getPkInterpScanArray"),
+//                            Operation.divide()), new ConstantNode("2", 2.0), Operation.pow());
+//
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, new ExpressionTree(
+//                            "254/238",
+//                            new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "206Mass", "206", "Pb", false), "getPkInterpScanArray"),
+//                            new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "238Mass", "238", "U", false), "getPkInterpScanArray"),
+//                            Operation.divide()));
+//        
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(r254_238wSquared);
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.divide());
+//
+//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
+
+        squidProject = new SquidProject();
+        ((XMLSerializerInterface) EXPRESSION).serializeXMLObject(SquidExpressionMinus1.EXPRESSION, "XXXExpressionTree.xml");
     }
 }

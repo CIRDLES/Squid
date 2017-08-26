@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions.isotopes;
+package org.cirdles.squid.tasks.expressions.functions;
 
+import org.cirdles.squid.tasks.expressions.operations.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 
 /**
- * A <code>ShrimpSpeciesNodeXMLConverter</code> is used to marshal and unmarshal
- * data between <code>ShrimpSpeciesNode</code> and XML files.
+ * A <code>OperationXMLConverter</code> is used to marshal and unmarshal data
+ * between <code>Operation</code> and XML files.
  *
  * @imports
  * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
@@ -42,38 +44,37 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  * @author James F. Bowring, javaDocs by Stan Gasque
  */
-public class ShrimpSpeciesNodeXMLConverter implements Converter {
+public class FunctionXMLConverter implements Converter {
 
     /**
-     * checks the argument <code>clazz</code> against
-     * <code>ShrimpSpeciesNode</code>'s <code>Class</code>. Used to ensure that
-     * the object about to be marshalled/unmarshalled is of the correct type.
+     * checks the argument <code>clazz</code> against <code>Operation</code>'s
+     * <code>Class</code>. Used to ensure that the object about to be
+     * marshalled/unmarshalled is of the correct type.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>ShrimpSpeciesNode.class</code>
+     * against <code>Operation.class</code>
      * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
      * convert to/from XML
      * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
-     * matches <code>ShrimpSpeciesNode</code>'s <code>Class</code>; else
+     * matches <code>Operation</code>'s <code>Class</code>; else
      * <code>false</code>.
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return clazz.equals(ShrimpSpeciesNode.class);
+        return Function.class.isAssignableFrom(clazz);
     }
 
     /**
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>ShrimpSpeciesNode</code>, <code>
+     * @pre     <code>value</code> is a valid <code>Operation</code>, <code>
      *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
      * <code>context</code> is a valid <code>MarshallingContext</code>
      * @post    <code>value</code> is written to the XML file specified via
      * <code>writer</code>
-     * @param value   <code>ShrimpSpeciesNode</code> that you wish to write to a
-     * file
+     * @param value   <code>Operation</code> that you wish to write to a file
      * @param writer stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
      */
@@ -81,42 +82,30 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        ShrimpSpeciesNode shrimpSpeciesNode = (ShrimpSpeciesNode) value;
+        OperationOrFunctionInterface function = (Function) value;
 
-        writer.startNode("squidSpeciesModel");
-        context.convertAnother(shrimpSpeciesNode.getSquidSpeciesModel());
+        writer.startNode("name");
+        writer.setValue(((Function)function).getName());
         writer.endNode();
-        
-        writer.startNode("methodNameForShrimpFraction");
-        writer.setValue(shrimpSpeciesNode.getMethodNameForShrimpFraction());
-        writer.endNode();
-
     }
 
     /**
-     * reads a <code>shrimpSpeciesNode</code> from the XML file specified
-     * through <code>reader</code>
+     * reads a <code>Operation</code> from the XML file specified through
+     * <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>ShrimpSpeciesNode</code>
-     * @post the <code>ShrimpSpeciesNode</code> is read from the XML file and
-     * returned
+     * @pre     <code>reader</code> leads to a valid <code>Operation</code>
+     * @post the <code>Operation</code> is read from the XML file and returned
      * @param reader stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic
      * data
-     * @return  <code>ShrimpSpeciesNode</code> - <code>ShrimpSpeciesNode</code>
-     * read from file specified by <code>reader</code>
+     * @return  <code>Operation</code> - <code>Operation</code> read from file
+     * specified by <code>reader</code>
      */
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        ShrimpSpeciesNode shrimpSpeciesNode = new ShrimpSpeciesNode();
-
-        reader.moveDown();
-//////        shrimpSpeciesNode.setName(IsotopeNames.valueOf(reader.getValue()));
-        reader.moveUp();
-
-        return shrimpSpeciesNode;
+        return null;
     }
 
 }

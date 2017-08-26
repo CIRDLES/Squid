@@ -17,8 +17,6 @@ package org.cirdles.squid.shrimp;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
-import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
-import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -154,11 +152,4 @@ public class SquidSpeciesModel implements
     public void setIsBackground(boolean isBackground) {
         this.isBackground = isBackground;
     }
-    
-    public static void main(String[] args) {
-        SquidSpeciesModel test = new SquidSpeciesModel();
-        
-        ((XMLSerializerInterface)test).serializeXMLObject(test, "XXXXX.xml");
-    }
-
 }
