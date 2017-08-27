@@ -77,8 +77,6 @@ public class SpotManagerController implements Initializable {
     @FXML
     private Button saveSpotNameButton;
     @FXML
-    private Button savePrawnFileButton;
-    @FXML
     private AnchorPane spotManagerPane;
 
     /**
@@ -90,7 +88,6 @@ public class SpotManagerController implements Initializable {
         spotManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         setUpShrimpFractionListHeaders();
-        savePrawnFileButton.setDisable(true);
         saveSpotNameButton.setDisable(true);
         setFilteredSpotsAsRefMatButton.setDisable(true);
 
@@ -105,7 +102,6 @@ public class SpotManagerController implements Initializable {
         shrimpRefMatList.setItems(shrimpRunsRefMat);
 
         setUpShrimpFractionList();
-        savePrawnFileButton.setDisable(false);
         saveSpotNameButton.setDisable(false);
         setFilteredSpotsAsRefMatButton.setDisable(false);
 
@@ -260,15 +256,14 @@ public class SpotManagerController implements Initializable {
         }
     }
 
-    @FXML
-    private void savePrawnFileAction(ActionEvent event) {
-        try {
-            FileHandler.savePrawnFile(squidProject, primaryStageWindow);
-            shrimpFractionList.refresh();
-            shrimpRefMatList.refresh();
-        } catch (IOException | JAXBException | SAXException iOException) {
-        }
-    }
+//    private void savePrawnFileAction(ActionEvent event) {
+//        try {
+//            FileHandler.savePrawnFile(squidProject, primaryStageWindow);
+//            shrimpFractionList.refresh();
+//            shrimpRefMatList.refresh();
+//        } catch (IOException | JAXBException | SAXException iOException) {
+//        }
+//    }
 
     /**
      * Saves underlying List to squidProject so it can be serialized

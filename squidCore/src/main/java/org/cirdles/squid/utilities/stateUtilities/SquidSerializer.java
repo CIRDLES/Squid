@@ -58,7 +58,7 @@ public final class SquidSerializer {
      * @param filename
      * @return
      */
-    public static Object getSerializedObjectFromFile(String filename) {
+    public static Object getSerializedObjectFromFile(String filename, boolean verbose) {
         FileInputStream inputStream;
         ObjectInputStream deserializedInputStream;
         Object deserializedObject = null;
@@ -68,19 +68,22 @@ public final class SquidSerializer {
             deserializedInputStream = new ObjectInputStream(inputStream);
             deserializedObject = deserializedInputStream.readObject();
             inputStream.close();
-            
+
         } catch (FileNotFoundException ex) {
-            if (!filename.endsWith(SquidPersistentState.SQUID_PERSISTENT_STATE_FILE_NAME)) {
-                SquidMessageDialog.showWarningDialog(
-                        "The file you are attempting to open does not exist:\n"
+            if (verbose) {
+                SquidMessageDialog.showWarningDialog("The file you are attempting to open does not exist:\n"
                         + " " + filename, null);
             }
         } catch (IOException ex) {
-            SquidMessageDialog.showWarningDialog(
-                    "The file you are attempting to open is not a valid '*.squid' file.", null);
+            if (verbose) {
+                SquidMessageDialog.showWarningDialog(
+                        "The file you are attempting to open is not a valid '*.squid' file.", null);
+            }
         } catch (ClassNotFoundException ex) {
-            SquidMessageDialog.showWarningDialog(
-                    "The file you are attempting to open is not compatible with this version of Squid3.", null);
+            if (verbose) {
+                SquidMessageDialog.showWarningDialog(
+                        "The file you are attempting to open is not compatible with this version of Squid3.", null);
+            }
         }
 
         return deserializedObject;

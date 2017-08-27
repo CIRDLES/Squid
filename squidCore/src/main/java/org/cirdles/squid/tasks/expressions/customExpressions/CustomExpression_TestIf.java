@@ -55,7 +55,7 @@ public class CustomExpression_TestIf {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
                 .addChild(new ConstantNode("99", 99));
 
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.sqif());
+        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.sqIf());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
         ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(true);

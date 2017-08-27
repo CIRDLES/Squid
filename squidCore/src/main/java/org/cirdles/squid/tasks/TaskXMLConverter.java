@@ -63,7 +63,7 @@ public class TaskXMLConverter implements Converter {
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return clazz.equals(Task.class);
+        return Task.class.isAssignableFrom(clazz);
     }
 
     /**
@@ -83,17 +83,14 @@ public class TaskXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        Task task = (Task) value;
+        TaskInterface task = (Task) value;
 
         writer.startNode("name");
         writer.setValue(task.getName());
         writer.endNode();
 
         writer.startNode("taskExpressionsOrdered");
-        List<ExpressionTreeInterface> taskExpressions = task.getTaskExpressionsOrdered();
-        for (ExpressionTreeInterface expression : taskExpressions) {
-            context.convertAnother(expression);
-        }
+        context.convertAnother(task.getTaskExpressionsOrdered());
         writer.endNode();
 
     }
@@ -115,7 +112,7 @@ public class TaskXMLConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        Task task = new Task();
+        TaskInterface task = new Task();
 
         reader.moveDown();
         task.setName(reader.getValue());
@@ -131,7 +128,7 @@ public class TaskXMLConverter implements Converter {
             reader.moveUp();
         }
         task.setTaskExpressionsOrdered(taskExpressions);
-        
+
         return task;
     }
 

@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -34,14 +32,14 @@ public class TaskSquid25 implements Serializable {
 
     private static final long serialVersionUID = -2805382700088270719L;
 
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(TaskSquid25.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of TaskSquid25 " + theSUID);
-    }
+//    private void readObject(
+//            ObjectInputStream stream)
+//            throws IOException, ClassNotFoundException {
+//        stream.defaultReadObject();
+//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(TaskSquid25.class.getCanonicalName()));
+//        long theSUID = myObject.getSerialVersionUID();
+//        System.out.println("Customized De-serialization of TaskSquid25 " + theSUID);
+//    }
     private String squidVersion;
     private String squidTaskFileName;
     private String taskType;

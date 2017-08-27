@@ -107,14 +107,14 @@ public class SquidProject implements Serializable {
 
     public void buildSquidRatiossModelListFromMassStationDetails() {
         squidRatiosModelList = new ArrayList<>();
-        
+
         SquidRatiosModel.knownSquidRatiosModels.clear();
 
         for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
             for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
                 if ((tableOfSelectedRatiosByMassStationIndex[row][col])
-                        &&(!squidSpeciesModelList.get(row).getIsBackground())
-                        &&(!squidSpeciesModelList.get(col).getIsBackground())) {
+                        && (!squidSpeciesModelList.get(row).getIsBackground())
+                        && (!squidSpeciesModelList.get(col).getIsBackground())) {
                     squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(row), squidSpeciesModelList.get(col), 0));
                 }
             }
@@ -154,8 +154,7 @@ public class SquidProject implements Serializable {
             squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(7), squidSpeciesModelList.get(8), 6));
             squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(9), 7));
             squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(9), squidSpeciesModelList.get(8), 8));
-            
-            
+
         } catch (Exception e) {
         }
         squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
@@ -251,6 +250,22 @@ public class SquidProject implements Serializable {
 
     }
 
+    public void extractTask25Ratios() {
+        if (getTaskSquid25() != null) {
+            resetTableOfSelectedRatiosByMassStationIndex();
+            String[] savedRatios = getTaskSquid25().getRatioNames();
+            for (int i = 0; i < savedRatios.length; i++) {
+                String[] ratio = savedRatios[i].split("/");
+                if ((lookUpSpeciesByName(ratio[0]) != null)
+                        && lookUpSpeciesByName(ratio[1]) != null) {
+                    int num = lookUpSpeciesByName(ratio[0]).getMassStationIndex();
+                    int den = lookUpSpeciesByName(ratio[1]).getMassStationIndex();
+                    getTableOfSelectedRatiosByMassStationIndex()[num][den] = true;
+                }
+            }
+        }
+    }
+
     public void setupPrawnFile(File prawnXMLFileNew)
             throws IOException, JAXBException, SAXException {
 
@@ -259,37 +274,41 @@ public class SquidProject implements Serializable {
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
     }
 
-    public void setupPrawnFileByMerge(List<File> prawnXMLFilesNew)
+    public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
             throws IOException, JAXBException, SAXException {
 
-        PrawnFile prawnFile1 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(0).getCanonicalPath());
-        PrawnFile prawnFile2 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(1).getCanonicalPath());
+        if (prawnXMLFilesNew.size() == 2) {
+            PrawnFile prawnFile1 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(0).getCanonicalPath());
+            PrawnFile prawnFile2 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(1).getCanonicalPath());
 
-        long start1 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile1.getRun().get(0));
-        long start2 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile2.getRun().get(0));
+            long start1 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile1.getRun().get(0));
+            long start2 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile2.getRun().get(0));
 
-        if (start1 > start2) {
-            prawnFile2.getRun().addAll(prawnFile1.getRun());
-            prawnFile2.setRuns((short) prawnFile2.getRun().size());
-            prawnXMLFile = new File(
-                    prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "")
-                    + "-JOIN-"
-                    + prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "") + ".xml");
-            prawnFile = prawnFile2;
+            if (start1 > start2) {
+                prawnFile2.getRun().addAll(prawnFile1.getRun());
+                prawnFile2.setRuns((short) prawnFile2.getRun().size());
+                prawnXMLFile = new File(
+                        prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "")
+                        + "-JOIN-"
+                        + prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "") + ".xml");
+                prawnFile = prawnFile2;
+            } else {
+                prawnFile1.getRun().addAll(prawnFile2.getRun());
+                prawnFile1.setRuns((short) prawnFile1.getRun().size());
+                prawnXMLFile = new File(
+                        prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "")
+                        + "-JOIN-"
+                        + prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "") + ".xml");
+                prawnFile = prawnFile1;
+            }
+
+            updatePrawnFileHandlerWithFileLocation();
+            // write and read merged file to confirm conforms to schema
+            serializePrawnData(prawnFileHandler.getCurrentPrawnFileLocation());
+            prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
         } else {
-            prawnFile1.getRun().addAll(prawnFile2.getRun());
-            prawnFile1.setRuns((short) prawnFile1.getRun().size());
-            prawnXMLFile = new File(
-                    prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "")
-                    + "-JOIN-"
-                    + prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "") + ".xml");
-            prawnFile = prawnFile1;
+            throw new IOException("Two files not present");
         }
-
-        updatePrawnFileHandlerWithFileLocation();
-        // write and read merged file to confirm conforms to schema
-        serializePrawnData(prawnFileHandler.getCurrentPrawnFileLocation());
-        prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
     }
 
     public void updatePrawnFileHandlerWithFileLocation()
@@ -323,6 +342,10 @@ public class SquidProject implements Serializable {
 
     public String getPrawnXMLFileName() {
         return prawnXMLFile.getName();
+    }
+
+    public String getPrawnXMLFilePath() {
+        return prawnXMLFile.getAbsolutePath();
     }
 
     public String getPrawnFileShrimpSoftwareVersionName() {
@@ -621,6 +644,20 @@ public class SquidProject implements Serializable {
 
     public void resetTableOfSelectedRatiosByMassStationIndex() {
         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+    }
+
+    public boolean isEmptyTableOfSelectedRatiosByMassStationIndex() {
+        boolean retVal = true;
+
+        if (tableOfSelectedRatiosByMassStationIndex != null) {
+            for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
+                for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
+                    retVal &= !tableOfSelectedRatiosByMassStationIndex[row][col];
+                }
+            }
+        }
+
+        return retVal;
     }
 
     /**

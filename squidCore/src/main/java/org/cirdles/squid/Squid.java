@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.cirdles.commons.util.ResourceExtractor;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
  *
@@ -31,14 +32,14 @@ public final class Squid {
 
     public static final String VERSION;
     public static final String RELEASE_DATE;
-    public static final File defaultCalamariReportsFolder;
+    public static final File DEFAULT_SQUID3_REPORTS_FOLDER;
 
     public static final StringBuilder ABOUT_WINDOW_CONTENT = new StringBuilder();
 
     public static final ResourceExtractor SQUID_RESOURCE_EXTRACTOR
             = new ResourceExtractor(Squid.class);
-
-    static {
+    
+   static {
         String version = "version";
         String releaseDate = "date";
 
@@ -77,10 +78,10 @@ public final class Squid {
             System.err.format("IOException: %s%n", x);
         }
         
-        defaultCalamariReportsFolder = new File("Squid3_Reports_v" + VERSION);
-        if (!defaultCalamariReportsFolder.exists()) {
-            if (!defaultCalamariReportsFolder.mkdir()) {
-                System.out.println("Failed to make Squid Reports folder.");
+        DEFAULT_SQUID3_REPORTS_FOLDER = new File("Squid3_Reports_v" + VERSION);
+        if (!DEFAULT_SQUID3_REPORTS_FOLDER.exists()) {
+            if (!DEFAULT_SQUID3_REPORTS_FOLDER.mkdir()) {
+                System.out.println("Failed to make Squid3 Reports folder.");
             }
         }
 

@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.variables;
 
-import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -30,16 +29,14 @@ import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.conver
  *
  * @author James F. Bowring
  */
-public class VariableNode implements ExpressionTreeInterface, XMLSerializerInterface {
+public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummary implements ExpressionTreeInterface, XMLSerializerInterface {
 
-    private String name;
     private static String lookupMethodNameForShrimpFraction = "getTaskExpressionsEvaluationsPerSpotByField";
-    private ExpressionTreeInterface parentET;
 
     /**
      *
      */
-    public VariableNode() {
+    public VariableNodeForPerSpotTaskExpressions() {
         this(null);
     }
 
@@ -47,18 +44,8 @@ public class VariableNode implements ExpressionTreeInterface, XMLSerializerInter
      *
      * @param name
      */
-    public VariableNode(String name) {
+    public VariableNodeForPerSpotTaskExpressions(String name) {
         this.name = name;
-    }
-
-    /**
-     *
-     * @param xstream
-     */
-    @Override
-    public void customizeXstream(XStream xstream) {
-//        xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
-//        xstream.alias("ShrimpSpeciesNode", VariableNode.class);
     }
 
     /**
@@ -84,88 +71,10 @@ public class VariableNode implements ExpressionTreeInterface, XMLSerializerInter
                 retVal[i] = convertArrayToObjects(values);
             }
 
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException    methodException) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
             throw new SquidException("Could not find variable " + name);
         }
 
         return retVal;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String toStringMathML() {
-        String retVal
-                = "<mtext>\n"
-                + name
-                + "</mtext>\n";
-
-        return retVal;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean isRootExpressionTree() {
-        return false;
-    }
-
-    /**
-     * @return the parentET
-     */
-    @Override
-    public ExpressionTreeInterface getParentET() {
-        return parentET;
-    }
-
-    /**
-     * @param parentET the parentET to set
-     */
-    @Override
-    public void setParentET(ExpressionTreeInterface parentET) {
-        this.parentET = parentET;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public boolean isTypeFunction() {
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public boolean isTypeFunctionOrOperation() {
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public int argumentCount() {
-        return 0;
     }
 }

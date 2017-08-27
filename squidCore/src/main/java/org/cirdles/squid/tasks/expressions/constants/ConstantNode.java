@@ -95,7 +95,7 @@ public class ConstantNode implements ExpressionTreeInterface, XMLSerializerInter
     /**
      * @param value the value to set
      */
-    public void setValue(double value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

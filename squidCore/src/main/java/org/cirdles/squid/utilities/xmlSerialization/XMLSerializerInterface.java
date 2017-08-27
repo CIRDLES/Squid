@@ -89,9 +89,9 @@ public interface XMLSerializerInterface {
 
     /**
      *
-     * @param xsteam
+     * @param xstream
      */
-    public void customizeXstream(XStream xsteam);
+    public void customizeXstream(XStream xstream);
 
     /**
      *

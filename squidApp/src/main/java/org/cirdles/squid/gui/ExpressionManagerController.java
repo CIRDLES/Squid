@@ -28,7 +28,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;

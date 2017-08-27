@@ -299,47 +299,38 @@ public class ShuntingYard {
          *
          */
         OPERATOR_A,
-
         /**
          *
          */
         OPERATOR_M,
-
         /**
          *
          */
         OPERATOR_E,
-
         /**
          *
          */
         LEFT_PAREN,
-
         /**
          *
          */
         RIGHT_PAREN,
-
         /**
          *
          */
         CONSTANT,
-
         /**
          *
          */
         VARIABLE,
-
         /**
          *
          */
         FUNCTION,
-
         /**
          *
          */
         NAMED_EXPRESSION,
-
         /**
          *
          */
@@ -368,7 +359,7 @@ public class ShuntingYard {
                 retVal = RIGHT_PAREN;
             } else if (token.equals(",")) {
                 retVal = COMMA;
-            } else if ("|ln|Ln|sqrt|Sqrt|exp|Exp|RobReg|robReg|robreg|and|if|".contains("|" + token + "|")) {
+            } else if (ExpressionParser.FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
             } else if (token.matches("\\[\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;

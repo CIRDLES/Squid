@@ -17,8 +17,8 @@ package org.cirdles.squid.tasks;
 
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 
 /**
  *
@@ -26,6 +26,18 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
  */
 public interface TaskInterface {
 
+    public String getName();
+    
+    public void setName(String name);
+    
+    /**
+     *
+     * @return
+     */
+    public List<ExpressionTreeInterface> getTaskExpressionsOrdered();
+    
+    public void setTaskExpressionsOrdered(List<ExpressionTreeInterface> taskExpressionsOrdered);
+    
     /**
      *
      * @param shrimpFractions

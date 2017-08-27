@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.variables;
 
-import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -23,18 +22,16 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.convertArrayToObjects;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring
  */
-public class VariableNodeForIsotopicRatios implements ExpressionTreeInterface, XMLSerializerInterface {
+public class VariableNodeForIsotopicRatios extends VariableNodeForSummary implements ExpressionTreeInterface, XMLSerializerInterface {
 
-    private String name;
     private static String lookupMethodNameForShrimpFraction = "getIsotopicRatioValuesByStringName";
-    private ExpressionTreeInterface parentET;
 
     /**
      *
@@ -49,16 +46,6 @@ public class VariableNodeForIsotopicRatios implements ExpressionTreeInterface, X
      */
     public VariableNodeForIsotopicRatios(String name) {
         this.name = name;
-    }
-
-    /**
-     *
-     * @param xstream
-     */
-    @Override
-    public void customizeXstream(XStream xstream) {
-//        xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
-//        xstream.alias("ShrimpSpeciesNode", VariableNode.class);
     }
 
     /**
@@ -87,83 +74,5 @@ public class VariableNodeForIsotopicRatios implements ExpressionTreeInterface, X
         }
 
         return retVal;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String toStringMathML() {
-        String retVal
-                = "<mtext>\n"
-                + name
-                + "</mtext>\n";
-
-        return retVal;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean isRootExpressionTree() {
-        return false;
-    }
-
-    /**
-     * @return the parentET
-     */
-    @Override
-    public ExpressionTreeInterface getParentET() {
-        return parentET;
-    }
-
-    /**
-     * @param parentET the parentET to set
-     */
-    @Override
-    public void setParentET(ExpressionTreeInterface parentET) {
-        this.parentET = parentET;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public boolean isTypeFunction() {
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public boolean isTypeFunctionOrOperation() {
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public int argumentCount() {
-        return 0;
     }
 }

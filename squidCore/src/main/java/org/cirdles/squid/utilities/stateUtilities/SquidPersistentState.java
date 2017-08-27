@@ -28,26 +28,25 @@ import org.cirdles.squid.exceptions.SquidException;
  *
  * @author James F. Bowring
  */
-// NOTE: java.utils.Properties should be considered for use here JFB April 2007
 public class SquidPersistentState implements Serializable {
 
     // class variables
-    //private static final long serialVersionUID = -2957701651505126654L;
-    public static final String SQUID_PERSISTENT_STATE_FILE_NAME = "SquidPersistentState.ser";
-    private static SquidPersistentState instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SQUID_PERSISTENT_STATE_FILE_NAME);
+    private static final long serialVersionUID = 9131785805774520290L;
+    private static final String SQUID_PERSISTENT_STATE_FILE_NAME = "SquidPersistentState.ser";
+    private static SquidPersistentState instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
     private static final int MRU_COUNT = 10;
 
     // instance variables
-    // persistant state for user
     private SquidUserPreferences squidUserPreferences;
     private File MRUProjectFile;
     private ArrayList<String> MRUProjectList;
     private String MRUProjectFolderPath;
+    private String MRUPrawnFileFolderPath;
 
     /**
      *
      */
-    public SquidPersistentState() {
+    private SquidPersistentState() {
 
         initMRUProjectList();
 
@@ -61,11 +60,20 @@ public class SquidPersistentState implements Serializable {
         }
 
         MRUProjectFile = null;
+        MRUProjectFolderPath = "";
+        MRUPrawnFileFolderPath = "";
 
         serializeSelf();
     }
 
-    public void serializeSelf() {
+    public static SquidPersistentState getInstance() {
+        if (instance == null) {
+            instance = new SquidPersistentState();
+        }
+        return instance;
+    }
+
+    private void serializeSelf() {
         // save initial persistent state serialized file
         try {
             SquidSerializer.serializeObjectToFile(this, getMySerializedName());
@@ -79,32 +87,41 @@ public class SquidPersistentState implements Serializable {
 
     /**
      *
-     * @param MRUProjectFile
+     * @param projectFileMRU
      */
-    public void updateMRUProjectList(File MRUProjectFile) {
+    public void updateProjectListMRU(File projectFileMRU) {
 
-        try {
-            // remove if exists in MRU list
-            String MRUProjectFileName = MRUProjectFile.getCanonicalPath();
-            MRUProjectList.remove(MRUProjectFileName);
-            MRUProjectList.add(0, MRUProjectFileName);
+        if (projectFileMRU != null) {
+            try {
+                // remove if exists in MRU list
+                String MRUProjectFileName = projectFileMRU.getCanonicalPath();
+                MRUProjectList.remove(MRUProjectFileName);
+                MRUProjectList.add(0, MRUProjectFileName);
 
-            // trim list
-            if (MRUProjectList.size() > MRU_COUNT) {
-                MRUProjectList.remove(MRU_COUNT);
+                // trim list
+                if (MRUProjectList.size() > MRU_COUNT) {
+                    MRUProjectList.remove(MRU_COUNT);
+                }
+
+                // update MRU folder
+                MRUProjectFolderPath = projectFileMRU.getParent();
+
+                // update current file
+                MRUProjectFile = projectFileMRU;
+
+            } catch (IOException iOException) {
             }
-
-            // update MRU folder
-            MRUProjectFolderPath = MRUProjectFile.getParent();
-        } catch (IOException iOException) {
         }
 
         // save
         try {
-            SquidSerializer.serializeObjectToFile(this, SQUID_PERSISTENT_STATE_FILE_NAME);
+            SquidSerializer.serializeObjectToFile(this, getMySerializedName());
         } catch (SquidException squidException) {
         }
+    }
 
+    public void removeFileNameFromProjectListMRU(String mruProjectFileName) {
+        MRUProjectList.remove(mruProjectFileName);
     }
 
     /**
@@ -118,9 +135,9 @@ public class SquidPersistentState implements Serializable {
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }
-//        if (instance == null) {
-//            instance = new SquidPersistentState();
-//        }
+        if (instance == null) {
+            instance = new SquidPersistentState();
+        }
 
         return instance;
     }
@@ -159,7 +176,24 @@ public class SquidPersistentState implements Serializable {
      * @return
      */
     public ArrayList<String> getMRUProjectList() {
+        cleanProjectListMRU();
         return MRUProjectList;
+    }
+
+    public void cleanProjectListMRU() {
+        ArrayList<String> missingFileNames = new ArrayList<>();
+        // test for missing files
+        for (String projectFileName : MRUProjectList) {
+            File projectFile = new File(projectFileName);
+            if (!projectFile.exists()) {
+                missingFileNames.add(projectFileName);
+            }
+        }
+
+        // remove missing fileNames
+        for (String projectFileName : missingFileNames) {
+            MRUProjectList.remove(projectFileName);
+        }
     }
 
     /**
@@ -185,6 +219,20 @@ public class SquidPersistentState implements Serializable {
     }
 
     /**
+     * @return the MRUPrawnFileFolderPath
+     */
+    public String getMRUPrawnFileFolderPath() {
+        return MRUPrawnFileFolderPath;
+    }
+
+    /**
+     * @param MRUPrawnFileFolderPath the MRUPrawnFileFolderPath to set
+     */
+    public void setMRUPrawnFileFolderPath(String MRUPrawnFileFolderPath) {
+        this.MRUPrawnFileFolderPath = MRUPrawnFileFolderPath;
+    }
+
+    /**
      * @return the squidUserPreferences
      */
     public SquidUserPreferences getSquidUserPreferences() {
@@ -202,8 +250,8 @@ public class SquidPersistentState implements Serializable {
 //            ObjectInputStream stream)
 //            throws IOException, ClassNotFoundException {
 //        stream.defaultReadObject();
-//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(LaserChronNUPlasmaMultiCollIonCounterFileHandler.class.getCanonicalName()));
+//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SquidPersistentState.class.getCanonicalName()));
 //        long theSUID = myObject.getSerialVersionUID();
-//        System.out.println("Customized De-serialization of LaserChronNUPlasmaMultiCollIonCounterFileHandler " + theSUID);
+//        System.out.println("Customized De-serialization of SquidPersistentState " + theSUID);
 //    }
 }

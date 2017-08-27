@@ -61,6 +61,6 @@ public final class Squid3Constants {
      */
     public static final String DEFAULT_PRAWNFILE_NAME = "NO_NAME_";
 
-    public static final String SQUID_USERS_DATA_FOLDER_NAME = "Squid User Data";
+    public static final String SQUID_USERS_DATA_FOLDER_NAME = "Squid3 User Data";
 
 }

@@ -75,8 +75,6 @@ public abstract class Operation
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new OperationXMLConverter());
-        xstream.alias("operation", Operation.class);
-        xstream.alias("operation", this.getClass());
     }
 
     /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions.constants;
+package org.cirdles.squid.tasks.expressions.variables;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -23,8 +23,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 
 /**
- * A <code>ConstantNodeXMLConverter</code> is used to marshal and unmarshal data
- * between <code>ConstantNode</code> and XML file.
+ * A <code>OperationXMLConverter</code> is used to marshal and unmarshal data
+ * between <code>Operation</code> and XML files.
  *
  * @imports
  * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
@@ -43,37 +43,37 @@ import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
  * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  * @author James F. Bowring, javaDocs by Stan Gasque
  */
-public class ConstantNodeXMLConverter implements Converter {
+public class VariableXMLConverter implements Converter {
 
     /**
-     * checks the argument <code>clazz</code> against
-     * <code>ConstantNode</code>'s <code>Class</code>. Used to ensure that the
-     * object about to be marshalled/unmarshalled is of the correct type.
+     * checks the argument <code>clazz</code> against <code>Operation</code>'s
+     * <code>Class</code>. Used to ensure that the object about to be
+     * marshalled/unmarshalled is of the correct type.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>ConstantNode.class</code>
+     * against <code>Operation.class</code>
      * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
      * convert to/from XML
      * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
-     * matches <code>ConstantNode</code>'s <code>Class</code>; else
+     * matches <code>Operation</code>'s <code>Class</code>; else
      * <code>false</code>.
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return clazz.equals(ConstantNode.class);
+        return VariableNodeForSummary.class.isAssignableFrom(clazz);
     }
 
     /**
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>ConstantNode</code>, <code>
+     * @pre     <code>value</code> is a valid <code>Operation</code>, <code>
      *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
      * <code>context</code> is a valid <code>MarshallingContext</code>
      * @post    <code>value</code> is written to the XML file specified via
      * <code>writer</code>
-     * @param value   <code>ConstantNode</code> that you wish to write to a file
+     * @param value   <code>Operation</code> that you wish to write to a file
      * @param writer stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
      */
@@ -81,61 +81,47 @@ public class ConstantNodeXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        ExpressionTreeInterface constantNode = (ConstantNode) value;
+        ExpressionTreeInterface variable = (VariableNodeForSummary) value;
 
         writer.startNode("name");
-        writer.setValue(constantNode.getName());
+        writer.setValue(variable.getName());
         writer.endNode();
-
-        writer.startNode("value");
-        Object myValue = ((ConstantNode) constantNode).getValue();
-        if (myValue instanceof Double) {
-            writer.setValue(Double.toString((Double) ((ConstantNode) constantNode).getValue()));
-        } else if (myValue instanceof Integer) {
-            writer.setValue(Integer.toString((Integer) ((ConstantNode) constantNode).getValue()));
-        } else { // boolean
-            writer.setValue(Boolean.toString((Boolean) ((ConstantNode) constantNode).getValue()));
-        }
-        writer.endNode();
-
     }
 
     /**
-     * reads a <code>ConstantNode</code> from the XML file specified through
+     * reads a <code>Operation</code> from the XML file specified through
      * <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>ConstantNode</code>
-     * @post the <code>ConstantNode</code> is read from the XML file and
-     * returned
+     * @pre     <code>reader</code> leads to a valid <code>Operation</code>
+     * @post the <code>Operation</code> is read from the XML file and returned
      * @param reader stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic
      * data
-     * @return  <code>ConstantNode</code> - <code>ConstantNode</code> read from
-     * file specified by <code>reader</code>
+     * @return  <code>Operation</code> - <code>Operation</code> read from file
+     * specified by <code>reader</code>
      */
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        ExpressionTreeInterface constantNode = new ConstantNode();
-
+        ExpressionTreeInterface variable = null;
+        String variableType = reader.getNodeName();
         reader.moveDown();
-        ((ConstantNode)constantNode).setName(reader.getValue());
+        String variableName = reader.getValue();
         reader.moveUp();
-
-        reader.moveDown();
-        String constant = reader.getValue();
-        if (constant.contains("e")) { // boolean
-            ((ConstantNode)constantNode).setValue(Boolean.parseBoolean(reader.getValue()));
-        } else if (constant.contains(".")) { // double
-            ((ConstantNode)constantNode).setValue(Double.parseDouble(reader.getValue()));
-        } else { // integer
-            ((ConstantNode)constantNode).setValue(Integer.parseInt(reader.getValue()));
+        switch (variableType) {
+            case "VariableNodeForSummary":
+                variable = new VariableNodeForSummary(variableName);
+                break;
+            case "VariableNodeForPerSpotTaskExpressions":
+                variable = new VariableNodeForPerSpotTaskExpressions(variableName);
+                break;
+            case "VariableNodeForIsotopicRatios":
+                variable = new VariableNodeForIsotopicRatios(variableName);
+                break;
         }
 
-        reader.moveUp();
-
-        return constantNode;
+        return variable;
     }
 
 }

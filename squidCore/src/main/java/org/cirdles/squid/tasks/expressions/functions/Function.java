@@ -68,9 +68,7 @@ public abstract class Function
      */
     @Override
     public void customizeXstream(XStream xstream) {
-//        xstream.registerConverter(new OperationXMLConverter());
-//        xstream.alias("operation", Function.class);
-//        xstream.alias("operation", this.getClass());
+        xstream.registerConverter(new FunctionXMLConverter());
     }
 
     /**
@@ -125,7 +123,7 @@ public abstract class Function
      *
      * @return
      */
-    public static OperationOrFunctionInterface sqWtdAvg() {
+    public static OperationOrFunctionInterface sqWtdAv() {
         return new SqWtdAv();
     }
 
@@ -149,7 +147,7 @@ public abstract class Function
      *
      * @return
      */
-    public static OperationOrFunctionInterface sqif() {
+    public static OperationOrFunctionInterface sqIf() {
         return new If();
     }
 

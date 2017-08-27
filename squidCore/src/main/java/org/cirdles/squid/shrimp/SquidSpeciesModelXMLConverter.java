@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions.constants;
+package org.cirdles.squid.shrimp;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 
 /**
- * A <code>ConstantNodeXMLConverter</code> is used to marshal and unmarshal data
- * between <code>ConstantNode</code> and XML file.
+ * A <code>ShrimpSpeciesNodeXMLConverter</code> is used to marshal and unmarshal
+ * data between <code>ShrimpSpeciesNode</code> and XML files.
  *
  * @imports
  * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
@@ -43,37 +42,38 @@ import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
  * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  * @author James F. Bowring, javaDocs by Stan Gasque
  */
-public class ConstantNodeXMLConverter implements Converter {
+public class SquidSpeciesModelXMLConverter implements Converter {
 
     /**
      * checks the argument <code>clazz</code> against
-     * <code>ConstantNode</code>'s <code>Class</code>. Used to ensure that the
-     * object about to be marshalled/unmarshalled is of the correct type.
+     * <code>ShrimpSpeciesNode</code>'s <code>Class</code>. Used to ensure that
+     * the object about to be marshalled/unmarshalled is of the correct type.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>ConstantNode.class</code>
+     * against <code>ShrimpSpeciesNode.class</code>
      * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
      * convert to/from XML
      * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
-     * matches <code>ConstantNode</code>'s <code>Class</code>; else
+     * matches <code>ShrimpSpeciesNode</code>'s <code>Class</code>; else
      * <code>false</code>.
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return clazz.equals(ConstantNode.class);
+        return clazz.equals(SquidSpeciesModel.class);
     }
 
     /**
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>ConstantNode</code>, <code>
+     * @pre     <code>value</code> is a valid <code>SquidSpeciesModel</code>, <code>
      *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
      * <code>context</code> is a valid <code>MarshallingContext</code>
      * @post    <code>value</code> is written to the XML file specified via
      * <code>writer</code>
-     * @param value   <code>ConstantNode</code> that you wish to write to a file
+     * @param value   <code>SquidSpeciesModel</code> that you wish to write to a
+     * file
      * @param writer stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
      */
@@ -81,61 +81,70 @@ public class ConstantNodeXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        ExpressionTreeInterface constantNode = (ConstantNode) value;
+        SquidSpeciesModel squidSpeciesModel = (SquidSpeciesModel) value;
 
-        writer.startNode("name");
-        writer.setValue(constantNode.getName());
+        writer.startNode("massStationIndex");
+        writer.setValue(String.valueOf(squidSpeciesModel.getMassStationIndex()));
         writer.endNode();
 
-        writer.startNode("value");
-        Object myValue = ((ConstantNode) constantNode).getValue();
-        if (myValue instanceof Double) {
-            writer.setValue(Double.toString((Double) ((ConstantNode) constantNode).getValue()));
-        } else if (myValue instanceof Integer) {
-            writer.setValue(Integer.toString((Integer) ((ConstantNode) constantNode).getValue()));
-        } else { // boolean
-            writer.setValue(Boolean.toString((Boolean) ((ConstantNode) constantNode).getValue()));
-        }
+        writer.startNode("massStationSpeciesName");
+        writer.setValue(squidSpeciesModel.getMassStationSpeciesName());
+        writer.endNode();
+
+        writer.startNode("isotopeName");
+        writer.setValue(squidSpeciesModel.getIsotopeName());
+        writer.endNode();
+
+        writer.startNode("elementName");
+        writer.setValue(squidSpeciesModel.getElementName());
+        writer.endNode();
+
+        writer.startNode("isBackground");
+        writer.setValue(String.valueOf(squidSpeciesModel.getIsBackground()));
         writer.endNode();
 
     }
 
     /**
-     * reads a <code>ConstantNode</code> from the XML file specified through
-     * <code>reader</code>
+     * reads a <code>SquidSpeciesModel</code> from the XML file specified
+     * through <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>ConstantNode</code>
-     * @post the <code>ConstantNode</code> is read from the XML file and
+     * @pre     <code>reader</code> leads to a valid <code>SquidSpeciesModel</code>
+     * @post the <code>SquidSpeciesModel</code> is read from the XML file and
      * returned
      * @param reader stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic
      * data
-     * @return  <code>ConstantNode</code> - <code>ConstantNode</code> read from
-     * file specified by <code>reader</code>
+     * @return  <code>SquidSpeciesModel</code> - <code>SquidSpeciesModel</code>
+     * read from file specified by <code>reader</code>
      */
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        ExpressionTreeInterface constantNode = new ConstantNode();
+        SquidSpeciesModel squidSpeciesModel = new SquidSpeciesModel();
 
         reader.moveDown();
-        ((ConstantNode)constantNode).setName(reader.getValue());
+        squidSpeciesModel.setMassStationIndex(Integer.parseInt(reader.getValue()));
         reader.moveUp();
 
         reader.moveDown();
-        String constant = reader.getValue();
-        if (constant.contains("e")) { // boolean
-            ((ConstantNode)constantNode).setValue(Boolean.parseBoolean(reader.getValue()));
-        } else if (constant.contains(".")) { // double
-            ((ConstantNode)constantNode).setValue(Double.parseDouble(reader.getValue()));
-        } else { // integer
-            ((ConstantNode)constantNode).setValue(Integer.parseInt(reader.getValue()));
-        }
-
+        squidSpeciesModel.setMassStationSpeciesName(reader.getValue());
         reader.moveUp();
 
-        return constantNode;
+        reader.moveDown();
+        squidSpeciesModel.setIsotopeName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        squidSpeciesModel.setElementName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        squidSpeciesModel.setIsBackground(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+
+        return squidSpeciesModel;
     }
 
 }

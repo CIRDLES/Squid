@@ -6,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '0.0.8'
+String mavenVersion = '0.0.9'
 
 
 sourceCompatibility = '1.8'
@@ -56,3 +56,13 @@ task createFolders(description: 'Creates the source folders if they do not exist
         }
     }
 }
+
+//compileJava {
+//    options.warnings = false
+//    options.deprecation = false
+//    options.compilerArgs += ["-Xlint:unchecked"]
+//}
+
+//tasks.withType(JavaCompile) {
+//    println 'Compiler args: ' + options.compilerArgs
+//}

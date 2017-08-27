@@ -20,10 +20,11 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 
 /**
- * A <code>ShrimpSpeciesNodeXMLConverter</code> is used to marshal and unmarshal data
- * between <code>ShrimpSpeciesNode</code> and XML files.
+ * A <code>ShrimpSpeciesNodeXMLConverter</code> is used to marshal and unmarshal
+ * data between <code>ShrimpSpeciesNode</code> and XML files.
  *
  * @imports
  * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
@@ -45,9 +46,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class ShrimpSpeciesNodeXMLConverter implements Converter {
 
     /**
-     * checks the argument <code>clazz</code> against <code>ShrimpSpeciesNode</code>'s
-     * <code>Class</code>. Used to ensure that the object about to be
-     * marshalled/unmarshalled is of the correct type.
+     * checks the argument <code>clazz</code> against
+     * <code>ShrimpSpeciesNode</code>'s <code>Class</code>. Used to ensure that
+     * the object about to be marshalled/unmarshalled is of the correct type.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
@@ -83,16 +84,19 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
 
         ShrimpSpeciesNode shrimpSpeciesNode = (ShrimpSpeciesNode) value;
 
-        writer.startNode("ShrimpSpeciesNode");
-            writer.startNode("name");
-            writer.setValue(shrimpSpeciesNode.getName());
-            writer.endNode();
+        writer.startNode("squidSpeciesModel");
+        context.convertAnother(shrimpSpeciesNode.getSquidSpeciesModel());
         writer.endNode();
+        
+        writer.startNode("methodNameForShrimpFraction");
+        writer.setValue(shrimpSpeciesNode.getMethodNameForShrimpFraction());
+        writer.endNode();
+
     }
 
     /**
-     * reads a <code>shrimpSpeciesNode</code> from the XML file specified through
-     * <code>reader</code>
+     * reads a <code>shrimpSpeciesNode</code> from the XML file specified
+     * through <code>reader</code>
      *
      * @pre     <code>reader</code> leads to a valid <code>ShrimpSpeciesNode</code>
      * @post the <code>ShrimpSpeciesNode</code> is read from the XML file and
@@ -110,7 +114,13 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
         ShrimpSpeciesNode shrimpSpeciesNode = new ShrimpSpeciesNode();
 
         reader.moveDown();
-//////        shrimpSpeciesNode.setName(IsotopeNames.valueOf(reader.getValue()));
+        SquidSpeciesModel squidSpeciesModel = new SquidSpeciesModel();
+        squidSpeciesModel = (SquidSpeciesModel) context.convertAnother(squidSpeciesModel, SquidSpeciesModel.class);
+        shrimpSpeciesNode.setsquidSpeciesModel(squidSpeciesModel);
+        reader.moveUp();        
+        
+        reader.moveDown();
+        shrimpSpeciesNode.setMethodNameForShrimpFraction(reader.getValue());
         reader.moveUp();
 
         return shrimpSpeciesNode;
