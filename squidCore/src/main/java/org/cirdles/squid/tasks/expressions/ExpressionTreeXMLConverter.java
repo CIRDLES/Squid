@@ -20,9 +20,15 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
 /**
  * A <code>ExpressionTreeXMLConverter</code> is used to marshal and unmarshal
@@ -142,65 +148,84 @@ public class ExpressionTreeXMLConverter implements Converter {
         expressionTree.setName(reader.getValue());
         reader.moveUp();
 
-        // leftET
-        ExpressionTreeInterface leftET = null;
+        // now we have list of childrenET
         reader.moveDown();
-        reader.moveDown();
-        String etType = reader.getNodeName();
-        if (etType.compareToIgnoreCase("ExpressionTree") == 0) {
-            leftET = new ExpressionTree();
-            leftET = (ExpressionTreeInterface) context.convertAnother(leftET, ExpressionTree.class);
-        } else if (etType.compareToIgnoreCase("ShrimpSpeciesNode") == 0) {
-            leftET = new ShrimpSpeciesNode();
-            leftET = (ExpressionTreeInterface) context.convertAnother(leftET, ShrimpSpeciesNode.class);
-        } else if (etType.compareToIgnoreCase("ConstantNode") == 0) {
-            leftET = new ConstantNode();
-            leftET = (ExpressionTreeInterface) context.convertAnother(leftET, ConstantNode.class);
-        }
-        reader.moveUp();
-        reader.moveUp();
-        expressionTree.addChild(0, leftET);
-
-        // rightET
-        ExpressionTreeInterface rightET = null;
-        reader.moveDown();
-        if (reader.hasMoreChildren()) {
+        List<ExpressionTreeInterface> childrenET = new ArrayList<>();
+        while (reader.hasMoreChildren()) {
             reader.moveDown();
-            etType = reader.getNodeName();
-            if (etType.compareToIgnoreCase("ExpressionTree") == 0) {
-                rightET = new ExpressionTree();
-                rightET = (ExpressionTreeInterface) context.convertAnother(rightET, ExpressionTree.class);
-            } else if (etType.compareToIgnoreCase("ShrimpSpeciesNode") == 0) {
-                rightET = new ShrimpSpeciesNode();
-                rightET = (ExpressionTreeInterface) context.convertAnother(rightET, ShrimpSpeciesNode.class);
-            } else if (etType.compareToIgnoreCase("ConstantNode") == 0) {
-                rightET = new ConstantNode();
-                rightET = (ExpressionTreeInterface) context.convertAnother(rightET, ConstantNode.class);
+            ExpressionTreeInterface expression = null;
+            String expressionType = reader.getNodeName();
+            switch (expressionType) {
+                case "ExpressionTree":
+                    expression = new ExpressionTree();
+                    expression = (ExpressionTreeInterface) context.convertAnother(expression, ExpressionTree.class);
+                    break;
+                case "ShrimpSpeciesNode":
+                    expression = new ShrimpSpeciesNode();
+                    expression = (ExpressionTreeInterface) context.convertAnother(expression, ShrimpSpeciesNode.class);
+                    break;
+                case "ConstantNode":
+                    expression = new ConstantNode();
+                    expression = (ExpressionTreeInterface) context.convertAnother(expression, ConstantNode.class);
+                    break;
+                case "VariableNodeForSummary":
+                    expression = new VariableNodeForSummary();
+                    expression = (ExpressionTreeInterface) context.convertAnother(expression, VariableNodeForSummary.class);
+                    break;
+                case "VariableNodeForPerSpotTaskExpressions":
+                    expression = new VariableNodeForPerSpotTaskExpressions();
+                    expression = (ExpressionTreeInterface) context.convertAnother(expression, VariableNodeForPerSpotTaskExpressions.class);
+                    break;
+                case "VariableNodeForIsotopicRatios":
+                    expression = new VariableNodeForIsotopicRatios();
+                    expression = (ExpressionTreeInterface) context.convertAnother(expression, VariableNodeForIsotopicRatios.class);
+                    break;
             }
+            childrenET.add(expression);
             reader.moveUp();
         }
+        expressionTree.setChildrenET(childrenET);
         reader.moveUp();
-        expressionTree.addChild(rightET);
 
         // operation
         reader.moveDown();
         reader.moveDown();
         OperationOrFunctionInterface operation = Operation.operationFactory(reader.getValue());
+        if (operation == null) {
+            operation = Function.operationFactory(reader.getValue());
+        }
+        if (operation ==null){
+            System.out.println("NULL OP  "+ expressionTree.getName() + "    " + reader.getValue());
+        }
         expressionTree.setOperation(operation);
         reader.moveUp();
         reader.moveUp();
 
         // ratiosOfInterest
         reader.moveDown();
-////        List<RawRatioNamesSHRIMP> ratiosOfInterest = new ArrayList<>();
+        List<String> ratiosOfInterest = new ArrayList<>();
         while (reader.hasMoreChildren()) {
-            reader.moveDown(); // into ratio element
-            reader.moveDown(); // into name element
-////            ratiosOfInterest.add(RawRatioNamesSHRIMP.valueOf(reader.getValue()));
-            reader.moveUp();
+            reader.moveDown();
+            ratiosOfInterest.add(reader.getValue());
             reader.moveUp();
         }
-//////        expressionTree.setRatiosOfInterest(ratiosOfInterest);
+        expressionTree.setRatiosOfInterest(ratiosOfInterest);
+        reader.moveUp();
+
+        reader.moveDown();
+        expressionTree.setSquidSwitchSCSummaryCalculation(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+
+        reader.moveDown();
+        expressionTree.setSquidSwitchSTReferenceMaterialCalculation(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+
+        reader.moveDown();
+        expressionTree.setSquidSwitchSAUnknownCalculation(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+
+        reader.moveDown();
+        expressionTree.setRootExpressionTree(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 
         return expressionTree;

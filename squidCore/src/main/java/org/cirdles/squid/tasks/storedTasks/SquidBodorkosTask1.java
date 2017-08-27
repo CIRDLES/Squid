@@ -17,7 +17,9 @@ package org.cirdles.squid.tasks.storedTasks;
 
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
@@ -88,8 +90,11 @@ public class SquidBodorkosTask1 extends Task {
         
         ((XMLSerializerInterface) this).serializeXMLObject(this, "SquidBodorkosTask1.xml");
 
-//        ExpressionTreeInterface test = new ExpressionTree();
-//        test = (ExpressionTreeInterface)((XMLSerializerInterface) test).readXMLObject("SquidExpressionMinus3.xml", false);
+        TaskInterface test = new Task();
+        test = (TaskInterface)((XMLSerializerInterface) test).readXMLObject("SquidBodorkosTask1.xml", false);
+        ((XMLSerializerInterface)test).serializeXMLObject(test, "SquidBodorkosTask1XXX.xml");
+        
+        
 //        ((ExpressionTree) test).setName("TESTSquidExpressionMinus3");
 //        ((ExpressionTree) test).setRootExpressionTree(true);
 //        taskExpressionsOrdered.add(test);

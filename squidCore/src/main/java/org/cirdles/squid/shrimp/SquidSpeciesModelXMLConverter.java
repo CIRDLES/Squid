@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.shrimp;
 
-import org.cirdles.squid.tasks.expressions.isotopes.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -99,7 +98,7 @@ public class SquidSpeciesModelXMLConverter implements Converter {
         writer.startNode("elementName");
         writer.setValue(squidSpeciesModel.getElementName());
         writer.endNode();
-        
+
         writer.startNode("isBackground");
         writer.setValue(String.valueOf(squidSpeciesModel.getIsBackground()));
         writer.endNode();
@@ -126,7 +125,23 @@ public class SquidSpeciesModelXMLConverter implements Converter {
         SquidSpeciesModel squidSpeciesModel = new SquidSpeciesModel();
 
         reader.moveDown();
+        squidSpeciesModel.setMassStationIndex(Integer.parseInt(reader.getValue()));
+        reader.moveUp();
 
+        reader.moveDown();
+        squidSpeciesModel.setMassStationSpeciesName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        squidSpeciesModel.setIsotopeName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        squidSpeciesModel.setElementName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        squidSpeciesModel.setIsBackground(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 
         return squidSpeciesModel;

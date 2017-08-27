@@ -233,5 +233,11 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializer
         ShrimpSpeciesNode test = new ShrimpSpeciesNode(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O", false), "getPkInterpScanArray");
 
         ((XMLSerializerInterface) test).serializeXMLObject(test, "ShrimpSpeciesNode.xml");
+
+        ShrimpSpeciesNode deserialize = new ShrimpSpeciesNode();
+        deserialize = (ShrimpSpeciesNode) ((XMLSerializerInterface) deserialize).readXMLObject("ShrimpSpeciesNode.xml", false);
+        
+
+        ((XMLSerializerInterface) deserialize).serializeXMLObject(deserialize, "ShrimpSpeciesNodeBBB.xml");
     }
 }

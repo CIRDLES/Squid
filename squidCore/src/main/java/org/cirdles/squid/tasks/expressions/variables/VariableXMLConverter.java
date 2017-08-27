@@ -104,7 +104,24 @@ public class VariableXMLConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        return null;
+        ExpressionTreeInterface variable = null;
+        String variableType = reader.getNodeName();
+        reader.moveDown();
+        String variableName = reader.getValue();
+        reader.moveUp();
+        switch (variableType) {
+            case "VariableNodeForSummary":
+                variable = new VariableNodeForSummary(variableName);
+                break;
+            case "VariableNodeForPerSpotTaskExpressions":
+                variable = new VariableNodeForPerSpotTaskExpressions(variableName);
+                break;
+            case "VariableNodeForIsotopicRatios":
+                variable = new VariableNodeForIsotopicRatios(variableName);
+                break;
+        }
+
+        return variable;
     }
 
 }

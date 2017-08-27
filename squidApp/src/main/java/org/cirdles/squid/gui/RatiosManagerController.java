@@ -165,7 +165,7 @@ public class RatiosManagerController implements Initializable {
         }
     }
 
-    class SquidButtonEventHandler implements EventHandler {
+    class SquidButtonEventHandler<ActionEvent> implements EventHandler {
 
         private int row;
         private int col;

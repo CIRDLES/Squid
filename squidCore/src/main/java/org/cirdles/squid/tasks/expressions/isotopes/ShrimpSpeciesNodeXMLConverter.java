@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 
 /**
  * A <code>ShrimpSpeciesNodeXMLConverter</code> is used to marshal and unmarshal
@@ -113,7 +114,13 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
         ShrimpSpeciesNode shrimpSpeciesNode = new ShrimpSpeciesNode();
 
         reader.moveDown();
-//////        shrimpSpeciesNode.setName(IsotopeNames.valueOf(reader.getValue()));
+        SquidSpeciesModel squidSpeciesModel = new SquidSpeciesModel();
+        squidSpeciesModel = (SquidSpeciesModel) context.convertAnother(squidSpeciesModel, SquidSpeciesModel.class);
+        shrimpSpeciesNode.setsquidSpeciesModel(squidSpeciesModel);
+        reader.moveUp();        
+        
+        reader.moveDown();
+        shrimpSpeciesNode.setMethodNameForShrimpFraction(reader.getValue());
         reader.moveUp();
 
         return shrimpSpeciesNode;

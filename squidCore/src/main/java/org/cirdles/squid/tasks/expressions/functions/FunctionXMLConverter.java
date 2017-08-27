@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.functions;
 
-import org.cirdles.squid.tasks.expressions.operations.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -105,7 +104,11 @@ public class FunctionXMLConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        return null;
+        reader.moveDown();
+        OperationOrFunctionInterface function = Function.operationFactory(reader.getValue());
+        reader.moveUp();
+        
+        return function;
     }
 
 }

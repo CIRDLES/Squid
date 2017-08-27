@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.constants;
 
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -118,14 +117,22 @@ public class ConstantNodeXMLConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        ConstantNode constantNode = new ConstantNode();
+        ExpressionTreeInterface constantNode = new ConstantNode();
 
         reader.moveDown();
-        constantNode.setName(reader.getValue());
+        ((ConstantNode)constantNode).setName(reader.getValue());
         reader.moveUp();
 
         reader.moveDown();
-        constantNode.setValue(Double.parseDouble(reader.getValue()));
+        String constant = reader.getValue();
+        if (constant.contains("e")) { // boolean
+            ((ConstantNode)constantNode).setValue(Boolean.parseBoolean(reader.getValue()));
+        } else if (constant.contains(".")) { // double
+            ((ConstantNode)constantNode).setValue(Double.parseDouble(reader.getValue()));
+        } else { // integer
+            ((ConstantNode)constantNode).setValue(Integer.parseInt(reader.getValue()));
+        }
+
         reader.moveUp();
 
         return constantNode;

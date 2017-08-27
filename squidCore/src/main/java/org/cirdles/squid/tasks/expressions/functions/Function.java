@@ -123,7 +123,7 @@ public abstract class Function
      *
      * @return
      */
-    public static OperationOrFunctionInterface sqWtdAvg() {
+    public static OperationOrFunctionInterface sqWtdAv() {
         return new SqWtdAv();
     }
 
@@ -147,7 +147,7 @@ public abstract class Function
      *
      * @return
      */
-    public static OperationOrFunctionInterface sqif() {
+    public static OperationOrFunctionInterface sqIf() {
         return new If();
     }
 

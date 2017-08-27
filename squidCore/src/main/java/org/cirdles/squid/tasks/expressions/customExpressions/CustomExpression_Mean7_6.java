@@ -35,7 +35,7 @@ public class CustomExpression_Mean7_6 {
     static {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
                 .addChild(0, new VariableNodeForPerSpotTaskExpressions(CustomExpression_RawPb76Age.EXPRESSION.getName()));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.sqWtdAvg());
+        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.sqWtdAv());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
         ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(true);

@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import org.cirdles.squid.tasks.expressions.functions.Function;
 
 /**
  * A <code>OperationXMLConverter</code> is used to marshal and unmarshal data
@@ -104,7 +105,11 @@ public class OperationXMLConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        return null;
+        reader.moveDown();
+        OperationOrFunctionInterface operation = Operation.operationFactory(reader.getValue());
+        reader.moveUp();
+        
+        return operation;
     }
 
 }

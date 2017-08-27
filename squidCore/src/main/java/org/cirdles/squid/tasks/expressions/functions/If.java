@@ -31,7 +31,7 @@ public class If extends Function {
      *
      */
     public If() {
-        name = "if";
+        name = "sqIf";
         argumentCount = 3;
         precedence = 4;
         rowCount = 1;

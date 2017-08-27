@@ -28,11 +28,15 @@ public interface TaskInterface {
 
     public String getName();
     
+    public void setName(String name);
+    
     /**
      *
      * @return
      */
     public List<ExpressionTreeInterface> getTaskExpressionsOrdered();
+    
+    public void setTaskExpressionsOrdered(List<ExpressionTreeInterface> taskExpressionsOrdered);
     
     /**
      *
