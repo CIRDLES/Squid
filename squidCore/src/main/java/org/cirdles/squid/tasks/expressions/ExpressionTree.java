@@ -32,6 +32,10 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
+import org.cirdles.squid.tasks.expressions.variables.VariableXMLConverter;
 
 /**
  *
@@ -162,12 +166,17 @@ public class ExpressionTree
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
 
+        xstream.registerConverter(new VariableXMLConverter());
+        xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
+        xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
+        xstream.alias("VariableNodeForIsotopicRatios", VariableNodeForIsotopicRatios.class);
+
         xstream.registerConverter(new OperationXMLConverter());
         xstream.registerConverter(new FunctionXMLConverter());
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
-        
+
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);
 
@@ -510,7 +519,6 @@ public class ExpressionTree
 //        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
 //        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
 //        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
-
         squidProject = new SquidProject();
         ((XMLSerializerInterface) EXPRESSION).serializeXMLObject(SquidExpressionMinus1.EXPRESSION, "XXXExpressionTree.xml");
     }

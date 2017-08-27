@@ -19,7 +19,7 @@ import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
-import org.cirdles.squid.tasks.expressions.variables.VariableNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
 /**
  *
@@ -34,7 +34,7 @@ public class CustomExpression_Mean7_6 {
 
     static {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(0, new VariableNode(CustomExpression_RawPb76Age.EXPRESSION.getName()));
+                .addChild(0, new VariableNodeForPerSpotTaskExpressions(CustomExpression_RawPb76Age.EXPRESSION.getName()));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.sqWtdAvg());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);

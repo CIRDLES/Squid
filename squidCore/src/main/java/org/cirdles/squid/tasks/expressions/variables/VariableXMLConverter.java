@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2006-2017 CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks;
+package org.cirdles.squid.tasks.expressions.variables;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 
 /**
- * A <code>TaskXMLConverter</code> is used to marshal and unmarshal data between
- * <code>Task</code> and XML files.
+ * A <code>OperationXMLConverter</code> is used to marshal and unmarshal data
+ * between <code>Operation</code> and XML files.
  *
  * @imports
  * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
@@ -46,36 +43,37 @@ import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
  * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  * @author James F. Bowring, javaDocs by Stan Gasque
  */
-public class TaskXMLConverter implements Converter {
+public class VariableXMLConverter implements Converter {
 
     /**
-     * checks the argument <code>clazz</code> against <code>Task</code>'s
+     * checks the argument <code>clazz</code> against <code>Operation</code>'s
      * <code>Class</code>. Used to ensure that the object about to be
      * marshalled/unmarshalled is of the correct type.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>Task.class</code>
+     * against <code>Operation.class</code>
      * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
      * convert to/from XML
      * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
-     * matches <code>Task</code>'s <code>Class</code>; else <code>false</code>.
+     * matches <code>Operation</code>'s <code>Class</code>; else
+     * <code>false</code>.
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return Task.class.isAssignableFrom(clazz);
+        return VariableNodeForSummary.class.isAssignableFrom(clazz);
     }
 
     /**
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>Task</code>, <code>
+     * @pre     <code>value</code> is a valid <code>Operation</code>, <code>
      *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
      * <code>context</code> is a valid <code>MarshallingContext</code>
      * @post    <code>value</code> is written to the XML file specified via
      * <code>writer</code>
-     * @param value   <code>Task</code> that you wish to write to a file
+     * @param value   <code>Operation</code> that you wish to write to a file
      * @param writer stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
      */
@@ -83,56 +81,30 @@ public class TaskXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        TaskInterface task = (Task) value;
+        ExpressionTreeInterface variable = (VariableNodeForSummary) value;
 
         writer.startNode("name");
-        writer.setValue(task.getName());
+        writer.setValue(variable.getName());
         writer.endNode();
-
-        writer.startNode("taskExpressionsOrdered");
-        List<ExpressionTreeInterface> taskExpressions = task.getTaskExpressionsOrdered();
-        for (ExpressionTreeInterface expression : taskExpressions) {
-            context.convertAnother(expression);
-        }
-        writer.endNode();
-
     }
 
     /**
-     * reads a <code>Task</code> from the XML file specified through
+     * reads a <code>Operation</code> from the XML file specified through
      * <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>Task</code>
-     * @post the <code>Task</code> is read from the XML file and returned
+     * @pre     <code>reader</code> leads to a valid <code>Operation</code>
+     * @post the <code>Operation</code> is read from the XML file and returned
      * @param reader stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic
      * data
-     * @return  <code>Task</code> - <code>Task</code> read from file specified by
-     * <code>reader</code>
+     * @return  <code>Operation</code> - <code>Operation</code> read from file
+     * specified by <code>reader</code>
      */
     @Override
-
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        Task task = new Task();
-
-        reader.moveDown();
-        task.setName(reader.getValue());
-        reader.moveUp();
-
-        List<ExpressionTreeInterface> taskExpressions = new ArrayList<>();
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            ExpressionTreeInterface exp = new ExpressionTree();
-            exp = (ExpressionTreeInterface) context.convertAnother(exp, ExpressionTree.class);
-            taskExpressions.add(exp);
-            reader.moveUp();
-        }
-        task.setTaskExpressionsOrdered(taskExpressions);
-        
-        return task;
+        return null;
     }
 
 }

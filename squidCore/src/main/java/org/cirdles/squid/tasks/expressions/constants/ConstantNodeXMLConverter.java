@@ -92,6 +92,8 @@ public class ConstantNodeXMLConverter implements Converter {
         Object myValue = ((ConstantNode) constantNode).getValue();
         if (myValue instanceof Double) {
             writer.setValue(Double.toString((Double) ((ConstantNode) constantNode).getValue()));
+        } else if (myValue instanceof Integer) {
+            writer.setValue(Integer.toString((Integer) ((ConstantNode) constantNode).getValue()));
         } else { // boolean
             writer.setValue(Boolean.toString((Boolean) ((ConstantNode) constantNode).getValue()));
         }

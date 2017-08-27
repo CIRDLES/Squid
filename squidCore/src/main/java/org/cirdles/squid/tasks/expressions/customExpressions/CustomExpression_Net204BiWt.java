@@ -20,7 +20,7 @@ import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.functions.Function;
-import org.cirdles.squid.tasks.expressions.variables.VariableNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
 /**
  *
@@ -35,7 +35,7 @@ public class CustomExpression_Net204BiWt {
 
     static {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(0, new VariableNode(CustomExpression_Net204cts_sec.EXPRESSION.getName()));
+                .addChild(0, new VariableNodeForPerSpotTaskExpressions(CustomExpression_Net204cts_sec.EXPRESSION.getName()));
         ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("9", 9));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.sqBiweight());
 

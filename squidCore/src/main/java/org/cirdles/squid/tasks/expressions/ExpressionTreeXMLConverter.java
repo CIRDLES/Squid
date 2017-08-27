@@ -85,10 +85,6 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         ExpressionTree expressionTree = (ExpressionTree) value;
 
-//        if (!expressionTree.rootExpressionTree) {
-//            writer.startNode("ExpressionTree");
-//        }
-
         writer.startNode("name");
         writer.setValue(expressionTree.getName());
         writer.endNode();
@@ -105,9 +101,21 @@ public class ExpressionTreeXMLConverter implements Converter {
         context.convertAnother(expressionTree.getRatiosOfInterest());
         writer.endNode();
 
-//        if (!expressionTree.rootExpressionTree) {
-//            writer.endNode();
-//        }
+        writer.startNode("squidSwitchSCSummaryCalculation");
+        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSCSummaryCalculation()));
+        writer.endNode();
+
+        writer.startNode("squidSwitchSTReferenceMaterialCalculation");
+        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSTReferenceMaterialCalculation()));
+        writer.endNode();
+
+        writer.startNode("squidSwitchSAUnknownCalculation");
+        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSAUnknownCalculation()));
+        writer.endNode();
+
+        writer.startNode("rootExpressionTree");
+        writer.setValue(String.valueOf(expressionTree.isRootExpressionTree()));
+        writer.endNode();
 
     }
 

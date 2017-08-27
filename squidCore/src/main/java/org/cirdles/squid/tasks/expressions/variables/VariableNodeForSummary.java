@@ -32,8 +32,8 @@ import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.conver
  */
 public class VariableNodeForSummary implements ExpressionTreeInterface, XMLSerializerInterface {
 
-    private String name;
-    private ExpressionTreeInterface parentET;
+    protected String name;
+    protected ExpressionTreeInterface parentET;
 
     /**
      *

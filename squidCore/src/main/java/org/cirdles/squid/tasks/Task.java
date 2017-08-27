@@ -48,6 +48,11 @@ import org.cirdles.squid.tasks.expressions.operations.Pow;
 import org.cirdles.squid.tasks.expressions.operations.Subtract;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
+import org.cirdles.squid.tasks.expressions.variables.VariableXMLConverter;
 
 /**
  *
@@ -69,7 +74,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      *
      */
     protected Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet;
-    
+
     protected transient SquidProject squidProject;
 
     /**
@@ -82,6 +87,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
     /**
      *
      * @param name
+     * @param squidProject
      */
     public Task(String name, SquidProject squidProject) {
         this.name = name;
@@ -102,15 +108,13 @@ public class Task implements TaskInterface, XMLSerializerInterface {
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
 
-        xstream.registerConverter(new OperationXMLConverter());
-        xstream.alias("operation", Operation.class);
-        xstream.alias("operation", Add.class);
-        xstream.alias("operation", Subtract.class);
-        xstream.alias("operation", Multiply.class);
-        xstream.alias("operation", Divide.class);
-        xstream.alias("operation", Pow.class);
+        xstream.registerConverter(new VariableXMLConverter());
+        xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
+        xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
+        xstream.alias("VariableNodeForIsotopicRatios", VariableNodeForIsotopicRatios.class);
 
-        xstream.alias("function", Ln.class);
+        xstream.registerConverter(new OperationXMLConverter());
+        xstream.registerConverter(new FunctionXMLConverter());
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
@@ -118,6 +122,10 @@ public class Task implements TaskInterface, XMLSerializerInterface {
         xstream.registerConverter(new TaskXMLConverter());
         xstream.alias("Task", Task.class);
         xstream.alias("Task", this.getClass());
+
+        // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
+        xstream.setMode(XStream.NO_REFERENCES);
+
     }
 
     /**
@@ -167,7 +175,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
     }
 
     private void evaluateExpressionForSpotSet(
-            ExpressionTreeInterface expression, 
+            ExpressionTreeInterface expression,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // determine type of expression
         if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
@@ -182,7 +190,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
     }
 
     private void evaluateExpressionForSpot(
-            ExpressionTreeInterface expression, 
+            ExpressionTreeInterface expression,
             ShrimpFractionExpressionInterface spot) throws SquidException {
 
         if (((ExpressionTree) expression).hasRatiosOfInterest()) {
@@ -211,7 +219,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      */
     private TaskExpressionEvaluatedPerSpotPerScanModelInterface
             evaluateTaskExpressionsPerSpotPerScan(
-                    ExpressionTreeInterface expression, 
+                    ExpressionTreeInterface expression,
                     ShrimpFractionExpressionInterface shrimpFraction) throws SquidException {
 
         TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel = null;
@@ -442,6 +450,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
     /**
      * @return the name
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -456,6 +465,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
     /**
      * @return the taskExpressionsOrdered
      */
+    @Override
     public List<ExpressionTreeInterface> getTaskExpressionsOrdered() {
         return taskExpressionsOrdered;
     }
