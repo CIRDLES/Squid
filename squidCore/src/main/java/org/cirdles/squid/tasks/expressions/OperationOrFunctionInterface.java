@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions;
 
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -58,4 +59,14 @@ public interface OperationOrFunctionInterface {
      */
     public abstract String toStringMathML(
             List<ExpressionTreeInterface> childrenET);
+
+    /**
+     * @return the name
+     */
+    public String getName();
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name);
 }

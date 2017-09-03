@@ -52,11 +52,12 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="321.0" prefWidth="925.0" styleClass="backgroundCalamari">
                <children>
-                  <WebView id="browser" fx:id="browser" layoutX="14.0" layoutY="14.0" prefHeight="340.0" prefWidth="900.0" stylesheets="@css/newcss.css">
+                  <WebView id="browser" fx:id="browser" layoutX="14.0" layoutY="14.0" prefHeight="368.0" prefWidth="439.0" stylesheets="@css/newcss.css">
                      <effect>
                         <InnerShadow />
                      </effect>
                   </WebView>
+                  <Label fx:id="expressionAuditLabel" alignment="TOP_LEFT" layoutX="462.0" layoutY="14.0" prefHeight="368.0" prefWidth="439.0" text="Expression Audit" wrapText="true" />
                </children>
             </AnchorPane>
          </items>

@@ -52,7 +52,9 @@ stat:   block
     ;
 */
 
-expr:   FUNCTION '(' exprList? ')'    // func call like f(), f(x), f(1,2)
+// http://meri-stuff.blogspot.com/2011/09/antlr-tutorial-expression-language.html
+
+expr:   FUNCTION '(' exprList+ ')'    // func call like f(), f(x), f(1,2) switched ? to + to require 1 arg min
     |   '(' expr ')'
 //    |   ID '[' expr ']'         // array index like a[i], a[i][j]
     |   '-' expr                // unary minus
@@ -72,11 +74,16 @@ expr:   FUNCTION '(' exprList? ')'    // func call like f(), f(x), f(1,2)
 exprList : expr (',' expr)* ;   // arg list
 
 FUNCTION : 
-    'ln' | 'Ln' | 
-    'sqrt' | 'Sqrt' | 
-    'exp' | 'Exp' | 
+    'AgePb76' | 'agePb76' | 
+    'And' | 'and' | 
+    'ConcordiaTW' | 'concordiaTW' |
+    'Exp' | 'exp' |  
+    'If' | 'if' | 
+    'Ln' | 'ln' | 
+    'Sqrt' | 'sqrt' | 
     'RobReg' | 'robReg' | 'robreg' |
-    'sqBiweight' ;
+    'SqBiweight' | 'sqBiweight'
+    'SqWtAvg' | 'sqWtAvg';
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 

@@ -15,9 +15,9 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -38,8 +38,8 @@ public class CustomExpression_Expo {
                 .addChild(0, new VariableNodeForPerSpotTaskExpressions(CustomExpression_LnUO_U.EXPRESSION.getName()));
         ((ExpressionTreeBuilderInterface) EXPRESSION)
                 .addChild(new VariableNodeForPerSpotTaskExpressions(CustomExpression_LnPbR_U.EXPRESSION.getName()));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("false", 0));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("false", 0));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("false", 0));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("false", 0));
         ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.robReg());
 
         ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);

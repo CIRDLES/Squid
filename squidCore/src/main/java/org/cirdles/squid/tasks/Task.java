@@ -30,17 +30,17 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeXMLConverter;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeXMLConverter;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -57,6 +57,11 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      *
      */
     protected String name;
+    protected String type;
+    protected String description;
+    protected String authorName;
+    protected String labName;
+    protected long dateRevised;
 
     /**
      *
@@ -68,6 +73,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      */
     protected Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet;
 
+    // SquidProject provides the details necessary for expressions, etc.
     protected transient SquidProject squidProject;
 
     /**
@@ -453,6 +459,76 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the authorName
+     */
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    /**
+     * @param authorName the authorName to set
+     */
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    /**
+     * @return the labName
+     */
+    public String getLabName() {
+        return labName;
+    }
+
+    /**
+     * @param labName the labName to set
+     */
+    public void setLabName(String labName) {
+        this.labName = labName;
+    }
+
+    /**
+     * @return the dateRevised
+     */
+    public long getDateRevised() {
+        return dateRevised;
+    }
+
+    /**
+     * @param dateRevised the dateRevised to set
+     */
+    public void setDateRevised(long dateRevised) {
+        this.dateRevised = dateRevised;
     }
 
     /**

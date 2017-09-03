@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions;
+package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.nio.file.Files;
  * @see http://rypress.com/tutorials/mathml/advanced-formatting
  * @author James F. Bowring
  */
-public class ExpressionWriterMathML {
+public class ExpressionTreeWriterMathML {
 
     /**
      *
@@ -33,19 +33,46 @@ public class ExpressionWriterMathML {
      * @return
      */
     public static StringBuilder toStringBuilderMathML(ExpressionTreeInterface expression) {
+        //https://www.mathjax.org/cdn-shutting-down/
+        /**
+         * We recommend cdnjs which also uses CloudFlare for delivery (and on
+         * the higher “enterprise” level!). We have been in touch with cdnjs’s
+         * maintainers and will help push future MathJax releases to cdnjs.
+         *
+         * For example, if you have been using the latest MathJax version
+         * (v2.7.0) change
+         *
+         * <script type="text/javascript" async
+         * src="https://cdn.mathjax.org/mathjax/2.7-latest/MathJax.js?...">
+         * </script>
+         * to
+         *
+         * <script type="text/javascript" async
+         * src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?...">
+         * </script>
+         * [Updated 2017/04/25] Other free CDN providers include
+         *
+         * rawgit, e.g.,
+         * https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js. jsdelivr
+         * plans to provide a (functional) copy of MathJax in the future.
+         *
+         */
         StringBuilder fileContents = new StringBuilder();
 
         if (expression == null) {
-            fileContents.append("No expression");
+            fileContents.append("Expression not valid.");
         } else {
             fileContents.append(
                     "<!DOCTYPE html>\n"
                     + "<html>\n"
                     + "    <head>\n"
                     + "        <title>" + expression.getName() + "</title>\n"
-                    + "        <meta charset=\"UTF-8\">\n"
-                    + "        <script type=\"text/javascript\"\n"
-                    + "                src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_SVG\">\n"
+                    + "        <meta charset=\"UTF-8\"/>\n"
+//                    + "        <script type=\"text/javascript\" async\n"
+//                    + "                src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_SVG\">\n"
+//                    + "        </script>\n"
+                    + "        <script type=\"text/javascript\" async\n"
+                    + "                src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_SVG\">\n"
                     + "        </script>\n"
                     + "    </head>\n"
                     + "    <body>\n"

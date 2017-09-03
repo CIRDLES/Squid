@@ -18,7 +18,9 @@ package org.cirdles.squid.tasks.expressions.operations;
 import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import java.util.HashMap;
+import java.util.Map;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
@@ -75,6 +77,22 @@ public abstract class Operation
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new OperationXMLConverter());
+    }
+
+    /**
+     *
+     */
+    public final static Map<String, String> OPERATIONS_MAP = new HashMap<>();
+
+    static {
+
+        OPERATIONS_MAP.put("+", add().getName());
+        OPERATIONS_MAP.put("-", subtract().getName());
+        OPERATIONS_MAP.put("/", divide().getName());
+        OPERATIONS_MAP.put("*", multiply().getName());
+        OPERATIONS_MAP.put("^", pow().getName());
+        OPERATIONS_MAP.put("==", equal().getName());
+        OPERATIONS_MAP.put("<", lessThan().getName());
     }
 
     /**

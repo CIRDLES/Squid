@@ -18,7 +18,9 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import java.util.HashMap;
+import java.util.Map;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
@@ -69,6 +71,46 @@ public abstract class Function
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new FunctionXMLConverter());
+    }
+
+    /**
+     *
+     */
+    public final static Map<String, String> FUNCTIONS_MAP = new HashMap<>();
+
+    static {
+
+        FUNCTIONS_MAP.put("agePb76", agePb76().getName());
+        FUNCTIONS_MAP.put("AgePb76", agePb76().getName());
+
+        FUNCTIONS_MAP.put("and", and().getName());
+        FUNCTIONS_MAP.put("And", and().getName());
+
+        FUNCTIONS_MAP.put("concordiaTW", concordiaTW().getName());
+        FUNCTIONS_MAP.put("ConcordiaTW", concordiaTW().getName());
+
+        FUNCTIONS_MAP.put("exp", exp().getName());
+        FUNCTIONS_MAP.put("Exp", exp().getName());
+
+        FUNCTIONS_MAP.put("if", Function.sqIf().getName());
+        FUNCTIONS_MAP.put("If", sqIf().getName());
+
+        FUNCTIONS_MAP.put("ln", ln().getName());
+        FUNCTIONS_MAP.put("Ln", ln().getName());
+
+        FUNCTIONS_MAP.put("robReg", robReg().getName());
+        FUNCTIONS_MAP.put("RobReg", robReg().getName());
+        FUNCTIONS_MAP.put("robreg", robReg().getName());
+
+        FUNCTIONS_MAP.put("sqBiweight", sqBiweight().getName());
+        FUNCTIONS_MAP.put("SqBiweight", sqBiweight().getName());
+
+        FUNCTIONS_MAP.put("sqWtdAv", sqWtdAv().getName());
+        FUNCTIONS_MAP.put("SqWtdAv", sqWtdAv().getName());
+
+        FUNCTIONS_MAP.put("sqrt", sqrt().getName());
+        FUNCTIONS_MAP.put("Sqrt", sqrt().getName());
+
     }
 
     /**

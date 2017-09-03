@@ -19,7 +19,7 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  *
@@ -37,7 +37,7 @@ public class RobReg extends Function {
      */
     public RobReg() {
         name = "robReg";
-        argumentCount = 4;
+        argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 4;

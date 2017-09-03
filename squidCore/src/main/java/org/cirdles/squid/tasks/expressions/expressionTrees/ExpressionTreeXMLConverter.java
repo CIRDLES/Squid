@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions;
+package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
@@ -129,8 +130,8 @@ public class ExpressionTreeXMLConverter implements Converter {
      * reads a <code>ExpressionTree</code> from the XML file specified through
      * <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>ConstantNode</code>
-     * @post the <code>ConstantNode</code> is read from the XML file and
+     * @pre     <code>reader</code> leads to a valid <code>ExpressionTree</code>
+     * @post the <code>ExpressionTree</code> is read from the XML file and
      * returned
      * @param reader stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic

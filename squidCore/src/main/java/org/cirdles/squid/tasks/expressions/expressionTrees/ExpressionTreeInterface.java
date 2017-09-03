@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions;
+package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
@@ -40,6 +40,11 @@ public interface ExpressionTreeInterface {
      * @return
      */
     public String getName();
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name);
 
     /**
      * @return the parentET
@@ -74,12 +79,11 @@ public interface ExpressionTreeInterface {
      */
     public boolean isTypeFunctionOrOperation();
 
-    /**
-     *
-     * @return
-     */
-    public int argumentCount();
-
+//    /**
+//     *
+//     * @return
+//     */
+//    public int argumentCount();
     /**
      *
      * @param objects
@@ -165,4 +169,16 @@ public interface ExpressionTreeInterface {
         return retVal;
     }
 
+    public default int argumentCount() {
+        return ((ExpressionTreeBuilderInterface) this).getOperation().getArgumentCount();
+    }
+
+    public default void auditExpressionTreeDependencies(List<String> argumentAudit) {
+        argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditOperationArgumentCount());
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
+            if (child instanceof ExpressionTree) {
+                child.auditExpressionTreeDependencies(argumentAudit);
+            }
+        }
+    }
 }
