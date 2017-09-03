@@ -154,7 +154,7 @@ public class ExpressionParser {
             String token = parsedRPNreversedIterator.next();
 
             if (exp != null) {
-                // find next available empty left
+                // find next available empty left child
                 exp = walkUpTreeToEmptyLeftChild(exp);
             }
 
@@ -174,9 +174,8 @@ public class ExpressionParser {
 
         boolean didAscend = true;
         while (didAscend && (savedExp != null)) {
-            if ((savedExp instanceof ExpressionTreeBuilderInterface)
-                    && (!savedExp.isTypeFunction())) {
-                if (((ExpressionTreeBuilderInterface) savedExp).getCountOfChildren() == 2) {
+            if ((savedExp instanceof ExpressionTreeBuilderInterface)) {//&& (!savedExp.isTypeFunction())) {
+                if (((ExpressionTreeBuilderInterface) savedExp).getCountOfChildren() == savedExp.argumentCount()) {//    2) {
                     expParent = savedExp.getParentET();
                     savedExp = expParent;
                 } else {
@@ -203,18 +202,18 @@ public class ExpressionParser {
     private ExpressionTreeInterface walkTree(String token, ExpressionTreeInterface myExp) {
         TokenTypes tokenType = TokenTypes.getType(token);
         ExpressionTreeInterface exp = myExp;
-
-        if (exp != null) {
-            if (exp.isTypeFunctionOrOperation()) {
-                while (exp.argumentCount() == ((ExpressionTreeBuilderInterface) exp).getCountOfChildren()
-                        && !exp.isRootExpressionTree()) {
-                    exp = exp.getParentET();
-                    if (exp == null) {
-                        break;
-                    }
-                }
-            }
-        }
+//
+//        if (exp != null) {
+//            if (exp.isTypeFunctionOrOperation()) {
+//                while (exp.argumentCount() == ((ExpressionTreeBuilderInterface) exp).getCountOfChildren()
+//                        && !exp.isRootExpressionTree()) {
+//                    exp = exp.getParentET();
+//                    if (exp == null) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
 
         ExpressionTreeInterface retExpTree = null;
 
@@ -248,6 +247,7 @@ public class ExpressionParser {
         }
 
         if (exp != null) {
+            // this insertion enforces correct order as children arrive in reverse order
             ((ExpressionTreeBuilderInterface) exp).addChild(0, retExpTree);
         }
 

@@ -33,6 +33,9 @@ public class Pexp extends Operation {
         name = "exp";
         argumentCount = 1;
         precedence = 4;//todo: rethink
+        rowCount = 1;
+        colCount = 1;
+        labelsForOutputValues = new String[][]{{"Fenced"}};
     }
 
     /**

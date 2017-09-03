@@ -45,7 +45,7 @@ public class ConcordiaTW extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 4;
-        labelsForValues = new String[][]{{"Raw Conc Age", "1-sigma abs", "MSWD Conc", "Prob Conc"}};
+        labelsForOutputValues = new String[][]{{"Raw Conc Age", "1-sigma abs", "MSWD Conc", "Prob Conc"}};
     }
 
     /**

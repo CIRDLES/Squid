@@ -36,6 +36,7 @@ public class Exp extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 1;
+        labelsForOutputValues = new String[][]{{"Exponential"}};
     }
 
     /**

@@ -36,6 +36,7 @@ public class Add extends Operation {
         precedence = 2;
         rowCount = 1;
         colCount = 1;
+        labelsForOutputValues = new String[][]{{"Sum"}};
     }
 
     /**

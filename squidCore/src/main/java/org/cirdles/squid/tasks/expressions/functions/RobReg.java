@@ -41,7 +41,7 @@ public class RobReg extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 4;
-        labelsForValues = new String[][]{{"Slope", "SlopeErr", "Y-Intercept", "Y-IntErr"}};
+        labelsForOutputValues = new String[][]{{"Slope", "SlopeErr", "Y-Intercept", "Y-IntErr"}};
     }
 
     /**

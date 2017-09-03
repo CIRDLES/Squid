@@ -35,6 +35,7 @@ public class Pow extends Operation {
         precedence = 4;
         rowCount = 1;
         colCount = 1;
+        labelsForOutputValues = new String[][]{{"Power"}};
 
     }
 

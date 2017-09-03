@@ -45,7 +45,7 @@ public class SqWtdAv extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 6;
-        labelsForValues = new String[][]{{"intMean", "intSigmaMean", "MSWD", "probability", "intErr68", "intMeanErr95"}};
+        labelsForOutputValues = new String[][]{{"intMean", "intSigmaMean", "MSWD", "probability", "intErr68", "intMeanErr95"}};
     }
 
     /**

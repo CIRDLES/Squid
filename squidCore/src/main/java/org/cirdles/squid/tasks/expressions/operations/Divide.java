@@ -35,6 +35,9 @@ public class Divide extends Operation {
         name = "divide";
         argumentCount = 2;
         precedence = 3;
+        rowCount = 1;
+        colCount = 1;
+        labelsForOutputValues = new String[][]{{"Quotient"}};
     }
 
     /**

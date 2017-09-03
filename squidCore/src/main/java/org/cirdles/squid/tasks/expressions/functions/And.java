@@ -36,6 +36,7 @@ public class And extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 1;
+        labelsForOutputValues = new String[][]{{"Conjuction"}};
     }
 
     /**

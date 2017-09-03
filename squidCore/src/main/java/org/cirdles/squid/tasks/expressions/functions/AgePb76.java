@@ -44,7 +44,7 @@ public class AgePb76 extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForValues = new String[][]{{"Age", "AgeErr"}};
+        labelsForOutputValues = new String[][]{{"Age", "AgeErr"}};
     }
 
     /**

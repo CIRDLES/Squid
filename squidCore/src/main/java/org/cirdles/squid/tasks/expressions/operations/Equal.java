@@ -36,6 +36,7 @@ public class Equal extends Operation {
         precedence = 1;
         rowCount = 1;
         colCount = 1;
+        labelsForOutputValues = new String[][]{{"Predicate"}};
     }
 
     /**

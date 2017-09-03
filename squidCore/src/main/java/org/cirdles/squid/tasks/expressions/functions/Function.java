@@ -62,7 +62,7 @@ public abstract class Function
     /**
      *
      */
-    protected String[][] labelsForValues;
+    protected String[][] labelsForOutputValues = new String[][]{{}};
 
     /**
      *
@@ -253,26 +253,11 @@ public abstract class Function
     }
 
     /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * @return the argumentCount
      */
     @Override
     public int getArgumentCount() {
         return argumentCount;
-    }
-
-    /**
-     * @param argumentCount the argumentCount to set
-     */
-    @Override
-    public void setArgumentCount(int argumentCount) {
-        this.argumentCount = argumentCount;
     }
 
     /**
@@ -291,13 +276,6 @@ public abstract class Function
     }
 
     /**
-     * @param rowCount the rowCount to set
-     */
-    public void setRowCount(int rowCount) {
-        this.rowCount = rowCount;
-    }
-
-    /**
      * @return the colCount
      */
     public int getColCount() {
@@ -305,23 +283,9 @@ public abstract class Function
     }
 
     /**
-     * @param colCount the colCount to set
+     * @return the labelsForOutputValues
      */
-    public void setColCount(int colCount) {
-        this.colCount = colCount;
-    }
-
-    /**
-     * @return the labelsForValues
-     */
-    public String[][] getLabelsForValues() {
-        return labelsForValues;
-    }
-
-    /**
-     * @param labelsForValues the labelsForValues to set
-     */
-    public void setLabelsForValues(String[][] labelsForValues) {
-        this.labelsForValues = labelsForValues;
+    public String[][] getLabelsForOutputValues() {
+        return labelsForOutputValues;
     }
 }

@@ -29,7 +29,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
@@ -151,13 +150,10 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private void handleParseButtonAction(ActionEvent event) {
 
-        ExpressionParser expressionParser = new ExpressionParser(SquidUIController.squidProject);
         Expression exp = new Expression("NoName", expressionText.getText());
-        ExpressionTreeInterface result = expressionParser.parseExpressionStringAndBuildExpressionTree(exp);
        
-        exp.setExpressionTree(result);
         expressionAuditLabel.setText(exp.produceExpressionTreeAudit());
-        webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(result).toString());
+        webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(exp.getExpressionTree()).toString());
 
 // PLAYGROUND
 //        AnimationTimer timer = new AnimationTimer() {

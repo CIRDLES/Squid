@@ -35,6 +35,7 @@ public class Subtract extends Operation {
         precedence = 2;
         rowCount = 1;
         colCount = 1;
+        labelsForOutputValues = new String[][]{{"Difference"}};
     }
 
     /**

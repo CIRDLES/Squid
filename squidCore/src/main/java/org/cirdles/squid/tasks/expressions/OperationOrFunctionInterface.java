@@ -48,11 +48,6 @@ public interface OperationOrFunctionInterface {
     public int getArgumentCount();
 
     /**
-     * @param argumentCount the argumentCount to set
-     */
-    public void setArgumentCount(int argumentCount);
-
-    /**
      *
      * @param childrenET the value of childrenET
      * @return
@@ -64,9 +59,24 @@ public interface OperationOrFunctionInterface {
      * @return the name
      */
     public String getName();
-
+    
     /**
-     * @param name the name to set
+     * @return the labelsForOutputValues
      */
-    public void setName(String name);
+    public String[][] getLabelsForOutputValues();
+    
+    public default String printOutputValues(){
+        String retVal = "None Specified";
+        String [] outputArray = getLabelsForOutputValues()[0];
+        
+        if (outputArray.length > 0){
+            retVal = " [";
+            for (int i = 0; i < outputArray.length; i ++){
+                retVal += outputArray[i] + (String)(i < (outputArray.length-1) ? ", " : "");
+            }
+            retVal += "]";
+        }
+        
+        return retVal;
+    }
 }

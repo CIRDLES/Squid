@@ -45,7 +45,7 @@ public class SqBiweight extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 3;
-        labelsForValues = new String[][]{{"Biwt Mean", "Biwt Sigma", "\u00B195%conf"}};
+        labelsForOutputValues = new String[][]{{"Biwt Mean", "Biwt Sigma", "\u00B195%conf"}};
     }
 
     /**

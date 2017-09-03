@@ -36,6 +36,7 @@ public class Multiply extends Operation {
         precedence = 3;
         rowCount = 1;
         colCount = 1;
+        labelsForOutputValues = new String[][]{{"Product"}};
     }
 
     /**

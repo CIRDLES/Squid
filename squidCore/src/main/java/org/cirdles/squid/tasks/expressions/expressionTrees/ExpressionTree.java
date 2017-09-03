@@ -170,6 +170,8 @@ public class ExpressionTree
                 }
             }
         }
+        
+        audit += "\n  returns " + getOperation().printOutputValues();
 
         return audit;
     }
