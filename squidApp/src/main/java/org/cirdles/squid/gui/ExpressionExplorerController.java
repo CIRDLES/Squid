@@ -52,7 +52,7 @@ import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
  *
  * @author James F. Bowring
  */
-public class ExpressionManagerController implements Initializable {
+public class ExpressionExplorerController implements Initializable {
 
     private WebEngine webEngine;
 

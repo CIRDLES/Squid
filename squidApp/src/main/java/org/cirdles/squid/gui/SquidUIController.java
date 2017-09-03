@@ -478,15 +478,15 @@ public class SquidUIController implements Initializable {
     private void launchExpressionManager() {
 
         try {
-            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
-            expressionManagerUI.setId("ExpressionManager");
+            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionExplorer.fxml"));
+            expressionManagerUI.setId("ExpressionExplorer");
             VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
             HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
             mainPane.getChildren().add(expressionManagerUI);
             expressionManagerUI.setVisible(false);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("ExpressionManager >>>>   " + iOException.getMessage());
+            System.out.println("ExpressionExplorer >>>>   " + iOException.getMessage());
         }
     }
 
