@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -32,15 +33,15 @@ public class CustomExpression_LnPbR_U {
      */
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("LnPbR_U");
 
-    static {
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
-
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, ExpressionTree.squidProject.buildRatioExpression("206/238"));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.ln());
-
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
-    }
+//    static {
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
+//
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, Task.buildRatioExpression("206/238"));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.ln());
+//
+//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
+//    }
 }

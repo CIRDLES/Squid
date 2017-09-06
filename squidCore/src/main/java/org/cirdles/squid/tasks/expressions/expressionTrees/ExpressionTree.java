@@ -48,7 +48,7 @@ public class ExpressionTree
         ExpressionTreeWithRatiosInterface,
         XMLSerializerInterface {
 
-    public static SquidProject squidProject;
+    public static TaskInterface TASK;
     /**
      *
      */
@@ -162,15 +162,15 @@ public class ExpressionTree
         int suppliedChildren = getCountOfChildren();
 
         String audit = "Op " + getOperation().getName() + " requires/provides: " + requiredChildren + " / " + suppliedChildren + " arguments.";
-        
-        for (ExpressionTreeInterface child: getChildrenET()){
-            if (child instanceof ConstantNode){
-                if (((ConstantNode) child).isMissingExpression()){
-                    audit += "\n    Expression '" + (String)((ConstantNode) child).getValue() + "' is missing.";
+
+        for (ExpressionTreeInterface child : getChildrenET()) {
+            if (child instanceof ConstantNode) {
+                if (((ConstantNode) child).isMissingExpression()) {
+                    audit += "\n    Expression '" + (String) ((ConstantNode) child).getValue() + "' is missing.";
                 }
             }
         }
-        
+
         audit += "\n  returns " + getOperation().printOutputValues();
 
         return audit;

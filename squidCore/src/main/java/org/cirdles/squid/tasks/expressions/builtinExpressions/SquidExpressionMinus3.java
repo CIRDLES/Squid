@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -33,28 +34,28 @@ public class SquidExpressionMinus3 {
      */
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("232/238");
 
-    static {
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("248/254");
-
-        ExpressionTreeInterface term1 = new ExpressionTree(
-                "0.03446 * 254/238",
-                new ConstantNode("0.03446", 0.03446),
-                ExpressionTree.squidProject.buildRatioExpression("254/238"),
-                Operation.multiply());
-        ExpressionTreeInterface term2 = new ExpressionTree(
-                "0.03446 * 254/238 + 0.868",
-                term1,
-                new ConstantNode("0.868", 0.868),
-                Operation.add());
-
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, term2);
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(ExpressionTree.squidProject.buildRatioExpression("248/254"));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.multiply());
-
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
-    }
+//    static {
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("248/254");
+//
+//        ExpressionTreeInterface term1 = new ExpressionTree(
+//                "0.03446 * 254/238",
+//                new ConstantNode("0.03446", 0.03446),
+//                Task.buildRatioExpression("254/238"),
+//                Operation.multiply());
+//        ExpressionTreeInterface term2 = new ExpressionTree(
+//                "0.03446 * 254/238 + 0.868",
+//                term1,
+//                new ConstantNode("0.868", 0.868),
+//                Operation.add());
+//
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, term2);
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(Task.buildRatioExpression("248/254"));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.multiply());
+//
+//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
+//    }
 }

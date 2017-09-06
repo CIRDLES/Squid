@@ -28,6 +28,7 @@ import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
@@ -53,36 +54,33 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
  */
 public class ExpressionParser {
 
-    private SquidProject squidProject;
-    private Map<String, ExpressionTreeInterface> NAMED_EXPRESSIONS_MAP;
+    private Map<String, ExpressionTreeInterface> namedExpressionsMap;
 
     public ExpressionParser() {
-        squidProject = null;
-        NAMED_EXPRESSIONS_MAP = new HashMap<>();
+        this.namedExpressionsMap = new HashMap<>();
     }
 
-    public ExpressionParser(SquidProject squidProject) {
+    public ExpressionParser(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
 
-        this.squidProject = squidProject;
+        this.namedExpressionsMap = namedExpressionsMap;
 
-        NAMED_EXPRESSIONS_MAP = new HashMap<>();
-
-        NAMED_EXPRESSIONS_MAP.put("[\"Ln254/238\"]", CustomExpression_LnUO_U.EXPRESSION);
-        NAMED_EXPRESSIONS_MAP.put("[\"LnUO/U\"]", CustomExpression_LnUO_U.EXPRESSION);
-
-        NAMED_EXPRESSIONS_MAP.put("[\"Ln206/238\"]", CustomExpression_LnPbR_U.EXPRESSION);
-        NAMED_EXPRESSIONS_MAP.put("[\"LnPbR_U\"]", CustomExpression_LnPbR_U.EXPRESSION);
-
-        NAMED_EXPRESSIONS_MAP.put("[\"206/238 Calib Const\"]", SquidExpressionMinus1.EXPRESSION);
-        NAMED_EXPRESSIONS_MAP.put("[\"232/238\"]", SquidExpressionMinus3.EXPRESSION);
-        NAMED_EXPRESSIONS_MAP.put("[\"U Conc Const\"]", SquidExpressionMinus4.EXPRESSION);
-
-        Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
-        while (ratioNameIterator.hasNext()) {
-            String ratioName = ratioNameIterator.next();
-            NAMED_EXPRESSIONS_MAP.put("[\"" + ratioName + "\"]", squidProject.buildRatioExpression(ratioName));
-        }
-
+//        NAMED_EXPRESSIONS_MAP = new HashMap<>();
+//
+//        NAMED_EXPRESSIONS_MAP.put("[\"Ln254/238\"]", CustomExpression_LnUO_U.EXPRESSION);
+//        NAMED_EXPRESSIONS_MAP.put("[\"LnUO/U\"]", CustomExpression_LnUO_U.EXPRESSION);
+//
+//        NAMED_EXPRESSIONS_MAP.put("[\"Ln206/238\"]", CustomExpression_LnPbR_U.EXPRESSION);
+//        NAMED_EXPRESSIONS_MAP.put("[\"LnPbR_U\"]", CustomExpression_LnPbR_U.EXPRESSION);
+//
+//        NAMED_EXPRESSIONS_MAP.put("[\"206/238 Calib Const\"]", SquidExpressionMinus1.EXPRESSION);
+//        NAMED_EXPRESSIONS_MAP.put("[\"232/238\"]", SquidExpressionMinus3.EXPRESSION);
+//        NAMED_EXPRESSIONS_MAP.put("[\"U Conc Const\"]", SquidExpressionMinus4.EXPRESSION);
+//
+//        Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
+//        while (ratioNameIterator.hasNext()) {
+//            String ratioName = ratioNameIterator.next();
+//            NAMED_EXPRESSIONS_MAP.put("[\"" + ratioName + "\"]", squidProject.getTask().buildRatioExpression(ratioName));
+//        }
     }
 
     /**
@@ -239,7 +237,7 @@ public class ExpressionParser {
                 break;
 
             case NAMED_EXPRESSION:
-                retExpTree = NAMED_EXPRESSIONS_MAP.get(token);
+                retExpTree = namedExpressionsMap.get(token);
                 if (retExpTree == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
                 }

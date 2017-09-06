@@ -30,10 +30,10 @@ public class ILC_Zircon_10Pk_expFloat_Task extends Task {
      *
      * @param squidProject
      */
-    public ILC_Zircon_10Pk_expFloat_Task(SquidProject squidProject) {
-        super("ILC Zircon 10Pk exp=Float", squidProject);
+    public ILC_Zircon_10Pk_expFloat_Task() {
+        super("ILC Zircon 10Pk exp=Float");
         
-        ExpressionTree.squidProject = squidProject;
+        ExpressionTree.TASK = this;
         
         taskExpressionsOrdered.add(CustomExpression_Net204cts_sec.EXPRESSION);
 

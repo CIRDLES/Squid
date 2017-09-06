@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -33,23 +34,23 @@ public class SquidExpressionMinus4 {
      */
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("U Conc Const");
 
-    static {
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("238/196");
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
-
-        ExpressionTreeInterface r254_238wPow = new ExpressionTree(
-                "254/238^0.66",
-                ExpressionTree.squidProject.buildRatioExpression("254/238"),
-                new ConstantNode("0.66", 0.66),
-                Operation.pow());
-
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, ExpressionTree.squidProject.buildRatioExpression("238/196"));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(r254_238wPow);
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.divide());
-
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
-    }
+//    static {
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("238/196");
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
+//
+//        ExpressionTreeInterface r254_238wPow = new ExpressionTree(
+//                "254/238^0.66",
+//                Task.buildRatioExpression("254/238"),
+//                new ConstantNode("0.66", 0.66),
+//                Operation.pow());
+//
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, Task.buildRatioExpression("238/196"));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(r254_238wPow);
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.divide());
+//
+//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
+//    }
 }

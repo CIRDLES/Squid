@@ -49,8 +49,8 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid Task" />
                   <MenuItem fx:id="selectSquid3TaskFromLibraryMenuItem" mnemonicParsing="false" onAction="#selectSquid3TaskFromLibraryMenuItemAction" text="Select Squid Task from Library" />
-                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Import Task from Squid 3 XML File" />
-                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Import Task from Squid 2.5 Excel File" />
+                  <MenuItem fx:id="importSquid3TaskMenuItem" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="New Squid Task from Squid 3 XML File" />
+                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="New Squid Task from Squid 2.5 Excel File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="exportSquid3TaskMenuItem" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Export Squid3 Task" />
               </items>

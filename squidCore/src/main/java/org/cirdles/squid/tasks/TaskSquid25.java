@@ -86,43 +86,43 @@ public class TaskSquid25 implements Serializable {
         return taskSquid25;
     }
 
-    public String printSummaryData() {
-        StringBuilder summary = new StringBuilder();
-        summary.append("Squid2.5 Task Name: ");
-        summary.append("\t");
-        summary.append(taskName);
-        summary.append("\n\n");
-
-        summary.append("Task File Name: ");
-        summary.append("\t");
-        summary.append(squidTaskFileName);
-        summary.append("\n\n");
-
-        summary.append("Squid Version: ");
-        summary.append("\t");
-        summary.append(squidVersion);
-        summary.append("\n\n");
-
-        summary.append("Task Type: ");
-        summary.append("\t\t");
-        summary.append(taskType);
-        summary.append("\n\n");
-
-        summary.append("Task Description: ");
-        summary.append("\t");
-        summary.append(taskDescription.replaceAll(",", "\n\t\t\t\t"));
-        summary.append("\n\n");
-
-        summary.append("Task Ratios: ");
-        summary.append("\t\t");
-        for (int i = 0; i < ratioNames.length; i++) {
-            summary.append(ratioNames[i]);
-            summary.append((i < (ratioNames.length - 1)) ? ", " : "");
-        }
-        summary.append("\n\n");
-
-        return summary.toString();
-    }
+//    public String printSummaryData() {
+//        StringBuilder summary = new StringBuilder();
+//        summary.append("Squid2.5 Task Name: ");
+//        summary.append("\t");
+//        summary.append(taskName);
+//        summary.append("\n\n");
+//
+//        summary.append("Task File Name: ");
+//        summary.append("\t");
+//        summary.append(squidTaskFileName);
+//        summary.append("\n\n");
+//
+//        summary.append("Squid Version: ");
+//        summary.append("\t");
+//        summary.append(squidVersion);
+//        summary.append("\n\n");
+//
+//        summary.append("Task Type: ");
+//        summary.append("\t\t");
+//        summary.append(taskType);
+//        summary.append("\n\n");
+//
+//        summary.append("Task Description: ");
+//        summary.append("\t");
+//        summary.append(taskDescription.replaceAll(",", "\n\t\t\t\t"));
+//        summary.append("\n\n");
+//
+//        summary.append("Task Ratios: ");
+//        summary.append("\t\t");
+//        for (int i = 0; i < ratioNames.length; i++) {
+//            summary.append(ratioNames[i]);
+//            summary.append((i < (ratioNames.length - 1)) ? ", " : "");
+//        }
+//        summary.append("\n\n");
+//
+//        return summary.toString();
+//    }
 
     /**
      * @return the squidVersion

@@ -113,6 +113,8 @@ public class SquidUIController implements Initializable {
     private MenuItem exportSquid3TaskMenuItem;
     @FXML
     private MenuItem selectSquid3TaskFromLibraryMenuItem;
+    @FXML
+    private MenuItem importSquid3TaskMenuItem;
 
     /**
      * Initializes the controller class.
@@ -152,7 +154,8 @@ public class SquidUIController implements Initializable {
         //Task menu
         newSquid3TaskMenuItem.setDisable(true);
         selectSquid3TaskFromLibraryMenuItem.setDisable(true);
-        importSquid25TaskMenuItem.setDisable(true);
+        importSquid25TaskMenuItem.setDisable(false);
+        importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
 
         CalamariFileUtilities.initExamplePrawnFiles();
@@ -544,7 +547,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void auditMassesMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(massesAuditUI);
-        squidProject.createMapOfIndexToMassStationDetails();
+        squidProject.getTask().createMapOfIndexToMassStationDetails();
         launchMassesAudit();
         showUI(massesAuditUI);
     }
@@ -552,7 +555,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void specifyIsotopesMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(isotopesManagerUI);
-        squidProject.createMapOfIndexToMassStationDetails();
+        squidProject.getTask().createMapOfIndexToMassStationDetails();
         launchIsotopesManager();
         showUI(isotopesManagerUI);
     }
@@ -598,8 +601,8 @@ public class SquidUIController implements Initializable {
         try {
             File squidTaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
             if (squidTaskFile != null) {
-                squidProject.setupTaskSquid25File(squidTaskFile);
-                SquidUIController.squidProject.extractTask25Ratios();
+                squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
+                squidProject.getTask().extractRatios();
                 launchTaskManager();
             }
         } catch (IOException | JAXBException | SAXException iOException) {
@@ -612,6 +615,10 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void selectSquid3TaskFromLibraryMenuItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void importSquid3TaskMenuItemAction(ActionEvent event) {
     }
 
 }

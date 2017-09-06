@@ -36,16 +36,6 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Expo;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnPbR_U;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204BiWt;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_sec;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_TestIf;
-import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
 
 /**
  * FXML Controller class
@@ -72,27 +62,28 @@ public class ExpressionExplorerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ExpressionTree.squidProject = SquidUIController.squidProject;
+        ExpressionTree.TASK = SquidUIController.squidProject.getTask();
 
         // Temp hack June 2017 to bring live ratios into expressions
-        SquidUIController.squidProject.buildSquidRatiossModelListFromMassStationDetails();
+        SquidUIController.squidProject.getTask().buildSquidRatiosModelListFromMassStationDetails();
 
         // initialize expressions tab
         ObservableList<ExpressionTreeInterface> items = FXCollections.observableArrayList(
-                CustomExpression_LnPbR_U.EXPRESSION,
-                CustomExpression_LnUO_U.EXPRESSION,
-                CustomExpression_Net204cts_sec.EXPRESSION,
-                CustomExpression_Net204BiWt.EXPRESSION,
-                SquidExpressionMinus1.EXPRESSION,
-                SquidExpressionMinus3.EXPRESSION,
-                SquidExpressionMinus4.EXPRESSION,
-                CustomExpression_Expo.EXPRESSION,
-                CustomExpression_TestIf.EXPRESSION);
+                SquidUIController.squidProject.getTask().getTaskExpressionsOrdered());
+//                CustomExpression_LnPbR_U.EXPRESSION,
+//                CustomExpression_LnUO_U.EXPRESSION,
+//                CustomExpression_Net204cts_sec.EXPRESSION,
+//                CustomExpression_Net204BiWt.EXPRESSION,
+//                SquidExpressionMinus1.EXPRESSION,
+//                SquidExpressionMinus3.EXPRESSION,
+//                SquidExpressionMinus4.EXPRESSION,
+//                CustomExpression_Expo.EXPRESSION,
+//                CustomExpression_TestIf.EXPRESSION);
 
         Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
         while (ratioNameIterator.hasNext()) {
             String ratioName = ratioNameIterator.next();
-            items.add(SquidUIController.squidProject.buildRatioExpression(ratioName));
+            items.add(SquidUIController.squidProject.getTask().buildRatioExpression(ratioName));
         }
 
         expressionListView.setItems(items);
@@ -150,7 +141,7 @@ public class ExpressionExplorerController implements Initializable {
     @FXML
     private void handleParseButtonAction(ActionEvent event) {
 
-        Expression exp = new Expression("NoName", expressionText.getText());
+        Expression exp = SquidUIController.squidProject.getTask().generateExpression("NoName", expressionText.getText());
        
         expressionAuditLabel.setText(exp.produceExpressionTreeAudit());
         webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(exp.getExpressionTree()).toString());

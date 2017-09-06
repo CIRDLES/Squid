@@ -16,31 +16,29 @@
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 
 /**
  *
  * @author James F. Bowring
  */
-public class CustomExpression_LnUO_U {
+public class CustomExpression_LnUO_U extends ExpressionTree {
 
     /**
      * Squid Excel format is ln(["254/238"])
      */
-    public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("LnUO/U");
 
-    static {
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
+    public CustomExpression_LnUO_U() {
+        super("LnUO/U");
 
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, ExpressionTree.squidProject.buildRatioExpression("254/238"));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.ln());
+        ratiosOfInterest.add("254/238");
 
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
+        addChild(0, TASK.buildRatioExpression("254/238"));
+        operation = Function.ln();
+
+        rootExpressionTree = true;
+        squidSwitchSCSummaryCalculation = false;
+        squidSwitchSTReferenceMaterialCalculation = true;
+        squidSwitchSAUnknownCalculation = true;
     }
 }

@@ -28,15 +28,6 @@ import java.util.TreeSet;
 public class SquidSessionModel implements Serializable {
 
     private static final long serialVersionUID = -2969849117024998190L;
-//    
-//    private void readObject(
-//            ObjectInputStream stream)
-//            throws IOException, ClassNotFoundException {
-//        stream.defaultReadObject();
-//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SquidSessionModel.class.getCanonicalName()));
-//        long theSUID = myObject.getSerialVersionUID();
-//        System.out.println("Customized De-serialization of SquidSessionModel " + theSUID);
-//    }
 
     private List<SquidSpeciesModel> squidSpeciesModelList;
     private List<SquidRatiosModel> squidRatiosModelList;

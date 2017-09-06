@@ -80,7 +80,7 @@ public class MassesAuditController implements Initializable {
 //                canvas.preparePanel();
 //                canvas.paint(gc1);
         int massCounter = 0;
-        for (Map.Entry<Integer, MassStationDetail> entry : squidProject.getMapOfIndexToMassStationDetails().entrySet()) {
+        for (Map.Entry<Integer, MassStationDetail> entry : squidProject.getTask().getMapOfIndexToMassStationDetails().entrySet()) {
             if (entry.getValue().autoCentered()) {
                 AbstractDataView canvas
                         = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),

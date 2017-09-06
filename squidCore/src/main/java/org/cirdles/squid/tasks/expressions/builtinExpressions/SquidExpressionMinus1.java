@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -33,20 +34,20 @@ public class SquidExpressionMinus1 {
      */
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("206/238 Calib Const");
 
-    static {
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
-
-        ExpressionTreeInterface r254_238wSquared = new ExpressionTree("254/238^2", ExpressionTree.squidProject.buildRatioExpression("254/238"), new ConstantNode("2", 2.0), Operation.pow());
-
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, ExpressionTree.squidProject.buildRatioExpression("206/238"));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(r254_238wSquared);
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.divide());
-
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
-    }
+//    static {
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
+//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
+//
+//        ExpressionTreeInterface r254_238wSquared = new ExpressionTree("254/238^2", Task.buildRatioExpression("254/238"), new ConstantNode("2", 2.0), Operation.pow());
+//
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, Task.buildRatioExpression("206/238"));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(r254_238wSquared);
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.divide());
+//
+//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
+//    }
 
 }

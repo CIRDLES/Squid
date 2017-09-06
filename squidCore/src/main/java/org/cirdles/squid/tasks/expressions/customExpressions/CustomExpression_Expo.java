@@ -33,18 +33,18 @@ public class CustomExpression_Expo {
      */
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("Expo");
 
-    static {
-        ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(0, new VariableNodeForPerSpotTaskExpressions(CustomExpression_LnUO_U.EXPRESSION.getName()));
-        ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(new VariableNodeForPerSpotTaskExpressions(CustomExpression_LnPbR_U.EXPRESSION.getName()));
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("false", 0));
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("false", 0));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.robReg());
-
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
-    }
+//    static {
+//        ((ExpressionTreeBuilderInterface) EXPRESSION)
+//                .addChild(0, new VariableNodeForPerSpotTaskExpressions(CustomExpression_LnUO_U.EXPRESSION.getName()));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION)
+//                .addChild(new VariableNodeForPerSpotTaskExpressions(CustomExpression_LnPbR_U.EXPRESSION.getName()));
+////        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("false", 0));
+////        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("false", 0));
+//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.robReg());
+//
+//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
+//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
+//    }
 }

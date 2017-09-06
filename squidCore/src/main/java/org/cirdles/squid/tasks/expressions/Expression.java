@@ -43,7 +43,7 @@ public class Expression {
         this.argumentAudit = new ArrayList<>();
     }
 
-    public Expression(String name, String originalStringExpression) {
+    public Expression(String name, String originalStringExpression, Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         this.name = name;
         this.originalExpressionString = originalStringExpression;
         this.expressionTree = null;
@@ -52,12 +52,12 @@ public class Expression {
         this.missingExpressionsByName = new ArrayList<>();
         this.argumentAudit = new ArrayList<>();
 
-        parseOriginalExpressionStringIntoExpression();
+        parseOriginalExpressionStringIntoExpression(namedExpressionsMap);
 
     }
 
-    private void parseOriginalExpressionStringIntoExpression() {
-        ExpressionParser expressionParser = new ExpressionParser();
+    private void parseOriginalExpressionStringIntoExpression(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
+        ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
     }
 
@@ -172,9 +172,9 @@ public class Expression {
         this.missingExpressionsByName = missingExpressionsByName;
     }
 
-    public static void main(String[] args) {
-        Expression test = new Expression("TEST", "ln(ln([\"expression\"]))");
-        System.out.println(test.produceExpressionTreeAudit());
-
-    }
+//    public static void main(String[] args) {
+//        Expression test = new Expression("TEST", "ln(ln([\"expression\"]))");
+//        System.out.println(test.produceExpressionTreeAudit());
+//
+//    }
 }
