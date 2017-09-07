@@ -136,18 +136,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     }
 
-    public void testRunOfSessionModel() {
-//        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, squidSessionModel);
-//
-//        TaskInterface squidBodorkosTask1 = new SquidBodorkosTask1(this);
-//        squidBodorkosTask1.evaluateTaskExpressions(shrimpFractions);
-//
-//        try {
-//            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
-//        } catch (IOException iOException) {
-//        }
-    }
-
     @Override
     public String printSummaryData() {
         StringBuilder summary = new StringBuilder();

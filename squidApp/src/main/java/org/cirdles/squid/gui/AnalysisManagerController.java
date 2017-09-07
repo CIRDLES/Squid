@@ -75,7 +75,7 @@ public class AnalysisManagerController implements Initializable {
 
         if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
             squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
-            ((Task)squidProject.getTask()).testRunOfSessionModel();
+            squidProject.testRunOfSessionModel();
         }
 //        
 //        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {

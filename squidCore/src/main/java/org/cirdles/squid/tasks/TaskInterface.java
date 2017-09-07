@@ -23,6 +23,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -34,7 +35,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 public interface TaskInterface {
 
     public ExpressionTreeInterface buildRatioExpression(String ratioName);
-    
+
     public ExpressionTreeInterface findNamedExpression(String ratioName);
 
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText);
@@ -222,5 +223,10 @@ public interface TaskInterface {
      * @return the NAMED_EXPRESSIONS_MAP
      */
     public Map<String, ExpressionTreeInterface> getNamedExpressionsMap();
+
+    /**
+     * @return the squidSessionModel
+     */
+    public SquidSessionModel getSquidSessionModel();
 
 }

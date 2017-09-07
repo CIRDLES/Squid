@@ -27,11 +27,10 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.TaskSquid25;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.storedTasks.Squid3ExampleTask1;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
@@ -70,6 +69,20 @@ public final class SquidProject implements Serializable {
         this.sessionDurationHours = 0.0;
 
         this.task = new Task();
+    }
+
+    public void testRunOfSessionModel() {
+        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, task.getSquidSessionModel());
+
+        TaskInterface squid3ExampleTask1 = new Squid3ExampleTask1();
+        squid3ExampleTask1.setPrawnFile(prawnFile);
+        squid3ExampleTask1.setupSquidSessionSpecs();
+        squid3ExampleTask1.evaluateTaskExpressions(shrimpFractions);
+
+        try {
+            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
+        } catch (IOException iOException) {
+        }
     }
 
     public void initializeNewProjectTask(TaskInterface task) {
