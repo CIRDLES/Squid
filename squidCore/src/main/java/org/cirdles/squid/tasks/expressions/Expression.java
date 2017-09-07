@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;

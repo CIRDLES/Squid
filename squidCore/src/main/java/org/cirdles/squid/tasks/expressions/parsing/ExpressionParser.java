@@ -26,16 +26,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
-import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnPbR_U;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -220,7 +212,7 @@ public class ExpressionParser {
                 break;
 
             case NAMED_EXPRESSION:
-                retExpTree = namedExpressionsMap.get(token);
+                retExpTree = namedExpressionsMap.get(token.replace("[\"", "").replace("\"]", ""));
                 if (retExpTree == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
                 }

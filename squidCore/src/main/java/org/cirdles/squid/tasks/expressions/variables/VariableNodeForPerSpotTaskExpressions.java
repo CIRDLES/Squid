@@ -29,7 +29,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  *
  * @author James F. Bowring
  */
-public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummary implements ExpressionTreeInterface, XMLSerializerInterface {
+public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummary {//implements ExpressionTreeInterface, XMLSerializerInterface {
 
     private static String lookupMethodNameForShrimpFraction = "getTaskExpressionsEvaluationsPerSpotByField";
 

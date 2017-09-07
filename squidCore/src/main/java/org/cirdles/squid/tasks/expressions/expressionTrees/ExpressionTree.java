@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,15 +48,7 @@ public class ExpressionTree
         Serializable,
         XMLSerializerInterface {
 
-//    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(ExpressionTree.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of ExpressionTree " + theSUID);
-    }
+    private static final long serialVersionUID = 69881766695649050L;
 
     /**
      *

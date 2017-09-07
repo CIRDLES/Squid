@@ -16,6 +16,7 @@
 package org.cirdles.squid.tasks.expressions.isotopes;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -30,7 +31,9 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializerInterface {
+public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+
+    private static final long serialVersionUID = 3592579554999155473L;
 
     private SquidSpeciesModel squidSpeciesModel;
     private String methodNameForShrimpFraction;
@@ -156,7 +159,6 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializer
     public void setName(String name) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 
     /**
      * @param squidSpeciesModel
@@ -242,7 +244,6 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, XMLSerializer
 
         ShrimpSpeciesNode deserialize = new ShrimpSpeciesNode();
         deserialize = (ShrimpSpeciesNode) ((XMLSerializerInterface) deserialize).readXMLObject("ShrimpSpeciesNode.xml", false);
-        
 
         ((XMLSerializerInterface) deserialize).serializeXMLObject(deserialize, "ShrimpSpeciesNodeBBB.xml");
     }

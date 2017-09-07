@@ -136,7 +136,7 @@ public class ExpressionExplorerController implements Initializable {
     @FXML
     private void handleParseButtonAction(ActionEvent event) {
 
-        Expression exp = SquidUIController.squidProject.getTask().generateExpressionFromRawExcelStyleText("NoName", expressionText.getText());
+        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText("NoName", expressionText.getText());
 
         expressionAuditLabel.setText(exp.produceExpressionTreeAudit());
         webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(exp.getExpressionTree()).toString());

@@ -16,6 +16,7 @@
 package org.cirdles.squid.tasks.expressions.constants;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -26,7 +27,9 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class ConstantNode implements ExpressionTreeInterface, XMLSerializerInterface {
+public class ConstantNode implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+
+    private static final long serialVersionUID = -2914393295564269277L;
 
     private String name;
     private Object value;
@@ -145,7 +148,7 @@ public class ConstantNode implements ExpressionTreeInterface, XMLSerializerInter
      */
     @Override
     public boolean isTypeFunctionOrOperation() {
-       return false;
+        return false;
     }
 
     /**
@@ -156,8 +159,8 @@ public class ConstantNode implements ExpressionTreeInterface, XMLSerializerInter
     public int argumentCount() {
         return 0;
     }
-    
-    public boolean isMissingExpression(){
+
+    public boolean isMissingExpression() {
         return (name.compareTo(MISSING_EXPRESSION_STRING) == 0);
     }
 }

@@ -29,7 +29,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class VariableNodeForIsotopicRatios extends VariableNodeForSummary implements ExpressionTreeInterface, XMLSerializerInterface {
+public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {//implements ExpressionTreeInterface, XMLSerializerInterface {
 
     private static String lookupMethodNameForShrimpFraction = "getIsotopicRatioValuesByStringName";
 

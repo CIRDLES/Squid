@@ -16,6 +16,10 @@
 package org.cirdles.squid.tasks.expressions.variables;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.exceptions.SquidException;
@@ -30,8 +34,17 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  *
  * @author James F. Bowring
  */
-public class VariableNodeForSummary implements ExpressionTreeInterface, XMLSerializerInterface {
+public class VariableNodeForSummary implements ExpressionTreeInterface,  Serializable, XMLSerializerInterface {
 
+           //    private static final long serialVersionUID = 69881766695649050L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(VariableNodeForSummary.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of VariableNodeForSummary " + theSUID);
+    }
     protected String name;
     protected ExpressionTreeInterface parentET;
 
