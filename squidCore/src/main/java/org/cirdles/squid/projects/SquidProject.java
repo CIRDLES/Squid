@@ -30,6 +30,7 @@ import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.TaskSquid25;
+import org.cirdles.squid.tasks.storedTasks.Squid3ExampleTask1;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -70,14 +71,31 @@ public final class SquidProject implements Serializable {
         this.task = new Task();
     }
 
+    public void initializeNewProjectTask(TaskInterface task) {
+        this.task = task;
+        initializeExistingProjectTask();
+    }
+
+    public void initializeExistingProjectTask() {
+        if (task != null) {
+            task.setPrawnFile(prawnFile);
+            task.setupSquidSessionSpecs();
+        }
+    }
+
     public void createTaskFromImportedSquid25Task(File squidTaskFile) {
 
+//     TODO:   move this work to task 25
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
-        task = new Task(taskSquid25.getTaskName(), prawnFile);
-        task.setType(taskSquid25.getTaskType());
-        task.setDescription(taskSquid25.getTaskDescription());
-        task.setRatioNames(taskSquid25.getRatioNames());
+        this.task = new Task(taskSquid25.getTaskName(), prawnFile);
+        this.task.setType(taskSquid25.getTaskType());
+        this.task.setDescription(taskSquid25.getTaskDescription());
+        this.task.setRatioNames(taskSquid25.getRatioNames());
+        
+        this.task.populateTableOfSelectedRatiosFromRatiosList();
+
+        this.task.setupSquidSessionSpecs();
 
     }
 
@@ -407,7 +425,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the task
      */
-    public TaskInterface getTask() {       
+    public TaskInterface getTask() {
         return task;
     }
 

@@ -40,10 +40,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import org.cirdles.squid.tasks.Task;
 
 /**
  * FXML Controller class
@@ -76,7 +76,7 @@ public class IsotopesManagerController implements Initializable {
 
     private void setupIsotopeTable() {
         ObservableList<MassStationDetail> massStationsData
-                = FXCollections.observableArrayList(SquidUIController.squidProject.getTask().makeListOfMassStationDetails());
+                = FXCollections.observableArrayList(squidProject.getTask().makeListOfMassStationDetails());
 
         massLabelColumn.setCellValueFactory(new PropertyValueFactory<>("massStationLabel"));
         elementLabelColumn.setCellValueFactory(new PropertyValueFactory<>("elementLabel"));
@@ -99,7 +99,7 @@ public class IsotopesManagerController implements Initializable {
                     ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
                             .setIsotopeLabel(editIsotopeName);
                     SquidSpeciesModel ssm
-                            = SquidUIController.squidProject.getTask().getSquidSpeciesModelList()
+                            = squidProject.getTask().getSquidSpeciesModelList()
                                     .get(editEvent.getTablePosition().getRow());
                     ssm.setIsotopeName(editIsotopeName);
                 } else {

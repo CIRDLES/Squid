@@ -30,6 +30,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.MassStationAuditViewForShrimp;
 import org.cirdles.squid.shrimp.MassStationDetail;
+import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 
 /**
  * FXML Controller class
@@ -66,21 +67,14 @@ public class MassesAuditController implements Initializable {
         
         int heightOfMassPlot = 150;
 
-        // original code for plotting mass variations
-        // note must change to only show those with auto-centering on with count_time_sec > 0 in the run table at the mas station
+        // plotting mass variations
+        // only show those with auto-centering on with count_time_sec > 0 in the run table at the mas station
         int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 350;
         scrolledAnchorPane.setPrefWidth(widthOfView + 150);
 
-//        scrolledAnchorPane.setPrefHeight(3700);// needs to be based on number of mass stations        
-//        AbstractDataView canvas = new SummaryRawDataViewForShrimp(
-//                new Rectangle(25, 25, widthOfView, 3500), 
-//                squidProject.getMapOfIndexToMassStationDetails());
-//        scrolledAnchorPane.getChildren().add(canvas);
-//                GraphicsContext gc1 = canvas.getGraphicsContext2D();
-//                canvas.preparePanel();
-//                canvas.paint(gc1);
         int massCounter = 0;
-        for (Map.Entry<Integer, MassStationDetail> entry : squidProject.getTask().getMapOfIndexToMassStationDetails().entrySet()) {
+        Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(squidProject.getPrawnFileRuns());
+        for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
             if (entry.getValue().autoCentered()) {
                 AbstractDataView canvas
                         = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
@@ -98,25 +92,8 @@ public class MassesAuditController implements Initializable {
                 massCounter++;
 
             }
-//            else {
-//                List<Double> empty = new ArrayList<>();
-//                empty.add(0.0);
-//                AbstractDataView canvas
-//                        = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * 150) + 25, widthOfView, 150),
-//                                entry.getValue().getMassStationLabel() + "\n > " + entry.getValue().getIsotopeLabel(),
-//                                empty,
-//                                empty);
-//                scrolledAnchorPane.getChildren().add(canvas);
-//                GraphicsContext gc1 = canvas.getGraphicsContext2D();
-//                canvas.preparePanel();
-//                canvas.paint(gc1);
-//            }
-
-//            massCounter++;
         }
-
         scrolledAnchorPane.setPrefHeight((massCounter * heightOfMassPlot) + 50);
-
     }
 
 }

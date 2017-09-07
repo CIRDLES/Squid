@@ -35,6 +35,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 
@@ -141,7 +142,7 @@ public class RatiosManagerController implements Initializable {
 
     @FXML
     private void useTaskRatiosButtonAction(ActionEvent event) {
-        SquidUIController.squidProject.getTask().extractRatios();
+        SquidUIController.squidProject.getTask().populateTableOfSelectedRatiosFromRatiosList();
         populateRatioGrid();
     }
 
@@ -181,7 +182,8 @@ public class RatiosManagerController implements Initializable {
             selected = !selected;
             ((Button) event.getSource()).setText(selected ? ratioName : "");
 
-            SquidUIController.squidProject.getTask().getTableOfSelectedRatiosByMassStationIndex()[row][col] = selected;
+            //squidProject.getTask().getTableOfSelectedRatiosByMassStationIndex()[row][col] = selected;
+            squidProject.getTask().updateTableOfSelectedRatiosByMassStationIndex(row, col, selected);
 
         }
     }

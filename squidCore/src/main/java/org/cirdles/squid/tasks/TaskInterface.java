@@ -33,9 +33,9 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  */
 public interface TaskInterface {
 
-    ExpressionTreeInterface buildRatioExpression(String ratioName);
+    public ExpressionTreeInterface buildRatioExpression(String ratioName);
 
-    public Expression generateExpression(String name, String originalExpressionText);
+    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText);
 
     void buildSquidRatiosModelListFromMassStationDetails();
 
@@ -53,7 +53,7 @@ public interface TaskInterface {
      */
     void evaluateTaskExpressions(List<ShrimpFractionExpressionInterface> shrimpFractions);
 
-    void extractRatios();
+    void populateTableOfSelectedRatiosFromRatiosList();
 
     /**
      *
@@ -104,7 +104,7 @@ public interface TaskInterface {
     /**
      * @return the ratioNames
      */
-    String[] getRatioNames();
+    List<String> getRatioNames();
 
     /**
      * @return the prawnFile
@@ -194,7 +194,7 @@ public interface TaskInterface {
     /**
      * @param ratioNames the ratioNames to set
      */
-    void setRatioNames(String[] ratioNames);
+    void setRatioNames(List<String> ratioNames);
 
     /**
      * @param taskExpressionsEvaluationsPerSpotSet the
@@ -213,5 +213,7 @@ public interface TaskInterface {
     void setType(String type);
 
     void setupSquidSessionSpecs();
+
+    public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
 
 }

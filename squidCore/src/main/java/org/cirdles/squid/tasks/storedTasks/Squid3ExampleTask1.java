@@ -38,14 +38,14 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class SquidBodorkosTask1 extends Task {
+public class Squid3ExampleTask1 extends Task {
 
     /**
      *
      * @param squidProject
      */
-    public SquidBodorkosTask1() {
-        super("SquidBodorkosTask1");
+    public Squid3ExampleTask1() {
+        super("Squid3ExampleTask1");
 
         ExpressionTree.TASK = this;
 
@@ -90,10 +90,10 @@ public class SquidBodorkosTask1 extends Task {
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Mean7_6.EXPRESSION, "CustomExpression_Mean7_6.xml");
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_RawConcAge.EXPRESSION, "CustomExpression_RawConcAge.xml");
 //        
-//        ((XMLSerializerInterface) this).serializeXMLObject(this, "SquidBodorkosTask1.xml");
+//        ((XMLSerializerInterface) this).serializeXMLObject(this, "Squid3ExampleTask1.xml");
 //
 //        TaskInterface test = new Task();
-//        test = (TaskInterface)((XMLSerializerInterface) test).readXMLObject("SquidBodorkosTask1.xml", false);
+//        test = (TaskInterface)((XMLSerializerInterface) test).readXMLObject("Squid3ExampleTask1.xml", false);
 //        ((XMLSerializerInterface)test).serializeXMLObject(test, "SquidBodorkosTask1XXX.xml");
 //        
         

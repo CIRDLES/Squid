@@ -20,6 +20,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
@@ -32,25 +34,17 @@ public class TaskSquid25 implements Serializable {
 
     private static final long serialVersionUID = -2805382700088270719L;
 
-//    private void readObject(
-//            ObjectInputStream stream)
-//            throws IOException, ClassNotFoundException {
-//        stream.defaultReadObject();
-//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(TaskSquid25.class.getCanonicalName()));
-//        long theSUID = myObject.getSerialVersionUID();
-//        System.out.println("Customized De-serialization of TaskSquid25 " + theSUID);
-//    }
     private String squidVersion;
     private String squidTaskFileName;
     private String taskType;
     private String taskName;
     private String taskDescription;
-    private String[] ratioNames;
+    private List<String> ratioNames;
 
     public static TaskSquid25 importSquidTaskFile(File squidTaskFile) {
 
         TaskSquid25 taskSquid25 = null;
-
+       
         try {
             InputStream inp = new FileInputStream(squidTaskFile);
             HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(inp));
@@ -75,9 +69,9 @@ public class TaskSquid25 implements Serializable {
 
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
                 int countOfRatios = Integer.valueOf(ratioStrings[1]);
-                taskSquid25.ratioNames = new String[countOfRatios];
-                for (int i = 0; i < taskSquid25.ratioNames.length; i++) {
-                    taskSquid25.ratioNames[i] = ratioStrings[i + 2];
+                taskSquid25.ratioNames = new ArrayList<>();
+                for (int i = 0; i < countOfRatios; i++) {
+                    taskSquid25.ratioNames.add(ratioStrings[i + 2]);
                 }
             }
         } catch (IOException iOException) {
@@ -162,7 +156,7 @@ public class TaskSquid25 implements Serializable {
     /**
      * @return the ratioNames
      */
-    public String[] getRatioNames() {
+    public List<String> getRatioNames() {
         return ratioNames;
     }
 

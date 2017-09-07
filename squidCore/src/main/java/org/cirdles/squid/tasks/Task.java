@@ -19,6 +19,7 @@ import com.google.common.primitives.Doubles;
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +32,6 @@ import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
@@ -75,7 +75,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected String labName;
     protected String provenance;
     protected long dateRevised;
-    protected String[] ratioNames;
+    protected List<String> ratioNames;
     // cannot be serialized because of JavaFX private final SimpleStringProperty fields
     protected transient Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
     protected SquidSessionModel squidSessionModel;
@@ -117,7 +117,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.labName = "lab name";
         this.provenance = "provenance";
         this.dateRevised = 0l;
-        this.ratioNames = new String[]{};
+        this.ratioNames = new ArrayList<>();
         this.squidSessionModel = null;
         squidSpeciesModelList = new ArrayList<>();
         squidRatiosModelList = new ArrayList<>();
@@ -168,11 +168,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append(description.replaceAll(",", "\n\t\t\t\t"));
         summary.append("\n\n");
 
+        Collections.sort(ratioNames);
         summary.append("Task Ratios: ");
         summary.append("\t\t");
-        for (int i = 0; i < ratioNames.length; i++) {
-            summary.append(ratioNames[i]);
-            summary.append((i < (ratioNames.length - 1)) ? ", " : "");
+        for (int i = 0; i < ratioNames.size(); i++) {
+            summary.append(ratioNames.get(i));
+            summary.append((i < (ratioNames.size() - 1)) ? ", " : "");
         }
         summary.append("\n\n");
 
@@ -186,50 +187,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public Expression generateExpression(String name, String originalExpressionText) {
+    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText) {
         Expression exp = new Expression(name, originalExpressionText, NAMED_EXPRESSIONS_MAP);
 
         return exp;
     }
 
     @Override
-    public void buildSquidRatiosModelListFromMassStationDetails() {
-        squidRatiosModelList = new ArrayList<>();
-
-        SquidRatiosModel.knownSquidRatiosModels.clear();
-
-        for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
-            for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
-                if ((tableOfSelectedRatiosByMassStationIndex[row][col])
-                        && (!squidSpeciesModelList.get(row).getIsBackground())
-                        && (!squidSpeciesModelList.get(col).getIsBackground())) {
-                    squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(row), squidSpeciesModelList.get(col), 0));
-                }
-            }
-        }
-
-    }
-
-    @Override
     public void setupSquidSessionSpecs() {
         createMapOfIndexToMassStationDetails();
 
-        squidRatiosModelList = new ArrayList<>();
-        try {
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3), 0));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(4), squidSpeciesModelList.get(3), 1));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(5), squidSpeciesModelList.get(3), 2));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(0), 3));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(6), 4));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(8), squidSpeciesModelList.get(6), 5));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(8), 9));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(7), squidSpeciesModelList.get(8), 6));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(9), 7));
-            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(9), squidSpeciesModelList.get(8), 8));
+        buildSquidRatiosModelListFromMassStationDetails();
 
-        } catch (Exception e) {
-        }
+//        squidRatiosModelList = new ArrayList<>();
+//        try {
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3), 0));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(4), squidSpeciesModelList.get(3), 1));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(5), squidSpeciesModelList.get(3), 2));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(0), 3));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(6), 4));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(8), squidSpeciesModelList.get(6), 5));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(8), 9));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(7), squidSpeciesModelList.get(8), 6));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(9), 7));
+//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(9), squidSpeciesModelList.get(8), 8));
+//
+//        } catch (Exception e) {
+//        }
         squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
     }
 
@@ -283,6 +268,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         return retVal;
+    }
+
+    @Override
+    public void buildSquidRatiosModelListFromMassStationDetails() {
+        squidRatiosModelList = new ArrayList<>();
+
+        SquidRatiosModel.knownSquidRatiosModels.clear();
+
+        for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
+            for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
+                if ((tableOfSelectedRatiosByMassStationIndex[row][col])
+                        && (!squidSpeciesModelList.get(row).getIsBackground())
+                        && (!squidSpeciesModelList.get(col).getIsBackground())) {
+                    squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(row), squidSpeciesModelList.get(col), 0));
+                }
+            }
+        }
+
     }
 
     @Override
@@ -844,7 +847,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the ratioNames
      */
     @Override
-    public String[] getRatioNames() {
+    public List<String> getRatioNames() {
         return ratioNames;
     }
 
@@ -852,7 +855,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param ratioNames the ratioNames to set
      */
     @Override
-    public void setRatioNames(String[] ratioNames) {
+    public void setRatioNames(List<String> ratioNames) {
         this.ratioNames = ratioNames;
     }
 
@@ -897,6 +900,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void resetTableOfSelectedRatiosByMassStationIndex() {
         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+        ratioNames.clear();
     }
 
     @Override
@@ -923,31 +927,47 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the mapOfIndexToMassStationDetails
+     * @return the listOfMassStationDetails
      */
     @Override
     public List<MassStationDetail> makeListOfMassStationDetails() {
-        List<MassStationDetail> listOfassStationDetails = new ArrayList<>();
+        List<MassStationDetail> listOfMassStationDetails = new ArrayList<>();
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
-            listOfassStationDetails.add(entry.getValue());
+            listOfMassStationDetails.add(entry.getValue());
         }
-        return listOfassStationDetails;
+        return listOfMassStationDetails;
     }
 
     @Override
-    public void extractRatios() {
+    public void populateTableOfSelectedRatiosFromRatiosList() {
         resetTableOfSelectedRatiosByMassStationIndex();
-        String[] savedRatios = ratioNames;
-        for (int i = 0; i < savedRatios.length; i++) {
-            String[] ratio = savedRatios[i].split("/");
+
+        for (int i = 0; i < ratioNames.size(); i++) {
+            String[] ratio = ratioNames.get(i).split("/");
             if ((lookUpSpeciesByName(ratio[0]) != null)
                     && lookUpSpeciesByName(ratio[1]) != null) {
                 int num = lookUpSpeciesByName(ratio[0]).getMassStationIndex();
                 int den = lookUpSpeciesByName(ratio[1]).getMassStationIndex();
-                getTableOfSelectedRatiosByMassStationIndex()[num][den] = true;
+                tableOfSelectedRatiosByMassStationIndex[num][den] = true;
             }
         }
+    }
 
+    @Override
+    public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected) {
+        tableOfSelectedRatiosByMassStationIndex[row][col] = selected;
+        String num = mapOfIndexToMassStationDetails.get(row).getIsotopeLabel();
+        String den = mapOfIndexToMassStationDetails.get(col).getIsotopeLabel();
+        String ratioName = num + "/" + den;
+        if (ratioNames.contains(ratioName)) {
+            if (!selected) {
+                ratioNames.remove(ratioName);
+            }
+        } else {
+            if (selected) {
+                ratioNames.add(ratioName);
+            }
+        }
     }
 
     /**

@@ -135,7 +135,7 @@ public class SquidUIController implements Initializable {
         managePrawnFileMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
-        manageAnalysisMenu.setDisable(false);
+        manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 
         // Squid project menu items
@@ -202,9 +202,9 @@ public class SquidUIController implements Initializable {
 
             managePrawnFileMenu.setDisable(false);
             manageTasksMenu.setDisable(false);
-            manageRatiosMenu.setDisable(false);
-            manageExpressionsMenu.setDisable(false);
-//            manageAnalysisMenu.setDisable(false);
+            manageRatiosMenu.setDisable(true);
+            manageExpressionsMenu.setDisable(true);
+            manageAnalysisMenu.setDisable(true);
 
             // log prawnFileFolderMRU
             squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
@@ -237,7 +237,7 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
-        manageAnalysisMenu.setDisable(false);
+        manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 
         // logo
@@ -446,6 +446,10 @@ public class SquidUIController implements Initializable {
             HBox.setHgrow(taskManagerUI, Priority.ALWAYS);
             mainPane.getChildren().add(taskManagerUI);
             showUI(taskManagerUI);
+            manageRatiosMenu.setDisable(false);
+            manageExpressionsMenu.setDisable(false);
+            manageAnalysisMenu.setDisable(false);
+
         } catch (IOException | RuntimeException iOException) {
             System.out.println("taskManagerUI >>>>   " + iOException.getMessage());
         }
@@ -602,7 +606,6 @@ public class SquidUIController implements Initializable {
             File squidTaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
             if (squidTaskFile != null) {
                 squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
-                squidProject.getTask().extractRatios();
                 launchTaskManager();
             }
         } catch (IOException | JAXBException | SAXException iOException) {

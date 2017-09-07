@@ -31,6 +31,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -63,9 +64,6 @@ public class ExpressionExplorerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ExpressionTree.TASK = SquidUIController.squidProject.getTask();
-
-        // Temp hack June 2017 to bring live ratios into expressions
-        SquidUIController.squidProject.getTask().buildSquidRatiosModelListFromMassStationDetails();
 
         // initialize expressions tab
         ObservableList<ExpressionTreeInterface> items = FXCollections.observableArrayList(
@@ -141,7 +139,7 @@ public class ExpressionExplorerController implements Initializable {
     @FXML
     private void handleParseButtonAction(ActionEvent event) {
 
-        Expression exp = SquidUIController.squidProject.getTask().generateExpression("NoName", expressionText.getText());
+        Expression exp = SquidUIController.squidProject.getTask().generateExpressionFromRawExcelStyleText("NoName", expressionText.getText());
        
         expressionAuditLabel.setText(exp.produceExpressionTreeAudit());
         webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(exp.getExpressionTree()).toString());
