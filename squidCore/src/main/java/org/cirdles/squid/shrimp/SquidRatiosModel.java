@@ -46,8 +46,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     private double ratioFractErr;
     private int minIndex;
     private boolean active;
-    
-    public static Map<String, SquidRatiosModel> knownSquidRatiosModels = new HashMap<>();
 
     public SquidRatiosModel(SquidSpeciesModel numerator, SquidSpeciesModel denominator, int reportingOrderIndex) {
         this.numerator = numerator;
@@ -63,8 +61,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
         this.ratioFractErr = 0;
         this.minIndex = -2;
         this.active = false;
-        
-        knownSquidRatiosModels.put(ratioName, this);
     }
 
     @Override

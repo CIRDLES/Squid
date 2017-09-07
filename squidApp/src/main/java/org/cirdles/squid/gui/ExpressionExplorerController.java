@@ -18,7 +18,9 @@ package org.cirdles.squid.gui;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -32,7 +34,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -58,31 +59,27 @@ public class ExpressionExplorerController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ExpressionTree.TASK = SquidUIController.squidProject.getTask();
+//        ExpressionTree.TASK = SquidUIController.squidProject.getTask();
 
+        // update expressions
+        squidProject.getTask().buildSquidRatiosModelListFromMassStationDetails();
+        
         // initialize expressions tab
-        ObservableList<ExpressionTreeInterface> items = FXCollections.observableArrayList(
-                SquidUIController.squidProject.getTask().getTaskExpressionsOrdered());
-//                CustomExpression_LnPbR_U.EXPRESSION,
-//                CustomExpression_LnUO_U.EXPRESSION,
-//                CustomExpression_Net204cts_sec.EXPRESSION,
-//                CustomExpression_Net204BiWt.EXPRESSION,
-//                SquidExpressionMinus1.EXPRESSION,
-//                SquidExpressionMinus3.EXPRESSION,
-//                SquidExpressionMinus4.EXPRESSION,
-//                CustomExpression_Expo.EXPRESSION,
-//                CustomExpression_TestIf.EXPRESSION);
-
-        Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
-        while (ratioNameIterator.hasNext()) {
-            String ratioName = ratioNameIterator.next();
-            items.add(SquidUIController.squidProject.getTask().buildRatioExpression(ratioName));
+        List<ExpressionTreeInterface> namedExpressions = new ArrayList<>();
+        Iterator<String> namedExpressionIterator = squidProject.getTask().getNamedExpressionsMap().keySet().iterator();
+        while (namedExpressionIterator.hasNext()) {
+            String expName = namedExpressionIterator.next();
+            namedExpressions.add(squidProject.getTask().getNamedExpressionsMap().get(expName));
         }
+
+        ObservableList<ExpressionTreeInterface> items = 
+                FXCollections.observableArrayList(namedExpressions);
 
         expressionListView.setItems(items);
 
@@ -140,7 +137,7 @@ public class ExpressionExplorerController implements Initializable {
     private void handleParseButtonAction(ActionEvent event) {
 
         Expression exp = SquidUIController.squidProject.getTask().generateExpressionFromRawExcelStyleText("NoName", expressionText.getText());
-       
+
         expressionAuditLabel.setText(exp.produceExpressionTreeAudit());
         webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(exp.getExpressionTree()).toString());
 

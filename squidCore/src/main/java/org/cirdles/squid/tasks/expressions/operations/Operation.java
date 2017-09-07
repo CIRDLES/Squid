@@ -16,6 +16,7 @@
 package org.cirdles.squid.tasks.expressions.operations;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 public abstract class Operation
         implements
         OperationOrFunctionInterface,
+        Serializable,
         XMLSerializerInterface {
 
     /**

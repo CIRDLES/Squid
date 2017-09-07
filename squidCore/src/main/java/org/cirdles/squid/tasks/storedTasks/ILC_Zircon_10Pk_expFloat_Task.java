@@ -33,8 +33,6 @@ public class ILC_Zircon_10Pk_expFloat_Task extends Task {
     public ILC_Zircon_10Pk_expFloat_Task() {
         super("ILC Zircon 10Pk exp=Float");
         
-        ExpressionTree.TASK = this;
-        
         taskExpressionsOrdered.add(CustomExpression_Net204cts_sec.EXPRESSION);
 
     }

@@ -43,7 +43,10 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeXMLConverter;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
@@ -87,7 +90,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      */
     protected List<ExpressionTreeInterface> taskExpressionsOrdered;
-    protected Map<String, ExpressionTreeInterface> NAMED_EXPRESSIONS_MAP;
+    protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
 
     /**
      *
@@ -124,7 +127,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
 
         this.taskExpressionsOrdered = new ArrayList<>();
-        this.NAMED_EXPRESSIONS_MAP = new HashMap<>();
+        this.namedExpressionsMap = new HashMap<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 
         this.prawnFile = prawnFile;
@@ -188,7 +191,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText) {
-        Expression exp = new Expression(name, originalExpressionText, NAMED_EXPRESSIONS_MAP);
+        Expression exp = new Expression(name, originalExpressionText, namedExpressionsMap);
 
         return exp;
     }
@@ -274,8 +277,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void buildSquidRatiosModelListFromMassStationDetails() {
         squidRatiosModelList = new ArrayList<>();
 
-        SquidRatiosModel.knownSquidRatiosModels.clear();
-
         for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
             for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
                 if ((tableOfSelectedRatiosByMassStationIndex[row][col])
@@ -285,7 +286,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
             }
         }
+        
+        // now use existing ratios as basis for building and checking expressions
+        assembleNamedExpressionsMap();
+    }
 
+    private void assembleNamedExpressionsMap() {
+        namedExpressionsMap.clear();
+
+        for (SquidRatiosModel srm : squidRatiosModelList) {
+            namedExpressionsMap.put(srm.getRatioName(), buildRatioExpression(srm.getRatioName()));
+        }
+
+        for (ExpressionTreeInterface exp : taskExpressionsOrdered) {
+            if (exp instanceof BuiltInExpressionInterface){
+                ((BuiltInExpressionInterface)exp).buildExpression(this);
+            }
+            namedExpressionsMap.put(exp.getName(), exp);
+        }
     }
 
     @Override
@@ -303,6 +321,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
         }
         return ratioExpression;
+    }
+
+    @Override
+    public ExpressionTreeInterface findNamedExpression(String ratioName) {
+        ExpressionTreeInterface foundRatioExp = namedExpressionsMap.get(ratioName);
+        if (foundRatioExp == null) {
+            foundRatioExp = new ConstantNode(MISSING_EXPRESSION_STRING, ratioName);
+        }
+        return foundRatioExp;
     }
 
     @Override
@@ -982,6 +1009,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void setPrawnFile(PrawnFile prawnFile) {
         this.prawnFile = prawnFile;
+    }
+
+    /**
+     * @return the namedExpressionsMap
+     */
+    public Map<String, ExpressionTreeInterface> getNamedExpressionsMap() {
+        return namedExpressionsMap;
     }
 
 }

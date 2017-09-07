@@ -30,6 +30,8 @@ import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.TaskSquid25;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.storedTasks.Squid3ExampleTask1;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
@@ -54,7 +56,6 @@ public final class SquidProject implements Serializable {
     private String filterForRefMatSpotNames;
     private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
-//    private SquidSessionModel squidSessionModel;
     private TaskInterface task;
 
     public SquidProject() {
@@ -92,7 +93,7 @@ public final class SquidProject implements Serializable {
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setRatioNames(taskSquid25.getRatioNames());
-        
+
         this.task.populateTableOfSelectedRatiosFromRatiosList();
 
         this.task.setupSquidSessionSpecs();

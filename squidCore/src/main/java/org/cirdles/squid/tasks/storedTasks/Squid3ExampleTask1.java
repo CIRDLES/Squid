@@ -47,11 +47,9 @@ public class Squid3ExampleTask1 extends Task {
     public Squid3ExampleTask1() {
         super("Squid3ExampleTask1");
 
-        ExpressionTree.TASK = this;
-
         ExpressionTreeInterface exp = new CustomExpression_LnUO_U();
         taskExpressionsOrdered.add(exp);
-        NAMED_EXPRESSIONS_MAP.put(exp.getName(), exp);
+
 
 //        taskExpressionsOrdered.add(CustomExpression_LnPbR_U.EXPRESSION);
 //

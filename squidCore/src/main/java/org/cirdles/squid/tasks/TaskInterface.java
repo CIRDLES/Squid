@@ -34,6 +34,8 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 public interface TaskInterface {
 
     public ExpressionTreeInterface buildRatioExpression(String ratioName);
+    
+    public ExpressionTreeInterface findNamedExpression(String ratioName);
 
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText);
 
@@ -215,5 +217,10 @@ public interface TaskInterface {
     void setupSquidSessionSpecs();
 
     public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
+
+    /**
+     * @return the NAMED_EXPRESSIONS_MAP
+     */
+    public Map<String, ExpressionTreeInterface> getNamedExpressionsMap();
 
 }

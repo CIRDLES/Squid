@@ -16,6 +16,10 @@
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
@@ -44,9 +48,19 @@ public class ExpressionTree
         implements ExpressionTreeInterface,
         ExpressionTreeBuilderInterface,
         ExpressionTreeWithRatiosInterface,
+        Serializable,
         XMLSerializerInterface {
 
-    public static TaskInterface TASK;
+//    private static final long serialVersionUID = 6522574920235718028L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(ExpressionTree.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of ExpressionTree " + theSUID);
+    }
+
     /**
      *
      */
@@ -55,7 +69,7 @@ public class ExpressionTree
     /**
      *
      */
-    private List<ExpressionTreeInterface> childrenET;
+    protected List<ExpressionTreeInterface> childrenET;
 
     /**
      *
@@ -295,6 +309,7 @@ public class ExpressionTree
     /**
      * @param name the name to set
      */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -302,6 +317,7 @@ public class ExpressionTree
     /**
      * @return the childrenET
      */
+    @Override
     public List<ExpressionTreeInterface> getChildrenET() {
         return childrenET;
     }

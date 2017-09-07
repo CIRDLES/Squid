@@ -88,6 +88,7 @@ public interface ExpressionTreeInterface {
      *
      * @param objects
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static double[] convertObjectArrayToDoubles(Object[] objects) throws SquidException {
         if (objects == null) {
@@ -108,6 +109,7 @@ public interface ExpressionTreeInterface {
      *
      * @param objects
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static double[][] convertObjectArrayToDoubles(Object[][] objects) throws SquidException {
         if (objects == null) {
@@ -124,6 +126,7 @@ public interface ExpressionTreeInterface {
      *
      * @param types
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static Object[] convertArrayToObjects(double[] types) throws SquidException {
         if (types == null) {
@@ -141,6 +144,7 @@ public interface ExpressionTreeInterface {
      *
      * @param types
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static Object[][] convertArrayToObjects(double[][] types) throws SquidException {
         if (types == null) {
@@ -157,6 +161,7 @@ public interface ExpressionTreeInterface {
      *
      * @param objects
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static boolean[] convertObjectArrayToBooleans(Object[] objects) throws SquidException {
         if (objects == null) {

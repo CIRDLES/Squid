@@ -45,6 +45,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
@@ -249,6 +250,8 @@ public class SquidUIController implements Initializable {
         removeAllManagers();
 
         squidProject = new SquidProject();
+        // experiment
+        squidProject.getTask().getTaskExpressionsOrdered().add(new CustomExpression_LnUO_U());
 
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
