@@ -72,17 +72,21 @@ public final class SquidProject implements Serializable {
     }
 
     public void testRunOfSessionModel() {
-        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, task.getSquidSessionModel());
 
         TaskInterface squid3ExampleTask1 = new Squid3ExampleTask1();
+       // squid3ExampleTask1.populateTableOfSelectedRatiosFromRatiosList();
         squid3ExampleTask1.setPrawnFile(prawnFile);
         squid3ExampleTask1.setupSquidSessionSpecs();
+
+        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, squid3ExampleTask1.getSquidSessionModel());
         squid3ExampleTask1.evaluateTaskExpressions(shrimpFractions);
 
         try {
             prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
         } catch (IOException iOException) {
         }
+        
+        task = squid3ExampleTask1;
     }
 
     public void initializeNewProjectTask(TaskInterface task) {
@@ -106,8 +110,6 @@ public final class SquidProject implements Serializable {
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setRatioNames(taskSquid25.getRatioNames());
-
-        this.task.populateTableOfSelectedRatiosFromRatiosList();
 
         this.task.setupSquidSessionSpecs();
 

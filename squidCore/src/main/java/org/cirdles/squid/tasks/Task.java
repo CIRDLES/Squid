@@ -188,6 +188,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setupSquidSessionSpecs() {
         createMapOfIndexToMassStationDetails();
 
+        populateTableOfSelectedRatiosFromRatiosList();
+
         buildSquidRatiosModelListFromMassStationDetails();
 
 //        squidRatiosModelList = new ArrayList<>();
@@ -265,16 +267,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void buildSquidRatiosModelListFromMassStationDetails() {
         squidRatiosModelList = new ArrayList<>();
 
+        // TODO revise use of this in comparator of squidSpeciesModel
+        int reportingOrderIndex = 0;
         for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
             for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
                 if ((tableOfSelectedRatiosByMassStationIndex[row][col])
                         && (!squidSpeciesModelList.get(row).getIsBackground())
                         && (!squidSpeciesModelList.get(col).getIsBackground())) {
-                    squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(row), squidSpeciesModelList.get(col), 0));
+                    squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(row), squidSpeciesModelList.get(col), reportingOrderIndex));
+                    reportingOrderIndex++;
                 }
             }
         }
-        
+
         // now use existing ratios as basis for building and checking expressions
         assembleNamedExpressionsMap();
     }
@@ -287,8 +292,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         for (ExpressionTreeInterface exp : taskExpressionsOrdered) {
-            if (exp instanceof BuiltInExpressionInterface){
-                ((BuiltInExpressionInterface)exp).buildExpression(this);
+            if (exp instanceof BuiltInExpressionInterface) {
+                ((BuiltInExpressionInterface) exp).buildExpression(this);
             }
             namedExpressionsMap.put(exp.getName(), exp);
         }
@@ -915,6 +920,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void resetTableOfSelectedRatiosByMassStationIndex() {
         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+    }
+
+    @Override
+    public void clearRatioNames() {
         ratioNames.clear();
     }
 

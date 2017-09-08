@@ -49,6 +49,18 @@ public class Squid3ExampleTask1 extends Task {
 
         ExpressionTreeInterface exp = new CustomExpression_LnUO_U();
         taskExpressionsOrdered.add(exp);
+        
+        ratioNames.add("204/206");
+        ratioNames.add("207/206");
+        ratioNames.add("208/206");
+        ratioNames.add("238/196");
+        ratioNames.add("206/238");
+        ratioNames.add("254/238");
+        ratioNames.add("248/254");
+        ratioNames.add("206/270");
+        ratioNames.add("270/254");
+        ratioNames.add("206/254");
+        ratioNames.add("238/206");
 
 
 //        taskExpressionsOrdered.add(CustomExpression_LnPbR_U.EXPRESSION);

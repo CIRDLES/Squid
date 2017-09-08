@@ -40,74 +40,74 @@ public interface TaskInterface {
 
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText);
 
-    void buildSquidRatiosModelListFromMassStationDetails();
+    public void buildSquidRatiosModelListFromMassStationDetails();
 
-    void createMapOfIndexToMassStationDetails();
+    public void createMapOfIndexToMassStationDetails();
 
     /**
      *
      * @param xstream
      */
-    void customizeXstream(XStream xstream);
+    public void customizeXstream(XStream xstream);
 
     /**
      *
      * @param shrimpFractions
      */
-    void evaluateTaskExpressions(List<ShrimpFractionExpressionInterface> shrimpFractions);
+    public void evaluateTaskExpressions(List<ShrimpFractionExpressionInterface> shrimpFractions);
 
-    void populateTableOfSelectedRatiosFromRatiosList();
+    public void populateTableOfSelectedRatiosFromRatiosList();
 
     /**
      *
      * @param ratiosOfInterest
      * @return
      */
-    Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest);
+    public Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest);
 
-    SquidSpeciesModel findDenominator(String ratioName);
+    public SquidSpeciesModel findDenominator(String ratioName);
 
-    SquidSpeciesModel findNumerator(String ratioName);
+    public SquidSpeciesModel findNumerator(String ratioName);
 
     /**
      * @return the authorName
      */
-    String getAuthorName();
+    public String getAuthorName();
 
     /**
      * @return the dateRevised
      */
-    long getDateRevised();
+    public long getDateRevised();
 
     /**
      * @return the description
      */
-    String getDescription();
+    public String getDescription();
 
     /**
      * @return the labName
      */
-    String getLabName();
+    public String getLabName();
 
     /**
      * @return the mapOfIndexToMassStationDetails
      */
-    Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails();
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails();
 
     /**
      * @return the name
      */
-    String getName();
+    public String getName();
 
     /**
      * @return the provenance
      */
-    String getProvenance();
+    public String getProvenance();
 
     /**
      * @return the ratioNames
      */
-    List<String> getRatioNames();
+    public List<String> getRatioNames();
 
     /**
      * @return the prawnFile
@@ -162,60 +162,62 @@ public interface TaskInterface {
 
     void resetTableOfSelectedRatiosByMassStationIndex();
 
-    int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
+    public void clearRatioNames();
+
+    public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
     /**
      * @param authorName the authorName to set
      */
-    void setAuthorName(String authorName);
+    public void setAuthorName(String authorName);
 
     /**
      * @param dateRevised the dateRevised to set
      */
-    void setDateRevised(long dateRevised);
+    public void setDateRevised(long dateRevised);
 
     /**
      * @param description the description to set
      */
-    void setDescription(String description);
+    public void setDescription(String description);
 
     /**
      * @param labName the labName to set
      */
-    void setLabName(String labName);
+    public void setLabName(String labName);
 
     /**
      * @param name the name to set
      */
-    void setName(String name);
+    public void setName(String name);
 
     /**
      * @param provenance the provenance to set
      */
-    void setProvenance(String provenance);
+    public void setProvenance(String provenance);
 
     /**
      * @param ratioNames the ratioNames to set
      */
-    void setRatioNames(List<String> ratioNames);
+    public void setRatioNames(List<String> ratioNames);
 
     /**
      * @param taskExpressionsEvaluationsPerSpotSet the
      * taskExpressionsEvaluationsPerSpotSet to set
      */
-    void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
+    public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
 
     /**
      * @param taskExpressionsOrdered the taskExpressionsOrdered to set
      */
-    void setTaskExpressionsOrdered(List<ExpressionTreeInterface> taskExpressionsOrdered);
+    public void setTaskExpressionsOrdered(List<ExpressionTreeInterface> taskExpressionsOrdered);
 
     /**
      * @param type the type to set
      */
-    void setType(String type);
+    public void setType(String type);
 
-    void setupSquidSessionSpecs();
+    public void setupSquidSessionSpecs();
 
     public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
 

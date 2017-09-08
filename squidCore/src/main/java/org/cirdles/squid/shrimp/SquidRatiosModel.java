@@ -162,13 +162,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     }
 
     /**
-     * @param reportingOrderIndex the reportingOrderIndex to set
-     */
-    public void setReportingOrderIndex(int reportingOrderIndex) {
-        this.reportingOrderIndex = reportingOrderIndex;
-    }
-
-    /**
      * @return the ratEqTime
      */
     public List<Double> getRatEqTime() {

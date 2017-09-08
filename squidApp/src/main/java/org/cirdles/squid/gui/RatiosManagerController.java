@@ -148,7 +148,8 @@ public class RatiosManagerController implements Initializable {
 
     @FXML
     private void clearRatiosButtonAction(ActionEvent event) {
-        SquidUIController.squidProject.getTask().resetTableOfSelectedRatiosByMassStationIndex();
+        squidProject.getTask().resetTableOfSelectedRatiosByMassStationIndex();
+        squidProject.getTask().clearRatioNames();
         populateRatioGrid();
     }
 
