@@ -53,6 +53,10 @@ public class ConstantNode implements ExpressionTreeInterface, Serializable, XMLS
         this.value = value;
     }
 
+    public boolean amHealthy(){
+        return name.compareTo(MISSING_EXPRESSION_STRING) != 0;
+    }
+    
     /**
      *
      * @param xstream

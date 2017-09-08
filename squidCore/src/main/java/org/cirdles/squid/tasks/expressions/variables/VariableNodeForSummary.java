@@ -34,9 +34,9 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  *
  * @author James F. Bowring
  */
-public class VariableNodeForSummary implements ExpressionTreeInterface,  Serializable, XMLSerializerInterface {
+public class VariableNodeForSummary implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
 
-           //    private static final long serialVersionUID = 69881766695649050L;
+    //    private static final long serialVersionUID = 69881766695649050L;
     private void readObject(
             ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
@@ -63,6 +63,10 @@ public class VariableNodeForSummary implements ExpressionTreeInterface,  Seriali
         this.name = name;
     }
 
+    public boolean amHealthy() {
+        return name.length() > 0;
+    }
+
     /**
      *
      * @param xstream
@@ -84,7 +88,7 @@ public class VariableNodeForSummary implements ExpressionTreeInterface,  Seriali
      * @return
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task)throws SquidException  {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);

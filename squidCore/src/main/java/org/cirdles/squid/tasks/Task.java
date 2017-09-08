@@ -149,7 +149,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\n");
 
         summary.append("Task Type: ");
-        summary.append("\t\t");
+        summary.append("\t");
         summary.append(type);
         summary.append("\n\n");
 
@@ -159,13 +159,22 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\n");
 
         summary.append("Task Ratios: ");
-        summary.append("\t\t");
+        summary.append("\t");
         summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");
         summary.append("\n\n");
 
+        int count = 0;
+        for (ExpressionTreeInterface exp : taskExpressionsOrdered) {
+            if (exp.amHealthy()) {
+                count++;
+            }
+        }
         summary.append("Task Expressions: ");
-        summary.append("\t\t");
-        summary.append((String) (taskExpressionsOrdered.size() > 0 ? String.valueOf(taskExpressionsOrdered.size()) : "None")).append(" included.");
+        summary.append("\n\tHealthy: ");
+        summary.append((String) (count > 0 ? String.valueOf(count) : "None")).append(" included.");
+        summary.append("\n\tUnHealthy: ");
+        summary.append((String) ((taskExpressionsOrdered.size() - count) > 0
+                ? String.valueOf(taskExpressionsOrdered.size() - count) : "None")).append(" included.");
         summary.append("\n\n");
 
         return summary.toString();
@@ -426,21 +435,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         });
 
         for (ExpressionTreeInterface expression : taskExpressionsOrdered) {
-            // determine subset of spots to be evaluated - default = all
-            List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
-            if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {
-                spotsForExpression = unknownSpots;
-            }
-            if (!((ExpressionTree) expression).isSquidSwitchSAUnknownCalculation()) {
-                spotsForExpression = referenceMaterialSpots;
-            }
+            if (expression.amHealthy()) {
+                // determine subset of spots to be evaluated - default = all
+                List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
+                if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {
+                    spotsForExpression = unknownSpots;
+                }
+                if (!((ExpressionTree) expression).isSquidSwitchSAUnknownCalculation()) {
+                    spotsForExpression = referenceMaterialSpots;
+                }
 
-            try {
-                evaluateExpressionForSpotSet(expression, spotsForExpression);
-            } catch (SquidException squidException) {
-                // TODO - log and report failure of expression
+                try {
+                    evaluateExpressionForSpotSet(expression, spotsForExpression);
+                } catch (SquidException squidException) {
+                    // TODO - log and report failure of expression
 //                JOptionPane.showMessageDialog(null,
 //                        "Expression failed: " + expression.getName() + " because: " + squidException.getMessage());
+                }
             }
         }
     }

@@ -79,11 +79,8 @@ public interface ExpressionTreeInterface {
      */
     public boolean isTypeFunctionOrOperation();
 
-//    /**
-//     *
-//     * @return
-//     */
-//    public int argumentCount();
+    public boolean amHealthy();
+
     /**
      *
      * @param objects

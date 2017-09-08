@@ -157,6 +157,15 @@ public class ExpressionTree
     }
 
     @Override
+    public boolean amHealthy(){
+        boolean retVal = true;
+            for (ExpressionTreeInterface exp : childrenET){
+                    retVal = retVal && exp.amHealthy();
+            }            
+        return retVal;
+    }
+    
+    @Override
     public String auditOperationArgumentCount() {
 
         int requiredChildren = ((ExpressionTreeInterface) this).argumentCount();

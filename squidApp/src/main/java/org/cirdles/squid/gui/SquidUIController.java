@@ -267,8 +267,6 @@ public class SquidUIController implements Initializable {
         removeAllManagers();
 
         squidProject = new SquidProject();
-        // experiment
-        squidProject.getTask().getTaskExpressionsOrdered().add(new CustomExpression_LnUO_U());
 
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 

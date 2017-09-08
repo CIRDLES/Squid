@@ -68,7 +68,9 @@ public class Expression {
         } else {
             auditExpressionTreeDependencies();
             auditReport
-                    += "Argument Count Audit:\n";
+                    += "Expression healthy: "
+                    + String.valueOf(expressionTree.amHealthy()).toUpperCase()
+                    + "\nArgument Count Audit:\n";
             for (String audit : argumentAudit) {
                 auditReport += audit + "\n";
             }

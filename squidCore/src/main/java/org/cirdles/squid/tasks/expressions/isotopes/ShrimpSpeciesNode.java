@@ -67,6 +67,10 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
     }
 
+    public boolean amHealthy(){
+        return ((squidSpeciesModel instanceof SquidSpeciesModel) && methodNameForShrimpFraction.length() > 0);
+    }
+    
     /**
      *
      * @param xstream
