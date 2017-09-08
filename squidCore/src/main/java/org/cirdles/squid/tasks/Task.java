@@ -45,7 +45,6 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeXMLConv
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
@@ -100,7 +99,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected PrawnFile prawnFile;
 
     public Task() {
-        this("InitialEmptyTask", null);
+        this("Default Empty Task", null);
     }
 
     public Task(String name) {
@@ -114,8 +113,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public Task(String name, PrawnFile prawnFile) {
         this.name = name;
-        this.type = "specify type";
-        this.description = "description";
+        this.type = "specify Geochron or General";
+        this.description = "describe task here";
         this.authorName = "author name";
         this.labName = "lab name";
         this.provenance = "provenance";
@@ -159,13 +158,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append(description.replaceAll(",", "\n\t\t\t\t"));
         summary.append("\n\n");
 
-        Collections.sort(ratioNames);
         summary.append("Task Ratios: ");
         summary.append("\t\t");
-        for (int i = 0; i < ratioNames.size(); i++) {
-            summary.append(ratioNames.get(i));
-            summary.append((i < (ratioNames.size() - 1)) ? ", " : "");
-        }
+        summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");
+        summary.append("\n\n");
+
+        summary.append("Task Expressions: ");
+        summary.append("\t\t");
+        summary.append((String) (taskExpressionsOrdered.size() > 0 ? String.valueOf(taskExpressionsOrdered.size()) : "None")).append(" included.");
         summary.append("\n\n");
 
         return summary.toString();

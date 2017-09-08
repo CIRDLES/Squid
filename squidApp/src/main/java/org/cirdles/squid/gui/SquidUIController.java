@@ -19,8 +19,8 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -45,6 +45,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
@@ -71,8 +72,6 @@ public class SquidUIController implements Initializable {
     private MenuItem newSquidProjectMenuItem;
     @FXML
     private MenuItem openSquidProjectMenuItem;
-    @FXML
-    private Menu openRecentSquidProjectMenuItem;
     @FXML
     private MenuItem saveAsSquidProjectMenuItem;
     @FXML
@@ -104,7 +103,7 @@ public class SquidUIController implements Initializable {
     private static Pane taskManagerUI;
     private static Pane isotopesManagerUI;
     private static Pane ratiosManagerUI;
-    private static Pane expressionManagerUI;
+    private static Pane expressionExplorerUI;
     private static Pane analysisManagerUI;
     @FXML
     private MenuItem newSquid3TaskMenuItem;
@@ -113,9 +112,11 @@ public class SquidUIController implements Initializable {
     @FXML
     private MenuItem exportSquid3TaskMenuItem;
     @FXML
-    private MenuItem selectSquid3TaskFromLibraryMenuItem;
-    @FXML
     private MenuItem importSquid3TaskMenuItem;
+    @FXML
+    private Menu openRecentSquidProjectMenu;
+    @FXML
+    private Menu selectSquid3TaskFromLibraryMenu;
 
     /**
      * Initializes the controller class.
@@ -154,7 +155,7 @@ public class SquidUIController implements Initializable {
 
         //Task menu
         newSquid3TaskMenuItem.setDisable(true);
-        selectSquid3TaskFromLibraryMenuItem.setDisable(true);
+        selectSquid3TaskFromLibraryMenu.setDisable(false);
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
@@ -164,10 +165,10 @@ public class SquidUIController implements Initializable {
     }
 
     private void buildProjectMenuMRU() {
-        openRecentSquidProjectMenuItem.setDisable(false);
+        openRecentSquidProjectMenu.setDisable(false);
 
-        openRecentSquidProjectMenuItem.getItems().clear();
-        ArrayList<String> mruProjectList = squidPersistentState.getMRUProjectList();
+        openRecentSquidProjectMenu.getItems().clear();
+        List<String> mruProjectList = squidPersistentState.getMRUProjectList();
         for (String projectFileName : mruProjectList) {
             MenuItem menuItem = new MenuItem(projectFileName);
             menuItem.setOnAction((ActionEvent t) -> {
@@ -176,12 +177,27 @@ public class SquidUIController implements Initializable {
                 } catch (IOException iOException) {
                     squidPersistentState.cleanProjectListMRU();
                     // remove self safe?
-                    openRecentSquidProjectMenuItem.getItems().remove(menuItem);
+                    openRecentSquidProjectMenu.getItems().remove(menuItem);
                 }
             });
-            openRecentSquidProjectMenuItem.getItems().add(menuItem);
+            openRecentSquidProjectMenu.getItems().add(menuItem);
         }
+    }
 
+    private void buildTaskLibraryMenu() {
+        selectSquid3TaskFromLibraryMenu.setDisable(false);
+
+        selectSquid3TaskFromLibraryMenu.getItems().clear();
+        Map< String, TaskInterface> taskLibrary = squidProject.getTaskLibrary();
+        for (Map.Entry< String, TaskInterface> entry : taskLibrary.entrySet()) {
+            MenuItem menuItem = new MenuItem(entry.getKey());
+            menuItem.setOnAction((ActionEvent t) -> {
+                // get a new library
+                squidProject.loadAndInitializeTask(squidProject.getTaskLibrary().get(menuItem.getText()));
+                launchTaskManager();
+            });
+            selectSquid3TaskFromLibraryMenu.getItems().add(menuItem);
+        }
     }
 
     private void launchProjectManager() {
@@ -202,6 +218,7 @@ public class SquidUIController implements Initializable {
             projectManagerMenuItem.setDisable(false);
 
             managePrawnFileMenu.setDisable(false);
+            buildTaskLibraryMenu();
             manageTasksMenu.setDisable(false);
             manageRatiosMenu.setDisable(true);
             manageExpressionsMenu.setDisable(true);
@@ -225,7 +242,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(taskManagerUI);
         mainPane.getChildren().remove(isotopesManagerUI);
         mainPane.getChildren().remove(ratiosManagerUI);
-        mainPane.getChildren().remove(expressionManagerUI);
+        mainPane.getChildren().remove(expressionExplorerUI);
         mainPane.getChildren().remove(analysisManagerUI);
 
         saveSquidProjectMenuItem.setDisable(true);
@@ -488,12 +505,12 @@ public class SquidUIController implements Initializable {
     private void launchExpressionManager() {
 
         try {
-            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionExplorer.fxml"));
-            expressionManagerUI.setId("ExpressionExplorer");
-            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(expressionManagerUI);
-            expressionManagerUI.setVisible(false);
+            expressionExplorerUI = FXMLLoader.load(getClass().getResource("ExpressionExplorer.fxml"));
+            expressionExplorerUI.setId("ExpressionExplorer");
+            VBox.setVgrow(expressionExplorerUI, Priority.ALWAYS);
+            HBox.setHgrow(expressionExplorerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(expressionExplorerUI);
+            expressionExplorerUI.setVisible(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("ExpressionExplorer >>>>   " + iOException.getMessage());
@@ -532,9 +549,9 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void exploreExpressionsMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(expressionManagerUI);
+        mainPane.getChildren().remove(expressionExplorerUI);
         launchExpressionManager();
-        showUI(expressionManagerUI);
+        showUI(expressionExplorerUI);
     }
 
     @FXML
@@ -617,10 +634,6 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void exportSquid3TaskMenuItemAction(ActionEvent event) {
-    }
-
-    @FXML
-    private void selectSquid3TaskFromLibraryMenuItemAction(ActionEvent event) {
     }
 
     @FXML

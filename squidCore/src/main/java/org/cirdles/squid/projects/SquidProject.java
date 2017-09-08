@@ -31,7 +31,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.TaskSquid25;
-import org.cirdles.squid.tasks.storedTasks.Squid3ExampleTask1;
+import org.cirdles.squid.tasks.builtinTasks.Squid3ExampleTask1;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -73,23 +73,30 @@ public final class SquidProject implements Serializable {
 
     public void testRunOfSessionModel() {
 
-        TaskInterface squid3ExampleTask1 = new Squid3ExampleTask1();
-       // squid3ExampleTask1.populateTableOfSelectedRatiosFromRatiosList();
-        squid3ExampleTask1.setPrawnFile(prawnFile);
-        squid3ExampleTask1.setupSquidSessionSpecs();
+//        TaskInterface squid3ExampleTask1 = new Squid3ExampleTask1();
+//       // squid3ExampleTask1.populateTableOfSelectedRatiosFromRatiosList();
+//        squid3ExampleTask1.setPrawnFile(prawnFile);
+//        squid3ExampleTask1.setupSquidSessionSpecs();
 
-        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, squid3ExampleTask1.getSquidSessionModel());
-        squid3ExampleTask1.evaluateTaskExpressions(shrimpFractions);
+        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, task.getSquidSessionModel());
+        task.evaluateTaskExpressions(shrimpFractions);
 
         try {
             prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
         } catch (IOException iOException) {
         }
-        
-        task = squid3ExampleTask1;
     }
 
-    public void initializeNewProjectTask(TaskInterface task) {
+    public Map< String, TaskInterface> getTaskLibrary(){
+        Map< String, TaskInterface> builtInTasks = new HashMap<>();
+        
+        TaskInterface task = new Squid3ExampleTask1();
+        builtInTasks.put(task.getName(), task);
+        
+        return builtInTasks;
+    }
+    
+    public void loadAndInitializeTask(TaskInterface task) {
         this.task = task;
         initializeExistingProjectTask();
     }

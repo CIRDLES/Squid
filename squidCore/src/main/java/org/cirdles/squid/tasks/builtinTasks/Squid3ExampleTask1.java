@@ -13,26 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.storedTasks;
+package org.cirdles.squid.tasks.builtinTasks;
 
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
-import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Expo;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnPbR_U;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Mean7_6;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204BiWt;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_sec;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_RawConcAge;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_RawPb76Age;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_TestIf;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
@@ -51,7 +39,7 @@ public class Squid3ExampleTask1 extends Task {
         this.description = "Example Squid3 Task for 10-peak zircon.";
         this.authorName = "Squid3 Team";
         this.labName = "GA";
-        this.provenance = "Built-in task.";
+        this.provenance = "Builtin task.";
         this.dateRevised = 0l;
 
         ratioNames.add("204/206");

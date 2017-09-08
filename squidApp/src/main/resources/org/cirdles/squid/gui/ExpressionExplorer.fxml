@@ -57,7 +57,7 @@
                         <InnerShadow />
                      </effect>
                   </WebView>
-                  <Label fx:id="expressionAuditLabel" alignment="TOP_LEFT" layoutX="462.0" layoutY="14.0" prefHeight="368.0" prefWidth="439.0" text="Expression Audit" wrapText="true" />
+                  <Label fx:id="expressionAuditLabel" alignment="TOP_LEFT" layoutX="462.0" layoutY="14.0" prefHeight="368.0" prefWidth="439.0" style="-fx-font-size: 10;" text="Expression Audit" wrapText="true" />
                </children>
             </AnchorPane>
          </items>
