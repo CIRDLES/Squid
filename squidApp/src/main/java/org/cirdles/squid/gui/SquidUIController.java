@@ -104,7 +104,9 @@ public class SquidUIController implements Initializable {
     private static Pane isotopesManagerUI;
     private static Pane ratiosManagerUI;
     private static Pane expressionExplorerUI;
+    private static Pane expressionManagerUI;
     private static Pane analysisManagerUI;
+
     @FXML
     private MenuItem newSquid3TaskMenuItem;
     @FXML
@@ -243,6 +245,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(isotopesManagerUI);
         mainPane.getChildren().remove(ratiosManagerUI);
         mainPane.getChildren().remove(expressionExplorerUI);
+        mainPane.getChildren().remove(expressionManagerUI);
         mainPane.getChildren().remove(analysisManagerUI);
 
         saveSquidProjectMenuItem.setDisable(true);
@@ -500,7 +503,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchExpressionManager() {
+    private void launchExpressionExplorer() {
 
         try {
             expressionExplorerUI = FXMLLoader.load(getClass().getResource("ExpressionExplorer.fxml"));
@@ -512,6 +515,21 @@ public class SquidUIController implements Initializable {
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("ExpressionExplorer >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchExpressionManager() {
+
+        try {
+            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
+            expressionManagerUI.setId("ExpressionManager");
+            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(expressionManagerUI);
+            expressionManagerUI.setVisible(false);
+
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("expressionManagerUI >>>>   " + iOException.getMessage());
         }
     }
 
@@ -548,7 +566,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void exploreExpressionsMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(expressionExplorerUI);
-        launchExpressionManager();
+        launchExpressionExplorer();
         showUI(expressionExplorerUI);
     }
 
@@ -636,6 +654,13 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void manageExpressionsMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(expressionManagerUI);
+        launchExpressionManager();
+        showUI(expressionManagerUI);
     }
 
 }

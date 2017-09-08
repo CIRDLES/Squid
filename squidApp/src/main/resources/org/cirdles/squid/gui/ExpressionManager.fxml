@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="expressionsAnchorPane" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionManagerController">
+   <children>
+      <ScrollPane fx:id="expressionsScrollPane" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari">
+        <content>
+          <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari">
+               <children>
+                  <Label layoutX="317.0" layoutY="257.0" prefHeight="28.0" prefWidth="292.0" text="Expression!" />
+               </children></AnchorPane>
+        </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

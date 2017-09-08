@@ -63,7 +63,8 @@
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#exploreExpressionsMenuItemAction" text="Explore" />
+                  <MenuItem mnemonicParsing="false" onAction="#manageExpressionsMenuItemAction" text="Manage Expressions" />
+            <MenuItem mnemonicParsing="false" onAction="#exploreExpressionsMenuItemAction" text=" Explore Expressions" />
           </items>
         </Menu>
             <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Analysis">
