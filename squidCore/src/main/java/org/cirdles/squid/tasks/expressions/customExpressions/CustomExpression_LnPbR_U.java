@@ -15,33 +15,35 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 
 /**
  *
  * @author James F. Bowring
  */
-public class CustomExpression_LnPbR_U {
+public class CustomExpression_LnPbR_U extends ExpressionTree implements BuiltInExpressionInterface {
 
     /**
      * Squid Excel format is ln(["206/238"])
      */
-    public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("LnPbR_U");
+    public CustomExpression_LnPbR_U() {
+        super("LnPbR_U/U");
+    }
 
-//    static {
-//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
-//
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, Task.buildRatioExpression("206/238"));
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.ln());
-//
-//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
-//    }
+    @Override
+    public void buildExpression(TaskInterface task) {
+        ratiosOfInterest.add("206/238");
+
+        childrenET.clear();
+        addChild(0, task.findNamedExpression("206/238"));
+        setOperation(Function.ln());
+
+        setRootExpressionTree(true);
+        setSquidSwitchSCSummaryCalculation(false);
+        setSquidSwitchSTReferenceMaterialCalculation(true);
+        setSquidSwitchSAUnknownCalculation(true);
+    }
 }

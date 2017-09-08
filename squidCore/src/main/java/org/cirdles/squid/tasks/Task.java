@@ -923,11 +923,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void clearRatioNames() {
-        ratioNames.clear();
-    }
-
-    @Override
     public boolean isEmptyTableOfSelectedRatiosByMassStationIndex() {
         boolean retVal = true;
 

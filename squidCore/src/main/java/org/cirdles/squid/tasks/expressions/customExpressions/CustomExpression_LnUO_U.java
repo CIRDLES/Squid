@@ -38,7 +38,7 @@ public class CustomExpression_LnUO_U extends ExpressionTree implements BuiltInEx
         ratiosOfInterest.add("254/238");
 
         childrenET.clear();
-        addChild(0, task.findNamedExpression("254/238"));//         .buildRatioExpression("254/238"));
+        addChild(0, task.findNamedExpression("254/238"));
         operation = Function.ln();
 
         rootExpressionTree = true;

@@ -47,9 +47,13 @@ public class Squid3ExampleTask1 extends Task {
     public Squid3ExampleTask1() {
         super("Squid3ExampleTask1");
 
-        ExpressionTreeInterface exp = new CustomExpression_LnUO_U();
-        taskExpressionsOrdered.add(exp);
-        
+        this.type = "Geochron";
+        this.description = "Example Squid3 Task for 10-peak zircon.";
+        this.authorName = "Squid3 Team";
+        this.labName = "GA";
+        this.provenance = "Built-in task.";
+        this.dateRevised = 0l;
+
         ratioNames.add("204/206");
         ratioNames.add("207/206");
         ratioNames.add("208/206");
@@ -62,15 +66,12 @@ public class Squid3ExampleTask1 extends Task {
         ratioNames.add("206/254");
         ratioNames.add("238/206");
 
+        taskExpressionsOrdered.add(new CustomExpression_LnUO_U());
+        taskExpressionsOrdered.add(new CustomExpression_LnPbR_U());
+        taskExpressionsOrdered.add(new SquidExpressionMinus1());
+        taskExpressionsOrdered.add(new SquidExpressionMinus4());
+        taskExpressionsOrdered.add(new SquidExpressionMinus3());
 
-//        taskExpressionsOrdered.add(CustomExpression_LnPbR_U.EXPRESSION);
-//
-//        taskExpressionsOrdered.add(SquidExpressionMinus1.EXPRESSION);
-//
-//        taskExpressionsOrdered.add(SquidExpressionMinus4.EXPRESSION);
-//
-//        taskExpressionsOrdered.add(SquidExpressionMinus3.EXPRESSION);
-//
 //        taskExpressionsOrdered.add(CustomExpression_Net204cts_sec.EXPRESSION);
 //
 //        taskExpressionsOrdered.add(CustomExpression_Net204BiWt.EXPRESSION);
@@ -84,7 +85,6 @@ public class Squid3ExampleTask1 extends Task {
 //        taskExpressionsOrdered.add(CustomExpression_Mean7_6.EXPRESSION);
 //
 //        taskExpressionsOrdered.add(CustomExpression_RawConcAge.EXPRESSION);
-
         // experiment
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnUO_U.EXPRESSION, "CustomExpression_LnUO_U.xml");
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnPbR_U.EXPRESSION, "CustomExpression_LnPbR_U.xml");
@@ -106,7 +106,6 @@ public class Squid3ExampleTask1 extends Task {
 //        test = (TaskInterface)((XMLSerializerInterface) test).readXMLObject("Squid3ExampleTask1.xml", false);
 //        ((XMLSerializerInterface)test).serializeXMLObject(test, "SquidBodorkosTask1XXX.xml");
 //        
-        
 //        ((ExpressionTree) test).setName("TESTSquidExpressionMinus3");
 //        ((ExpressionTree) test).setRootExpressionTree(true);
 //        taskExpressionsOrdered.add(test);

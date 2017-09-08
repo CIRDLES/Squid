@@ -162,8 +162,6 @@ public interface TaskInterface {
 
     void resetTableOfSelectedRatiosByMassStationIndex();
 
-    public void clearRatioNames();
-
     public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
     /**

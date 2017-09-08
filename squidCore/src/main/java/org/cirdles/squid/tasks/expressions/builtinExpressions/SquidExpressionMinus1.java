@@ -16,38 +16,46 @@
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
 import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 
 /**
  *
  * @author James F. Bowring
  */
-public class SquidExpressionMinus1 {
+public class SquidExpressionMinus1 extends ExpressionTree implements BuiltInExpressionInterface {
 
     /**
      * Squid Excel format is ["206/238"]/["254/238"]^2 has EqNum = -1
      */
-    public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("206/238 Calib Const");
+    public SquidExpressionMinus1() {
+        super("206/238 Calib Const");
+    }
 
-//    static {
-//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
-//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
-//
-//        ExpressionTreeInterface r254_238wSquared = new ExpressionTree("254/238^2", Task.buildRatioExpression("254/238"), new ConstantNode("2", 2.0), Operation.pow());
-//
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, Task.buildRatioExpression("206/238"));
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(r254_238wSquared);
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.divide());
-//
-//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
-//    }
+    @Override
+    public void buildExpression(TaskInterface task) {
+
+        ratiosOfInterest.add("206/238");
+        ratiosOfInterest.add("254/238");
+
+        childrenET.clear();
+        ExpressionTreeInterface r254_238wSquared = new ExpressionTree("254/238^2", task.findNamedExpression("254/238"), new ConstantNode("2", 2.0), Operation.pow());
+
+        addChild(0, task.findNamedExpression("206/238"));
+        addChild(r254_238wSquared);
+        setOperation(Operation.divide());
+
+        setRootExpressionTree(true);
+        setSquidSwitchSCSummaryCalculation(false);
+        setSquidSwitchSTReferenceMaterialCalculation(true);
+        setSquidSwitchSAUnknownCalculation(true);
+
+    }
 
 }

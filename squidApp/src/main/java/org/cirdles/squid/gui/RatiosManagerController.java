@@ -59,8 +59,6 @@ public class RatiosManagerController implements Initializable {
     private int indexOfBackgroundSpecies;
 
     @FXML
-    private ToolBar toolbar;
-    @FXML
     private VBox manageRatiosVBox;
 
     /**
@@ -138,19 +136,6 @@ public class RatiosManagerController implements Initializable {
             }
         }
 
-    }
-
-    @FXML
-    private void useTaskRatiosButtonAction(ActionEvent event) {
-        SquidUIController.squidProject.getTask().populateTableOfSelectedRatiosFromRatiosList();
-        populateRatioGrid();
-    }
-
-    @FXML
-    private void clearRatiosButtonAction(ActionEvent event) {
-        squidProject.getTask().resetTableOfSelectedRatiosByMassStationIndex();
-        squidProject.getTask().clearRatioNames();
-        populateRatioGrid();
     }
 
     class SquidRatioButton extends Button {
