@@ -16,10 +16,9 @@
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
 import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 
@@ -27,21 +26,29 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
  *
  * @author James F. Bowring
  */
-public class CustomExpression_Net204cts_sec {
+public class CustomExpression_Net204cts_sec extends ExpressionTree implements BuiltInExpressionInterface {
 
     /**
      * Squid Excel format is ["Total204cts/sec"] - ["Bkrdcts/sec"]
      */
-    public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("Net204cts/sec");
+    public static String excelExpressionString = "[\"Total204cts/sec\"] - [\"Bkrdcts/sec\"]";
 
-//    static {
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, new ShrimpSpeciesNode(Task.lookUpSpeciesByName("204"), "getTotalCps"));
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ShrimpSpeciesNode(Task.lookUpSpeciesByName(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL), "getTotalCps"));
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.subtract());
-//
-//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
-//    }
+    public CustomExpression_Net204cts_sec() {
+        super("Net204cts/sec");
+    }
+
+    @Override
+    public void buildExpression(TaskInterface task) {
+
+        childrenET.clear();
+        
+        addChild(0, new ShrimpSpeciesNode(task.lookUpSpeciesByName("204"), "getTotalCps"));
+        addChild(new ShrimpSpeciesNode(task.lookUpSpeciesByName(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL), "getTotalCps"));
+        setOperation(Operation.subtract());
+
+        setRootExpressionTree(true);
+        setSquidSwitchSCSummaryCalculation(false);
+        setSquidSwitchSTReferenceMaterialCalculation(true);
+        setSquidSwitchSAUnknownCalculation(false);
+    }
 }

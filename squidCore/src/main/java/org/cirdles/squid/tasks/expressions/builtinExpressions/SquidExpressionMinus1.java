@@ -15,12 +15,9 @@
  */
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
@@ -34,6 +31,8 @@ public class SquidExpressionMinus1 extends ExpressionTree implements BuiltInExpr
     /**
      * Squid Excel format is ["206/238"]/["254/238"]^2 has EqNum = -1
      */
+    public static String excelExpressionString = "[\"206/238\"]/[\"254/238\"]^2";
+
     public SquidExpressionMinus1() {
         super("206/238 Calib Const");
     }

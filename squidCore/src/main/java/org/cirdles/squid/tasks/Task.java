@@ -88,7 +88,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      */
-    protected List<ExpressionTreeInterface> taskExpressionsOrdered;
+    protected List<ExpressionTree> taskExpressionTreesOrdered;
+    protected List<Expression> taskExpressionsOrdered;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
 
     /**
@@ -125,6 +126,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         squidRatiosModelList = new ArrayList<>();
         tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
 
+        this.taskExpressionTreesOrdered = new ArrayList<>();
         this.taskExpressionsOrdered = new ArrayList<>();
         this.namedExpressionsMap = new HashMap<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
@@ -164,7 +166,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\n");
 
         int count = 0;
-        for (ExpressionTreeInterface exp : taskExpressionsOrdered) {
+        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
             if (exp.amHealthy()) {
                 count++;
             }
@@ -173,8 +175,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\tHealthy: ");
         summary.append((String) (count > 0 ? String.valueOf(count) : "None")).append(" included.");
         summary.append("\n\tUnHealthy: ");
-        summary.append((String) ((taskExpressionsOrdered.size() - count) > 0
-                ? String.valueOf(taskExpressionsOrdered.size() - count) : "None")).append(" included.");
+        summary.append((String) ((taskExpressionTreesOrdered.size() - count) > 0
+                ? String.valueOf(taskExpressionTreesOrdered.size() - count) : "None")).append(" included.");
         summary.append("\n\n");
 
         return summary.toString();
@@ -188,13 +190,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText) {
-        Expression exp = new Expression(name, originalExpressionText, namedExpressionsMap);
+
+        Expression exp = new Expression(name, originalExpressionText);
+        exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
         return exp;
     }
 
     @Override
     public void setupSquidSessionSpecs() {
+        
+        // populate taskExpressionsOrdered
+        taskExpressionTreesOrdered.clear();
+        for (Expression exp : taskExpressionsOrdered){
+            taskExpressionTreesOrdered.add((ExpressionTree)exp.getExpressionTree());
+        }
+        // put expressions in execution order
+        Collections.sort(taskExpressionTreesOrdered);
+
         createMapOfIndexToMassStationDetails();
 
         populateTableOfSelectedRatiosFromRatiosList();
@@ -284,7 +297,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             namedExpressionsMap.put(srm.getRatioName(), buildRatioExpression(srm.getRatioName()));
         }
 
-        for (ExpressionTreeInterface exp : taskExpressionsOrdered) {
+        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
             if (exp instanceof BuiltInExpressionInterface) {
                 ((BuiltInExpressionInterface) exp).buildExpression(this);
             }
@@ -327,7 +340,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return lookUpSpeciesByName(parts[1]);
     }
 
-    private SquidSpeciesModel lookUpSpeciesByName(String isotopeName) {
+    @Override
+    public SquidSpeciesModel lookUpSpeciesByName(String isotopeName) {
         SquidSpeciesModel retVal = null;
 
         for (SquidSpeciesModel squidSpeciesModel : squidSpeciesModelList) {
@@ -413,7 +427,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         });
 
-        for (ExpressionTreeInterface expression : taskExpressionsOrdered) {
+        for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
             if (expression.amHealthy()) {
                 // determine subset of spots to be evaluated - default = all
                 List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
@@ -805,19 +819,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the taskExpressionsOrdered
+     * @return the taskExpressionTreesOrdered
      */
     @Override
-    public List<ExpressionTreeInterface> getTaskExpressionsOrdered() {
-        return taskExpressionsOrdered;
+    public List<ExpressionTree> getTaskExpressionTreesOrdered() {
+        return taskExpressionTreesOrdered;
     }
 
     /**
-     * @param taskExpressionsOrdered the taskExpressionsOrdered to set
+     * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
      */
     @Override
-    public void setTaskExpressionsOrdered(List<ExpressionTreeInterface> taskExpressionsOrdered) {
-        this.taskExpressionsOrdered = taskExpressionsOrdered;
+    public void setTaskExpressionTreesOrdered(List<ExpressionTree> taskExpressionTreesOrdered) {
+        this.taskExpressionTreesOrdered = taskExpressionTreesOrdered;
     }
 
     /**
@@ -996,6 +1010,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the namedExpressionsMap
      */
+    @Override
     public Map<String, ExpressionTreeInterface> getNamedExpressionsMap() {
         return namedExpressionsMap;
     }

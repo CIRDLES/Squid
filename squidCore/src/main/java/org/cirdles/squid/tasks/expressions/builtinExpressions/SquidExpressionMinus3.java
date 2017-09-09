@@ -31,6 +31,8 @@ public class SquidExpressionMinus3 extends ExpressionTree implements BuiltInExpr
     /**
      * Squid Excel format is (0.03446*["254/238"]+0.868)*["248/254"] EqNum -3
      */
+    public static String excelExpressionString = "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]";
+
     public SquidExpressionMinus3() {
         super("232/238");
     }

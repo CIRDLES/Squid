@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +36,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javax.xml.bind.JAXBException;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
-import org.xml.sax.SAXException;
 
 /**
  * FXML Controller class

@@ -67,7 +67,7 @@ public class ExpressionParser {
         ExpressionTreeInterface returnExpressionTree = null;
 
         // Get our lexer
-        ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(expression.getOriginalExpressionString()));
+        ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(expression.getExcelExpressionString()));
 
         // Get a list of matched tokens
         CommonTokenStream tokens = new CommonTokenStream(lexer);

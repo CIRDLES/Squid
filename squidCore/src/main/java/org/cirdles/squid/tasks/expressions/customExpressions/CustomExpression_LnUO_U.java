@@ -29,6 +29,8 @@ public class CustomExpression_LnUO_U extends ExpressionTree implements BuiltInEx
     /**
      * Squid Excel format is ln(["254/238"])
      */
+    public static String excelExpressionString = "ln([\"254/238\"])";
+
     public CustomExpression_LnUO_U() {
         super("LnUO/U");
     }
@@ -38,6 +40,7 @@ public class CustomExpression_LnUO_U extends ExpressionTree implements BuiltInEx
         ratiosOfInterest.add("254/238");
 
         childrenET.clear();
+        
         addChild(0, task.findNamedExpression("254/238"));
         operation = Function.ln();
 

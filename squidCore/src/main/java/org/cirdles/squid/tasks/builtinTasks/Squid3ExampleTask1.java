@@ -16,11 +16,14 @@
 package org.cirdles.squid.tasks.builtinTasks;
 
 import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnPbR_U;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204BiWt;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_sec;
 
 /**
  *
@@ -30,7 +33,6 @@ public class Squid3ExampleTask1 extends Task {
 
     /**
      *
-     * @param squidProject
      */
     public Squid3ExampleTask1() {
         super("Squid3ExampleTask1");
@@ -54,25 +56,31 @@ public class Squid3ExampleTask1 extends Task {
         ratioNames.add("206/254");
         ratioNames.add("238/206");
 
-        taskExpressionsOrdered.add(new CustomExpression_LnUO_U());
-        taskExpressionsOrdered.add(new CustomExpression_LnPbR_U());
-        taskExpressionsOrdered.add(new SquidExpressionMinus1());
-        taskExpressionsOrdered.add(new SquidExpressionMinus4());
-        taskExpressionsOrdered.add(new SquidExpressionMinus3());
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_LnPbR_U(), CustomExpression_LnPbR_U.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new SquidExpressionMinus1(), SquidExpressionMinus1.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new SquidExpressionMinus4(), SquidExpressionMinus4.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_Net204BiWt(), CustomExpression_Net204BiWt.excelExpressionString));
 
-//        taskExpressionsOrdered.add(CustomExpression_Net204cts_sec.EXPRESSION);
 //
-//        taskExpressionsOrdered.add(CustomExpression_Net204BiWt.EXPRESSION);
+//        taskExpressionTreesOrdered.add(CustomExpression_Expo.EXPRESSION);
 //
-//        taskExpressionsOrdered.add(CustomExpression_Expo.EXPRESSION);
+//        taskExpressionTreesOrdered.add(CustomExpression_TestIf.EXPRESSION);
 //
-//        taskExpressionsOrdered.add(CustomExpression_TestIf.EXPRESSION);
+//        taskExpressionTreesOrdered.add(CustomExpression_RawPb76Age.EXPRESSION);
 //
-//        taskExpressionsOrdered.add(CustomExpression_RawPb76Age.EXPRESSION);
+//        taskExpressionTreesOrdered.add(CustomExpression_Mean7_6.EXPRESSION);
 //
-//        taskExpressionsOrdered.add(CustomExpression_Mean7_6.EXPRESSION);
-//
-//        taskExpressionsOrdered.add(CustomExpression_RawConcAge.EXPRESSION);
+//        taskExpressionTreesOrdered.add(CustomExpression_RawConcAge.EXPRESSION);
         // experiment
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnUO_U.EXPRESSION, "CustomExpression_LnUO_U.xml");
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnPbR_U.EXPRESSION, "CustomExpression_LnPbR_U.xml");
@@ -96,6 +104,6 @@ public class Squid3ExampleTask1 extends Task {
 //        
 //        ((ExpressionTree) test).setName("TESTSquidExpressionMinus3");
 //        ((ExpressionTree) test).setRootExpressionTree(true);
-//        taskExpressionsOrdered.add(test);
+//        taskExpressionTreesOrdered.add(test);
     }
 }

@@ -15,10 +15,10 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
@@ -26,22 +26,29 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
  *
  * @author James F. Bowring
  */
-public class CustomExpression_Net204BiWt {
+public class CustomExpression_Net204BiWt extends ExpressionTree implements BuiltInExpressionInterface {
 
     /**
      * Squid Excel format is sqBiweight(["Net204cts/sec"],9)
      */
-    public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("Net204BiWt");
+    public static String excelExpressionString = "sqBiweight([\"Net204cts/sec\"],9)";
 
-    static {
-        ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(0, new VariableNodeForPerSpotTaskExpressions(CustomExpression_Net204cts_sec.EXPRESSION.getName()));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("9", 9));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.sqBiweight());
+    public CustomExpression_Net204BiWt() {
+        super("Net204BiWt");
+    }
 
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
+    @Override
+    public void buildExpression(TaskInterface task) {
+
+        childrenET.clear();
+        
+        addChild(0, new VariableNodeForPerSpotTaskExpressions("Net204cts/sec"));
+        addChild(new ConstantNode("9", 9));
+        setOperation(Function.sqBiweight());
+
+        setRootExpressionTree(true);
+        setSquidSwitchSCSummaryCalculation(true);
+        setSquidSwitchSTReferenceMaterialCalculation(true);
+        setSquidSwitchSAUnknownCalculation(false);
     }
 }

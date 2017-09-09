@@ -80,6 +80,8 @@ public interface ExpressionTreeInterface {
     public boolean isTypeFunctionOrOperation();
 
     public boolean amHealthy();
+    
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp);
 
     /**
      *

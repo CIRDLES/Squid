@@ -90,8 +90,8 @@ public final class SquidProject implements Serializable {
     public Map< String, TaskInterface> getTaskLibrary(){
         Map< String, TaskInterface> builtInTasks = new HashMap<>();
         
-        TaskInterface task = new Squid3ExampleTask1();
-        builtInTasks.put(task.getName(), task);
+        TaskInterface builtInTask = new Squid3ExampleTask1();
+        builtInTasks.put(builtInTask.getName(), builtInTask);
         
         return builtInTasks;
     }

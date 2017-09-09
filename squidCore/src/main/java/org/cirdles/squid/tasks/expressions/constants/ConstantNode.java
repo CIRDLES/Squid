@@ -56,6 +56,11 @@ public class ConstantNode implements ExpressionTreeInterface, Serializable, XMLS
     public boolean amHealthy(){
         return name.compareTo(MISSING_EXPRESSION_STRING) != 0;
     }
+
+    @Override
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
+        return false;
+    }
     
     /**
      *

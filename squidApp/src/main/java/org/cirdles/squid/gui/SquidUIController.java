@@ -230,7 +230,7 @@ public class SquidUIController implements Initializable {
             squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println(">>>>   " + iOException.getMessage());
+            System.out.println("ProjectManager >>>>   " + iOException.getMessage());
         }
 
     }

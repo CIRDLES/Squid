@@ -88,8 +88,7 @@ public class ExpressionExplorerController implements Initializable {
         expressionListView.getSelectionModel().selectedItemProperty()
                 .addListener((ObservableValue<? extends ExpressionTreeInterface> ov, ExpressionTreeInterface old_val, ExpressionTreeInterface new_val) -> {
 
-                    Expression holder = new Expression();
-                    holder.setExpressionTree(new_val);
+                    Expression holder = new Expression(new_val, "");
                     expressionAuditLabel.setText(holder.produceExpressionTreeAudit());
                     webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(new_val).toString());
 

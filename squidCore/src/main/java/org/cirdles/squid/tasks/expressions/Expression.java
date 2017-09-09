@@ -15,8 +15,8 @@
  */
 package org.cirdles.squid.tasks.expressions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -27,34 +27,32 @@ import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
  *
  * @author James F. Bowring
  */
-public class Expression {
+public class Expression implements Serializable {
+
+    private static final long serialVersionUID = 2614344042503810733L;
 
     private String name;
-    private String originalExpressionString;
+    private String excelExpressionString;
     private ExpressionTreeInterface expressionTree;
     private String parsingStatusReport;
-    private Map<String, ExpressionTreeInterface> expressionTreeDependencies;
-    private List<String> missingExpressionsByName;
     private List<String> argumentAudit;
 
-    public Expression() {
-        this.argumentAudit = new ArrayList<>();
+    private Expression() {
     }
 
-    public Expression(String name, String originalStringExpression, Map<String, ExpressionTreeInterface> namedExpressionsMap) {
-        this.name = name;
-        this.originalExpressionString = originalStringExpression;
-        this.expressionTree = null;
+    public Expression(String name, String excelExpressionString) {
+        this(new ExpressionTree(name), excelExpressionString);
+    }
+
+    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString) {
+        this.name = expressionTree.getName();
+        this.excelExpressionString = excelExpressionString;
+        this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
-        this.expressionTreeDependencies = new HashMap<>();
-        this.missingExpressionsByName = new ArrayList<>();
         this.argumentAudit = new ArrayList<>();
-
-        parseOriginalExpressionStringIntoExpression(namedExpressionsMap);
-
     }
 
-    private void parseOriginalExpressionStringIntoExpression(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
+    public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
     }
@@ -103,17 +101,17 @@ public class Expression {
     }
 
     /**
-     * @return the originalExpressionString
+     * @return the excelExpressionString
      */
-    public String getOriginalExpressionString() {
-        return originalExpressionString;
+    public String getExcelExpressionString() {
+        return excelExpressionString;
     }
 
     /**
-     * @param originalExpressionString the originalExpressionString to set
+     * @param excelExpressionString the excelExpressionString to set
      */
-    public void setOriginalExpressionString(String originalExpressionString) {
-        this.originalExpressionString = originalExpressionString;
+    public void setExcelExpressionString(String excelExpressionString) {
+        this.excelExpressionString = excelExpressionString;
     }
 
     /**
@@ -142,33 +140,5 @@ public class Expression {
      */
     public void setParsingStatusReport(String parsingStatusReport) {
         this.parsingStatusReport = parsingStatusReport;
-    }
-
-    /**
-     * @return the expressionTreeDependencies
-     */
-    public Map<String, ExpressionTreeInterface> getExpressionTreeDependencies() {
-        return expressionTreeDependencies;
-    }
-
-    /**
-     * @param expressionTreeDependencies the expressionTreeDependencies to set
-     */
-    public void setExpressionTreeDependencies(Map<String, ExpressionTreeInterface> expressionTreeDependencies) {
-        this.expressionTreeDependencies = expressionTreeDependencies;
-    }
-
-    /**
-     * @return the missingExpressionsByName
-     */
-    public List<String> getMissingExpressionsByName() {
-        return missingExpressionsByName;
-    }
-
-    /**
-     * @param missingExpressionsByName the missingExpressionsByName to set
-     */
-    public void setMissingExpressionsByName(List<String> missingExpressionsByName) {
-        this.missingExpressionsByName = missingExpressionsByName;
     }
 }

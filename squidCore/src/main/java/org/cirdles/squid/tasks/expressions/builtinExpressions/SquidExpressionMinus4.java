@@ -31,6 +31,8 @@ public class SquidExpressionMinus4 extends ExpressionTree implements BuiltInExpr
     /**
      * Squid Excel format is ["238/196"]/["254/238"]^0.66 has EqNum = -4
      */
+    public static String excelExpressionString = "[\"238/196\"]/[\"254/238\"]^0.66";
+
     public SquidExpressionMinus4() {
         super("U Conc Const");
     }

@@ -42,7 +42,9 @@ import org.cirdles.squid.tasks.expressions.variables.VariableXMLConverter;
  * @author James F. Bowring
  */
 public class ExpressionTree
-        implements ExpressionTreeInterface,
+        implements
+        Comparable<ExpressionTree>,
+        ExpressionTreeInterface,
         ExpressionTreeBuilderInterface,
         ExpressionTreeWithRatiosInterface,
         Serializable,
@@ -161,10 +163,62 @@ public class ExpressionTree
         boolean retVal = true;
         // check for correct number of operands for operation
         retVal = retVal && (getCountOfChildren() == argumentCount());
-        for (ExpressionTreeInterface exp : childrenET) {
-            retVal = retVal && exp.amHealthy();
+        if (retVal) {
+            for (ExpressionTreeInterface exp : childrenET) {
+                retVal = retVal && exp.amHealthy();
+                if (!retVal) {
+                    break;
+                }
+            }
         }
         return retVal;
+    }
+
+    @Override
+    public boolean usesAnotherExpression(ExpressionTreeInterface expTarget) {
+        boolean retVal = false;
+        for (ExpressionTreeInterface exp : childrenET) {
+            // checking for same object
+            retVal = retVal || (exp == expTarget) || exp.usesAnotherExpression(exp);
+            if (retVal) {
+                break;
+            }
+        }
+        return retVal;
+    }
+
+    @Override
+    /**
+     * This arranges expressions in ascending order of evaluation. Checking for
+     * circular references is done elsewhere.
+     */
+    public int compareTo(ExpressionTree exp) {
+        int retVal = 0;
+        if (this.usesAnotherExpression(exp)) {
+            // this object comes after exp
+            retVal = 1;
+        } else if (exp.usesAnotherExpression(this)) {
+            // this object comes before exp
+            retVal = -1;
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean retVal = false;
+        if (obj instanceof ExpressionTree) {
+            retVal = (this.usesAnotherExpression((ExpressionTree) obj)
+                    == ((ExpressionTree) obj).usesAnotherExpression(this));
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

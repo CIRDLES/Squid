@@ -18,7 +18,6 @@ package org.cirdles.squid.tasks;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -26,6 +25,7 @@ import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
@@ -105,6 +105,8 @@ public interface TaskInterface {
      * @param prawnFile the prawnFile to set
      */
     public void setPrawnFile(PrawnFile prawnFile);
+    
+    public SquidSpeciesModel lookUpSpeciesByName(String isotopeName);
 
     /**
      * @return the squidRatiosModelList
@@ -129,7 +131,7 @@ public interface TaskInterface {
     /**
      * @return the taskExpressionsOrdered
      */
-    List<ExpressionTreeInterface> getTaskExpressionsOrdered();
+    List<ExpressionTree> getTaskExpressionTreesOrdered();
 
     /**
      * @return the type
@@ -193,7 +195,7 @@ public interface TaskInterface {
     /**
      * @param taskExpressionsOrdered the taskExpressionsOrdered to set
      */
-    public void setTaskExpressionsOrdered(List<ExpressionTreeInterface> taskExpressionsOrdered);
+    public void setTaskExpressionTreesOrdered(List<ExpressionTree> taskExpressionsOrdered);
 
     /**
      * @param type the type to set
