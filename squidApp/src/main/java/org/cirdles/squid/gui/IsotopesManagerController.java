@@ -65,6 +65,8 @@ public class IsotopesManagerController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -121,12 +123,12 @@ public class IsotopesManagerController implements Initializable {
                     public void handle(ActionEvent event) {
                         row.getItem().setIsotopeLabel(SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
                         SquidSpeciesModel ssm
-                                = SquidUIController.squidProject.getTask().getSquidSpeciesModelList()
+                                = squidProject.getTask().getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
-                        int previousIndex = SquidUIController.squidProject.getTask().selectBackgroundSpeciesReturnPreviousIndex(ssm);
+                        int previousIndex = squidProject.getTask().selectBackgroundSpeciesReturnPreviousIndex(ssm);
                         if (previousIndex >= 0) {
                             massStationsData.get(previousIndex).setIsotopeLabel(
-                                    SquidUIController.squidProject.getTask().getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
+                                    squidProject.getTask().getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
                         }
                         isotopesTableView.refresh();
                     }
@@ -138,7 +140,7 @@ public class IsotopesManagerController implements Initializable {
                     @Override
                     public void handle(ActionEvent event) {
                         SquidSpeciesModel ssm
-                                = SquidUIController.squidProject.getTask().getSquidSpeciesModelList()
+                                = squidProject.getTask().getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
                         ssm.setIsBackground(false);
                         row.getItem().setIsotopeLabel(ssm.getIsotopeName());

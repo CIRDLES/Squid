@@ -157,18 +157,20 @@ public class ExpressionTree
     }
 
     @Override
-    public boolean amHealthy(){
+    public boolean amHealthy() {
         boolean retVal = true;
-            for (ExpressionTreeInterface exp : childrenET){
-                    retVal = retVal && exp.amHealthy();
-            }            
+        // check for correct number of operands for operation
+        retVal = retVal && (getCountOfChildren() == argumentCount());
+        for (ExpressionTreeInterface exp : childrenET) {
+            retVal = retVal && exp.amHealthy();
+        }
         return retVal;
     }
-    
+
     @Override
     public String auditOperationArgumentCount() {
 
-        int requiredChildren = ((ExpressionTreeInterface) this).argumentCount();
+        int requiredChildren = argumentCount();
         int suppliedChildren = getCountOfChildren();
 
         String audit = "Op " + getOperation().getName() + " requires/provides: " + requiredChildren + " / " + suppliedChildren + " arguments.";

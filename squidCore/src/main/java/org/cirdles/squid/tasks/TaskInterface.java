@@ -34,8 +34,6 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  */
 public interface TaskInterface {
 
-    public ExpressionTreeInterface buildRatioExpression(String ratioName);
-
     public ExpressionTreeInterface findNamedExpression(String ratioName);
 
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText);
@@ -57,17 +55,6 @@ public interface TaskInterface {
     public void evaluateTaskExpressions(List<ShrimpFractionExpressionInterface> shrimpFractions);
 
     public void populateTableOfSelectedRatiosFromRatiosList();
-
-    /**
-     *
-     * @param ratiosOfInterest
-     * @return
-     */
-    public Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest);
-
-    public SquidSpeciesModel findDenominator(String ratioName);
-
-    public SquidSpeciesModel findNumerator(String ratioName);
 
     /**
      * @return the authorName
@@ -150,8 +137,6 @@ public interface TaskInterface {
     String getType();
 
     boolean isEmptyTableOfSelectedRatiosByMassStationIndex();
-
-    SquidSpeciesModel lookUpSpeciesByName(String isotopeName);
 
     /**
      * @return the mapOfIndexToMassStationDetails

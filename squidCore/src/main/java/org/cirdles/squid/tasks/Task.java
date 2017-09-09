@@ -201,22 +201,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         buildSquidRatiosModelListFromMassStationDetails();
 
-//        squidRatiosModelList = new ArrayList<>();
-//        try {
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3), 0));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(4), squidSpeciesModelList.get(3), 1));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(5), squidSpeciesModelList.get(3), 2));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(0), 3));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(6), 4));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(8), squidSpeciesModelList.get(6), 5));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(8), 9));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(7), squidSpeciesModelList.get(8), 6));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(9), 7));
-//            squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(9), squidSpeciesModelList.get(8), 8));
-//
-//        } catch (Exception e) {
-//        }
         squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
     }
 
@@ -308,8 +292,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
-    @Override
-    public ExpressionTreeInterface buildRatioExpression(String ratioName) {
+    private ExpressionTreeInterface buildRatioExpression(String ratioName) {
         // format of ratioName is "nnn/mmm"
         ExpressionTreeInterface ratioExpression = null;
         if ((findNumerator(ratioName) != null) & (findDenominator(ratioName) != null)) {
@@ -334,20 +317,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return foundRatioExp;
     }
 
-    @Override
-    public SquidSpeciesModel findNumerator(String ratioName) {
+    private SquidSpeciesModel findNumerator(String ratioName) {
         String[] parts = ratioName.split("/");
         return lookUpSpeciesByName(parts[0]);
     }
 
-    @Override
-    public SquidSpeciesModel findDenominator(String ratioName) {
+    private SquidSpeciesModel findDenominator(String ratioName) {
         String[] parts = ratioName.split("/");
         return lookUpSpeciesByName(parts[1]);
     }
 
-    @Override
-    public SquidSpeciesModel lookUpSpeciesByName(String isotopeName) {
+    private SquidSpeciesModel lookUpSpeciesByName(String isotopeName) {
         SquidSpeciesModel retVal = null;
 
         for (SquidSpeciesModel squidSpeciesModel : squidSpeciesModelList) {
@@ -365,8 +345,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param ratiosOfInterest
      * @return
      */
-    @Override
-    public Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest) {
+    private Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest) {
         // assume acquisition order is atomic weight order
         Set<SquidSpeciesModel> eqPkUndupeOrd = new TreeSet<>();
         for (int i = 0; i < ratiosOfInterest.size(); i++) {

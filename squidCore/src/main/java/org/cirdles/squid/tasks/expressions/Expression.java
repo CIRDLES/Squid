@@ -171,10 +171,4 @@ public class Expression {
     public void setMissingExpressionsByName(List<String> missingExpressionsByName) {
         this.missingExpressionsByName = missingExpressionsByName;
     }
-
-//    public static void main(String[] args) {
-//        Expression test = new Expression("TEST", "ln(ln([\"expression\"]))");
-//        System.out.println(test.produceExpressionTreeAudit());
-//
-//    }
 }
