@@ -32,13 +32,13 @@ public class ShrimpSpeciesNodeFunction extends Function {
     private ShrimpSpeciesNode shrimpSpeciesNode;
 
     public ShrimpSpeciesNodeFunction(String methodNameForShrimpFraction) {
-        name = "squidSpeciesModel";
+        name = methodNameForShrimpFraction.replace("get", "");
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
-        labelsForOutputValues = new String[][]{{"Calculated Field: " + methodNameForShrimpFraction}};
+        labelsForOutputValues = new String[][]{{"Calculated Field: " + name}};
     }
 
     /**
@@ -56,44 +56,30 @@ public class ShrimpSpeciesNodeFunction extends Function {
         shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
         shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
         
+        Object[][] results = shrimpSpeciesNode.eval(shrimpFractions, task);
+        // restore the node to anonymous
+        shrimpSpeciesNode.setMethodNameForShrimpFraction("");
         return shrimpSpeciesNode.eval(shrimpFractions, task);
-//        
-//        
-//        double retVal = 0.0;
-//        squidSpeciesModel = ((ShrimpSpeciesNode) childrenET.get(0)).getSquidSpeciesModel();
-//        Integer index = squidSpeciesModel.getMassStationIndex();
-//        if (index != -1) {
-//            double[] isotopeValues
-//                    = methodFactory(shrimpFractions.get(0), methodNameForShrimpFraction);
-//            if (index < isotopeValues.length) {
-//                retVal = isotopeValues[index];
-//            }
-//        }
-//
-//        return new Object[][]{{retVal}};
     }
+    
+    
 
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
         shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
-        return shrimpSpeciesNode.toStringMathML();
+        
+        String retVal 
+                = "<mrow>"
+                + "<mi>" + name + "</mi>"
+                + "<mfenced>"
+                + shrimpSpeciesNode.toStringMathML()
+                + "</mfenced></mrow>\n";
 
-//        String retVal
-//                = "<msubsup>\n"
-//                + "<mstyle mathsize='90%'>\n"
-//                + "<mtext>\n"
-//                + squidSpeciesModel.getIsotopeName()
-//                + "\n</mtext>\n"
-//                + "</mstyle>\n"
-//                + "<mstyle  mathsize='150%'>\n"
-//                + "<mtext>\n"
-//                + squidSpeciesModel.getElementName()
-//                + "\n</mtext>\n"
-//                + "</mstyle>\n"
-//                + "</msubsup>\n";
-//
-//        return retVal;
+         // restore the node to anonymous
+        shrimpSpeciesNode.setMethodNameForShrimpFraction("");
+        
+        return retVal;
     }
 
     /**

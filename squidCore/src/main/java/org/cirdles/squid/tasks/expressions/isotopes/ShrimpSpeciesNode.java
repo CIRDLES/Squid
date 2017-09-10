@@ -70,6 +70,7 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
         this.isotopeName = squidSpeciesModel.getIsotopeName();
     }
 
+    @Override
     public boolean amHealthy() {
         boolean retVal = false;
         if (parentET instanceof ExpressionTree) {

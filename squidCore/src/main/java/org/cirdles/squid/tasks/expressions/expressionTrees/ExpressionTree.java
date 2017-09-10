@@ -28,6 +28,7 @@ import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
+import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
@@ -253,9 +254,16 @@ public class ExpressionTree
                     audit += "\n    Expression '" + (String) ((ConstantNode) child).getValue() + "' is missing.";
                 }
             }
+            
+            if (child instanceof ShrimpSpeciesNode) {
+                if (!(((ExpressionTree)child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
+                        && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
+                    audit += "\n    Expression '" + (String) ((ShrimpSpeciesNode) child).getName() + "' is not a valid argument.";
+                }
+            }
         }
 
-        audit += "\n  returns " + getOperation().printOutputValues();
+        audit += "\n    returns " + getOperation().printOutputValues();
 
         return audit;
     }
@@ -365,7 +373,10 @@ public class ExpressionTree
         if (operation == null) {
             retVal = "<mtext>No expression selected.</mtext>\n";
         } else {
-            retVal = operation.toStringMathML(childrenET);
+            try {
+                retVal = operation.toStringMathML(childrenET);
+            } catch (Exception e) {
+            }
         }
         return retVal;
     }

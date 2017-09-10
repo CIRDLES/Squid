@@ -69,17 +69,20 @@ public class ExpressionExplorerController implements Initializable {
 
         // update expressions
         squidProject.getTask().buildSquidRatiosModelListFromMassStationDetails();
-        
+
         // initialize expressions tab
         List<ExpressionTreeInterface> namedExpressions = new ArrayList<>();
         Iterator<String> namedExpressionIterator = squidProject.getTask().getNamedExpressionsMap().keySet().iterator();
         while (namedExpressionIterator.hasNext()) {
             String expName = namedExpressionIterator.next();
-            namedExpressions.add(squidProject.getTask().getNamedExpressionsMap().get(expName));
+            ExpressionTreeInterface exp = squidProject.getTask().getNamedExpressionsMap().get(expName);
+            if (exp instanceof ExpressionTree) {
+                namedExpressions.add(exp);
+            }
         }
 
-        ObservableList<ExpressionTreeInterface> items = 
-                FXCollections.observableArrayList(namedExpressions);
+        ObservableList<ExpressionTreeInterface> items
+                = FXCollections.observableArrayList(namedExpressions);
 
         expressionListView.setItems(items);
 

@@ -116,6 +116,8 @@ public class ExpressionParser {
         }
 
         return returnExpressionTree;
+        
+        // robreg(  totalCts(["204"]) -totalCts(["206"]) , 9) breaks also with parens around term
 
     }
 
