@@ -26,6 +26,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -35,6 +36,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilder
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
+import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
@@ -53,9 +55,7 @@ public class ExpressionParser {
     }
 
     public ExpressionParser(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
-
         this.namedExpressionsMap = namedExpressionsMap;
-
     }
 
     /**
@@ -108,7 +108,10 @@ public class ExpressionParser {
 
             returnExpressionTree = buildTree(parsedRPN);
             if (returnExpressionTree != null) {
-                returnExpressionTree.setName(expression.getName());
+                try {
+                    returnExpressionTree.setName(expression.getName());
+                } catch (Exception e) {
+                }
             }
         }
 
@@ -220,7 +223,7 @@ public class ExpressionParser {
         }
 
         if (exp != null) {
-            // this insertion enforces correct order as children arrive in reverse order
+            // this insertion enforces correct order as children arrive in reverse polish notation order
             ((ExpressionTreeBuilderInterface) exp).addChild(0, retExpTree);
         }
 

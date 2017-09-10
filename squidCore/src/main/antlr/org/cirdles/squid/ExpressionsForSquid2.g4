@@ -83,7 +83,8 @@ FUNCTION :
     'Sqrt' | 'sqrt' | 
     'RobReg' | 'robReg' | 'robreg' |
     'SqBiweight' | 'sqBiweight' |
-    'SqWtAvg' | 'sqWtAvg';
+    'SqWtAvg' | 'sqWtAvg' |
+    'TotalCps' | 'totalCps';
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 

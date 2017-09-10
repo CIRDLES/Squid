@@ -56,21 +56,24 @@ public class Squid3ExampleTask1 extends Task {
         ratioNames.add("206/254");
         ratioNames.add("238/206");
 
+        
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString));
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_LnPbR_U(), CustomExpression_LnPbR_U.excelExpressionString));
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus1(), SquidExpressionMinus1.excelExpressionString));
+        // this next expression should be last in execution, but serves as a test for sorting execution order
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_Net204BiWt(), CustomExpression_Net204BiWt.excelExpressionString));
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus4(), SquidExpressionMinus4.excelExpressionString));
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString));
+
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
-        taskExpressionsOrdered.add(
-                new Expression(new CustomExpression_Net204BiWt(), CustomExpression_Net204BiWt.excelExpressionString));
-
+        
 //
 //        taskExpressionTreesOrdered.add(CustomExpression_Expo.EXPRESSION);
 //

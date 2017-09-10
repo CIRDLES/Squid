@@ -113,6 +113,9 @@ public abstract class Function
         FUNCTIONS_MAP.put("sqrt", sqrt().getName());
         FUNCTIONS_MAP.put("Sqrt", sqrt().getName());
 
+        FUNCTIONS_MAP.put("TotalCps", "totalCps");
+        FUNCTIONS_MAP.put("totalCps", "totalCps");
+
     }
 
     /**
@@ -193,6 +196,10 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface sqIf() {
         return new If();
+    }
+    
+    public static OperationOrFunctionInterface totalCps(){
+        return new ShrimpSpeciesNodeFunction("getTotalCps");
     }
 
     /**

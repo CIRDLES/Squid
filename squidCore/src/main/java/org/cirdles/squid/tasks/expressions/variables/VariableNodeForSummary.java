@@ -66,7 +66,7 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, Serializ
 
     @Override
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
-        return false;
+        return name == exp.getName();
     }
 
     /**

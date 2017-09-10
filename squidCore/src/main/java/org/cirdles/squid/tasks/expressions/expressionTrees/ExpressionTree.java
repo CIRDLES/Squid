@@ -179,7 +179,7 @@ public class ExpressionTree
         boolean retVal = false;
         for (ExpressionTreeInterface exp : childrenET) {
             // checking for same object
-            retVal = retVal || (exp == expTarget) || exp.usesAnotherExpression(exp);
+            retVal = retVal || (exp == expTarget) || exp.usesAnotherExpression(expTarget);
             if (retVal) {
                 break;
             }
@@ -194,12 +194,22 @@ public class ExpressionTree
      */
     public int compareTo(ExpressionTree exp) {
         int retVal = 0;
-        if (this.usesAnotherExpression(exp)) {
-            // this object comes after exp
-            retVal = 1;
-        } else if (exp.usesAnotherExpression(this)) {
-            // this object comes before exp
-            retVal = -1;
+        if (this != exp) {
+            if (this.usesAnotherExpression(exp)) {
+                // this object comes after exp
+                retVal = 1;
+            } else if (exp.usesAnotherExpression(this)) {
+                // this object comes before exp
+                retVal = -1;
+            }
+            if (retVal == 0) {
+                // then compare has ratios of interest
+                retVal = (int) (hasRatiosOfInterest() ? -1 : (int) (exp.hasRatiosOfInterest() ? 1 : 0));
+            }
+            if (retVal == 0) {
+                // then compare on names so we have a complete ordering
+                retVal = name.compareTo(exp.getName());
+            }
         }
 
         return retVal;
@@ -208,9 +218,17 @@ public class ExpressionTree
     @Override
     public boolean equals(Object obj) {
         boolean retVal = false;
-        if (obj instanceof ExpressionTree) {
-            retVal = (this.usesAnotherExpression((ExpressionTree) obj)
-                    == ((ExpressionTree) obj).usesAnotherExpression(this));
+        if (this == obj) {
+            retVal = true;
+        } else if (obj instanceof ExpressionTree) {
+            retVal = !(this.usesAnotherExpression((ExpressionTree) obj)
+                    && !((ExpressionTree) obj).usesAnotherExpression(this));
+            if(retVal){
+                retVal = (hasRatiosOfInterest() == ((ExpressionTree)obj).hasRatiosOfInterest());
+            }
+            if(retVal){
+                retVal = (name.compareTo(((ExpressionTree)obj).getName()) == 0);
+            }
         }
 
         return retVal;
@@ -218,7 +236,7 @@ public class ExpressionTree
 
     @Override
     public int hashCode() {
-        return super.hashCode(); //To change body of generated methods, choose Tools | Templates.
+        return name.hashCode();
     }
 
     @Override

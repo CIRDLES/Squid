@@ -90,6 +90,7 @@ public class ExpressionExplorerController implements Initializable {
 
                     Expression holder = new Expression(new_val, "");
                     expressionAuditLabel.setText(holder.produceExpressionTreeAudit());
+                    webEngine.load("");
                     webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(new_val).toString());
 
 // PLAYGROUND

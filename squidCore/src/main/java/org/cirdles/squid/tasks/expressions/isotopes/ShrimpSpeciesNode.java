@@ -24,7 +24,9 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -35,6 +37,7 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
 
     private static final long serialVersionUID = 3592579554999155473L;
 
+    private String isotopeName;
     private SquidSpeciesModel squidSpeciesModel;
     private String methodNameForShrimpFraction;
     // used for parsing expressions
@@ -53,29 +56,38 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
      * @param name
      */
     public ShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel) {
-        this(squidSpeciesModel, null);
+        this(squidSpeciesModel, "");
     }
 
     /**
      *
      * @param squidSpeciesModel
-     * @param name
      * @param methodNameForShrimpFraction
      */
     public ShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel, String methodNameForShrimpFraction) {
         this.squidSpeciesModel = squidSpeciesModel;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
+        this.isotopeName = squidSpeciesModel.getIsotopeName();
     }
 
-    public boolean amHealthy(){
-        return ((squidSpeciesModel instanceof SquidSpeciesModel) && methodNameForShrimpFraction.length() > 0);
+    public boolean amHealthy() {
+        boolean retVal = false;
+        if (parentET instanceof ExpressionTree) {
+            if (((ExpressionTree) parentET).getOperation() instanceof ShrimpSpeciesNodeFunction) {
+                retVal = ((ShrimpSpeciesNodeFunction) ((ExpressionTree) parentET).getOperation()).getMethodNameForShrimpFraction().length() > 0;
+            } else {
+                retVal = ((squidSpeciesModel instanceof SquidSpeciesModel) && methodNameForShrimpFraction.length() > 0);
+            }
+        }
+
+        return retVal;
     }
 
     @Override
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
         return false;
     }
-    
+
     /**
      *
      * @param xstream
@@ -255,5 +267,13 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
         deserialize = (ShrimpSpeciesNode) ((XMLSerializerInterface) deserialize).readXMLObject("ShrimpSpeciesNode.xml", false);
 
         ((XMLSerializerInterface) deserialize).serializeXMLObject(deserialize, "ShrimpSpeciesNodeBBB.xml");
+    }
+
+    /**
+     * @return the isotopeName
+     */
+    // for populating iists
+    public String toString() {
+        return isotopeName;
     }
 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -128,7 +129,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.taskExpressionTreesOrdered = new ArrayList<>();
         this.taskExpressionsOrdered = new ArrayList<>();
-        this.namedExpressionsMap = new HashMap<>();
+        this.namedExpressionsMap = new LinkedHashMap<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 
         this.prawnFile = prawnFile;
@@ -199,20 +200,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void setupSquidSessionSpecs() {
-        
+
         // populate taskExpressionsOrdered
         taskExpressionTreesOrdered.clear();
-        for (Expression exp : taskExpressionsOrdered){
-            taskExpressionTreesOrdered.add((ExpressionTree)exp.getExpressionTree());
+        for (Expression exp : taskExpressionsOrdered) {
+            taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
         }
-        // put expressions in execution order
-        Collections.sort(taskExpressionTreesOrdered);
-
         createMapOfIndexToMassStationDetails();
 
         populateTableOfSelectedRatiosFromRatiosList();
 
         buildSquidRatiosModelListFromMassStationDetails();
+
+        // put expressions in execution order
+        Collections.sort(taskExpressionTreesOrdered);
 
         squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
     }
@@ -293,6 +294,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void assembleNamedExpressionsMap() {
         namedExpressionsMap.clear();
 
+        for (SquidSpeciesModel spm : squidSpeciesModelList) {
+            ShrimpSpeciesNode shrimpSpeciesNode = new ShrimpSpeciesNode(spm);
+            namedExpressionsMap.put(spm.getIsotopeName(), shrimpSpeciesNode);
+        }
+
         for (SquidRatiosModel srm : squidRatiosModelList) {
             namedExpressionsMap.put(srm.getRatioName(), buildRatioExpression(srm.getRatioName()));
         }
@@ -303,6 +309,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
             namedExpressionsMap.put(exp.getName(), exp);
         }
+
     }
 
     private ExpressionTreeInterface buildRatioExpression(String ratioName) {
@@ -1014,5 +1021,4 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public Map<String, ExpressionTreeInterface> getNamedExpressionsMap() {
         return namedExpressionsMap;
     }
-
 }
