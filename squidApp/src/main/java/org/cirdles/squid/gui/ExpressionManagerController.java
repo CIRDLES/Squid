@@ -19,8 +19,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 
@@ -36,18 +38,19 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private AnchorPane expressionsAnchorPane;
     @FXML
-    private ScrollPane expressionsScrollPane;
+    private ListView<?> expressionsListView;
+    @FXML
+    private Pane expressionDetailsPane;
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         expressionsAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         expressionsAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
-        expressionsScrollPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        expressionsScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
     }
 

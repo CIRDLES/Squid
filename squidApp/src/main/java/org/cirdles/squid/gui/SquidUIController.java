@@ -119,6 +119,8 @@ public class SquidUIController implements Initializable {
     private Menu openRecentSquidProjectMenu;
     @FXML
     private Menu selectSquid3TaskFromLibraryMenu;
+    @FXML
+    private Menu dataReductionMenu;
 
     /**
      * Initializes the controller class.
@@ -661,6 +663,14 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(expressionManagerUI);
         launchExpressionManager();
         showUI(expressionManagerUI);
+    }
+
+    @FXML
+    private void showReferenceMaterialDataMenutItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void showUnknownDataMenuItemAction(ActionEvent event) {
     }
 
 }

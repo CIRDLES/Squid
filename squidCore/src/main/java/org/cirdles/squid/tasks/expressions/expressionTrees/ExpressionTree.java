@@ -255,6 +255,7 @@ public class ExpressionTree
                 }
             }
             
+            // backwards compatible with use of ShrimpSpeciesNodes directly
             if (child instanceof ShrimpSpeciesNode) {
                 if (!(((ExpressionTree)child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
                         && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {

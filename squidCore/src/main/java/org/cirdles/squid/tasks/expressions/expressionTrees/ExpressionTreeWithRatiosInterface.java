@@ -32,20 +32,20 @@ public interface ExpressionTreeWithRatiosInterface {
      */
     public List<String> getRatiosOfInterest();
 
-    /**
-     *
-     * @param ratio
-     * @return
-     */
-    public static ExpressionTreeInterface buildRatioExpression(SquidRatiosModel ratio) {
-        ExpressionTreeInterface ratioExpression
-                = new ExpressionTree(
-                        ratio.getDisplayNameNoSpaces(),
-                        new ShrimpSpeciesNode(ratio.getNumerator(), "getPkInterpScanArray"),
-                        new ShrimpSpeciesNode(ratio.getDenominator(), "getPkInterpScanArray"),
-                        Operation.divide());
-        
-        ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratio.getRatioName());
-        return ratioExpression;
-    }
+//    /**
+//     *
+//     * @param ratio
+//     * @return
+//     */
+//    public static ExpressionTreeInterface buildRatioExpression(SquidRatiosModel ratio) {
+//        ExpressionTreeInterface ratioExpression
+//                = new ExpressionTree(
+//                        ratio.getDisplayNameNoSpaces(),
+//                        new ShrimpSpeciesNode(ratio.getNumerator(), "getPkInterpScanArray"),
+//                        new ShrimpSpeciesNode(ratio.getDenominator(), "getPkInterpScanArray"),
+//                        Operation.divide());
+//        
+//        ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratio.getRatioName());
+//        return ratioExpression;
+//    }
 }
