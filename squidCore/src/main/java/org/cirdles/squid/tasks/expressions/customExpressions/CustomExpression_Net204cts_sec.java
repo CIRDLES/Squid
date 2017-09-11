@@ -40,11 +40,12 @@ public class CustomExpression_Net204cts_sec extends ExpressionTree implements Bu
     @Override
     public void buildExpression(TaskInterface task) {
 
+        operation = Operation.subtract();
+
         childrenET.clear();
-        
-        addChild(0, new ShrimpSpeciesNode(task.lookUpSpeciesByName("204"), "getTotalCps"));
-        addChild(new ShrimpSpeciesNode(task.lookUpSpeciesByName(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL), "getTotalCps"));
-        setOperation(Operation.subtract());
+
+        addChild(0, ShrimpSpeciesNode.buildShrimpSpeciesNode(task.lookUpSpeciesByName("204"), "getTotalCps"));
+        addChild(ShrimpSpeciesNode.buildShrimpSpeciesNode(task.lookUpSpeciesByName(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL), "getTotalCps"));
 
         setRootExpressionTree(true);
         setSquidSwitchSCSummaryCalculation(false);

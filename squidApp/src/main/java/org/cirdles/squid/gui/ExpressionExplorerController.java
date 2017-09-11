@@ -65,10 +65,9 @@ public class ExpressionExplorerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        ExpressionTree.TASK = SquidUIController.squidProject.getTask();
 
         // update expressions
-        squidProject.getTask().buildSquidRatiosModelListFromMassStationDetails();
+        squidProject.getTask().setupSquidSessionSpecs();//.buildSquidRatiosModelListFromMassStationDetails();
 
         // initialize expressions tab
         List<ExpressionTreeInterface> namedExpressions = new ArrayList<>();

@@ -15,20 +15,21 @@
  */
 package org.cirdles.squid.tasks.expressions;
 
+import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring
  */
-public class Expression implements Serializable {
+public class Expression implements Comparable<Expression>, XMLSerializerInterface, Serializable {
 
     private static final long serialVersionUID = 2614344042503810733L;
 
@@ -51,6 +52,38 @@ public class Expression implements Serializable {
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
+    }
+
+    @Override
+    public int compareTo(Expression expression) {
+        return ((ExpressionTree) expressionTree).compareTo((ExpressionTree) expression.getExpressionTree());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean retVal = false;
+        if (this == obj) {
+            retVal = true;
+        } else if (obj instanceof Expression) {
+            retVal = ((ExpressionTree) expressionTree).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public String customizeXML(String xml) {
+        return XMLSerializerInterface.super.customizeXML(xml); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void customizeXstream(XStream xstream) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
@@ -141,5 +174,10 @@ public class Expression implements Serializable {
      */
     public void setParsingStatusReport(String parsingStatusReport) {
         this.parsingStatusReport = parsingStatusReport;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

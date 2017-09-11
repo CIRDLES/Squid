@@ -43,6 +43,8 @@ public class SquidExpressionMinus4 extends ExpressionTree implements BuiltInExpr
         ratiosOfInterest.add("238/196");
         ratiosOfInterest.add("254/238");
 
+        operation = Operation.divide();
+
         childrenET.clear();
         ExpressionTreeInterface r254_238wPow = new ExpressionTree(
                 "254/238^0.66",
@@ -52,7 +54,6 @@ public class SquidExpressionMinus4 extends ExpressionTree implements BuiltInExpr
 
         addChild(0, task.findNamedExpression("238/196"));
         addChild(r254_238wPow);
-        setOperation(Operation.divide());
 
         setRootExpressionTree(true);
         setSquidSwitchSCSummaryCalculation(false);

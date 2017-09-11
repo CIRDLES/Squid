@@ -80,7 +80,7 @@ public interface ExpressionTreeInterface {
     public boolean isTypeFunctionOrOperation();
 
     public boolean amHealthy();
-    
+
     public boolean usesAnotherExpression(ExpressionTreeInterface exp);
 
     /**
@@ -174,7 +174,15 @@ public interface ExpressionTreeInterface {
     }
 
     public default int argumentCount() {
-        return ((ExpressionTreeBuilderInterface) this).getOperation().getArgumentCount();
+        int retVal = 0;
+
+        if (this instanceof ExpressionTreeBuilderInterface) {
+            if (((ExpressionTreeBuilderInterface) this).getOperation() != null) {
+                retVal = ((ExpressionTreeBuilderInterface) this).getOperation().getArgumentCount();
+            }
+        }
+
+        return retVal;
     }
 
     public default void auditExpressionTreeDependencies(List<String> argumentAudit) {

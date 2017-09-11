@@ -23,6 +23,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
@@ -61,12 +62,13 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, Serializ
     }
 
     public boolean amHealthy() {
-        return name.length() > 0;
+//        return name.length() > 0;
+        return (name.length() > 0) && name.compareTo(MISSING_EXPRESSION_STRING) !=0;
     }
 
     @Override
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
-        return name == exp.getName();
+        return name.compareToIgnoreCase(exp.getName()) == 0;
     }
 
     /**

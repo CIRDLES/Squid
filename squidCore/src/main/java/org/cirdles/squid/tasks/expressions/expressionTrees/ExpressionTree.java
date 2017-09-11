@@ -180,7 +180,7 @@ public class ExpressionTree
         boolean retVal = false;
         for (ExpressionTreeInterface exp : childrenET) {
             // checking for same object
-            retVal = retVal || (exp == expTarget) || exp.usesAnotherExpression(expTarget);
+            retVal = retVal || exp.usesAnotherExpression(expTarget) || (exp.equals(expTarget));
             if (retVal) {
                 break;
             }
@@ -205,7 +205,11 @@ public class ExpressionTree
             }
             if (retVal == 0) {
                 // then compare has ratios of interest
-                retVal = (int) (hasRatiosOfInterest() ? -1 : (int) (exp.hasRatiosOfInterest() ? 1 : 0));
+                if (hasRatiosOfInterest() && !exp.hasRatiosOfInterest()) {
+                    retVal = -1;
+                } else if (!hasRatiosOfInterest() && exp.hasRatiosOfInterest()) {
+                    retVal = 1;
+                }
             }
             if (retVal == 0) {
                 // then compare on names so we have a complete ordering
@@ -224,11 +228,11 @@ public class ExpressionTree
         } else if (obj instanceof ExpressionTree) {
             retVal = !(this.usesAnotherExpression((ExpressionTree) obj)
                     && !((ExpressionTree) obj).usesAnotherExpression(this));
-            if(retVal){
-                retVal = (hasRatiosOfInterest() == ((ExpressionTree)obj).hasRatiosOfInterest());
+            if (retVal) {
+                retVal = (hasRatiosOfInterest() == ((ExpressionTree) obj).hasRatiosOfInterest());
             }
-            if(retVal){
-                retVal = (name.compareTo(((ExpressionTree)obj).getName()) == 0);
+            if (retVal) {
+                retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
             }
         }
 
@@ -254,10 +258,10 @@ public class ExpressionTree
                     audit += "\n    Expression '" + (String) ((ConstantNode) child).getValue() + "' is missing.";
                 }
             }
-            
+
             // backwards compatible with use of ShrimpSpeciesNodes directly
             if (child instanceof ShrimpSpeciesNode) {
-                if (!(((ExpressionTree)child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
+                if (!(((ExpressionTree) child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
                         && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
                     audit += "\n    Expression '" + (String) ((ShrimpSpeciesNode) child).getName() + "' is not a valid argument.";
                 }

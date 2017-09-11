@@ -24,7 +24,9 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 
 /**
- * This class demonstrate the alternative build strategy used by the expression parser.
+ * This class demonstrate the alternative build strategy used by the expression
+ * parser.
+ *
  * @author James F. Bowring
  */
 public class CustomExpression_Net204cts_secALT extends ExpressionTree implements BuiltInExpressionInterface {
@@ -41,18 +43,18 @@ public class CustomExpression_Net204cts_secALT extends ExpressionTree implements
     @Override
     public void buildExpression(TaskInterface task) {
 
+        operation = Operation.subtract();
+
         childrenET.clear();
 
         ExpressionTree leftExp = new ExpressionTree(Function.totalCps());
-        leftExp.addChild(0, new ShrimpSpeciesNode(task.lookUpSpeciesByName("204")));
+        leftExp.addChild(0, ShrimpSpeciesNode.buildShrimpSpeciesNode(task.lookUpSpeciesByName("204")));
 
         ExpressionTree rightExp = new ExpressionTree(Function.totalCps());
-        rightExp.addChild(0, new ShrimpSpeciesNode(task.lookUpSpeciesByName(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL)));
+        rightExp.addChild(0, ShrimpSpeciesNode.buildShrimpSpeciesNode(task.lookUpSpeciesByName(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL)));
 
         addChild(0, leftExp);
         addChild(rightExp);
-        
-        setOperation(Operation.subtract());
 
         setRootExpressionTree(true);
         setSquidSwitchSCSummaryCalculation(false);

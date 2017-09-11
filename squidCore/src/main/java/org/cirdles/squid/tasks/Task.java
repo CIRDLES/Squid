@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -201,7 +200,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setupSquidSessionSpecs() {
 
-        // populate taskExpressionsOrdered
+        // populate taskExpressionsTreesOrdered
         taskExpressionTreesOrdered.clear();
         for (Expression exp : taskExpressionsOrdered) {
             taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
@@ -214,8 +213,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         // put expressions in execution order
         Collections.sort(taskExpressionTreesOrdered);
+        Collections.sort(taskExpressionsOrdered);
+
+        // now use existing ratios as basis for building and checking expressions in ascending execution order
+        assembleNamedExpressionsMap();
+
+        // two passes need to get in correct order
+        buildExpressions();
+
+        // put expressions in execution order
+        Collections.sort(taskExpressionTreesOrdered);
+        Collections.sort(taskExpressionsOrdered);
+
+        buildExpressions();
+
+        // put expressions in execution order
+        Collections.sort(taskExpressionTreesOrdered);
+        Collections.sort(taskExpressionsOrdered);
 
         squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
+    }
+
+    private void buildExpressions() {
+        // after map is built
+        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
+            if (exp instanceof BuiltInExpressionInterface) {
+                ((BuiltInExpressionInterface) exp).buildExpression(this);
+            }
+        }
     }
 
     @Override
@@ -286,16 +311,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
             }
         }
-
-        // now use existing ratios as basis for building and checking expressions
-        assembleNamedExpressionsMap();
     }
 
     private void assembleNamedExpressionsMap() {
         namedExpressionsMap.clear();
 
         for (SquidSpeciesModel spm : squidSpeciesModelList) {
-            ShrimpSpeciesNode shrimpSpeciesNode = new ShrimpSpeciesNode(spm);
+            ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);
             namedExpressionsMap.put(spm.getIsotopeName(), shrimpSpeciesNode);
         }
 
@@ -304,12 +326,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
-            if (exp instanceof BuiltInExpressionInterface) {
-                ((BuiltInExpressionInterface) exp).buildExpression(this);
-            }
             namedExpressionsMap.put(exp.getName(), exp);
         }
-
     }
 
     private ExpressionTreeInterface buildRatioExpression(String ratioName) {
@@ -319,8 +337,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             ratioExpression
                     = new ExpressionTree(
                             ratioName,
-                            new ShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
-                            new ShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
+                            ShrimpSpeciesNode.buildShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
+                            ShrimpSpeciesNode.buildShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
                             Operation.divide());
 
             ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
@@ -332,6 +350,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public ExpressionTreeInterface findNamedExpression(String ratioName) {
         ExpressionTreeInterface foundRatioExp = namedExpressionsMap.get(ratioName);
         if (foundRatioExp == null) {
+            foundRatioExp = new ConstantNode(MISSING_EXPRESSION_STRING, ratioName);
+        } else if (!foundRatioExp.amHealthy()) {
             foundRatioExp = new ConstantNode(MISSING_EXPRESSION_STRING, ratioName);
         }
         return foundRatioExp;
@@ -1020,5 +1040,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public Map<String, ExpressionTreeInterface> getNamedExpressionsMap() {
         return namedExpressionsMap;
+    }
+
+    /**
+     * @return the taskExpressionsOrdered
+     */
+    public List<Expression> getTaskExpressionsOrdered() {
+        return taskExpressionsOrdered;
     }
 }

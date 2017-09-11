@@ -137,10 +137,11 @@ public class SquidUIController implements Initializable {
         squidImageView.layoutYProperty().bind(primaryStageWindow.getScene().heightProperty()
                 .divide(2).subtract(squidImageView.getFitHeight() / 2).subtract(60));
 
-        manageExpressionsMenu.setDisable(true);
         managePrawnFileMenu.setDisable(true);
-        manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
+        manageRatiosMenu.setDisable(true);
+        dataReductionMenu.setDisable(true);
+        manageExpressionsMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 

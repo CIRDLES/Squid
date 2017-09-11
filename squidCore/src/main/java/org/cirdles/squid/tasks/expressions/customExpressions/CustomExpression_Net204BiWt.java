@@ -19,6 +19,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
@@ -40,11 +41,16 @@ public class CustomExpression_Net204BiWt extends ExpressionTree implements Built
     @Override
     public void buildExpression(TaskInterface task) {
 
+        operation = Function.sqBiweight();
+
         childrenET.clear();
-        
-        addChild(0, new VariableNodeForPerSpotTaskExpressions("Net204cts/sec"));
+
+        // causes amHealthy to fail if expression bad
+        ExpressionTreeInterface exp = task.findNamedExpression("Net204cts/sec");
+        addChild(0, new VariableNodeForPerSpotTaskExpressions(exp.getName()));
+
+//        addChild(0, new VariableNodeForPerSpotTaskExpressions("Net204cts/sec"));
         addChild(new ConstantNode("9", 9));
-        setOperation(Function.sqBiweight());
 
         setRootExpressionTree(true);
         setSquidSwitchSCSummaryCalculation(true);

@@ -39,10 +39,12 @@ public class CustomExpression_LnUO_U extends ExpressionTree implements BuiltInEx
     public void buildExpression(TaskInterface task) {
         ratiosOfInterest.add("254/238");
 
+        operation = Function.ln();
+        
         childrenET.clear();
         
         addChild(0, task.findNamedExpression("254/238"));
-        operation = Function.ln();
+        
 
         rootExpressionTree = true;
         squidSwitchSCSummaryCalculation = false;

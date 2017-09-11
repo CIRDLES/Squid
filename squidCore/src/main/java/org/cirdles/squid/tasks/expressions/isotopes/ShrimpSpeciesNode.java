@@ -46,17 +46,7 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
     /**
      *
      */
-    public ShrimpSpeciesNode() {
-        this(null);
-    }
-
-    /**
-     *
-     * @param squidSpeciesModel
-     * @param name
-     */
-    public ShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel) {
-        this(squidSpeciesModel, "");
+    private ShrimpSpeciesNode() {
     }
 
     /**
@@ -64,10 +54,30 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
      * @param squidSpeciesModel
      * @param methodNameForShrimpFraction
      */
-    public ShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel, String methodNameForShrimpFraction) {
+    private ShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel, String methodNameForShrimpFraction) {
         this.squidSpeciesModel = squidSpeciesModel;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
         this.isotopeName = squidSpeciesModel.getIsotopeName();
+    }
+
+    public static ShrimpSpeciesNode buildShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel, String methodNameForShrimpFraction) {
+        ShrimpSpeciesNode retVal = null;
+        if (squidSpeciesModel != null) {
+            retVal = new ShrimpSpeciesNode(squidSpeciesModel, methodNameForShrimpFraction);
+        }
+        return retVal;
+    }
+
+    public static ShrimpSpeciesNode buildShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel) {
+        ShrimpSpeciesNode retVal = null;
+        if (squidSpeciesModel != null) {
+            retVal = new ShrimpSpeciesNode(squidSpeciesModel, "");
+        }
+        return retVal;
+    }
+    
+    public static ShrimpSpeciesNode buildEmptyShrimpSpeciesNode() {
+        return new ShrimpSpeciesNode();
     }
 
     @Override

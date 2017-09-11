@@ -162,7 +162,7 @@ public class ExpressionTreeXMLConverter implements Converter {
                     expression = (ExpressionTreeInterface) context.convertAnother(expression, ExpressionTree.class);
                     break;
                 case "ShrimpSpeciesNode":
-                    expression = new ShrimpSpeciesNode();
+                    expression = ShrimpSpeciesNode.buildEmptyShrimpSpeciesNode();
                     expression = (ExpressionTreeInterface) context.convertAnother(expression, ShrimpSpeciesNode.class);
                     break;
                 case "ConstantNode":

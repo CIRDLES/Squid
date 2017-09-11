@@ -215,5 +215,10 @@ public interface TaskInterface {
      * @return the squidSessionModel
      */
     public SquidSessionModel getSquidSessionModel();
+    
+     /**
+     * @return the taskExpressionsOrdered
+     */
+    public List<Expression> getTaskExpressionsOrdered();
 
 }
