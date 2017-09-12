@@ -31,7 +31,7 @@ public class CustomExpression_LnPbR_U extends ExpressionTree implements BuiltInE
     /**
      * Squid Excel format is ln(["206/238"])
      */
-    public static final String excelExpressionString = "ln([\"206/238\"]";
+    public static final String excelExpressionString = "ln([\"206/238\"])";
 
     public CustomExpression_LnPbR_U() {
         super("LnPbR_U/U");

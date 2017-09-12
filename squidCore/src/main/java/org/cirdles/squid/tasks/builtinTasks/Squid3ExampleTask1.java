@@ -24,6 +24,7 @@ import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Ln
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204BiWt;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_sec;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_secALT;
 
 /**
  *
@@ -71,8 +72,10 @@ public class Squid3ExampleTask1 extends Task {
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString));
 
+//        taskExpressionsOrdered.add(
+//                new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
         taskExpressionsOrdered.add(
-                new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
+                new Expression(new CustomExpression_Net204cts_secALT(), CustomExpression_Net204cts_secALT.excelExpressionString));
         
 //
 //        taskExpressionTreesOrdered.add(CustomExpression_Expo.EXPRESSION);

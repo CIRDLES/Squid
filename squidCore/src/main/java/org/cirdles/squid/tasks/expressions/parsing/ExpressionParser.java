@@ -26,7 +26,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -36,7 +35,6 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilder
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
-import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
@@ -89,7 +87,10 @@ public class ExpressionParser {
 
         // we don't want to build expressiontree if any bad parsing present
         if (descriptiveErrorListenerLexer.getSyntaxErrors().length() + descriptiveErrorListenerParser.getSyntaxErrors().length() > 0) {
-            expression.setParsingStatusReport(descriptiveErrorListenerLexer.getSyntaxErrors() + "\n " + descriptiveErrorListenerParser.getSyntaxErrors());
+            expression.setParsingStatusReport(
+                    descriptiveErrorListenerLexer.getSyntaxErrors()
+                    + (String) (descriptiveErrorListenerLexer.getSyntaxErrors().length() > 0 ? descriptiveErrorListenerLexer.getSyntaxErrors() + "\n" : "")
+                    + descriptiveErrorListenerParser.getSyntaxErrors());
         } else {
             parser.setBuildParseTree(true);
             List<ParseTree> children = expSentenceContext.children;
@@ -116,9 +117,8 @@ public class ExpressionParser {
         }
 
         return returnExpressionTree;
-        
-        // robreg(  totalCts(["204"]) -totalCts(["206"]) , 9) breaks also with parens around term
 
+        // robreg(  totalCts(["204"]) -totalCts(["206"]) , 9) breaks also with parens around term
     }
 
     private ExpressionTreeInterface buildTree(List<String> parsedRPNreversed) {

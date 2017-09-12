@@ -34,7 +34,7 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
  */
 public class CustomExpression_Net204cts_secALT extends ExpressionTree implements BuiltInExpressionInterface {
 
-                   //    private static final long serialVersionUID = 6522574920235718028L;
+    //    private static final long serialVersionUID = 6522574920235718028L;
     private void readObject(
             ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
@@ -46,7 +46,7 @@ public class CustomExpression_Net204cts_secALT extends ExpressionTree implements
     /**
      * Squid Excel format is ["Total204cts/sec"] - ["Bkrdcts/sec"]
      */
-    public static final String excelExpressionString = "[\"Total204cts/sec\"] - [\"Bkrdcts/sec\"]";
+    public static final String excelExpressionString = "totalCps([\"204\"]) - totalCps([\"BKG\"])";
 
     public CustomExpression_Net204cts_secALT() {
         super("Net204cts/sec");

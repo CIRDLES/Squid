@@ -227,6 +227,7 @@ public class SquidUIController implements Initializable {
             manageTasksMenu.setDisable(false);
             manageRatiosMenu.setDisable(true);
             manageExpressionsMenu.setDisable(true);
+            dataReductionMenu.setDisable(true);
             manageAnalysisMenu.setDisable(true);
 
             // log prawnFileFolderMRU
@@ -261,6 +262,7 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
+        dataReductionMenu.setDisable(true);
         manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 
@@ -472,7 +474,7 @@ public class SquidUIController implements Initializable {
             showUI(taskManagerUI);
             manageRatiosMenu.setDisable(false);
             manageExpressionsMenu.setDisable(false);
-            manageAnalysisMenu.setDisable(false);
+            dataReductionMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("taskManagerUI >>>>   " + iOException.getMessage());

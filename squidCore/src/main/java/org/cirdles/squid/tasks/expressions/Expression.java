@@ -97,7 +97,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public String produceExpressionTreeAudit() {
 
-        String auditReport = "\n*** Expression Audit Report ***\n";
+        String auditReport = "";//*** Expression Audit Report ***\n";
         if (expressionTree == null) {
             auditReport
                     += "Errors occurred in parsing:\n" + parsingStatusReport;

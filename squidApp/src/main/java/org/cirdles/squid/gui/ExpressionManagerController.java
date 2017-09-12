@@ -29,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -47,6 +48,9 @@ import org.cirdles.squid.tasks.expressions.Expression;
  */
 public class ExpressionManagerController implements Initializable {
 
+     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
+    private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
+    
     @FXML
     private AnchorPane scrolledAnchorPane;
     @FXML
@@ -54,14 +58,15 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private ListView<Expression> expressionsListView;
     @FXML
-    private Pane expressionDetailsPane;
-
-    private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
-    private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
+    private Pane expressionDetailsPane;  
     @FXML
     private Label expressionListHeaderLabel;
     @FXML
     private TextField expressionNameTextField;
+    @FXML
+    private TextField expressionExcelTextField;
+    @FXML
+    private TextArea expressionAuditTextArea;
 
     /**
      * Initializes the controller class.
@@ -138,10 +143,16 @@ public class ExpressionManagerController implements Initializable {
 
     private void populateExpressionDetails(Expression expression) {
         expressionNameTextField.setText(expression.getName());
+        expressionExcelTextField.setText(expression.getExcelExpressionString());
+        
+        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(expression.getName(), expression.getExcelExpressionString());
+        expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
     }
 
     private void vacateExpressionDetails() {
         expressionNameTextField.setText("");
+        expressionExcelTextField.setText("");
+        expressionAuditTextArea.setText("Audit:");
     }
 
     private void populateExpressionsListView() {
