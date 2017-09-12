@@ -22,6 +22,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
@@ -48,9 +49,9 @@ import org.cirdles.squid.tasks.expressions.Expression;
  */
 public class ExpressionManagerController implements Initializable {
 
-     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
+    private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
-    
+
     @FXML
     private AnchorPane scrolledAnchorPane;
     @FXML
@@ -58,7 +59,7 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private ListView<Expression> expressionsListView;
     @FXML
-    private Pane expressionDetailsPane;  
+    private Pane expressionDetailsPane;
     @FXML
     private Label expressionListHeaderLabel;
     @FXML
@@ -94,7 +95,8 @@ public class ExpressionManagerController implements Initializable {
                 + String.format("%1$-" + 3 + "s", "SC")
                 + String.format("%1$-" + 3 + "s", "RM")
                 + String.format("%1$-" + 3 + "s", "UN")
-                + String.format("%1$-" + 3 + "s", "SQ"));
+                + String.format("%1$-" + 3 + "s", "SQ")
+                + String.format("%1$-" + 15 + "s", "Sorted in Execution Order"));
         Tooltip tooltip = new Tooltip();
         tooltip.setText("RI = Ratios of Interest; SC = Summary; RM = Reference Materials; UN = Unknowns; SQ = Special Squid UPbTh");
         expressionListHeaderLabel.setTooltip(tooltip);
@@ -144,7 +146,7 @@ public class ExpressionManagerController implements Initializable {
     private void populateExpressionDetails(Expression expression) {
         expressionNameTextField.setText(expression.getName());
         expressionExcelTextField.setText(expression.getExcelExpressionString());
-        
+
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(expression.getName(), expression.getExcelExpressionString());
         expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
     }
@@ -184,6 +186,22 @@ public class ExpressionManagerController implements Initializable {
         contextMenu.getItems().add(menuItem);
 
         return contextMenu;
+    }
+
+    @FXML
+    private void newButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void editButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void saveButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void cancelButtonAction(ActionEvent event) {
     }
 
 }
