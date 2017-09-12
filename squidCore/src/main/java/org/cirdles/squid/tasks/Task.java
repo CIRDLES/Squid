@@ -90,6 +90,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     protected List<ExpressionTree> taskExpressionTreesOrdered;
     protected List<Expression> taskExpressionsOrdered;
+    protected List<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
 
     /**
@@ -98,6 +99,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet;
 
     protected PrawnFile prawnFile;
+
+    protected boolean changed;
 
     public Task() {
         this("Default Empty Task", null);
@@ -128,10 +131,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.taskExpressionTreesOrdered = new ArrayList<>();
         this.taskExpressionsOrdered = new ArrayList<>();
+        this.taskExpressionsRemoved = new ArrayList<>();
         this.namedExpressionsMap = new LinkedHashMap<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 
         this.prawnFile = prawnFile;
+
+        this.changed = true;
 
         initializeTask();
 
@@ -199,18 +205,35 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void setupSquidSessionSpecs() {
-
-        // populate taskExpressionsTreesOrdered
-        taskExpressionTreesOrdered.clear();
-        for (Expression exp : taskExpressionsOrdered) {
-            taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
+        // this is transient so needs re-creating if does not exist
+        if (mapOfIndexToMassStationDetails == null) {
+            createMapOfIndexToMassStationDetails();
         }
-        createMapOfIndexToMassStationDetails();
 
-        populateTableOfSelectedRatiosFromRatiosList();
+        if (changed) {
 
-        buildSquidRatiosModelListFromMassStationDetails();
+            createMapOfIndexToMassStationDetails();
 
+            // populate taskExpressionsTreesOrdered
+            taskExpressionTreesOrdered.clear();
+            for (Expression exp : taskExpressionsOrdered) {
+                taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
+            }
+            buildSquidSpeciesModelList();
+
+            populateTableOfSelectedRatiosFromRatiosList();
+
+            buildSquidRatiosModelListFromMassStationDetails();
+
+            processAndSortExpressions();
+
+            squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
+
+            changed = false;
+        }
+    }
+
+    private void processAndSortExpressions() {
         // put expressions in execution order
         Collections.sort(taskExpressionTreesOrdered);
         Collections.sort(taskExpressionsOrdered);
@@ -218,7 +241,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // now use existing ratios as basis for building and checking expressions in ascending execution order
         assembleNamedExpressionsMap();
 
-        // two passes need to get in correct order
+        // two passes needed to get in correct order ***************************
+        // since checking for dependencies after possible changes or new expressions
         buildExpressions();
 
         // put expressions in execution order
@@ -230,8 +254,31 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // put expressions in execution order
         Collections.sort(taskExpressionTreesOrdered);
         Collections.sort(taskExpressionsOrdered);
+    }
 
-        squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
+    public void removeExpression(Expression expression) {
+        if (expression != null) {
+            taskExpressionTreesOrdered.remove(expression.getExpressionTree());
+            taskExpressionsOrdered.remove(expression);
+            taskExpressionsRemoved.add(expression);
+            processAndSortExpressions();
+        }
+    }
+    
+    public void restoreRemovedExpressions(){
+        for (Expression exp : taskExpressionsRemoved){
+            taskExpressionsOrdered.add(exp);
+            taskExpressionTreesOrdered.add((ExpressionTree)exp.getExpressionTree());
+        }
+        taskExpressionsRemoved.clear();
+        processAndSortExpressions();
+    }
+
+    private void createMapOfIndexToMassStationDetails() {
+        // this is transient so needs re-creating if does not exist
+        if (prawnFile != null) {
+            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
+        }
     }
 
     private void buildExpressions() {
@@ -244,22 +291,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void createMapOfIndexToMassStationDetails() {
-        if (prawnFile != null) {
-            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
-
-            // update these if squidSpeciesModelList exists
-            if (squidSpeciesModelList.size() > 0) {
-                for (SquidSpeciesModel ssm : squidSpeciesModelList) {
-                    MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
-                    // only these two fields change
-                    massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
-                    massStationDetail.setIsBackground(ssm.getIsBackground());
-                }
-            } else {
-                buildSquidSpeciesModelListFromMassStationDetails();
+    public void buildSquidSpeciesModelList() {
+        // update these if squidSpeciesModelList exists
+        if (squidSpeciesModelList.size() > 0) {
+            for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+                MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+                // only these two fields change
+                massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+                massStationDetail.setIsBackground(ssm.getIsBackground());
             }
+        } else {
+            buildSquidSpeciesModelListFromMassStationDetails();
         }
+
     }
 
     private void buildSquidSpeciesModelListFromMassStationDetails() {
@@ -913,6 +957,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the squidSessionModel
      */
+    @Override
     public SquidSessionModel getSquidSessionModel() {
         return squidSessionModel;
     }
@@ -1018,6 +1063,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 ratioNames.add(ratioName);
             }
         }
+
+        changed = true;
     }
 
     /**
@@ -1047,5 +1094,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public List<Expression> getTaskExpressionsOrdered() {
         return taskExpressionsOrdered;
+    }
+
+    /**
+     * @param changed the changed to set
+     */
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 }

@@ -13,7 +13,8 @@
          <items>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <ListView fx:id="expressionsListView" layoutX="46.0" layoutY="41.0" prefHeight="529.0" prefWidth="361.0" style="-fx-background-color: white; -fx-border-color: black;" stylesheets="@css/projectManager.css" />
+                  <Label fx:id="expressionListHeaderLabel" layoutX="46.0" layoutY="45.0" prefHeight="28.0" prefWidth="361.0" text="Header Label " />
+                  <ListView fx:id="expressionsListView" layoutX="46.0" layoutY="73.0" prefHeight="529.0" prefWidth="361.0" style="-fx-background-color: white; -fx-border-color: black;" stylesheets="@css/projectManager.css" />
                   <Label layoutX="15.0" layoutY="14.0" prefHeight="17.0" prefWidth="216.0" text="Select an expression:">
                      <effect>
                         <InnerShadow />

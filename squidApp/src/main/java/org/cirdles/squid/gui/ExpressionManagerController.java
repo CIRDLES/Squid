@@ -22,8 +22,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -51,6 +55,8 @@ public class ExpressionManagerController implements Initializable {
 
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
+    @FXML
+    private Label expressionListHeaderLabel;
 
     /**
      * Initializes the controller class.
@@ -64,13 +70,26 @@ public class ExpressionManagerController implements Initializable {
         expressionsAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         // update expressions
-        squidProject.getTask().setupSquidSessionSpecs();//.buildSquidRatiosModelListFromMassStationDetails();
+        squidProject.getTask().setupSquidSessionSpecs();
 
-        // initialize expressions tab
-        List<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
-        ObservableList<Expression> items
-                = FXCollections.observableArrayList(namedExpressions);
-        expressionsListView.setItems(items);
+        initializeExpressionsListView();
+    }
+
+    private void initializeExpressionsListView() {
+        expressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        expressionListHeaderLabel.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        expressionListHeaderLabel.setText(
+                String.format("%1$-" + 5 + "s", " ")
+                + String.format("%1$-" + 3 + "s", "RI")
+                + String.format("%1$-" + 3 + "s", "SC")
+                + String.format("%1$-" + 3 + "s", "RM")
+                + String.format("%1$-" + 3 + "s", "UN")
+                + String.format("%1$-" + 3 + "s", "SQ"));
+        Tooltip tooltip = new Tooltip();
+        tooltip.setText("RI = Ratios of Interest; SC = Summary; RM = Reference Materials; UN = Unknowns; SQ = Special Squid UPbTh");
+        expressionListHeaderLabel.setTooltip(tooltip);
+
+        populateExpressionsListView();
 
         expressionsListView.setCellFactory(param -> new ListCell<Expression>() {
             private ImageView imageView = new ImageView();
@@ -82,7 +101,7 @@ public class ExpressionManagerController implements Initializable {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    if (expression.getExpressionTree().amHealthy()) {
+                    if (expression.amHealthy()) {
                         imageView.setImage(HEALTHY);
                     } else {
                         imageView.setImage(UNHEALTHY);
@@ -90,11 +109,45 @@ public class ExpressionManagerController implements Initializable {
 
                     imageView.setFitHeight(12);
                     imageView.setFitWidth(12);
-                    setText(expression.getName());
+                    setText(expression.buildSignatureString());
                     setGraphic(imageView);
                 }
             }
+            
+            
         });
+
+        expressionsListView.setContextMenu(createExpressionsListViewContextMenu());
+    }
+
+    private void populateExpressionsListView() {
+        List<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
+        ObservableList<Expression> items
+                = FXCollections.observableArrayList(namedExpressions);
+        expressionsListView.setItems(items);
+    }
+
+    private ContextMenu createExpressionsListViewContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        
+        MenuItem menuItem = new MenuItem("Remove expression.");
+        menuItem.setOnAction((evt) -> {
+            Expression selectedExpression = expressionsListView.getSelectionModel().getSelectedItem();
+            if (selectedExpression != null) {
+                squidProject.getTask().removeExpression(selectedExpression);
+                populateExpressionsListView();
+            }
+        });
+        contextMenu.getItems().add(menuItem);
+        
+        menuItem = new MenuItem("Restore removed expressions.");
+        menuItem.setOnAction((evt) -> {
+                squidProject.getTask().restoreRemovedExpressions();
+                populateExpressionsListView();    
+        });
+        contextMenu.getItems().add(menuItem);
+        
+        return contextMenu;
     }
 
 }

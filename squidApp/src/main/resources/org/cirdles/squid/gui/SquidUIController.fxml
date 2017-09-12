@@ -71,14 +71,16 @@
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageExpressionsMenuItemAction" text="Manage Expressions" />
+                  <MenuItem mnemonicParsing="false" text="Load Expression from File" />
+                  <MenuItem mnemonicParsing="false" text="Load Expression from Library" />
             <MenuItem mnemonicParsing="false" onAction="#exploreExpressionsMenuItemAction" text=" Explore Expressions" />
           </items>
         </Menu>
             <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Analysis">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" />
-                  <MenuItem mnemonicParsing="false" text="Reference Material Task" />
-                  <MenuItem mnemonicParsing="false" text="Unknowns Tasks" />
+                <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Analyze Data using Expressions" />
+                  <MenuItem mnemonicParsing="false" text="Reference Material Results" />
+                  <MenuItem mnemonicParsing="false" text="Unknowns Results" />
               </items>
             </Menu>
             <Menu fx:id="manageReportsMenu" mnemonicParsing="false" text="Reports">

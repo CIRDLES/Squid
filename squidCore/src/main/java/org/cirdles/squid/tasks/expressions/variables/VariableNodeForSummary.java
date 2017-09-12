@@ -62,7 +62,6 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, Serializ
     }
 
     public boolean amHealthy() {
-//        return name.length() > 0;
         return (name.length() > 0) && name.compareTo(MISSING_EXPRESSION_STRING) !=0;
     }
 

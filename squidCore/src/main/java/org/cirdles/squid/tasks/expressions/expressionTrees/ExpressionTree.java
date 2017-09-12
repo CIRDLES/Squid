@@ -96,6 +96,11 @@ public class ExpressionTree
     /**
      *
      */
+    protected boolean squidSpecialUPbThExpression;
+
+    /**
+     *
+     */
     protected boolean rootExpressionTree;
 
     /**
@@ -151,6 +156,7 @@ public class ExpressionTree
         this.squidSwitchSCSummaryCalculation = false;
         this.squidSwitchSTReferenceMaterialCalculation = false;
         this.squidSwitchSAUnknownCalculation = false;
+        this.squidSpecialUPbThExpression = false;
         this.rootExpressionTree = false;
     }
 
@@ -212,6 +218,14 @@ public class ExpressionTree
                 }
             }
             if (retVal == 0) {
+                // then compare is special built-in UPbTh expression
+                if (isSquidSpecialUPbThExpression()&& !exp.isSquidSpecialUPbThExpression()) {
+                    retVal = -1;
+                } else if (!isSquidSpecialUPbThExpression() && exp.isSquidSpecialUPbThExpression()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
                 // then compare on names so we have a complete ordering
                 retVal = name.compareTo(exp.getName());
             }
@@ -230,6 +244,9 @@ public class ExpressionTree
                     && !((ExpressionTree) obj).usesAnotherExpression(this));
             if (retVal) {
                 retVal = (hasRatiosOfInterest() == ((ExpressionTree) obj).hasRatiosOfInterest());
+            }
+            if (retVal) {
+                retVal = (isSquidSpecialUPbThExpression() == ((ExpressionTree) obj).isSquidSpecialUPbThExpression());
             }
             if (retVal) {
                 retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
@@ -595,5 +612,19 @@ public class ExpressionTree
      */
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
         this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @return the squidSpecialUPbThExpression
+     */
+    public boolean isSquidSpecialUPbThExpression() {
+        return squidSpecialUPbThExpression;
+    }
+
+    /**
+     * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
+     */
+    public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression) {
+        this.squidSpecialUPbThExpression = squidSpecialUPbThExpression;
     }
 }

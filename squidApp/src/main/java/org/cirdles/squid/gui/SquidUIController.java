@@ -590,7 +590,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void auditMassesMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(massesAuditUI);
-        squidProject.getTask().createMapOfIndexToMassStationDetails();
+        squidProject.getTask().buildSquidSpeciesModelList();
         launchMassesAudit();
         showUI(massesAuditUI);
     }
@@ -598,7 +598,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void specifyIsotopesMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(isotopesManagerUI);
-        squidProject.getTask().createMapOfIndexToMassStationDetails();
+        squidProject.getTask().buildSquidSpeciesModelList();
         launchIsotopesManager();
         showUI(isotopesManagerUI);
     }

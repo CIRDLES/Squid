@@ -103,6 +103,7 @@ public class IsotopesManagerController implements Initializable {
                     SquidSpeciesModel ssm
                             = squidProject.getTask().getSquidSpeciesModelList()
                                     .get(editEvent.getTablePosition().getRow());
+                    squidProject.getTask().setChanged(true);
                     ssm.setIsotopeName(editIsotopeName);
                 } else {
                     ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
@@ -130,6 +131,7 @@ public class IsotopesManagerController implements Initializable {
                             massStationsData.get(previousIndex).setIsotopeLabel(
                                     squidProject.getTask().getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
                         }
+                        squidProject.getTask().setChanged(true);
                         isotopesTableView.refresh();
                     }
                 });
@@ -142,6 +144,7 @@ public class IsotopesManagerController implements Initializable {
                         SquidSpeciesModel ssm
                                 = squidProject.getTask().getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
+                        squidProject.getTask().setChanged(true);
                         ssm.setIsBackground(false);
                         row.getItem().setIsotopeLabel(ssm.getIsotopeName());
                         isotopesTableView.refresh();

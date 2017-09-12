@@ -40,7 +40,7 @@ public interface TaskInterface {
 
     public void buildSquidRatiosModelListFromMassStationDetails();
 
-    public void createMapOfIndexToMassStationDetails();
+    public void buildSquidSpeciesModelList();
 
     /**
      *
@@ -196,6 +196,10 @@ public interface TaskInterface {
      * @param taskExpressionsOrdered the taskExpressionsOrdered to set
      */
     public void setTaskExpressionTreesOrdered(List<ExpressionTree> taskExpressionsOrdered);
+    
+    public void removeExpression(Expression expression);
+    
+    public void restoreRemovedExpressions();
 
     /**
      * @param type the type to set
@@ -220,5 +224,9 @@ public interface TaskInterface {
      * @return the taskExpressionsOrdered
      */
     public List<Expression> getTaskExpressionsOrdered();
-
+    
+    /**
+     * @param changed the changed to set
+     */
+    public void setChanged(boolean changed);
 }

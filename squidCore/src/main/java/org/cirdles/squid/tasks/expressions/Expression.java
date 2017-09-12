@@ -76,6 +76,10 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         return name.hashCode();
     }
 
+    public boolean amHealthy(){
+        return expressionTree.amHealthy();
+    }
+    
     @Override
     public String customizeXML(String xml) {
         return XMLSerializerInterface.super.customizeXML(xml); //To change body of generated methods, choose Tools | Templates.
@@ -118,6 +122,18 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
                 ((ExpressionTree) expressionTree).auditExpressionTreeDependencies(argumentAudit);
             }
         }
+    }
+    
+    public String buildSignatureString(){
+         StringBuilder signature = new StringBuilder();
+         signature.append(((ExpressionTree)expressionTree).hasRatiosOfInterest() ? "  +" : "  -");
+         signature.append(((ExpressionTree)expressionTree).isSquidSwitchSCSummaryCalculation() ? "  +" : "  -");
+         signature.append(((ExpressionTree)expressionTree).isSquidSwitchSTReferenceMaterialCalculation()? "  +" : "  -");
+         signature.append(((ExpressionTree)expressionTree).isSquidSwitchSAUnknownCalculation()? "  +" : "  -");
+         signature.append(((ExpressionTree)expressionTree).isSquidSpecialUPbThExpression()? "  +  " : "  -  ");
+         signature.append(((ExpressionTree)expressionTree).getName());
+         
+         return signature.toString();
     }
 
     /**
