@@ -28,10 +28,12 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
  */
 public class SquidExpressionMinus1 extends ExpressionTree implements BuiltInExpressionInterface {
 
+    private static final long serialVersionUID = -6450797263330239509L;
+
     /**
      * Squid Excel format is ["206/238"]/["254/238"]^2 has EqNum = -1
      */
-    public static String excelExpressionString = "[\"206/238\"]/[\"254/238\"]^2";
+    public static final String excelExpressionString = "[\"206/238\"]/[\"254/238\"]^2";
 
     public SquidExpressionMinus1() {
         super("206/238 Calib Const");
@@ -47,7 +49,7 @@ public class SquidExpressionMinus1 extends ExpressionTree implements BuiltInExpr
 
         childrenET.clear();
         addChild(0, task.findNamedExpression("206/238"));
-        ExpressionTreeInterface r254_238wSquared = new ExpressionTree("254/238^2", task.findNamedExpression("254/238"), new ConstantNode("2", 2.0), Operation.pow());   
+        ExpressionTreeInterface r254_238wSquared = new ExpressionTree("254/238^2", task.findNamedExpression("254/238"), new ConstantNode("2", 2.0), Operation.pow());
         addChild(r254_238wSquared);
 
         setRootExpressionTree(true);

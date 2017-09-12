@@ -28,10 +28,12 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
  */
 public class CustomExpression_Net204cts_sec extends ExpressionTree implements BuiltInExpressionInterface {
 
+    private static final long serialVersionUID = -6501040138165217443L;
+
     /**
      * Squid Excel format is ["Total204cts/sec"] - ["Bkrdcts/sec"]
      */
-    public static String excelExpressionString = "[\"Total204cts/sec\"] - [\"Bkrdcts/sec\"]";
+    public static final String excelExpressionString = "[\"Total204cts/sec\"] - [\"Bkrdcts/sec\"]";
 
     public CustomExpression_Net204cts_sec() {
         super("Net204cts/sec");

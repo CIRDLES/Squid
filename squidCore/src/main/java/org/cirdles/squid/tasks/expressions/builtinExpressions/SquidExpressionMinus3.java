@@ -28,10 +28,12 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
  */
 public class SquidExpressionMinus3 extends ExpressionTree implements BuiltInExpressionInterface {
 
+    private static final long serialVersionUID = -8990134118105371171L;
+
     /**
      * Squid Excel format is (0.03446*["254/238"]+0.868)*["248/254"] EqNum -3
      */
-    public static String excelExpressionString = "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]";
+    public static final String excelExpressionString = "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]";
 
     public SquidExpressionMinus3() {
         super("232/238");

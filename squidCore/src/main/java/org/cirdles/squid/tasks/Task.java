@@ -258,17 +258,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     public void removeExpression(Expression expression) {
         if (expression != null) {
-            taskExpressionTreesOrdered.remove(expression.getExpressionTree());
+            taskExpressionTreesOrdered.remove((ExpressionTree) expression.getExpressionTree());
             taskExpressionsOrdered.remove(expression);
             taskExpressionsRemoved.add(expression);
             processAndSortExpressions();
         }
     }
-    
-    public void restoreRemovedExpressions(){
-        for (Expression exp : taskExpressionsRemoved){
+
+    public void restoreRemovedExpressions() {
+        for (Expression exp : taskExpressionsRemoved) {
             taskExpressionsOrdered.add(exp);
-            taskExpressionTreesOrdered.add((ExpressionTree)exp.getExpressionTree());
+            taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
         }
         taskExpressionsRemoved.clear();
         processAndSortExpressions();
@@ -292,18 +292,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void buildSquidSpeciesModelList() {
-        // update these if squidSpeciesModelList exists
-        if (squidSpeciesModelList.size() > 0) {
-            for (SquidSpeciesModel ssm : squidSpeciesModelList) {
-                MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
-                // only these two fields change
-                massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
-                massStationDetail.setIsBackground(ssm.getIsBackground());
+        if (mapOfIndexToMassStationDetails != null) {
+            // update these if squidSpeciesModelList exists
+            if (squidSpeciesModelList.size() > 0) {
+                for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+                    MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+                    // only these two fields change
+                    massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+                    massStationDetail.setIsBackground(ssm.getIsBackground());
+                }
+            } else {
+                buildSquidSpeciesModelListFromMassStationDetails();
             }
-        } else {
-            buildSquidSpeciesModelListFromMassStationDetails();
         }
-
     }
 
     private void buildSquidSpeciesModelListFromMassStationDetails() {

@@ -29,10 +29,12 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
  */
 public class CustomExpression_Net204BiWt extends ExpressionTree implements BuiltInExpressionInterface {
 
+    private static final long serialVersionUID = -5952836801278720275L;
+
     /**
      * Squid Excel format is sqBiweight(["Net204cts/sec"],9)
      */
-    public static String excelExpressionString = "sqBiweight([\"Net204cts/sec\"],9)";
+    public static final String excelExpressionString = "sqBiweight([\"Net204cts/sec\"],9)";
 
     public CustomExpression_Net204BiWt() {
         super("Net204BiWt");

@@ -16,10 +16,10 @@
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 
 /**
@@ -28,10 +28,12 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
  */
 public class SquidExpressionMinus4 extends ExpressionTree implements BuiltInExpressionInterface {
 
+    private static final long serialVersionUID = 1036410631333809397L;
+
     /**
      * Squid Excel format is ["238/196"]/["254/238"]^0.66 has EqNum = -4
      */
-    public static String excelExpressionString = "[\"238/196\"]/[\"254/238\"]^0.66";
+    public static final String excelExpressionString = "[\"238/196\"]/[\"254/238\"]^0.66";
 
     public SquidExpressionMinus4() {
         super("U Conc Const");

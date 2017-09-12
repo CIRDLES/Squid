@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
@@ -24,7 +27,16 @@
             </AnchorPane>
           <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="701.0" styleClass="backgroundCalamari">
                <children>
-                  <Pane fx:id="expressionDetailsPane" prefHeight="638.0" prefWidth="473.0" />
+                  <Pane fx:id="expressionDetailsPane" prefHeight="595.0" prefWidth="473.0" style="-fx-background-color: white;">
+                     <children>
+                        <Label layoutX="6.0" layoutY="14.0" text="Name:" />
+                        <TextField fx:id="expressionNameTextField" editable="false" layoutX="72.0" layoutY="15.0" prefHeight="27.0" prefWidth="381.0" />
+                     </children></Pane>
+                  <ToolBar layoutY="595.0" prefHeight="43.0" prefWidth="473.0">
+                    <items>
+                      <Button mnemonicParsing="false" text="Button" />
+                    </items>
+                  </ToolBar>
                </children>
             </AnchorPane>
          </items>

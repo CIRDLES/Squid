@@ -26,10 +26,12 @@ import org.cirdles.squid.tasks.expressions.functions.Function;
  */
 public class CustomExpression_LnPbR_U extends ExpressionTree implements BuiltInExpressionInterface {
 
+    private static final long serialVersionUID = 4503819747092653761L;
+
     /**
      * Squid Excel format is ln(["206/238"])
      */
-    public static String excelExpressionString = "ln([\"206/238\"]";
+    public static final String excelExpressionString = "ln([\"206/238\"]";
 
     public CustomExpression_LnPbR_U() {
         super("LnPbR_U/U");

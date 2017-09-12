@@ -18,6 +18,8 @@ package org.cirdles.squid.gui;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -57,6 +60,8 @@ public class ExpressionManagerController implements Initializable {
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
     @FXML
     private Label expressionListHeaderLabel;
+    @FXML
+    private TextField expressionNameTextField;
 
     /**
      * Initializes the controller class.
@@ -113,11 +118,30 @@ public class ExpressionManagerController implements Initializable {
                     setGraphic(imageView);
                 }
             }
-            
-            
+
         });
 
         expressionsListView.setContextMenu(createExpressionsListViewContextMenu());
+
+        expressionsListView.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Expression>() {
+            public void changed(ObservableValue<? extends Expression> ov,
+                    Expression old_val, Expression new_val) {
+                if (new_val != null) {
+                    populateExpressionDetails(new_val);
+                } else {
+                    vacateExpressionDetails();
+                }
+            }
+        });
+    }
+
+    private void populateExpressionDetails(Expression expression) {
+        expressionNameTextField.setText(expression.getName());
+    }
+
+    private void vacateExpressionDetails() {
+        expressionNameTextField.setText("");
     }
 
     private void populateExpressionsListView() {
@@ -125,11 +149,12 @@ public class ExpressionManagerController implements Initializable {
         ObservableList<Expression> items
                 = FXCollections.observableArrayList(namedExpressions);
         expressionsListView.setItems(items);
+        expressionsListView.getSelectionModel().clearSelection();
     }
 
     private ContextMenu createExpressionsListViewContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
-        
+
         MenuItem menuItem = new MenuItem("Remove expression.");
         menuItem.setOnAction((evt) -> {
             Expression selectedExpression = expressionsListView.getSelectionModel().getSelectedItem();
@@ -139,14 +164,14 @@ public class ExpressionManagerController implements Initializable {
             }
         });
         contextMenu.getItems().add(menuItem);
-        
+
         menuItem = new MenuItem("Restore removed expressions.");
         menuItem.setOnAction((evt) -> {
-                squidProject.getTask().restoreRemovedExpressions();
-                populateExpressionsListView();    
+            squidProject.getTask().restoreRemovedExpressions();
+            populateExpressionsListView();
         });
         contextMenu.getItems().add(menuItem);
-        
+
         return contextMenu;
     }
 
