@@ -64,7 +64,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         boolean retVal = false;
         if (this == obj) {
             retVal = true;
-        } else if (obj instanceof Expression) {
+        } else if (obj instanceof Expression && (expressionTree instanceof ExpressionTreeInterface)) {
+            // note checking if expressionTree is null due to bad parsing
             retVal = ((ExpressionTree) expressionTree).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
         }
 
@@ -76,10 +77,14 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         return name.hashCode();
     }
 
-    public boolean amHealthy(){
-        return expressionTree.amHealthy();
+    public boolean amHealthy() {
+        boolean retVal = false;
+        if (expressionTree != null) {
+            retVal = expressionTree.amHealthy();
+        }
+        return retVal;
     }
-    
+
     @Override
     public String customizeXML(String xml) {
         return XMLSerializerInterface.super.customizeXML(xml); //To change body of generated methods, choose Tools | Templates.
@@ -93,12 +98,13 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
+        //expressionTree.setName(name);
     }
 
     public String produceExpressionTreeAudit() {
 
         String auditReport = "";//*** Expression Audit Report ***\n";
-        if (expressionTree == null) {
+        if (!((ExpressionTree) expressionTree).isValid()) {
             auditReport
                     += "Errors occurred in parsing:\n" + parsingStatusReport;
         } else {
@@ -116,24 +122,28 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     private void auditExpressionTreeDependencies() {
-        if (expressionTree != null) {
+        if (((ExpressionTree) expressionTree).isValid()) {
             if (expressionTree instanceof ExpressionTree) {
                 this.argumentAudit = new ArrayList<>();
                 ((ExpressionTree) expressionTree).auditExpressionTreeDependencies(argumentAudit);
             }
         }
     }
-    
-    public String buildSignatureString(){
-         StringBuilder signature = new StringBuilder();
-         signature.append(((ExpressionTree)expressionTree).hasRatiosOfInterest() ? "  +" : "  -");
-         signature.append(((ExpressionTree)expressionTree).isSquidSwitchSCSummaryCalculation() ? "  +" : "  -");
-         signature.append(((ExpressionTree)expressionTree).isSquidSwitchSTReferenceMaterialCalculation()? "  +" : "  -");
-         signature.append(((ExpressionTree)expressionTree).isSquidSwitchSAUnknownCalculation()? "  +" : "  -");
-         signature.append(((ExpressionTree)expressionTree).isSquidSpecialUPbThExpression()? "  +  " : "  -  ");
-         signature.append(((ExpressionTree)expressionTree).getName());
-         
-         return signature.toString();
+
+    public String buildSignatureString() {
+        StringBuilder signature = new StringBuilder();
+        if (((ExpressionTree) expressionTree).isValid()) {
+            signature.append(((ExpressionTree) expressionTree).hasRatiosOfInterest() ? "  " + String.valueOf(((ExpressionTree) expressionTree).getRatiosOfInterest().size()) : "  -");
+            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSCSummaryCalculation() ? "  +" : "  -");
+            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? "  +" : "  -");
+            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? "  +" : "  -");
+            signature.append(((ExpressionTree) expressionTree).isSquidSpecialUPbThExpression() ? "  +  " : "  -  ");
+            signature.append(((ExpressionTree) expressionTree).getName());
+        } else {
+            signature.append("  Parsing Error! ").append(name);
+        }
+
+        return signature.toString();
     }
 
     /**

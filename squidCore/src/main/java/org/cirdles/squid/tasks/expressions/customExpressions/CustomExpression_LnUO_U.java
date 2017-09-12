@@ -39,6 +39,8 @@ public class CustomExpression_LnUO_U extends ExpressionTree implements BuiltInEx
 
     @Override
     public void buildExpression(TaskInterface task) {
+        
+        ratiosOfInterest.clear();
         ratiosOfInterest.add("254/238");
 
         operation = Function.ln();

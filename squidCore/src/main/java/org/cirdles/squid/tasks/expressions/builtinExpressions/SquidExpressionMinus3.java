@@ -42,6 +42,7 @@ public class SquidExpressionMinus3 extends ExpressionTree implements BuiltInExpr
     @Override
     public void buildExpression(TaskInterface task) {
 
+        ratiosOfInterest.clear();
         ratiosOfInterest.add("254/238");
         ratiosOfInterest.add("248/254");
 

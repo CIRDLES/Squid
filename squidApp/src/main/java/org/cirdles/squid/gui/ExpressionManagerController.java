@@ -41,6 +41,7 @@ import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  * FXML Controller class
@@ -68,6 +69,8 @@ public class ExpressionManagerController implements Initializable {
     private TextField expressionExcelTextField;
     @FXML
     private TextArea expressionAuditTextArea;
+
+    private Expression currentExpression;
 
     /**
      * Initializes the controller class.
@@ -101,8 +104,7 @@ public class ExpressionManagerController implements Initializable {
         tooltip.setText("RI = Ratios of Interest; SC = Summary; RM = Reference Materials; UN = Unknowns; SQ = Special Squid UPbTh");
         expressionListHeaderLabel.setTooltip(tooltip);
 
-        populateExpressionsListView();
-
+//        populateExpressionsListView();
         expressionsListView.setCellFactory(param -> new ListCell<Expression>() {
             private ImageView imageView = new ImageView();
 
@@ -141,14 +143,27 @@ public class ExpressionManagerController implements Initializable {
                 }
             }
         });
+
+        populateExpressionsListView();
+    }
+
+    private Expression parseAndAuditCurrentExcelExpression() {
+        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
+                expressionNameTextField.getText(),
+                expressionExcelTextField.getText());
+
+        expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
+
+        return exp;
     }
 
     private void populateExpressionDetails(Expression expression) {
+        currentExpression = expression;
+
         expressionNameTextField.setText(expression.getName());
         expressionExcelTextField.setText(expression.getExcelExpressionString());
 
-        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(expression.getName(), expression.getExcelExpressionString());
-        expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
+        parseAndAuditCurrentExcelExpression();
     }
 
     private void vacateExpressionDetails() {
@@ -162,7 +177,6 @@ public class ExpressionManagerController implements Initializable {
         ObservableList<Expression> items
                 = FXCollections.observableArrayList(namedExpressions);
         expressionsListView.setItems(items);
-        expressionsListView.getSelectionModel().clearSelection();
     }
 
     private ContextMenu createExpressionsListViewContextMenu() {
@@ -173,7 +187,8 @@ public class ExpressionManagerController implements Initializable {
             Expression selectedExpression = expressionsListView.getSelectionModel().getSelectedItem();
             if (selectedExpression != null) {
                 squidProject.getTask().removeExpression(selectedExpression);
-                populateExpressionsListView();
+                expressionsListView.getItems().remove(selectedExpression);
+                expressionsListView.refresh();
             }
         });
         contextMenu.getItems().add(menuItem);
@@ -194,14 +209,32 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void editButtonAction(ActionEvent event) {
+        expressionExcelTextField.setEditable(true);
     }
 
     @FXML
     private void saveButtonAction(ActionEvent event) {
+        if (currentExpression != null) {
+            Expression exp = parseAndAuditCurrentExcelExpression();
+            ExpressionTreeInterface expTree = exp.getExpressionTree();
+            currentExpression.setExpressionTree(expTree);
+            currentExpression.setExcelExpressionString(expressionExcelTextField.getText().trim());
+
+            squidProject.getTask().setChanged(true);
+            // update expressions
+            squidProject.getTask().setupSquidSessionSpecs();
+
+            expressionsListView.refresh();
+        }
     }
 
     @FXML
     private void cancelButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void auditButtonAction(ActionEvent event) {
+        parseAndAuditCurrentExcelExpression();
     }
 
 }

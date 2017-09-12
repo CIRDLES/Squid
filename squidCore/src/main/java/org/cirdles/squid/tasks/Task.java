@@ -235,9 +235,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void processAndSortExpressions() {
         // put expressions in execution order
-        Collections.sort(taskExpressionTreesOrdered);
-        Collections.sort(taskExpressionsOrdered);
-
+        try {
+            Collections.sort(taskExpressionTreesOrdered);
+            Collections.sort(taskExpressionsOrdered);
+        } catch (Exception e) {
+        }
         // now use existing ratios as basis for building and checking expressions in ascending execution order
         assembleNamedExpressionsMap();
 
@@ -252,10 +254,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         buildExpressions();
 
         // put expressions in execution order
-        Collections.sort(taskExpressionTreesOrdered);
-        Collections.sort(taskExpressionsOrdered);
+        try {
+            Collections.sort(taskExpressionTreesOrdered);
+            Collections.sort(taskExpressionsOrdered);
+        } catch (Exception e) {
+        }
     }
 
+    @Override
     public void removeExpression(Expression expression) {
         if (expression != null) {
             taskExpressionTreesOrdered.remove((ExpressionTree) expression.getExpressionTree());
@@ -265,6 +271,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    @Override
     public void restoreRemovedExpressions() {
         for (Expression exp : taskExpressionsRemoved) {
             taskExpressionsOrdered.add(exp);

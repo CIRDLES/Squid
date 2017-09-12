@@ -38,10 +38,11 @@
                      </children></Pane>
                   <ToolBar layoutY="595.0" prefHeight="43.0" prefWidth="473.0">
                     <items>
-                      <Button disable="true" mnemonicParsing="false" onAction="#newButtonAction" text="New" translateX="50.0" />
-                        <Button disable="true" layoutY="10.0" mnemonicParsing="false" onAction="#editButtonAction" text="Edit" translateX="50.0" />
-                        <Button disable="true" layoutY="10.0" mnemonicParsing="false" onAction="#saveButtonAction" text="Save" translateX="50.0" />
-                        <Button cancelButton="true" disable="true" layoutY="10.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" translateX="50.0" />
+                      <Button disable="true" mnemonicParsing="false" onAction="#newButtonAction" text="New" translateX="10.0" />
+                        <Button layoutY="10.0" mnemonicParsing="false" onAction="#editButtonAction" text="Edit" translateX="10.0" />
+                        <Button layoutY="10.0" mnemonicParsing="false" onAction="#saveButtonAction" text="Save" translateX="10.0" />
+                        <Button cancelButton="true" layoutY="10.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" translateX="10.0" />
+                        <Button layoutX="256.0" layoutY="10.0" mnemonicParsing="false" onAction="#auditButtonAction" text="Audit" translateX="10.0" />
                     </items>
                   </ToolBar>
                </children>

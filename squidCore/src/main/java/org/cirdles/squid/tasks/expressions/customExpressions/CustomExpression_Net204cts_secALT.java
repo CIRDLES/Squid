@@ -15,9 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
@@ -34,15 +31,8 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
  */
 public class CustomExpression_Net204cts_secALT extends ExpressionTree implements BuiltInExpressionInterface {
 
-    //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(CustomExpression_Net204cts_secALT.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of CustomExpression_Net204cts_secALT " + theSUID);
-    }
+    private static final long serialVersionUID = -1823847703052156911L;
+
     /**
      * Squid Excel format is ["Total204cts/sec"] - ["Bkrdcts/sec"]
      */

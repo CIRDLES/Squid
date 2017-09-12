@@ -33,6 +33,7 @@ import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
@@ -62,7 +63,7 @@ public class ExpressionParser {
      * @return
      */
     public ExpressionTreeInterface parseExpressionStringAndBuildExpressionTree(Expression expression) {
-        ExpressionTreeInterface returnExpressionTree = null;
+        ExpressionTreeInterface returnExpressionTree = new ExpressionTreeParsedFromExcelString(expression.getName());
 
         // Get our lexer
         ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(expression.getExcelExpressionString()));
@@ -118,10 +119,9 @@ public class ExpressionParser {
 
         return returnExpressionTree;
 
-        // robreg(  totalCts(["204"]) -totalCts(["206"]) , 9) breaks also with parens around term
     }
 
-    private ExpressionTreeInterface buildTree(List<String> parsedRPNreversed) {
+    public ExpressionTreeInterface buildTree(List<String> parsedRPNreversed) {
         Iterator<String> parsedRPNreversedIterator = parsedRPNreversed.iterator();
 
         ExpressionTreeInterface exp = null;
@@ -143,6 +143,13 @@ public class ExpressionParser {
             }
         }
 
+        // so can re-parse later
+        if (savedExp == null){
+            savedExp = new ExpressionTreeParsedFromExcelString("PARSE_ERROR");
+        }
+        
+        ((ExpressionTreeParsedFromExcelString)savedExp).setParsedRPNreversedExcelString(parsedRPNreversed);
+        
         return savedExp;
     }
 
@@ -200,12 +207,12 @@ public class ExpressionParser {
             case OPERATOR_M:
             case OPERATOR_E:
                 OperationOrFunctionInterface operation = Operation.operationFactory(OPERATIONS_MAP.get(token));
-                retExpTree = new ExpressionTree(operation);
+                retExpTree = new ExpressionTreeParsedFromExcelString(operation);
                 break;
 
             case FUNCTION:
                 OperationOrFunctionInterface function = Function.operationFactory(FUNCTIONS_MAP.get(token));
-                retExpTree = new ExpressionTree(function);
+                retExpTree = new ExpressionTreeParsedFromExcelString(function);
                 break;
 
             case CONSTANT:

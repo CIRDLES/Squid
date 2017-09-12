@@ -167,14 +167,16 @@ public class ExpressionTree
 
     @Override
     public boolean amHealthy() {
-        boolean retVal = true;
+        boolean retVal = (isValid());
         // check for correct number of operands for operation
-        retVal = retVal && (getCountOfChildren() == argumentCount());
         if (retVal) {
-            for (ExpressionTreeInterface exp : childrenET) {
-                retVal = retVal && exp.amHealthy();
-                if (!retVal) {
-                    break;
+            retVal = retVal && (getCountOfChildren() == argumentCount());
+            if (retVal) {
+                for (ExpressionTreeInterface exp : childrenET) {
+                    retVal = retVal && exp.amHealthy();
+                    if (!retVal) {
+                        break;
+                    }
                 }
             }
         }
@@ -219,7 +221,7 @@ public class ExpressionTree
             }
             if (retVal == 0) {
                 // then compare is special built-in UPbTh expression
-                if (isSquidSpecialUPbThExpression()&& !exp.isSquidSpecialUPbThExpression()) {
+                if (isSquidSpecialUPbThExpression() && !exp.isSquidSpecialUPbThExpression()) {
                     retVal = -1;
                 } else if (!isSquidSpecialUPbThExpression() && exp.isSquidSpecialUPbThExpression()) {
                     retVal = 1;
@@ -259,6 +261,10 @@ public class ExpressionTree
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public boolean isValid() {
+        return (operation != null);
     }
 
     @Override
