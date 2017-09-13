@@ -30,8 +30,12 @@ import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.TaskSquid25;
+import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
 import org.cirdles.squid.tasks.builtinTasks.Squid3ExampleTask1;
+import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -110,14 +114,30 @@ public final class SquidProject implements Serializable {
 
     public void createTaskFromImportedSquid25Task(File squidTaskFile) {
 
-//     TODO:   move this work to task 25
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
         this.task = new Task(taskSquid25.getTaskName(), prawnFile);
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setRatioNames(taskSquid25.getRatioNames());
-
+        
+        // first pass
+        this.task.setupSquidSessionSpecs();
+        
+        List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
+        for (TaskSquid25Equation task25Eqn : task25Equations){
+            Expression expression = this.task.generateExpressionFromRawExcelStyleText(
+                    task25Eqn.getEquationName(), task25Eqn.getExcelEquationString());
+            
+            ExpressionTreeInterface expressionTree = expression.getExpressionTree();
+            ((ExpressionTree)expressionTree).setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
+            ((ExpressionTree)expressionTree).setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
+            ((ExpressionTree)expressionTree).setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
+                      
+            this.task.getTaskExpressionsOrdered().add(expression);
+        }
+        
+        this.task.setChanged(true);
         this.task.setupSquidSessionSpecs();
 
     }

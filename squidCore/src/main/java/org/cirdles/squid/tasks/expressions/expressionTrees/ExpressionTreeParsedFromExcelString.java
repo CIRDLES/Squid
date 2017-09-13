@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
-import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
 
 /**
@@ -56,8 +55,9 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
 
         determineRatiosOfInterest();
         
-        setSquidSwitchSTReferenceMaterialCalculation(true);
-        setSquidSwitchSAUnknownCalculation(true);
+        //other switches set outside of this operation
+        
+        setRootExpressionTree(true);
     }
     
     private void determineRatiosOfInterest(){

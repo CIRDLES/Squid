@@ -139,7 +139,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.changed = true;
 
-        initializeTask();
+//        initializeTask();
 
     }
 

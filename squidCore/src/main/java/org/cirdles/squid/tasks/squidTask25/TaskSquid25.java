@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks;
+package org.cirdles.squid.tasks.squidTask25;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
+import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 
 /**
  *
@@ -40,11 +41,12 @@ public class TaskSquid25 implements Serializable {
     private String taskName;
     private String taskDescription;
     private List<String> ratioNames;
+    private List<TaskSquid25Equation> task25Equations;
 
     public static TaskSquid25 importSquidTaskFile(File squidTaskFile) {
 
         TaskSquid25 taskSquid25 = null;
-       
+
         try {
             InputStream inp = new FileInputStream(squidTaskFile);
             HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(inp));
@@ -73,6 +75,30 @@ public class TaskSquid25 implements Serializable {
                 for (int i = 0; i < countOfRatios; i++) {
                     taskSquid25.ratioNames.add(ratioStrings[i + 2]);
                 }
+
+                String[] equations = lines[firstRow + 26].split("\t");
+                int countOfEquations = Integer.valueOf(equations[1]);
+
+                String[] equationNames = lines[firstRow + 27].split("\t");
+
+                String[] switchST = lines[firstRow + 28].split("\t");
+
+                String[] switchSA = lines[firstRow + 29].split("\t");
+
+                String[] switchSC = lines[firstRow + 30].split("\t");
+
+                taskSquid25.task25Equations = new ArrayList<>();
+                for (int i = 0; i < countOfEquations; i++) {
+                    if (prepareSquid25ExcelStringForSquid3(equations[i + 2]).length() > 0) {
+                        taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                                prepareSquid25ExcelStringForSquid3(equations[i + 2]),
+                                prepareSquid25ExcelStringForSquid3(equationNames[i + 2]),
+                                Boolean.parseBoolean(switchST[i + 2]),
+                                Boolean.parseBoolean(switchSA[i + 2]),
+                                Boolean.parseBoolean(switchSC[i + 2])));
+                    }
+                }
+
             }
         } catch (IOException iOException) {
         }
@@ -80,43 +106,21 @@ public class TaskSquid25 implements Serializable {
         return taskSquid25;
     }
 
-//    public String printSummaryData() {
-//        StringBuilder summary = new StringBuilder();
-//        summary.append("Squid2.5 Task Name: ");
-//        summary.append("\t");
-//        summary.append(taskName);
-//        summary.append("\n\n");
-//
-//        summary.append("Task File Name: ");
-//        summary.append("\t");
-//        summary.append(squidTaskFileName);
-//        summary.append("\n\n");
-//
-//        summary.append("Squid Version: ");
-//        summary.append("\t");
-//        summary.append(squidVersion);
-//        summary.append("\n\n");
-//
-//        summary.append("Task Type: ");
-//        summary.append("\t\t");
-//        summary.append(taskType);
-//        summary.append("\n\n");
-//
-//        summary.append("Task Description: ");
-//        summary.append("\t");
-//        summary.append(taskDescription.replaceAll(",", "\n\t\t\t\t"));
-//        summary.append("\n\n");
-//
-//        summary.append("Task Ratios: ");
-//        summary.append("\t\t");
-//        for (int i = 0; i < ratioNames.length; i++) {
-//            summary.append(ratioNames[i]);
-//            summary.append((i < (ratioNames.length - 1)) ? ", " : "");
-//        }
-//        summary.append("\n\n");
-//
-//        return summary.toString();
-//    }
+    private static String prepareSquid25ExcelStringForSquid3(String excelString) {
+        String retVal = "";
+
+        if (excelString.startsWith("[")) {
+            // do not accept field names as being equations
+            retVal = "";
+        } else {
+            retVal = excelString.replace("|", "");
+            retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
+            retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
+            retVal = retVal.replace("(Ma)", "");
+        }
+
+        return retVal;
+    }
 
     /**
      * @return the squidVersion
@@ -158,6 +162,13 @@ public class TaskSquid25 implements Serializable {
      */
     public List<String> getRatioNames() {
         return ratioNames;
+    }
+
+    /**
+     * @return the task25Equations
+     */
+    public List<TaskSquid25Equation> getTask25Equations() {
+        return task25Equations;
     }
 
 }

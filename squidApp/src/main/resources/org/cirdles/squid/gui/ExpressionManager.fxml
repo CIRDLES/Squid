@@ -31,10 +31,10 @@
                   <Pane fx:id="expressionDetailsPane" prefHeight="595.0" prefWidth="473.0" style="-fx-background-color: white;">
                      <children>
                         <Label layoutX="6.0" layoutY="14.0" text="Name:" />
-                        <TextField fx:id="expressionNameTextField" editable="false" layoutX="72.0" layoutY="15.0" prefHeight="27.0" prefWidth="381.0" />
+                        <TextField fx:id="expressionNameTextField" editable="false" layoutX="72.0" layoutY="15.0" prefHeight="27.0" prefWidth="381.0" promptText="Expression Name" />
                         <Label layoutX="6.0" layoutY="44.0" text="Excel:" />
-                        <TextField fx:id="expressionExcelTextField" editable="false" layoutX="72.0" layoutY="45.0" prefHeight="27.0" prefWidth="381.0" />
-                        <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="7.0" layoutY="77.0" prefHeight="106.0" prefWidth="449.0" style="-fx-font-size: 14;" styleClass="label" text="Audit:" wrapText="true" />
+                        <TextField fx:id="expressionExcelTextField" editable="false" layoutX="72.0" layoutY="45.0" prefHeight="27.0" prefWidth="381.0" promptText="Modified Squid 2.5 Excel &quot;Equation&quot;" />
+                        <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="7.0" layoutY="77.0" prefHeight="106.0" prefWidth="449.0" style="-fx-font-size: 14;" styleClass="label" text="Audit of parsing and expression building will appear here." wrapText="true" />
                      </children></Pane>
                   <ToolBar layoutY="595.0" prefHeight="43.0" prefWidth="473.0">
                     <items>

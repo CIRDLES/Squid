@@ -41,6 +41,7 @@ import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
@@ -99,7 +100,7 @@ public class ExpressionManagerController implements Initializable {
                 + String.format("%1$-" + 3 + "s", "RM")
                 + String.format("%1$-" + 3 + "s", "UN")
                 + String.format("%1$-" + 3 + "s", "SQ")
-                + String.format("%1$-" + 15 + "s", "Sorted in Execution Order"));
+                + String.format("%1$-" + 16 + "s", "Sorted in Execution Order"));
         Tooltip tooltip = new Tooltip();
         tooltip.setText("RI = Ratios of Interest; SC = Summary; RM = Reference Materials; UN = Unknowns; SQ = Special Squid UPbTh");
         expressionListHeaderLabel.setTooltip(tooltip);
@@ -217,6 +218,13 @@ public class ExpressionManagerController implements Initializable {
         if (currentExpression != null) {
             Expression exp = parseAndAuditCurrentExcelExpression();
             ExpressionTreeInterface expTree = exp.getExpressionTree();
+            ExpressionTreeInterface currentExpTree = currentExpression.getExpressionTree();
+
+            // until we have these in the edit box
+            ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(((ExpressionTree) currentExpTree).isSquidSwitchSTReferenceMaterialCalculation());
+            ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(((ExpressionTree) currentExpTree).isSquidSwitchSAUnknownCalculation());
+            ((ExpressionTree) expTree).setSquidSwitchSCSummaryCalculation(((ExpressionTree) currentExpTree).isSquidSwitchSCSummaryCalculation());
+
             currentExpression.setExpressionTree(expTree);
             currentExpression.setExcelExpressionString(expressionExcelTextField.getText().trim());
 

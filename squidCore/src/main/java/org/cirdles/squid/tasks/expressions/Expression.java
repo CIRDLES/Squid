@@ -98,7 +98,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
-        //expressionTree.setName(name);
+        expressionTree.setName(name);
     }
 
     public String produceExpressionTreeAudit() {
