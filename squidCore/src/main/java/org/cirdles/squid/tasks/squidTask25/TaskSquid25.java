@@ -22,10 +22,11 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
-import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 
 /**
  *
@@ -109,14 +110,22 @@ public class TaskSquid25 implements Serializable {
     private static String prepareSquid25ExcelStringForSquid3(String excelString) {
         String retVal = "";
 
+        retVal = excelString.replace("|", "");
+        retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
+        retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
+        retVal = retVal.replace("(Ma)", "");
+
+        // regex for robreg with four arguments = robreg.*\)
+        Pattern robregPattern = Pattern.compile("^(.*)robreg.*\\)", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = robregPattern.matcher(retVal);
+        if (matcher.matches()) {
+            String[] robregParts = matcher.group().split(",");
+            retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + ")");
+        }
+
         if (excelString.startsWith("[")) {
             // do not accept field names as being equations
             retVal = "";
-        } else {
-            retVal = excelString.replace("|", "");
-            retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
-            retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
-            retVal = retVal.replace("(Ma)", "");
         }
 
         return retVal;
