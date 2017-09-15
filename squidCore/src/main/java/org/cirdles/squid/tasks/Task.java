@@ -53,6 +53,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -138,9 +139,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.prawnFile = prawnFile;
 
         this.changed = true;
-
-//        initializeTask();
-
     }
 
     @Override
@@ -196,7 +194,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText) {
-
         Expression exp = new Expression(name, originalExpressionText);
         exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
@@ -243,13 +240,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // now use existing ratios as basis for building and checking expressions in ascending execution order
         assembleNamedExpressionsMap();
 
-        // two passes needed to get in correct order ***************************
+        // two passes needed to get in correct order worst case ***************************
         // since checking for dependencies after possible changes or new expressions
         buildExpressions();
 
         // put expressions in execution order
-        Collections.sort(taskExpressionTreesOrdered);
-        Collections.sort(taskExpressionsOrdered);
+        try {
+            Collections.sort(taskExpressionTreesOrdered);
+            Collections.sort(taskExpressionsOrdered);
+        } catch (Exception e) {
+        }
 
         buildExpressions();
 
@@ -367,6 +367,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void assembleNamedExpressionsMap() {
         namedExpressionsMap.clear();
+
+        // TODO: refactor SpotNode treatment after the extent of use is known
+        SpotNode spotNode = SpotNode.buildSpotNode("getHours");
+        namedExpressionsMap.put(spotNode.getName(), spotNode);
 
         for (SquidSpeciesModel spm : squidSpeciesModelList) {
             ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);

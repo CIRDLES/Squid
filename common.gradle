@@ -66,3 +66,20 @@ task createFolders(description: 'Creates the source folders if they do not exist
 //tasks.withType(JavaCompile) {
 //    println 'Compiler args: ' + options.compilerArgs
 //}
+ 
+javadoc {
+    options.tags = [
+            'pre:a:Precondition:',
+            'post:a:Postcondition:',
+            'imports:a:Imports libraries:',
+            'author:a:Author:'
+    ]
+}
+    
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}

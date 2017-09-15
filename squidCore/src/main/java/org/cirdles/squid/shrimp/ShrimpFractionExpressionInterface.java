@@ -141,4 +141,6 @@ public interface ShrimpFractionExpressionInterface {
      * @return the pkFerr
      */
     public double[][] getPkFerr();
+    
+    public double getHours();
 }

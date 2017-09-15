@@ -90,10 +90,10 @@ public class TaskSquid25 implements Serializable {
 
                 taskSquid25.task25Equations = new ArrayList<>();
                 for (int i = 0; i < countOfEquations; i++) {
-                    if (prepareSquid25ExcelStringForSquid3(equations[i + 2]).length() > 0) {
+                    if (prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]).length() > 0) {
                         taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                                prepareSquid25ExcelStringForSquid3(equations[i + 2]),
-                                prepareSquid25ExcelStringForSquid3(equationNames[i + 2]),
+                                prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]),
+                                prepareSquid25ExcelEquationNameForSquid3(equationNames[i + 2]),
                                 Boolean.parseBoolean(switchST[i + 2]),
                                 Boolean.parseBoolean(switchSA[i + 2]),
                                 Boolean.parseBoolean(switchSC[i + 2])));
@@ -107,12 +107,13 @@ public class TaskSquid25 implements Serializable {
         return taskSquid25;
     }
 
-    private static String prepareSquid25ExcelStringForSquid3(String excelString) {
+    private static String prepareSquid25ExcelEquationStringForSquid3(String excelString) {
         String retVal = "";
 
         retVal = excelString.replace("|", "");
         retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
         retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
+        retVal = retVal.replace("[\"Hours\"]", "lookup([\"Hours\"])");
         retVal = retVal.replace("(Ma)", "");
 
         // regex for robreg with four arguments = robreg.*\)
@@ -120,13 +121,24 @@ public class TaskSquid25 implements Serializable {
         Matcher matcher = robregPattern.matcher(retVal);
         if (matcher.matches()) {
             String[] robregParts = matcher.group().split(",");
-            retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + ")");
+            retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + (robregParts.length > 2 ? ")" : ""));
         }
 
         if (excelString.startsWith("[")) {
             // do not accept field names as being equations
             retVal = "";
+        } else if (!excelString.contains("(") && !excelString.contains("[")) {
+            // do not accept constants as being equations - this reults from the conflation in Squid2.5 between equations and outputs
+            retVal = "";
         }
+
+        return retVal;
+    }
+
+    private static String prepareSquid25ExcelEquationNameForSquid3(String excelString) {
+        String retVal = "";
+
+        retVal = excelString.replace("|", "");
 
         return retVal;
     }

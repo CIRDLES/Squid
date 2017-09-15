@@ -115,6 +115,8 @@ public abstract class Function
 
         FUNCTIONS_MAP.put("TotalCps", "totalCps");
         FUNCTIONS_MAP.put("totalCps", "totalCps");
+        
+        FUNCTIONS_MAP.put("lookup", "lookup");
 
     }
 
@@ -197,9 +199,13 @@ public abstract class Function
     public static OperationOrFunctionInterface sqIf() {
         return new If();
     }
-    
-    public static OperationOrFunctionInterface totalCps(){
+
+    public static OperationOrFunctionInterface totalCps() {
         return new ShrimpSpeciesNodeFunction("getTotalCps");
+    }
+
+    public static OperationOrFunctionInterface lookup() {
+        return new SpotNodeLookupFunction();
     }
 
     /**
@@ -217,7 +223,7 @@ public abstract class Function
                         new Class[0]);
                 retVal = (Function) method.invoke(null, new Object[0]);
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-                // do nothing for now
+                System.out.println(noSuchMethodException.getMessage());
             }
         }
         return retVal;

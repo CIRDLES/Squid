@@ -15,12 +15,16 @@
  */
 package org.cirdles.squid.shrimp;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -32,6 +36,17 @@ import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterfa
  */
 public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInterface {
 
+        //    private static final long serialVersionUID = 6522574920235718028L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(ShrimpFraction.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of ShrimpFraction " + theSUID);
+    }
+
+    public static long dateTimeOfFirstReferenceMaterialSpotMilliseconds = 0l;
     private String fractionID;
     private int spotNumber;
     private String nameOfMount;
@@ -110,6 +125,22 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         this();
         this.fractionID = fractionID;
         this.isotopicRatiosII = isotopicRatiosII;
+    }
+
+    /**
+     * This method is needed by expression processing and referred to by its
+     * String name.
+     *
+     * @return double elapsed time in hours (hh.###) since timestamp of first reference material
+     */
+    public double getHours() {
+        long deltaTime = dateTimeMilliseconds - ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds;
+
+        BigDecimal deltaTimeBD = new BigDecimal(String.valueOf(deltaTime));
+
+        BigDecimal hrs = deltaTimeBD.divide(new BigDecimal("3600000"), MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_UP);
+
+        return hrs.doubleValue();
     }
 
     /**
@@ -249,12 +280,12 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return double [1][2] containing ratio value and 1-sigma abs uncertainty
      */
     @Override
-    public double[][] getIsotopicRatioValuesByStringName(String name) {        
-        SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);   
+    public double[][] getIsotopicRatioValuesByStringName(String name) {
+        SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
         double[][] ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
         return ratioAndUnct;
     }
-    
+
     /**
      * @return the isotopicRatiosII
      */

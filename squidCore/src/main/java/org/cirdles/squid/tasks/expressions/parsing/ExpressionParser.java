@@ -144,12 +144,14 @@ public class ExpressionParser {
         }
 
         // so can re-parse later
-        if (savedExp == null){
+        if (savedExp == null) {
             savedExp = new ExpressionTreeParsedFromExcelString("PARSE_ERROR");
         }
-        
-        ((ExpressionTreeParsedFromExcelString)savedExp).setParsedRPNreversedExcelString(parsedRPNreversed);
-        
+
+        if (savedExp instanceof ExpressionTreeParsedFromExcelString) {
+            ((ExpressionTreeParsedFromExcelString) savedExp).setParsedRPNreversedExcelString(parsedRPNreversed);
+        }
+
         return savedExp;
     }
 
@@ -233,7 +235,7 @@ public class ExpressionParser {
 
         if (exp != null) {
             // this insertion enforces correct order as children arrive in reverse polish notation order
-            ((ExpressionTreeBuilderInterface) exp).addChild(0, retExpTree);
+            ((ExpressionTree) exp).addChild(0, retExpTree);
         }
 
         return retExpTree;

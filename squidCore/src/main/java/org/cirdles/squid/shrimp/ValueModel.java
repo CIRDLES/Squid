@@ -17,6 +17,9 @@
  */
 package org.cirdles.squid.shrimp;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -28,15 +31,28 @@ import java.util.concurrent.ConcurrentMap;
  * and their errors. It also provides additional methods for manipulating and
  * publishing these values.
  *
- * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/XStream.html>com.thoughtworks.xstream.XStream</a>
- * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/ConversionException.html>com.thoughtworks.xstream.converters.ConversionException</a>
- * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/xml/DomDriver.html>com.thoughtworks.xstream.io.xml.DomDriver</a>
+ * @imports
+ * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/XStream.html>com.thoughtworks.xstream.XStream</a>
+ * @imports
+ * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/ConversionException.html>com.thoughtworks.xstream.converters.ConversionException</a>
+ * @imports
+ * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/xml/DomDriver.html>com.thoughtworks.xstream.io.xml.DomDriver</a>
  *
  * @author James F. Bowring, javaDocs by Stan Gasque
  */
 public class ValueModel implements
         Serializable,
-        Comparable<ValueModel>{
+        Comparable<ValueModel> {
+
+    //    private static final long serialVersionUID = 6522574920235718028L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(ValueModel.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of ValueModel " + theSUID);
+    }
 
     // Instance variables
     /**
@@ -132,7 +148,8 @@ public class ValueModel implements
      * fields match those of this <code>ValueModel</code>
      */
     public ValueModel copy() {
-        ValueModel retval =//
+        ValueModel retval
+                =//
                 new ValueModel(
                         getName(),
                         getValue(),
@@ -238,7 +255,6 @@ public class ValueModel implements
     }
 
     // Field Accessors
-
     /**
      * gets the value of the <code>name</code> field
      *
@@ -414,7 +430,7 @@ public class ValueModel implements
     public static BigDecimal convertOneSigmaAbsToPctIfRequired(//
             ValueModel valueModel, BigDecimal oneSigmaAbs) {
         if (valueModel.getUncertaintyType().equalsIgnoreCase("PCT")) {
-            return oneSigmaAbs.divide(valueModel.getValue(),MathContext.DECIMAL32)//
+            return oneSigmaAbs.divide(valueModel.getValue(), MathContext.DECIMAL32)//
                     .movePointRight(2);
         } else {
             return oneSigmaAbs;

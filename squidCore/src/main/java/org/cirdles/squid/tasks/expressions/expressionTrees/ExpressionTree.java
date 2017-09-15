@@ -268,12 +268,16 @@ public class ExpressionTree
     }
 
     @Override
-    public String auditOperationArgumentCount() {
-
+    public String auditOperationArgumentCount() {        
+        String audit = "";
+        if (operation == null){
+            audit = "   " + name + " is unhealthy expression";
+        } else {
+        
         int requiredChildren = argumentCount();
         int suppliedChildren = getCountOfChildren();
 
-        String audit = "Op " + getOperation().getName() + " requires/provides: " + requiredChildren + " / " + suppliedChildren + " arguments.";
+        audit = "Op " + operation.getName() + " requires/provides: " + requiredChildren + " / " + suppliedChildren + " arguments.";
 
         for (ExpressionTreeInterface child : getChildrenET()) {
             if (child instanceof ConstantNode) {
@@ -292,6 +296,7 @@ public class ExpressionTree
         }
 
         audit += "\n    returns " + getOperation().printOutputValues();
+        }
 
         return audit;
     }

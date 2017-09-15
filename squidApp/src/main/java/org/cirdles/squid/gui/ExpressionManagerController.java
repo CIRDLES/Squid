@@ -25,6 +25,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -54,6 +55,8 @@ public class ExpressionManagerController implements Initializable {
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
 
+    private Expression currentExpression;
+
     @FXML
     private AnchorPane scrolledAnchorPane;
     @FXML
@@ -67,11 +70,16 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private TextField expressionNameTextField;
     @FXML
-    private TextField expressionExcelTextField;
-    @FXML
     private TextArea expressionAuditTextArea;
 
-    private Expression currentExpression;
+    @FXML
+    private TextArea expressionExcelTextArea;
+    @FXML
+    private CheckBox refMatSwitchCheckBox;
+    @FXML
+    private CheckBox unknownsSwitchCheckBox;
+    @FXML
+    private CheckBox summarySwitchCheckBox;
 
     /**
      * Initializes the controller class.
@@ -105,7 +113,6 @@ public class ExpressionManagerController implements Initializable {
         tooltip.setText("RI = Ratios of Interest; SC = Summary; RM = Reference Materials; UN = Unknowns; SQ = Special Squid UPbTh");
         expressionListHeaderLabel.setTooltip(tooltip);
 
-//        populateExpressionsListView();
         expressionsListView.setCellFactory(param -> new ListCell<Expression>() {
             private ImageView imageView = new ImageView();
 
@@ -151,7 +158,7 @@ public class ExpressionManagerController implements Initializable {
     private Expression parseAndAuditCurrentExcelExpression() {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText(),
-                expressionExcelTextField.getText());
+                expressionExcelTextArea.getText().trim().replace("\n", ""));
 
         expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
 
@@ -162,14 +169,18 @@ public class ExpressionManagerController implements Initializable {
         currentExpression = expression;
 
         expressionNameTextField.setText(expression.getName());
-        expressionExcelTextField.setText(expression.getExcelExpressionString());
+        expressionExcelTextArea.setText(expression.getExcelExpressionString());
+
+        refMatSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
+        unknownsSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
+        summarySwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSCSummaryCalculation());
 
         parseAndAuditCurrentExcelExpression();
     }
 
     private void vacateExpressionDetails() {
         expressionNameTextField.setText("");
-        expressionExcelTextField.setText("");
+        expressionExcelTextArea.setText("");
         expressionAuditTextArea.setText("Audit:");
     }
 
@@ -210,7 +221,10 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void editButtonAction(ActionEvent event) {
-        expressionExcelTextField.setEditable(true);
+        expressionExcelTextArea.setEditable(true);
+        refMatSwitchCheckBox.setDisable(false);
+        unknownsSwitchCheckBox.setDisable(false);
+        summarySwitchCheckBox.setDisable(false);
     }
 
     @FXML
@@ -218,31 +232,49 @@ public class ExpressionManagerController implements Initializable {
         if (currentExpression != null) {
             Expression exp = parseAndAuditCurrentExcelExpression();
             ExpressionTreeInterface expTree = exp.getExpressionTree();
-            ExpressionTreeInterface currentExpTree = currentExpression.getExpressionTree();
 
             // until we have these in the edit box
-            ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(((ExpressionTree) currentExpTree).isSquidSwitchSTReferenceMaterialCalculation());
-            ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(((ExpressionTree) currentExpTree).isSquidSwitchSAUnknownCalculation());
-            ((ExpressionTree) expTree).setSquidSwitchSCSummaryCalculation(((ExpressionTree) currentExpTree).isSquidSwitchSCSummaryCalculation());
+            ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.selectedProperty().getValue());
+            ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.selectedProperty().getValue());
+            ((ExpressionTree) expTree).setSquidSwitchSCSummaryCalculation(summarySwitchCheckBox.selectedProperty().getValue());
 
             currentExpression.setExpressionTree(expTree);
-            currentExpression.setExcelExpressionString(expressionExcelTextField.getText().trim());
+            currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim().replace("\n", ""));
 
             squidProject.getTask().setChanged(true);
             // update expressions
             squidProject.getTask().setupSquidSessionSpecs();
 
+            // reveal new ordering etc
+            populateExpressionsListView();
             expressionsListView.refresh();
         }
     }
 
     @FXML
     private void cancelButtonAction(ActionEvent event) {
+        populateExpressionDetails(currentExpression);
     }
 
     @FXML
     private void auditButtonAction(ActionEvent event) {
+        squidProject.getTask().setChanged(true);
+        // update expressions
+        squidProject.getTask().setupSquidSessionSpecs();
+        
         parseAndAuditCurrentExcelExpression();
+    }
+
+    @FXML
+    private void refMatSwitchCheckBoxOnAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void unknownsSwitchCheckBoxOnAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void summarySwitchCheckBoxhOnAction(ActionEvent event) {
     }
 
 }

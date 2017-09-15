@@ -84,16 +84,18 @@ FUNCTION :
     'RobReg' | 'robReg' | 'robreg' |
     'SqBiweight' | 'sqBiweight' |
     'SqWtAvg' | 'sqWtAvg' |
-    'TotalCps' | 'totalCps';
+    'TotalCps' | 'totalCps' |
+    'lookup' ;
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 
 NAMED_EXPRESSION : '[' '"' ID (ID | '/' | ' ')* '"' ']' ;
 
-ID  :   (LETTER | [0-9]) (LETTER | [0-9])* ;
+ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment
 LETTER : [a-zA-Z_] ;
 
+NUMBER : [0-9_] ;
 
 INT :   [0-9]+ ;
 

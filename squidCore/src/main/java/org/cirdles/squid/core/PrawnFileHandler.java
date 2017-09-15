@@ -179,6 +179,12 @@ public class PrawnFileHandler implements Serializable {
                     nameOfMount = "No-Mount-Name";
                 }
                 shrimpFraction.setNameOfMount(nameOfMount);
+                
+                // preparing for field "Hours" specified as time in hours elapsed since first ref material analysis start = hh.###
+                if ((ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds == 0l)
+                        && shrimpFraction.isReferenceMaterial()) {
+                    ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds = shrimpFraction.getDateTimeMilliseconds();
+                }
                 shrimpFractions.add(shrimpFraction);
             }
 
@@ -270,7 +276,7 @@ public class PrawnFileHandler implements Serializable {
         //Schema schema = sf.newSchema(new URL(URL_STRING_FOR_PRAWN_XML_SCHEMA_REMOTE));
         File schemaFile = new File(URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL);
         // during testing
-        if (!schemaFile.isFile()){
+        if (!schemaFile.isFile()) {
             schemaFile = new File(schemaFile.getAbsolutePath().replace("Core", "App"));
         }
         Schema schema = sf.newSchema(schemaFile);
@@ -418,14 +424,14 @@ public class PrawnFileHandler implements Serializable {
     public String getCurrentPrawnFileLocation() {
         return currentPrawnFileLocation;
     }
-    
-    public String getCurrentPrawnFileLocationFolder(){
+
+    public String getCurrentPrawnFileLocationFolder() {
         String retVal = "";
         File prawnFileLocation = new File(currentPrawnFileLocation);
-        if (prawnFileLocation.exists()){
+        if (prawnFileLocation.exists()) {
             retVal = prawnFileLocation.getParent();
         }
-        
+
         return retVal;
     }
 

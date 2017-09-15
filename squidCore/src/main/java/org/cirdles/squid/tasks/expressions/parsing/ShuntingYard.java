@@ -38,12 +38,11 @@ public class ShuntingYard {
 
 //        // Input: 3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3
 
-        infixList.add("sqBiWeight");
-        infixList.add("(");
-        infixList.add("1");
-        infixList.add(",");
-        infixList.add("2");
-        infixList.add(")");
+        infixList.add("[");
+        infixList.add("\"");
+        infixList.add("word233_33");
+        infixList.add("\"");;
+        infixList.add("]");
         System.out.println("Shunt " + infixToPostfix(infixList));
 
         //1+(ln(3) +4)

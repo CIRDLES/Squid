@@ -19,6 +19,7 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 
 /**
  *
@@ -188,7 +189,8 @@ public interface ExpressionTreeInterface {
     public default void auditExpressionTreeDependencies(List<String> argumentAudit) {
         argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditOperationArgumentCount());
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
-            if (child instanceof ExpressionTree) {
+            // SpotNode is an ExpressionTree without Children
+            if( (child instanceof ExpressionTree)&&!(child instanceof SpotNode)) {
                 child.auditExpressionTreeDependencies(argumentAudit);
             }
         }

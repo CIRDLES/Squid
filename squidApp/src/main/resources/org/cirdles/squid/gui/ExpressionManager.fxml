@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
@@ -31,10 +32,14 @@
                   <Pane fx:id="expressionDetailsPane" prefHeight="595.0" prefWidth="473.0" style="-fx-background-color: white;">
                      <children>
                         <Label layoutX="6.0" layoutY="14.0" text="Name:" />
-                        <TextField fx:id="expressionNameTextField" editable="false" layoutX="72.0" layoutY="15.0" prefHeight="27.0" prefWidth="381.0" promptText="Expression Name" />
-                        <Label layoutX="6.0" layoutY="44.0" text="Excel:" />
-                        <TextField fx:id="expressionExcelTextField" editable="false" layoutX="72.0" layoutY="45.0" prefHeight="27.0" prefWidth="381.0" promptText="Modified Squid 2.5 Excel &quot;Equation&quot;" />
-                        <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="7.0" layoutY="77.0" prefHeight="106.0" prefWidth="449.0" style="-fx-font-size: 14;" styleClass="label" text="Audit of parsing and expression building will appear here." wrapText="true" />
+                        <TextField fx:id="expressionNameTextField" editable="false" layoutX="70.0" layoutY="15.0" prefHeight="27.0" prefWidth="385.0" promptText="Expression Name" />
+                        <Label layoutX="6.0" layoutY="48.0" text="Excel:" />
+                        <TextArea fx:id="expressionExcelTextArea" editable="false" layoutX="70.0" layoutY="44.0" prefHeight="74.0" prefWidth="385.0" promptText="Modified Squid 2.5 Excel &quot;Equation&quot;" style="-fx-font-size: 14;" styleClass="text-field" wrapText="true" />
+                        <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="70.0" layoutY="151.0" prefHeight="106.0" prefWidth="385.0" style="-fx-font-size: 14;" styleClass="label" text="Audit of parsing and expression building." wrapText="true" />
+                        <CheckBox fx:id="refMatSwitchCheckBox" disable="true" layoutX="211.0" layoutY="124.0" mnemonicParsing="false" onAction="#refMatSwitchCheckBoxOnAction" opacity="0.9" text="Ref Mat (RM)" />
+                        <CheckBox fx:id="unknownsSwitchCheckBox" disable="true" layoutX="335.0" layoutY="124.0" mnemonicParsing="false" onAction="#unknownsSwitchCheckBoxOnAction" opacity="0.9" text="Unknowns (UN)" />
+                        <CheckBox fx:id="summarySwitchCheckBox" disable="true" layoutX="70.0" layoutY="124.0" mnemonicParsing="false" onAction="#summarySwitchCheckBoxhOnAction" opacity="0.9" text="Summary (SC)" />
+                        <Label layoutX="6.0" layoutY="119.0" text="Switch:" />
                      </children></Pane>
                   <ToolBar layoutY="595.0" prefHeight="43.0" prefWidth="473.0">
                     <items>

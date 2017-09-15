@@ -20,29 +20,27 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 
 /**
  *
  * @author James F. Bowring
  */
-public class ShrimpSpeciesNodeFunction extends Function {
+public class SpotNodeLookupFunction extends Function {
 
     private String methodNameForShrimpFraction;
-    private ShrimpSpeciesNode shrimpSpeciesNode;
+    private SpotNode spotNode;
 
-    public ShrimpSpeciesNodeFunction(String methodNameForShrimpFraction) {
-        name = methodNameForShrimpFraction.replace("get", "");
+    public SpotNodeLookupFunction() {
+        name = "Lookup";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
-        this.methodNameForShrimpFraction = methodNameForShrimpFraction;
-        labelsForOutputValues = new String[][]{{"Calculated Field: " + name}};
     }
 
     /**
-     * Only child is a ShrimpSpeciesNode containing a SquidSpeciesModel.
+     * Only child is a SpotNode specifying the lookup method for a shrimpfraction (spot).
      *
      * @param childrenET
      * @param shrimpFractions
@@ -53,32 +51,29 @@ public class ShrimpSpeciesNodeFunction extends Function {
     @Override
     public Object[][] eval(List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         //TODO refactor duplicate code
-        shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
-        shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
-        
-        Object[][] results = shrimpSpeciesNode.eval(shrimpFractions, task);
-        // restore the node to anonymous
-        shrimpSpeciesNode.setMethodNameForShrimpFraction("");
+        spotNode = ((SpotNode) childrenET.get(0));
+        methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();
+        labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
+
+        Object[][] results = spotNode.eval(shrimpFractions, task);
+
         return results;
     }
-    
-    
 
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
-        shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
-        
-        String retVal 
+        spotNode = ((SpotNode) childrenET.get(0));
+        methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();
+        labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
+
+
+        String retVal
                 = "<mrow>"
                 + "<mi>" + name + "</mi>"
                 + "<mfenced>"
-                + shrimpSpeciesNode.toStringMathML()
+                + spotNode.toStringMathML()
                 + "</mfenced></mrow>\n";
 
-         // restore the node to anonymous
-        shrimpSpeciesNode.setMethodNameForShrimpFraction("");
-        
         return retVal;
     }
 
