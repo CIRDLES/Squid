@@ -77,6 +77,48 @@ public class TaskSquid25 implements Serializable {
                     taskSquid25.ratioNames.add(ratioStrings[i + 2]);
                 }
 
+                taskSquid25.task25Equations = new ArrayList<>();
+
+                String[] primaryUThPbEqn = lines[firstRow + 22].split("\t");
+                if (primaryUThPbEqn.length > 1) {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]),
+                            prepareSquid25ExcelEquationNameForSquid3(primaryUThPbEqn[0]),
+                            true,
+                            true,
+                            false));
+                }
+
+                String[] secondaryUThPbEqn = lines[firstRow + 23].split("\t");
+                if (secondaryUThPbEqn.length > 1) {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]),
+                            prepareSquid25ExcelEquationNameForSquid3(secondaryUThPbEqn[0]),
+                            true,
+                            true,
+                            false));
+                }
+
+                String[] ThUEqn = lines[firstRow + 24].split("\t");
+                if (ThUEqn.length > 1) {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
+                            prepareSquid25ExcelEquationNameForSquid3(ThUEqn[0]),
+                            true,
+                            true,
+                            false));
+                }
+
+                String[] ppmParentEqn = lines[firstRow + 25].split("\t");
+                if (ppmParentEqn.length > 1) {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
+                            prepareSquid25ExcelEquationNameForSquid3(ppmParentEqn[0]),
+                            true,
+                            true,
+                            false));
+                }
+
                 String[] equations = lines[firstRow + 26].split("\t");
                 int countOfEquations = Integer.valueOf(equations[1]);
 
@@ -88,7 +130,6 @@ public class TaskSquid25 implements Serializable {
 
                 String[] switchSC = lines[firstRow + 30].split("\t");
 
-                taskSquid25.task25Equations = new ArrayList<>();
                 for (int i = 0; i < countOfEquations; i++) {
                     if (prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]).length() > 0) {
                         taskSquid25.task25Equations.add(new TaskSquid25Equation(
@@ -126,7 +167,7 @@ public class TaskSquid25 implements Serializable {
 
         if (excelString.startsWith("[")) {
             // do not accept field names as being equations
-            retVal = "";
+            //retVal = "";
         } else if (!excelString.contains("(") && !excelString.contains("[")) {
             // do not accept constants as being equations - this reults from the conflation in Squid2.5 between equations and outputs
             retVal = "";

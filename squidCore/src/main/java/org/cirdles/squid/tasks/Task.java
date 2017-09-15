@@ -52,8 +52,10 @@ import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
+import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import static org.cirdles.squid.tasks.expressions.spots.SpotNode.buildSpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -368,9 +370,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void assembleNamedExpressionsMap() {
         namedExpressionsMap.clear();
 
-        // TODO: refactor SpotNode treatment after the extent of use is known
-        SpotNode spotNode = SpotNode.buildSpotNode("getHours");
-        namedExpressionsMap.put(spotNode.getName(), spotNode);
+        // TODO: make a SpotNode factory
+        ExpressionTreeInterface expHours = buildSpotNode("getHours");      
+        namedExpressionsMap.put(expHours.getName(), expHours);
 
         for (SquidSpeciesModel spm : squidSpeciesModelList) {
             ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);

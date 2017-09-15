@@ -32,12 +32,23 @@ public class SpotNodeLookupFunction extends Function {
     private SpotNode spotNode;
 
     public SpotNodeLookupFunction() {
-        name = "Lookup";
+        name = "lookup";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
+        
+        methodNameForShrimpFraction = "";
+        spotNode = null;
     }
+
+    @Override
+    public String[][] getLabelsForOutputValues() {
+        labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
+        return super.getLabelsForOutputValues(); 
+    }
+    
+    
 
     /**
      * Only child is a SpotNode specifying the lookup method for a shrimpfraction (spot).
@@ -52,8 +63,7 @@ public class SpotNodeLookupFunction extends Function {
     public Object[][] eval(List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         //TODO refactor duplicate code
         spotNode = ((SpotNode) childrenET.get(0));
-        methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();
-        labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
+        methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();        
 
         Object[][] results = spotNode.eval(shrimpFractions, task);
 
@@ -64,8 +74,6 @@ public class SpotNodeLookupFunction extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         spotNode = ((SpotNode) childrenET.get(0));
         methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();
-        labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
-
 
         String retVal
                 = "<mrow>"
