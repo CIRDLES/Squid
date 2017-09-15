@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  * A <code>ConstantNodeXMLConverter</code> is used to marshal and unmarshal data
@@ -80,24 +80,26 @@ public class ConstantNodeXMLConverter implements Converter {
     @Override
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
-
+        
         ExpressionTreeInterface constantNode = (ConstantNode) value;
-
+        
         writer.startNode("name");
         writer.setValue(constantNode.getName());
         writer.endNode();
-
+        
         writer.startNode("value");
         Object myValue = ((ConstantNode) constantNode).getValue();
         if (myValue instanceof Double) {
             writer.setValue(Double.toString((Double) ((ConstantNode) constantNode).getValue()));
         } else if (myValue instanceof Integer) {
             writer.setValue(Integer.toString((Integer) ((ConstantNode) constantNode).getValue()));
+        } else if (myValue instanceof String) {
+            writer.setValue((String) ((ConstantNode) constantNode).getValue());
         } else { // boolean
             writer.setValue(Boolean.toString((Boolean) ((ConstantNode) constantNode).getValue()));
         }
         writer.endNode();
-
+        
     }
 
     /**
@@ -116,26 +118,33 @@ public class ConstantNodeXMLConverter implements Converter {
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
-
+        
         ExpressionTreeInterface constantNode = new ConstantNode();
-
+        
         reader.moveDown();
-        ((ConstantNode)constantNode).setName(reader.getValue());
+        ((ConstantNode) constantNode).setName(reader.getValue());
         reader.moveUp();
-
+        
         reader.moveDown();
         String constant = reader.getValue();
         if (constant.contains("e")) { // boolean
-            ((ConstantNode)constantNode).setValue(Boolean.parseBoolean(reader.getValue()));
+            ((ConstantNode) constantNode).setValue(Boolean.parseBoolean(reader.getValue()));
         } else if (constant.contains(".")) { // double
-            ((ConstantNode)constantNode).setValue(Double.parseDouble(reader.getValue()));
-        } else { // integer
-            ((ConstantNode)constantNode).setValue(Integer.parseInt(reader.getValue()));
+            ((ConstantNode) constantNode).setValue(Double.parseDouble(reader.getValue()));
+        } else { // integer or string
+            try {
+                int myInt = Integer.parseInt(reader.getValue());
+                ((ConstantNode) constantNode).setValue(myInt);
+            } catch (NumberFormatException numberFormatException) {
+                // String
+                ((ConstantNode) constantNode).setValue(reader.getValue());
+            }
+        
         }
-
+        
         reader.moveUp();
-
+        
         return constantNode;
     }
-
+    
 }

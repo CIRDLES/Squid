@@ -15,8 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import org.cirdles.squid.projects.SquidProject;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 
@@ -61,8 +59,6 @@ public class RatiosManagerController implements Initializable {
     private int indexOfBackgroundSpecies;
 
     @FXML
-    private ToolBar toolbar;
-    @FXML
     private VBox manageRatiosVBox;
 
     /**
@@ -85,7 +81,7 @@ public class RatiosManagerController implements Initializable {
 
     private void prepareRatioGrid() {
 
-        squidSpeciesList = SquidUIController.squidProject.getSquidSpeciesModelList();
+        squidSpeciesList = SquidUIController.squidProject.getTask().getSquidSpeciesModelList();
 
         indexOfBackgroundSpecies = -1;
 
@@ -120,7 +116,7 @@ public class RatiosManagerController implements Initializable {
                     Button ratioButton = new SquidRatioButton(
                             i, j,
                             squidSpeciesList.get(i).getIsotopeName() + "/" + squidSpeciesList.get(j).getIsotopeName(),
-                            SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[i][j]);
+                            SquidUIController.squidProject.getTask().getTableOfSelectedRatiosByMassStationIndex()[i][j]);
 
                     ratioButton.setPrefWidth(BUTTON_WIDTH - 2);
                     ratioButton.setPrefHeight(BUTTON_HEIGHT - 2);
@@ -140,18 +136,6 @@ public class RatiosManagerController implements Initializable {
             }
         }
 
-    }
-
-    @FXML
-    private void useTaskRatiosButtonAction(ActionEvent event) {
-        SquidUIController.squidProject.extractTask25Ratios();
-        populateRatioGrid();
-    }
-
-    @FXML
-    private void clearRatiosButtonAction(ActionEvent event) {
-        SquidUIController.squidProject.resetTableOfSelectedRatiosByMassStationIndex();
-        populateRatioGrid();
     }
 
     class SquidRatioButton extends Button {
@@ -184,7 +168,8 @@ public class RatiosManagerController implements Initializable {
             selected = !selected;
             ((Button) event.getSource()).setText(selected ? ratioName : "");
 
-            SquidUIController.squidProject.getTableOfSelectedRatiosByMassStationIndex()[row][col] = selected;
+            //squidProject.getTask().getTableOfSelectedRatiosByMassStationIndex()[row][col] = selected;
+            squidProject.getTask().updateTableOfSelectedRatiosByMassStationIndex(row, col, selected);
 
         }
     }

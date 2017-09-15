@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions;
+package org.cirdles.squid.tasks.expressions.expressionTrees;
+
+import java.util.List;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 
 /**
  *
@@ -40,20 +43,20 @@ public interface ExpressionTreeBuilderInterface {
      * @return the rightET
      */
     public ExpressionTreeInterface getRightET();
-    
+
     /**
      *
      * @param childET
      */
     public void addChild(ExpressionTreeInterface childET);
-    
+
     /**
      *
      * @param index
      * @param childET
      */
     public void addChild(int index, ExpressionTreeInterface childET);
-    
+
     /**
      *
      * @return
@@ -65,5 +68,12 @@ public interface ExpressionTreeBuilderInterface {
      * @return
      */
     public int getOperationPrecedence();
+
+    /**
+     * @return the childrenET
+     */
+    public List<ExpressionTreeInterface> getChildrenET();
+    
+    public String auditOperationArgumentCount();
 
 }

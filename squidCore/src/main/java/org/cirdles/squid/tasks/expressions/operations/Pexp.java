@@ -18,7 +18,7 @@ package org.cirdles.squid.tasks.expressions.operations;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  *
@@ -33,6 +33,9 @@ public class Pexp extends Operation {
         name = "exp";
         argumentCount = 1;
         precedence = 4;//todo: rethink
+        rowCount = 1;
+        colCount = 1;
+        labelsForOutputValues = new String[][]{{"Fenced"}};
     }
 
     /**

@@ -15,9 +15,9 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.operations.Operation;

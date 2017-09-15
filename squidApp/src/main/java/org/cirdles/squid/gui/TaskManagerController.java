@@ -23,7 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import org.cirdles.squid.tasks.TaskSquid25;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
  * FXML Controller class
@@ -45,10 +45,10 @@ public class TaskManagerController implements Initializable {
 
         taskManagerAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         taskManagerAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
-        TaskSquid25 taskSquid25 = SquidUIController.squidProject.getTaskSquid25();
-        if (taskSquid25 != null) {
-            taskSummaryLabel.setText(SquidUIController.squidProject.getTaskSquid25().printSummaryData());
+        
+        if (squidProject.getTask() != null) {
+            squidProject.initializeExistingProjectTask();
+            taskSummaryLabel.setText(squidProject.getTask().printSummaryData());
         } else {
             taskSummaryLabel.setText("No Task information available");
         }

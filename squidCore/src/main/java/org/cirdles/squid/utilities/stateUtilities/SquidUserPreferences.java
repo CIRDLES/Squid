@@ -24,9 +24,11 @@ import java.io.Serializable;
  * @author James F. Bowring
  */
 public class SquidUserPreferences implements Serializable {
+
     // NOTE: java.utils.Properties should be considered for use here JFB
     // Class variables
-    // private static final long serialVersionUID = -3387114034799849790L;
+    private static final long serialVersionUID = -936841271782482788L;
+
     // instance variables
     private String geochronUserName;
     private String geochronPassWord;

@@ -17,76 +17,439 @@ package org.cirdles.squid.tasks;
 
 import com.google.common.primitives.Doubles;
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeXMLConverter;
+import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeXMLConverter;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
+import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableXMLConverter;
+import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 
 /**
  *
  * @author James F. Bowring
  */
-public class Task implements TaskInterface, XMLSerializerInterface {
+public class Task implements TaskInterface, Serializable, XMLSerializerInterface {
+
+    private static final long serialVersionUID = 6522574920235718028L;
 
     /**
      *
      */
     protected String name;
+    protected String type;
+    protected String description;
+    protected String authorName;
+    protected String labName;
+    protected String provenance;
+    protected long dateRevised;
+    protected List<String> ratioNames;
+    // cannot be serialized because of JavaFX private final SimpleStringProperty fields
+    protected transient Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
+    protected SquidSessionModel squidSessionModel;
+    protected List<SquidSpeciesModel> squidSpeciesModelList;
+    protected List<SquidRatiosModel> squidRatiosModelList;
+    protected boolean[][] tableOfSelectedRatiosByMassStationIndex;
 
     /**
      *
      */
-    protected List<ExpressionTreeInterface> taskExpressionsOrdered;
+    protected List<ExpressionTree> taskExpressionTreesOrdered;
+    protected List<Expression> taskExpressionsOrdered;
+    protected List<Expression> taskExpressionsRemoved;
+    protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
 
     /**
      *
      */
     protected Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet;
 
-    protected transient SquidProject squidProject;
+    protected PrawnFile prawnFile;
 
-    /**
-     *
-     */
+    protected boolean changed;
+
     public Task() {
-        this("NoName", null);
+        this("Default Empty Task", null);
+    }
+
+    public Task(String name) {
+        this(name, null);
     }
 
     /**
      *
      * @param name
-     * @param squidProject
+     * @param prawnFile
      */
-    public Task(String name, SquidProject squidProject) {
+    public Task(String name, PrawnFile prawnFile) {
         this.name = name;
-        this.squidProject = squidProject;
+        this.type = "specify Geochron or General";
+        this.description = "describe task here";
+        this.authorName = "author name";
+        this.labName = "lab name";
+        this.provenance = "provenance";
+        this.dateRevised = 0l;
+        this.ratioNames = new ArrayList<>();
+        this.squidSessionModel = null;
+        squidSpeciesModelList = new ArrayList<>();
+        squidRatiosModelList = new ArrayList<>();
+        tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
+
+        this.taskExpressionTreesOrdered = new ArrayList<>();
         this.taskExpressionsOrdered = new ArrayList<>();
+        this.taskExpressionsRemoved = new ArrayList<>();
+        this.namedExpressionsMap = new LinkedHashMap<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
+
+        this.prawnFile = prawnFile;
+
+        this.changed = true;
+    }
+
+    @Override
+    public String printSummaryData() {
+        StringBuilder summary = new StringBuilder();
+        summary.append("Squid3 Task Name: ");
+        summary.append("\t");
+        summary.append(name);
+        summary.append("\n\n");
+
+        summary.append("Provenance: ");
+        summary.append("\t");
+        summary.append(provenance);
+        summary.append("\n\n");
+
+        summary.append("Task Type: ");
+        summary.append("\t");
+        summary.append(type);
+        summary.append("\n\n");
+
+        summary.append("Task Description: ");
+        summary.append("\t");
+        summary.append(description.replaceAll(",", "\n\t\t\t\t"));
+        summary.append("\n\n");
+
+        summary.append("Task Ratios: ");
+        summary.append("\t");
+        summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");
+        summary.append("\n\n");
+
+        int count = 0;
+        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
+            if (exp.amHealthy()) {
+                count++;
+            }
+        }
+        summary.append("Task Expressions: ");
+        summary.append("\n\tHealthy: ");
+        summary.append((String) (count > 0 ? String.valueOf(count) : "None")).append(" included.");
+        summary.append("\n\tUnHealthy: ");
+        summary.append((String) ((taskExpressionTreesOrdered.size() - count) > 0
+                ? String.valueOf(taskExpressionTreesOrdered.size() - count) : "None")).append(" included.");
+        summary.append("\n\n");
+
+        return summary.toString();
+    }
+
+    private void initializeTask() {
+        if (prawnFile != null) {
+            setupSquidSessionSpecs();
+        }
+    }
+
+    @Override
+    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText) {
+        Expression exp = new Expression(name, originalExpressionText);
+        exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+
+        return exp;
+    }
+
+    @Override
+    public void setupSquidSessionSpecs() {
+        // this is transient so needs re-creating if does not exist
+        if (mapOfIndexToMassStationDetails == null) {
+            createMapOfIndexToMassStationDetails();
+        }
+
+        if (changed) {
+
+            createMapOfIndexToMassStationDetails();
+
+            // populate taskExpressionsTreesOrdered
+            taskExpressionTreesOrdered.clear();
+            for (Expression exp : taskExpressionsOrdered) {
+                taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
+            }
+            buildSquidSpeciesModelList();
+
+            populateTableOfSelectedRatiosFromRatiosList();
+
+            buildSquidRatiosModelListFromMassStationDetails();
+
+            processAndSortExpressions();
+
+            squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
+
+            changed = false;
+        }
+    }
+
+    private void processAndSortExpressions() {
+        // put expressions in execution order
+        try {
+            Collections.sort(taskExpressionTreesOrdered);
+            Collections.sort(taskExpressionsOrdered);
+        } catch (Exception e) {
+        }
+        // now use existing ratios as basis for building and checking expressions in ascending execution order
+        assembleNamedExpressionsMap();
+
+        // two passes needed to get in correct order worst case ***************************
+        // since checking for dependencies after possible changes or new expressions
+        buildExpressions();
+
+        // put expressions in execution order
+        try {
+            Collections.sort(taskExpressionTreesOrdered);
+            Collections.sort(taskExpressionsOrdered);
+        } catch (Exception e) {
+        }
+
+        buildExpressions();
+
+        // put expressions in execution order
+        try {
+            Collections.sort(taskExpressionTreesOrdered);
+            Collections.sort(taskExpressionsOrdered);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void removeExpression(Expression expression) {
+        if (expression != null) {
+            taskExpressionTreesOrdered.remove((ExpressionTree) expression.getExpressionTree());
+            taskExpressionsOrdered.remove(expression);
+            taskExpressionsRemoved.add(expression);
+            processAndSortExpressions();
+        }
+    }
+
+    @Override
+    public void restoreRemovedExpressions() {
+        for (Expression exp : taskExpressionsRemoved) {
+            taskExpressionsOrdered.add(exp);
+            taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
+        }
+        taskExpressionsRemoved.clear();
+        processAndSortExpressions();
+    }
+
+    private void createMapOfIndexToMassStationDetails() {
+        // this is transient so needs re-creating if does not exist
+        if (prawnFile != null) {
+            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
+        }
+    }
+
+    private void buildExpressions() {
+        // after map is built
+        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
+            if (exp instanceof BuiltInExpressionInterface) {
+                ((BuiltInExpressionInterface) exp).buildExpression(this);
+            }
+        }
+    }
+
+    @Override
+    public void buildSquidSpeciesModelList() {
+        if (mapOfIndexToMassStationDetails != null) {
+            // update these if squidSpeciesModelList exists
+            if (squidSpeciesModelList.size() > 0) {
+                for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+                    MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+                    // only these two fields change
+                    massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+                    massStationDetail.setIsBackground(ssm.getIsBackground());
+                }
+            } else {
+                buildSquidSpeciesModelListFromMassStationDetails();
+            }
+        }
+    }
+
+    private void buildSquidSpeciesModelListFromMassStationDetails() {
+        squidSpeciesModelList = new ArrayList<>();
+        for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
+            SquidSpeciesModel spm = new SquidSpeciesModel(
+                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(), entry.getValue().getElementLabel(), entry.getValue().getIsBackground());
+
+            squidSpeciesModelList.add(spm);
+        }
+        if (tableOfSelectedRatiosByMassStationIndex.length == 0) {
+            tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+        }
+    }
+
+    @Override
+    public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm) {
+        // there is at most one
+        int retVal = -1;
+
+        for (SquidSpeciesModel squidSpeciesModel : squidSpeciesModelList) {
+            if (squidSpeciesModel.getIsBackground()) {
+                squidSpeciesModel.setIsBackground(false);
+                retVal = squidSpeciesModel.getMassStationIndex();
+                break;
+            }
+        }
+
+        if (ssm != null) {
+            ssm.setIsBackground(true);
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public void buildSquidRatiosModelListFromMassStationDetails() {
+        squidRatiosModelList = new ArrayList<>();
+
+        // TODO revise use of this in comparator of squidSpeciesModel
+        int reportingOrderIndex = 0;
+        for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
+            for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
+                if ((tableOfSelectedRatiosByMassStationIndex[row][col])
+                        && (!squidSpeciesModelList.get(row).getIsBackground())
+                        && (!squidSpeciesModelList.get(col).getIsBackground())) {
+                    squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(row), squidSpeciesModelList.get(col), reportingOrderIndex));
+                    reportingOrderIndex++;
+                }
+            }
+        }
+    }
+
+    private void assembleNamedExpressionsMap() {
+        namedExpressionsMap.clear();
+
+        // TODO: refactor SpotNode treatment after the extent of use is known
+        SpotNode spotNode = SpotNode.buildSpotNode("getHours");
+        namedExpressionsMap.put(spotNode.getName(), spotNode);
+
+        for (SquidSpeciesModel spm : squidSpeciesModelList) {
+            ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);
+            namedExpressionsMap.put(spm.getIsotopeName(), shrimpSpeciesNode);
+        }
+
+        for (SquidRatiosModel srm : squidRatiosModelList) {
+            namedExpressionsMap.put(srm.getRatioName(), buildRatioExpression(srm.getRatioName()));
+        }
+
+        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
+            namedExpressionsMap.put(exp.getName(), exp);
+        }
+    }
+
+    private ExpressionTreeInterface buildRatioExpression(String ratioName) {
+        // format of ratioName is "nnn/mmm"
+        ExpressionTreeInterface ratioExpression = null;
+        if ((findNumerator(ratioName) != null) & (findDenominator(ratioName) != null)) {
+            ratioExpression
+                    = new ExpressionTree(
+                            ratioName,
+                            ShrimpSpeciesNode.buildShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
+                            ShrimpSpeciesNode.buildShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
+                            Operation.divide());
+
+            ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
+        }
+        return ratioExpression;
+    }
+
+    @Override
+    public ExpressionTreeInterface findNamedExpression(String ratioName) {
+        ExpressionTreeInterface foundRatioExp = namedExpressionsMap.get(ratioName);
+        if (foundRatioExp == null) {
+            foundRatioExp = new ConstantNode(MISSING_EXPRESSION_STRING, ratioName);
+        } else if (!foundRatioExp.amHealthy()) {
+            foundRatioExp = new ConstantNode(MISSING_EXPRESSION_STRING, ratioName);
+        }
+        return foundRatioExp;
+    }
+
+    private SquidSpeciesModel findNumerator(String ratioName) {
+        String[] parts = ratioName.split("/");
+        return lookUpSpeciesByName(parts[0]);
+    }
+
+    private SquidSpeciesModel findDenominator(String ratioName) {
+        String[] parts = ratioName.split("/");
+        return lookUpSpeciesByName(parts[1]);
+    }
+
+    @Override
+    public SquidSpeciesModel lookUpSpeciesByName(String isotopeName) {
+        SquidSpeciesModel retVal = null;
+
+        for (SquidSpeciesModel squidSpeciesModel : squidSpeciesModelList) {
+            if (squidSpeciesModel.getIsotopeName().compareToIgnoreCase(isotopeName) == 0) {
+                retVal = squidSpeciesModel;
+                break;
+            }
+        }
+
+        return retVal;
+    }
+
+    /**
+     *
+     * @param ratiosOfInterest
+     * @return
+     */
+    private Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest) {
+        // assume acquisition order is atomic weight order
+        Set<SquidSpeciesModel> eqPkUndupeOrd = new TreeSet<>();
+        for (int i = 0; i < ratiosOfInterest.size(); i++) {
+            eqPkUndupeOrd.add(findNumerator(ratiosOfInterest.get(i)));
+            eqPkUndupeOrd.add(findDenominator(ratiosOfInterest.get(i)));
+        }
+        return eqPkUndupeOrd;
     }
 
     /**
@@ -147,22 +510,24 @@ public class Task implements TaskInterface, XMLSerializerInterface {
             }
         });
 
-        for (ExpressionTreeInterface expression : taskExpressionsOrdered) {
-            // determine subset of spots to be evaluated - default = all
-            List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
-            if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {
-                spotsForExpression = unknownSpots;
-            }
-            if (!((ExpressionTree) expression).isSquidSwitchSAUnknownCalculation()) {
-                spotsForExpression = referenceMaterialSpots;
-            }
+        for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
+            if (expression.amHealthy()) {
+                // determine subset of spots to be evaluated - default = all
+                List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
+                if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {
+                    spotsForExpression = unknownSpots;
+                }
+                if (!((ExpressionTree) expression).isSquidSwitchSAUnknownCalculation()) {
+                    spotsForExpression = referenceMaterialSpots;
+                }
 
-            try {
-                evaluateExpressionForSpotSet(expression, spotsForExpression);
-            } catch (SquidException squidException) {
-                // TODO - log and report failure of expression
+                try {
+                    evaluateExpressionForSpotSet(expression, spotsForExpression);
+                } catch (SquidException squidException) {
+                    // TODO - log and report failure of expression
 //                JOptionPane.showMessageDialog(null,
 //                        "Expression failed: " + expression.getName() + " because: " + squidException.getMessage());
+                }
             }
         }
     }
@@ -227,13 +592,13 @@ public class Task implements TaskInterface, XMLSerializerInterface {
 
             int[] isotopeIndices = new int[ratiosOfInterest.size() * 2];
             for (int i = 0; i < ratiosOfInterest.size(); i++) {
-                if (squidProject.findNumerator(ratiosOfInterest.get(i)) != null) {
-                    isotopeIndices[2 * i] = squidProject.findNumerator(ratiosOfInterest.get(i)).getMassStationIndex();
+                if (findNumerator(ratiosOfInterest.get(i)) != null) {
+                    isotopeIndices[2 * i] = findNumerator(ratiosOfInterest.get(i)).getMassStationIndex();
                 } else {
                     isotopeIndices[2 * i] = -1;
                 }
-                if (squidProject.findDenominator(ratiosOfInterest.get(i)) != null) {
-                    isotopeIndices[2 * i + 1] = squidProject.findDenominator(ratiosOfInterest.get(i)).getMassStationIndex();
+                if (findDenominator(ratiosOfInterest.get(i)) != null) {
+                    isotopeIndices[2 * i + 1] = findDenominator(ratiosOfInterest.get(i)).getMassStationIndex();
                 } else {
                     isotopeIndices[2 * i + 1] = -1;
                 }
@@ -323,7 +688,7 @@ public class Task implements TaskInterface, XMLSerializerInterface {
                 if (eqValTmp != 0.0) {
                     // numerical pertubation procedure
                     // EqPkUndupeOrd is here a List of the unique Isotopes in order of acquisition in the expression
-                    Set<SquidSpeciesModel> eqPkUndupeOrd = squidProject.extractUniqueSpeciesNumbers(((ExpressionTreeWithRatiosInterface) expression).getRatiosOfInterest());
+                    Set<SquidSpeciesModel> eqPkUndupeOrd = extractUniqueSpeciesNumbers(((ExpressionTreeWithRatiosInterface) expression).getRatiosOfInterest());
                     Iterator<SquidSpeciesModel> species = eqPkUndupeOrd.iterator();
 
                     double fVar = 0.0;
@@ -451,28 +816,111 @@ public class Task implements TaskInterface, XMLSerializerInterface {
     /**
      * @param name the name to set
      */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return the taskExpressionsOrdered
+     * @return the type
      */
     @Override
-    public List<ExpressionTreeInterface> getTaskExpressionsOrdered() {
-        return taskExpressionsOrdered;
+    public String getType() {
+        return type;
     }
 
     /**
-     * @param taskExpressionsOrdered the taskExpressionsOrdered to set
+     * @param type the type to set
      */
-    public void setTaskExpressionsOrdered(List<ExpressionTreeInterface> taskExpressionsOrdered) {
-        this.taskExpressionsOrdered = taskExpressionsOrdered;
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the description
+     */
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the authorName
+     */
+    @Override
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    /**
+     * @param authorName the authorName to set
+     */
+    @Override
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    /**
+     * @return the labName
+     */
+    @Override
+    public String getLabName() {
+        return labName;
+    }
+
+    /**
+     * @param labName the labName to set
+     */
+    @Override
+    public void setLabName(String labName) {
+        this.labName = labName;
+    }
+
+    /**
+     * @return the dateRevised
+     */
+    @Override
+    public long getDateRevised() {
+        return dateRevised;
+    }
+
+    /**
+     * @param dateRevised the dateRevised to set
+     */
+    @Override
+    public void setDateRevised(long dateRevised) {
+        this.dateRevised = dateRevised;
+    }
+
+    /**
+     * @return the taskExpressionTreesOrdered
+     */
+    @Override
+    public List<ExpressionTree> getTaskExpressionTreesOrdered() {
+        return taskExpressionTreesOrdered;
+    }
+
+    /**
+     * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
+     */
+    @Override
+    public void setTaskExpressionTreesOrdered(List<ExpressionTree> taskExpressionTreesOrdered) {
+        this.taskExpressionTreesOrdered = taskExpressionTreesOrdered;
     }
 
     /**
      * @return the taskExpressionsEvaluationsPerSpotSet
      */
+    @Override
     public Map<String, SpotSummaryDetails> getTaskExpressionsEvaluationsPerSpotSet() {
         return taskExpressionsEvaluationsPerSpotSet;
     }
@@ -481,7 +929,189 @@ public class Task implements TaskInterface, XMLSerializerInterface {
      * @param taskExpressionsEvaluationsPerSpotSet the
      * taskExpressionsEvaluationsPerSpotSet to set
      */
+    @Override
     public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet) {
         this.taskExpressionsEvaluationsPerSpotSet = taskExpressionsEvaluationsPerSpotSet;
+    }
+
+    /**
+     * @return the provenance
+     */
+    @Override
+    public String getProvenance() {
+        return provenance;
+    }
+
+    /**
+     * @param provenance the provenance to set
+     */
+    @Override
+    public void setProvenance(String provenance) {
+        this.provenance = provenance;
+    }
+
+    /**
+     * @return the ratioNames
+     */
+    @Override
+    public List<String> getRatioNames() {
+        return ratioNames;
+    }
+
+    /**
+     * @param ratioNames the ratioNames to set
+     */
+    @Override
+    public void setRatioNames(List<String> ratioNames) {
+        this.ratioNames = ratioNames;
+    }
+
+    /**
+     * @return the squidSessionModel
+     */
+    @Override
+    public SquidSessionModel getSquidSessionModel() {
+        return squidSessionModel;
+    }
+
+    /**
+     * @param squidSessionModel the squidSessionModel to set
+     */
+    public void setSquidSessionModel(SquidSessionModel squidSessionModel) {
+        this.squidSessionModel = squidSessionModel;
+    }
+
+    /**
+     * @return the squidSpeciesModelList
+     */
+    @Override
+    public List<SquidSpeciesModel> getSquidSpeciesModelList() {
+        return squidSpeciesModelList;
+    }
+
+    /**
+     * @return the squidRatiosModelList
+     */
+    @Override
+    public List<SquidRatiosModel> getSquidRatiosModelList() {
+        return squidRatiosModelList;
+    }
+
+    /**
+     * @return the tableOfSelectedRatiosByMassStationIndex
+     */
+    @Override
+    public boolean[][] getTableOfSelectedRatiosByMassStationIndex() {
+        return tableOfSelectedRatiosByMassStationIndex;
+    }
+
+    @Override
+    public void resetTableOfSelectedRatiosByMassStationIndex() {
+        tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
+    }
+
+    @Override
+    public boolean isEmptyTableOfSelectedRatiosByMassStationIndex() {
+        boolean retVal = true;
+
+        if (tableOfSelectedRatiosByMassStationIndex != null) {
+            for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
+                for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
+                    retVal &= !tableOfSelectedRatiosByMassStationIndex[row][col];
+                }
+            }
+        }
+
+        return retVal;
+    }
+
+    /**
+     * @return the mapOfIndexToMassStationDetails
+     */
+    @Override
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
+        return mapOfIndexToMassStationDetails;
+    }
+
+    /**
+     * @return the listOfMassStationDetails
+     */
+    @Override
+    public List<MassStationDetail> makeListOfMassStationDetails() {
+        List<MassStationDetail> listOfMassStationDetails = new ArrayList<>();
+        for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
+            listOfMassStationDetails.add(entry.getValue());
+        }
+        return listOfMassStationDetails;
+    }
+
+    @Override
+    public void populateTableOfSelectedRatiosFromRatiosList() {
+        resetTableOfSelectedRatiosByMassStationIndex();
+
+        for (int i = 0; i < ratioNames.size(); i++) {
+            String[] ratio = ratioNames.get(i).split("/");
+            if ((lookUpSpeciesByName(ratio[0]) != null)
+                    && lookUpSpeciesByName(ratio[1]) != null) {
+                int num = lookUpSpeciesByName(ratio[0]).getMassStationIndex();
+                int den = lookUpSpeciesByName(ratio[1]).getMassStationIndex();
+                tableOfSelectedRatiosByMassStationIndex[num][den] = true;
+            }
+        }
+    }
+
+    @Override
+    public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected) {
+        tableOfSelectedRatiosByMassStationIndex[row][col] = selected;
+        String num = mapOfIndexToMassStationDetails.get(row).getIsotopeLabel();
+        String den = mapOfIndexToMassStationDetails.get(col).getIsotopeLabel();
+        String ratioName = num + "/" + den;
+        if (ratioNames.contains(ratioName)) {
+            if (!selected) {
+                ratioNames.remove(ratioName);
+            }
+        } else {
+            if (selected) {
+                ratioNames.add(ratioName);
+            }
+        }
+
+        changed = true;
+    }
+
+    /**
+     * @return the prawnFile
+     */
+    public PrawnFile getPrawnFile() {
+        return prawnFile;
+    }
+
+    /**
+     * @param prawnFile the prawnFile to set
+     */
+    public void setPrawnFile(PrawnFile prawnFile) {
+        this.prawnFile = prawnFile;
+    }
+
+    /**
+     * @return the namedExpressionsMap
+     */
+    @Override
+    public Map<String, ExpressionTreeInterface> getNamedExpressionsMap() {
+        return namedExpressionsMap;
+    }
+
+    /**
+     * @return the taskExpressionsOrdered
+     */
+    public List<Expression> getTaskExpressionsOrdered() {
+        return taskExpressionsOrdered;
+    }
+
+    /**
+     * @param changed the changed to set
+     */
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 }

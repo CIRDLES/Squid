@@ -15,10 +15,11 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
@@ -26,22 +27,36 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
  *
  * @author James F. Bowring
  */
-public class CustomExpression_Net204BiWt {
+public class CustomExpression_Net204BiWt extends ExpressionTree implements BuiltInExpressionInterface {
+
+    private static final long serialVersionUID = -5952836801278720275L;
 
     /**
      * Squid Excel format is sqBiweight(["Net204cts/sec"],9)
      */
-    public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("Net204BiWt");
+    public static final String excelExpressionString = "sqBiweight([\"Net204cts/sec\"],9)";
 
-    static {
-        ((ExpressionTreeBuilderInterface) EXPRESSION)
-                .addChild(0, new VariableNodeForPerSpotTaskExpressions(CustomExpression_Net204cts_sec.EXPRESSION.getName()));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ConstantNode("9", 9));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.sqBiweight());
+    public CustomExpression_Net204BiWt() {
+        super("Net204BiWt");
+    }
 
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
+    @Override
+    public void buildExpression(TaskInterface task) {
+
+        operation = Function.sqBiweight();
+
+        childrenET.clear();
+
+        // causes amHealthy to fail if expression bad
+        ExpressionTreeInterface exp = task.findNamedExpression("Net204cts/sec");
+        addChild(0, new VariableNodeForPerSpotTaskExpressions(exp.getName()));
+
+//        addChild(0, new VariableNodeForPerSpotTaskExpressions("Net204cts/sec"));
+        addChild(new ConstantNode("9", 9));
+
+        setRootExpressionTree(true);
+        setSquidSwitchSCSummaryCalculation(true);
+        setSquidSwitchSTReferenceMaterialCalculation(true);
+        setSquidSwitchSAUnknownCalculation(false);
     }
 }

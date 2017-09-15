@@ -33,6 +33,7 @@ import javafx.stage.WindowEvent;
 public final class SquidUI extends Application {
 
     public static final String SPOT_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
+    public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
     public static final int PIXEL_OFFSET_FOR_MENU = 40;
     protected static Window primaryStageWindow;
     protected static SquidAboutWindow squidAboutWindow;

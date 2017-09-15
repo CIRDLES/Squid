@@ -27,11 +27,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
-import javax.swing.JOptionPane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.tasks.storedTasks.SquidBodorkosTask1;
+import org.cirdles.squid.tasks.Task;
 
 /**
  * FXML Controller class

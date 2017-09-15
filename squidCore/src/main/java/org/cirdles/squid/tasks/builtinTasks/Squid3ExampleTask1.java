@@ -13,66 +13,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.storedTasks;
+package org.cirdles.squid.tasks.builtinTasks;
 
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
-import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Expo;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnPbR_U;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Mean7_6;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204BiWt;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_sec;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_RawConcAge;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_RawPb76Age;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_TestIf;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_secALT;
 
 /**
  *
  * @author James F. Bowring
  */
-public class SquidBodorkosTask1 extends Task {
+public class Squid3ExampleTask1 extends Task {
 
     /**
      *
-     * @param squidProject
      */
-    public SquidBodorkosTask1(SquidProject squidProject) {
-        super("SquidBodorkosTask1", squidProject);
+    public Squid3ExampleTask1() {
+        super("Squid3ExampleTask1");
 
-        ExpressionTree.squidProject = squidProject;
+        this.type = "Geochron";
+        this.description = "Example Squid3 Task for 10-peak zircon.";
+        this.authorName = "Squid3 Team";
+        this.labName = "GA";
+        this.provenance = "Builtin task.";
+        this.dateRevised = 0l;
 
-        taskExpressionsOrdered.add(CustomExpression_LnUO_U.EXPRESSION);
+        ratioNames.add("204/206");
+        ratioNames.add("207/206");
+        ratioNames.add("208/206");
+        ratioNames.add("238/196");
+        ratioNames.add("206/238");
+        ratioNames.add("254/238");
+        ratioNames.add("248/254");
+        ratioNames.add("206/270");
+        ratioNames.add("270/254");
+        ratioNames.add("206/254");
+        ratioNames.add("238/206");
 
-        taskExpressionsOrdered.add(CustomExpression_LnPbR_U.EXPRESSION);
+        
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_LnPbR_U(), CustomExpression_LnPbR_U.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new SquidExpressionMinus1(), SquidExpressionMinus1.excelExpressionString));
+        // this next expression should be last in execution, but serves as a test for sorting execution order
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_Net204BiWt(), CustomExpression_Net204BiWt.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new SquidExpressionMinus4(), SquidExpressionMinus4.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString));
 
-        taskExpressionsOrdered.add(SquidExpressionMinus1.EXPRESSION);
-
-        taskExpressionsOrdered.add(SquidExpressionMinus4.EXPRESSION);
-
-        taskExpressionsOrdered.add(SquidExpressionMinus3.EXPRESSION);
-
-        taskExpressionsOrdered.add(CustomExpression_Net204cts_sec.EXPRESSION);
-
-        taskExpressionsOrdered.add(CustomExpression_Net204BiWt.EXPRESSION);
-
-        taskExpressionsOrdered.add(CustomExpression_Expo.EXPRESSION);
-
-        taskExpressionsOrdered.add(CustomExpression_TestIf.EXPRESSION);
-
-        taskExpressionsOrdered.add(CustomExpression_RawPb76Age.EXPRESSION);
-
-        taskExpressionsOrdered.add(CustomExpression_Mean7_6.EXPRESSION);
-
-        taskExpressionsOrdered.add(CustomExpression_RawConcAge.EXPRESSION);
-
+//        taskExpressionsOrdered.add(
+//                new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
+        taskExpressionsOrdered.add(
+                new Expression(new CustomExpression_Net204cts_secALT(), CustomExpression_Net204cts_secALT.excelExpressionString));
+        
+//
+//        taskExpressionTreesOrdered.add(CustomExpression_Expo.EXPRESSION);
+//
+//        taskExpressionTreesOrdered.add(CustomExpression_TestIf.EXPRESSION);
+//
+//        taskExpressionTreesOrdered.add(CustomExpression_RawPb76Age.EXPRESSION);
+//
+//        taskExpressionTreesOrdered.add(CustomExpression_Mean7_6.EXPRESSION);
+//
+//        taskExpressionTreesOrdered.add(CustomExpression_RawConcAge.EXPRESSION);
         // experiment
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnUO_U.EXPRESSION, "CustomExpression_LnUO_U.xml");
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnPbR_U.EXPRESSION, "CustomExpression_LnPbR_U.xml");
@@ -87,16 +101,15 @@ public class SquidBodorkosTask1 extends Task {
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_RawPb76Age.EXPRESSION, "CustomExpression_RawPb76Age.xml");
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Mean7_6.EXPRESSION, "CustomExpression_Mean7_6.xml");
 //        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_RawConcAge.EXPRESSION, "CustomExpression_RawConcAge.xml");
-        
-        ((XMLSerializerInterface) this).serializeXMLObject(this, "SquidBodorkosTask1.xml");
-
-        TaskInterface test = new Task();
-        test = (TaskInterface)((XMLSerializerInterface) test).readXMLObject("SquidBodorkosTask1.xml", false);
-        ((XMLSerializerInterface)test).serializeXMLObject(test, "SquidBodorkosTask1XXX.xml");
-        
-        
+//        
+//        ((XMLSerializerInterface) this).serializeXMLObject(this, "Squid3ExampleTask1.xml");
+//
+//        TaskInterface test = new Task();
+//        test = (TaskInterface)((XMLSerializerInterface) test).readXMLObject("Squid3ExampleTask1.xml", false);
+//        ((XMLSerializerInterface)test).serializeXMLObject(test, "SquidBodorkosTask1XXX.xml");
+//        
 //        ((ExpressionTree) test).setName("TESTSquidExpressionMinus3");
 //        ((ExpressionTree) test).setRootExpressionTree(true);
-//        taskExpressionsOrdered.add(test);
+//        taskExpressionTreesOrdered.add(test);
     }
 }

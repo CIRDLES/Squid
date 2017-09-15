@@ -15,32 +15,44 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 
 /**
  *
  * @author James F. Bowring
  */
-public class CustomExpression_LnUO_U {
+public class CustomExpression_LnUO_U extends ExpressionTree implements BuiltInExpressionInterface {
+
+    private static final long serialVersionUID = -7191987794192109215L;
 
     /**
      * Squid Excel format is ln(["254/238"])
      */
-    public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("LnUO/U");
+    public static final String excelExpressionString = "ln([\"254/238\"])";
 
-    static {
-        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
-
-        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, ExpressionTree.squidProject.buildRatioExpression("254/238"));
-        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Function.ln());
-
-        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
+    public CustomExpression_LnUO_U() {
+        super("LnUO/U");
     }
+
+    @Override
+    public void buildExpression(TaskInterface task) {
+        
+        ratiosOfInterest.clear();
+        ratiosOfInterest.add("254/238");
+
+        operation = Function.ln();
+
+        childrenET.clear();
+
+        addChild(0, task.findNamedExpression("254/238"));
+
+        rootExpressionTree = true;
+        squidSwitchSCSummaryCalculation = false;
+        squidSwitchSTReferenceMaterialCalculation = true;
+        squidSwitchSAUnknownCalculation = true;
+    }
+
 }

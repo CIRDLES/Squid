@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions;
+package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
+import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
@@ -42,12 +43,16 @@ import org.cirdles.squid.tasks.expressions.variables.VariableXMLConverter;
  * @author James F. Bowring
  */
 public class ExpressionTree
-        implements ExpressionTreeInterface,
+        implements
+        Comparable<ExpressionTree>,
+        ExpressionTreeInterface,
         ExpressionTreeBuilderInterface,
         ExpressionTreeWithRatiosInterface,
+        Serializable,
         XMLSerializerInterface {
 
-    public static SquidProject squidProject;
+    private static final long serialVersionUID = 69881766695649050L;
+
     /**
      *
      */
@@ -56,7 +61,7 @@ public class ExpressionTree
     /**
      *
      */
-    private List<ExpressionTreeInterface> childrenET;
+    protected List<ExpressionTreeInterface> childrenET;
 
     /**
      *
@@ -87,6 +92,11 @@ public class ExpressionTree
      *
      */
     protected boolean squidSwitchSAUnknownCalculation;
+
+    /**
+     *
+     */
+    protected boolean squidSpecialUPbThExpression;
 
     /**
      *
@@ -146,12 +156,149 @@ public class ExpressionTree
         this.squidSwitchSCSummaryCalculation = false;
         this.squidSwitchSTReferenceMaterialCalculation = false;
         this.squidSwitchSAUnknownCalculation = false;
+        this.squidSpecialUPbThExpression = false;
         this.rootExpressionTree = false;
     }
 
     private void populateChildrenET(ExpressionTreeInterface leftET, ExpressionTreeInterface rightET) {
         addChild(leftET);
         addChild(rightET);
+    }
+
+    @Override
+    public boolean amHealthy() {
+        boolean retVal = (isValid());
+        // check for correct number of operands for operation
+        if (retVal) {
+            retVal = retVal && (getCountOfChildren() == argumentCount());
+            if (retVal) {
+                for (ExpressionTreeInterface exp : childrenET) {
+                    retVal = retVal && exp.amHealthy();
+                    if (!retVal) {
+                        break;
+                    }
+                }
+            }
+        }
+        return retVal;
+    }
+
+    @Override
+    public boolean usesAnotherExpression(ExpressionTreeInterface expTarget) {
+        boolean retVal = false;
+        for (ExpressionTreeInterface exp : childrenET) {
+            // checking for same object
+            retVal = retVal || exp.usesAnotherExpression(expTarget) || (exp.equals(expTarget));
+            if (retVal) {
+                break;
+            }
+        }
+        return retVal;
+    }
+
+    @Override
+    /**
+     * This arranges expressions in ascending order of evaluation. Checking for
+     * circular references is done elsewhere.
+     */
+    public int compareTo(ExpressionTree exp) {
+        int retVal = 0;
+        if (this != exp) {
+            if (this.usesAnotherExpression(exp)) {
+                // this object comes after exp
+                retVal = 1;
+            } else if (exp.usesAnotherExpression(this)) {
+                // this object comes before exp
+                retVal = -1;
+            }
+            if (retVal == 0) {
+                // then compare has ratios of interest
+                if (hasRatiosOfInterest() && !exp.hasRatiosOfInterest()) {
+                    retVal = -1;
+                } else if (!hasRatiosOfInterest() && exp.hasRatiosOfInterest()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
+                // then compare is special built-in UPbTh expression
+                if (isSquidSpecialUPbThExpression() && !exp.isSquidSpecialUPbThExpression()) {
+                    retVal = -1;
+                } else if (!isSquidSpecialUPbThExpression() && exp.isSquidSpecialUPbThExpression()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
+                // then compare on names so we have a complete ordering
+                retVal = name.compareTo(exp.getName());
+            }
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean retVal = false;
+        if (this == obj) {
+            retVal = true;
+        } else if (obj instanceof ExpressionTree) {
+            retVal = !(this.usesAnotherExpression((ExpressionTree) obj)
+                    && !((ExpressionTree) obj).usesAnotherExpression(this));
+            if (retVal) {
+                retVal = (hasRatiosOfInterest() == ((ExpressionTree) obj).hasRatiosOfInterest());
+            }
+            if (retVal) {
+                retVal = (isSquidSpecialUPbThExpression() == ((ExpressionTree) obj).isSquidSpecialUPbThExpression());
+            }
+            if (retVal) {
+                retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
+            }
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    public boolean isValid() {
+        return (operation != null);
+    }
+
+    @Override
+    public String auditOperationArgumentCount() {        
+        String audit = "";
+        if (operation == null){
+            audit = "   " + name + " is unhealthy expression";
+        } else {
+        
+        int requiredChildren = argumentCount();
+        int suppliedChildren = getCountOfChildren();
+
+        audit = "Op " + operation.getName() + " requires/provides: " + requiredChildren + " / " + suppliedChildren + " arguments.";
+
+        for (ExpressionTreeInterface child : getChildrenET()) {
+            if (child instanceof ConstantNode) {
+                if (((ConstantNode) child).isMissingExpression()) {
+                    audit += "\n    Expression '" + (String) ((ConstantNode) child).getValue() + "' is missing.";
+                }
+            }
+
+            // backwards compatible with use of ShrimpSpeciesNodes directly
+            if (child instanceof ShrimpSpeciesNode) {
+                if (!(((ExpressionTree) child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
+                        && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
+                    audit += "\n    Expression '" + (String) ((ShrimpSpeciesNode) child).getName() + "' is not a valid argument.";
+                }
+            }
+        }
+
+        audit += "\n    returns " + getOperation().printOutputValues();
+        }
+
+        return audit;
     }
 
     /**
@@ -254,21 +401,15 @@ public class ExpressionTree
      * @return
      */
     @Override
-    public int argumentCount() {
-        return operation.getArgumentCount();
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
     public String toStringMathML() {
         String retVal = "";
         if (operation == null) {
             retVal = "<mtext>No expression selected.</mtext>\n";
         } else {
-            retVal = operation.toStringMathML(childrenET);
+            try {
+                retVal = operation.toStringMathML(childrenET);
+            } catch (Exception e) {
+            }
         }
         return retVal;
     }
@@ -284,6 +425,7 @@ public class ExpressionTree
     /**
      * @param name the name to set
      */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -291,6 +433,7 @@ public class ExpressionTree
     /**
      * @return the childrenET
      */
+    @Override
     public List<ExpressionTreeInterface> getChildrenET() {
         return childrenET;
     }
@@ -482,44 +625,17 @@ public class ExpressionTree
         this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
     }
 
-    public static void main(String[] args) {
-//        ExpressionTreeInterface EXPRESSION = new ExpressionTree("Net204cts/sec");
-//
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "DummyMass", "204", "Pb", false), "getTotalCps"));
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "BKG", "204", "Pb", true), "getTotalCps"));
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.subtract());
-//
-//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
-//        
+    /**
+     * @return the squidSpecialUPbThExpression
+     */
+    public boolean isSquidSpecialUPbThExpression() {
+        return squidSpecialUPbThExpression;
+    }
 
-        ExpressionTreeInterface EXPRESSION = new ExpressionTree("206/238 Calib Const");
-
-//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("206/238");
-//        ((ExpressionTreeWithRatiosInterface) EXPRESSION).getRatiosOfInterest().add("254/238");
-//
-//        ExpressionTreeInterface r254_238wSquared = new ExpressionTree("254/238^2", new ExpressionTree(
-//                            "254/238",
-//                            new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "254Mass", "254", "Pb", false), "getPkInterpScanArray"),
-//                            new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "238Mass", "238", "U", false), "getPkInterpScanArray"),
-//                            Operation.divide()), new ConstantNode("2", 2.0), Operation.pow());
-//
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(0, new ExpressionTree(
-//                            "254/238",
-//                            new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "206Mass", "206", "Pb", false), "getPkInterpScanArray"),
-//                            new ShrimpSpeciesNode(new SquidSpeciesModel(-1, "238Mass", "238", "U", false), "getPkInterpScanArray"),
-//                            Operation.divide()));
-//        
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).addChild(r254_238wSquared);
-//        ((ExpressionTreeBuilderInterface) EXPRESSION).setOperation(Operation.divide());
-//
-//        ((ExpressionTree) EXPRESSION).setRootExpressionTree(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
-//        ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(true);
-        squidProject = new SquidProject();
-        ((XMLSerializerInterface) EXPRESSION).serializeXMLObject(SquidExpressionMinus1.EXPRESSION, "XXXExpressionTree.xml");
+    /**
+     * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
+     */
+    public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression) {
+        this.squidSpecialUPbThExpression = squidSpecialUPbThExpression;
     }
 }

@@ -16,21 +16,25 @@
 package org.cirdles.squid.tasks.expressions.constants;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring
  */
-public class ConstantNode implements ExpressionTreeInterface, XMLSerializerInterface {
+public class ConstantNode implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+
+    private static final long serialVersionUID = -2914393295564269277L;
 
     private String name;
     private Object value;
     private ExpressionTreeInterface parentET;
+    public static final String MISSING_EXPRESSION_STRING = "Missing Expression";
 
     /**
      *
@@ -49,6 +53,15 @@ public class ConstantNode implements ExpressionTreeInterface, XMLSerializerInter
         this.value = value;
     }
 
+    public boolean amHealthy(){
+        return name.compareTo(MISSING_EXPRESSION_STRING) != 0;
+    }
+
+    @Override
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
+        return false;
+    }
+    
     /**
      *
      * @param xstream
@@ -144,7 +157,7 @@ public class ConstantNode implements ExpressionTreeInterface, XMLSerializerInter
      */
     @Override
     public boolean isTypeFunctionOrOperation() {
-       return false;
+        return false;
     }
 
     /**
@@ -154,5 +167,9 @@ public class ConstantNode implements ExpressionTreeInterface, XMLSerializerInter
     @Override
     public int argumentCount() {
         return 0;
+    }
+
+    public boolean isMissingExpression() {
+        return (name.compareTo(MISSING_EXPRESSION_STRING) == 0);
     }
 }

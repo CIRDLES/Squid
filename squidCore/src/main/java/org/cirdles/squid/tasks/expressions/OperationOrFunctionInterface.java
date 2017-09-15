@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions;
 
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -47,15 +48,35 @@ public interface OperationOrFunctionInterface {
     public int getArgumentCount();
 
     /**
-     * @param argumentCount the argumentCount to set
-     */
-    public void setArgumentCount(int argumentCount);
-
-    /**
      *
      * @param childrenET the value of childrenET
      * @return
      */
     public abstract String toStringMathML(
             List<ExpressionTreeInterface> childrenET);
+
+    /**
+     * @return the name
+     */
+    public String getName();
+    
+    /**
+     * @return the labelsForOutputValues
+     */
+    public String[][] getLabelsForOutputValues();
+    
+    public default String printOutputValues(){
+        String retVal = "None Specified";
+        String [] outputArray = getLabelsForOutputValues()[0];
+        
+        if (outputArray.length > 0){
+            retVal = " [";
+            for (int i = 0; i < outputArray.length; i ++){
+                retVal += outputArray[i] + (String)(i < (outputArray.length-1) ? ", " : "");
+            }
+            retVal += "]";
+        }
+        
+        return retVal;
+    }
 }

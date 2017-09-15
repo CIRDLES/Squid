@@ -22,8 +22,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  * A <code>TaskXMLConverter</code> is used to marshal and unmarshal data between
@@ -90,7 +90,7 @@ public class TaskXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("taskExpressionsOrdered");
-        context.convertAnother(task.getTaskExpressionsOrdered());
+        context.convertAnother(task.getTaskExpressionTreesOrdered());
         writer.endNode();
 
     }
@@ -118,16 +118,16 @@ public class TaskXMLConverter implements Converter {
         task.setName(reader.getValue());
         reader.moveUp();
 
-        List<ExpressionTreeInterface> taskExpressions = new ArrayList<>();
+        List<ExpressionTree> taskExpressions = new ArrayList<>();
         reader.moveDown();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             ExpressionTreeInterface exp = new ExpressionTree();
             exp = (ExpressionTreeInterface) context.convertAnother(exp, ExpressionTree.class);
-            taskExpressions.add(exp);
+            taskExpressions.add((ExpressionTree)exp);
             reader.moveUp();
         }
-        task.setTaskExpressionsOrdered(taskExpressions);
+        task.setTaskExpressionTreesOrdered(taskExpressions);
 
         return task;
     }

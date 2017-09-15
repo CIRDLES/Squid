@@ -26,21 +26,19 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
-import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnPbR_U;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus3;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus4;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
 import org.cirdles.squid.tasks.expressions.functions.Function;
+import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
+import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 
 /**
@@ -49,41 +47,26 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
  */
 public class ExpressionParser {
 
-    private SquidProject squidProject;
-    private Map<String, ExpressionTreeInterface> NAMED_EXPRESSIONS_MAP;
+    private Map<String, ExpressionTreeInterface> namedExpressionsMap;
 
-    public ExpressionParser(SquidProject squidProject) {
+    public ExpressionParser() {
+        this.namedExpressionsMap = new HashMap<>();
+    }
 
-        this.squidProject = squidProject;
-
-        NAMED_EXPRESSIONS_MAP = new HashMap<>();
-
-        NAMED_EXPRESSIONS_MAP.put("[\"Ln254/238\"]", CustomExpression_LnUO_U.EXPRESSION);
-        NAMED_EXPRESSIONS_MAP.put("[\"LnUO/U\"]", CustomExpression_LnUO_U.EXPRESSION);
-
-        NAMED_EXPRESSIONS_MAP.put("[\"Ln206/238\"]", CustomExpression_LnPbR_U.EXPRESSION);
-        NAMED_EXPRESSIONS_MAP.put("[\"LnPbR_U\"]", CustomExpression_LnPbR_U.EXPRESSION);
-
-        NAMED_EXPRESSIONS_MAP.put("[\"206/238 Calib Const\"]", SquidExpressionMinus1.EXPRESSION);
-        NAMED_EXPRESSIONS_MAP.put("[\"232/238\"]", SquidExpressionMinus3.EXPRESSION);
-        NAMED_EXPRESSIONS_MAP.put("[\"U Conc Const\"]", SquidExpressionMinus4.EXPRESSION);
-
-        Iterator<String> ratioNameIterator = SquidRatiosModel.knownSquidRatiosModels.keySet().iterator();
-        while (ratioNameIterator.hasNext()) {
-            String ratioName = ratioNameIterator.next();
-            NAMED_EXPRESSIONS_MAP.put("[\"" + ratioName + "\"]", squidProject.buildRatioExpression(ratioName));
-        }
-
+    public ExpressionParser(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
+        this.namedExpressionsMap = namedExpressionsMap;
     }
 
     /**
      *
-     * @param expression
+     * @param expressionString
      * @return
      */
-    public ExpressionTreeInterface parseExpression(String expression) {
+    public ExpressionTreeInterface parseExpressionStringAndBuildExpressionTree(Expression expression) {
+        ExpressionTreeInterface returnExpressionTree = new ExpressionTreeParsedFromExcelString(expression.getName());
+
         // Get our lexer
-        ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(expression));
+        ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(expression.getExcelExpressionString()));
 
         // Get a list of matched tokens
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -91,80 +74,54 @@ public class ExpressionParser {
         // Pass the tokens to the parser
         ExpressionsForSquid2Parser parser = new ExpressionsForSquid2Parser(tokens);
 
+        // https://stackoverflow.com/questions/18132078/handling-errors-in-antlr4
+        lexer.removeErrorListeners();
+        DescriptiveErrorListener descriptiveErrorListenerLexer = new DescriptiveErrorListener(true);
+        lexer.addErrorListener(descriptiveErrorListenerLexer);
+
+        parser.removeErrorListeners();
+        DescriptiveErrorListener descriptiveErrorListenerParser = new DescriptiveErrorListener(true);
+        parser.addErrorListener(descriptiveErrorListenerParser);
+
         // Specify our entry point
         ExpressionsForSquid2Parser.ExprContext expSentenceContext = parser.expr();
 
-        parser.setBuildParseTree(true);
-        List<ParseTree> children = expSentenceContext.children;
+        // we don't want to build expressiontree if any bad parsing present
+        if (descriptiveErrorListenerLexer.getSyntaxErrors().length() + descriptiveErrorListenerParser.getSyntaxErrors().length() > 0) {
+            expression.setParsingStatusReport(
+                    descriptiveErrorListenerLexer.getSyntaxErrors()
+                    + (String) (descriptiveErrorListenerLexer.getSyntaxErrors().length() > 0 ? descriptiveErrorListenerLexer.getSyntaxErrors() + "\n" : "")
+                    + descriptiveErrorListenerParser.getSyntaxErrors());
+        } else {
+            parser.setBuildParseTree(true);
+            List<ParseTree> children = expSentenceContext.children;
 
-        List<String> parsed = new ArrayList<>();
-        List<String> parsedRPN = new ArrayList<>();
+            List<String> parsed = new ArrayList<>();
+            List<String> parsedRPN = new ArrayList<>();
 
-        if (children != null) {
-            for (int i = 0; i < children.size(); i++) {
-                printTree(parser, children.get(i), parsed);
+            if (children != null) {
+                for (int i = 0; i < children.size(); i++) {
+                    printTree(parser, children.get(i), parsed);
+                }
+                parsedRPN = ShuntingYard.infixToPostfix(parsed);
             }
-            parsedRPN = ShuntingYard.infixToPostfix(parsed);
 
+            Collections.reverse(parsedRPN);
+
+            returnExpressionTree = buildTree(parsedRPN);
+            if (returnExpressionTree != null) {
+                try {
+                    returnExpressionTree.setName(expression.getName());
+                } catch (Exception e) {
+                }
+            }
         }
 
-        Collections.reverse(parsedRPN);
-
-        return buildTree(parsedRPN);
+        return returnExpressionTree;
 
     }
 
-    /**
-     *
-     */
-    public final static Map<String, String> OPERATIONS_MAP = new HashMap<>();
-
-    static {
-
-        OPERATIONS_MAP.put("+", "add");
-        OPERATIONS_MAP.put("-", "subtract");
-        OPERATIONS_MAP.put("/", "divide");
-        OPERATIONS_MAP.put("*", "multiply");
-        OPERATIONS_MAP.put("^", "pow");
-        OPERATIONS_MAP.put("==", "equal");
-        OPERATIONS_MAP.put("<", "lessThan");
-    }
-
-    /**
-     *
-     */
-    public final static Map<String, String> FUNCTIONS_MAP = new HashMap<>();
-
-    static {
-
-        FUNCTIONS_MAP.put("ln", "ln");
-        FUNCTIONS_MAP.put("Ln", "ln");
-
-        FUNCTIONS_MAP.put("sqrt", "sqrt");
-        FUNCTIONS_MAP.put("Sqrt", "sqrt");
-
-        FUNCTIONS_MAP.put("exp", "exp");
-        FUNCTIONS_MAP.put("Exp", "exp");
-
-        FUNCTIONS_MAP.put("robReg", "robReg");
-        FUNCTIONS_MAP.put("RobReg", "robReg");
-        FUNCTIONS_MAP.put("robreg", "robReg");
-
-        FUNCTIONS_MAP.put("and", "and");
-
-        FUNCTIONS_MAP.put("if", "sqif");
-
-        FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
-
-        FUNCTIONS_MAP.put("agePb76", "agePb76");
-
-        FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
-
-        FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
-
-    }
-
-    private ExpressionTreeInterface buildTree(List<String> parsedRPNreversed) {
+    public ExpressionTreeInterface buildTree(List<String> parsedRPNreversed) {
         Iterator<String> parsedRPNreversedIterator = parsedRPNreversed.iterator();
 
         ExpressionTreeInterface exp = null;
@@ -175,7 +132,7 @@ public class ExpressionParser {
             String token = parsedRPNreversedIterator.next();
 
             if (exp != null) {
-                // find next available empty left
+                // find next available empty left child
                 exp = walkUpTreeToEmptyLeftChild(exp);
             }
 
@@ -184,6 +141,15 @@ public class ExpressionParser {
                 savedExp = exp;
                 firstPass = false;
             }
+        }
+
+        // so can re-parse later
+        if (savedExp == null) {
+            savedExp = new ExpressionTreeParsedFromExcelString("PARSE_ERROR");
+        }
+
+        if (savedExp instanceof ExpressionTreeParsedFromExcelString) {
+            ((ExpressionTreeParsedFromExcelString) savedExp).setParsedRPNreversedExcelString(parsedRPNreversed);
         }
 
         return savedExp;
@@ -195,9 +161,8 @@ public class ExpressionParser {
 
         boolean didAscend = true;
         while (didAscend && (savedExp != null)) {
-            if ((savedExp instanceof ExpressionTreeBuilderInterface)
-                    && (!savedExp.isTypeFunction())) {
-                if (((ExpressionTreeBuilderInterface) savedExp).getCountOfChildren() == 2) {
+            if ((savedExp instanceof ExpressionTreeBuilderInterface)) {//&& (!savedExp.isTypeFunction())) {
+                if (((ExpressionTreeBuilderInterface) savedExp).getCountOfChildren() == savedExp.argumentCount()) {//    2) {
                     expParent = savedExp.getParentET();
                     savedExp = expParent;
                 } else {
@@ -224,18 +189,18 @@ public class ExpressionParser {
     private ExpressionTreeInterface walkTree(String token, ExpressionTreeInterface myExp) {
         TokenTypes tokenType = TokenTypes.getType(token);
         ExpressionTreeInterface exp = myExp;
-
-        if (exp != null) {
-            if (exp.isTypeFunctionOrOperation()) {
-                while (exp.argumentCount() == ((ExpressionTreeBuilderInterface) exp).getCountOfChildren()
-                        && !exp.isRootExpressionTree()) {
-                    exp = exp.getParentET();
-                    if (exp == null) {
-                        break;
-                    }
-                }
-            }
-        }
+//
+//        if (exp != null) {
+//            if (exp.isTypeFunctionOrOperation()) {
+//                while (exp.argumentCount() == ((ExpressionTreeBuilderInterface) exp).getCountOfChildren()
+//                        && !exp.isRootExpressionTree()) {
+//                    exp = exp.getParentET();
+//                    if (exp == null) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
 
         ExpressionTreeInterface retExpTree = null;
 
@@ -244,12 +209,12 @@ public class ExpressionParser {
             case OPERATOR_M:
             case OPERATOR_E:
                 OperationOrFunctionInterface operation = Operation.operationFactory(OPERATIONS_MAP.get(token));
-                retExpTree = new ExpressionTree(operation);
+                retExpTree = new ExpressionTreeParsedFromExcelString(operation);
                 break;
 
             case FUNCTION:
                 OperationOrFunctionInterface function = Function.operationFactory(FUNCTIONS_MAP.get(token));
-                retExpTree = new ExpressionTree(function);
+                retExpTree = new ExpressionTreeParsedFromExcelString(function);
                 break;
 
             case CONSTANT:
@@ -261,15 +226,16 @@ public class ExpressionParser {
                 break;
 
             case NAMED_EXPRESSION:
-                retExpTree = NAMED_EXPRESSIONS_MAP.get(token);
+                retExpTree = namedExpressionsMap.get(token.replace("[\"", "").replace("\"]", ""));
                 if (retExpTree == null) {
-                    retExpTree = new ConstantNode("Bad Name", 0.0);
+                    retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
                 }
                 break;
         }
 
         if (exp != null) {
-            ((ExpressionTreeBuilderInterface) exp).addChild(0, retExpTree);
+            // this insertion enforces correct order as children arrive in reverse polish notation order
+            ((ExpressionTree) exp).addChild(0, retExpTree);
         }
 
         return retExpTree;

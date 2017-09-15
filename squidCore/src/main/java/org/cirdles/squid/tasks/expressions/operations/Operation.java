@@ -16,9 +16,12 @@
 package org.cirdles.squid.tasks.expressions.operations;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import java.util.HashMap;
+import java.util.Map;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
@@ -29,6 +32,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 public abstract class Operation
         implements
         OperationOrFunctionInterface,
+        Serializable,
         XMLSerializerInterface {
 
     /**
@@ -60,6 +64,11 @@ public abstract class Operation
     /**
      *
      */
+    protected String[][] labelsForOutputValues = new String[][]{{}};
+
+    /**
+     *
+     */
     public Operation() {
         this.name = "no-op";
         this.argumentCount = 1;
@@ -75,6 +84,22 @@ public abstract class Operation
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new OperationXMLConverter());
+    }
+
+    /**
+     *
+     */
+    public final static Map<String, String> OPERATIONS_MAP = new HashMap<>();
+
+    static {
+
+        OPERATIONS_MAP.put("+", add().getName());
+        OPERATIONS_MAP.put("-", subtract().getName());
+        OPERATIONS_MAP.put("/", divide().getName());
+        OPERATIONS_MAP.put("*", multiply().getName());
+        OPERATIONS_MAP.put("^", pow().getName());
+        OPERATIONS_MAP.put("==", equal().getName());
+        OPERATIONS_MAP.put("<", lessThan().getName());
     }
 
     /**
@@ -186,26 +211,11 @@ public abstract class Operation
     }
 
     /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * @return the argumentCount
      */
     @Override
     public int getArgumentCount() {
         return argumentCount;
-    }
-
-    /**
-     * @param argumentCount the argumentCount to set
-     */
-    @Override
-    public void setArgumentCount(int argumentCount) {
-        this.argumentCount = argumentCount;
     }
 
     /**
@@ -224,13 +234,6 @@ public abstract class Operation
     }
 
     /**
-     * @param rowCount the rowCount to set
-     */
-    public void setRowCount(int rowCount) {
-        this.rowCount = rowCount;
-    }
-
-    /**
      * @return the colCount
      */
     public int getColCount() {
@@ -238,9 +241,9 @@ public abstract class Operation
     }
 
     /**
-     * @param colCount the colCount to set
+     * @return the labelsForOutputValues
      */
-    public void setColCount(int colCount) {
-        this.colCount = colCount;
+    public String[][] getLabelsForOutputValues() {
+        return labelsForOutputValues;
     }
 }

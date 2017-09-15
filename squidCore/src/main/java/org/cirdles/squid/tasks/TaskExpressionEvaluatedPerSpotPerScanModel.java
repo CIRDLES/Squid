@@ -15,7 +15,7 @@
  */
 package org.cirdles.squid.tasks;
 
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.ludwig.squid25.Utilities;
 
 /**

@@ -19,8 +19,8 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -45,6 +45,8 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
@@ -70,8 +72,6 @@ public class SquidUIController implements Initializable {
     private MenuItem newSquidProjectMenuItem;
     @FXML
     private MenuItem openSquidProjectMenuItem;
-    @FXML
-    private Menu openRecentSquidProjectMenuItem;
     @FXML
     private MenuItem saveAsSquidProjectMenuItem;
     @FXML
@@ -103,8 +103,10 @@ public class SquidUIController implements Initializable {
     private static Pane taskManagerUI;
     private static Pane isotopesManagerUI;
     private static Pane ratiosManagerUI;
+    private static Pane expressionExplorerUI;
     private static Pane expressionManagerUI;
     private static Pane analysisManagerUI;
+
     @FXML
     private MenuItem newSquid3TaskMenuItem;
     @FXML
@@ -112,7 +114,13 @@ public class SquidUIController implements Initializable {
     @FXML
     private MenuItem exportSquid3TaskMenuItem;
     @FXML
-    private MenuItem selectSquid3TaskFromLibraryMenuItem;
+    private MenuItem importSquid3TaskMenuItem;
+    @FXML
+    private Menu openRecentSquidProjectMenu;
+    @FXML
+    private Menu selectSquid3TaskFromLibraryMenu;
+    @FXML
+    private Menu dataReductionMenu;
 
     /**
      * Initializes the controller class.
@@ -129,11 +137,12 @@ public class SquidUIController implements Initializable {
         squidImageView.layoutYProperty().bind(primaryStageWindow.getScene().heightProperty()
                 .divide(2).subtract(squidImageView.getFitHeight() / 2).subtract(60));
 
-        manageExpressionsMenu.setDisable(true);
         managePrawnFileMenu.setDisable(true);
-        manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
-        manageAnalysisMenu.setDisable(false);
+        manageRatiosMenu.setDisable(true);
+        dataReductionMenu.setDisable(true);
+        manageExpressionsMenu.setDisable(true);
+        manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 
         // Squid project menu items
@@ -151,8 +160,9 @@ public class SquidUIController implements Initializable {
 
         //Task menu
         newSquid3TaskMenuItem.setDisable(true);
-        selectSquid3TaskFromLibraryMenuItem.setDisable(true);
-        importSquid25TaskMenuItem.setDisable(true);
+        selectSquid3TaskFromLibraryMenu.setDisable(false);
+        importSquid25TaskMenuItem.setDisable(false);
+        importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
 
         CalamariFileUtilities.initExamplePrawnFiles();
@@ -160,10 +170,10 @@ public class SquidUIController implements Initializable {
     }
 
     private void buildProjectMenuMRU() {
-        openRecentSquidProjectMenuItem.setDisable(false);
+        openRecentSquidProjectMenu.setDisable(false);
 
-        openRecentSquidProjectMenuItem.getItems().clear();
-        ArrayList<String> mruProjectList = squidPersistentState.getMRUProjectList();
+        openRecentSquidProjectMenu.getItems().clear();
+        List<String> mruProjectList = squidPersistentState.getMRUProjectList();
         for (String projectFileName : mruProjectList) {
             MenuItem menuItem = new MenuItem(projectFileName);
             menuItem.setOnAction((ActionEvent t) -> {
@@ -172,12 +182,27 @@ public class SquidUIController implements Initializable {
                 } catch (IOException iOException) {
                     squidPersistentState.cleanProjectListMRU();
                     // remove self safe?
-                    openRecentSquidProjectMenuItem.getItems().remove(menuItem);
+                    openRecentSquidProjectMenu.getItems().remove(menuItem);
                 }
             });
-            openRecentSquidProjectMenuItem.getItems().add(menuItem);
+            openRecentSquidProjectMenu.getItems().add(menuItem);
         }
+    }
 
+    private void buildTaskLibraryMenu() {
+        selectSquid3TaskFromLibraryMenu.setDisable(false);
+
+        selectSquid3TaskFromLibraryMenu.getItems().clear();
+        Map< String, TaskInterface> taskLibrary = squidProject.getTaskLibrary();
+        for (Map.Entry< String, TaskInterface> entry : taskLibrary.entrySet()) {
+            MenuItem menuItem = new MenuItem(entry.getKey());
+            menuItem.setOnAction((ActionEvent t) -> {
+                // get a new library
+                squidProject.loadAndInitializeTask(squidProject.getTaskLibrary().get(menuItem.getText()));
+                launchTaskManager();
+            });
+            selectSquid3TaskFromLibraryMenu.getItems().add(menuItem);
+        }
     }
 
     private void launchProjectManager() {
@@ -198,16 +223,18 @@ public class SquidUIController implements Initializable {
             projectManagerMenuItem.setDisable(false);
 
             managePrawnFileMenu.setDisable(false);
+            buildTaskLibraryMenu();
             manageTasksMenu.setDisable(false);
-            manageRatiosMenu.setDisable(false);
-            manageExpressionsMenu.setDisable(false);
-//            manageAnalysisMenu.setDisable(false);
+            manageRatiosMenu.setDisable(true);
+            manageExpressionsMenu.setDisable(true);
+            dataReductionMenu.setDisable(true);
+            manageAnalysisMenu.setDisable(true);
 
             // log prawnFileFolderMRU
             squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println(">>>>   " + iOException.getMessage());
+            System.out.println("ProjectManager >>>>   " + iOException.getMessage());
         }
 
     }
@@ -221,6 +248,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(taskManagerUI);
         mainPane.getChildren().remove(isotopesManagerUI);
         mainPane.getChildren().remove(ratiosManagerUI);
+        mainPane.getChildren().remove(expressionExplorerUI);
         mainPane.getChildren().remove(expressionManagerUI);
         mainPane.getChildren().remove(analysisManagerUI);
 
@@ -234,7 +262,8 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
-        manageAnalysisMenu.setDisable(false);
+        dataReductionMenu.setDisable(true);
+        manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 
         // logo
@@ -443,6 +472,10 @@ public class SquidUIController implements Initializable {
             HBox.setHgrow(taskManagerUI, Priority.ALWAYS);
             mainPane.getChildren().add(taskManagerUI);
             showUI(taskManagerUI);
+            manageRatiosMenu.setDisable(false);
+            manageExpressionsMenu.setDisable(false);
+            dataReductionMenu.setDisable(false);
+
         } catch (IOException | RuntimeException iOException) {
             System.out.println("taskManagerUI >>>>   " + iOException.getMessage());
         }
@@ -475,6 +508,21 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    private void launchExpressionExplorer() {
+
+        try {
+            expressionExplorerUI = FXMLLoader.load(getClass().getResource("ExpressionExplorer.fxml"));
+            expressionExplorerUI.setId("ExpressionExplorer");
+            VBox.setVgrow(expressionExplorerUI, Priority.ALWAYS);
+            HBox.setHgrow(expressionExplorerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(expressionExplorerUI);
+            expressionExplorerUI.setVisible(false);
+
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("ExpressionExplorer >>>>   " + iOException.getMessage());
+        }
+    }
+
     private void launchExpressionManager() {
 
         try {
@@ -486,7 +534,7 @@ public class SquidUIController implements Initializable {
             expressionManagerUI.setVisible(false);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("ExpressionManager >>>>   " + iOException.getMessage());
+            System.out.println("expressionManagerUI >>>>   " + iOException.getMessage());
         }
     }
 
@@ -522,9 +570,9 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void exploreExpressionsMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(expressionManagerUI);
-        launchExpressionManager();
-        showUI(expressionManagerUI);
+        mainPane.getChildren().remove(expressionExplorerUI);
+        launchExpressionExplorer();
+        showUI(expressionExplorerUI);
     }
 
     @FXML
@@ -544,7 +592,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void auditMassesMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(massesAuditUI);
-        squidProject.createMapOfIndexToMassStationDetails();
+        squidProject.getTask().buildSquidSpeciesModelList();
         launchMassesAudit();
         showUI(massesAuditUI);
     }
@@ -552,7 +600,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void specifyIsotopesMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(isotopesManagerUI);
-        squidProject.createMapOfIndexToMassStationDetails();
+        squidProject.getTask().buildSquidSpeciesModelList();
         launchIsotopesManager();
         showUI(isotopesManagerUI);
     }
@@ -598,8 +646,7 @@ public class SquidUIController implements Initializable {
         try {
             File squidTaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
             if (squidTaskFile != null) {
-                squidProject.setupTaskSquid25File(squidTaskFile);
-                SquidUIController.squidProject.extractTask25Ratios();
+                squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
                 launchTaskManager();
             }
         } catch (IOException | JAXBException | SAXException iOException) {
@@ -611,7 +658,22 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void selectSquid3TaskFromLibraryMenuItemAction(ActionEvent event) {
+    private void importSquid3TaskMenuItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void manageExpressionsMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(expressionManagerUI);
+        launchExpressionManager();
+        showUI(expressionManagerUI);
+    }
+
+    @FXML
+    private void showReferenceMaterialDataMenutItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void showUnknownDataMenuItemAction(ActionEvent event) {
     }
 
 }

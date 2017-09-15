@@ -16,9 +16,12 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import java.util.HashMap;
+import java.util.Map;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
@@ -29,6 +32,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 public abstract class Function
         implements
         OperationOrFunctionInterface,
+        Serializable,
         XMLSerializerInterface {
 
     /**
@@ -60,7 +64,7 @@ public abstract class Function
     /**
      *
      */
-    protected String[][] labelsForValues;
+    protected String[][] labelsForOutputValues = new String[][]{{}};
 
     /**
      *
@@ -69,6 +73,51 @@ public abstract class Function
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new FunctionXMLConverter());
+    }
+
+    /**
+     *
+     */
+    public final static Map<String, String> FUNCTIONS_MAP = new HashMap<>();
+
+    static {
+
+        FUNCTIONS_MAP.put("agePb76", agePb76().getName());
+        FUNCTIONS_MAP.put("AgePb76", agePb76().getName());
+
+        FUNCTIONS_MAP.put("and", and().getName());
+        FUNCTIONS_MAP.put("And", and().getName());
+
+        FUNCTIONS_MAP.put("concordiaTW", concordiaTW().getName());
+        FUNCTIONS_MAP.put("ConcordiaTW", concordiaTW().getName());
+
+        FUNCTIONS_MAP.put("exp", exp().getName());
+        FUNCTIONS_MAP.put("Exp", exp().getName());
+
+        FUNCTIONS_MAP.put("if", Function.sqIf().getName());
+        FUNCTIONS_MAP.put("If", sqIf().getName());
+
+        FUNCTIONS_MAP.put("ln", ln().getName());
+        FUNCTIONS_MAP.put("Ln", ln().getName());
+
+        FUNCTIONS_MAP.put("robReg", robReg().getName());
+        FUNCTIONS_MAP.put("RobReg", robReg().getName());
+        FUNCTIONS_MAP.put("robreg", robReg().getName());
+
+        FUNCTIONS_MAP.put("sqBiweight", sqBiweight().getName());
+        FUNCTIONS_MAP.put("SqBiweight", sqBiweight().getName());
+
+        FUNCTIONS_MAP.put("sqWtdAv", sqWtdAv().getName());
+        FUNCTIONS_MAP.put("SqWtdAv", sqWtdAv().getName());
+
+        FUNCTIONS_MAP.put("sqrt", sqrt().getName());
+        FUNCTIONS_MAP.put("Sqrt", sqrt().getName());
+
+        FUNCTIONS_MAP.put("TotalCps", "totalCps");
+        FUNCTIONS_MAP.put("totalCps", "totalCps");
+        
+        FUNCTIONS_MAP.put("lookup", "lookup");
+
     }
 
     /**
@@ -151,6 +200,14 @@ public abstract class Function
         return new If();
     }
 
+    public static OperationOrFunctionInterface totalCps() {
+        return new ShrimpSpeciesNodeFunction("getTotalCps");
+    }
+
+    public static OperationOrFunctionInterface lookup() {
+        return new SpotNodeLookupFunction();
+    }
+
     /**
      *
      * @param operationName
@@ -166,7 +223,7 @@ public abstract class Function
                         new Class[0]);
                 retVal = (Function) method.invoke(null, new Object[0]);
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-                // do nothing for now
+                System.out.println(noSuchMethodException.getMessage());
             }
         }
         return retVal;
@@ -211,26 +268,11 @@ public abstract class Function
     }
 
     /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * @return the argumentCount
      */
     @Override
     public int getArgumentCount() {
         return argumentCount;
-    }
-
-    /**
-     * @param argumentCount the argumentCount to set
-     */
-    @Override
-    public void setArgumentCount(int argumentCount) {
-        this.argumentCount = argumentCount;
     }
 
     /**
@@ -249,13 +291,6 @@ public abstract class Function
     }
 
     /**
-     * @param rowCount the rowCount to set
-     */
-    public void setRowCount(int rowCount) {
-        this.rowCount = rowCount;
-    }
-
-    /**
      * @return the colCount
      */
     public int getColCount() {
@@ -263,23 +298,9 @@ public abstract class Function
     }
 
     /**
-     * @param colCount the colCount to set
+     * @return the labelsForOutputValues
      */
-    public void setColCount(int colCount) {
-        this.colCount = colCount;
-    }
-
-    /**
-     * @return the labelsForValues
-     */
-    public String[][] getLabelsForValues() {
-        return labelsForValues;
-    }
-
-    /**
-     * @param labelsForValues the labelsForValues to set
-     */
-    public void setLabelsForValues(String[][] labelsForValues) {
-        this.labelsForValues = labelsForValues;
+    public String[][] getLabelsForOutputValues() {
+        return labelsForOutputValues;
     }
 }

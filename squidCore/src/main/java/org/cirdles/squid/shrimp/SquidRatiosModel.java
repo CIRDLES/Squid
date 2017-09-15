@@ -17,17 +17,10 @@ package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_UPPER_LIMIT_1_SIGMA_PERCENT;
-import org.cirdles.squid.tasks.expressions.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeWithRatiosInterface;
-import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
-import org.cirdles.squid.tasks.expressions.operations.Operation;
 
 /**
  *
@@ -51,8 +44,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     private double ratioFractErr;
     private int minIndex;
     private boolean active;
-    
-    public static Map<String, SquidRatiosModel> knownSquidRatiosModels = new HashMap<>();
 
     public SquidRatiosModel(SquidSpeciesModel numerator, SquidSpeciesModel denominator, int reportingOrderIndex) {
         this.numerator = numerator;
@@ -68,8 +59,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
         this.ratioFractErr = 0;
         this.minIndex = -2;
         this.active = false;
-        
-        knownSquidRatiosModels.put(ratioName, this);
     }
 
     @Override
@@ -168,13 +157,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
      */
     public int getReportingOrderIndex() {
         return reportingOrderIndex;
-    }
-
-    /**
-     * @param reportingOrderIndex the reportingOrderIndex to set
-     */
-    public void setReportingOrderIndex(int reportingOrderIndex) {
-        this.reportingOrderIndex = reportingOrderIndex;
     }
 
     /**

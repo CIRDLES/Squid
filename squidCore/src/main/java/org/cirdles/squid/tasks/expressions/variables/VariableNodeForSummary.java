@@ -16,22 +16,33 @@
 package org.cirdles.squid.tasks.expressions.variables;
 
 import com.thoughtworks.xstream.XStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.convertArrayToObjects;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 
 /**
  *
  * @author James F. Bowring
  */
-public class VariableNodeForSummary implements ExpressionTreeInterface, XMLSerializerInterface {
+public class VariableNodeForSummary implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
 
+        private static final long serialVersionUID = -868256637199178058L;
+//    private void readObject(
+//            ObjectInputStream stream)
+//            throws IOException, ClassNotFoundException {
+//        stream.defaultReadObject();
+//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(VariableNodeForSummary.class.getCanonicalName()));
+//        long theSUID = myObject.getSerialVersionUID();
+//        System.out.println("Customized De-serialization of VariableNodeForSummary " + theSUID);
+//    }
     protected String name;
     protected ExpressionTreeInterface parentET;
 
@@ -48,6 +59,15 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, XMLSeria
      */
     public VariableNodeForSummary(String name) {
         this.name = name;
+    }
+
+    public boolean amHealthy() {
+        return (name.length() > 0) && name.compareTo(MISSING_EXPRESSION_STRING) !=0;
+    }
+
+    @Override
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
+        return name.compareToIgnoreCase(exp.getName()) == 0;
     }
 
     /**
@@ -71,7 +91,7 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, XMLSeria
      * @return
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task)throws SquidException  {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);

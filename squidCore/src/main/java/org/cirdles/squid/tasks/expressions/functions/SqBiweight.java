@@ -19,9 +19,9 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.convertArrayToObjects;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 
 /**
  *
@@ -45,7 +45,7 @@ public class SqBiweight extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 3;
-        labelsForValues = new String[][]{{"Biwt Mean", "Biwt Sigma", "\u00B195%conf"}};
+        labelsForOutputValues = new String[][]{{"Biwt Mean", "Biwt Sigma", "\u00B195%conf"}};
     }
 
     /**

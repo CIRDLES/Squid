@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions;
+package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 
 /**
  *
@@ -40,6 +41,11 @@ public interface ExpressionTreeInterface {
      * @return
      */
     public String getName();
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name);
 
     /**
      * @return the parentET
@@ -74,16 +80,15 @@ public interface ExpressionTreeInterface {
      */
     public boolean isTypeFunctionOrOperation();
 
-    /**
-     *
-     * @return
-     */
-    public int argumentCount();
+    public boolean amHealthy();
+
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp);
 
     /**
      *
      * @param objects
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static double[] convertObjectArrayToDoubles(Object[] objects) throws SquidException {
         if (objects == null) {
@@ -104,6 +109,7 @@ public interface ExpressionTreeInterface {
      *
      * @param objects
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static double[][] convertObjectArrayToDoubles(Object[][] objects) throws SquidException {
         if (objects == null) {
@@ -120,6 +126,7 @@ public interface ExpressionTreeInterface {
      *
      * @param types
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static Object[] convertArrayToObjects(double[] types) throws SquidException {
         if (types == null) {
@@ -137,6 +144,7 @@ public interface ExpressionTreeInterface {
      *
      * @param types
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static Object[][] convertArrayToObjects(double[][] types) throws SquidException {
         if (types == null) {
@@ -153,6 +161,7 @@ public interface ExpressionTreeInterface {
      *
      * @param objects
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     public static boolean[] convertObjectArrayToBooleans(Object[] objects) throws SquidException {
         if (objects == null) {
@@ -165,4 +174,25 @@ public interface ExpressionTreeInterface {
         return retVal;
     }
 
+    public default int argumentCount() {
+        int retVal = 0;
+
+        if (this instanceof ExpressionTreeBuilderInterface) {
+            if (((ExpressionTreeBuilderInterface) this).getOperation() != null) {
+                retVal = ((ExpressionTreeBuilderInterface) this).getOperation().getArgumentCount();
+            }
+        }
+
+        return retVal;
+    }
+
+    public default void auditExpressionTreeDependencies(List<String> argumentAudit) {
+        argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditOperationArgumentCount());
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
+            // SpotNode is an ExpressionTree without Children
+            if( (child instanceof ExpressionTree)&&!(child instanceof SpotNode)) {
+                child.auditExpressionTreeDependencies(argumentAudit);
+            }
+        }
+    }
 }

@@ -19,8 +19,8 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
  *
@@ -44,7 +44,7 @@ public class AgePb76 extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForValues = new String[][]{{"Age", "AgeErr"}};
+        labelsForOutputValues = new String[][]{{"Age", "AgeErr"}};
     }
 
     /**

@@ -111,7 +111,7 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        ShrimpSpeciesNode shrimpSpeciesNode = new ShrimpSpeciesNode();
+        ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildEmptyShrimpSpeciesNode();
 
         reader.moveDown();
         SquidSpeciesModel squidSpeciesModel = new SquidSpeciesModel();

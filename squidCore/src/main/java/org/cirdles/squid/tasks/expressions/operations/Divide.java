@@ -18,8 +18,8 @@ package org.cirdles.squid.tasks.expressions.operations;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 
 /**
@@ -35,6 +35,9 @@ public class Divide extends Operation {
         name = "divide";
         argumentCount = 2;
         precedence = 3;
+        rowCount = 1;
+        colCount = 1;
+        labelsForOutputValues = new String[][]{{"Quotient"}};
     }
 
     /**

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
+import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
 
 /**
  * @author James F. Bowring
@@ -36,48 +37,12 @@ public class ShuntingYard {
         List<String> infixList = new ArrayList<>();
 
 //        // Input: 3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3
-//        infixList.add("3");
-//        infixList.add("+");
-//        infixList.add("4");
-//        infixList.add("*");
-//        infixList.add("2");
-//        infixList.add("/");
-//        infixList.add("(");
-//        infixList.add("1");
-//        infixList.add("-");
-//        infixList.add("5");
-//        infixList.add(")");
-//        infixList.add("^");
-//        infixList.add("2");
-//        infixList.add("^");
-//        infixList.add("3");
-//        infixList.add("(");
-//        infixList.add("1");
-//        infixList.add("/");
-//        infixList.add("2");
-//        infixList.add(")");
-//        infixList.add("/");
-//        infixList.add("(");
-//        infixList.add("c");
-//        infixList.add("/");
-//        infixList.add("4");
-//        infixList.add(")");
-//        infixList.add("2");
-//        infixList.add("+");
-//        infixList.add("ln");
-//        infixList.add("(");
-//        infixList.add("1");
-//        infixList.add(")");
-//        infixList.add("/");
-//        infixList.add("[");
-//        infixList.add("\"");
-//        infixList.add("a");
-//        infixList.add("b");
-//        infixList.add("c");
-//        infixList.add("\"");
-        infixList.add("w");
-        infixList.add("+");
-        infixList.add("w");
+
+        infixList.add("[");
+        infixList.add("\"");
+        infixList.add("word233_33");
+        infixList.add("\"");;
+        infixList.add("]");
         System.out.println("Shunt " + infixToPostfix(infixList));
 
         //1+(ln(3) +4)
@@ -359,7 +324,7 @@ public class ShuntingYard {
                 retVal = RIGHT_PAREN;
             } else if (token.equals(",")) {
                 retVal = COMMA;
-            } else if (ExpressionParser.FUNCTIONS_MAP.containsKey(token)) {
+            } else if (FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
             } else if (token.matches("\\[\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;

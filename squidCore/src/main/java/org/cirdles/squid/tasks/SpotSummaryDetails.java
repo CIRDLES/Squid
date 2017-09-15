@@ -15,6 +15,10 @@
  */
 package org.cirdles.squid.tasks;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.io.Serializable;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
@@ -22,7 +26,17 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
  *
  * @author James F. Bowring
  */
-public class SpotSummaryDetails {
+public class SpotSummaryDetails implements Serializable {
+
+    //    private static final long serialVersionUID = 6522574920235718028L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SpotSummaryDetails.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of SpotSummaryDetails " + theSUID);
+    }
     private double[][] values;
     private List<ShrimpFractionExpressionInterface> selectedSpots;
 
@@ -52,7 +66,5 @@ public class SpotSummaryDetails {
     public List<ShrimpFractionExpressionInterface> getSelectedSpots() {
         return selectedSpots;
     }
-    
-    
-    
+
 }
