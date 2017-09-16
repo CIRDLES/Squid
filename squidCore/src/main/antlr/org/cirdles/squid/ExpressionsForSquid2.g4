@@ -93,7 +93,7 @@ NAMED_EXPRESSION : '[' '"' ID (ID | '/' | ' ')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment
-LETTER : [a-zA-Z_] ;
+LETTER : [a-zA-Z_%-*] ;
 
 NUMBER : [0-9_] ;
 

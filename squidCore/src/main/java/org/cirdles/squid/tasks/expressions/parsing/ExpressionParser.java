@@ -40,6 +40,7 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 
 /**
  *
@@ -59,6 +60,7 @@ public class ExpressionParser {
 
     /**
      *
+     * @param expression
      * @param expressionString
      * @return
      */
@@ -110,10 +112,12 @@ public class ExpressionParser {
 
             returnExpressionTree = buildTree(parsedRPN);
             if (returnExpressionTree != null) {
+                // if single objects are the actual expression, don't change
+                if (!(returnExpressionTree instanceof ConstantNode) && !(returnExpressionTree instanceof SpotNode)&& !(returnExpressionTree instanceof ShrimpSpeciesNode)){
                 try {
                     returnExpressionTree.setName(expression.getName());
                 } catch (Exception e) {
-                }
+                }}
             }
         }
 
@@ -189,18 +193,6 @@ public class ExpressionParser {
     private ExpressionTreeInterface walkTree(String token, ExpressionTreeInterface myExp) {
         TokenTypes tokenType = TokenTypes.getType(token);
         ExpressionTreeInterface exp = myExp;
-//
-//        if (exp != null) {
-//            if (exp.isTypeFunctionOrOperation()) {
-//                while (exp.argumentCount() == ((ExpressionTreeBuilderInterface) exp).getCountOfChildren()
-//                        && !exp.isRootExpressionTree()) {
-//                    exp = exp.getParentET();
-//                    if (exp == null) {
-//                        break;
-//                    }
-//                }
-//            }
-//        }
 
         ExpressionTreeInterface retExpTree = null;
 

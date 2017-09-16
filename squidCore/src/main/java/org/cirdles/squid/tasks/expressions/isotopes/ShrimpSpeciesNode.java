@@ -46,6 +46,19 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
     /**
      *
      */
+    private boolean squidSwitchSTReferenceMaterialCalculation;
+    /**
+     *
+     */
+    private boolean squidSwitchSAUnknownCalculation;
+    /**
+     *
+     */
+    protected boolean squidSwitchSCSummaryCalculation;
+
+    /**
+     *
+     */
     private ShrimpSpeciesNode() {
     }
 
@@ -75,7 +88,7 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
         }
         return retVal;
     }
-    
+
     public static ShrimpSpeciesNode buildEmptyShrimpSpeciesNode() {
         return new ShrimpSpeciesNode();
     }
@@ -89,9 +102,17 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
             } else {
                 retVal = ((squidSpeciesModel instanceof SquidSpeciesModel) && methodNameForShrimpFraction.length() > 0);
             }
+        } else {
+            // Node is top of expressiontree
+            retVal = (squidSpeciesModel instanceof SquidSpeciesModel);
         }
 
         return retVal;
+    }
+
+    @Override
+    public boolean isValid() {
+        return (squidSpeciesModel != null);
     }
 
     @Override
@@ -189,7 +210,7 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
 
     @Override
     public void setName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // do nothing
     }
 
     /**
@@ -286,5 +307,56 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
     // for populating iists
     public String toString() {
         return isotopeName;
+    }
+
+    /**
+     * @return the squidSwitchSTReferenceMaterialCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSTReferenceMaterialCalculation() {
+        return squidSwitchSTReferenceMaterialCalculation;
+    }
+
+    /**
+     * @param squidSwitchSTReferenceMaterialCalculation the
+     * squidSwitchSTReferenceMaterialCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
+        this.squidSwitchSTReferenceMaterialCalculation = squidSwitchSTReferenceMaterialCalculation;
+    }
+
+    /**
+     * @return the squidSwitchSAUnknownCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSAUnknownCalculation() {
+        return squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @param squidSwitchSAUnknownCalculation the
+     * squidSwitchSAUnknownCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
+        this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @return the squidSwitchSCSummaryCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSCSummaryCalculation() {
+        return squidSwitchSCSummaryCalculation;
+    }
+
+    /**
+     * @param squidSwitchSCSummaryCalculation the
+     * squidSwitchSCSummaryCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation) {
+        this.squidSwitchSCSummaryCalculation = squidSwitchSCSummaryCalculation;
     }
 }

@@ -153,16 +153,26 @@ public class TaskSquid25 implements Serializable {
 
         retVal = excelString.replace("|", "");
         retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
+        retVal = retVal.replace("[\"Total 206cts/sec\"]", "totalCps([\"206\"])");
         retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
-        retVal = retVal.replace("[\"Hours\"]", "lookup([\"Hours\"])");
         retVal = retVal.replace("(Ma)", "");
 
         // regex for robreg with four arguments = robreg.*\)
-        Pattern robregPattern = Pattern.compile("^(.*)robreg.*\\)", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = robregPattern.matcher(retVal);
+        Pattern squid25FunctionPattern = Pattern.compile("^(.*)[r,R]obreg.*\\)", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = squid25FunctionPattern.matcher(retVal);
         if (matcher.matches()) {
             String[] robregParts = matcher.group().split(",");
             retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + (robregParts.length > 2 ? ")" : ""));
+        }
+
+        // regex for robreg with four arguments = agePb76.*\)
+        squid25FunctionPattern = Pattern.compile("^(.*)[a,A]gePb76.*\\)", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.matches()) {
+            String[] agePb76Parts = matcher.group().split(",");
+            if (agePb76Parts.length > 1) {
+                retVal = retVal.replace(matcher.group(), agePb76Parts[0] + "," + agePb76Parts[1] + (agePb76Parts.length > 2 ? ")" : ""));
+            }
         }
 
         if (excelString.startsWith("[")) {

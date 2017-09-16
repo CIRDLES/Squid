@@ -131,9 +131,9 @@ public final class SquidProject implements Serializable {
             
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
             System.out.println(">>>>>   " + expressionTree.getName());
-            ((ExpressionTree)expressionTree).setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
-            ((ExpressionTree)expressionTree).setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
-            ((ExpressionTree)expressionTree).setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
+            expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
+            expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
+            expressionTree.setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
                       
             this.task.getTaskExpressionsOrdered().add(expression);
         }

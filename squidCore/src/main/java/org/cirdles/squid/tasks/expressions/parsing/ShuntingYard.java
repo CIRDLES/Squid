@@ -38,16 +38,12 @@ public class ShuntingYard {
 
 //        // Input: 3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3
 
-        infixList.add("[");
-        infixList.add("\"");
+//        infixList.add("[");
+//        infixList.add("\"");
         infixList.add("word233_33");
-        infixList.add("\"");;
-        infixList.add("]");
+//        infixList.add("\"");;
+//        infixList.add("]");
         System.out.println("Shunt " + infixToPostfix(infixList));
-
-        //1+(ln(3) +4)
-        //ln  (  ln(3) + ln(4)  )  
-        // ln(1)/(ln(3) + 1)
     }
 
     /**

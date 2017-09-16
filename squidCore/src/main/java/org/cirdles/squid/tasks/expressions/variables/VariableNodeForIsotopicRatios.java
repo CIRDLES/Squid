@@ -21,9 +21,7 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *

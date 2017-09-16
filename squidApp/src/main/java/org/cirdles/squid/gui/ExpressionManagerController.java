@@ -157,7 +157,7 @@ public class ExpressionManagerController implements Initializable {
 
     private Expression parseAndAuditCurrentExcelExpression() {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
-                expressionNameTextField.getText(),
+                expressionNameTextField.getText().length() == 0 ? "Anonymous" : expressionNameTextField.getText(),
                 expressionExcelTextArea.getText().trim().replace("\n", ""));
 
         expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
@@ -166,16 +166,18 @@ public class ExpressionManagerController implements Initializable {
     }
 
     private void populateExpressionDetails(Expression expression) {
-        currentExpression = expression;
+        if (expression != null) {
+            currentExpression = expression;
 
-        expressionNameTextField.setText(expression.getName());
-        expressionExcelTextArea.setText(expression.getExcelExpressionString());
+            expressionNameTextField.setText(expression.getName());
+            expressionExcelTextArea.setText(expression.getExcelExpressionString());
 
-        refMatSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
-        unknownsSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
-        summarySwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSCSummaryCalculation());
+            refMatSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
+            unknownsSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
+            summarySwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSCSummaryCalculation());
 
-        parseAndAuditCurrentExcelExpression();
+            parseAndAuditCurrentExcelExpression();
+        }
     }
 
     private void vacateExpressionDetails() {
@@ -261,7 +263,7 @@ public class ExpressionManagerController implements Initializable {
         squidProject.getTask().setChanged(true);
         // update expressions
         squidProject.getTask().setupSquidSessionSpecs();
-        
+
         parseAndAuditCurrentExcelExpression();
     }
 

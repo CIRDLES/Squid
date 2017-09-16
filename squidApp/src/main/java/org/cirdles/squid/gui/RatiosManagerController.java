@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -27,7 +26,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -54,7 +52,6 @@ public class RatiosManagerController implements Initializable {
     private final int BUTTON_WIDTH = 70;
     private final int BUTTON_HEIGHT = 30;
 
-    private List<SquidRatiosModel> squidRatiosModelList;
     private List<SquidSpeciesModel> squidSpeciesList;
     private int indexOfBackgroundSpecies;
 
@@ -75,7 +72,9 @@ public class RatiosManagerController implements Initializable {
         manageRatiosAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         manageRatiosAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU - 40));
 
-        squidRatiosModelList = new ArrayList<>();
+        // prime the pump
+        squidProject.getTask().makeListOfMassStationDetails();
+                
         prepareRatioGrid();
     }
 

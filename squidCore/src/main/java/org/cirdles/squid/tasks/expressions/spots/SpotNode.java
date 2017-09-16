@@ -46,6 +46,7 @@ public class SpotNode extends ExpressionTree implements Serializable, XMLSeriali
 
     private SpotNode(String fieldName, String methodNameForShrimpFraction) {
         this.fieldName = fieldName;
+        this.name = fieldName;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
         this.parentET = null;
     }
@@ -91,7 +92,7 @@ public class SpotNode extends ExpressionTree implements Serializable, XMLSeriali
 
     @Override
     public void setName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.name = name;
     }
 
     /**
@@ -147,9 +148,15 @@ public class SpotNode extends ExpressionTree implements Serializable, XMLSeriali
 
     @Override
     public boolean amHealthy() {
-        return true;
+        return (methodNameForShrimpFraction.length() > 0);
     }
 
+    @Override
+    public boolean isValid() {
+        return amHealthy();
+    }
+
+    
     @Override
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
         return false;
