@@ -370,6 +370,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void assembleNamedExpressionsMap() {
         namedExpressionsMap.clear();
 
+        //TODO: Make a constants factory
+        ExpressionTreeInterface testConstant = new ConstantNode("TEST_CONSTANT", 999.999);
+        namedExpressionsMap.put(testConstant.getName(), testConstant);
+        
         // TODO: make a SpotNode factory
         ExpressionTreeInterface expHours = buildSpotNode("getHours");      
         namedExpressionsMap.put(expHours.getName(), expHours);
@@ -523,6 +527,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     spotsForExpression = referenceMaterialSpots;
                 }
 
+                // now evaluate expression
                 try {
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException squidException) {
@@ -562,12 +567,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             // save spot-specific results
             double[][] value = new double[][]{{taskExpressionEvaluatedPerSpotPerScanModel.getRatioVal(),
                 taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
-            spot.getTaskExpressionsEvaluationsPerSpot().put(expression.getName(), value);
+            spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
         } else {
             List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
             singleSpot.add(spot);
             double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
-            spot.getTaskExpressionsEvaluationsPerSpot().put(expression.getName(), value);
+            spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
         }
     }
 

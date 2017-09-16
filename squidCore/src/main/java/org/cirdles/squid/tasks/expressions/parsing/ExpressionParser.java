@@ -209,12 +209,15 @@ public class ExpressionParser {
                 retExpTree = new ExpressionTreeParsedFromExcelString(function);
                 break;
 
-            case CONSTANT:
+            case NUMBER:
                 retExpTree = new ConstantNode(token, Double.parseDouble(token));
                 break;
 
-            case VARIABLE:
-                retExpTree = new ConstantNode(token, 0.0);
+            case NAMED_CONSTANT:
+                retExpTree = namedExpressionsMap.get(token);
+                if (retExpTree == null) {
+                    retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
+                }
                 break;
 
             case NAMED_EXPRESSION:

@@ -172,7 +172,7 @@ public class ShuntingYard {
                     }
                     lastWasOperationOrFunction = false;
                     break;
-                case CONSTANT:
+                case NUMBER:
                     outputQueue.add(token);
                     if (!wereValues.empty()) {
                         wereValues.pop();
@@ -180,7 +180,7 @@ public class ShuntingYard {
                     }
                     lastWasOperationOrFunction = false;
                     break;
-                case VARIABLE:
+                case NAMED_CONSTANT:
                     outputQueue.add(token);
                     if (!wereValues.empty()) {
                         wereValues.pop();
@@ -279,11 +279,11 @@ public class ShuntingYard {
         /**
          *
          */
-        CONSTANT,
+        NUMBER,
         /**
          *
          */
-        VARIABLE,
+        NAMED_CONSTANT,
         /**
          *
          */
@@ -306,7 +306,7 @@ public class ShuntingYard {
          * @return
          */
         public static TokenTypes getType(String token) {
-            TokenTypes retVal = VARIABLE;
+            TokenTypes retVal = NAMED_CONSTANT;
 
             if ("|+|-|==|<|<=|>|>=|<>|".contains("|" + token + "|")) {
                 retVal = OPERATOR_A;
@@ -325,7 +325,7 @@ public class ShuntingYard {
             } else if (token.matches("\\[\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;
             } else if (isNumber(token)) {
-                retVal = CONSTANT;
+                retVal = NUMBER;
 
             }
 

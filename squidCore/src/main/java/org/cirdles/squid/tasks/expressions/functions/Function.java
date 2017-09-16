@@ -78,9 +78,9 @@ public abstract class Function
     /**
      *
      */
-    public final static Map<String, String> FUNCTIONS_MAP = new HashMap<>();
+    public static Map<String, String> FUNCTIONS_MAP = new HashMap<>();
 
-    static {
+    public Function() {
 
         FUNCTIONS_MAP.put("agePb76", agePb76().getName());
         FUNCTIONS_MAP.put("AgePb76", agePb76().getName());
@@ -115,8 +115,12 @@ public abstract class Function
 
         FUNCTIONS_MAP.put("TotalCps", "totalCps");
         FUNCTIONS_MAP.put("totalCps", "totalCps");
-        
+
         FUNCTIONS_MAP.put("lookup", "lookup");
+
+        FUNCTIONS_MAP.put("max", "max");
+
+        FUNCTIONS_MAP.put("abs", "abs");
 
     }
 
@@ -206,6 +210,22 @@ public abstract class Function
 
     public static OperationOrFunctionInterface lookup() {
         return new SpotNodeLookupFunction();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface max() {
+        return new Max();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface abs() {
+        return new Abs();
     }
 
     /**

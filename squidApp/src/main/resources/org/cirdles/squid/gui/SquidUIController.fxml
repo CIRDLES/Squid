@@ -61,6 +61,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Select Ratios" />
               </items>
             </Menu>
+            <Menu fx:id="manageConstantsMenu" mnemonicParsing="false" text="Constants">
+              <items>
+                <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
+              </items>
+            </Menu>
             <Menu fx:id="dataReductionMenu" mnemonicParsing="false" text="Reduction">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" />

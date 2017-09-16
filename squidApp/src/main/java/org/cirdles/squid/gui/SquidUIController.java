@@ -121,6 +121,8 @@ public class SquidUIController implements Initializable {
     private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
     private Menu dataReductionMenu;
+    @FXML
+    private Menu manageConstantsMenu;
 
     /**
      * Initializes the controller class.

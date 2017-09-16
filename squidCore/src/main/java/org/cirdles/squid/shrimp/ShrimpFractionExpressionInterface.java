@@ -18,6 +18,7 @@ package org.cirdles.squid.shrimp;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  *
@@ -96,7 +97,7 @@ public interface ShrimpFractionExpressionInterface {
     /**
      * @return the taskExpressionsEvaluationsPerSpot
      */
-    public Map<String, double[][]> getTaskExpressionsEvaluationsPerSpot();
+    public Map<ExpressionTreeInterface, double[][]> getTaskExpressionsEvaluationsPerSpot();
 
     /**
      * Used by reflection in expression evaluations by VariableNode, for example

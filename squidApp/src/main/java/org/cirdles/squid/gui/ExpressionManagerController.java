@@ -260,9 +260,9 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void auditButtonAction(ActionEvent event) {
-        squidProject.getTask().setChanged(true);
-        // update expressions
-        squidProject.getTask().setupSquidSessionSpecs();
+//        squidProject.getTask().setChanged(true);
+//        // update expressions
+//        squidProject.getTask().setupSquidSessionSpecs();
 
         parseAndAuditCurrentExcelExpression();
     }

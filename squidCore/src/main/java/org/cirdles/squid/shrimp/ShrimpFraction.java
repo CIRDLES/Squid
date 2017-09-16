@@ -29,6 +29,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  *
@@ -77,7 +78,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double[] pkInterpScanArray;
 
     private List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated;
-    private Map<String, double[][]> taskExpressionsEvaluationsPerSpot;
+    private Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
 
     /**
      *
@@ -560,7 +561,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the taskExpressionsEvaluationsPerSpot
      */
     @Override
-    public Map<String, double[][]> getTaskExpressionsEvaluationsPerSpot() {
+    public Map<ExpressionTreeInterface, double[][]> getTaskExpressionsEvaluationsPerSpot() {
         return taskExpressionsEvaluationsPerSpot;
     }
 

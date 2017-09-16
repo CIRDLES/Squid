@@ -26,18 +26,18 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  *
  * @author James F. Bowring
  */
-public class Ln extends Function {
+public class Abs extends Function {
 
     /**
      *
      */
-    public Ln() {
-        name = "ln";
+    public Abs() {
+        name = "abs";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
-        labelsForOutputValues = new String[][]{{"natLog"}};
+        labelsForOutputValues = new String[][]{{"absolute"}};
     }
 
     /**
@@ -52,8 +52,10 @@ public class Ln extends Function {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
         double retVal;
-        try {          
-            retVal = Math.log(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
+        try {
+            double number = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0];
+            retVal = Math.abs(number);
+            ;
         } catch (SquidException se) {
             retVal = 0.0;
         }
@@ -70,7 +72,7 @@ public class Ln extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>ln</mi>"
+                + "<mi>abs</mi>"
                 + "<mfenced>";
 
         for (int i = 0; i < childrenET.size(); i++) {
