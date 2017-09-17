@@ -89,12 +89,6 @@ public interface ShrimpFractionExpressionInterface {
     public List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> getTaskExpressionsForScansEvaluated();
 
     /**
-     * @param fieldName
-     * @return the taskExpressionsEvaluationsPerSpot
-     */
-    public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName);
-
-    /**
      * @return the taskExpressionsEvaluationsPerSpot
      */
     public Map<ExpressionTreeInterface, double[][]> getTaskExpressionsEvaluationsPerSpot();

@@ -40,10 +40,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.cirdles.ludwig.squid25.Utilities;
+import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
@@ -59,6 +64,7 @@ public class ExpressionManagerController implements Initializable {
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
 
     private Expression currentExpression;
+    private ExpressionTreeInterface originalExpressionTree;
     private WebEngine webEngine;
 
     @FXML
@@ -84,6 +90,10 @@ public class ExpressionManagerController implements Initializable {
     private CheckBox unknownsSwitchCheckBox;
     @FXML
     private WebView expressionWebView;
+    @FXML
+    private TextArea rmPeekTextArea;
+    @FXML
+    private TextArea unPeekTextArea;
 
     /**
      * Initializes the controller class.
@@ -100,7 +110,7 @@ public class ExpressionManagerController implements Initializable {
         squidProject.getTask().setupSquidSessionSpecs();
 
         initializeExpressionsListView();
-        
+
         webEngine = expressionWebView.getEngine();
     }
 
@@ -166,24 +176,73 @@ public class ExpressionManagerController implements Initializable {
                 expressionNameTextField.getText().length() == 0 ? "Anonymous" : expressionNameTextField.getText(),
                 expressionExcelTextArea.getText().trim().replace("\n", ""));
 
-        expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
+        ExpressionTreeInterface expTree = exp.getExpressionTree();
+        // to detect ratios of interest
+        if (expTree instanceof BuiltInExpressionInterface) {
+            ((BuiltInExpressionInterface) expTree).buildExpression(squidProject.getTask());
+        }
         
-        webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(currentExpression.getExpressionTree()).toString());
+        expTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
+        expTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
+        expTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());
+
+        expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
+
+        webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(exp.getExpressionTree()).toString());
+
+        if (exp.amHealthy()) {
+            populatePeeks(exp);
+        }
 
         return exp;
     }
 
+    private void populatePeeks(Expression exp) {
+        rmPeekTextArea.setText("Problem encountered evaluating expression.");
+        
+        TaskInterface task = squidProject.getTask();
+
+        List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
+        List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
+
+        ExpressionTreeInterface expTree = exp.getExpressionTree();
+
+        try {
+            task.evaluateExpressionForSpotSet(expTree, refMatSpots);
+
+            ShrimpFractionExpressionInterface spot = refMatSpots.get(0);
+            StringBuilder sb = new StringBuilder();
+            sb.append(spot.getFractionID());
+            sb.append("\t");
+            sb.append(Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)[0][0], 12));
+
+            if (((ExpressionTree) expTree).hasRatiosOfInterest()) {
+                sb.append("\t");
+                sb.append(Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)[0][1], 12));
+            }
+
+            sb.append("\n");
+
+            rmPeekTextArea.setText(sb.toString());
+
+        } catch (SquidException squidException) {
+            
+        }
+    }
+
     private void populateExpressionDetails(Expression expression) {
         if (expression != null) {
+            
             currentExpression = expression;
+            originalExpressionTree = ((ExpressionTree)currentExpression.getExpressionTree()).copy();
 
-            expressionNameTextField.setText(expression.getName());
-            expressionExcelTextArea.setText(expression.getExcelExpressionString());
+            expressionNameTextField.setText(currentExpression.getName());
+            expressionExcelTextArea.setText(currentExpression.getExcelExpressionString());
 
-            refMatSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
-            unknownsSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
+            refMatSwitchCheckBox.setSelected(((ExpressionTree) currentExpression.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
+            unknownsSwitchCheckBox.setSelected(((ExpressionTree) currentExpression.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
 
-            parseAndAuditCurrentExcelExpression();                       
+            parseAndAuditCurrentExcelExpression();
         }
     }
 
@@ -279,6 +338,5 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private void unknownsSwitchCheckBoxOnAction(ActionEvent event) {
     }
-
 
 }

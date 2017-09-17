@@ -160,6 +160,21 @@ public class ExpressionTree
         this.squidSpecialUPbThExpression = false;
         this.rootExpressionTree = false;
     }
+    
+    public ExpressionTree copy(){
+        ExpressionTree target = new ExpressionTree();
+        target.setName(name);
+        target.setChildrenET(childrenET);
+        target.setOperation(operation);
+        target.setSquidSwitchSCSummaryCalculation(squidSwitchSCSummaryCalculation);
+        target.setSquidSwitchSTReferenceMaterialCalculation(squidSwitchSTReferenceMaterialCalculation);
+        target.setSquidSwitchSAUnknownCalculation(squidSwitchSAUnknownCalculation);
+        target.setSquidSpecialUPbThExpression(squidSpecialUPbThExpression);
+        target.setRootExpressionTree(rootExpressionTree);
+        
+        
+        return target;
+    }
 
     private void populateChildrenET(ExpressionTreeInterface leftET, ExpressionTreeInterface rightET) {
         addChild(leftET);

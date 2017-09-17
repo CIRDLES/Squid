@@ -15,9 +15,6 @@
  */
 package org.cirdles.squid.shrimp;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -37,15 +34,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  */
 public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInterface {
 
-        //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(ShrimpFraction.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of ShrimpFraction " + theSUID);
-    }
+    private static final long serialVersionUID = -8414997835056044184L;
 
     public static long dateTimeOfFirstReferenceMaterialSpotMilliseconds = 0l;
     private String fractionID;
@@ -132,7 +121,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * This method is needed by expression processing and referred to by its
      * String name.
      *
-     * @return double elapsed time in hours (hh.###) since timestamp of first reference material
+     * @return double elapsed time in hours (hh.###) since timestamp of first
+     * reference material
      */
     public double getHours() {
         long deltaTime = dateTimeMilliseconds - ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds;
@@ -546,15 +536,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public void setTaskExpressionsForScansEvaluated(List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated) {
         this.taskExpressionsForScansEvaluated = taskExpressionsForScansEvaluated;
-    }
-
-    /**
-     * @param fieldName
-     * @return the taskExpressionsEvaluationsPerSpot
-     */
-    @Override
-    public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName) {
-        return taskExpressionsEvaluationsPerSpot.get(fieldName);
     }
 
     /**
