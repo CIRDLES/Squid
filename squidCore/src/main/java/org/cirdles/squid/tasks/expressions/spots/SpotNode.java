@@ -129,9 +129,10 @@ public class SpotNode extends ExpressionTree implements Serializable, XMLSeriali
         String retVal
                 = "<mrow>"
                 + "<mi>" + fieldName + "</mi>"
-                + "<mfenced>"
-                + "SPOT"
-                + "</mfenced></mrow>\n";
+//                + "<mfenced>"
+//                + "<mi>SPOT</mi>"
+//                + "</mfenced>"
+                + "</mrow>\n";
 
         return retVal;
     }

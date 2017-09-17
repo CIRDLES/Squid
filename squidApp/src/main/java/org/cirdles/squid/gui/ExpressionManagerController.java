@@ -38,12 +38,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 
 /**
  * FXML Controller class
@@ -56,6 +59,7 @@ public class ExpressionManagerController implements Initializable {
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
 
     private Expression currentExpression;
+    private WebEngine webEngine;
 
     @FXML
     private AnchorPane scrolledAnchorPane;
@@ -79,7 +83,7 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private CheckBox unknownsSwitchCheckBox;
     @FXML
-    private CheckBox summarySwitchCheckBox;
+    private WebView expressionWebView;
 
     /**
      * Initializes the controller class.
@@ -96,6 +100,8 @@ public class ExpressionManagerController implements Initializable {
         squidProject.getTask().setupSquidSessionSpecs();
 
         initializeExpressionsListView();
+        
+        webEngine = expressionWebView.getEngine();
     }
 
     private void initializeExpressionsListView() {
@@ -161,6 +167,8 @@ public class ExpressionManagerController implements Initializable {
                 expressionExcelTextArea.getText().trim().replace("\n", ""));
 
         expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
+        
+        webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(currentExpression.getExpressionTree()).toString());
 
         return exp;
     }
@@ -174,9 +182,8 @@ public class ExpressionManagerController implements Initializable {
 
             refMatSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
             unknownsSwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
-            summarySwitchCheckBox.setSelected(((ExpressionTree) expression.getExpressionTree()).isSquidSwitchSCSummaryCalculation());
 
-            parseAndAuditCurrentExcelExpression();
+            parseAndAuditCurrentExcelExpression();                       
         }
     }
 
@@ -226,7 +233,6 @@ public class ExpressionManagerController implements Initializable {
         expressionExcelTextArea.setEditable(true);
         refMatSwitchCheckBox.setDisable(false);
         unknownsSwitchCheckBox.setDisable(false);
-        summarySwitchCheckBox.setDisable(false);
     }
 
     @FXML
@@ -238,7 +244,6 @@ public class ExpressionManagerController implements Initializable {
             // until we have these in the edit box
             ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.selectedProperty().getValue());
             ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.selectedProperty().getValue());
-            ((ExpressionTree) expTree).setSquidSwitchSCSummaryCalculation(summarySwitchCheckBox.selectedProperty().getValue());
 
             currentExpression.setExpressionTree(expTree);
             currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim().replace("\n", ""));
@@ -275,8 +280,5 @@ public class ExpressionManagerController implements Initializable {
     private void unknownsSwitchCheckBoxOnAction(ActionEvent event) {
     }
 
-    @FXML
-    private void summarySwitchCheckBoxhOnAction(ActionEvent event) {
-    }
 
 }

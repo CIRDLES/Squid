@@ -28,6 +28,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  */
 public class Ln extends Function {
 
+    private static final long serialVersionUID = 441943806225660404L;
+
     /**
      *
      */
@@ -52,7 +54,7 @@ public class Ln extends Function {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
         double retVal;
-        try {          
+        try {
             retVal = Math.log(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
         } catch (SquidException se) {
             retVal = 0.0;
