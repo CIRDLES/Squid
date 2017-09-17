@@ -50,6 +50,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 
@@ -110,6 +111,8 @@ public class ExpressionManagerController implements Initializable {
         squidProject.getTask().setupSquidSessionSpecs();
 
         initializeExpressionsListView();
+        
+        squidProject.getTask().evaluateTaskExpressions();
 
         webEngine = expressionWebView.getEngine();
     }
@@ -181,7 +184,7 @@ public class ExpressionManagerController implements Initializable {
         if (expTree instanceof BuiltInExpressionInterface) {
             ((BuiltInExpressionInterface) expTree).buildExpression(squidProject.getTask());
         }
-        
+
         expTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
         expTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
         expTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());
@@ -199,42 +202,52 @@ public class ExpressionManagerController implements Initializable {
 
     private void populatePeeks(Expression exp) {
         rmPeekTextArea.setText("Problem encountered evaluating expression.");
-        
+
         TaskInterface task = squidProject.getTask();
 
         List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
         List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
 
-        ExpressionTreeInterface expTree = exp.getExpressionTree();
+        ExpressionTreeInterface expTree = originalExpressionTree;
 
-        try {
-            task.evaluateExpressionForSpotSet(expTree, refMatSpots);
+//        try {
+//            task.evaluateTaskExpressions();
+
 
             ShrimpFractionExpressionInterface spot = refMatSpots.get(0);
             StringBuilder sb = new StringBuilder();
             sb.append(spot.getFractionID());
             sb.append("\t");
-            sb.append(Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)[0][0], 12));
+            if ((((ExpressionTree) expTree).hasRatiosOfInterest()) || !((ExpressionTree) expTree).isSquidSwitchSCSummaryCalculation()) {
 
-            if (((ExpressionTree) expTree).hasRatiosOfInterest()) {
-                sb.append("\t");
-                sb.append(Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)[0][1], 12));
+                sb.append(Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)[0][0], 12));
+
+                if (((ExpressionTree) expTree).hasRatiosOfInterest()) {
+                    sb.append("\t");
+                    sb.append(Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)[0][1], 12));
+                }
+
+                sb.append("\n");
+            } else if (((ExpressionTree) expTree).isSquidSwitchSCSummaryCalculation()) {
+                try {
+                    sb.append(Utilities.roundedToSize(task.getTaskExpressionsEvaluationsPerSpotSet().get(expTree.getName()).getValues()[0][0], 12));
+                    sb.append("\n");
+                } catch (Exception e) {
+                }
             }
-
-            sb.append("\n");
 
             rmPeekTextArea.setText(sb.toString());
 
-        } catch (SquidException squidException) {
-            
-        }
+//        } catch (SquidException squidException) {
+//        }
     }
 
     private void populateExpressionDetails(Expression expression) {
         if (expression != null) {
-            
+
             currentExpression = expression;
-            originalExpressionTree = ((ExpressionTree)currentExpression.getExpressionTree()).copy();
+          //  originalExpressionTree = ((ExpressionTree) currentExpression.getExpressionTree()).copy();
+            originalExpressionTree = currentExpression.getExpressionTree();
 
             expressionNameTextField.setText(currentExpression.getName());
             expressionExcelTextArea.setText(currentExpression.getExcelExpressionString());
@@ -303,6 +316,7 @@ public class ExpressionManagerController implements Initializable {
             // until we have these in the edit box
             ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.selectedProperty().getValue());
             ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.selectedProperty().getValue());
+            ((ExpressionTree) expTree).setRatiosOfInterest(((ExpressionTree)originalExpressionTree).getRatiosOfInterest());          
 
             currentExpression.setExpressionTree(expTree);
             currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim().replace("\n", ""));
@@ -311,6 +325,8 @@ public class ExpressionManagerController implements Initializable {
             // update expressions
             squidProject.getTask().setupSquidSessionSpecs();
 
+            squidProject.getTask().evaluateTaskExpressions();
+            
             // reveal new ordering etc
             populateExpressionsListView();
             expressionsListView.refresh();

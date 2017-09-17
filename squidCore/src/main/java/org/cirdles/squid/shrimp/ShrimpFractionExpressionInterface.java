@@ -92,6 +92,13 @@ public interface ShrimpFractionExpressionInterface {
      * @return the taskExpressionsEvaluationsPerSpot
      */
     public Map<ExpressionTreeInterface, double[][]> getTaskExpressionsEvaluationsPerSpot();
+    
+       /**
+     * Used by Reflection in org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions
+     * @param fieldName
+     * @return 
+     */
+    public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName);
 
     /**
      * Used by reflection in expression evaluations by VariableNode, for example
@@ -136,6 +143,6 @@ public interface ShrimpFractionExpressionInterface {
      * @return the pkFerr
      */
     public double[][] getPkFerr();
-    
+
     public double getHours();
 }

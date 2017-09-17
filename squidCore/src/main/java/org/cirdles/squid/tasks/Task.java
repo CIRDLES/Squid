@@ -33,7 +33,6 @@ import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -55,9 +54,7 @@ import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
-import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
-import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 import static org.cirdles.squid.tasks.expressions.spots.SpotNode.buildSpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -242,8 +239,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
 
-            shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
-
+            try {
+//                TODO - move this
+                shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+            } catch (Exception e) {
+            }
             changed = false;
         }
     }
@@ -598,10 +598,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * 
+     *
      * @param expression
      * @param spotsForExpression
-     * @throws SquidException 
+     * @throws SquidException
      */
     @Override
     public void evaluateExpressionForSpotSet(
@@ -636,8 +636,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         } else {
             List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
             singleSpot.add(spot);
-            double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
-            spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
+            try {
+                double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
+                spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
+            } catch (Exception   squidException) {
+                System.out.println(squidException.getMessage());
+            }
         }
     }
 

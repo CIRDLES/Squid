@@ -16,7 +16,6 @@
 package org.cirdles.squid.tasks.expressions.variables;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.exceptions.SquidException;
@@ -24,15 +23,15 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 
 /**
  *
  * @author James F. Bowring
  */
-public class VariableNodeForSummary implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+public class VariableNodeForSummary extends ExpressionTree {//implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
 
     private static final long serialVersionUID = -868256637199178058L;
 //    private void readObject(
@@ -43,22 +42,22 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, Serializ
 //        long theSUID = myObject.getSerialVersionUID();
 //        System.out.println("Customized De-serialization of VariableNodeForSummary " + theSUID);
 //    }
-    protected String name;
-    protected ExpressionTreeInterface parentET;
-
-    /**
-     *
-     */
-    private boolean squidSwitchSTReferenceMaterialCalculation;
-
-    /**
-     *
-     */
-    private boolean squidSwitchSAUnknownCalculation;
-    /**
-     *
-     */
-    protected boolean squidSwitchSCSummaryCalculation;
+//    protected String name;
+//    protected ExpressionTreeInterface parentET;
+//
+//    /**
+//     *
+//     */
+//    private boolean squidSwitchSTReferenceMaterialCalculation;
+//
+//    /**
+//     *
+//     */
+//    private boolean squidSwitchSAUnknownCalculation;
+//    /**
+//     *
+//     */
+//    protected boolean squidSwitchSCSummaryCalculation;
 
     /**
      *

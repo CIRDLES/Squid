@@ -16,7 +16,6 @@
 package org.cirdles.squid.tasks.expressions.isotopes;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -33,7 +32,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+public class ShrimpSpeciesNode extends ExpressionTree {
 
     private static final long serialVersionUID = 3592579554999155473L;
 
@@ -41,20 +40,20 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
     private SquidSpeciesModel squidSpeciesModel;
     private String methodNameForShrimpFraction;
     // used for parsing expressions
-    private ExpressionTreeInterface parentET;
+//    private ExpressionTreeInterface parentET;
 
-    /**
-     *
-     */
-    private boolean squidSwitchSTReferenceMaterialCalculation;
-    /**
-     *
-     */
-    private boolean squidSwitchSAUnknownCalculation;
-    /**
-     *
-     */
-    protected boolean squidSwitchSCSummaryCalculation;
+//    /**
+//     *
+//     */
+//    private boolean squidSwitchSTReferenceMaterialCalculation;
+//    /**
+//     *
+//     */
+//    private boolean squidSwitchSAUnknownCalculation;
+//    /**
+//     *
+//     */
+//    protected boolean squidSwitchSCSummaryCalculation;
 
     /**
      *

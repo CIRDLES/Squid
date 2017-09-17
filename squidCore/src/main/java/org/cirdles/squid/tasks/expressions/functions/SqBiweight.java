@@ -29,10 +29,12 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  */
 public class SqBiweight extends Function {
 
+    private static final long serialVersionUID = -1534611458354369530L;
+
     /**
      * Provides the functionality of Squid's sqBiweight and biWt by calculating
- TukeysBiweight and returning mean, sigma, and 95% confidence and encoding
- the labels for each cell of the values array produced by eval.
+     * TukeysBiweight and returning mean, sigma, and 95% confidence and encoding
+     * the labels for each cell of the values array produced by eval.
      *
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
@@ -60,7 +62,7 @@ public class SqBiweight extends Function {
      */
     @Override
     public Object[][] eval(
-            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException{
+            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
 
         Object[][] retVal;
         try {

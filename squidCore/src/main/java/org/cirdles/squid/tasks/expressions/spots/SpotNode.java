@@ -39,7 +39,7 @@ public class SpotNode extends ExpressionTree implements Serializable, XMLSeriali
     private String fieldName;
     private String methodNameForShrimpFraction;
     // used for parsing expressions
-    private ExpressionTreeInterface parentET;
+//    private ExpressionTreeInterface parentET;
 
     private SpotNode() {
     }

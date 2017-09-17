@@ -32,7 +32,7 @@ public class ConstantNode extends ExpressionTree {
 
     private static final long serialVersionUID = -2914393295564269277L;
     public static final String MISSING_EXPRESSION_STRING = "Missing Expression";
-    private String name;
+//    private String name;
     private Object value;
 
     /**

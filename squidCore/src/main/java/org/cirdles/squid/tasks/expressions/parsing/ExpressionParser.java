@@ -41,6 +41,7 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
 /**
  *
@@ -113,11 +114,12 @@ public class ExpressionParser {
             returnExpressionTree = buildTree(parsedRPN);
             if (returnExpressionTree != null) {
                 // if single objects are the actual expression, don't change
-                if (!(returnExpressionTree instanceof ConstantNode) && !(returnExpressionTree instanceof SpotNode)&& !(returnExpressionTree instanceof ShrimpSpeciesNode)){
-                try {
-                    returnExpressionTree.setName(expression.getName());
-                } catch (Exception e) {
-                }}
+                if (!(returnExpressionTree instanceof ConstantNode) && !(returnExpressionTree instanceof SpotNode) && !(returnExpressionTree instanceof ShrimpSpeciesNode)) {
+                    try {
+                        returnExpressionTree.setName(expression.getName());
+                    } catch (Exception e) {
+                    }
+                }
             }
         }
 
@@ -221,9 +223,16 @@ public class ExpressionParser {
                 break;
 
             case NAMED_EXPRESSION:
-                retExpTree = namedExpressionsMap.get(token.replace("[\"", "").replace("\"]", ""));
-                if (retExpTree == null) {
+                ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(token.replace("[\"", "").replace("\"]", ""));
+                if (retExpTreeKnown == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
+                } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
+                        && ((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode) {
+                    retExpTree = retExpTreeKnown;
+                } else if (retExpTreeKnown instanceof ShrimpSpeciesNode) {
+                    retExpTree = retExpTreeKnown;
+                } else {
+                    retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());
                 }
                 break;
         }

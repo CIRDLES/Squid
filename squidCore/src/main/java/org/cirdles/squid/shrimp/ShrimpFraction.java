@@ -546,4 +546,25 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return taskExpressionsEvaluationsPerSpot;
     }
 
+    /**
+     * Used by Reflection in
+     * org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions
+     *
+     * @param fieldName
+     * @return
+     */
+    @Override
+    public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName) {
+        double[][] values = new double[][]{{0.0}};
+
+        for (Map.Entry<ExpressionTreeInterface, double[][]> entry : taskExpressionsEvaluationsPerSpot.entrySet()) {
+            if (entry.getKey().getName().compareTo(fieldName) == 0) {
+                values = entry.getValue();
+                break;
+            }
+        }
+
+        return values;
+    }
+
 }

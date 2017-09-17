@@ -62,7 +62,6 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
     }
 
     private void determineRatiosOfInterest() {
-        // for now assume they are in the top-level expression as these are signals for NU switch = special math
         if (getCountOfChildren() == 1) {
             ExpressionTreeInterface onlyChild = childrenET.get(0);
             if (onlyChild.isTypeFunctionOrOperation()) {
