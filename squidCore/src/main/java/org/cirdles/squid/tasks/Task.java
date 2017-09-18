@@ -1071,20 +1071,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
     }
 
-//    @Override
-//    public boolean isEmptyTableOfSelectedRatiosByMassStationIndex() {
-//        boolean retVal = true;
-//
-//        if (tableOfSelectedRatiosByMassStationIndex != null) {
-//            for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
-//                for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
-//                    retVal &= !tableOfSelectedRatiosByMassStationIndex[row][col];
-//                }
-//            }
-//        }
-//
-//        return retVal;
-//    }
     /**
      * @return the listOfMassStationDetails
      */

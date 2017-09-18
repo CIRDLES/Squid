@@ -72,9 +72,6 @@ public class RatiosManagerController implements Initializable {
         manageRatiosAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         manageRatiosAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU - 40));
 
-        // prime the pump
-        squidProject.getTask().makeListOfMassStationDetails();
-                
         prepareRatioGrid();
     }
 
@@ -96,10 +93,12 @@ public class RatiosManagerController implements Initializable {
             con.setPrefHeight(BUTTON_HEIGHT);
             ratiosGridPane.getRowConstraints().add(con);
 
-            ColumnConstraints colcon = new ColumnConstraints();
+            ColumnConstraints colcon = new ColumnConstraints(BUTTON_WIDTH);
             colcon.setPrefWidth(BUTTON_WIDTH);
+            colcon.setMaxWidth(BUTTON_WIDTH);
             colcon.setHalignment(HPos.CENTER);
             ratiosGridPane.getColumnConstraints().add(colcon);
+            
         }
 
         populateRatioGrid();
@@ -123,11 +122,11 @@ public class RatiosManagerController implements Initializable {
                             + "    -fx-border-width: 1;\n"
                             + "    -fx-border-color: black;\n"
                             + "    -fx-background-radius: 0;\n"
-                            + "    -fx-background-color: #43ABC9;/*#72b1bf;/*#43ABC9;/*#ff8f89; /*#ff6961; /*#1d1d1d;*/\n"
+                            + "    -fx-background-color: #00BFFF;\n"
                             + "    -fx-font-family: \"Lucida Sans Bold\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
                             + "    -fx-font-weight: bold;\n"
                             + "    -fx-font-size: 10pt;\n"
-                            + "    -fx-text-fill: whitesmoke;/*  #d8d8d8;*/\n"
+                            + "    -fx-text-fill: White;/*  #d8d8d8;*/\n"
                     );
 
                     ratiosGridPane.add(ratioButton, j + 1, i + 1);

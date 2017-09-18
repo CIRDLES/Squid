@@ -120,52 +120,66 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     * Assumes a one-element list of shrimpFractions
+     * Assumes a list of shrimpFractions - can be a singleton if needed
      *
      * @param shrimpFractions the value of shrimpFraction
      * @return the double[][]
      */
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
-        //TODO: refac tor method out of loop
-        Object[][] retVal = new Object[shrimpFractions.size()][];
-        Integer index = squidSpeciesModel.getMassStationIndex();
-        if (index != -1) {
-            for (int i = 0; i < shrimpFractions.size(); i++) {
-                double retVala = 0.0;
-                double[] isotopeValues
-                        = methodFactory(shrimpFractions.get(i), methodNameForShrimpFraction);
-                if (index < isotopeValues.length) {
-                    retVala = isotopeValues[index];
-                }
-                retVal[i] = convertArrayToObjects(new double[]{retVala});
-            }
-        }
-
-        return retVal;
-    }
-
-    /**
-     *
-     * @param shrimpFraction
-     * @param methodNameForShrimpFraction
-     * @return
-     */
-    public static double[] methodFactory(ShrimpFractionExpressionInterface shrimpFraction, String methodNameForShrimpFraction) {
-        double[] retVal = new double[0];
-        Method method;
+        Method method = null;
         if (methodNameForShrimpFraction != null) {
             try {
                 method = ShrimpFractionExpressionInterface.class.getMethod(//
                         methodNameForShrimpFraction,
                         new Class[0]);
-                retVal = (double[]) method.invoke(shrimpFraction, new Object[0]);
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-                // do nothing for now
+            } catch (NoSuchMethodException | SecurityException noSuchMethodException) {
             }
         }
+
+        Object[][] retVal = new Object[shrimpFractions.size()][];
+        if (method != null) {
+            Integer index = squidSpeciesModel.getMassStationIndex();
+            if (index != -1) {
+                for (int i = 0; i < shrimpFractions.size(); i++) {
+                    double retVala = 0.0;
+                    try {
+                        double[] isotopeValues
+                                = (double[]) method.invoke(shrimpFractions.get(i), new Object[0]);
+                        if (index < isotopeValues.length) {
+                            retVala = isotopeValues[index];
+                        }
+                        retVal[i] = convertArrayToObjects(new double[]{retVala});
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SquidException illegalAccessException) {
+                    }
+                }
+            }
+        }
+
         return retVal;
     }
+
+//    /**
+//     *
+//     * @param shrimpFraction
+//     * @param methodNameForShrimpFraction
+//     * @return
+//     */
+//    public static double[] methodFactory(ShrimpFractionExpressionInterface shrimpFraction, String methodNameForShrimpFraction) {
+//        double[] retVal = new double[0];
+//        Method method;
+//        if (methodNameForShrimpFraction != null) {
+//            try {
+//                method = ShrimpFractionExpressionInterface.class.getMethod(//
+//                        methodNameForShrimpFraction,
+//                        new Class[0]);
+//                retVal = (double[]) method.invoke(shrimpFraction, new Object[0]);
+//            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
+//                // do nothing for now
+//            }
+//        }
+//        return retVal;
+//    }
 
     /**
      *

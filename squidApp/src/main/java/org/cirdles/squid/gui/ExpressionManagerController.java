@@ -25,6 +25,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -96,6 +97,16 @@ public class ExpressionManagerController implements Initializable {
     private TextArea rmPeekTextArea;
     @FXML
     private TextArea unPeekTextArea;
+    @FXML
+    private Button newButton;
+    @FXML
+    private Button editButton;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button cancelButton;
+    @FXML
+    private Button auditButton;
 
     /**
      * Initializes the controller class.
@@ -165,6 +176,7 @@ public class ExpressionManagerController implements Initializable {
             public void changed(ObservableValue<? extends Expression> ov,
                     Expression old_val, Expression new_val) {
                 if (new_val != null) {
+                    cancelEdit();
                     populateExpressionDetails(new_val);
                 } else {
                     vacateExpressionDetails();
@@ -186,9 +198,11 @@ public class ExpressionManagerController implements Initializable {
             ((BuiltInExpressionInterface) expTree).buildExpression(squidProject.getTask());
         }
 
-        expTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
-        expTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
-        expTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());
+        if (originalExpressionTree != null) {
+            expTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
+            expTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
+            expTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());
+        }
 
         expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
 
@@ -351,6 +365,10 @@ public class ExpressionManagerController implements Initializable {
             ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.selectedProperty().getValue());
             ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.selectedProperty().getValue());
 
+            ((ExpressionTree) expTree).setSquidSwitchSCSummaryCalculation(((ExpressionTree) originalExpressionTree).isSquidSwitchSCSummaryCalculation());
+            ((ExpressionTree) expTree).setSquidSpecialUPbThExpression(((ExpressionTree) originalExpressionTree).isSquidSpecialUPbThExpression());
+            ((ExpressionTree) expTree).setRootExpressionTree(((ExpressionTree) originalExpressionTree).isRootExpressionTree());
+
             // temp hack until builder does this better
             if (((ExpressionTree) expTree).getRatiosOfInterest().isEmpty()) {
                 ((ExpressionTree) expTree).setRatiosOfInterest(((ExpressionTree) originalExpressionTree).getRatiosOfInterest());
@@ -372,12 +390,19 @@ public class ExpressionManagerController implements Initializable {
             rmPeekTextArea.setText("No Expression due to parsing error.");
             unPeekTextArea.setText("No Expression due to parsing error.");
         }
+
+        toggleEditMode(false);
     }
 
     private void toggleEditMode(boolean editMode) {
+        expressionNameTextField.setEditable(editMode);
         expressionExcelTextArea.setEditable(editMode);
         refMatSwitchCheckBox.setDisable(!editMode);
         unknownsSwitchCheckBox.setDisable(!editMode);
+
+        editButton.setDisable(editMode);
+        saveButton.setDisable(!editMode);
+        cancelButton.setDisable(!editMode);
 
         if (editMode) {
             rmPeekTextArea.setText("No values calculated during edit of expression");
@@ -387,6 +412,10 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void cancelButtonAction(ActionEvent event) {
+        cancelEdit();
+    }
+
+    private void cancelEdit() {
         toggleEditMode(false);
         populateExpressionDetails(currentExpression);
     }

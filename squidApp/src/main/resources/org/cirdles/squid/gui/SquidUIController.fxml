@@ -61,11 +61,6 @@
                   <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Select Ratios" />
               </items>
             </Menu>
-            <Menu fx:id="manageConstantsMenu" mnemonicParsing="false" text="Constants">
-              <items>
-                <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
-              </items>
-            </Menu>
             <Menu fx:id="dataReductionMenu" mnemonicParsing="false" text="Reduction">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" />
@@ -79,7 +74,8 @@
                   <MenuItem disable="true" mnemonicParsing="false" text="Expression Builder" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from File" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
-            <MenuItem mnemonicParsing="false" onAction="#exploreExpressionsMenuItemAction" text=" Explore Expressions" visible="false" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
           </items>
         </Menu>
             <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Analysis">

@@ -160,8 +160,8 @@ public class ExpressionTree
         this.squidSpecialUPbThExpression = false;
         this.rootExpressionTree = false;
     }
-    
-    public ExpressionTree copy(){
+
+    public ExpressionTree copy() {
         ExpressionTree target = new ExpressionTree();
         target.setName(name);
         target.setChildrenET(childrenET);
@@ -171,8 +171,7 @@ public class ExpressionTree
         target.setSquidSwitchSAUnknownCalculation(squidSwitchSAUnknownCalculation);
         target.setSquidSpecialUPbThExpression(squidSpecialUPbThExpression);
         target.setRootExpressionTree(rootExpressionTree);
-        
-        
+
         return target;
     }
 
@@ -244,6 +243,30 @@ public class ExpressionTree
                 }
             }
             if (retVal == 0) {
+                // then compare is for ref materials only
+                if (isSquidSwitchSTReferenceMaterialCalculation() && !exp.isSquidSwitchSTReferenceMaterialCalculation()) {
+                    retVal = -1;
+                } else if (!isSquidSwitchSTReferenceMaterialCalculation() && exp.isSquidSwitchSTReferenceMaterialCalculation()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
+                // then compare is for unknowns materials only
+                if (isSquidSwitchSAUnknownCalculation() && !exp.isSquidSwitchSAUnknownCalculation()) {
+                    retVal = -1;
+                } else if (!isSquidSwitchSAUnknownCalculation() && exp.isSquidSwitchSAUnknownCalculation()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
+                // then compare is summary
+                if (isSquidSwitchSCSummaryCalculation()&& !exp.isSquidSwitchSCSummaryCalculation()) {
+                    retVal = -1;
+                } else if (!isSquidSwitchSCSummaryCalculation() && exp.isSquidSwitchSCSummaryCalculation()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
                 // then compare on names so we have a complete ordering
                 retVal = name.compareTo(exp.getName());
             }
@@ -265,6 +288,15 @@ public class ExpressionTree
             }
             if (retVal) {
                 retVal = (isSquidSpecialUPbThExpression() == ((ExpressionTree) obj).isSquidSpecialUPbThExpression());
+            }
+            if (retVal) {
+                retVal = (isSquidSwitchSTReferenceMaterialCalculation() == ((ExpressionTree) obj).isSquidSwitchSTReferenceMaterialCalculation());
+            }
+            if (retVal) {
+                retVal = (isSquidSwitchSAUnknownCalculation() == ((ExpressionTree) obj).isSquidSwitchSAUnknownCalculation());
+            }
+            if (retVal) {
+                retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
             }
             if (retVal) {
                 retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);

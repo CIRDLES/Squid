@@ -121,8 +121,6 @@ public class SquidUIController implements Initializable {
     private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
     private Menu dataReductionMenu;
-    @FXML
-    private Menu manageConstantsMenu;
 
     /**
      * Initializes the controller class.
@@ -182,8 +180,8 @@ public class SquidUIController implements Initializable {
                 try {
                     openProject(menuItem.getText());
                 } catch (IOException iOException) {
+                    squidPersistentState.removeProjectFileNameFromMRU(menuItem.getText());
                     squidPersistentState.cleanProjectListMRU();
-                    // remove self safe?
                     openRecentSquidProjectMenu.getItems().remove(menuItem);
                 }
             });
@@ -344,11 +342,14 @@ public class SquidUIController implements Initializable {
             SpotManagerController.saveProjectData();
             try {
                 File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
-                saveSquidProjectMenuItem.setDisable(false);
-                squidPersistentState.updateProjectListMRU(projectFile);
-                buildProjectMenuMRU();
+                if (projectFile != null) {
+                    saveSquidProjectMenuItem.setDisable(false);
+                    squidPersistentState.updateProjectListMRU(projectFile);
+                    buildProjectMenuMRU();
+                }
 
             } catch (IOException ex) {
+                saveSquidProjectMenuItem.setDisable(false);
             }
         }
     }
@@ -570,7 +571,6 @@ public class SquidUIController implements Initializable {
         myManager.setVisible(true);
     }
 
-    @FXML
     private void exploreExpressionsMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(expressionExplorerUI);
         launchExpressionExplorer();
@@ -610,6 +610,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void selectRatiosMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(ratiosManagerUI);
+        squidProject.getTask().buildSquidSpeciesModelList();
         launchRatiosManager();
         showUI(ratiosManagerUI);
     }
