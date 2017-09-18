@@ -55,7 +55,7 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="142.0" prefWidth="383.0">
                                        <children>
-                                          <TextArea fx:id="rmPeekTextArea" prefHeight="151.0" prefWidth="385.0" />
+                                          <TextArea fx:id="rmPeekTextArea" editable="false" prefHeight="151.0" prefWidth="385.0" style="-fx-font-family: Courier New; -fx-font-size: 11;" />
                                        </children>
                                     </AnchorPane>
                               </content>
@@ -64,7 +64,7 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TextArea fx:id="unPeekTextArea" prefHeight="151.0" prefWidth="385.0" />
+                                          <TextArea fx:id="unPeekTextArea" editable="false" prefHeight="151.0" prefWidth="385.0" style="-fx-font-family: Courier New; -fx-font-size: 11;" />
                                        </children>
                                     </AnchorPane>
                               </content>

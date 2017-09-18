@@ -19,12 +19,14 @@ import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
@@ -39,21 +41,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     private String isotopeName;
     private SquidSpeciesModel squidSpeciesModel;
     private String methodNameForShrimpFraction;
-    // used for parsing expressions
-//    private ExpressionTreeInterface parentET;
-
-//    /**
-//     *
-//     */
-//    private boolean squidSwitchSTReferenceMaterialCalculation;
-//    /**
-//     *
-//     */
-//    private boolean squidSwitchSAUnknownCalculation;
-//    /**
-//     *
-//     */
-//    protected boolean squidSwitchSCSummaryCalculation;
 
     /**
      *
@@ -139,18 +126,23 @@ public class ShrimpSpeciesNode extends ExpressionTree {
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
-        double retVal = 0.0;
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
+        //TODO: refac tor method out of loop
+        Object[][] retVal = new Object[shrimpFractions.size()][];
         Integer index = squidSpeciesModel.getMassStationIndex();
         if (index != -1) {
-            double[] isotopeValues
-                    = methodFactory(shrimpFractions.get(0), methodNameForShrimpFraction);
-            if (index < isotopeValues.length) {
-                retVal = isotopeValues[index];
+            for (int i = 0; i < shrimpFractions.size(); i++) {
+                double retVala = 0.0;
+                double[] isotopeValues
+                        = methodFactory(shrimpFractions.get(i), methodNameForShrimpFraction);
+                if (index < isotopeValues.length) {
+                    retVala = isotopeValues[index];
+                }
+                retVal[i] = convertArrayToObjects(new double[]{retVala});
             }
         }
 
-        return new Object[][]{{retVal}};
+        return retVal;
     }
 
     /**

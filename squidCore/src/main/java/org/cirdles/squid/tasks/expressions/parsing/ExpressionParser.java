@@ -229,7 +229,7 @@ public class ExpressionParser {
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && ((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode) {
                     retExpTree = retExpTreeKnown;
-                } else if (retExpTreeKnown instanceof ShrimpSpeciesNode) {
+                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)||(retExpTreeKnown instanceof SpotNode)) {
                     retExpTree = retExpTreeKnown;
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());

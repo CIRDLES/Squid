@@ -46,6 +46,7 @@ import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
@@ -111,7 +112,7 @@ public class ExpressionManagerController implements Initializable {
         squidProject.getTask().setupSquidSessionSpecs();
 
         initializeExpressionsListView();
-        
+
         squidProject.getTask().evaluateTaskExpressions();
 
         webEngine = expressionWebView.getEngine();
@@ -174,7 +175,7 @@ public class ExpressionManagerController implements Initializable {
         populateExpressionsListView();
     }
 
-    private Expression parseAndAuditCurrentExcelExpression() {
+    private Expression parseAndAuditCurrentExcelExpression(boolean auditMode) {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText().length() == 0 ? "Anonymous" : expressionNameTextField.getText(),
                 expressionExcelTextArea.getText().trim().replace("\n", ""));
@@ -193,8 +194,11 @@ public class ExpressionManagerController implements Initializable {
 
         webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(exp.getExpressionTree()).toString());
 
-        if (exp.amHealthy()) {
+        if (exp.amHealthy() && !auditMode) {
             populatePeeks(exp);
+        } else {
+            rmPeekTextArea.setText("No values calculated during audit of expression");
+            unPeekTextArea.setText("No values calculated during audit of expression");
         }
 
         return exp;
@@ -202,51 +206,83 @@ public class ExpressionManagerController implements Initializable {
 
     private void populatePeeks(Expression exp) {
         rmPeekTextArea.setText("Problem encountered evaluating expression.");
+        unPeekTextArea.setText("Problem encountered evaluating expression.");
 
         TaskInterface task = squidProject.getTask();
 
         List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
         List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
 
-        ExpressionTreeInterface expTree = originalExpressionTree;
+        if (originalExpressionTree.isSquidSwitchSCSummaryCalculation()) {
+            SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName());
+            if (task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName()) != null) {
+                if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
+                    rmPeekTextArea.setText("Sumary Function: " + spotSummary.getOperation().getName());
+                    rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                } else {
+                    rmPeekTextArea.setText("No Summary");
+                }
 
-//        try {
-//            task.evaluateTaskExpressions();
+                if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
+                    unPeekTextArea.setText("Sumary Function: " + spotSummary.getOperation().getName());
+                    unPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                } else {
+                    unPeekTextArea.setText("No Summary");
+                }
+            }
+        } else {
+            if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
+                rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots));
+            } else if (!originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
+                rmPeekTextArea.setText("Reference Materials not processed.");
+            }
+            if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
+                unPeekTextArea.setText(peekDetailsPerSpot(unSpots));
+            } else if (!originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
+                unPeekTextArea.setText("Unknowns not processed.");
+            }
+        }
+    }
 
-
-            ShrimpFractionExpressionInterface spot = refMatSpots.get(0);
-            StringBuilder sb = new StringBuilder();
-            sb.append(spot.getFractionID());
+    private String peekDetailsPerSummary(SpotSummaryDetails spotSummary) {
+        String[][] labels = spotSummary.getOperation().getLabelsForOutputValues();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < labels[0].length; i++) {
             sb.append("\t");
-            if ((((ExpressionTree) expTree).hasRatiosOfInterest()) || !((ExpressionTree) expTree).isSquidSwitchSCSummaryCalculation()) {
+            sb.append(String.format("%1$-" + 13 + "s", labels[0][i]));
+            sb.append(": ");
+            sb.append(spotSummary.getValues()[0][i]);
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 
-                sb.append(Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)[0][0], 12));
+    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots) {
+        StringBuilder sb = new StringBuilder();
+        for (ShrimpFractionExpressionInterface spot : spots) {
 
-                if (((ExpressionTree) expTree).hasRatiosOfInterest()) {
-                    sb.append("\t");
-                    sb.append(Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)[0][1], 12));
+            if (spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree) != null) {
+
+                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+                //sb.append("\t");
+                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree)[0][0], 12)));
+
+                if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()) {
+                    //sb.append("\t");
+                    sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree)[0][1], 12)));
                 }
 
                 sb.append("\n");
-            } else if (((ExpressionTree) expTree).isSquidSwitchSCSummaryCalculation()) {
-                try {
-                    sb.append(Utilities.roundedToSize(task.getTaskExpressionsEvaluationsPerSpotSet().get(expTree.getName()).getValues()[0][0], 12));
-                    sb.append("\n");
-                } catch (Exception e) {
-                }
             }
-
-            rmPeekTextArea.setText(sb.toString());
-
-//        } catch (SquidException squidException) {
-//        }
+        }
+        return sb.toString();
     }
 
     private void populateExpressionDetails(Expression expression) {
         if (expression != null) {
 
             currentExpression = expression;
-          //  originalExpressionTree = ((ExpressionTree) currentExpression.getExpressionTree()).copy();
+            //  originalExpressionTree = ((ExpressionTree) currentExpression.getExpressionTree()).copy();
             originalExpressionTree = currentExpression.getExpressionTree();
 
             expressionNameTextField.setText(currentExpression.getName());
@@ -255,7 +291,7 @@ public class ExpressionManagerController implements Initializable {
             refMatSwitchCheckBox.setSelected(((ExpressionTree) currentExpression.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
             unknownsSwitchCheckBox.setSelected(((ExpressionTree) currentExpression.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
 
-            parseAndAuditCurrentExcelExpression();
+            parseAndAuditCurrentExcelExpression(false);
         }
     }
 
@@ -302,21 +338,23 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void editButtonAction(ActionEvent event) {
-        expressionExcelTextArea.setEditable(true);
-        refMatSwitchCheckBox.setDisable(false);
-        unknownsSwitchCheckBox.setDisable(false);
+        toggleEditMode(true);
     }
 
     @FXML
     private void saveButtonAction(ActionEvent event) {
         if (currentExpression != null) {
-            Expression exp = parseAndAuditCurrentExcelExpression();
+            Expression exp = parseAndAuditCurrentExcelExpression(false);
             ExpressionTreeInterface expTree = exp.getExpressionTree();
 
             // until we have these in the edit box
             ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.selectedProperty().getValue());
             ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.selectedProperty().getValue());
-            ((ExpressionTree) expTree).setRatiosOfInterest(((ExpressionTree)originalExpressionTree).getRatiosOfInterest());          
+
+            // temp hack until builder does this better
+            if (((ExpressionTree) expTree).getRatiosOfInterest().isEmpty()) {
+                ((ExpressionTree) expTree).setRatiosOfInterest(((ExpressionTree) originalExpressionTree).getRatiosOfInterest());
+            }
 
             currentExpression.setExpressionTree(expTree);
             currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim().replace("\n", ""));
@@ -326,25 +364,36 @@ public class ExpressionManagerController implements Initializable {
             squidProject.getTask().setupSquidSessionSpecs();
 
             squidProject.getTask().evaluateTaskExpressions();
-            
+
             // reveal new ordering etc
             populateExpressionsListView();
             expressionsListView.refresh();
+        } else {
+            rmPeekTextArea.setText("No Expression due to parsing error.");
+            unPeekTextArea.setText("No Expression due to parsing error.");
+        }
+    }
+
+    private void toggleEditMode(boolean editMode) {
+        expressionExcelTextArea.setEditable(editMode);
+        refMatSwitchCheckBox.setDisable(!editMode);
+        unknownsSwitchCheckBox.setDisable(!editMode);
+
+        if (editMode) {
+            rmPeekTextArea.setText("No values calculated during edit of expression");
+            unPeekTextArea.setText("No values calculated during edit of expression");
         }
     }
 
     @FXML
     private void cancelButtonAction(ActionEvent event) {
+        toggleEditMode(false);
         populateExpressionDetails(currentExpression);
     }
 
     @FXML
     private void auditButtonAction(ActionEvent event) {
-//        squidProject.getTask().setChanged(true);
-//        // update expressions
-//        squidProject.getTask().setupSquidSessionSpecs();
-
-        parseAndAuditCurrentExcelExpression();
+        parseAndAuditCurrentExcelExpression(true);
     }
 
     @FXML

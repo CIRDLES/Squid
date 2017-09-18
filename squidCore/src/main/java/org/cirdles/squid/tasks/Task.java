@@ -561,21 +561,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 
-//        // setup spots
-//        shrimpFractions.forEach((spot) -> {
-//            List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated = new ArrayList<>();
-//            spot.setTaskExpressionsForScansEvaluated(taskExpressionsForScansEvaluated);
-//        });
-//        // subdivide spots
-//        List<ShrimpFractionExpressionInterface> referenceMaterialSpots = new ArrayList<>();
-//        List<ShrimpFractionExpressionInterface> unknownSpots = new ArrayList<>();
-//        shrimpFractions.forEach((spot) -> {
-//            if (spot.isReferenceMaterial()) {
-//                referenceMaterialSpots.add(spot);
-//            } else {
-//                unknownSpots.add(spot);
-//            }
-//        });
         for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
             if (expression.amHealthy()) {
                 // determine subset of spots to be evaluated - default = all
@@ -610,7 +595,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // determine type of expression
         if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
             double[][] value = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
-            taskExpressionsEvaluationsPerSpotSet.put(expression.getName(), new SpotSummaryDetails(value, spotsForExpression));
+            taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
+                    new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), value, spotsForExpression));
         } else {
             // perform expression on each spot
             for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
@@ -639,7 +625,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             try {
                 double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
                 spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
-            } catch (Exception   squidException) {
+            } catch (Exception squidException) {
                 System.out.println(squidException.getMessage());
             }
         }

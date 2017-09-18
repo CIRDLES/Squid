@@ -124,6 +124,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return double elapsed time in hours (hh.###) since timestamp of first
      * reference material
      */
+    @Override
     public double getHours() {
         long deltaTime = dateTimeMilliseconds - ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds;
 
