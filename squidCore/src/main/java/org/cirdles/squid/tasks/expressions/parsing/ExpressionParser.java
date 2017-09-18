@@ -40,6 +40,8 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
 /**
  *
@@ -59,6 +61,7 @@ public class ExpressionParser {
 
     /**
      *
+     * @param expression
      * @param expressionString
      * @return
      */
@@ -110,9 +113,12 @@ public class ExpressionParser {
 
             returnExpressionTree = buildTree(parsedRPN);
             if (returnExpressionTree != null) {
-                try {
-                    returnExpressionTree.setName(expression.getName());
-                } catch (Exception e) {
+                // if single objects are the actual expression, don't change
+                if (!(returnExpressionTree instanceof ConstantNode) && !(returnExpressionTree instanceof SpotNode) && !(returnExpressionTree instanceof ShrimpSpeciesNode)) {
+                    try {
+                        returnExpressionTree.setName(expression.getName());
+                    } catch (Exception e) {
+                    }
                 }
             }
         }
@@ -189,18 +195,6 @@ public class ExpressionParser {
     private ExpressionTreeInterface walkTree(String token, ExpressionTreeInterface myExp) {
         TokenTypes tokenType = TokenTypes.getType(token);
         ExpressionTreeInterface exp = myExp;
-//
-//        if (exp != null) {
-//            if (exp.isTypeFunctionOrOperation()) {
-//                while (exp.argumentCount() == ((ExpressionTreeBuilderInterface) exp).getCountOfChildren()
-//                        && !exp.isRootExpressionTree()) {
-//                    exp = exp.getParentET();
-//                    if (exp == null) {
-//                        break;
-//                    }
-//                }
-//            }
-//        }
 
         ExpressionTreeInterface retExpTree = null;
 
@@ -217,18 +211,28 @@ public class ExpressionParser {
                 retExpTree = new ExpressionTreeParsedFromExcelString(function);
                 break;
 
-            case CONSTANT:
+            case NUMBER:
                 retExpTree = new ConstantNode(token, Double.parseDouble(token));
                 break;
 
-            case VARIABLE:
-                retExpTree = new ConstantNode(token, 0.0);
+            case NAMED_CONSTANT:
+                retExpTree = namedExpressionsMap.get(token);
+                if (retExpTree == null) {
+                    retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
+                }
                 break;
 
             case NAMED_EXPRESSION:
-                retExpTree = namedExpressionsMap.get(token.replace("[\"", "").replace("\"]", ""));
-                if (retExpTree == null) {
+                ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(token.replace("[\"", "").replace("\"]", ""));
+                if (retExpTreeKnown == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
+                } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
+                        && ((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode) {
+                    retExpTree = retExpTreeKnown;
+                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)||(retExpTreeKnown instanceof SpotNode)) {
+                    retExpTree = retExpTreeKnown;
+                } else {
+                    retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());
                 }
                 break;
         }

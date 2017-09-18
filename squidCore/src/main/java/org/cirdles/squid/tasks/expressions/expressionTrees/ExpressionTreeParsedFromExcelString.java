@@ -27,13 +27,15 @@ import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
  */
 public class ExpressionTreeParsedFromExcelString extends ExpressionTree implements BuiltInExpressionInterface {
 
+    private static final long serialVersionUID = -1526502328130247004L;
+
     private List<String> parsedRPNreversedExcelString;
 
-    public ExpressionTreeParsedFromExcelString (String name){
+    public ExpressionTreeParsedFromExcelString(String name) {
         super(name);
         parsedRPNreversedExcelString = new ArrayList<>();
     }
-    
+
     /**
      *
      * @param operation
@@ -45,29 +47,27 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
 
     @Override
     public void buildExpression(TaskInterface task) {
-        
+
         ExpressionParser parser = new ExpressionParser(task.getNamedExpressionsMap());
         ExpressionTreeInterface parsedExp = parser.buildTree(parsedRPNreversedExcelString);
-        
+
         // copy to this children, operation, and calculate ratiosOfInterest
-        this.childrenET = ((ExpressionTree)parsedExp).getChildrenET();
-        this.operation = ((ExpressionTree)parsedExp).getOperation();
+        this.childrenET = ((ExpressionTree) parsedExp).getChildrenET();
+        this.operation = ((ExpressionTree) parsedExp).getOperation();
 
         determineRatiosOfInterest();
-        
+
         //other switches set outside of this operation
-        
         setRootExpressionTree(true);
     }
-    
-    private void determineRatiosOfInterest(){
-        // for now assume they are in the top-level expression as these are signals for NU switch = special math
-        if (getCountOfChildren() == 1){
+
+    private void determineRatiosOfInterest() {
+        if (getCountOfChildren() == 1) {
             ExpressionTreeInterface onlyChild = childrenET.get(0);
-            if (onlyChild.isTypeFunctionOrOperation()){
-                ratiosOfInterest = ((ExpressionTree)onlyChild).getRatiosOfInterest();
+            if (onlyChild.isTypeFunctionOrOperation()) {
+                ratiosOfInterest = ((ExpressionTree) onlyChild).getRatiosOfInterest();
             }
-        }       
+        }
     }
 
     /**

@@ -16,16 +16,17 @@
 package org.cirdles.squid.tasks.expressions.isotopes;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
@@ -33,15 +34,13 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+public class ShrimpSpeciesNode extends ExpressionTree {
 
     private static final long serialVersionUID = 3592579554999155473L;
 
     private String isotopeName;
     private SquidSpeciesModel squidSpeciesModel;
     private String methodNameForShrimpFraction;
-    // used for parsing expressions
-    private ExpressionTreeInterface parentET;
 
     /**
      *
@@ -75,7 +74,7 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
         }
         return retVal;
     }
-    
+
     public static ShrimpSpeciesNode buildEmptyShrimpSpeciesNode() {
         return new ShrimpSpeciesNode();
     }
@@ -89,9 +88,17 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
             } else {
                 retVal = ((squidSpeciesModel instanceof SquidSpeciesModel) && methodNameForShrimpFraction.length() > 0);
             }
+        } else {
+            // Node is top of expressiontree
+            retVal = (squidSpeciesModel instanceof SquidSpeciesModel);
         }
 
         return retVal;
+    }
+
+    @Override
+    public boolean isValid() {
+        return (squidSpeciesModel != null);
     }
 
     @Override
@@ -113,47 +120,66 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
     }
 
     /**
-     * Assumes a one-element list of shrimpFractions
+     * Assumes a list of shrimpFractions - can be a singleton if needed
      *
      * @param shrimpFractions the value of shrimpFraction
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
-        double retVal = 0.0;
-        Integer index = squidSpeciesModel.getMassStationIndex();
-        if (index != -1) {
-            double[] isotopeValues
-                    = methodFactory(shrimpFractions.get(0), methodNameForShrimpFraction);
-            if (index < isotopeValues.length) {
-                retVal = isotopeValues[index];
-            }
-        }
-
-        return new Object[][]{{retVal}};
-    }
-
-    /**
-     *
-     * @param shrimpFraction
-     * @param methodNameForShrimpFraction
-     * @return
-     */
-    public static double[] methodFactory(ShrimpFractionExpressionInterface shrimpFraction, String methodNameForShrimpFraction) {
-        double[] retVal = new double[0];
-        Method method;
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
+        Method method = null;
         if (methodNameForShrimpFraction != null) {
             try {
                 method = ShrimpFractionExpressionInterface.class.getMethod(//
                         methodNameForShrimpFraction,
                         new Class[0]);
-                retVal = (double[]) method.invoke(shrimpFraction, new Object[0]);
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-                // do nothing for now
+            } catch (NoSuchMethodException | SecurityException noSuchMethodException) {
             }
         }
+
+        Object[][] retVal = new Object[shrimpFractions.size()][];
+        if (method != null) {
+            Integer index = squidSpeciesModel.getMassStationIndex();
+            if (index != -1) {
+                for (int i = 0; i < shrimpFractions.size(); i++) {
+                    double retVala = 0.0;
+                    try {
+                        double[] isotopeValues
+                                = (double[]) method.invoke(shrimpFractions.get(i), new Object[0]);
+                        if (index < isotopeValues.length) {
+                            retVala = isotopeValues[index];
+                        }
+                        retVal[i] = convertArrayToObjects(new double[]{retVala});
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SquidException illegalAccessException) {
+                    }
+                }
+            }
+        }
+
         return retVal;
     }
+
+//    /**
+//     *
+//     * @param shrimpFraction
+//     * @param methodNameForShrimpFraction
+//     * @return
+//     */
+//    public static double[] methodFactory(ShrimpFractionExpressionInterface shrimpFraction, String methodNameForShrimpFraction) {
+//        double[] retVal = new double[0];
+//        Method method;
+//        if (methodNameForShrimpFraction != null) {
+//            try {
+//                method = ShrimpFractionExpressionInterface.class.getMethod(//
+//                        methodNameForShrimpFraction,
+//                        new Class[0]);
+//                retVal = (double[]) method.invoke(shrimpFraction, new Object[0]);
+//            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
+//                // do nothing for now
+//            }
+//        }
+//        return retVal;
+//    }
 
     /**
      *
@@ -189,7 +215,7 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
 
     @Override
     public void setName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // do nothing
     }
 
     /**
@@ -286,5 +312,56 @@ public class ShrimpSpeciesNode implements ExpressionTreeInterface, Serializable,
     // for populating iists
     public String toString() {
         return isotopeName;
+    }
+
+    /**
+     * @return the squidSwitchSTReferenceMaterialCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSTReferenceMaterialCalculation() {
+        return squidSwitchSTReferenceMaterialCalculation;
+    }
+
+    /**
+     * @param squidSwitchSTReferenceMaterialCalculation the
+     * squidSwitchSTReferenceMaterialCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
+        this.squidSwitchSTReferenceMaterialCalculation = squidSwitchSTReferenceMaterialCalculation;
+    }
+
+    /**
+     * @return the squidSwitchSAUnknownCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSAUnknownCalculation() {
+        return squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @param squidSwitchSAUnknownCalculation the
+     * squidSwitchSAUnknownCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
+        this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @return the squidSwitchSCSummaryCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSCSummaryCalculation() {
+        return squidSwitchSCSummaryCalculation;
+    }
+
+    /**
+     * @param squidSwitchSCSummaryCalculation the
+     * squidSwitchSCSummaryCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation) {
+        this.squidSwitchSCSummaryCalculation = squidSwitchSCSummaryCalculation;
     }
 }

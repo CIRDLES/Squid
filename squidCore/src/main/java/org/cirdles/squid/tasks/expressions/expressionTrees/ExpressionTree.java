@@ -33,6 +33,7 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -160,6 +161,20 @@ public class ExpressionTree
         this.rootExpressionTree = false;
     }
 
+    public ExpressionTree copy() {
+        ExpressionTree target = new ExpressionTree();
+        target.setName(name);
+        target.setChildrenET(childrenET);
+        target.setOperation(operation);
+        target.setSquidSwitchSCSummaryCalculation(squidSwitchSCSummaryCalculation);
+        target.setSquidSwitchSTReferenceMaterialCalculation(squidSwitchSTReferenceMaterialCalculation);
+        target.setSquidSwitchSAUnknownCalculation(squidSwitchSAUnknownCalculation);
+        target.setSquidSpecialUPbThExpression(squidSpecialUPbThExpression);
+        target.setRootExpressionTree(rootExpressionTree);
+
+        return target;
+    }
+
     private void populateChildrenET(ExpressionTreeInterface leftET, ExpressionTreeInterface rightET) {
         addChild(leftET);
         addChild(rightET);
@@ -228,6 +243,30 @@ public class ExpressionTree
                 }
             }
             if (retVal == 0) {
+                // then compare is for ref materials only
+                if (isSquidSwitchSTReferenceMaterialCalculation() && !exp.isSquidSwitchSTReferenceMaterialCalculation()) {
+                    retVal = -1;
+                } else if (!isSquidSwitchSTReferenceMaterialCalculation() && exp.isSquidSwitchSTReferenceMaterialCalculation()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
+                // then compare is for unknowns materials only
+                if (isSquidSwitchSAUnknownCalculation() && !exp.isSquidSwitchSAUnknownCalculation()) {
+                    retVal = -1;
+                } else if (!isSquidSwitchSAUnknownCalculation() && exp.isSquidSwitchSAUnknownCalculation()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
+                // then compare is summary
+                if (isSquidSwitchSCSummaryCalculation()&& !exp.isSquidSwitchSCSummaryCalculation()) {
+                    retVal = -1;
+                } else if (!isSquidSwitchSCSummaryCalculation() && exp.isSquidSwitchSCSummaryCalculation()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
                 // then compare on names so we have a complete ordering
                 retVal = name.compareTo(exp.getName());
             }
@@ -251,6 +290,15 @@ public class ExpressionTree
                 retVal = (isSquidSpecialUPbThExpression() == ((ExpressionTree) obj).isSquidSpecialUPbThExpression());
             }
             if (retVal) {
+                retVal = (isSquidSwitchSTReferenceMaterialCalculation() == ((ExpressionTree) obj).isSquidSwitchSTReferenceMaterialCalculation());
+            }
+            if (retVal) {
+                retVal = (isSquidSwitchSAUnknownCalculation() == ((ExpressionTree) obj).isSquidSwitchSAUnknownCalculation());
+            }
+            if (retVal) {
+                retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
+            }
+            if (retVal) {
                 retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
             }
         }
@@ -268,34 +316,42 @@ public class ExpressionTree
     }
 
     @Override
-    public String auditOperationArgumentCount() {        
+    public String auditOperationArgumentCount() {
         String audit = "";
-        if (operation == null){
-            audit = "   " + name + " is unhealthy expression";
+        if (operation == null) {
+            if (!(this instanceof ConstantNode) && !(this instanceof SpotNode) && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)) {
+                audit = "    " + this.getName() + " is unhealthy expression";
+            } else {//if (this instanceof ConstantNode) {
+                if (this.amHealthy()) {
+                    audit = "    " + this.getName() + " is healthy " + this.getClass().getSimpleName();
+                } else if (this.getParentET() == null) {// only if ConstantNode is top of tree vs within an already autided expressiontree
+                    audit = "    " + this.getName(); // = Missing Expression becasue if unhealthy, it was forced to be a constantNode
+                }
+            }
         } else {
-        
-        int requiredChildren = argumentCount();
-        int suppliedChildren = getCountOfChildren();
 
-        audit = "Op " + operation.getName() + " requires/provides: " + requiredChildren + " / " + suppliedChildren + " arguments.";
+            int requiredChildren = argumentCount();
+            int suppliedChildren = getCountOfChildren();
 
-        for (ExpressionTreeInterface child : getChildrenET()) {
-            if (child instanceof ConstantNode) {
-                if (((ConstantNode) child).isMissingExpression()) {
-                    audit += "\n    Expression '" + (String) ((ConstantNode) child).getValue() + "' is missing.";
+            audit = "Op " + operation.getName() + " requires/provides: " + requiredChildren + " / " + suppliedChildren + " arguments.";
+
+            for (ExpressionTreeInterface child : getChildrenET()) {
+                if (child instanceof ConstantNode) {
+                    if (((ConstantNode) child).isMissingExpression()) {
+                        audit += "\n    Expression '" + (String) ((ConstantNode) child).getValue() + "' is missing.";
+                    }
+                }
+
+                // backwards compatible with use of ShrimpSpeciesNodes directly
+                if (child instanceof ShrimpSpeciesNode) {
+                    if (!(((ExpressionTree) child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
+                            && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
+                        audit += "\n    Expression '" + (String) ((ShrimpSpeciesNode) child).getName() + "' is not a valid argument.";
+                    }
                 }
             }
 
-            // backwards compatible with use of ShrimpSpeciesNodes directly
-            if (child instanceof ShrimpSpeciesNode) {
-                if (!(((ExpressionTree) child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
-                        && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
-                    audit += "\n    Expression '" + (String) ((ShrimpSpeciesNode) child).getName() + "' is not a valid argument.";
-                }
-            }
-        }
-
-        audit += "\n    returns " + getOperation().printOutputValues();
+            audit += "\n    returns " + operation.printOutputValues();
         }
 
         return audit;
@@ -583,6 +639,7 @@ public class ExpressionTree
     /**
      * @return the squidSwitchSCSummaryCalculation
      */
+    @Override
     public boolean isSquidSwitchSCSummaryCalculation() {
         return squidSwitchSCSummaryCalculation;
     }
@@ -591,6 +648,7 @@ public class ExpressionTree
      * @param squidSwitchSCSummaryCalculation the
      * squidSwitchSCSummaryCalculation to set
      */
+    @Override
     public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation) {
         this.squidSwitchSCSummaryCalculation = squidSwitchSCSummaryCalculation;
     }
@@ -598,6 +656,7 @@ public class ExpressionTree
     /**
      * @return the squidSwitchSTReferenceMaterialCalculation
      */
+    @Override
     public boolean isSquidSwitchSTReferenceMaterialCalculation() {
         return squidSwitchSTReferenceMaterialCalculation;
     }
@@ -606,6 +665,7 @@ public class ExpressionTree
      * @param squidSwitchSTReferenceMaterialCalculation the
      * squidSwitchSTReferenceMaterialCalculation to set
      */
+    @Override
     public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
         this.squidSwitchSTReferenceMaterialCalculation = squidSwitchSTReferenceMaterialCalculation;
     }
@@ -613,6 +673,7 @@ public class ExpressionTree
     /**
      * @return the squidSwitchSAUnknownCalculation
      */
+    @Override
     public boolean isSquidSwitchSAUnknownCalculation() {
         return squidSwitchSAUnknownCalculation;
     }
@@ -621,6 +682,7 @@ public class ExpressionTree
      * @param squidSwitchSAUnknownCalculation the
      * squidSwitchSAUnknownCalculation to set
      */
+    @Override
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
         this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
     }

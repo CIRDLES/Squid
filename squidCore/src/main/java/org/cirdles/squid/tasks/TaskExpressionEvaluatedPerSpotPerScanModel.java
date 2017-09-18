@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks;
 
+import java.io.Serializable;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.ludwig.squid25.Utilities;
 
@@ -22,7 +23,9 @@ import org.cirdles.ludwig.squid25.Utilities;
  *
  * @author James F. Bowring
  */
-public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressionEvaluatedPerSpotPerScanModelInterface {
+public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressionEvaluatedPerSpotPerScanModelInterface, Serializable {
+
+    private static final long serialVersionUID = 2530366687586794333L;
 
     private ExpressionTreeInterface expression;
     private double[] ratEqVal;

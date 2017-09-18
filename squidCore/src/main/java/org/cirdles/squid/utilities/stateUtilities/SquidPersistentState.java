@@ -192,10 +192,14 @@ public class SquidPersistentState implements Serializable {
 
         // remove missing fileNames
         for (String projectFileName : missingFileNames) {
-            MRUProjectList.remove(projectFileName);
+            removeProjectFileNameFromMRU(projectFileName);
         }
         
         serializeSelf();
+    }
+    
+    public void removeProjectFileNameFromMRU(String projectFileName){
+        MRUProjectList.remove(projectFileName);
     }
 
     /**

@@ -77,6 +77,48 @@ public class TaskSquid25 implements Serializable {
                     taskSquid25.ratioNames.add(ratioStrings[i + 2]);
                 }
 
+                taskSquid25.task25Equations = new ArrayList<>();
+
+                String[] primaryUThPbEqn = lines[firstRow + 22].split("\t");
+                if (primaryUThPbEqn.length > 1) {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]),
+                            prepareSquid25ExcelEquationNameForSquid3(primaryUThPbEqn[0]),
+                            true,
+                            true,
+                            false));
+                }
+
+                String[] secondaryUThPbEqn = lines[firstRow + 23].split("\t");
+                if (secondaryUThPbEqn.length > 1) {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]),
+                            prepareSquid25ExcelEquationNameForSquid3(secondaryUThPbEqn[0]),
+                            true,
+                            true,
+                            false));
+                }
+
+                String[] ThUEqn = lines[firstRow + 24].split("\t");
+                if (ThUEqn.length > 1) {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
+                            prepareSquid25ExcelEquationNameForSquid3(ThUEqn[0]),
+                            true,
+                            true,
+                            false));
+                }
+
+                String[] ppmParentEqn = lines[firstRow + 25].split("\t");
+                if (ppmParentEqn.length > 1) {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
+                            prepareSquid25ExcelEquationNameForSquid3(ppmParentEqn[0]),
+                            true,
+                            true,
+                            false));
+                }
+
                 String[] equations = lines[firstRow + 26].split("\t");
                 int countOfEquations = Integer.valueOf(equations[1]);
 
@@ -88,7 +130,6 @@ public class TaskSquid25 implements Serializable {
 
                 String[] switchSC = lines[firstRow + 30].split("\t");
 
-                taskSquid25.task25Equations = new ArrayList<>();
                 for (int i = 0; i < countOfEquations; i++) {
                     if (prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]).length() > 0) {
                         taskSquid25.task25Equations.add(new TaskSquid25Equation(
@@ -112,21 +153,31 @@ public class TaskSquid25 implements Serializable {
 
         retVal = excelString.replace("|", "");
         retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
+        retVal = retVal.replace("[\"Total 206cts/sec\"]", "totalCps([\"206\"])");
         retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
-        retVal = retVal.replace("[\"Hours\"]", "lookup([\"Hours\"])");
         retVal = retVal.replace("(Ma)", "");
 
         // regex for robreg with four arguments = robreg.*\)
-        Pattern robregPattern = Pattern.compile("^(.*)robreg.*\\)", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = robregPattern.matcher(retVal);
+        Pattern squid25FunctionPattern = Pattern.compile("^(.*)[r,R]obreg.*\\)", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = squid25FunctionPattern.matcher(retVal);
         if (matcher.matches()) {
             String[] robregParts = matcher.group().split(",");
             retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + (robregParts.length > 2 ? ")" : ""));
         }
 
+        // regex for robreg with four arguments = agePb76.*\)
+        squid25FunctionPattern = Pattern.compile("^(.*)[a,A]gePb76.*\\)", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.matches()) {
+            String[] agePb76Parts = matcher.group().split(",");
+            if (agePb76Parts.length > 1) {
+                retVal = retVal.replace(matcher.group(), agePb76Parts[0] + "," + agePb76Parts[1] + (agePb76Parts.length > 2 ? ")" : ""));
+            }
+        }
+
         if (excelString.startsWith("[")) {
             // do not accept field names as being equations
-            retVal = "";
+            //retVal = "";
         } else if (!excelString.contains("(") && !excelString.contains("[")) {
             // do not accept constants as being equations - this reults from the conflation in Squid2.5 between equations and outputs
             retVal = "";

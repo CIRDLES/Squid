@@ -23,7 +23,6 @@ import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMin
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnPbR_U;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204BiWt;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_sec;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_secALT;
 
 /**
@@ -31,6 +30,8 @@ import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Ne
  * @author James F. Bowring
  */
 public class Squid3ExampleTask1 extends Task {
+
+    private static final long serialVersionUID = -914383068154435665L;
 
     /**
      *
@@ -57,7 +58,6 @@ public class Squid3ExampleTask1 extends Task {
         ratioNames.add("206/254");
         ratioNames.add("238/206");
 
-        
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString));
         taskExpressionsOrdered.add(
@@ -76,7 +76,7 @@ public class Squid3ExampleTask1 extends Task {
 //                new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_Net204cts_secALT(), CustomExpression_Net204cts_secALT.excelExpressionString));
-        
+
 //
 //        taskExpressionTreesOrdered.add(CustomExpression_Expo.EXPRESSION);
 //

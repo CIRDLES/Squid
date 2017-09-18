@@ -32,7 +32,9 @@ import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.shrimp.MassStationDetail;
+import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
@@ -53,7 +55,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
-import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import static org.cirdles.squid.tasks.expressions.spots.SpotNode.buildSpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -67,6 +69,9 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 public class Task implements TaskInterface, Serializable, XMLSerializerInterface {
 
     private static final long serialVersionUID = 6522574920235718028L;
+
+    private static final PrawnFileRunFractionParser PRAWN_FILE_RUN_FRACTION_PARSER
+            = new PrawnFileRunFractionParser();
 
     /**
      *
@@ -93,6 +98,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<Expression> taskExpressionsOrdered;
     protected List<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
+
+    private List<ShrimpFractionExpressionInterface> shrimpFractions;
+    private List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
+    private List<ShrimpFractionExpressionInterface> unknownSpots;
 
     /**
      *
@@ -135,6 +144,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.taskExpressionsRemoved = new ArrayList<>();
         this.namedExpressionsMap = new LinkedHashMap<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
+
+        this.shrimpFractions = new ArrayList<>();
+        this.referenceMaterialSpots = new ArrayList<>();
+        this.unknownSpots = new ArrayList<>();
 
         this.prawnFile = prawnFile;
 
@@ -226,6 +239,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
 
+            try {
+//                TODO - move this
+                shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+            } catch (Exception e) {
+            }
             changed = false;
         }
     }
@@ -368,9 +386,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void assembleNamedExpressionsMap() {
         namedExpressionsMap.clear();
 
-        // TODO: refactor SpotNode treatment after the extent of use is known
-        SpotNode spotNode = SpotNode.buildSpotNode("getHours");
-        namedExpressionsMap.put(spotNode.getName(), spotNode);
+        //TODO: Make a constants factory
+        ExpressionTreeInterface testConstant = new ConstantNode("TEST_CONSTANT", 999.999);
+        namedExpressionsMap.put(testConstant.getName(), testConstant);
+
+        // TODO: make a SpotNode factory
+        ExpressionTreeInterface expHours = buildSpotNode("getHours");
+        namedExpressionsMap.put(expHours.getName(), expHours);
 
         for (SquidSpeciesModel spm : squidSpeciesModelList) {
             ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);
@@ -484,15 +506,32 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     }
 
-    /**
-     *
-     * @param shrimpFractions
-     */
     @Override
-    public void evaluateTaskExpressions(List<ShrimpFractionExpressionInterface> shrimpFractions) {
+    public List<ShrimpFractionExpressionInterface> processRunFractions(PrawnFile prawnFile, SquidSessionModel squidSessionSpecs) {
+        shrimpFractions = new ArrayList<>();
+        for (int f = 0; f < prawnFile.getRun().size(); f++) {
+            PrawnFile.Run runFraction = prawnFile.getRun().get(f);
 
-        taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
+            ShrimpFraction shrimpFraction
+                    = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
+            if (shrimpFraction != null) {
+                shrimpFraction.setSpotNumber(f + 1);
+                String nameOfMount = prawnFile.getMount();
+                if (nameOfMount == null) {
+                    nameOfMount = "No-Mount-Name";
+                }
+                shrimpFraction.setNameOfMount(nameOfMount);
 
+                // preparing for field "Hours" specified as time in hours elapsed since first ref material analysis start = hh.###
+                if ((ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds == 0l)
+                        && shrimpFraction.isReferenceMaterial()) {
+                    ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds = shrimpFraction.getDateTimeMilliseconds();
+                }
+                shrimpFractions.add(shrimpFraction);
+            }
+        }
+
+        // prepare for tasks
         // setup spots
         shrimpFractions.forEach((spot) -> {
             List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated = new ArrayList<>();
@@ -500,8 +539,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         });
 
         // subdivide spots
-        List<ShrimpFractionExpressionInterface> referenceMaterialSpots = new ArrayList<>();
-        List<ShrimpFractionExpressionInterface> unknownSpots = new ArrayList<>();
+        referenceMaterialSpots = new ArrayList<>();
+        unknownSpots = new ArrayList<>();
         shrimpFractions.forEach((spot) -> {
             if (spot.isReferenceMaterial()) {
                 referenceMaterialSpots.add(spot);
@@ -509,6 +548,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 unknownSpots.add(spot);
             }
         });
+
+        return shrimpFractions;
+    }
+
+    /**
+     *
+     * @param shrimpFractions
+     */
+    @Override
+    public void evaluateTaskExpressions() {
+
+        taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 
         for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
             if (expression.amHealthy()) {
@@ -521,24 +572,31 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     spotsForExpression = referenceMaterialSpots;
                 }
 
+                // now evaluate expression
                 try {
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException squidException) {
-                    // TODO - log and report failure of expression
-//                JOptionPane.showMessageDialog(null,
-//                        "Expression failed: " + expression.getName() + " because: " + squidException.getMessage());
+
                 }
             }
         }
     }
 
-    private void evaluateExpressionForSpotSet(
+    /**
+     *
+     * @param expression
+     * @param spotsForExpression
+     * @throws SquidException
+     */
+    @Override
+    public void evaluateExpressionForSpotSet(
             ExpressionTreeInterface expression,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // determine type of expression
         if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
             double[][] value = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
-            taskExpressionsEvaluationsPerSpotSet.put(expression.getName(), new SpotSummaryDetails(value, spotsForExpression));
+            taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
+                    new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), value, spotsForExpression));
         } else {
             // perform expression on each spot
             for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
@@ -560,12 +618,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             // save spot-specific results
             double[][] value = new double[][]{{taskExpressionEvaluatedPerSpotPerScanModel.getRatioVal(),
                 taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
-            spot.getTaskExpressionsEvaluationsPerSpot().put(expression.getName(), value);
+            spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
         } else {
             List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
             singleSpot.add(spot);
-            double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
-            spot.getTaskExpressionsEvaluationsPerSpot().put(expression.getName(), value);
+            try {
+                double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
+                spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
+            } catch (Exception squidException) {
+                System.out.println(squidException.getMessage());
+            }
         }
     }
 
@@ -1005,32 +1067,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return tableOfSelectedRatiosByMassStationIndex;
     }
 
-    @Override
-    public void resetTableOfSelectedRatiosByMassStationIndex() {
+    private void resetTableOfSelectedRatiosByMassStationIndex() {
         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
-    }
-
-    @Override
-    public boolean isEmptyTableOfSelectedRatiosByMassStationIndex() {
-        boolean retVal = true;
-
-        if (tableOfSelectedRatiosByMassStationIndex != null) {
-            for (int row = 0; row < tableOfSelectedRatiosByMassStationIndex.length; row++) {
-                for (int col = 0; col < tableOfSelectedRatiosByMassStationIndex[0].length; col++) {
-                    retVal &= !tableOfSelectedRatiosByMassStationIndex[row][col];
-                }
-            }
-        }
-
-        return retVal;
-    }
-
-    /**
-     * @return the mapOfIndexToMassStationDetails
-     */
-    @Override
-    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
-        return mapOfIndexToMassStationDetails;
     }
 
     /**
@@ -1045,8 +1083,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return listOfMassStationDetails;
     }
 
-    @Override
-    public void populateTableOfSelectedRatiosFromRatiosList() {
+    private void populateTableOfSelectedRatiosFromRatiosList() {
         resetTableOfSelectedRatiosByMassStationIndex();
 
         for (int i = 0; i < ratioNames.size(); i++) {
@@ -1080,15 +1117,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the prawnFile
-     */
-    public PrawnFile getPrawnFile() {
-        return prawnFile;
-    }
-
-    /**
      * @param prawnFile the prawnFile to set
      */
+    @Override
     public void setPrawnFile(PrawnFile prawnFile) {
         this.prawnFile = prawnFile;
     }
@@ -1104,6 +1135,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the taskExpressionsOrdered
      */
+    @Override
     public List<Expression> getTaskExpressionsOrdered() {
         return taskExpressionsOrdered;
     }
@@ -1111,7 +1143,32 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param changed the changed to set
      */
+    @Override
     public void setChanged(boolean changed) {
         this.changed = changed;
+    }
+
+    /**
+     * @return the shrimpFractions
+     */
+    @Override
+    public List<ShrimpFractionExpressionInterface> getShrimpFractions() {
+        return shrimpFractions;
+    }
+
+    /**
+     * @return the referenceMaterialSpots
+     */
+    @Override
+    public List<ShrimpFractionExpressionInterface> getReferenceMaterialSpots() {
+        return referenceMaterialSpots;
+    }
+
+    /**
+     * @return the unknownSpots
+     */
+    @Override
+    public List<ShrimpFractionExpressionInterface> getUnknownSpots() {
+        return unknownSpots;
     }
 }

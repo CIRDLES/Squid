@@ -28,6 +28,8 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
  */
 public class ShrimpSpeciesNodeFunction extends Function {
 
+    private static final long serialVersionUID = -7371492154923797766L;
+
     private String methodNameForShrimpFraction;
     private ShrimpSpeciesNode shrimpSpeciesNode;
 
@@ -55,30 +57,28 @@ public class ShrimpSpeciesNodeFunction extends Function {
         //TODO refactor duplicate code
         shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
         shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
-        
+
         Object[][] results = shrimpSpeciesNode.eval(shrimpFractions, task);
         // restore the node to anonymous
         shrimpSpeciesNode.setMethodNameForShrimpFraction("");
         return results;
     }
-    
-    
 
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
         shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
-        
-        String retVal 
+
+        String retVal
                 = "<mrow>"
                 + "<mi>" + name + "</mi>"
                 + "<mfenced>"
                 + shrimpSpeciesNode.toStringMathML()
                 + "</mfenced></mrow>\n";
 
-         // restore the node to anonymous
+        // restore the node to anonymous
         shrimpSpeciesNode.setMethodNameForShrimpFraction("");
-        
+
         return retVal;
     }
 

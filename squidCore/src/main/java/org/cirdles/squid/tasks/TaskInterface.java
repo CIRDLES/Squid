@@ -18,6 +18,7 @@ package org.cirdles.squid.tasks;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -52,9 +53,7 @@ public interface TaskInterface {
      *
      * @param shrimpFractions
      */
-    public void evaluateTaskExpressions(List<ShrimpFractionExpressionInterface> shrimpFractions);
-
-    public void populateTableOfSelectedRatiosFromRatiosList();
+    public void evaluateTaskExpressions();
 
     /**
      * @return the authorName
@@ -77,11 +76,6 @@ public interface TaskInterface {
     public String getLabName();
 
     /**
-     * @return the mapOfIndexToMassStationDetails
-     */
-    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails();
-
-    /**
      * @return the name
      */
     public String getName();
@@ -97,15 +91,10 @@ public interface TaskInterface {
     public List<String> getRatioNames();
 
     /**
-     * @return the prawnFile
-     */
-    public PrawnFile getPrawnFile();
-
-    /**
      * @param prawnFile the prawnFile to set
      */
     public void setPrawnFile(PrawnFile prawnFile);
-    
+
     public SquidSpeciesModel lookUpSpeciesByName(String isotopeName);
 
     /**
@@ -138,16 +127,12 @@ public interface TaskInterface {
      */
     String getType();
 
-    boolean isEmptyTableOfSelectedRatiosByMassStationIndex();
-
     /**
      * @return the mapOfIndexToMassStationDetails
      */
     List<MassStationDetail> makeListOfMassStationDetails();
 
     String printSummaryData();
-
-    void resetTableOfSelectedRatiosByMassStationIndex();
 
     public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
@@ -196,9 +181,9 @@ public interface TaskInterface {
      * @param taskExpressionsOrdered the taskExpressionsOrdered to set
      */
     public void setTaskExpressionTreesOrdered(List<ExpressionTree> taskExpressionsOrdered);
-    
+
     public void removeExpression(Expression expression);
-    
+
     public void restoreRemovedExpressions();
 
     /**
@@ -219,14 +204,35 @@ public interface TaskInterface {
      * @return the squidSessionModel
      */
     public SquidSessionModel getSquidSessionModel();
-    
-     /**
+
+    /**
      * @return the taskExpressionsOrdered
      */
     public List<Expression> getTaskExpressionsOrdered();
-    
+
     /**
      * @param changed the changed to set
      */
     public void setChanged(boolean changed);
+
+    /**
+     * @return the shrimpFractions
+     */
+    public List<ShrimpFractionExpressionInterface> getShrimpFractions();
+
+    public List<ShrimpFractionExpressionInterface> processRunFractions(PrawnFile prawnFile, SquidSessionModel squidSessionSpecs);
+
+    /**
+     * @return the referenceMaterialSpots
+     */
+    public List<ShrimpFractionExpressionInterface> getReferenceMaterialSpots();
+
+    /**
+     * @return the unknownSpots
+     */
+    public List<ShrimpFractionExpressionInterface> getUnknownSpots();
+
+    public void evaluateExpressionForSpotSet(
+            ExpressionTreeInterface expression,
+            List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException;
 }

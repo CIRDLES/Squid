@@ -15,22 +15,31 @@
  */
 package org.cirdles.squid.tasks.expressions.variables;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring
  */
 public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {//implements ExpressionTreeInterface, XMLSerializerInterface {
-
+    //    private static final long serialVersionUID = 6522574920235718028L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(VariableNodeForIsotopicRatios.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of VariableNodeForIsotopicRatios " + theSUID);
+    }
     private static String lookupMethodNameForShrimpFraction = "getIsotopicRatioValuesByStringName";
 
     /**

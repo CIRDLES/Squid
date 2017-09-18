@@ -16,7 +16,6 @@
 package org.cirdles.squid.tasks.expressions.variables;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.exceptions.SquidException;
@@ -24,17 +23,17 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 
 /**
  *
  * @author James F. Bowring
  */
-public class VariableNodeForSummary implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+public class VariableNodeForSummary extends ExpressionTree {//implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
 
-        private static final long serialVersionUID = -868256637199178058L;
+    private static final long serialVersionUID = -868256637199178058L;
 //    private void readObject(
 //            ObjectInputStream stream)
 //            throws IOException, ClassNotFoundException {
@@ -43,8 +42,22 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, Serializ
 //        long theSUID = myObject.getSerialVersionUID();
 //        System.out.println("Customized De-serialization of VariableNodeForSummary " + theSUID);
 //    }
-    protected String name;
-    protected ExpressionTreeInterface parentET;
+//    protected String name;
+//    protected ExpressionTreeInterface parentET;
+//
+//    /**
+//     *
+//     */
+//    private boolean squidSwitchSTReferenceMaterialCalculation;
+//
+//    /**
+//     *
+//     */
+//    private boolean squidSwitchSAUnknownCalculation;
+//    /**
+//     *
+//     */
+//    protected boolean squidSwitchSCSummaryCalculation;
 
     /**
      *
@@ -61,8 +74,14 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, Serializ
         this.name = name;
     }
 
+    @Override
     public boolean amHealthy() {
-        return (name.length() > 0) && name.compareTo(MISSING_EXPRESSION_STRING) !=0;
+        return (name.length() > 0) && name.compareTo(MISSING_EXPRESSION_STRING) != 0;
+    }
+
+    @Override
+    public boolean isValid() {
+        return (name != null);
     }
 
     @Override
@@ -177,5 +196,56 @@ public class VariableNodeForSummary implements ExpressionTreeInterface, Serializ
     @Override
     public int argumentCount() {
         return 0;
+    }
+
+    /**
+     * @return the squidSwitchSTReferenceMaterialCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSTReferenceMaterialCalculation() {
+        return squidSwitchSTReferenceMaterialCalculation;
+    }
+
+    /**
+     * @param squidSwitchSTReferenceMaterialCalculation the
+     * squidSwitchSTReferenceMaterialCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
+        this.squidSwitchSTReferenceMaterialCalculation = squidSwitchSTReferenceMaterialCalculation;
+    }
+
+    /**
+     * @return the squidSwitchSAUnknownCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSAUnknownCalculation() {
+        return squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @param squidSwitchSAUnknownCalculation the
+     * squidSwitchSAUnknownCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
+        this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @return the squidSwitchSCSummaryCalculation
+     */
+    @Override
+    public boolean isSquidSwitchSCSummaryCalculation() {
+        return squidSwitchSCSummaryCalculation;
+    }
+
+    /**
+     * @param squidSwitchSCSummaryCalculation the
+     * squidSwitchSCSummaryCalculation to set
+     */
+    @Override
+    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation) {
+        this.squidSwitchSCSummaryCalculation = squidSwitchSCSummaryCalculation;
     }
 }

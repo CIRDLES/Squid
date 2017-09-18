@@ -16,6 +16,7 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -26,6 +27,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  * @author James F. Bowring
  */
 public class Ln extends Function {
+
+    private static final long serialVersionUID = 441943806225660404L;
 
     /**
      *
@@ -51,9 +54,9 @@ public class Ln extends Function {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
         double retVal;
-        try {          
+        try {
             retVal = Math.log(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
-        } catch (Exception e) {
+        } catch (SquidException se) {
             retVal = 0.0;
         }
 

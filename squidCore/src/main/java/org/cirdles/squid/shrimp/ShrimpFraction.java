@@ -15,9 +15,6 @@
  */
 package org.cirdles.squid.shrimp;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -29,6 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  *
@@ -36,15 +34,7 @@ import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterfa
  */
 public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInterface {
 
-        //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(ShrimpFraction.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of ShrimpFraction " + theSUID);
-    }
+    private static final long serialVersionUID = -8414997835056044184L;
 
     public static long dateTimeOfFirstReferenceMaterialSpotMilliseconds = 0l;
     private String fractionID;
@@ -77,7 +67,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double[] pkInterpScanArray;
 
     private List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated;
-    private Map<String, double[][]> taskExpressionsEvaluationsPerSpot;
+    private Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
 
     /**
      *
@@ -131,8 +121,10 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * This method is needed by expression processing and referred to by its
      * String name.
      *
-     * @return double elapsed time in hours (hh.###) since timestamp of first reference material
+     * @return double elapsed time in hours (hh.###) since timestamp of first
+     * reference material
      */
+    @Override
     public double getHours() {
         long deltaTime = dateTimeMilliseconds - ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds;
 
@@ -548,20 +540,32 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     * @param fieldName
      * @return the taskExpressionsEvaluationsPerSpot
      */
     @Override
-    public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName) {
-        return taskExpressionsEvaluationsPerSpot.get(fieldName);
+    public Map<ExpressionTreeInterface, double[][]> getTaskExpressionsEvaluationsPerSpot() {
+        return taskExpressionsEvaluationsPerSpot;
     }
 
     /**
-     * @return the taskExpressionsEvaluationsPerSpot
+     * Used by Reflection in
+     * org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions
+     *
+     * @param fieldName
+     * @return
      */
     @Override
-    public Map<String, double[][]> getTaskExpressionsEvaluationsPerSpot() {
-        return taskExpressionsEvaluationsPerSpot;
+    public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName) {
+        double[][] values = new double[][]{{0.0}};
+
+        for (Map.Entry<ExpressionTreeInterface, double[][]> entry : taskExpressionsEvaluationsPerSpot.entrySet()) {
+            if (entry.getKey().getName().compareTo(fieldName) == 0) {
+                values = entry.getValue();
+                break;
+            }
+        }
+
+        return values;
     }
 
 }

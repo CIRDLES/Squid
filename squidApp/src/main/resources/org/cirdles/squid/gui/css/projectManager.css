@@ -161,7 +161,7 @@
 }
 .tab-pane .tab
 {
-    -fx-background-color: P-Dark;/*#e6e6e6;*/
+    -fx-background-color: Secondary;/*#e6e6e6;*/
     -fx-text-fill: white;
 
 }
@@ -170,7 +170,7 @@
 }
 .tab-pane .tab:selected
 {
-    -fx-background-color: P-Light;
+    -fx-background-color: S-Dark;
     /*-fx-background-color: derive(P-Light, 25%);*/
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;

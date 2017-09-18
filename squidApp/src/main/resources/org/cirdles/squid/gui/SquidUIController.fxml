@@ -71,9 +71,11 @@
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageExpressionsMenuItemAction" text="Manage Expressions" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Expression Builder" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from File" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
-            <MenuItem mnemonicParsing="false" onAction="#exploreExpressionsMenuItemAction" text=" Explore Expressions" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
           </items>
         </Menu>
             <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Analysis">
@@ -85,7 +87,7 @@
             </Menu>
             <Menu fx:id="manageReportsMenu" mnemonicParsing="false" text="Reports">
               <items>
-                <MenuItem mnemonicParsing="false" text="Specify Report Layout" />
+                <MenuItem mnemonicParsing="false" text="Specify Reports Layout" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">

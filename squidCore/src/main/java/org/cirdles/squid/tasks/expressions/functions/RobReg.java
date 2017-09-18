@@ -27,10 +27,12 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  */
 public class RobReg extends Function {
 
+    private static final long serialVersionUID = -198041668841495965L;
+
     /**
      * Provides the functionality of Squid's robReg by calling robustReg2 and
- returning "Slope", "SlopeErr", "Y-Intercept", "Y-IntErr" and encoding the
- labels for each cell of the values array produced by eval.
+     * returning "Slope", "SlopeErr", "Y-Intercept", "Y-IntErr" and encoding the
+     * labels for each cell of the values array produced by eval.
      *
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
@@ -59,7 +61,7 @@ public class RobReg extends Function {
      */
     @Override
     public Object[][] eval(
-            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task)throws SquidException{
+            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
 
         Object[][] retVal;
         try {

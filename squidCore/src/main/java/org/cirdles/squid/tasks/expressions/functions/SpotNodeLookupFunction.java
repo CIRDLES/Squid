@@ -15,6 +15,9 @@
  */
 package org.cirdles.squid.tasks.expressions.functions;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -27,17 +30,36 @@ import org.cirdles.squid.tasks.expressions.spots.SpotNode;
  * @author James F. Bowring
  */
 public class SpotNodeLookupFunction extends Function {
-
+    //    private static final long serialVersionUID = 6522574920235718028L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SpotNodeLookupFunction.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of SpotNodeLookupFunction " + theSUID);
+    }
     private String methodNameForShrimpFraction;
     private SpotNode spotNode;
 
     public SpotNodeLookupFunction() {
-        name = "Lookup";
+        name = "lookup";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
+        
+        methodNameForShrimpFraction = "";
+        spotNode = null;
     }
+
+    @Override
+    public String[][] getLabelsForOutputValues() {
+        labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
+        return super.getLabelsForOutputValues(); 
+    }
+    
+    
 
     /**
      * Only child is a SpotNode specifying the lookup method for a shrimpfraction (spot).
@@ -52,8 +74,7 @@ public class SpotNodeLookupFunction extends Function {
     public Object[][] eval(List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         //TODO refactor duplicate code
         spotNode = ((SpotNode) childrenET.get(0));
-        methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();
-        labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
+        methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();        
 
         Object[][] results = spotNode.eval(shrimpFractions, task);
 
@@ -64,8 +85,6 @@ public class SpotNodeLookupFunction extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         spotNode = ((SpotNode) childrenET.get(0));
         methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();
-        labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
-
 
         String retVal
                 = "<mrow>"

@@ -20,9 +20,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
+import org.cirdles.squid.tasks.expressions.spots.SpotNode;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -98,23 +101,34 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
-        expressionTree.setName(name);
+        if (!(expressionTree instanceof ConstantNode) && !(expressionTree instanceof SpotNode) && !(expressionTree instanceof ShrimpSpeciesNode)) {
+            // ConstantNode and SpotNode has name already and plays role of toplevel expression here
+            expressionTree.setName(name);
+        }
     }
 
     public String produceExpressionTreeAudit() {
 
-        String auditReport = "";//*** Expression Audit Report ***\n";
-        if (!((ExpressionTree) expressionTree).isValid()) {
+        String auditReport = "";
+        if (!((ExpressionTreeInterface) expressionTree).isValid()) {
             auditReport
                     += "Errors occurred in parsing:\n" + parsingStatusReport;
         } else {
             auditExpressionTreeDependencies();
             auditReport
                     += "Expression healthy: "
-                    + String.valueOf(expressionTree.amHealthy()).toUpperCase()
-                    + "\nArgument Count Audit:\n";
-            for (String audit : argumentAudit) {
-                auditReport += audit + "\n";
+                    + String.valueOf(expressionTree.amHealthy()).toUpperCase();
+            if (argumentAudit.size() > 0) {
+                auditReport += "\nAudit:\n";
+                for (String audit : argumentAudit) {
+                    auditReport += audit + "\n";
+                }
+            } else {
+                // case of no arguments = ConstantNode, ShrimpSpeciesNode or SpotNode ALL Default if missing to ConstantNode with name "Missing Expression"
+                auditReport += "\n  " + (expressionTree.amHealthy() ? "Found " : "") + expressionTree.getName();
+                if ((expressionTree instanceof ConstantNode) && expressionTree.amHealthy()) {
+                    auditReport += ", value = " + String.valueOf((double) ((ConstantNode) expressionTree).getValue());
+                } 
             }
         }
 
@@ -122,7 +136,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     private void auditExpressionTreeDependencies() {
-        if (((ExpressionTree) expressionTree).isValid()) {
+        if (((ExpressionTreeInterface) expressionTree).isValid()) {
             if (expressionTree instanceof ExpressionTree) {
                 this.argumentAudit = new ArrayList<>();
                 ((ExpressionTree) expressionTree).auditExpressionTreeDependencies(argumentAudit);

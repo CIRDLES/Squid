@@ -15,6 +15,9 @@
  */
 package org.cirdles.squid.tasks.expressions.functions;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -28,10 +31,20 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  */
 public class AgePb76 extends Function {
 
+    //    private static final long serialVersionUID = 6522574920235718028L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(AgePb76.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of AgePb76 " + theSUID);
+    }
+
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and
- returning "Age" and "AgeErr" and encoding the labels for each cell of the
- values array produced by eval.
+     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
+     * values array produced by eval.
      *
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
@@ -39,6 +52,7 @@ public class AgePb76 extends Function {
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
     public AgePb76() {
+
         name = "agePb76";
         argumentCount = 1;
         precedence = 4;
@@ -59,7 +73,7 @@ public class AgePb76 extends Function {
      */
     @Override
     public Object[][] eval(
-            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException{
+            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
 
         Object[][] retVal;
         try {

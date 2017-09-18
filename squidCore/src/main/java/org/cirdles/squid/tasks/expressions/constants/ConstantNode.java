@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
@@ -27,14 +28,12 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class ConstantNode implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+public class ConstantNode extends ExpressionTree {
 
     private static final long serialVersionUID = -2914393295564269277L;
-
-    private String name;
-    private Object value;
-    private ExpressionTreeInterface parentET;
     public static final String MISSING_EXPRESSION_STRING = "Missing Expression";
+
+    private Object value;
 
     /**
      *
@@ -53,15 +52,21 @@ public class ConstantNode implements ExpressionTreeInterface, Serializable, XMLS
         this.value = value;
     }
 
-    public boolean amHealthy(){
+    @Override
+    public boolean amHealthy() {
         return name.compareTo(MISSING_EXPRESSION_STRING) != 0;
+    }
+
+    @Override
+    public boolean isValid() {
+        return (name.length() > 0) && (value != null);
     }
 
     @Override
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
         return false;
     }
-    
+
     /**
      *
      * @param xstream

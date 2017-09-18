@@ -27,13 +27,12 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
 import org.cirdles.squid.tasks.builtinTasks.Squid3ExampleTask1;
+import org.cirdles.squid.tasks.builtinTasks.Squid3ExampleTaskexperiment;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.xml.sax.SAXException;
@@ -77,29 +76,26 @@ public final class SquidProject implements Serializable {
 
     public void testRunOfSessionModel() {
 
-//        TaskInterface squid3ExampleTask1 = new Squid3ExampleTask1();
-//       // squid3ExampleTask1.populateTableOfSelectedRatiosFromRatiosList();
-//        squid3ExampleTask1.setPrawnFile(prawnFile);
-//        squid3ExampleTask1.setupSquidSessionSpecs();
-
-        List<ShrimpFractionExpressionInterface> shrimpFractions = prawnFileHandler.processRunFractions(prawnFile, task.getSquidSessionModel());
-        task.evaluateTaskExpressions(shrimpFractions);
+        task.evaluateTaskExpressions();
 
         try {
-            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
+            prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions());
         } catch (IOException iOException) {
         }
     }
 
-    public Map< String, TaskInterface> getTaskLibrary(){
+    public Map< String, TaskInterface> getTaskLibrary() {
         Map< String, TaskInterface> builtInTasks = new HashMap<>();
-        
+
         TaskInterface builtInTask = new Squid3ExampleTask1();
         builtInTasks.put(builtInTask.getName(), builtInTask);
+
+//        TaskInterface builtInTask2 = new Squid3ExampleTaskexperiment();
+//        builtInTasks.put(builtInTask2.getName(), builtInTask2);
         
         return builtInTasks;
     }
-    
+
     public void loadAndInitializeTask(TaskInterface task) {
         this.task = task;
         initializeExistingProjectTask();
@@ -120,24 +116,24 @@ public final class SquidProject implements Serializable {
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setRatioNames(taskSquid25.getRatioNames());
-        
+
         // first pass
         this.task.setupSquidSessionSpecs();
-        
+
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
-        for (TaskSquid25Equation task25Eqn : task25Equations){
+        for (TaskSquid25Equation task25Eqn : task25Equations) {
             Expression expression = this.task.generateExpressionFromRawExcelStyleText(
                     task25Eqn.getEquationName(), task25Eqn.getExcelEquationString());
-            
+
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
             System.out.println(">>>>>   " + expressionTree.getName());
-            ((ExpressionTree)expressionTree).setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
-            ((ExpressionTree)expressionTree).setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
-            ((ExpressionTree)expressionTree).setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
-                      
+            expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
+            expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
+            expressionTree.setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
+
             this.task.getTaskExpressionsOrdered().add(expression);
         }
-        
+
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecs();
 

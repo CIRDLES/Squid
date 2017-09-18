@@ -35,6 +35,8 @@ public abstract class Function
         Serializable,
         XMLSerializerInterface {
 
+    private static final long serialVersionUID = 5737437390502874465L;
+
     /**
      *
      */
@@ -65,6 +67,58 @@ public abstract class Function
      *
      */
     protected String[][] labelsForOutputValues = new String[][]{{}};
+    /**
+     *
+     */
+    public static final Map<String, String> FUNCTIONS_MAP = new HashMap<>();
+
+    static {
+
+        FUNCTIONS_MAP.put("agePb76", "agePb76");
+        FUNCTIONS_MAP.put("AgePb76", "agePb76");
+
+        FUNCTIONS_MAP.put("and", "and");
+        FUNCTIONS_MAP.put("And", "and");
+
+        FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
+        FUNCTIONS_MAP.put("ConcordiaTW", "concordiaTW");
+
+        FUNCTIONS_MAP.put("exp", "exp");
+        FUNCTIONS_MAP.put("Exp", "exp");
+
+        FUNCTIONS_MAP.put("if", "sqIf");
+        FUNCTIONS_MAP.put("If", "sqIf");
+
+        FUNCTIONS_MAP.put("ln", "ln");
+        FUNCTIONS_MAP.put("Ln", "ln");
+
+        FUNCTIONS_MAP.put("robReg", "robReg");
+        FUNCTIONS_MAP.put("RobReg", "robReg");
+        FUNCTIONS_MAP.put("robreg", "robReg");
+
+        FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
+        FUNCTIONS_MAP.put("SqBiweight", "sqBiweight");
+
+        FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
+        FUNCTIONS_MAP.put("SqWtdAv", "sqWtdAv");
+
+        FUNCTIONS_MAP.put("sqrt", "sqrt");
+        FUNCTIONS_MAP.put("Sqrt", "sqrt");
+
+        FUNCTIONS_MAP.put("TotalCps", "totalCps");
+        FUNCTIONS_MAP.put("totalCps", "totalCps");
+
+        FUNCTIONS_MAP.put("lookup", "lookup");
+
+        FUNCTIONS_MAP.put("max", "max");
+
+        FUNCTIONS_MAP.put("abs", "abs");
+        FUNCTIONS_MAP.put("xxx", "abs");
+    }
+
+    public Function() {
+
+    }
 
     /**
      *
@@ -73,51 +127,6 @@ public abstract class Function
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new FunctionXMLConverter());
-    }
-
-    /**
-     *
-     */
-    public final static Map<String, String> FUNCTIONS_MAP = new HashMap<>();
-
-    static {
-
-        FUNCTIONS_MAP.put("agePb76", agePb76().getName());
-        FUNCTIONS_MAP.put("AgePb76", agePb76().getName());
-
-        FUNCTIONS_MAP.put("and", and().getName());
-        FUNCTIONS_MAP.put("And", and().getName());
-
-        FUNCTIONS_MAP.put("concordiaTW", concordiaTW().getName());
-        FUNCTIONS_MAP.put("ConcordiaTW", concordiaTW().getName());
-
-        FUNCTIONS_MAP.put("exp", exp().getName());
-        FUNCTIONS_MAP.put("Exp", exp().getName());
-
-        FUNCTIONS_MAP.put("if", Function.sqIf().getName());
-        FUNCTIONS_MAP.put("If", sqIf().getName());
-
-        FUNCTIONS_MAP.put("ln", ln().getName());
-        FUNCTIONS_MAP.put("Ln", ln().getName());
-
-        FUNCTIONS_MAP.put("robReg", robReg().getName());
-        FUNCTIONS_MAP.put("RobReg", robReg().getName());
-        FUNCTIONS_MAP.put("robreg", robReg().getName());
-
-        FUNCTIONS_MAP.put("sqBiweight", sqBiweight().getName());
-        FUNCTIONS_MAP.put("SqBiweight", sqBiweight().getName());
-
-        FUNCTIONS_MAP.put("sqWtdAv", sqWtdAv().getName());
-        FUNCTIONS_MAP.put("SqWtdAv", sqWtdAv().getName());
-
-        FUNCTIONS_MAP.put("sqrt", sqrt().getName());
-        FUNCTIONS_MAP.put("Sqrt", sqrt().getName());
-
-        FUNCTIONS_MAP.put("TotalCps", "totalCps");
-        FUNCTIONS_MAP.put("totalCps", "totalCps");
-        
-        FUNCTIONS_MAP.put("lookup", "lookup");
-
     }
 
     /**
@@ -206,6 +215,30 @@ public abstract class Function
 
     public static OperationOrFunctionInterface lookup() {
         return new SpotNodeLookupFunction();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface max() {
+        return new Max();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface abs() {
+        return new Abs();
+    }
+    
+       /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface xxx() {
+        return new Abs();
     }
 
     /**

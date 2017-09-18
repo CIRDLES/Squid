@@ -80,9 +80,9 @@ public class ExpressionTreeWriterMathML {
                     + "        <mstyle  mathsize='100%'>\n"
             );
 
-            fileContents.append(
-                    "<mtext mathcolor='#cc0000'>[" + expression.getName() + "] = </mtext>\n"
-            );
+//            fileContents.append(
+//                    "<mtext mathcolor='#cc0000'>[" + expression.getName() + "] = </mtext>\n"
+//            );
             fileContents.append(
                     "<mspace depth=\"0.5ex\" height=\"0.5ex\" width=\"1ex\"/>\n"
             );

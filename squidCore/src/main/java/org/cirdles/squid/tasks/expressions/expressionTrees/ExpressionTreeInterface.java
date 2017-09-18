@@ -82,7 +82,42 @@ public interface ExpressionTreeInterface {
 
     public boolean amHealthy();
 
+    public boolean isValid();
+
     public boolean usesAnotherExpression(ExpressionTreeInterface exp);
+
+    /**
+     * @return the squidSwitchSTReferenceMaterialCalculation
+     */
+    public boolean isSquidSwitchSTReferenceMaterialCalculation();
+
+    /**
+     * @param squidSwitchSTReferenceMaterialCalculation the
+     * squidSwitchSTReferenceMaterialCalculation to set
+     */
+    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation);
+
+    /**
+     * @return the squidSwitchSAUnknownCalculation
+     */
+    public boolean isSquidSwitchSAUnknownCalculation();
+
+    /**
+     * @param squidSwitchSAUnknownCalculation the
+     * squidSwitchSAUnknownCalculation to set
+     */
+    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation);
+
+    /**
+     * @return the squidSwitchSCSummaryCalculation
+     */
+    public boolean isSquidSwitchSCSummaryCalculation();
+
+    /**
+     * @param squidSwitchSCSummaryCalculation the
+     * squidSwitchSCSummaryCalculation to set
+     */
+    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation);
 
     /**
      *
@@ -190,7 +225,7 @@ public interface ExpressionTreeInterface {
         argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditOperationArgumentCount());
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
             // SpotNode is an ExpressionTree without Children
-            if( (child instanceof ExpressionTree)&&!(child instanceof SpotNode)) {
+            if ((child instanceof ExpressionTree) && !(child instanceof SpotNode)) {
                 child.auditExpressionTreeDependencies(argumentAudit);
             }
         }

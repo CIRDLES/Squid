@@ -38,16 +38,12 @@ public class ShuntingYard {
 
 //        // Input: 3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3
 
-        infixList.add("[");
-        infixList.add("\"");
+//        infixList.add("[");
+//        infixList.add("\"");
         infixList.add("word233_33");
-        infixList.add("\"");;
-        infixList.add("]");
+//        infixList.add("\"");;
+//        infixList.add("]");
         System.out.println("Shunt " + infixToPostfix(infixList));
-
-        //1+(ln(3) +4)
-        //ln  (  ln(3) + ln(4)  )  
-        // ln(1)/(ln(3) + 1)
     }
 
     /**
@@ -176,7 +172,7 @@ public class ShuntingYard {
                     }
                     lastWasOperationOrFunction = false;
                     break;
-                case CONSTANT:
+                case NUMBER:
                     outputQueue.add(token);
                     if (!wereValues.empty()) {
                         wereValues.pop();
@@ -184,7 +180,7 @@ public class ShuntingYard {
                     }
                     lastWasOperationOrFunction = false;
                     break;
-                case VARIABLE:
+                case NAMED_CONSTANT:
                     outputQueue.add(token);
                     if (!wereValues.empty()) {
                         wereValues.pop();
@@ -283,11 +279,11 @@ public class ShuntingYard {
         /**
          *
          */
-        CONSTANT,
+        NUMBER,
         /**
          *
          */
-        VARIABLE,
+        NAMED_CONSTANT,
         /**
          *
          */
@@ -310,7 +306,7 @@ public class ShuntingYard {
          * @return
          */
         public static TokenTypes getType(String token) {
-            TokenTypes retVal = VARIABLE;
+            TokenTypes retVal = NAMED_CONSTANT;
 
             if ("|+|-|==|<|<=|>|>=|<>|".contains("|" + token + "|")) {
                 retVal = OPERATOR_A;
@@ -329,7 +325,7 @@ public class ShuntingYard {
             } else if (token.matches("\\[\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;
             } else if (isNumber(token)) {
-                retVal = CONSTANT;
+                retVal = NUMBER;
 
             }
 

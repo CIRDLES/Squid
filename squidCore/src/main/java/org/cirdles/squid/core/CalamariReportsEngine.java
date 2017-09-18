@@ -34,6 +34,8 @@ import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterfa
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  * Calamari's reports engine.
@@ -419,25 +421,26 @@ public class CalamariReportsEngine {
             }
         }
 
-        // Handle any task expressions that we calculated per scan with a summary value per spot = Squid Switch "NU"
-        List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFraction.getTaskExpressionsForScansEvaluated();
-        for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
-            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatioVal(), 12));
-            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatioFractErr() * 100.0, 12));
+        // these now are printed by the spot-summary
+//        // Handle any task expressions that we calculated per scan with a summary value per spot = Squid Switch "NU"
+//        List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFraction.getTaskExpressionsForScansEvaluated();
+//        for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
+//            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatioVal(), 12));
+//            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatioFractErr() * 100.0, 12));
+//        }
+
+        // these expressions are spot-specific with no ratios-of-interest and INCLUDE those = Squid Switch "NU"
+        Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFraction.getTaskExpressionsEvaluationsPerSpot();
+        for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
+            double[] expressionResults = entry.getValue()[0];
+            dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
+            if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[1] * 100.0, 12));
+            }
         }
 
-//        System.out.println("\n" + shrimpFraction.getFractionID() + "********************");
-//        for (Map.Entry<String, double[][]> entry : shrimpFraction.getTaskExpressionsEvaluationsPerSpot().entrySet()) {
-//            String expressionName = entry.getKey();
-//            double[] expressionResults = entry.getValue()[0];
-//
-//            System.out.print(expressionName + "\t");
-//            for (int i = 0; i < expressionResults.length; i++) {
-//                System.out.print("\t" + rounded(expressionResults[i]));
-//            }
-//            System.out.println();
-//        }
         dataLine.append("\n");
+
         if (shrimpFraction.isReferenceMaterial()) {
             refMatMeanRatios_PerSpot.append(dataLine);
         } else {
@@ -512,9 +515,9 @@ public class CalamariReportsEngine {
         StringBuilder header = new StringBuilder();
         header.append("Title, Date, Ndod, Type");
 
-        Iterator <SquidRatiosModel> squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
-            while (squidRatiosIterator.hasNext()){
-                SquidRatiosModel entry = squidRatiosIterator.next();
+        Iterator<SquidRatiosModel> squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
+        while (squidRatiosIterator.hasNext()) {
+            SquidRatiosModel entry = squidRatiosIterator.next();
             if (entry.isActive()) {
                 header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".InterpTime");
                 header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".Value");
@@ -538,13 +541,14 @@ public class CalamariReportsEngine {
         refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
         unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
 
+        // report squid_04 headers
         meanRatios_PerSpot = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_04_MeanRatios_PerSpot.csv");
         header = new StringBuilder();
         header.append("Title, Date, Type");
 
         squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
-            while (squidRatiosIterator.hasNext()){
-                SquidRatiosModel entry = squidRatiosIterator.next();
+        while (squidRatiosIterator.hasNext()) {
+            SquidRatiosModel entry = squidRatiosIterator.next();
             if (entry.isActive()) {
                 header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".MinIndex");
                 header.append(", ").append(entry.getDisplayNameNoSpaces()).append(".Value");
@@ -552,11 +556,24 @@ public class CalamariReportsEngine {
             }
         }
 
-        // prepare headers for any task expressions
-        for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
-            String expressionName = taskExpressionEval.getExpression().getName();
+        
+        // now printed by spot summary
+//        // prepare headers for any task expressions
+//        for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
+//            String expressionName = taskExpressionEval.getExpression().getName();
+//            header.append(", ").append(expressionName).append(".Value");
+//            header.append(", ").append(expressionName).append(".1SigmaPct");
+//        }
+
+        // these expressions are spot-specific with no ratios-of-interest
+        // currently, this duplicates these ouputs since they are stroed in the per scan results too
+        Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFraction.getTaskExpressionsEvaluationsPerSpot();
+        for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
+            String expressionName = entry.getKey().getName();
             header.append(", ").append(expressionName).append(".Value");
-            header.append(", ").append(expressionName).append(".1SigmaPct");
+            if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                header.append(", ").append(expressionName).append(".1SigmaPct");
+            }
         }
 
         header.append("\n");

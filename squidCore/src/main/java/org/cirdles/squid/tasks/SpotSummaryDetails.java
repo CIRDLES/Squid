@@ -15,12 +15,10 @@
  */
 package org.cirdles.squid.tasks;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 
 /**
  *
@@ -28,27 +26,23 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
  */
 public class SpotSummaryDetails implements Serializable {
 
-    //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SpotSummaryDetails.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of SpotSummaryDetails " + theSUID);
-    }
+    private static final long serialVersionUID = 761897612163829455L;
+
     private double[][] values;
     private List<ShrimpFractionExpressionInterface> selectedSpots;
+    private OperationOrFunctionInterface operation;
 
     private SpotSummaryDetails() {
     }
 
     /**
      *
+     * @param operation
      * @param values
      * @param selectedSpots
      */
-    public SpotSummaryDetails(double[][] values, List<ShrimpFractionExpressionInterface> selectedSpots) {
+    public SpotSummaryDetails(OperationOrFunctionInterface operation, double[][] values, List<ShrimpFractionExpressionInterface> selectedSpots) {
+        this.operation = operation;
         this.values = values;
         this.selectedSpots = selectedSpots;
     }
@@ -65,6 +59,13 @@ public class SpotSummaryDetails implements Serializable {
      */
     public List<ShrimpFractionExpressionInterface> getSelectedSpots() {
         return selectedSpots;
+    }
+
+    /**
+     * @return the operation
+     */
+    public OperationOrFunctionInterface getOperation() {
+        return operation;
     }
 
 }

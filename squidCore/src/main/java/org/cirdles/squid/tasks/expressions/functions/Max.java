@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -28,26 +29,26 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  *
  * @author James F. Bowring
  */
-public class Exp extends Function {
+public class Max extends Function {
         //    private static final long serialVersionUID = 6522574920235718028L;
     private void readObject(
             ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Exp.class.getCanonicalName()));
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Max.class.getCanonicalName()));
         long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Exp " + theSUID);
+        System.out.println("Customized De-serialization of Max " + theSUID);
     }
     /**
      *
      */
-    public Exp() {
-        name = "exp";
-        argumentCount = 1;
+    public Max() {
+        name = "max";
+        argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
-        labelsForOutputValues = new String[][]{{"Exponential"}};
+        labelsForOutputValues = new String[][]{{"maximum"}};
     }
 
     /**
@@ -62,9 +63,11 @@ public class Exp extends Function {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
         double retVal;
-        try {
-            retVal = Math.exp(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
-        } catch (Exception e) {
+        try {          
+            double leftNumber = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0];
+            double rightNumber = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0])[0];
+            retVal = Math.max(leftNumber, rightNumber);
+        } catch (SquidException se) {
             retVal = 0.0;
         }
 
@@ -80,18 +83,14 @@ public class Exp extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<msup>"
-                + "<mi>"
-                + "&ExponentialE;"
-                + "</mi>"
-                + "<mfenced>\n";
+                + "<mi>max</mi>"
+                + "<mfenced>";
 
-        retVal += toStringAnotherExpression(childrenET.get(0));
+        for (int i = 0; i < childrenET.size(); i++) {
+            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
+        }
 
-        retVal
-                += "</mfenced>"
-                + "</msup>"
-                + "</mrow>";
+        retVal += "</mfenced></mrow>\n";
 
         return retVal;
     }
