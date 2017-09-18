@@ -12,7 +12,7 @@
       <Label prefHeight="28.0" prefWidth="490.0" text="Manage Ratios - click on colored cell to toggle ratio:" translateX="15.0" />
       <AnchorPane fx:id="manageRatiosAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
          <children>
-            <GridPane fx:id="ratiosGridPane" gridLinesVisible="true" layoutX="126.0" layoutY="100.0" style="-fx-background-color: white; -fx-font-size: 10;">
+            <GridPane fx:id="ratiosGridPane" gridLinesVisible="true" layoutX="126.0" layoutY="100.0" style="-fx-background-color: white;">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="10.0" prefWidth="101.0" />
               </columnConstraints>
