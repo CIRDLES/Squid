@@ -55,7 +55,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
-import static org.cirdles.squid.tasks.expressions.spots.SpotNode.buildSpotNode;
+import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -390,7 +390,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ExpressionTreeInterface testConstant = new ConstantNode("TEST_CONSTANT", 999.999);
         namedExpressionsMap.put(testConstant.getName(), testConstant);
 
-        // TODO: make a SpotNode factory
+        // TODO: make a SpotFieldNode factory
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         namedExpressionsMap.put(expHours.getName(), expHours);
 

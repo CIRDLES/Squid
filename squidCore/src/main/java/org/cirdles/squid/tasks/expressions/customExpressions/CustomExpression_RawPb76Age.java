@@ -31,7 +31,7 @@ public class CustomExpression_RawPb76Age {
      * Squid Excel format is AgePb76(["207/206"])
      */
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("Raw7/6Age");
-
+//wrong if NU required
     static {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
                 .addChild(0, new VariableNodeForIsotopicRatios("207/206"));

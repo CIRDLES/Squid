@@ -19,7 +19,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.functions.Function;
-import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 
 /**
  *
@@ -45,7 +45,7 @@ public class CustomExpression_Hours extends ExpressionTree implements BuiltInExp
 
         childrenET.clear();
 
-        addChild(0, SpotNode.buildSpotNode("getHours"));
+        addChild(0, SpotFieldNode.buildSpotNode("getHours"));
 
         setRootExpressionTree(true);
         setSquidSwitchSCSummaryCalculation(false);

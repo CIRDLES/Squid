@@ -32,7 +32,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class SpotNode extends ExpressionTree implements Serializable, XMLSerializerInterface {
+public class SpotFieldNode extends ExpressionTree{// implements Serializable, XMLSerializerInterface {
 
     private static final long serialVersionUID = 2173277234623108736L;
 
@@ -41,18 +41,18 @@ public class SpotNode extends ExpressionTree implements Serializable, XMLSeriali
     // used for parsing expressions
 //    private ExpressionTreeInterface parentET;
 
-    private SpotNode() {
+    private SpotFieldNode() {
     }
 
-    private SpotNode(String fieldName, String methodNameForShrimpFraction) {
+    private SpotFieldNode(String fieldName, String methodNameForShrimpFraction) {
         this.fieldName = fieldName;
         this.name = fieldName;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
         this.parentET = null;
     }
 
-    public static SpotNode buildSpotNode(String methodNameForShrimpFraction) {
-        SpotNode spotNode = new SpotNode(methodNameForShrimpFraction.replace("get", ""), methodNameForShrimpFraction);
+    public static SpotFieldNode buildSpotNode(String methodNameForShrimpFraction) {
+        SpotFieldNode spotNode = new SpotFieldNode(methodNameForShrimpFraction.replace("get", ""), methodNameForShrimpFraction);
         return spotNode;
     }
 

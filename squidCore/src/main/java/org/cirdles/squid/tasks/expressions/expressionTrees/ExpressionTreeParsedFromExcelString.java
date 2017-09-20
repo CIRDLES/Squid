@@ -54,20 +54,12 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
         // copy to this children, operation, and calculate ratiosOfInterest
         this.childrenET = ((ExpressionTree) parsedExp).getChildrenET();
         this.operation = ((ExpressionTree) parsedExp).getOperation();
-
-        determineRatiosOfInterest();
+              
+        this.ratiosOfInterest = getAllRatiosOfInterest();
+             
 
         //other switches set outside of this operation
         setRootExpressionTree(true);
-    }
-
-    private void determineRatiosOfInterest() {
-        if (getCountOfChildren() == 1) {
-            ExpressionTreeInterface onlyChild = childrenET.get(0);
-            if (onlyChild.isTypeFunctionOrOperation()) {
-                ratiosOfInterest = ((ExpressionTree) onlyChild).getRatiosOfInterest();
-            }
-        }
     }
 
     /**

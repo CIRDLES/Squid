@@ -27,13 +27,15 @@ import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.Function;
+import static org.cirdles.squid.tasks.expressions.functions.Function.lookup;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
+import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
-import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -260,7 +262,7 @@ public class ExpressionTree
             }
             if (retVal == 0) {
                 // then compare is summary
-                if (isSquidSwitchSCSummaryCalculation()&& !exp.isSquidSwitchSCSummaryCalculation()) {
+                if (isSquidSwitchSCSummaryCalculation() && !exp.isSquidSwitchSCSummaryCalculation()) {
                     retVal = -1;
                 } else if (!isSquidSwitchSCSummaryCalculation() && exp.isSquidSwitchSCSummaryCalculation()) {
                     retVal = 1;
@@ -319,7 +321,7 @@ public class ExpressionTree
     public String auditOperationArgumentCount() {
         String audit = "";
         if (operation == null) {
-            if (!(this instanceof ConstantNode) && !(this instanceof SpotNode) && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)) {
+            if (!(this instanceof ConstantNode) && !(this instanceof SpotFieldNode) && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)) {
                 audit = "    " + this.getName() + " is unhealthy expression";
             } else {//if (this instanceof ConstantNode) {
                 if (this.amHealthy()) {
@@ -614,6 +616,31 @@ public class ExpressionTree
      */
     public boolean hasRatiosOfInterest() {
         return ratiosOfInterest.size() > 0;
+    }
+
+    public List<String> getAllRatiosOfInterest() {
+        return getAllRatiosOfInterest(new ArrayList<>());
+    }
+
+    private List<String> getAllRatiosOfInterest(List<String> ratiosList) {
+        if (!(operation instanceof SpotNodeLookupFunction)) {
+            addOnlyNewRatios(ratiosList, ratiosOfInterest);
+            for (ExpressionTreeInterface child : childrenET) {
+                addOnlyNewRatios(ratiosList, ((ExpressionTree) child).getAllRatiosOfInterest(ratiosList));
+            }
+        }
+
+        return ratiosList;
+    }
+
+    private List<String> addOnlyNewRatios(List<String> target, List<String> source) {
+        for (int i = 0; i < source.size(); i++) {
+            if (!target.contains(source.get(i))) {
+                target.add(source.get(i));
+            }
+        }
+
+        return target;
     }
 
     /**

@@ -40,7 +40,7 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {//imp
         long theSUID = myObject.getSerialVersionUID();
         System.out.println("Customized De-serialization of VariableNodeForIsotopicRatios " + theSUID);
     }
-    private static String lookupMethodNameForShrimpFraction = "getIsotopicRatioValuesByStringName";
+    public static String lookupMethodNameForShrimpFraction = "getIsotopicRatioValuesByStringName";
 
     /**
      *

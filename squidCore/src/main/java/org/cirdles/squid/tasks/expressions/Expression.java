@@ -25,7 +25,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
-import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -101,8 +101,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
-        if (!(expressionTree instanceof ConstantNode) && !(expressionTree instanceof SpotNode) && !(expressionTree instanceof ShrimpSpeciesNode)) {
-            // ConstantNode and SpotNode has name already and plays role of toplevel expression here
+        if (!(expressionTree instanceof ConstantNode) && !(expressionTree instanceof SpotFieldNode) && !(expressionTree instanceof ShrimpSpeciesNode)) {
+            // ConstantNode and SpotFieldNode has name already and plays role of toplevel expression here
             expressionTree.setName(name);
         }
     }
@@ -124,7 +124,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
                     auditReport += audit + "\n";
                 }
             } else {
-                // case of no arguments = ConstantNode, ShrimpSpeciesNode or SpotNode ALL Default if missing to ConstantNode with name "Missing Expression"
+                // case of no arguments = ConstantNode, ShrimpSpeciesNode or SpotFieldNode ALL Default if missing to ConstantNode with name "Missing Expression"
                 auditReport += "\n  " + (expressionTree.amHealthy() ? "Found " : "") + expressionTree.getName();
                 if ((expressionTree instanceof ConstantNode) && expressionTree.amHealthy()) {
                     auditReport += ", value = " + String.valueOf((double) ((ConstantNode) expressionTree).getValue());

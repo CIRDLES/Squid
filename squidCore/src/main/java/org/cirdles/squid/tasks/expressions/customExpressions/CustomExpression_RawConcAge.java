@@ -31,7 +31,7 @@ public class CustomExpression_RawConcAge {
      * Squid Excel format is concordiaTW(["238/206"],[±"238/206"],["207/206"],[±"207/206"],,false,true,1)
      */
     public final static ExpressionTreeInterface EXPRESSION = new ExpressionTree("RawConcAge");
-
+//wrong if NU required
     static {
         ((ExpressionTreeBuilderInterface) EXPRESSION)
                 .addChild(0, new VariableNodeForIsotopicRatios("238/206"));
