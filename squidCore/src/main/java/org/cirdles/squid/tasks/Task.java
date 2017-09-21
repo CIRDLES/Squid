@@ -216,14 +216,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void setupSquidSessionSpecs() {
-//        // this is transient so needs re-creating if does not exist
-//        if (mapOfIndexToMassStationDetails == null) {
-//            createMapOfIndexToMassStationDetails();
-//        }
 
         if (changed) {
-
-//            createMapOfIndexToMassStationDetails();
             // populate taskExpressionsTreesOrdered
             taskExpressionTreesOrdered.clear();
             for (Expression exp : taskExpressionsOrdered) {
@@ -366,8 +360,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return retVal;
     }
 
-    @Override
-    public void buildSquidRatiosModelListFromMassStationDetails() {
+    private void buildSquidRatiosModelListFromMassStationDetails() {
         squidRatiosModelList = new ArrayList<>();
 
         // TODO revise use of this in comparator of squidSpeciesModel
@@ -589,8 +582,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param spotsForExpression
      * @throws SquidException
      */
-    @Override
-    public void evaluateExpressionForSpotSet(
+    private void evaluateExpressionForSpotSet(
             ExpressionTreeInterface expression,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // determine type of expression
