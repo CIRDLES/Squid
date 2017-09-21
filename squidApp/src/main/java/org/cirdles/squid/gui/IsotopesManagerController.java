@@ -65,6 +65,7 @@ public class IsotopesManagerController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -86,7 +87,7 @@ public class IsotopesManagerController implements Initializable {
         Callback<TableColumn<MassStationDetail, String>, TableCell<MassStationDetail, String>> cellFactory
                 = new Callback<TableColumn<MassStationDetail, String>, TableCell<MassStationDetail, String>>() {
             @Override
-            public TableCell<MassStationDetail,String> call(TableColumn param) {
+            public TableCell<MassStationDetail, String> call(TableColumn param) {
                 return new EditingCell();
             }
         };
@@ -239,7 +240,7 @@ public class IsotopesManagerController implements Initializable {
         }
 
         private String getString() {
-            return getItem() == null ? "" : getItem().toString();
+            return getItem() == null ? "" : getItem();
         }
     }
 

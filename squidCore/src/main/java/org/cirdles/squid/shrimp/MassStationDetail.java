@@ -29,11 +29,11 @@ public class MassStationDetail implements Serializable {
     private static final long serialVersionUID = -874679604916998001L;
 
     private int massStationIndex;
-    
+
     private final SimpleStringProperty massStationLabel;
     private final SimpleStringProperty isotopeLabel;
     private final SimpleStringProperty elementLabel;
-    
+
     private boolean isBackground;
 
     private final double centeringTimeSec;
@@ -94,10 +94,10 @@ public class MassStationDetail implements Serializable {
     public String getIsotopeLabel() {
         return isotopeLabel.get();
     }
-    
+
     /**
-     * 
-     * @param label 
+     *
+     * @param label
      */
     public void setIsotopeLabel(String label) {
         isotopeLabel.set(label);
@@ -159,6 +159,5 @@ public class MassStationDetail implements Serializable {
     public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
     }
-    
 
 }

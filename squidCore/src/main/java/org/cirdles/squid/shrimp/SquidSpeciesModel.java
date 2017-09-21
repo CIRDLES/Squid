@@ -48,7 +48,7 @@ public class SquidSpeciesModel implements
         this.isotopeName = isotopeName;
         this.elementName = elementName;
         this.isBackground = isBackground;
-    }
+        }
 
     @Override
     public int compareTo(SquidSpeciesModel squidSpeciesModel) {

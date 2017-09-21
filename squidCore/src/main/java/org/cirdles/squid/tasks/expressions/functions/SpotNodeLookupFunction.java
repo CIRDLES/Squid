@@ -15,14 +15,10 @@
  */
 package org.cirdles.squid.tasks.expressions.functions;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
@@ -33,15 +29,8 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRati
  */
 public class SpotNodeLookupFunction extends Function {
 
-    //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SpotNodeLookupFunction.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of SpotNodeLookupFunction " + theSUID);
-    }
+    private static final long serialVersionUID = 3357932109604734200L;
+
     private String methodNameForShrimpFraction;
     private ExpressionTreeInterface spotNode;
 

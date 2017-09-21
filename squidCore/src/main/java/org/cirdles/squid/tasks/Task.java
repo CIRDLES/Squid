@@ -39,6 +39,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -215,15 +216,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void setupSquidSessionSpecs() {
-        // this is transient so needs re-creating if does not exist
-        if (mapOfIndexToMassStationDetails == null) {
-            createMapOfIndexToMassStationDetails();
-        }
+//        // this is transient so needs re-creating if does not exist
+//        if (mapOfIndexToMassStationDetails == null) {
+//            createMapOfIndexToMassStationDetails();
+//        }
 
         if (changed) {
 
-            createMapOfIndexToMassStationDetails();
-
+//            createMapOfIndexToMassStationDetails();
             // populate taskExpressionsTreesOrdered
             taskExpressionTreesOrdered.clear();
             for (Expression exp : taskExpressionsOrdered) {
@@ -317,6 +317,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void buildSquidSpeciesModelList() {
+        createMapOfIndexToMassStationDetails();
         if (mapOfIndexToMassStationDetails != null) {
             // update these if squidSpeciesModelList exists
             if (squidSpeciesModelList.size() > 0) {
@@ -1079,6 +1080,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         List<MassStationDetail> listOfMassStationDetails = new ArrayList<>();
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
             listOfMassStationDetails.add(entry.getValue());
+            if (entry.getValue().getIsBackground()) {
+                entry.getValue().setIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
+            }
         }
         return listOfMassStationDetails;
     }

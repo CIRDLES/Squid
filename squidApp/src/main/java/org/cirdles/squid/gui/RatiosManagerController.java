@@ -24,7 +24,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -79,7 +78,7 @@ public class RatiosManagerController implements Initializable {
 
     private void prepareRatioGrid() {
 
-        squidSpeciesList = SquidUIController.squidProject.getTask().getSquidSpeciesModelList();
+        squidSpeciesList = squidProject.getTask().getSquidSpeciesModelList();
 
         indexOfBackgroundSpecies = -1;
 

@@ -72,13 +72,13 @@ public final class PrawnFileUtilities {
             String elementLabel = massStationLabel.replace(isotopeLabel, "");
 
             boolean isBackground = massStationLabel.toUpperCase(Locale.US).contains("KG");
-            MassStationDetail massStationDetail = 
-                    new MassStationDetail(index, massStationLabel, centeringTimeSec, isotopeLabel, elementLabel, isBackground);
+            MassStationDetail massStationDetail
+                    = new MassStationDetail(index, massStationLabel, centeringTimeSec, isotopeLabel, elementLabel, isBackground);
 
             mapOfIndexToMassStationDetails.put(index, massStationDetail);
-            index ++;
+            index++;
         }
-        
+
         // collect mass variations by time for all runs
         int runIndex = 1;
         for (Run run : runs) {
@@ -92,19 +92,19 @@ public final class PrawnFileUtilities {
                     double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
                     double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
                     long measurementTime = runStartTime + (long) timeStampSec * 1000l;
-                    
+
                     MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
                     massStationDetail.getMeasuredTrimMasses().add(trimMass);
                     massStationDetail.getTimesOfMeasuredTrimMasses().add((double) measurementTime);
                     massStationDetail.getIndicesOfScansAtMeasurementTimes().add((int) scan.getNumber());
                     massStationDetail.getIndicesOfRunsAtMeasurementTimes().add(runIndex);
-                    
+
                     index++;
                 }
             }
             runIndex++;
         }
-        
+
         return mapOfIndexToMassStationDetails;
     }
 }
