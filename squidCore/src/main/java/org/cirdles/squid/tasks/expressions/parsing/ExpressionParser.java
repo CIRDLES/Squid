@@ -40,7 +40,8 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
-import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
 /**
@@ -114,7 +115,7 @@ public class ExpressionParser {
             returnExpressionTree = buildTree(parsedRPN);
             if (returnExpressionTree != null) {
                 // if single objects are the actual expression, don't change
-                if (!(returnExpressionTree instanceof ConstantNode) && !(returnExpressionTree instanceof SpotNode) && !(returnExpressionTree instanceof ShrimpSpeciesNode)) {
+                if (!(returnExpressionTree instanceof ConstantNode) && !(returnExpressionTree instanceof SpotFieldNode) && !(returnExpressionTree instanceof ShrimpSpeciesNode)) {
                     try {
                         returnExpressionTree.setName(expression.getName());
                     } catch (Exception e) {
@@ -229,7 +230,7 @@ public class ExpressionParser {
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && ((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode) {
                     retExpTree = retExpTreeKnown;
-                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)||(retExpTreeKnown instanceof SpotNode)) {
+                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode) || (retExpTreeKnown instanceof SpotFieldNode)) {
                     retExpTree = retExpTreeKnown;
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());

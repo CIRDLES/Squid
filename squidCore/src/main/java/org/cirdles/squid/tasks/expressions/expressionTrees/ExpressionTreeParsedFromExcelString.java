@@ -17,6 +17,7 @@ package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
@@ -46,6 +47,19 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.parsedRPNreversedExcelString);
+        return hash;
+    }
+
+    
+    @Override
     public void buildExpression(TaskInterface task) {
 
         ExpressionParser parser = new ExpressionParser(task.getNamedExpressionsMap());
@@ -54,20 +68,12 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
         // copy to this children, operation, and calculate ratiosOfInterest
         this.childrenET = ((ExpressionTree) parsedExp).getChildrenET();
         this.operation = ((ExpressionTree) parsedExp).getOperation();
-
-        determineRatiosOfInterest();
+              
+        this.ratiosOfInterest = getAllRatiosOfInterest();
+             
 
         //other switches set outside of this operation
         setRootExpressionTree(true);
-    }
-
-    private void determineRatiosOfInterest() {
-        if (getCountOfChildren() == 1) {
-            ExpressionTreeInterface onlyChild = childrenET.get(0);
-            if (onlyChild.isTypeFunctionOrOperation()) {
-                ratiosOfInterest = ((ExpressionTree) onlyChild).getRatiosOfInterest();
-            }
-        }
     }
 
     /**

@@ -15,32 +15,24 @@
  */
 package org.cirdles.squid.tasks.expressions.functions;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.spots.SpotNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 
 /**
  *
  * @author James F. Bowring
  */
 public class SpotNodeLookupFunction extends Function {
-    //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SpotNodeLookupFunction.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of SpotNodeLookupFunction " + theSUID);
-    }
+
+    private static final long serialVersionUID = 3357932109604734200L;
+
     private String methodNameForShrimpFraction;
-    private SpotNode spotNode;
+    private ExpressionTreeInterface spotNode;
 
     public SpotNodeLookupFunction() {
         name = "lookup";
@@ -48,7 +40,7 @@ public class SpotNodeLookupFunction extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 1;
-        
+
         methodNameForShrimpFraction = "";
         spotNode = null;
     }
@@ -56,13 +48,12 @@ public class SpotNodeLookupFunction extends Function {
     @Override
     public String[][] getLabelsForOutputValues() {
         labelsForOutputValues = new String[][]{{"Lookup Field: " + methodNameForShrimpFraction.replace("get", "")}};
-        return super.getLabelsForOutputValues(); 
+        return super.getLabelsForOutputValues();
     }
-    
-    
 
     /**
-     * Only child is a SpotNode specifying the lookup method for a shrimpfraction (spot).
+     * Only child is a SpotFieldNode specifying the lookup method for a
+     * shrimpfraction (spot).
      *
      * @param childrenET
      * @param shrimpFractions
@@ -73,8 +64,14 @@ public class SpotNodeLookupFunction extends Function {
     @Override
     public Object[][] eval(List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         //TODO refactor duplicate code
-        spotNode = ((SpotNode) childrenET.get(0));
-        methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();        
+
+        // to support lookup of ratios without invoking the NU switch option because of ratios of interest  we recreate the child
+        if (task.getRatioNames().contains(childrenET.get(0).getName())) {
+            spotNode = new VariableNodeForIsotopicRatios(childrenET.get(0).getName());
+        } else {
+            spotNode = ((SpotFieldNode) childrenET.get(0));
+            methodNameForShrimpFraction = ((SpotFieldNode) spotNode).getMethodNameForShrimpFraction();
+        }
 
         Object[][] results = spotNode.eval(shrimpFractions, task);
 
@@ -83,8 +80,8 @@ public class SpotNodeLookupFunction extends Function {
 
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        spotNode = ((SpotNode) childrenET.get(0));
-        methodNameForShrimpFraction = spotNode.getMethodNameForShrimpFraction();
+        // to support lookup of ratios without invoking the NU switch option because of ratios of interest  we recreate the child
+        spotNode = childrenET.get(0);
 
         String retVal
                 = "<mrow>"

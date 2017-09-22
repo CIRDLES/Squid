@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks;
+package org.cirdles.squid.tasks.expressions.spots;
 
 import java.io.Serializable;
 import java.util.List;
@@ -43,7 +43,7 @@ public class SpotSummaryDetails implements Serializable {
      */
     public SpotSummaryDetails(OperationOrFunctionInterface operation, double[][] values, List<ShrimpFractionExpressionInterface> selectedSpots) {
         this.operation = operation;
-        this.values = values;
+        this.values = values.clone();
         this.selectedSpots = selectedSpots;
     }
 
@@ -51,7 +51,7 @@ public class SpotSummaryDetails implements Serializable {
      * @return the values
      */
     public double[][] getValues() {
-        return values;
+        return values.clone();
     }
 
     /**

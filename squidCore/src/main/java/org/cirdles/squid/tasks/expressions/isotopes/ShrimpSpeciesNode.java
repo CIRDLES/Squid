@@ -124,6 +124,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
      *
      * @param shrimpFractions the value of shrimpFraction
      * @return the double[][]
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
@@ -158,28 +159,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
 
         return retVal;
     }
-
-//    /**
-//     *
-//     * @param shrimpFraction
-//     * @param methodNameForShrimpFraction
-//     * @return
-//     */
-//    public static double[] methodFactory(ShrimpFractionExpressionInterface shrimpFraction, String methodNameForShrimpFraction) {
-//        double[] retVal = new double[0];
-//        Method method;
-//        if (methodNameForShrimpFraction != null) {
-//            try {
-//                method = ShrimpFractionExpressionInterface.class.getMethod(//
-//                        methodNameForShrimpFraction,
-//                        new Class[0]);
-//                retVal = (double[]) method.invoke(shrimpFraction, new Object[0]);
-//            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-//                // do nothing for now
-//            }
-//        }
-//        return retVal;
-//    }
 
     /**
      *

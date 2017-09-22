@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks;
 
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,6 @@ public interface TaskInterface {
     public ExpressionTreeInterface findNamedExpression(String ratioName);
 
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText);
-
-    public void buildSquidRatiosModelListFromMassStationDetails();
 
     public void buildSquidSpeciesModelList();
 
@@ -232,7 +231,4 @@ public interface TaskInterface {
      */
     public List<ShrimpFractionExpressionInterface> getUnknownSpots();
 
-    public void evaluateExpressionForSpotSet(
-            ExpressionTreeInterface expression,
-            List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException;
 }

@@ -47,7 +47,7 @@
          </image>
       </ImageView>
       <Label fx:id="aboutDetailsLabel" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="29.0" layoutY="320.0" prefHeight="158.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Developed by the CIRDLES team at the College of Charleston." textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="buildDate" alignment="CENTER" layoutX="125.0" layoutY="292.0" prefHeight="17.0" prefWidth="201.0" styleClass="main-Text-Color" text="Build Date: mm/dd/yyyy" textAlignment="CENTER" />
+      <Label fx:id="buildDate" alignment="CENTER" layoutX="44.0" layoutY="292.0" prefHeight="17.0" prefWidth="358.0" styleClass="main-Text-Color" text="Build Date: mm/dd/yyyy" textAlignment="CENTER" />
       <ImageView fitHeight="300.0" fitWidth="400.0" layoutX="75.0" layoutY="-32.0" pickOnBounds="true" preserveRatio="true" styleClass="logo">
          <image>
             <Image url="@images/SquidLogo.png" />

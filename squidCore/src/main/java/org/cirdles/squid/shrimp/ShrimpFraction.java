@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
@@ -36,11 +36,11 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     private static final long serialVersionUID = -8414997835056044184L;
 
-    public static long dateTimeOfFirstReferenceMaterialSpotMilliseconds = 0l;
     private String fractionID;
     private int spotNumber;
     private String nameOfMount;
     private long dateTimeMilliseconds;
+    private double hours;
     private int deadTimeNanoseconds;
     private int sbmZeroCps;
     private double[] countTimeSec;
@@ -77,6 +77,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         spotNumber = -1;
         nameOfMount = "NONE";
         dateTimeMilliseconds = 0l;
+        hours = 0.0;
         deadTimeNanoseconds = 0;
         sbmZeroCps = 0;
         countTimeSec = new double[0];
@@ -126,13 +127,11 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double getHours() {
-        long deltaTime = dateTimeMilliseconds - ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds;
+        return hours;
+    }
 
-        BigDecimal deltaTimeBD = new BigDecimal(String.valueOf(deltaTime));
-
-        BigDecimal hrs = deltaTimeBD.divide(new BigDecimal("3600000"), MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_UP);
-
-        return hrs.doubleValue();
+    public void setHours(double hours) {
+        this.hours = hours;
     }
 
     /**
