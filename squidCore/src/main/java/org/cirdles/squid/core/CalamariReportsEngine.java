@@ -30,7 +30,7 @@ import java.util.Map;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.shrimp.SquidRatiosModel;

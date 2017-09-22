@@ -32,14 +32,12 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring
  */
-public class SpotFieldNode extends ExpressionTree{// implements Serializable, XMLSerializerInterface {
+public class SpotFieldNode extends ExpressionTree{
 
     private static final long serialVersionUID = 2173277234623108736L;
 
     private String fieldName;
     private String methodNameForShrimpFraction;
-    // used for parsing expressions
-//    private ExpressionTreeInterface parentET;
 
     private SpotFieldNode() {
     }
@@ -129,9 +127,6 @@ public class SpotFieldNode extends ExpressionTree{// implements Serializable, XM
         String retVal
                 = "<mrow>"
                 + "<mi>" + fieldName + "</mi>"
-//                + "<mfenced>"
-//                + "<mi>SPOT</mi>"
-//                + "</mfenced>"
                 + "</mrow>\n";
 
         return retVal;

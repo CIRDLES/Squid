@@ -17,6 +17,7 @@ package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
@@ -45,6 +46,19 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
         parsedRPNreversedExcelString = new ArrayList<>();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.parsedRPNreversedExcelString);
+        return hash;
+    }
+
+    
     @Override
     public void buildExpression(TaskInterface task) {
 

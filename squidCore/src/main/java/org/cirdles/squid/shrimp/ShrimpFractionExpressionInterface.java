@@ -17,7 +17,7 @@ package org.cirdles.squid.shrimp;
 
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.tasks.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**

@@ -15,6 +15,9 @@
  */
 package org.cirdles.squid.prawn;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ public class PrawnFileRunFractionParser {
 
     private String fractionID;
     private long dateTimeMilliseconds;
+    private long baseTimeOfFirstRefMatForCalcHoursField;
     private double[][] totalCounts;
     private double[][] totalCountsOneSigmaAbs;
     private double[][] totalCountsSBM;
@@ -72,6 +76,7 @@ public class PrawnFileRunFractionParser {
      */
     public PrawnFileRunFractionParser() {
         dateTimeMilliseconds = 0l;
+        baseTimeOfFirstRefMatForCalcHoursField = 0l;
     }
 
     /**
@@ -105,6 +110,7 @@ public class PrawnFileRunFractionParser {
 
             shrimpFraction = new ShrimpFraction(fractionID, isotopicRatiosII);
             shrimpFraction.setDateTimeMilliseconds(dateTimeMilliseconds);
+            shrimpFraction.setHours(calculateHours());
             shrimpFraction.setDeadTimeNanoseconds(deadTimeNanoseconds);
             shrimpFraction.setSbmZeroCps(sbmZeroCps);
             shrimpFraction.setCountTimeSec(countTimeSec);
@@ -132,6 +138,16 @@ public class PrawnFileRunFractionParser {
             }
         }
         return shrimpFraction;
+    }
+
+    private double calculateHours() {
+        long deltaTime = dateTimeMilliseconds - baseTimeOfFirstRefMatForCalcHoursField;
+
+        BigDecimal deltaTimeBD = new BigDecimal(String.valueOf(deltaTime));
+
+        BigDecimal hrs = deltaTimeBD.divide(new BigDecimal("3600000"), MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_UP);
+
+        return hrs.doubleValue();
     }
 
     private void prepareRunFractionMetaData(PrawnFile.Run runFraction, SquidSessionModel squidSessionSpecs) {
@@ -175,7 +191,7 @@ public class PrawnFileRunFractionParser {
         pkNetCps = new double[nScans][nSpecies];
         sbmCps = new double[nScans][nSpecies];
         pkFerr = new double[nScans][nSpecies];
-        
+
         isotopicRatiosII = squidSessionSpecs.produceRatiosCopySortedSet();
     }
 
@@ -697,24 +713,40 @@ public class PrawnFileRunFractionParser {
                         } catch (Exception e) {
                             scanPkCts = SQUID_ERROR_VALUE;
                         }
-                        try {
-                            pkFractErr = Math.sqrt(pkFractErr * pkFractErr
-                                    + 1.0 / sbmCps[scanNum][pkOrder] / countTimeSec[pkOrder]);
-                        } catch (Exception e) {
+
+                        pkFractErr = Math.sqrt(pkFractErr * pkFractErr
+                                + 1.0 / sbmCps[scanNum][pkOrder] / countTimeSec[pkOrder]);
+                        if (Double.isNaN(pkFractErr)) {
                             pkFractErr = SQUID_ERROR_VALUE;
                         }
-                    }
 
-                    try {
-                        reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
-                    } catch (Exception e) {
-                        reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
+                        try {
+                            reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
+                        } catch (Exception e) {
+                            reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
+                        }
+                        reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
                     }
-                    reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
                 }
-            }
-        } // end of scans loop
-        // the remainder of the math is done on a per-expression basis
+            } // end of scans loop
+            // the remainder of the math is done on a per-expression basis
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public long getBaseTimeOfFirstRefMatForCalcHoursField() {
+        return baseTimeOfFirstRefMatForCalcHoursField;
+    }
+
+    /**
+     * @param baseTimeOfFirstRefMatForCalcHoursField the
+     * baseTimeOfFirstRefMatForCalcHoursField to set
+     */
+    public void setBaseTimeOfFirstRefMatForCalcHoursField(long baseTimeOfFirstRefMatForCalcHoursField) {
+        this.baseTimeOfFirstRefMatForCalcHoursField = baseTimeOfFirstRefMatForCalcHoursField;
     }
 
 }

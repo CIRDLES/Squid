@@ -15,21 +15,18 @@
  */
 package org.cirdles.squid.tasks;
 
-import com.google.common.primitives.Doubles;
+import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
-import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
-import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
@@ -40,6 +37,7 @@ import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -198,12 +196,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\n");
 
         return summary.toString();
-    }
-
-    private void initializeTask() {
-        if (prawnFile != null) {
-            setupSquidSessionSpecs();
-        }
     }
 
     @Override
@@ -405,7 +397,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private ExpressionTreeInterface buildRatioExpression(String ratioName) {
         // format of ratioName is "nnn/mmm"
         ExpressionTreeInterface ratioExpression = null;
-        if ((findNumerator(ratioName) != null) & (findDenominator(ratioName) != null)) {
+        if ((findNumerator(ratioName) != null) && (findDenominator(ratioName) != null)) {
             ratioExpression
                     = new ExpressionTree(
                             ratioName,
@@ -429,12 +421,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return foundRatioExp;
     }
 
-    private SquidSpeciesModel findNumerator(String ratioName) {
+    public SquidSpeciesModel findNumerator(String ratioName) {
         String[] parts = ratioName.split("/");
         return lookUpSpeciesByName(parts[0]);
     }
 
-    private SquidSpeciesModel findDenominator(String ratioName) {
+    public SquidSpeciesModel findDenominator(String ratioName) {
         String[] parts = ratioName.split("/");
         return lookUpSpeciesByName(parts[1]);
     }
@@ -458,7 +450,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param ratiosOfInterest
      * @return
      */
-    private Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest) {
+    public Set<SquidSpeciesModel> extractUniqueSpeciesNumbers(List<String> ratiosOfInterest) {
         // assume acquisition order is atomic weight order
         Set<SquidSpeciesModel> eqPkUndupeOrd = new TreeSet<>();
         for (int i = 0; i < ratiosOfInterest.size(); i++) {
@@ -517,9 +509,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 shrimpFraction.setNameOfMount(nameOfMount);
 
                 // preparing for field "Hours" specified as time in hours elapsed since first ref material analysis start = hh.###
-                if ((ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds == 0l)
+                if ((PRAWN_FILE_RUN_FRACTION_PARSER.getBaseTimeOfFirstRefMatForCalcHoursField() == 0l)
                         && shrimpFraction.isReferenceMaterial()) {
-                    ShrimpFraction.dateTimeOfFirstReferenceMaterialSpotMilliseconds = shrimpFraction.getDateTimeMilliseconds();
+                    PRAWN_FILE_RUN_FRACTION_PARSER.setBaseTimeOfFirstRefMatForCalcHoursField(shrimpFraction.getDateTimeMilliseconds());
                 }
                 shrimpFractions.add(shrimpFraction);
             }
@@ -587,9 +579,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // determine type of expression
         if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
-            double[][] value = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
+            double[][] values = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
             taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
-                    new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), value, spotsForExpression));
+                    new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), values, spotsForExpression));
         } else {
             // perform expression on each spot
             for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
@@ -604,10 +596,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         if (((ExpressionTree) expression).hasRatiosOfInterest()) {
             // case of Squid switch "NU"
+            ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
             TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel
-                    = evaluateTaskExpressionsPerSpotPerScan(expression, spot);
+                    = expressionEvaluator.evaluateTaskExpressionsPerSpotPerScan(this, expression, spot);
+
             // save scan-specific results
             spot.getTaskExpressionsForScansEvaluated().add(taskExpressionEvaluatedPerSpotPerScanModel);
+
             // save spot-specific results
             double[][] value = new double[][]{{taskExpressionEvaluatedPerSpotPerScanModel.getRatioVal(),
                 taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
@@ -625,239 +620,51 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * see https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-EqnInterp
-     *
-     * @param expression
-     * @param shrimpFraction
+     * @return the listOfMassStationDetails
      */
-    private TaskExpressionEvaluatedPerSpotPerScanModelInterface
-            evaluateTaskExpressionsPerSpotPerScan(
-                    ExpressionTreeInterface expression,
-                    ShrimpFractionExpressionInterface shrimpFraction) throws SquidException {
-
-        TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel = null;
-        if (shrimpFraction != null) {
-
-            // construct argument list of one spot
-            List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
-            singleSpot.add(shrimpFraction);
-
-            // first have to build pkInterp etc per expression and then evaluate by scan
-            List<String> ratiosOfInterest = ((ExpressionTreeWithRatiosInterface) expression).getRatiosOfInterest();
-
-            int[] isotopeIndices = new int[ratiosOfInterest.size() * 2];
-            for (int i = 0; i < ratiosOfInterest.size(); i++) {
-                if (findNumerator(ratiosOfInterest.get(i)) != null) {
-                    isotopeIndices[2 * i] = findNumerator(ratiosOfInterest.get(i)).getMassStationIndex();
-                } else {
-                    isotopeIndices[2 * i] = -1;
-                }
-                if (findDenominator(ratiosOfInterest.get(i)) != null) {
-                    isotopeIndices[2 * i + 1] = findDenominator(ratiosOfInterest.get(i)).getMassStationIndex();
-                } else {
-                    isotopeIndices[2 * i + 1] = -1;
-                }
+    @Override
+    public List<MassStationDetail> makeListOfMassStationDetails() {
+        List<MassStationDetail> listOfMassStationDetails = new ArrayList<>();
+        for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
+            listOfMassStationDetails.add(entry.getValue());
+            if (entry.getValue().getIsBackground()) {
+                entry.getValue().setIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
             }
+        }
+        return listOfMassStationDetails;
+    }
 
-            //TODO June 2017 temp hack until expression checking is in place
-            for (int i = 0; i < isotopeIndices.length; i++) {
-                if (isotopeIndices[i] == -1) {
-                    throw new SquidException("Missing Isotope");
-                }
+    private void populateTableOfSelectedRatiosFromRatiosList() {
+        resetTableOfSelectedRatiosByMassStationIndex();
+
+        for (int i = 0; i < ratioNames.size(); i++) {
+            String[] ratio = ratioNames.get(i).split("/");
+            if ((lookUpSpeciesByName(ratio[0]) != null)
+                    && lookUpSpeciesByName(ratio[1]) != null) {
+                int num = lookUpSpeciesByName(ratio[0]).getMassStationIndex();
+                int den = lookUpSpeciesByName(ratio[1]).getMassStationIndex();
+                tableOfSelectedRatiosByMassStationIndex[num][den] = true;
             }
+        }
+    }
 
-            int sIndx = shrimpFraction.getReducedPkHt().length - 1;
-            double[][] pkInterp = new double[sIndx][shrimpFraction.getReducedPkHt()[0].length];
-            double[][] pkInterpFerr = new double[sIndx][shrimpFraction.getReducedPkHt()[0].length];
-            boolean singleScan = (sIndx == 1);
-            double interpTime = 0.0;
-
-            List<Double> eqValList = new ArrayList<>();
-            List<Double> fractErrList = new ArrayList<>();
-            List<Double> absErrList = new ArrayList<>();
-            List<Double> eqTimeList = new ArrayList<>();
-
-            for (int scanNum = 0; scanNum < sIndx; scanNum++) {
-                boolean doProceed = true;
-                if (!singleScan) {
-                    double interpTimeSpan = 0.0;
-                    for (int i = 0; i < isotopeIndices.length; i++) {
-                        interpTimeSpan
-                                += shrimpFraction.getTimeStampSec()[scanNum][isotopeIndices[i]]
-                                + shrimpFraction.getTimeStampSec()[scanNum + 1][isotopeIndices[i]];
-                    }
-                    interpTime = interpTimeSpan / isotopeIndices.length / 2.0;
-                } // end check singleScan
-
-                for (int i = 0; i < isotopeIndices.length; i++) {
-                    double fractInterpTime = 0.0;
-                    double fractLessInterpTime = 0.0;
-                    double redPk2Ht = 0.0;
-
-                    if (!singleScan) {
-                        // default value
-                        pkInterp[scanNum][isotopeIndices[i]] = SQUID_ERROR_VALUE;
-                        double pkTdelt
-                                = shrimpFraction.getTimeStampSec()[scanNum + 1][isotopeIndices[i]]
-                                - shrimpFraction.getTimeStampSec()[scanNum][isotopeIndices[i]];
-
-                        doProceed = (pkTdelt > 0.0);
-
-                        if (doProceed) {
-                            fractInterpTime = (interpTime - shrimpFraction.getTimeStampSec()[scanNum][isotopeIndices[i]]) / pkTdelt;
-                            fractLessInterpTime = 1.0 - fractInterpTime;
-                            redPk2Ht = shrimpFraction.getReducedPkHt()[scanNum + 1][isotopeIndices[i]];
-                        }
-                    } // end check singleScan
-                    if (doProceed) {
-                        double redPk1Ht = shrimpFraction.getReducedPkHt()[scanNum][isotopeIndices[i]];
-
-                        if (redPk1Ht == SQUID_ERROR_VALUE || redPk2Ht == SQUID_ERROR_VALUE) {
-                            doProceed = false;
-                        }
-
-                        if (doProceed) {
-                            double pkF1 = shrimpFraction.getReducedPkHtFerr()[scanNum][isotopeIndices[i]];
-
-                            if (singleScan) {
-                                pkInterp[scanNum][isotopeIndices[i]] = redPk1Ht;
-                                pkInterpFerr[scanNum][isotopeIndices[i]] = pkF1;
-                            } else {
-                                pkInterp[scanNum][isotopeIndices[i]] = (fractLessInterpTime * redPk1Ht) + (fractInterpTime * redPk2Ht);
-                                double pkF2 = shrimpFraction.getReducedPkHtFerr()[scanNum + 1][isotopeIndices[i]];
-                                pkInterpFerr[scanNum][isotopeIndices[i]] = Math.sqrt((fractLessInterpTime * pkF1) * (fractLessInterpTime * pkF1)
-                                        + (fractInterpTime * pkF2) * (fractInterpTime * pkF2));
-                            }
-                        }
-                    }
-                }
-
-                // The next step is to evaluate the equation 'FormulaEval', 
-                // documented separately, and approximate the uncertainties:
-                shrimpFraction.setPkInterpScanArray(pkInterp[scanNum]);
-
-                double eqValTmp = convertObjectArrayToDoubles(expression.eval(singleSpot, this))[0][0];
-
-                double eqFerr;
-
-                if (eqValTmp != 0.0) {
-                    // numerical pertubation procedure
-                    // EqPkUndupeOrd is here a List of the unique Isotopes in order of acquisition in the expression
-                    Set<SquidSpeciesModel> eqPkUndupeOrd = extractUniqueSpeciesNumbers(((ExpressionTreeWithRatiosInterface) expression).getRatiosOfInterest());
-                    Iterator<SquidSpeciesModel> species = eqPkUndupeOrd.iterator();
-
-                    double fVar = 0.0;
-                    while (species.hasNext()) {
-                        SquidSpeciesModel specie = species.next();
-                        int unDupPkOrd = specie.getMassStationIndex();
-
-                        // clone pkInterp[scanNum] for use in pertubation
-                        double[] perturbed = pkInterp[scanNum].clone();
-                        perturbed[unDupPkOrd] *= 1.0001;
-                        shrimpFraction.setPkInterpScanArray(perturbed);
-
-                        double pertVal = convertObjectArrayToDoubles(expression.eval(singleSpot, this))[0][0];
-
-                        double fDelt = (pertVal - eqValTmp) / eqValTmp; // improvement suggested by Bodorkos
-                        double tA = pkInterpFerr[scanNum][unDupPkOrd];
-                        double tB = 1.0001 - 1.0;// --note that Excel 16-bit floating binary gives 9.9999999999989E-05    
-                        double tC = fDelt * (tA / tB); // Bodorkos rescaled tc and td April 2017    fDelt * fDelt;
-                        double tD = tC * tC;         // Bodorkos rescaled tc and td April 2017(tA / tB) * (tA / tB) * tC;
-                        fVar += tD;// --fractional internal variance
-
-                    } // end of visiting each isotope and perturbing equation
-
-                    eqFerr = Math.sqrt(fVar);
-
-                    // now that expression and its error are calculated
-                    if (eqFerr != 0.0) {
-                        eqValList.add(eqValTmp);
-                        absErrList.add(Math.abs(eqFerr * eqValTmp));
-                        fractErrList.add(eqFerr);
-                        double totRatTime = 0.0;
-                        int numPksInclDupes = 0;
-
-                        // reset iterator
-                        species = eqPkUndupeOrd.iterator();
-                        while (species.hasNext()) {
-                            int unDupPkOrd = species.next().getMassStationIndex();
-
-                            totRatTime += shrimpFraction.getTimeStampSec()[scanNum][unDupPkOrd];
-                            numPksInclDupes++;
-
-                            totRatTime += shrimpFraction.getTimeStampSec()[scanNum + 1][unDupPkOrd];
-                            numPksInclDupes++;
-                        }
-                        eqTimeList.add(totRatTime / numPksInclDupes);
-                    }
-                } // end test of eqValTmp != 0.0 VBA calls this a bailout and has no logic
-
-            } // end scanNum loop
-
-            // The final step is to assemble outputs EqTime, EqVal and AbsErr, and
-            // to define SigRho as input for the use of subroutine WtdLinCorr and its sub-subroutines: 
-            // convert to arrays
-            double[] eqVal = Doubles.toArray(eqValList);
-            double[] absErr = Doubles.toArray(absErrList);
-            double[] fractErr = Doubles.toArray(fractErrList);
-            double[] eqTime = Doubles.toArray(eqTimeList);
-            double[][] sigRho = new double[eqVal.length][eqVal.length];
-
-            for (int i = 0; i < sigRho.length; i++) {
-                sigRho[i][i] = absErr[i];
-                if (i > 0) {
-                    sigRho[i][i - 1] = 0.25;
-                    sigRho[i - 1][i] = 0.25;
-                }
+    @Override
+    public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected) {
+        tableOfSelectedRatiosByMassStationIndex[row][col] = selected;
+        String num = mapOfIndexToMassStationDetails.get(row).getIsotopeLabel();
+        String den = mapOfIndexToMassStationDetails.get(col).getIsotopeLabel();
+        String ratioName = num + "/" + den;
+        if (ratioNames.contains(ratioName)) {
+            if (!selected) {
+                ratioNames.remove(ratioName);
             }
-
-            WtdLinCorrResults wtdLinCorrResults;
-            double meanEq;
-            double meanEqSig;
-
-            if (shrimpFraction.isUserLinFits() && eqVal.length > 3) {
-                wtdLinCorrResults = wtdLinCorr(eqVal, sigRho, eqTime);
-
-                double midTime
-                        = (shrimpFraction.getTimeStampSec()[sIndx][shrimpFraction.getReducedPkHt()[0].length - 1]
-                        + shrimpFraction.getTimeStampSec()[0][0]) / 2.0;
-                double slope = wtdLinCorrResults.getSlope();
-                double sigmaSlope = wtdLinCorrResults.getSigmaSlope();
-                double sigmaIntercept = wtdLinCorrResults.getSigmaIntercept();
-
-                meanEq = (slope * midTime) + wtdLinCorrResults.getIntercept();
-                meanEqSig = Math.sqrt((midTime * sigmaSlope * midTime * sigmaSlope)//
-                        + sigmaIntercept * sigmaIntercept //
-                        + 2.0 * midTime * wtdLinCorrResults.getCovSlopeInter());
-
-            } else {
-                wtdLinCorrResults = wtdLinCorr(eqVal, sigRho, new double[0]);
-                meanEq = wtdLinCorrResults.getIntercept();
-                meanEqSig = wtdLinCorrResults.getSigmaIntercept();
+        } else {
+            if (selected) {
+                ratioNames.add(ratioName);
             }
-
-            double eqValFerr;
-            if (meanEq == 0.0) {
-                eqValFerr = 1.0;
-            } else {
-                eqValFerr = Math.abs(meanEqSig / meanEq);
-            }
-
-            // for consistency with Bodorkos documentation
-            double[] ratEqVal = eqVal.clone();
-            double[] ratEqTime = eqTime.clone();
-            double[] ratEqErr = new double[eqVal.length];
-            for (int i = 0; i < ratEqErr.length; i++) {
-                ratEqErr[i] = Math.abs(eqVal[i] * fractErr[i]);
-            }
-
-            // April 20178 rounding of ratEqVal, meanEq, and eqValFerr occurs within this constructor
-            taskExpressionEvaluatedPerSpotPerScanModel
-                    = new TaskExpressionEvaluatedPerSpotPerScanModel(
-                            expression, ratEqVal, ratEqTime, ratEqErr, meanEq, eqValFerr);
         }
 
-        return taskExpressionEvaluatedPerSpotPerScanModel;
+        changed = true;
     }
 
     /**
@@ -1062,54 +869,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void resetTableOfSelectedRatiosByMassStationIndex() {
         tableOfSelectedRatiosByMassStationIndex = new boolean[squidSpeciesModelList.size()][squidSpeciesModelList.size()];
-    }
-
-    /**
-     * @return the listOfMassStationDetails
-     */
-    @Override
-    public List<MassStationDetail> makeListOfMassStationDetails() {
-        List<MassStationDetail> listOfMassStationDetails = new ArrayList<>();
-        for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
-            listOfMassStationDetails.add(entry.getValue());
-            if (entry.getValue().getIsBackground()) {
-                entry.getValue().setIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
-            }
-        }
-        return listOfMassStationDetails;
-    }
-
-    private void populateTableOfSelectedRatiosFromRatiosList() {
-        resetTableOfSelectedRatiosByMassStationIndex();
-
-        for (int i = 0; i < ratioNames.size(); i++) {
-            String[] ratio = ratioNames.get(i).split("/");
-            if ((lookUpSpeciesByName(ratio[0]) != null)
-                    && lookUpSpeciesByName(ratio[1]) != null) {
-                int num = lookUpSpeciesByName(ratio[0]).getMassStationIndex();
-                int den = lookUpSpeciesByName(ratio[1]).getMassStationIndex();
-                tableOfSelectedRatiosByMassStationIndex[num][den] = true;
-            }
-        }
-    }
-
-    @Override
-    public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected) {
-        tableOfSelectedRatiosByMassStationIndex[row][col] = selected;
-        String num = mapOfIndexToMassStationDetails.get(row).getIsotopeLabel();
-        String den = mapOfIndexToMassStationDetails.get(col).getIsotopeLabel();
-        String ratioName = num + "/" + den;
-        if (ratioNames.contains(ratioName)) {
-            if (!selected) {
-                ratioNames.remove(ratioName);
-            }
-        } else {
-            if (selected) {
-                ratioNames.add(ratioName);
-            }
-        }
-
-        changed = true;
     }
 
     /**

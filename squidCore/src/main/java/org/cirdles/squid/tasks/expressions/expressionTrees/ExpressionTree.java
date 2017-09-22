@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -310,7 +311,9 @@ public class ExpressionTree
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        int hash = 7;
+        hash = 73 * hash + Objects.hashCode(this.name);
+        return hash;
     }
 
     public boolean isValid() {
@@ -319,15 +322,15 @@ public class ExpressionTree
 
     @Override
     public String auditOperationArgumentCount() {
-        String audit = "";
+        StringBuffer audit = new StringBuffer();
         if (operation == null) {
             if (!(this instanceof ConstantNode) && !(this instanceof SpotFieldNode) && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)) {
-                audit = "    " + this.getName() + " is unhealthy expression";
+                audit.append("    ").append(this.getName()).append(" is unhealthy expression");
             } else {//if (this instanceof ConstantNode) {
                 if (this.amHealthy()) {
-                    audit = "    " + this.getName() + " is healthy " + this.getClass().getSimpleName();
+                    audit.append(this.getName()).append(" is healthy ").append(this.getClass().getSimpleName());
                 } else if (this.getParentET() == null) {// only if ConstantNode is top of tree vs within an already autided expressiontree
-                    audit = "    " + this.getName(); // = Missing Expression becasue if unhealthy, it was forced to be a constantNode
+                    audit.append("    ").append(this.getName()); // = Missing Expression becasue if unhealthy, it was forced to be a constantNode
                 }
             }
         } else {
@@ -335,12 +338,13 @@ public class ExpressionTree
             int requiredChildren = argumentCount();
             int suppliedChildren = getCountOfChildren();
 
-            audit = "Op " + operation.getName() + " requires/provides: " + requiredChildren + " / " + suppliedChildren + " arguments.";
+            audit.append("Op ").append(operation.getName()).append(" requires/provides: ")
+                    .append(requiredChildren).append(" / ").append(suppliedChildren).append(" arguments.");
 
             for (ExpressionTreeInterface child : getChildrenET()) {
                 if (child instanceof ConstantNode) {
                     if (((ConstantNode) child).isMissingExpression()) {
-                        audit += "\n    Expression '" + (String) ((ConstantNode) child).getValue() + "' is missing.";
+                        audit.append("\n    Expression '").append((String) ((ConstantNode) child).getValue()).append("' is missing.");
                     }
                 }
 
@@ -348,15 +352,15 @@ public class ExpressionTree
                 if (child instanceof ShrimpSpeciesNode) {
                     if (!(((ExpressionTree) child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
                             && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
-                        audit += "\n    Expression '" + (String) ((ShrimpSpeciesNode) child).getName() + "' is not a valid argument.";
+                        audit.append("\n    Expression '").append((String) ((ShrimpSpeciesNode) child).getName()).append("' is not a valid argument.");
                     }
                 }
             }
 
-            audit += "\n    returns " + operation.printOutputValues();
+            audit.append("\n    returns ").append(operation.printOutputValues());
         }
 
-        return audit;
+        return audit.toString();
     }
 
     /**

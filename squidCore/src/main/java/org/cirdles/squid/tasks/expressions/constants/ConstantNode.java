@@ -18,6 +18,7 @@ package org.cirdles.squid.tasks.expressions.constants;
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -53,6 +54,38 @@ public class ConstantNode extends ExpressionTree {
     }
 
     @Override
+    public boolean equals(Object obj) {
+
+        boolean retVal = false;
+        if (obj == null) {
+            retVal = false;
+        } else {
+            if (this == obj) {
+                retVal = true;
+            } else if (obj.getClass().equals(this.getClass())) {
+                retVal = (name.compareTo(((ConstantNode) obj).getName()) == 0);
+                if (retVal) {
+                    if (value instanceof Double) {
+                        retVal = (Double.compare((double) value, (double) ((ConstantNode) obj).getValue()) == 0);
+                    } else if (value instanceof String) {
+                        retVal = (((String) value).compareToIgnoreCase(((String) ((ConstantNode) obj).getValue())) == 0);
+                    } else if (value instanceof Boolean) {
+                        retVal = (((Boolean) value).compareTo(((Boolean) ((ConstantNode) obj).getValue())) == 0);
+                    }
+                }
+            }
+        }
+        return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.value);
+        return hash;
+    }
+
+    @Override
     public boolean amHealthy() {
         return name.compareTo(MISSING_EXPRESSION_STRING) != 0;
     }
@@ -63,7 +96,8 @@ public class ConstantNode extends ExpressionTree {
     }
 
     @Override
-    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp
+    ) {
         return false;
     }
 
@@ -72,7 +106,8 @@ public class ConstantNode extends ExpressionTree {
      * @param xstream
      */
     @Override
-    public void customizeXstream(XStream xstream) {
+    public void customizeXstream(XStream xstream
+    ) {
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
     }
@@ -83,7 +118,8 @@ public class ConstantNode extends ExpressionTree {
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task
+    ) {
         return new Object[][]{{value}};
     }
 
