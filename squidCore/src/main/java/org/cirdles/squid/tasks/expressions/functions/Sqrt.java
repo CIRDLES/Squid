@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.functions;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -25,6 +26,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  *
  * @author James F. Bowring
  */
+@XStreamAlias("Operation")
 public class Sqrt extends Function {
 
     private static final long serialVersionUID = 1408341634276755722L;

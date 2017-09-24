@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -24,6 +25,7 @@ import org.cirdles.squid.tasks.expressions.functions.Function;
  *
  * @author James F. Bowring
  */
+@XStreamAlias("ExpressionTree")
 public class CustomExpression_LnPbR_U extends ExpressionTree implements BuiltInExpressionInterface {
 
     private static final long serialVersionUID = 4503819747092653761L;

@@ -31,33 +31,9 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  *
  * @author James F. Bowring
  */
-public class VariableNodeForSummary extends ExpressionTree {//implements ExpressionTreeInterface, Serializable, XMLSerializerInterface {
+public class VariableNodeForSummary extends ExpressionTree {
 
     private static final long serialVersionUID = -868256637199178058L;
-//    private void readObject(
-//            ObjectInputStream stream)
-//            throws IOException, ClassNotFoundException {
-//        stream.defaultReadObject();
-//        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(VariableNodeForSummary.class.getCanonicalName()));
-//        long theSUID = myObject.getSerialVersionUID();
-//        System.out.println("Customized De-serialization of VariableNodeForSummary " + theSUID);
-//    }
-//    protected String name;
-//    protected ExpressionTreeInterface parentET;
-//
-//    /**
-//     *
-//     */
-//    private boolean squidSwitchSTReferenceMaterialCalculation;
-//
-//    /**
-//     *
-//     */
-//    private boolean squidSwitchSAUnknownCalculation;
-//    /**
-//     *
-//     */
-//    protected boolean squidSwitchSCSummaryCalculation;
 
     /**
      *
@@ -135,41 +111,9 @@ public class VariableNodeForSummary extends ExpressionTree {//implements Express
         return retVal;
     }
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public boolean isRootExpressionTree() {
         return false;
-    }
-
-    /**
-     * @return the parentET
-     */
-    @Override
-    public ExpressionTreeInterface getParentET() {
-        return parentET;
-    }
-
-    /**
-     * @param parentET the parentET to set
-     */
-    @Override
-    public void setParentET(ExpressionTreeInterface parentET) {
-        this.parentET = parentET;
     }
 
     /**
@@ -197,56 +141,5 @@ public class VariableNodeForSummary extends ExpressionTree {//implements Express
     @Override
     public int argumentCount() {
         return 0;
-    }
-
-    /**
-     * @return the squidSwitchSTReferenceMaterialCalculation
-     */
-    @Override
-    public boolean isSquidSwitchSTReferenceMaterialCalculation() {
-        return squidSwitchSTReferenceMaterialCalculation;
-    }
-
-    /**
-     * @param squidSwitchSTReferenceMaterialCalculation the
-     * squidSwitchSTReferenceMaterialCalculation to set
-     */
-    @Override
-    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
-        this.squidSwitchSTReferenceMaterialCalculation = squidSwitchSTReferenceMaterialCalculation;
-    }
-
-    /**
-     * @return the squidSwitchSAUnknownCalculation
-     */
-    @Override
-    public boolean isSquidSwitchSAUnknownCalculation() {
-        return squidSwitchSAUnknownCalculation;
-    }
-
-    /**
-     * @param squidSwitchSAUnknownCalculation the
-     * squidSwitchSAUnknownCalculation to set
-     */
-    @Override
-    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
-        this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
-    }
-
-    /**
-     * @return the squidSwitchSCSummaryCalculation
-     */
-    @Override
-    public boolean isSquidSwitchSCSummaryCalculation() {
-        return squidSwitchSCSummaryCalculation;
-    }
-
-    /**
-     * @param squidSwitchSCSummaryCalculation the
-     * squidSwitchSCSummaryCalculation to set
-     */
-    @Override
-    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation) {
-        this.squidSwitchSCSummaryCalculation = squidSwitchSCSummaryCalculation;
     }
 }

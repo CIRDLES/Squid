@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,10 +28,12 @@ import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
  *
  * @author James F. Bowring
  */
+@XStreamAlias("ExpressionTree")
 public class ExpressionTreeParsedFromExcelString extends ExpressionTree implements BuiltInExpressionInterface {
 
     private static final long serialVersionUID = -1526502328130247004L;
 
+    @XStreamOmitField
     private List<String> parsedRPNreversedExcelString;
 
     public ExpressionTreeParsedFromExcelString(String name) {
@@ -58,7 +62,6 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
         return hash;
     }
 
-    
     @Override
     public void buildExpression(TaskInterface task) {
 
@@ -68,9 +71,8 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
         // copy to this children, operation, and calculate ratiosOfInterest
         this.childrenET = ((ExpressionTree) parsedExp).getChildrenET();
         this.operation = ((ExpressionTree) parsedExp).getOperation();
-              
+
         this.ratiosOfInterest = getAllRatiosOfInterest();
-             
 
         //other switches set outside of this operation
         setRootExpressionTree(true);

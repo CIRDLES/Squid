@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.functions;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
@@ -28,6 +29,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  *
  * @author James F. Bowring
  */
+@XStreamAlias("Operation")
 public class And extends Function {
         //    private static final long serialVersionUID = 6522574920235718028L;
     private void readObject(
