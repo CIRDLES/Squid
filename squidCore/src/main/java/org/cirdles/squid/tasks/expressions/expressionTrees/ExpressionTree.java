@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_LOCAL_SCHEMA;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_REMOTE_SCHEMA;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -409,7 +409,7 @@ public class ExpressionTree
         String xmlR = xml;
         
         xmlR = xmlR.replaceFirst("<ExpressionTree>",
-                XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_LOCAL_SCHEMA);
+                XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_REMOTE_SCHEMA);
 
         return xmlR;
     }

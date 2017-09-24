@@ -24,7 +24,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.xml.sax.SAXException;
 
 /**
@@ -41,7 +43,7 @@ public class FileHandler {
         fileChooser.setTitle("Select Project '.squid' file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
         File initDirectory = new File(projectFolderPathMRU);
-        fileChooser.setInitialDirectory(initDirectory.exists()? initDirectory : null);
+        fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
         File projectFileNew = fileChooser.showOpenDialog(ownerWindow);
 
@@ -81,7 +83,7 @@ public class FileHandler {
         fileChooser.setTitle("Select Prawn XML file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
         File initDirectory = new File(prawnFileFolderMRU);
-        fileChooser.setInitialDirectory(initDirectory.exists()? initDirectory : null);
+        fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
         File prawnXMLFileNew = fileChooser.showOpenDialog(ownerWindow);
 
@@ -105,7 +107,7 @@ public class FileHandler {
         fileChooser.setTitle("Select Two Prawn XML files");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
         File initDirectory = new File(prawnFileFolderMRU);
-        fileChooser.setInitialDirectory(initDirectory.exists()? initDirectory : null);
+        fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
         List<File> prawnXMLFilesNew = fileChooser.showOpenMultipleDialog(ownerWindow);
 
@@ -159,6 +161,28 @@ public class FileHandler {
             } else {
                 throw new IOException("Filename does not end with '.xls'");
             }
+        }
+
+        return retVal;
+    }
+
+    public static File saveExpressionTreeFileXML(Expression expression, Window ownerWindow)
+            throws IOException {
+
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save ExpressionTree '.xml' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("ExpressionTree '.xml' files", "*.xml"));
+        fileChooser.setInitialDirectory(null);
+        fileChooser.setInitialFileName(expression.getName() + ".xml");
+
+        File expressionTreeFileXML = fileChooser.showSaveDialog(ownerWindow);
+
+        if (expressionTreeFileXML != null) {
+            retVal = expressionTreeFileXML;
+            ((XMLSerializerInterface) expression.getExpressionTree())
+                    .serializeXMLObject(expressionTreeFileXML.getAbsolutePath());
         }
 
         return retVal;
