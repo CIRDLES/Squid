@@ -27,6 +27,7 @@ import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -120,6 +121,10 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.setValue(String.valueOf(expressionTree.isSquidSwitchSAUnknownCalculation()));
         writer.endNode();
 
+        writer.startNode("squidSpecialUPbThExpression");
+        writer.setValue(String.valueOf(expressionTree.isSquidSpecialUPbThExpression()));
+        writer.endNode();
+
         writer.startNode("rootExpressionTree");
         writer.setValue(String.valueOf(expressionTree.isRootExpressionTree()));
         writer.endNode();
@@ -168,6 +173,10 @@ public class ExpressionTreeXMLConverter implements Converter {
                 case "ConstantNode":
                     expression = new ConstantNode();
                     expression = (ExpressionTreeInterface) context.convertAnother(expression, ConstantNode.class);
+                    break;
+                case "SpotFieldNode":
+                    expression = new SpotFieldNode();
+                    expression = (ExpressionTreeInterface) context.convertAnother(expression, SpotFieldNode.class);
                     break;
                 case "VariableNodeForSummary":
                     expression = new VariableNodeForSummary();
@@ -223,6 +232,10 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         reader.moveDown();
         expressionTree.setSquidSwitchSAUnknownCalculation(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+
+        reader.moveDown();
+        expressionTree.setSquidSpecialUPbThExpression(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 
         reader.moveDown();

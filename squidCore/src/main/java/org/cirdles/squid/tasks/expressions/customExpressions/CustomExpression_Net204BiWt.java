@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -27,6 +28,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
  *
  * @author James F. Bowring
  */
+@XStreamAlias("ExpressionTree")
 public class CustomExpression_Net204BiWt extends ExpressionTree implements BuiltInExpressionInterface {
 
     private static final long serialVersionUID = -5952836801278720275L;

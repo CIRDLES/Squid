@@ -58,7 +58,7 @@ import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotN
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
-import org.cirdles.squid.tasks.expressions.variables.VariableXMLConverter;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 
 /**
@@ -235,6 +235,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void processAndSortExpressions() {
+
         // put expressions in execution order
         try {
             Collections.sort(taskExpressionTreesOrdered);
@@ -248,6 +249,21 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // since checking for dependencies after possible changes or new expressions
         buildExpressions();
 
+//        // experiment----------------
+//        Expression first = taskExpressionsOrdered.get(2);
+//        ((XMLSerializerInterface) first.getExpressionTree())
+//                .serializeXMLObject("TEST_SERIAL2.xml");
+
+//        ExpressionTreeInterface test = (ExpressionTreeInterface) this.readXMLObject("TEST_SERIAL2.xml", false);
+//        test.setName("TEST");
+//        Expression testExp = new Expression(test, first.getExcelExpressionString());
+//        if (taskExpressionsOrdered.contains(testExp)){
+//            taskExpressionsOrdered.remove(testExp);
+//            taskExpressionTreesOrdered.remove(test);
+//        }
+//        taskExpressionsOrdered.add(testExp);
+//        taskExpressionTreesOrdered.add((ExpressionTree) test);
+        //---------------
         // put expressions in execution order
         try {
             Collections.sort(taskExpressionTreesOrdered);
@@ -472,7 +488,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
 
-        xstream.registerConverter(new VariableXMLConverter());
+        xstream.registerConverter(new VariableNodeForSummaryXMLConverter());
         xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
         xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
         xstream.alias("VariableNodeForIsotopicRatios", VariableNodeForIsotopicRatios.class);

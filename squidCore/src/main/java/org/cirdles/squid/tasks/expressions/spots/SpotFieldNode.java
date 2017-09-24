@@ -16,7 +16,6 @@
 package org.cirdles.squid.tasks.expressions.spots;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -26,20 +25,22 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring
  */
-public class SpotFieldNode extends ExpressionTree{
+public class SpotFieldNode extends ExpressionTree {
 
     private static final long serialVersionUID = 2173277234623108736L;
 
     private String fieldName;
     private String methodNameForShrimpFraction;
 
-    private SpotFieldNode() {
+    /**
+     * Used in unmarshalling
+     */
+    public SpotFieldNode() {
     }
 
     private SpotFieldNode(String fieldName, String methodNameForShrimpFraction) {
@@ -52,6 +53,16 @@ public class SpotFieldNode extends ExpressionTree{
     public static SpotFieldNode buildSpotNode(String methodNameForShrimpFraction) {
         SpotFieldNode spotNode = new SpotFieldNode(methodNameForShrimpFraction.replace("get", ""), methodNameForShrimpFraction);
         return spotNode;
+    }
+    
+        /**
+     *
+     * @param xstream
+     */
+    @Override
+    public void customizeXstream(XStream xstream) {
+        xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
+        xstream.alias("SpotFieldNode", SpotFieldNode.class);
     }
 
     /**
@@ -90,7 +101,7 @@ public class SpotFieldNode extends ExpressionTree{
 
     @Override
     public void setName(String name) {
-        this.name = name;
+        fieldName = name;
     }
 
     /**
@@ -105,16 +116,6 @@ public class SpotFieldNode extends ExpressionTree{
      */
     public void setMethodNameForShrimpFraction(String methodNameForShrimpFraction) {
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
-    }
-
-    @Override
-    public ExpressionTreeInterface getParentET() {
-        return parentET;
-    }
-
-    @Override
-    public void setParentET(ExpressionTreeInterface parentET) {
-        this.parentET = parentET;
     }
 
     @Override
@@ -152,14 +153,8 @@ public class SpotFieldNode extends ExpressionTree{
         return amHealthy();
     }
 
-    
     @Override
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
         return false;
-    }
-
-    @Override
-    public void customizeXstream(XStream xstream) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

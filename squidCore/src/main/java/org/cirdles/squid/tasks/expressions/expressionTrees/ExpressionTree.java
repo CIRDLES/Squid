@@ -16,10 +16,13 @@
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_LOCAL_SCHEMA;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -28,7 +31,6 @@ import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.Function;
-import static org.cirdles.squid.tasks.expressions.functions.Function.lookup;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
@@ -40,12 +42,13 @@ import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
-import org.cirdles.squid.tasks.expressions.variables.VariableXMLConverter;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 
 /**
  *
  * @author James F. Bowring
  */
+@XStreamAlias("ExpressionTree")
 public class ExpressionTree
         implements
         Comparable<ExpressionTree>,
@@ -70,6 +73,7 @@ public class ExpressionTree
     /**
      *
      */
+    @XStreamOmitField
     protected ExpressionTreeInterface parentET;
 
     /**
@@ -322,7 +326,7 @@ public class ExpressionTree
 
     @Override
     public String auditOperationArgumentCount() {
-        StringBuffer audit = new StringBuffer();
+        StringBuilder audit = new StringBuilder();
         if (operation == null) {
             if (!(this instanceof ConstantNode) && !(this instanceof SpotFieldNode) && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)) {
                 audit.append("    ").append(this.getName()).append(" is unhealthy expression");
@@ -375,20 +379,24 @@ public class ExpressionTree
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
 
-        xstream.registerConverter(new VariableXMLConverter());
+        xstream.registerConverter(new VariableNodeForSummaryXMLConverter());
         xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
         xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
         xstream.alias("VariableNodeForIsotopicRatios", VariableNodeForIsotopicRatios.class);
 
         xstream.registerConverter(new OperationXMLConverter());
+        xstream.alias("Operation", Operation.class);
         xstream.registerConverter(new FunctionXMLConverter());
+        xstream.alias("Operation", Function.class);
+        xstream.alias("Operation", OperationOrFunctionInterface.class);
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
+        xstream.alias("ExpressionTree", ExpressionTreeInterface.class);
 
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);
-
+        xstream.autodetectAnnotations(true);
     }
 
     /**
@@ -399,17 +407,9 @@ public class ExpressionTree
     @Override
     public String customizeXML(String xml) {
         String xmlR = xml;
-
-        // TODO: Move to global once we decide where this puppy will live
-        String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<ExpressionTree xmlns=\"https://raw.githubusercontent.com\"\n"
-                + " xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
-                + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + " xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
-                + "                 https://raw.githubusercontent.com/CIRDLES/Calamari/master/src/main/resources/SquidExpressionModelXMLSchema.xsd\">";
-
+        
         xmlR = xmlR.replaceFirst("<ExpressionTree>",
-                header);
+                XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_LOCAL_SCHEMA);
 
         return xmlR;
     }

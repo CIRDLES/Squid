@@ -36,7 +36,7 @@ public final class Squid3Constants {
             + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
-            + "                                https://raw.githubusercontent.com/CIRDLES/ShrimpXSD/master/SHRIMP_PRAWN.xsd\">";
+            + "                                https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SHRIMP_PRAWN.xsd\">";
 
     public static final String XML_HEADER_FOR_PRAWN_FILES_USING_LOCAL_SCHEMA
             = "<?xml version=\"1.0\"?>\n"
@@ -45,13 +45,13 @@ public final class Squid3Constants {
             + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
-            + "                                ../Schema/SHRIMP_PRAWN.xsd\">";
+            + "                                ../schema/SHRIMP_PRAWN.xsd\">";
 
     /**
      *
      */
     public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA_REMOTE
-            = "https://raw.githubusercontent.com/CIRDLES/ShrimpXSD/master/SHRIMP_PRAWN.xsd";
+            = "https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SHRIMP_PRAWN.xsd";
 
     public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL
             = "Schema/SHRIMP_PRAWN.xsd";
@@ -62,5 +62,35 @@ public final class Squid3Constants {
     public static final String DEFAULT_PRAWNFILE_NAME = "NO_NAME_";
 
     public static final String SQUID_USERS_DATA_FOLDER_NAME = "Squid3 User Data";
+
+    /**
+     *
+     */
+    public static final String XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_REMOTE_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- SQUIDTASK_EXPRESSIONTREE_DATA_FILE -->\n"
+            + "<ExpressionTree xmlns=\"https://raw.githubusercontent.com\"\n"
+            + " xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + " xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionTreeXMLSchema.xsd\">";
+
+    public static final String XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_LOCAL_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- SQUIDTASK_EXPRESSIONTREE_DATA_FILE -->\n"
+            + "<ExpressionTree xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                ../schema/SquidTask_ExpressionTreeXMLSchema.xsd\">";
+
+    /**
+     *
+     */
+    public static final String URL_STRING_FOR_SQUIDTASK_EPRESSIONTREE_XML_SCHEMA_REMOTE
+            = "https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionTreeXMLSchema.xsd";
+
+    public static final String URL_STRING_FOR_SQUIDTASK_EPRESSIONTREE_XML_SCHEMA_LOCAL
+            = "Schema/SquidTask_ExpressionTreeXMLSchema.xsd";
 
 }

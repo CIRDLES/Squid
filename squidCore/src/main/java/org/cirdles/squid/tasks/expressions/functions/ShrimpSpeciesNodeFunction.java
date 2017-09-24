@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.functions;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -26,6 +27,7 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
  *
  * @author James F. Bowring
  */
+@XStreamAlias("Operation")
 public class ShrimpSpeciesNodeFunction extends Function {
 
     private static final long serialVersionUID = -7371492154923797766L;

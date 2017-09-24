@@ -268,7 +268,6 @@ public class PrawnFileHandler implements Serializable {
         // force validation against schema
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         // JULY 2017 Team decided to make schema and validation local because of security concerns at Geoscience Australia
-        //Schema schema = sf.newSchema(new URL(URL_STRING_FOR_PRAWN_XML_SCHEMA_REMOTE));
         File schemaFile = new File(URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL);
         // during testing
         if (!schemaFile.isFile()) {
@@ -317,7 +316,6 @@ public class PrawnFileHandler implements Serializable {
         }
 
         // July 2017 Team decided to make schema local because of issues of security at Geoscience Australia
-//        String[] headerArray = XML_HEADER_FOR_PRAWN_FILES_USING_REMOTE_SCHEMA.split("\\n");
         String[] headerArray = Squid3Constants.XML_HEADER_FOR_PRAWN_FILES_USING_LOCAL_SCHEMA.split("\\n");
 
         // add correct header
