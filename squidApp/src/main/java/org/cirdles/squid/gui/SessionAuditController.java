@@ -25,7 +25,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
-//import javafx.scene.layout.Pane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -68,43 +67,19 @@ public class SessionAuditController implements Initializable {
      * Prepares the TreeView to be displayed
      * @param hasBeenChecked determines whether the duplicate CheckBox has been checked
      */
-    private void setUpPrawnFileAuditTreeView(boolean hasBeenChecked) {
+    private void setUpPrawnFileAuditTreeView(boolean showDupesOnly) {
         prawnAuditTree.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         
         SquidPrefixTree spotPrefixTree = squidProject.getPrefixTree();
         String summaryStatsString = spotPrefixTree.buildSummaryDataString();
         
-        boolean hasDuplicates = queryForDuplicates(spotPrefixTree);
-        boolean checkboxIsVisible = isVisible(hasDuplicates);
-        TreeItem<String> rootItem = setRootItem(hasDuplicates, summaryStatsString);
-        
-        populatePrefixTreeView(rootItem, spotPrefixTree, hasBeenChecked);
-    }
-     
-    /**
-     * Checks whether the current SquidPrefixTree has duplicates
-     * @param spotPrefixTree
-     * @return boolean value of whether tree has duplicates
-     */
-    private boolean queryForDuplicates(SquidPrefixTree spotPrefixTree){
-        boolean hasDuplicates = false;
-        if (spotPrefixTree.getCountOfDups() > 0){
-            hasDuplicates = true;
-        }
-        else{
-            hasDuplicates = false;
-        }
-        return hasDuplicates;
-    }
-    
-    /**
-     * CheckBox is visible only if the SquidPrefixTree has duplicates
-     * @param hasDuplicates
-     * @return whether the "Display Duplicates" CheckBox is visible
-     */
-    private boolean isVisible(boolean hasDuplicates){
+        boolean hasDuplicates = spotPrefixTree.getCountOfDups() > 0;
         checkbox.setVisible(hasDuplicates);
-        return checkbox.isVisible();
+        TreeItem<String> rootItem = customizeRootItem(summaryStatsString, hasDuplicates);
+        rootItem.setExpanded(true);
+        prawnAuditTree.setRoot(rootItem);
+        
+        populatePrefixTreeView(rootItem, spotPrefixTree, showDupesOnly);
     }
     
     /**
@@ -113,16 +88,15 @@ public class SessionAuditController implements Initializable {
      * @param summaryStatsString summary of statistics from SquidPrefixTree to display
      * @return the root item depending on whether there are duplicates
      */
-    private TreeItem<String> setRootItem(boolean hasDuplicates, String summaryStatsString){
+    private TreeItem<String> customizeRootItem(String summaryStatsString, boolean hasDuplicates){
         TreeItem<String> rootItem = new TreeItem<>("Spots", null);
         if(hasDuplicates){
-            rootItem.setValue("***This file has duplicate names. Change names of duplicates in PrawnFile>Edit Spots***\n\nSpots by prefix: " + summaryStatsString);
-        }
-        else{
+            rootItem.setValue(
+                    "***This file has duplicate names. Change names of duplicates in PrawnFile>Edit Spots***" + 
+                    "\n\nSpots by prefix: " + summaryStatsString);
+        }else{
             rootItem.setValue("Spots by prefix:" + summaryStatsString);
         }
-        rootItem.setExpanded(true);
-        prawnAuditTree.setRoot(rootItem);
         return rootItem;
     }
     
@@ -172,11 +146,6 @@ public class SessionAuditController implements Initializable {
      * Calls method displaying appropriate tree dependent on the state of the CheckBox
      */
     private void duplicatesChecked(ActionEvent event) {
-        if(checkbox.isSelected()){
-            setUpPrawnFileAuditTreeView(true);
-        }
-        else{
-            setUpPrawnFileAuditTreeView(false);
-        }
+        setUpPrawnFileAuditTreeView(checkbox.isSelected());
     }
 }

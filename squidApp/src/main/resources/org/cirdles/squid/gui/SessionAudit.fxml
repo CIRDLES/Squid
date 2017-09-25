@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="sessionAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="925.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
    <children>
@@ -14,6 +15,9 @@
             <Insets />
          </opaqueInsets>
       </TreeView>
-      <CheckBox fx:id="checkbox" layoutX="529.0" layoutY="5.0" mnemonicParsing="false" onAction="#duplicatesChecked" text="Dispay Duplicates" />
+      <CheckBox fx:id="checkbox" layoutX="529.0" layoutY="5.0" mnemonicParsing="false" onAction="#duplicatesChecked" text="Dispay Duplicates Only" textFill="#ee3704">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></CheckBox>
    </children>
 </AnchorPane>
