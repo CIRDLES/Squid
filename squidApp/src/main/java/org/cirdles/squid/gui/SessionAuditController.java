@@ -102,12 +102,12 @@ public class SessionAuditController implements Initializable {
     
     /**
      * Displays all nodes in the tree starting from the root. 
-     * Displays only duplicate spot tree if hasBeenChecked is true. Displays entire spot tree if hasBeenChecked is false.
+     * Displays only duplicate spot tree if showDupesOnly is true. Displays entire spot tree if hasBeenChecked is false.
      * @param parentItem the root item for this tree
      * @param squidPrefixTree the current instance of SquidPrefixTree
-     * @param hasBeenChecked implies both that SquidPrefixTree has duplicates, and that the CheckBox has been checked
+     * @param showDupesOnly implies both that SquidPrefixTree has duplicates, and that the CheckBox has been checked
      */
-    private void populatePrefixTreeView(TreeItem<String> parentItem, SquidPrefixTree squidPrefixTree, boolean hasBeenChecked) {
+    private void populatePrefixTreeView(TreeItem<String> parentItem, SquidPrefixTree squidPrefixTree, boolean showDupesOnly) {
 
         List<SquidPrefixTree> children = squidPrefixTree.getChildren();
 
@@ -117,7 +117,7 @@ public class SessionAuditController implements Initializable {
                         = new TreeItem<>(children.get(i).getStringValue()
                                 + children.get(i).buildSummaryDataString()
                         );
-                if(hasBeenChecked){
+                if(showDupesOnly){
                     if(children.get(i).getCountOfDups() > 0){
                         parentItem.getChildren().add(childItem);
                     }
@@ -127,7 +127,7 @@ public class SessionAuditController implements Initializable {
                 }
 
                 if (children.get(i).hasChildren()) {
-                    populatePrefixTreeView(childItem, children.get(i), hasBeenChecked);
+                    populatePrefixTreeView(childItem, children.get(i), showDupesOnly);
                 }
 
             } else {
