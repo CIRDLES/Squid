@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions.variables;
+package org.cirdles.squid.tasks.expressions.spots;
 
+import org.cirdles.squid.tasks.expressions.isotopes.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 
 /**
- * A <code>OperationXMLConverter</code> is used to marshal and unmarshal data
- * between <code>Operation</code> and XML files.
+ * A <code>SpotFieldNodeXMLConverter</code> is used to marshal and unmarshal
+ * data between <code>SpotFieldNode</code> and XML files.
  *
  * @imports
  * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
@@ -43,37 +45,38 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  * @author James F. Bowring, javaDocs by Stan Gasque
  */
-public class VariableXMLConverter implements Converter {
+public class SpotFieldNodeNodeXMLConverter implements Converter {
 
     /**
-     * checks the argument <code>clazz</code> against <code>Operation</code>'s
-     * <code>Class</code>. Used to ensure that the object about to be
-     * marshalled/unmarshalled is of the correct type.
+     * checks the argument <code>clazz</code> against
+     * <code>ShrimpSpeciesNode</code>'s <code>Class</code>. Used to ensure that
+     * the object about to be marshalled/unmarshalled is of the correct type.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>Operation.class</code>
+     * against <code>ShrimpSpeciesNode.class</code>
      * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
      * convert to/from XML
      * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
-     * matches <code>Operation</code>'s <code>Class</code>; else
+     * matches <code>ShrimpSpeciesNode</code>'s <code>Class</code>; else
      * <code>false</code>.
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return VariableNodeForSummary.class.isAssignableFrom(clazz);
+        return clazz.equals(SpotFieldNode.class);
     }
 
     /**
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>Operation</code>, <code>
+     * @pre     <code>value</code> is a valid <code>ShrimpSpeciesNode</code>, <code>
      *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
      * <code>context</code> is a valid <code>MarshallingContext</code>
      * @post    <code>value</code> is written to the XML file specified via
      * <code>writer</code>
-     * @param value   <code>Operation</code> that you wish to write to a file
+     * @param value   <code>ShrimpSpeciesNode</code> that you wish to write to a
+     * file
      * @param writer stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
      */
@@ -81,47 +84,46 @@ public class VariableXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        ExpressionTreeInterface variable = (VariableNodeForSummary) value;
-
-        writer.startNode("name");
-        writer.setValue(variable.getName());
+        SpotFieldNode spotFieldNode = (SpotFieldNode) value;
+        
+        writer.startNode("isotopeName");
+        writer.setValue(spotFieldNode.getName());
         writer.endNode();
+        
+        writer.startNode("methodNameForShrimpFraction");
+        writer.setValue(spotFieldNode.getMethodNameForShrimpFraction());
+        writer.endNode();
+
     }
 
     /**
-     * reads a <code>Operation</code> from the XML file specified through
-     * <code>reader</code>
+     * reads a <code>spotFieldNode</code> from the XML file specified
+     * through <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>Operation</code>
-     * @post the <code>Operation</code> is read from the XML file and returned
+     * @pre     <code>reader</code> leads to a valid <code>spotFieldNode</code>
+     * @post the <code>spotFieldNode</code> is read from the XML file and
+     * returned
      * @param reader stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic
      * data
-     * @return  <code>Operation</code> - <code>Operation</code> read from file
-     * specified by <code>reader</code>
+     * @return  <code>spotFieldNode</code> - <code>spotFieldNode</code>
+     * read from file specified by <code>reader</code>
      */
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        ExpressionTreeInterface variable = null;
-        String variableType = reader.getNodeName();
-        reader.moveDown();
-        String variableName = reader.getValue();
-        reader.moveUp();
-        switch (variableType) {
-            case "VariableNodeForSummary":
-                variable = new VariableNodeForSummary(variableName);
-                break;
-            case "VariableNodeForPerSpotTaskExpressions":
-                variable = new VariableNodeForPerSpotTaskExpressions(variableName);
-                break;
-            case "VariableNodeForIsotopicRatios":
-                variable = new VariableNodeForIsotopicRatios(variableName);
-                break;
-        }
+        SpotFieldNode spotFieldNode = new SpotFieldNode();
 
-        return variable;
+        reader.moveDown();
+        spotFieldNode.setName(reader.getValue());
+        reader.moveUp();   
+        
+        reader.moveDown();
+        spotFieldNode.setMethodNameForShrimpFraction(reader.getValue());
+        reader.moveUp();
+
+        return spotFieldNode;
     }
 
 }

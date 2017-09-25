@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.gui;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -32,6 +34,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -42,19 +45,20 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.cirdles.ludwig.squid25.Utilities;
-import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  * FXML Controller class
@@ -340,6 +344,21 @@ public class ExpressionManagerController implements Initializable {
         menuItem.setOnAction((evt) -> {
             squidProject.getTask().restoreRemovedExpressions();
             populateExpressionsListView();
+        });
+        contextMenu.getItems().add(menuItem);
+
+        menuItem = new SeparatorMenuItem();
+        contextMenu.getItems().add(menuItem);
+
+        menuItem = new MenuItem("Export expression as XML document.");
+        menuItem.setOnAction((evt) -> {
+            Expression selectedExpression = expressionsListView.getSelectionModel().getSelectedItem();
+            if (selectedExpression != null) {
+                try {
+                    File expressionTreeFileXML = FileHandler.saveExpressionTreeFileXML(selectedExpression, SquidUI.primaryStageWindow);
+                } catch (IOException iOException) {
+                }
+            }
         });
         contextMenu.getItems().add(menuItem);
 

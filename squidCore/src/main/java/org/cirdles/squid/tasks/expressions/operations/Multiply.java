@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.operations;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -25,6 +26,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  *
  * @author James F. Bowring
  */
+@XStreamAlias("Operation")
 public class Multiply extends Operation {
 
     /**

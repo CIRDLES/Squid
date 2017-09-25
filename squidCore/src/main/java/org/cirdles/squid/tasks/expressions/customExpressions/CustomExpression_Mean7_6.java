@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -25,6 +26,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
  *
  * @author James F. Bowring
  */
+@XStreamAlias("ExpressionTree")
 public class CustomExpression_Mean7_6 {
 
     /**

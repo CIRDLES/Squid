@@ -23,7 +23,7 @@ import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMin
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnPbR_U;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
 import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204BiWt;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_secALT;
+import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_Net204cts_sec;
 
 /**
  *
@@ -64,52 +64,14 @@ public class Squid3ExampleTask1 extends Task {
                 new Expression(new CustomExpression_LnPbR_U(), CustomExpression_LnPbR_U.excelExpressionString));
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus1(), SquidExpressionMinus1.excelExpressionString));
-        // this next expression should be last in execution, but serves as a test for sorting execution order
+        // this next expression should be last in execution, but placement here serves as a test for sorting execution order
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_Net204BiWt(), CustomExpression_Net204BiWt.excelExpressionString));
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus4(), SquidExpressionMinus4.excelExpressionString));
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString));
+        taskExpressionsOrdered.add(new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
 
-//        taskExpressionsOrdered.add(
-//                new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
-        taskExpressionsOrdered.add(
-                new Expression(new CustomExpression_Net204cts_secALT(), CustomExpression_Net204cts_secALT.excelExpressionString));
-
-//
-//        taskExpressionTreesOrdered.add(CustomExpression_Expo.EXPRESSION);
-//
-//        taskExpressionTreesOrdered.add(CustomExpression_TestIf.EXPRESSION);
-//
-//        taskExpressionTreesOrdered.add(CustomExpression_RawPb76Age.EXPRESSION);
-//
-//        taskExpressionTreesOrdered.add(CustomExpression_Mean7_6.EXPRESSION);
-//
-//        taskExpressionTreesOrdered.add(CustomExpression_RawConcAge.EXPRESSION);
-        // experiment
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnUO_U.EXPRESSION, "CustomExpression_LnUO_U.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_LnPbR_U.EXPRESSION, "CustomExpression_LnPbR_U.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(SquidExpressionMinus1.EXPRESSION, "SquidExpressionMinus1.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(SquidExpressionMinus4.EXPRESSION, "SquidExpressionMinus4.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(SquidExpressionMinus3.EXPRESSION, "SquidExpressionMinus3.xml");
-//
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Net204cts_sec.EXPRESSION, "CustomExpression_Net204cts_sec.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Net204BiWt.EXPRESSION, "CustomExpression_Net204BiWt.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Expo.EXPRESSION, "CustomExpression_Expo.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_TestIf.EXPRESSION, "CustomExpression_TestIf.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_RawPb76Age.EXPRESSION, "CustomExpression_RawPb76Age.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_Mean7_6.EXPRESSION, "CustomExpression_Mean7_6.xml");
-//        ((XMLSerializerInterface) SquidExpressionMinus3.EXPRESSION).serializeXMLObject(CustomExpression_RawConcAge.EXPRESSION, "CustomExpression_RawConcAge.xml");
-//        
-//        ((XMLSerializerInterface) this).serializeXMLObject(this, "Squid3ExampleTask1.xml");
-//
-//        TaskInterface test = new Task();
-//        test = (TaskInterface)((XMLSerializerInterface) test).readXMLObject("Squid3ExampleTask1.xml", false);
-//        ((XMLSerializerInterface)test).serializeXMLObject(test, "SquidBodorkosTask1XXX.xml");
-//        
-//        ((ExpressionTree) test).setName("TESTSquidExpressionMinus3");
-//        ((ExpressionTree) test).setRootExpressionTree(true);
-//        taskExpressionTreesOrdered.add(test);
     }
 }

@@ -16,14 +16,12 @@
 package org.cirdles.squid.tasks.expressions.constants;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
@@ -96,8 +94,7 @@ public class ConstantNode extends ExpressionTree {
     }
 
     @Override
-    public boolean usesAnotherExpression(ExpressionTreeInterface exp
-    ) {
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
         return false;
     }
 
@@ -106,8 +103,7 @@ public class ConstantNode extends ExpressionTree {
      * @param xstream
      */
     @Override
-    public void customizeXstream(XStream xstream
-    ) {
+    public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
     }
@@ -118,25 +114,8 @@ public class ConstantNode extends ExpressionTree {
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task
-    ) {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface tast) {
         return new Object[][]{{value}};
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -165,22 +144,6 @@ public class ConstantNode extends ExpressionTree {
     @Override
     public boolean isRootExpressionTree() {
         return false;
-    }
-
-    /**
-     * @return the parentET
-     */
-    @Override
-    public ExpressionTreeInterface getParentET() {
-        return parentET;
-    }
-
-    /**
-     * @param parentET the parentET to set
-     */
-    @Override
-    public void setParentET(ExpressionTreeInterface parentET) {
-        this.parentET = parentET;
     }
 
     /**

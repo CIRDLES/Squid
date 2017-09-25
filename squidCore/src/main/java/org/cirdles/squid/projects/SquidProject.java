@@ -31,7 +31,6 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
 import org.cirdles.squid.tasks.builtinTasks.Squid3ExampleTask1;
-import org.cirdles.squid.tasks.builtinTasks.Squid3ExampleTaskexperiment;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
@@ -90,9 +89,6 @@ public final class SquidProject implements Serializable {
         TaskInterface builtInTask = new Squid3ExampleTask1();
         builtInTasks.put(builtInTask.getName(), builtInTask);
 
-//        TaskInterface builtInTask2 = new Squid3ExampleTaskexperiment();
-//        builtInTasks.put(builtInTask2.getName(), builtInTask2);
-        
         return builtInTasks;
     }
 

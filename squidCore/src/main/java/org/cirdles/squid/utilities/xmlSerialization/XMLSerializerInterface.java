@@ -37,12 +37,12 @@ public interface XMLSerializerInterface {
      * @param object
      * @param filename
      */
-    public default void serializeXMLObject(Object object, String filename) {
+    public default void serializeXMLObject(String filename) {
         FileWriter outFile = null;
         try {
             XStream xstream = new XStream(new DomDriver());
             customizeXstream(xstream);
-            String xml = xstream.toXML(object).trim();
+            String xml = xstream.toXML(this).trim();
             xml = customizeXML(xml).trim();
 
             outFile = new FileWriter(filename);

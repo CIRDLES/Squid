@@ -28,7 +28,6 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
@@ -189,13 +188,15 @@ public class ShrimpSpeciesNode extends ExpressionTree {
      */
     @Override
     public String getName() {
-        return squidSpeciesModel.getMassStationSpeciesName();
+        return  isotopeName;//   squidSpeciesModel.getMassStationSpeciesName();
     }
 
     @Override
     public void setName(String name) {
-        // do nothing
+        isotopeName = name;
     }
+    
+    
 
     /**
      * @param squidSpeciesModel
@@ -232,22 +233,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     * @return the parentET
-     */
-    @Override
-    public ExpressionTreeInterface getParentET() {
-        return parentET;
-    }
-
-    /**
-     * @param parentET the parentET to set
-     */
-    @Override
-    public void setParentET(ExpressionTreeInterface parentET) {
-        this.parentET = parentET;
-    }
-
-    /**
      *
      * @return
      */
@@ -274,73 +259,11 @@ public class ShrimpSpeciesNode extends ExpressionTree {
         return 0;
     }
 
-    public static void main(String[] args) {
-        ShrimpSpeciesNode test = new ShrimpSpeciesNode(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O", false), "getPkInterpScanArray");
-
-        ((XMLSerializerInterface) test).serializeXMLObject(test, "ShrimpSpeciesNode.xml");
-
-        ShrimpSpeciesNode deserialize = new ShrimpSpeciesNode();
-        deserialize = (ShrimpSpeciesNode) ((XMLSerializerInterface) deserialize).readXMLObject("ShrimpSpeciesNode.xml", false);
-
-        ((XMLSerializerInterface) deserialize).serializeXMLObject(deserialize, "ShrimpSpeciesNodeBBB.xml");
-    }
-
     /**
      * @return the isotopeName
      */
     // for populating iists
     public String toString() {
         return isotopeName;
-    }
-
-    /**
-     * @return the squidSwitchSTReferenceMaterialCalculation
-     */
-    @Override
-    public boolean isSquidSwitchSTReferenceMaterialCalculation() {
-        return squidSwitchSTReferenceMaterialCalculation;
-    }
-
-    /**
-     * @param squidSwitchSTReferenceMaterialCalculation the
-     * squidSwitchSTReferenceMaterialCalculation to set
-     */
-    @Override
-    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
-        this.squidSwitchSTReferenceMaterialCalculation = squidSwitchSTReferenceMaterialCalculation;
-    }
-
-    /**
-     * @return the squidSwitchSAUnknownCalculation
-     */
-    @Override
-    public boolean isSquidSwitchSAUnknownCalculation() {
-        return squidSwitchSAUnknownCalculation;
-    }
-
-    /**
-     * @param squidSwitchSAUnknownCalculation the
-     * squidSwitchSAUnknownCalculation to set
-     */
-    @Override
-    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
-        this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
-    }
-
-    /**
-     * @return the squidSwitchSCSummaryCalculation
-     */
-    @Override
-    public boolean isSquidSwitchSCSummaryCalculation() {
-        return squidSwitchSCSummaryCalculation;
-    }
-
-    /**
-     * @param squidSwitchSCSummaryCalculation the
-     * squidSwitchSCSummaryCalculation to set
-     */
-    @Override
-    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation) {
-        this.squidSwitchSCSummaryCalculation = squidSwitchSCSummaryCalculation;
     }
 }
