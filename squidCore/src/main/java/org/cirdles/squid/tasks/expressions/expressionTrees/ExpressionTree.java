@@ -411,12 +411,7 @@ public class ExpressionTree
      */
     @Override
     public String customizeXML(String xml) {
-        String xmlR = xml;
-
-        xmlR = xmlR.replaceFirst("<ExpressionTree>",
-                XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA);
-
-        return xmlR;
+        return XMLSerializerInterface.super.customizeXML(xml);
     }
 
     /**

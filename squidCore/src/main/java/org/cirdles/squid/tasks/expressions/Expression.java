@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -107,12 +108,17 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     @Override
     public String customizeXML(String xml) {
-        return XMLSerializerInterface.super.customizeXML(xml);
+        String xmlR = xml;
+
+        xmlR = xmlR.replaceFirst("<Expression>",
+                XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA);
+
+        return xmlR;
     }
 
     @Override
     public void customizeXstream(XStream xstream) {
-                xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
+        xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
         xstream.alias("ShrimpSpeciesNode", ShrimpSpeciesNode.class);
 
         xstream.registerConverter(new SquidSpeciesModelXMLConverter());

@@ -72,8 +72,10 @@
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageExpressionsMenuItemAction" text="Manage Expressions" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Expression Builder" />
-                  <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from File" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />
+                  <Menu fx:id="openRecentExpressionFileMenu" mnemonicParsing="false" text="Load Recent Expression from xml File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
           </items>

@@ -46,7 +46,7 @@ import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.customExpressions.CustomExpression_LnUO_U;
+import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
@@ -121,6 +121,8 @@ public class SquidUIController implements Initializable {
     private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
     private Menu dataReductionMenu;
+    @FXML
+    private Menu openRecentExpressionFileMenu;
 
     /**
      * Initializes the controller class.
@@ -164,6 +166,9 @@ public class SquidUIController implements Initializable {
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
+        
+        // Expression menu
+        buildExpressionMenuMRU();
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
@@ -202,6 +207,26 @@ public class SquidUIController implements Initializable {
                 launchTaskManager();
             });
             selectSquid3TaskFromLibraryMenu.getItems().add(menuItem);
+        }
+    }
+
+    private void buildExpressionMenuMRU() {
+
+        openRecentExpressionFileMenu.getItems().clear();
+        List<String> mruExpressionList = squidPersistentState.getMRUExpressionList();
+        for (String expressionFileName : mruExpressionList) {
+            MenuItem menuItem = new MenuItem(expressionFileName);
+            menuItem.setOnAction((ActionEvent t) -> {
+
+                if (!loadExpressionFromXMLFile(new File(menuItem.getText()))) {
+                    squidPersistentState.removeExpressionFileNameFromMRU(menuItem.getText());
+                    squidPersistentState.cleanExpressionListMRU();
+                    openRecentExpressionFileMenu.getItems().remove(menuItem);
+                }
+            }
+            );
+            openRecentExpressionFileMenu.getItems()
+                    .add(menuItem);
         }
     }
 
@@ -285,7 +310,7 @@ public class SquidUIController implements Initializable {
         prepareForNewProject();
 
         try {
-            File prawnXMLFileNew = FileHandler.selectPrawnFile(squidPersistentState.getMRUPrawnFileFolderPath(), primaryStageWindow);
+            File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
             if (prawnXMLFileNew != null) {
                 squidProject.setupPrawnFile(prawnXMLFileNew);
                 launchProjectManager();
@@ -316,7 +341,7 @@ public class SquidUIController implements Initializable {
                 primaryStageWindow);
 
         try {
-            List<File> prawnXMLFilesNew = FileHandler.selectForJoinTwoPrawnFiles(squidPersistentState.getMRUPrawnFileFolderPath(), primaryStageWindow);
+            List<File> prawnXMLFilesNew = FileHandler.selectForJoinTwoPrawnFiles(primaryStageWindow);
             if (prawnXMLFilesNew.size() == 2) {
                 squidProject.setupPrawnFileByJoin(prawnXMLFilesNew);
                 launchProjectManager();
@@ -359,7 +384,7 @@ public class SquidUIController implements Initializable {
         removeAllManagers();
 
         try {
-            String projectFileName = FileHandler.selectProjectFile(squidPersistentState.getMRUProjectFolderPath(), SquidUI.primaryStageWindow);
+            String projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
             openProject(projectFileName);
         } catch (IOException iOException) {
         }
@@ -527,6 +552,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void launchExpressionManager() {
+        mainPane.getChildren().remove(expressionManagerUI);
 
         try {
             expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
@@ -535,6 +561,8 @@ public class SquidUIController implements Initializable {
             HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
             mainPane.getChildren().add(expressionManagerUI);
             expressionManagerUI.setVisible(false);
+
+            showUI(expressionManagerUI);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("expressionManagerUI >>>>   " + iOException.getMessage());
@@ -666,9 +694,9 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void manageExpressionsMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(expressionManagerUI);
+//        mainPane.getChildren().remove(expressionManagerUI);
         launchExpressionManager();
-        showUI(expressionManagerUI);
+//        showUI(expressionManagerUI);
     }
 
     @FXML
@@ -677,6 +705,31 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void showUnknownDataMenuItemAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void loadExpressionFromXMLFileMenuItemAction(ActionEvent event) {
+        try {
+            File expressionFileXML = FileHandler.selectExpressionXMLFile(primaryStageWindow);
+            loadExpressionFromXMLFile(expressionFileXML);
+
+        } catch (IOException | JAXBException | SAXException iOException) {
+        }
+    }
+
+    private boolean loadExpressionFromXMLFile(File expressionFileXML) {
+        boolean retVal = false;
+        if (expressionFileXML != null) {
+            Expression exp = (Expression) (new Expression()).readXMLObject(expressionFileXML.getAbsolutePath(), false);
+            if (exp != null) {
+                retVal = true;
+                squidProject.getTask().addExpression(exp);
+                squidPersistentState.updateExpressionListMRU(expressionFileXML);
+                buildExpressionMenuMRU();
+                launchExpressionManager();
+            }
+        }
+        return retVal;
     }
 
 }

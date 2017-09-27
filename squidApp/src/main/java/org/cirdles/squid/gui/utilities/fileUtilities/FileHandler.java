@@ -23,6 +23,7 @@ import java.util.Locale;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javax.xml.bind.JAXBException;
+import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
@@ -35,14 +36,14 @@ import org.xml.sax.SAXException;
  */
 public class FileHandler {
 
-    public static String selectProjectFile(String projectFolderPathMRU, Window ownerWindow)
+    public static String selectProjectFile(Window ownerWindow)
             throws IOException {
         String retVal = "";
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Project '.squid' file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
-        File initDirectory = new File(projectFolderPathMRU);
+        File initDirectory = new File(squidPersistentState.getMRUProjectFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
         File projectFileNew = fileChooser.showOpenDialog(ownerWindow);
@@ -62,7 +63,8 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Project '.squid' file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
-        fileChooser.setInitialDirectory(null);
+        File initDirectory = new File(squidPersistentState.getMRUProjectFolderPath());
+        fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
         fileChooser.setInitialFileName(squidProject.getProjectName().toUpperCase(Locale.US) + ".squid");
 
         File projectFileNew = fileChooser.showSaveDialog(ownerWindow);
@@ -75,14 +77,14 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File selectPrawnFile(String prawnFileFolderMRU, Window ownerWindow)
+    public static File selectPrawnFile(Window ownerWindow)
             throws IOException, JAXBException, SAXException {
         File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Prawn XML file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
-        File initDirectory = new File(prawnFileFolderMRU);
+        File initDirectory = new File(squidPersistentState.getMRUPrawnFileFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
         File prawnXMLFileNew = fileChooser.showOpenDialog(ownerWindow);
@@ -98,14 +100,14 @@ public class FileHandler {
         return retVal;
     }
 
-    public static List<File> selectForJoinTwoPrawnFiles(String prawnFileFolderMRU, Window ownerWindow)
+    public static List<File> selectForJoinTwoPrawnFiles(Window ownerWindow)
             throws IOException, JAXBException, SAXException {
         List<File> retVal = new ArrayList<>();
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Two Prawn XML files");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
-        File initDirectory = new File(prawnFileFolderMRU);
+        File initDirectory = new File(squidPersistentState.getMRUPrawnFileFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
         List<File> prawnXMLFilesNew = fileChooser.showOpenMultipleDialog(ownerWindow);
@@ -172,15 +174,41 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Expression '.xml' file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression '.xml' files", "*.xml"));
-        fileChooser.setInitialDirectory(null);
+        File mruFolder = new File(squidPersistentState.getMRUExpressionFolderPath());
+        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
         fileChooser.setInitialFileName(expression.getName() + ".xml");
 
         File expressionFileXML = fileChooser.showSaveDialog(ownerWindow);
 
         if (expressionFileXML != null) {
             retVal = expressionFileXML;
+            squidPersistentState.setMRUExpressionFolderPath(expressionFileXML.getParent());
             ((XMLSerializerInterface) expression)
                     .serializeXMLObject(expressionFileXML.getAbsolutePath());
+        }
+
+        return retVal;
+    }
+
+    public static File selectExpressionXMLFile(Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Expression xml File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+        File mruFolder = new File(squidPersistentState.getMRUExpressionFolderPath());
+        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
+
+        File expressionFileXML = fileChooser.showOpenDialog(ownerWindow);
+
+        if (expressionFileXML != null) {
+            if (expressionFileXML.getName().toLowerCase(Locale.US).endsWith(".xml")) {
+                squidPersistentState.setMRUExpressionFolderPath(expressionFileXML.getParent());
+                retVal = expressionFileXML;
+            } else {
+                throw new IOException("Filename does not end with '.xml'");
+            }
         }
 
         return retVal;

@@ -184,6 +184,8 @@ public interface TaskInterface {
     public void removeExpression(Expression expression);
 
     public void restoreRemovedExpressions();
+    
+    public void addExpression(Expression exp);
 
     /**
      * @param type the type to set

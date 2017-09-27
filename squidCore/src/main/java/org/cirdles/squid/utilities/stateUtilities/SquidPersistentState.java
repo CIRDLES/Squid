@@ -72,6 +72,12 @@ public class SquidPersistentState implements Serializable {
         MRUProjectFolderPath = "";
         MRUPrawnFileFolderPath = "";
 
+        MRUTaskFile = null;
+        MRUTaskFolderPath = "";
+
+        MRUExpressionFile = null;
+        MRUExpressionFolderPath = "";
+
         serializeSelf();
     }
 
@@ -271,6 +277,10 @@ public class SquidPersistentState implements Serializable {
      */
     public void updateTaskListMRU(File taskFileMRU) {
 
+        if (MRUTaskList == null) {
+            MRUTaskList = new ArrayList<>(MRU_COUNT);
+        }
+
         if (taskFileMRU != null) {
             try {
                 // remove if exists in MRU list
@@ -358,6 +368,9 @@ public class SquidPersistentState implements Serializable {
      * @return the MRUTaskFolderPath
      */
     public String getMRUTaskFolderPath() {
+        if (MRUTaskFolderPath == null) {
+            MRUTaskFolderPath = "";
+        }
         return MRUTaskFolderPath;
     }
 
@@ -374,6 +387,10 @@ public class SquidPersistentState implements Serializable {
      * @param expressionFileMRU
      */
     public void updateExpressionListMRU(File expressionFileMRU) {
+
+        if (MRUExpressionList == null) {
+            MRUExpressionList = new ArrayList<>(MRU_COUNT);
+        }
 
         if (expressionFileMRU != null) {
             try {
@@ -462,6 +479,9 @@ public class SquidPersistentState implements Serializable {
      * @return the MRUExpressionFolderPath
      */
     public String getMRUExpressionFolderPath() {
+        if (MRUExpressionFolderPath == null) {
+            MRUExpressionFolderPath = "";
+        }
         return MRUExpressionFolderPath;
     }
 

@@ -253,7 +253,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 //        Expression first = taskExpressionsOrdered.get(2);
 //        ((XMLSerializerInterface) first.getExpressionTree())
 //                .serializeXMLObject("TEST_SERIAL2.xml");
-
 //        ExpressionTreeInterface test = (ExpressionTreeInterface) this.readXMLObject("TEST_SERIAL2.xml", false);
 //        test.setName("TEST");
 //        Expression testExp = new Expression(test, first.getExcelExpressionString());
@@ -294,10 +293,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void restoreRemovedExpressions() {
         for (Expression exp : taskExpressionsRemoved) {
-            taskExpressionsOrdered.add(exp);
-            taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
+            addExpression(exp);
         }
         taskExpressionsRemoved.clear();
+    }
+
+    @Override
+    public void addExpression(Expression exp) {
+        taskExpressionsOrdered.add(exp);
+        taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
         processAndSortExpressions();
     }
 
