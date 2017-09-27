@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui;
+package org.cirdles.squid.gui.dataReduction;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,7 +37,7 @@ import org.cirdles.squid.tasks.Task;
  *
  * @author James F. Bowring
  */
-public class AnalysisManagerController implements Initializable {
+public class ReductionManagerController implements Initializable {
 
     @FXML
     private AnchorPane calamariTabAnchorPane;

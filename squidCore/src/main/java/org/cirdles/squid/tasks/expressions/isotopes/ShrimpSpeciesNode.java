@@ -128,6 +128,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         Method method = null;
+        // two ways to get methodname : 1) by construction, and 2) by ShrimpSpeciesNodeFunction supplying it
         if (methodNameForShrimpFraction != null) {
             try {
                 method = ShrimpFractionExpressionInterface.class.getMethod(//

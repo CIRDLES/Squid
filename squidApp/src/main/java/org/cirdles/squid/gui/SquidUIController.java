@@ -97,15 +97,21 @@ public class SquidUIController implements Initializable {
     private ImageView squidImageView;
 
     private static Pane projectManagerUI;
+
     private static Pane sessionAuditUI;
     private static Pane massesAuditUI;
     private static Pane spotManagerUI;
+
     private static Pane taskManagerUI;
+
     private static Pane isotopesManagerUI;
     private static Pane ratiosManagerUI;
+
     private static Pane expressionExplorerUI;
     private static Pane expressionManagerUI;
-    private static Pane analysisManagerUI;
+
+    private static Pane reductionManagerUI;
+    private static Pane reducedUnknownsReportManagerUI;
 
     @FXML
     private MenuItem newSquid3TaskMenuItem;
@@ -166,7 +172,7 @@ public class SquidUIController implements Initializable {
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
-        
+
         // Expression menu
         buildExpressionMenuMRU();
 
@@ -267,15 +273,21 @@ public class SquidUIController implements Initializable {
     private void removeAllManagers() {
         // prevent stacking of project panes
         mainPane.getChildren().remove(projectManagerUI);
+
         mainPane.getChildren().remove(sessionAuditUI);
         mainPane.getChildren().remove(massesAuditUI);
         mainPane.getChildren().remove(spotManagerUI);
+
         mainPane.getChildren().remove(taskManagerUI);
+
         mainPane.getChildren().remove(isotopesManagerUI);
         mainPane.getChildren().remove(ratiosManagerUI);
+
         mainPane.getChildren().remove(expressionExplorerUI);
         mainPane.getChildren().remove(expressionManagerUI);
-        mainPane.getChildren().remove(analysisManagerUI);
+
+        mainPane.getChildren().remove(reductionManagerUI);
+        mainPane.getChildren().remove(reducedUnknownsReportManagerUI);
 
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -569,17 +581,31 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchAnalysisManager() {
+    private void launchReductionManager() {
         try {
-            analysisManagerUI = FXMLLoader.load(getClass().getResource("AnalysisManager.fxml"));
-            analysisManagerUI.setId("AnalysisManager");
-            VBox.setVgrow(analysisManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(analysisManagerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(analysisManagerUI);
-            analysisManagerUI.setVisible(false);
+            reductionManagerUI = FXMLLoader.load(getClass().getResource("./dataReduction/ReductionManager.fxml"));
+            reductionManagerUI.setId("ReductionManager");
+            VBox.setVgrow(reductionManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(reductionManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(reductionManagerUI);
+            reductionManagerUI.setVisible(false);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("AnalysisManager >>>>   " + iOException.getMessage());
+            System.out.println("ReductionManager >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchReducedUnknownsReportManager() {
+        try {
+            reducedUnknownsReportManagerUI = FXMLLoader.load(getClass().getResource("./dataReduction/ReducedUnknownsReport.fxml"));
+            reducedUnknownsReportManagerUI.setId("ReducedUnknownsReport");
+            VBox.setVgrow(reducedUnknownsReportManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(reducedUnknownsReportManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(reducedUnknownsReportManagerUI);
+            reducedUnknownsReportManagerUI.setVisible(false);
+
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("ReducedUnknownsReport >>>>   " + iOException.getMessage());
         }
     }
 
@@ -645,9 +671,9 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void reduceDataMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(analysisManagerUI);
-        launchAnalysisManager();
-        showUI(analysisManagerUI);
+        mainPane.getChildren().remove(reductionManagerUI);
+        launchReductionManager();
+        showUI(reductionManagerUI);
     }
 
     @FXML
@@ -694,9 +720,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void manageExpressionsMenuItemAction(ActionEvent event) {
-//        mainPane.getChildren().remove(expressionManagerUI);
         launchExpressionManager();
-//        showUI(expressionManagerUI);
     }
 
     @FXML
@@ -705,6 +729,8 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void showUnknownDataMenuItemAction(ActionEvent event) {
+        launchReducedUnknownsReportManager();
+        showUI(reducedUnknownsReportManagerUI);
     }
 
     @FXML

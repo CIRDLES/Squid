@@ -354,6 +354,9 @@ public class SquidPersistentState implements Serializable {
      * @return the MRUTaskList
      */
     public ArrayList<String> getMRUTaskList() {
+        if (MRUTaskList == null) {
+            MRUTaskList = null;
+        }
         return MRUTaskList;
     }
 
@@ -465,6 +468,9 @@ public class SquidPersistentState implements Serializable {
      * @return the MRUExpressionList
      */
     public ArrayList<String> getMRUExpressionList() {
+        if (MRUExpressionList == null) {
+            MRUExpressionList = null;
+        }
         return MRUExpressionList;
     }
 

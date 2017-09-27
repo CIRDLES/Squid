@@ -64,8 +64,8 @@
             <Menu fx:id="dataReductionMenu" mnemonicParsing="false" text="Reduction">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#showReferenceMaterialDataMenutItemAction" text="Reference Materials" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#showUnknownDataMenuItemAction" text="Unknowns" />
+                  <MenuItem mnemonicParsing="false" onAction="#showReferenceMaterialDataMenutItemAction" text="Reference Materials Data" />
+                  <MenuItem mnemonicParsing="false" onAction="#showUnknownDataMenuItemAction" text="Unknowns Data" />
               </items>
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">

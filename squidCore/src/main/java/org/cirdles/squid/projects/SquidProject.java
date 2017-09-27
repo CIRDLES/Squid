@@ -78,7 +78,7 @@ public final class SquidProject implements Serializable {
         task.evaluateTaskExpressions();
 
         try {
-            prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions());
+            prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions(), false);
         } catch (IOException iOException) {
         }
     }
