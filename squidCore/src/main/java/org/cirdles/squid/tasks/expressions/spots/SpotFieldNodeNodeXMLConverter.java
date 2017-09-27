@@ -49,16 +49,16 @@ public class SpotFieldNodeNodeXMLConverter implements Converter {
 
     /**
      * checks the argument <code>clazz</code> against
-     * <code>ShrimpSpeciesNode</code>'s <code>Class</code>. Used to ensure that
+     * <code>SpotFieldNode</code>'s <code>Class</code>. Used to ensure that
      * the object about to be marshalled/unmarshalled is of the correct type.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>ShrimpSpeciesNode.class</code>
+     * against <code>SpotFieldNode.class</code>
      * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
      * convert to/from XML
      * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
-     * matches <code>ShrimpSpeciesNode</code>'s <code>Class</code>; else
+     * matches <code>SpotFieldNode</code>'s <code>Class</code>; else
      * <code>false</code>.
      */
     @Override
@@ -70,12 +70,12 @@ public class SpotFieldNodeNodeXMLConverter implements Converter {
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>ShrimpSpeciesNode</code>, <code>
+     * @pre     <code>value</code> is a valid <code>SpotFieldNode</code>, <code>
      *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
      * <code>context</code> is a valid <code>MarshallingContext</code>
      * @post    <code>value</code> is written to the XML file specified via
      * <code>writer</code>
-     * @param value   <code>ShrimpSpeciesNode</code> that you wish to write to a
+     * @param value   <code>SpotFieldNode</code> that you wish to write to a
      * file
      * @param writer stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data

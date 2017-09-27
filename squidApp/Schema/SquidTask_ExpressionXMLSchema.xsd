@@ -9,7 +9,7 @@
         <xs:documentation xml:lang="en">
             This schema defines the contents of a Squid Expression.
 
-            Copyright 2016 CIRDLES.org
+            Copyright 2016-2017 CIRDLES.org
 
             Licensed under the Apache License, Version 2.0 (the "License");
             you may not use this file except in compliance with the License.
@@ -29,8 +29,16 @@
             
         </xs:documentation>
     </xs:annotation> 
-          
-    <xs:element name="ExpressionTree" type="ExpressionTree"/>
+
+    <xs:element name="Expression" type="Expression"/>
+    <xs:complexType name="Expression" mixed="true">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"></xs:element>
+            <xs:element name="excelExpressionString" type="xs:string"></xs:element>
+            <xs:element name="expressionTree" type="ExpressionTree"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+              
     <xs:complexType name="ExpressionTree" mixed="true">
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
@@ -41,6 +49,8 @@
                             <xs:element name="ExpressionTree" type="ExpressionTree" minOccurs="0"/>
                             <xs:element name="ShrimpSpeciesNode" type="ShrimpSpeciesNode" minOccurs="0"/>
                             <xs:element name="SpotFieldNode" type="SpotFieldNode" minOccurs="0"/>
+                            <xs:element name="VariableNodeForSummary" type="VariableNodeForSummary" minOccurs="0"/>
+                            <xs:element name="VariableNodeForIsotopicRatios" type="VariableNodeForIsotopicRatios" minOccurs="0"/>
                             <xs:element name="VariableNodeForPerSpotTaskExpressions" type="VariableNodeForPerSpotTaskExpressions" minOccurs="0"/>
                             <xs:element name="ConstantNode" type="ConstantNode" minOccurs="0"/>
                         </xs:choice>
@@ -91,13 +101,23 @@
         </xs:sequence>
     </xs:complexType>
     
+    <xs:complexType name="VariableNodeForSummary">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"></xs:element>
+        </xs:sequence>
+    </xs:complexType>   
+    
+    <xs:complexType name="VariableNodeForIsotopicRatios">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"></xs:element>
+        </xs:sequence>
+    </xs:complexType>   
+    
     <xs:complexType name="VariableNodeForPerSpotTaskExpressions">
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
         </xs:sequence>
-    </xs:complexType>
-    
-    
+    </xs:complexType>   
     
     <xs:complexType name="ConstantNode">
         <xs:sequence>

@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions.variables;
+package org.cirdles.squid.tasks.expressions;
 
+import org.cirdles.squid.tasks.expressions.expressionTrees.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
- * A <code>VariableNodeForSummaryXMLConverter</code> is used to marshal and unmarshal data
- * between <code>VariableNodeForSummary</code> and XML files.
+ * A <code>ExpressionTreeXMLConverter</code> is used to marshal and unmarshal
+ * data between <code>Expression</code> and XML file.
  *
  * @imports
  * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
@@ -43,37 +43,37 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  * @author James F. Bowring, javaDocs by Stan Gasque
  */
-public class VariableNodeForSummaryXMLConverter implements Converter {
+public class ExpressionXMLConverter implements Converter {
 
     /**
-     * checks the argument <code>clazz</code> against <code>VariableNodeForSummary</code>'s
+     * checks the argument <code>clazz</code> against <code>Expression</code>'s
      * <code>Class</code>. Used to ensure that the object about to be
      * marshalled/unmarshalled is of the correct type.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>VariableNodeForSummary.class</code>
+     * against <code>Expression.class</code>
      * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
      * convert to/from XML
      * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
-     * matches <code>VariableNodeForSummary</code>'s <code>Class</code>; else
+     * matches <code>Expression</code>'s <code>Class</code>; else
      * <code>false</code>.
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return VariableNodeForSummary.class.isAssignableFrom(clazz);
+        return clazz.equals(Expression.class);
     }
 
     /**
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>VariableNodeForSummary</code>, <code>
+     * @pre     <code>value</code> is a valid <code>Expression</code>, <code>
      *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
      * <code>context</code> is a valid <code>MarshallingContext</code>
      * @post    <code>value</code> is written to the XML file specified via
      * <code>writer</code>
-     * @param value   <code>VariableNodeForSummary</code> that you wish to write to a file
+     * @param value   <code>Expression</code> that you wish to write to a file
      * @param writer stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
      */
@@ -81,47 +81,54 @@ public class VariableNodeForSummaryXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        VariableNodeForSummary variable = (VariableNodeForSummary) value;
+        Expression expression = (Expression) value;
 
         writer.startNode("name");
-        writer.setValue(variable.getName());
+        writer.setValue(expression.getName());
+        writer.endNode();
+
+        writer.startNode("excelExpressionString");
+        writer.setValue(expression.getExcelExpressionString());
+        writer.endNode();
+
+        writer.startNode("expressionTree");
+        context.convertAnother(expression.getExpressionTree());
         writer.endNode();
     }
 
     /**
-     * reads a <code>VariableNodeForSummary</code> from the XML file specified through
+     * reads a <code>Expression</code> from the XML file specified through
      * <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>Operation</code>
-     * @post the <code>VariableNodeForSummary</code> is read from the XML file and returned
+     * @pre     <code>reader</code> leads to a valid <code>Expression</code>
+     * @post the <code>Expression</code> is read from the XML file and returned
      * @param reader stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic
      * data
-     * @return  <code>VariableNodeForSummary</code> - <code>VariableNodeForSummary</code> read from file
+     * @return  <code>Expression</code> - <code>Expression</code> read from file
      * specified by <code>reader</code>
      */
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
 
-        ExpressionTreeInterface variable = null;
-        String variableType = reader.getNodeName();
-        reader.moveDown();
-        String variableName = reader.getValue();
-        reader.moveUp();
-        switch (variableType) {
-            case "VariableNodeForSummary":
-                variable = new VariableNodeForSummary(variableName);
-                break;
-            case "VariableNodeForPerSpotTaskExpressions":
-                variable = new VariableNodeForPerSpotTaskExpressions(variableName);
-                break;
-            case "VariableNodeForIsotopicRatios":
-                variable = new VariableNodeForIsotopicRatios(variableName);
-                break;
-        }
+        Expression expression = new Expression();
 
-        return variable;
+        reader.moveDown();
+        expression.setName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        expression.setExcelExpressionString(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        ExpressionTreeInterface expressionTree = new ExpressionTree();
+        expressionTree = (ExpressionTreeInterface) context.convertAnother(expressionTree, ExpressionTree.class);
+        expression.setExpressionTree(expressionTree);
+        reader.moveUp();
+
+        return expression;
     }
 
 }

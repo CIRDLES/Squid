@@ -159,39 +159,39 @@ public class ExpressionTreeXMLConverter implements Converter {
         List<ExpressionTreeInterface> childrenET = new ArrayList<>();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            ExpressionTreeInterface expression = null;
+            ExpressionTreeInterface childExpressionTree = null;
             String expressionType = reader.getNodeName();
             switch (expressionType) {
                 case "ExpressionTree":
-                    expression = new ExpressionTree();
-                    expression = (ExpressionTreeInterface) context.convertAnother(expression, ExpressionTree.class);
+                    childExpressionTree = new ExpressionTree();
+                    childExpressionTree = (ExpressionTreeInterface) context.convertAnother(childExpressionTree, ExpressionTree.class);
                     break;
                 case "ShrimpSpeciesNode":
-                    expression = ShrimpSpeciesNode.buildEmptyShrimpSpeciesNode();
-                    expression = (ExpressionTreeInterface) context.convertAnother(expression, ShrimpSpeciesNode.class);
+                    childExpressionTree = ShrimpSpeciesNode.buildEmptyShrimpSpeciesNode();
+                    childExpressionTree = (ExpressionTreeInterface) context.convertAnother(childExpressionTree, ShrimpSpeciesNode.class);
                     break;
                 case "ConstantNode":
-                    expression = new ConstantNode();
-                    expression = (ExpressionTreeInterface) context.convertAnother(expression, ConstantNode.class);
+                    childExpressionTree = new ConstantNode();
+                    childExpressionTree = (ExpressionTreeInterface) context.convertAnother(childExpressionTree, ConstantNode.class);
                     break;
                 case "SpotFieldNode":
-                    expression = new SpotFieldNode();
-                    expression = (ExpressionTreeInterface) context.convertAnother(expression, SpotFieldNode.class);
+                    childExpressionTree = new SpotFieldNode();
+                    childExpressionTree = (ExpressionTreeInterface) context.convertAnother(childExpressionTree, SpotFieldNode.class);
                     break;
                 case "VariableNodeForSummary":
-                    expression = new VariableNodeForSummary();
-                    expression = (ExpressionTreeInterface) context.convertAnother(expression, VariableNodeForSummary.class);
+                    childExpressionTree = new VariableNodeForSummary();
+                    childExpressionTree = (ExpressionTreeInterface) context.convertAnother(childExpressionTree, VariableNodeForSummary.class);
                     break;
                 case "VariableNodeForPerSpotTaskExpressions":
-                    expression = new VariableNodeForPerSpotTaskExpressions();
-                    expression = (ExpressionTreeInterface) context.convertAnother(expression, VariableNodeForPerSpotTaskExpressions.class);
+                    childExpressionTree = new VariableNodeForPerSpotTaskExpressions();
+                    childExpressionTree = (ExpressionTreeInterface) context.convertAnother(childExpressionTree, VariableNodeForPerSpotTaskExpressions.class);
                     break;
                 case "VariableNodeForIsotopicRatios":
-                    expression = new VariableNodeForIsotopicRatios();
-                    expression = (ExpressionTreeInterface) context.convertAnother(expression, VariableNodeForIsotopicRatios.class);
+                    childExpressionTree = new VariableNodeForIsotopicRatios();
+                    childExpressionTree = (ExpressionTreeInterface) context.convertAnother(childExpressionTree, VariableNodeForIsotopicRatios.class);
                     break;
             }
-            childrenET.add(expression);
+            childrenET.add(childExpressionTree);
             reader.moveUp();
         }
         expressionTree.setChildrenET(childrenET);

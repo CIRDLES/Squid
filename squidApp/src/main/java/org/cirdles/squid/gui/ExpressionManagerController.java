@@ -355,7 +355,7 @@ public class ExpressionManagerController implements Initializable {
             Expression selectedExpression = expressionsListView.getSelectionModel().getSelectedItem();
             if (selectedExpression != null) {
                 try {
-                    File expressionTreeFileXML = FileHandler.saveExpressionTreeFileXML(selectedExpression, SquidUI.primaryStageWindow);
+                    File expressionFileXML = FileHandler.saveExpressionFileXML(selectedExpression, SquidUI.primaryStageWindow);
                 } catch (IOException iOException) {
                 }
             }

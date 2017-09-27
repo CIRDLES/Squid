@@ -94,6 +94,15 @@ public class CalamariFileUtilities {
                 } else {
                     System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
                 }
+                
+                File shrimpExpressionSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidTask_ExpressionXMLSchema.xsd");
+                File shrimpExpressionSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd");
+
+                if (shrimpExpressionSchemaResource.renameTo(shrimpExpressionSchema)) {
+                    System.out.println("SquidTask_ExpressionXMLSchema.xsd added.");
+                } else {
+                    System.out.println("Failed to add SquidTask_ExpressionXMLSchema.xsd.");
+                }
             }
         } catch (IOException iOException) {
         }

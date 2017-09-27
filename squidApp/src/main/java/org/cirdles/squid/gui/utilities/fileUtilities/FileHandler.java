@@ -89,7 +89,6 @@ public class FileHandler {
 
         if (prawnXMLFileNew != null) {
             if (prawnXMLFileNew.getName().toLowerCase(Locale.US).endsWith(".xml")) {
-//                squidProject.setupPrawnFile(prawnXMLFileNew);
                 retVal = prawnXMLFileNew;
             } else {
                 throw new IOException("Filename does not end with '.xml'");
@@ -115,7 +114,6 @@ public class FileHandler {
             if ((prawnXMLFilesNew.size() == 2)
                     && prawnXMLFilesNew.get(0).getName().toLowerCase(Locale.US).endsWith(".xml")
                     && prawnXMLFilesNew.get(1).getName().toLowerCase(Locale.US).endsWith(".xml")) {
-//                squidProject.setupPrawnFileByJoin(prawnXMLFilesNew);
                 retVal = prawnXMLFilesNew;
             } else {
                 throw new IOException("Please choose exactly 2 Prawn xml files to merge.");
@@ -166,23 +164,23 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File saveExpressionTreeFileXML(Expression expression, Window ownerWindow)
+    public static File saveExpressionFileXML(Expression expression, Window ownerWindow)
             throws IOException {
 
         File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save ExpressionTree '.xml' file");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("ExpressionTree '.xml' files", "*.xml"));
+        fileChooser.setTitle("Save Expression '.xml' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression '.xml' files", "*.xml"));
         fileChooser.setInitialDirectory(null);
         fileChooser.setInitialFileName(expression.getName() + ".xml");
 
-        File expressionTreeFileXML = fileChooser.showSaveDialog(ownerWindow);
+        File expressionFileXML = fileChooser.showSaveDialog(ownerWindow);
 
-        if (expressionTreeFileXML != null) {
-            retVal = expressionTreeFileXML;
-            ((XMLSerializerInterface) expression.getExpressionTree())
-                    .serializeXMLObject(expressionTreeFileXML.getAbsolutePath());
+        if (expressionFileXML != null) {
+            retVal = expressionFileXML;
+            ((XMLSerializerInterface) expression)
+                    .serializeXMLObject(expressionFileXML.getAbsolutePath());
         }
 
         return retVal;

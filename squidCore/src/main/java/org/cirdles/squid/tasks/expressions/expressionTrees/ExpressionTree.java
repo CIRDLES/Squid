@@ -22,9 +22,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_REMOTE_SCHEMA;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
@@ -43,6 +44,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA;
 
 /**
  *
@@ -376,6 +378,9 @@ public class ExpressionTree
         xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
         xstream.alias("ShrimpSpeciesNode", ShrimpSpeciesNode.class);
 
+        xstream.registerConverter(new SquidSpeciesModelXMLConverter());
+        xstream.alias("SquidSpeciesModel", SquidSpeciesModel.class);
+
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
 
@@ -407,9 +412,9 @@ public class ExpressionTree
     @Override
     public String customizeXML(String xml) {
         String xmlR = xml;
-        
+
         xmlR = xmlR.replaceFirst("<ExpressionTree>",
-                XML_HEADER_FOR_SQUIDTASK_EPRESSIONTREE_FILES_USING_REMOTE_SCHEMA);
+                XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA);
 
         return xmlR;
     }
