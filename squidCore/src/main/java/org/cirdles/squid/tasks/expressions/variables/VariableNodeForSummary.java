@@ -71,8 +71,8 @@ public class VariableNodeForSummary extends ExpressionTree {
      */
     @Override
     public void customizeXstream(XStream xstream) {
-//        xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
-//        xstream.alias("ShrimpSpeciesNode", VariableNode.class);
+        xstream.registerConverter(new VariableNodeForSummaryXMLConverter());
+        xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
     }
 
     /**

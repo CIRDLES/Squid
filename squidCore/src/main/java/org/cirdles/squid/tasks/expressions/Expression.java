@@ -20,12 +20,25 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeXMLConverter;
+import org.cirdles.squid.tasks.expressions.functions.Function;
+import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
+import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -39,10 +52,14 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     private String name;
     private String excelExpressionString;
     private ExpressionTreeInterface expressionTree;
-    private String parsingStatusReport;
-    private List<String> argumentAudit;
+    private transient String parsingStatusReport;
+    private transient List<String> argumentAudit;
 
-    private Expression() {
+    /**
+     * Needed for XML unmarshal
+     */
+    public Expression() {
+        this("NONE", "");
     }
 
     public Expression(String name, String excelExpressionString) {
@@ -90,12 +107,41 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     @Override
     public String customizeXML(String xml) {
-        return XMLSerializerInterface.super.customizeXML(xml); //To change body of generated methods, choose Tools | Templates.
+        return XMLSerializerInterface.super.customizeXML(xml);
     }
 
     @Override
     public void customizeXstream(XStream xstream) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
+        xstream.alias("ShrimpSpeciesNode", ShrimpSpeciesNode.class);
+
+        xstream.registerConverter(new SquidSpeciesModelXMLConverter());
+        xstream.alias("SquidSpeciesModel", SquidSpeciesModel.class);
+
+        xstream.registerConverter(new ConstantNodeXMLConverter());
+        xstream.alias("ConstantNode", ConstantNode.class);
+
+        xstream.registerConverter(new VariableNodeForSummaryXMLConverter());
+        xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
+        xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
+        xstream.alias("VariableNodeForIsotopicRatios", VariableNodeForIsotopicRatios.class);
+
+        xstream.registerConverter(new OperationXMLConverter());
+        xstream.alias("Operation", Operation.class);
+        xstream.registerConverter(new FunctionXMLConverter());
+        xstream.alias("Operation", Function.class);
+        xstream.alias("Operation", OperationOrFunctionInterface.class);
+
+        xstream.registerConverter(new ExpressionTreeXMLConverter());
+        xstream.alias("ExpressionTree", ExpressionTree.class);
+        xstream.alias("ExpressionTree", ExpressionTreeInterface.class);
+
+        xstream.registerConverter(new ExpressionXMLConverter());
+        xstream.alias("Expression", Expression.class);
+
+        // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
+        xstream.setMode(XStream.NO_REFERENCES);
+        xstream.autodetectAnnotations(true);
     }
 
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
@@ -128,7 +174,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
                 auditReport += "\n  " + (expressionTree.amHealthy() ? "Found " : "") + expressionTree.getName();
                 if ((expressionTree instanceof ConstantNode) && expressionTree.amHealthy()) {
                     auditReport += ", value = " + String.valueOf((double) ((ConstantNode) expressionTree).getValue());
-                } 
+                }
             }
         }
 

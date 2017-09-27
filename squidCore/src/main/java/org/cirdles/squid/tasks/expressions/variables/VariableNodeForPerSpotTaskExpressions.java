@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions.variables;
 
+import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -49,6 +50,16 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     }
 
     /**
+     *
+     * @param xstream
+     */
+    @Override
+    public void customizeXstream(XStream xstream) {
+        xstream.registerConverter(new VariableNodeForSummaryXMLConverter());
+        xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
+    }
+
+    /**
      * Returns an array of values from a column (name) of spots
      * (shrimpFractions) by using the specified lookup Method
      * getTaskExpressionsEvaluationsPerSpotByField that takes an expression's
@@ -57,6 +68,7 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
      * @param shrimpFractions
      * @param task
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
