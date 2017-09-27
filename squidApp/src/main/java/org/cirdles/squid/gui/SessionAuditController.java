@@ -18,12 +18,13 @@ package org.cirdles.squid.gui;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -32,6 +33,10 @@ import org.cirdles.squid.utilities.SquidPrefixTree;
 /**
  * FXML Controller class
  *
+ * This class displays the spot tree with statistics.
+ * If there are duplicate spot names the user has the option to display only those 
+ * trees containing duplicates.
+ * 
  * @author James F. Bowring
  */
 public class SessionAuditController implements Initializable {
@@ -40,6 +45,8 @@ public class SessionAuditController implements Initializable {
     private TreeView<String> prawnAuditTree;
     @FXML
     private AnchorPane sessionAnchorPane;
+    @FXML
+    private CheckBox checkbox;
 
     /**
      * Initializes the controller class.
@@ -53,39 +60,74 @@ public class SessionAuditController implements Initializable {
         prawnAuditTree.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTree.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         
-        setUpPrawnFileAuditTreeView();
+        setUpPrawnFileAuditTreeView(false);
     }
-
-    private void setUpPrawnFileAuditTreeView() {
+    
+    /**
+     * Prepares the TreeView to be displayed
+     * @param hasBeenChecked determines whether the duplicate CheckBox has been checked
+     */
+    private void setUpPrawnFileAuditTreeView(boolean showDupesOnly) {
         prawnAuditTree.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
-
-        TreeItem<String> rootItem = new TreeItem<>("Spots", null);
+        
+        SquidPrefixTree spotPrefixTree = squidProject.getPrefixTree();
+        String summaryStatsString = spotPrefixTree.buildSummaryDataString();
+        
+        boolean hasDuplicates = spotPrefixTree.getCountOfDups() > 0;
+        checkbox.setVisible(hasDuplicates);
+        TreeItem<String> rootItem = customizeRootItem(summaryStatsString, hasDuplicates);
         rootItem.setExpanded(true);
         prawnAuditTree.setRoot(rootItem);
-
-        SquidPrefixTree spotPrefixTree = squidProject.getPrefixTree();
-
-        String summaryStatsString = spotPrefixTree.buildSummaryDataString();
-        rootItem.setValue("Spots by prefix:" + summaryStatsString);
-
-        populatePrefixTreeView(rootItem, spotPrefixTree);
+        
+        populatePrefixTreeView(rootItem, spotPrefixTree, showDupesOnly);
     }
-
-    private void populatePrefixTreeView(TreeItem<String> parentItem, SquidPrefixTree squidPrefixTree) {
+    
+    /**
+     * Initializes root item of prawnAuditTree TreeView based on whether the SquidPrefixTree has duplicates
+     * @param hasDuplicates the SquidPrefixTree has duplicates
+     * @param summaryStatsString summary of statistics from SquidPrefixTree to display
+     * @return the root item depending on whether there are duplicates
+     */
+    private TreeItem<String> customizeRootItem(String summaryStatsString, boolean hasDuplicates){
+        TreeItem<String> rootItem = new TreeItem<>("Spots", null);
+        if(hasDuplicates){
+            rootItem.setValue(
+                    "***This file has duplicate names. Change names of duplicates in PrawnFile>Edit Spots***" + 
+                    "\n\nSpots by prefix: " + summaryStatsString);
+        }else{
+            rootItem.setValue("Spots by prefix:" + summaryStatsString);
+        }
+        return rootItem;
+    }
+    
+    /**
+     * Displays all nodes in the tree starting from the root. 
+     * Displays only duplicate spot tree if showDupesOnly is true. Displays entire spot tree if hasBeenChecked is false.
+     * @param parentItem the root item for this tree
+     * @param squidPrefixTree the current instance of SquidPrefixTree
+     * @param showDupesOnly implies both that SquidPrefixTree has duplicates, and that the CheckBox has been checked
+     */
+    private void populatePrefixTreeView(TreeItem<String> parentItem, SquidPrefixTree squidPrefixTree, boolean showDupesOnly) {
 
         List<SquidPrefixTree> children = squidPrefixTree.getChildren();
 
         for (int i = 0; i < children.size(); i++) {
             if (!children.get(i).isleaf()) {
-                TreeItem<String> item
+                TreeItem<String> childItem
                         = new TreeItem<>(children.get(i).getStringValue()
                                 + children.get(i).buildSummaryDataString()
                         );
-
-                parentItem.getChildren().add(item);
+                if(showDupesOnly){
+                    if(children.get(i).getCountOfDups() > 0){
+                        parentItem.getChildren().add(childItem);
+                    }
+                }
+                else{
+                    parentItem.getChildren().add(childItem);
+                }
 
                 if (children.get(i).hasChildren()) {
-                    populatePrefixTreeView(item, children.get(i));
+                    populatePrefixTreeView(childItem, children.get(i), showDupesOnly);
                 }
 
             } else {
@@ -99,4 +141,11 @@ public class SessionAuditController implements Initializable {
         }
     }
 
+    @FXML
+    /**
+     * Calls method displaying appropriate tree dependent on the state of the CheckBox
+     */
+    private void duplicatesChecked(ActionEvent event) {
+        setUpPrawnFileAuditTreeView(checkbox.isSelected());
+    }
 }
