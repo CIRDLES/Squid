@@ -583,7 +583,7 @@ public class SquidUIController implements Initializable {
 
     private void launchReductionManager() {
         try {
-            reductionManagerUI = FXMLLoader.load(getClass().getResource("./dataReduction/ReductionManager.fxml"));
+            reductionManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/ReductionManager.fxml"));
             reductionManagerUI.setId("ReductionManager");
             VBox.setVgrow(reductionManagerUI, Priority.ALWAYS);
             HBox.setHgrow(reductionManagerUI, Priority.ALWAYS);
@@ -597,7 +597,7 @@ public class SquidUIController implements Initializable {
 
     private void launchReducedUnknownsReportManager() {
         try {
-            reducedUnknownsReportManagerUI = FXMLLoader.load(getClass().getResource("./dataReduction/ReducedUnknownsReport.fxml"));
+            reducedUnknownsReportManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/ReducedUnknownsReport.fxml"));
             reducedUnknownsReportManagerUI.setId("ReducedUnknownsReport");
             VBox.setVgrow(reducedUnknownsReportManagerUI, Priority.ALWAYS);
             HBox.setHgrow(reducedUnknownsReportManagerUI, Priority.ALWAYS);
