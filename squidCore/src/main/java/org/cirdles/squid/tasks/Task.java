@@ -156,25 +156,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public String printSummaryData() {
         StringBuilder summary = new StringBuilder();
-        summary.append("Squid3 Task Name: ");
-        summary.append("\t");
-        summary.append(name);
-        summary.append("\n\n");
-
-        summary.append("Provenance: ");
-        summary.append("\t");
-        summary.append(provenance);
-        summary.append("\n\n");
-
-        summary.append("Task Type: ");
-        summary.append("\t");
-        summary.append(type);
-        summary.append("\n\n");
-
-        summary.append("Task Description: ");
-        summary.append("\t");
-        summary.append(description.replaceAll(",", "\n\t\t\t\t"));
-        summary.append("\n\n");
 
         summary.append("Task Ratios: ");
         summary.append("\t");

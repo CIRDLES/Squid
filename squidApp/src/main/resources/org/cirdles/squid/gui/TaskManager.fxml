@@ -23,10 +23,14 @@
             <RadioButton fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" prefHeight="18.0" prefWidth="102.0" text="General" toggleGroup="$taskTypeToggleGroup" />
          </children>
       </HBox>
+      <Label layoutX="21.0" layoutY="55.0" text="Description:" />
+      <TextField fx:id="taskDescriptionTextField" layoutX="127.0" layoutY="56.0" prefHeight="27.0" prefWidth="757.0" promptText="Task Description" />
       <Label layoutX="55.0" layoutY="98.0" text="Author:" />
-      <Label layoutX="481.0" layoutY="98.0" text="Lab Name:" />
       <TextField fx:id="authorsNameTextField" layoutX="127.0" layoutY="98.0" prefHeight="27.0" prefWidth="306.0" promptText="Author's Name" />
+      <Label layoutX="481.0" layoutY="98.0" text="Lab Name:" />
       <TextField fx:id="labNameTextField" layoutX="573.0" layoutY="98.0" prefHeight="27.0" prefWidth="313.0" promptText="Lab Name:" />
+      <Label layoutX="20.0" layoutY="142.0" text="Provenance:" />
+      <TextField fx:id="provenanceTextField" layoutX="127.0" layoutY="143.0" prefHeight="27.0" prefWidth="757.0" promptText="Provenance" />
       <Label alignment="CENTER_RIGHT" layoutX="55.0" layoutY="183.0" prefHeight="17.0" prefWidth="250.0" text="Normalise Ion Counts for SBM?" />
       <HBox layoutX="346.0" layoutY="179.0">
          <children>
@@ -49,9 +53,5 @@
             <RadioButton mnemonicParsing="false" prefHeight="18.0" prefWidth="212.0" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
          </children>
       </HBox>
-      <Label layoutX="21.0" layoutY="55.0" text="Description:" />
-      <TextField fx:id="taskDescriptionTextField" layoutX="127.0" layoutY="56.0" prefHeight="27.0" prefWidth="757.0" promptText="Task Description" />
-      <Label layoutX="20.0" layoutY="142.0" text="Provenance:" />
-      <TextField fx:id="provenanceTextField" layoutX="127.0" layoutY="143.0" prefHeight="27.0" prefWidth="757.0" promptText="Provenance" />
    </children>
 </AnchorPane>

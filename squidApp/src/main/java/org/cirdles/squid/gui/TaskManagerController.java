@@ -17,6 +17,8 @@ package org.cirdles.squid.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,6 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.tasks.TaskInterface;
 
 /**
  * FXML Controller class
@@ -36,6 +39,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
  */
 public class TaskManagerController implements Initializable {
 
+    private TaskInterface task;
     @FXML
     private Label taskSummaryLabel;
     @FXML
@@ -69,21 +73,78 @@ public class TaskManagerController implements Initializable {
 
         taskManagerAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         taskManagerAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-        
+
         if (squidProject.getTask() != null) {
+            task = squidProject.getTask();
             squidProject.initializeExistingProjectTask();
-            taskSummaryLabel.setText(squidProject.getTask().printSummaryData());
+            populateTaskFields();
+            setupListeners();
         } else {
             taskSummaryLabel.setText("No Task information available");
         }
     }
 
+    private void populateTaskFields() {
+
+        taskNameTextField.setText(task.getName());
+        taskDescriptionTextField.setText(task.getDescription());
+        authorsNameTextField.setText(task.getAuthorName());
+        labNameTextField.setText(task.getLabName());
+        provenanceTextField.setText(task.getProvenance());
+        
+        if(task.getType().compareToIgnoreCase("GEOCHRON")!=0){
+            generalTaskTypeRadioButton.setSelected(true);
+        }
+
+        taskSummaryLabel.setText(squidProject.getTask().printSummaryData());
+    }
+
+    private void setupListeners() {
+        taskNameTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                task.setName(newValue);
+            }
+        });
+
+        taskDescriptionTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                task.setDescription(newValue);
+            }
+        });
+
+        authorsNameTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                task.setAuthorName(newValue);
+            }
+        });
+
+        labNameTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                task.setLabName(newValue);
+            }
+        });
+
+        provenanceTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                task.setProvenance(newValue);
+            }
+        });
+
+    }
+
     @FXML
     private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
+        task.setType("geochron");
     }
 
     @FXML
     private void generalTaskTypeRadioButtonAction(ActionEvent event) {
+        task.setType("general");
     }
 
 }
