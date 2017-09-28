@@ -1,10 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane fx:id="taskManagerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
    <children>
-      <Label fx:id="taskSummaryLabel" alignment="TOP_LEFT" layoutX="24.0" layoutY="41.0" prefHeight="537.0" prefWidth="878.0" style="-fx-font-size: 14;" text="Task Summary" />
+      <Label layoutX="24.0" layoutY="15.0" text="Task Name:" />
+      <TextField fx:id="taskNameTextField" layoutX="127.0" layoutY="15.0" prefHeight="27.0" prefWidth="496.0" promptText="Task name" />
+      <Label fx:id="taskSummaryLabel" alignment="TOP_LEFT" layoutX="291.0" layoutY="282.0" prefHeight="296.0" prefWidth="611.0" style="-fx-font-size: 14; -fx-border-color: black;" text="Task Summary" />
+      <Label layoutX="649.0" layoutY="18.0" text="Type:" />
+      <HBox layoutX="705.0" layoutY="22.0" prefHeight="21.0" prefWidth="181.0">
+         <children>
+            <RadioButton fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" prefHeight="18.0" prefWidth="106.0" selected="true" text="Geochron">
+               <toggleGroup>
+                  <ToggleGroup fx:id="taskTypeToggleGroup" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" prefHeight="18.0" prefWidth="102.0" text="General" toggleGroup="$taskTypeToggleGroup" />
+         </children>
+      </HBox>
+      <Label layoutX="55.0" layoutY="98.0" text="Author:" />
+      <Label layoutX="481.0" layoutY="98.0" text="Lab Name:" />
+      <TextField fx:id="authorsNameTextField" layoutX="127.0" layoutY="98.0" prefHeight="27.0" prefWidth="306.0" promptText="Author's Name" />
+      <TextField fx:id="labNameTextField" layoutX="573.0" layoutY="98.0" prefHeight="27.0" prefWidth="313.0" promptText="Lab Name:" />
+      <Label alignment="CENTER_RIGHT" layoutX="55.0" layoutY="183.0" prefHeight="17.0" prefWidth="250.0" text="Normalise Ion Counts for SBM?" />
+      <HBox layoutX="346.0" layoutY="179.0">
+         <children>
+            <RadioButton layoutX="350.0" mnemonicParsing="false" prefWidth="50.0" selected="true" text="Yes">
+               <toggleGroup>
+                  <ToggleGroup fx:id="toggleGroupSMB" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" prefHeight="12.0" prefWidth="50.0" text="No" toggleGroup="$toggleGroupSMB" />
+         </children>
+      </HBox>
+      <Label alignment="CENTER_RIGHT" layoutX="70.0" layoutY="219.0" prefHeight="17.0" prefWidth="250.0" text="Select Ratio Calculation Method:" />
+      <HBox layoutX="357.0" layoutY="215.0">
+         <children>
+            <RadioButton layoutX="350.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="249.0" text="Linear regression to burn mid-time">
+               <toggleGroup>
+                  <ToggleGroup fx:id="toggleGroupRatioCalcMethod" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" prefHeight="18.0" prefWidth="212.0" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
+         </children>
+      </HBox>
+      <Label layoutX="21.0" layoutY="55.0" text="Description:" />
+      <TextField fx:id="taskDescriptionTextField" layoutX="127.0" layoutY="56.0" prefHeight="27.0" prefWidth="757.0" promptText="Task Description" />
+      <Label layoutX="20.0" layoutY="142.0" text="Provenance:" />
+      <TextField fx:id="provenanceTextField" layoutX="127.0" layoutY="143.0" prefHeight="27.0" prefWidth="757.0" promptText="Provenance" />
    </children>
 </AnchorPane>

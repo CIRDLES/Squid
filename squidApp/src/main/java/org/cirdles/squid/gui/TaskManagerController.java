@@ -17,9 +17,13 @@ package org.cirdles.squid.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -36,6 +40,26 @@ public class TaskManagerController implements Initializable {
     private Label taskSummaryLabel;
     @FXML
     private AnchorPane taskManagerAnchorPane;
+    @FXML
+    private TextField taskNameTextField;
+    @FXML
+    private RadioButton geochronTaskTypeRadioButton;
+    @FXML
+    private ToggleGroup taskTypeToggleGroup;
+    @FXML
+    private RadioButton generalTaskTypeRadioButton;
+    @FXML
+    private ToggleGroup toggleGroupSMB;
+    @FXML
+    private ToggleGroup toggleGroupRatioCalcMethod;
+    @FXML
+    private TextField authorsNameTextField;
+    @FXML
+    private TextField labNameTextField;
+    @FXML
+    private TextField taskDescriptionTextField;
+    @FXML
+    private TextField provenanceTextField;
 
     /**
      * Initializes the controller class.
@@ -52,6 +76,14 @@ public class TaskManagerController implements Initializable {
         } else {
             taskSummaryLabel.setText("No Task information available");
         }
+    }
+
+    @FXML
+    private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void generalTaskTypeRadioButtonAction(ActionEvent event) {
     }
 
 }
