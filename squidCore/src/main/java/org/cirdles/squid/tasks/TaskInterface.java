@@ -19,7 +19,6 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -192,7 +191,7 @@ public interface TaskInterface {
      */
     public void setType(String type);
 
-    public void setupSquidSessionSpecs();
+    public void setupSquidSessionSpecsAndReduceData();
 
     public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
 

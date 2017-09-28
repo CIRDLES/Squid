@@ -75,10 +75,10 @@ public final class SquidProject implements Serializable {
 
     public void testRunOfSessionModel() {
 
+        task.setupSquidSessionSpecsAndReduceData();
         task.evaluateTaskExpressions();
-
         try {
-            prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions(), false);
+            prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions(), false, true);
         } catch (IOException iOException) {
         }
     }
@@ -100,7 +100,7 @@ public final class SquidProject implements Serializable {
     public void initializeExistingProjectTask() {
         if (task != null) {
             task.setPrawnFile(prawnFile);
-            task.setupSquidSessionSpecs();
+            task.setupSquidSessionSpecsAndReduceData();
         }
     }
 
@@ -114,7 +114,7 @@ public final class SquidProject implements Serializable {
         this.task.setRatioNames(taskSquid25.getRatioNames());
 
         // first pass
-        this.task.setupSquidSessionSpecs();
+        this.task.setupSquidSessionSpecsAndReduceData();
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
@@ -131,7 +131,7 @@ public final class SquidProject implements Serializable {
         }
 
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecs();
+        this.task.setupSquidSessionSpecsAndReduceData();
 
     }
 

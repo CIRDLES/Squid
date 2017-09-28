@@ -124,7 +124,7 @@ public class ExpressionManagerController implements Initializable {
         expressionsAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         // update expressions
-        squidProject.getTask().setupSquidSessionSpecs();
+        squidProject.getTask().setupSquidSessionSpecsAndReduceData();
 
         initializeExpressionsListView();
 
@@ -400,7 +400,7 @@ public class ExpressionManagerController implements Initializable {
 
             squidProject.getTask().setChanged(true);
             // update expressions
-            squidProject.getTask().setupSquidSessionSpecs();
+            squidProject.getTask().setupSquidSessionSpecsAndReduceData();
 
             squidProject.getTask().evaluateTaskExpressions();
 

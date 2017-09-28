@@ -116,7 +116,7 @@ public class PrawnFileHandlerIT {
         List<ShrimpFractionExpressionInterface> shrimpFractions = task.processRunFractions(prawnFileData, squidSessionModel);
         
         try {
-            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions, true);
+            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions, true, false);
         } catch (IOException iOException) {
         }             
         

@@ -38,7 +38,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Audit Session" />
                   <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Masses" />
-                  <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Edit Spots" />
+                  <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Choose Refeerence Materials" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Prawn File as ..." />
               </items>

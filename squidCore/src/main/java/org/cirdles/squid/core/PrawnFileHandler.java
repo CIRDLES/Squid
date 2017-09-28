@@ -229,7 +229,7 @@ public class PrawnFileHandler implements Serializable {
     public void writeReportsFromPrawnFile(String prawnFileLocation, boolean useSBM, boolean userLinFits, String referenceMaterialLetter, TaskInterface task)
             throws IOException, MalformedURLException, JAXBException, SAXException {
         List<ShrimpFractionExpressionInterface> shrimpFractions = extractShrimpFractionsFromPrawnFile(prawnFileLocation, useSBM, userLinFits, referenceMaterialLetter, task);
-        reportsEngine.produceReports(shrimpFractions, true);
+        reportsEngine.produceReports(shrimpFractions, true, false);
     }
 
     /**

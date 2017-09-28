@@ -207,7 +207,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void setupSquidSessionSpecs() {
+    public void setupSquidSessionSpecsAndReduceData() {
 
         if (changed) {
             // populate taskExpressionsTreesOrdered

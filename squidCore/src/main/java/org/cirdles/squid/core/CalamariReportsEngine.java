@@ -92,7 +92,7 @@ public class CalamariReportsEngine {
      * @param doWriteReportFiles
      * @throws java.io.IOException
      */
-    public void produceReports(List<ShrimpFractionExpressionInterface> shrimpFractions, boolean doWriteReportFiles) throws IOException {
+    public void produceReports(List<ShrimpFractionExpressionInterface> shrimpFractions, boolean doWriteReportFiles, boolean summaryOnly) throws IOException {
 
         this.doWriteReportFiles = doWriteReportFiles;
 
@@ -112,27 +112,33 @@ public class CalamariReportsEngine {
                 reportNamePrefix = nameOfPrawnXMLFile + "_" + reportParameterValues + "_";
             }
 
-            folderToWriteCalamariReportsPath
-                    = folderToWriteCalamariReports.getCanonicalPath()
-                    + File.separator + nameOfPrawnXMLFile
-                    + File.separator + sdfTime.format(new Date())
-                    + reportParameterValues
-                    + File.separator;
-            File reportsFolder = new File(folderToWriteCalamariReportsPath);
-            reportsFolder.mkdirs();
+            if (doWriteReportFiles) {
+                folderToWriteCalamariReportsPath
+                        = folderToWriteCalamariReports.getCanonicalPath()
+                        + File.separator + nameOfPrawnXMLFile
+                        + File.separator + sdfTime.format(new Date())
+                        + reportParameterValues
+                        + File.separator;
+                File reportsFolder = new File(folderToWriteCalamariReportsPath);
+                reportsFolder.mkdirs();
+            }
 
             prepSpeciesReportFiles(firstShrimpFraction);
             prepRatiosReportFiles(firstShrimpFraction);
 
             for (int f = 0; f < shrimpFractions.size(); f++) {
                 ShrimpFraction shrimpFraction = (ShrimpFraction) shrimpFractions.get(f);
-                shrimpFraction.setSpotNumber(f + 1);
-                reportTotalIonCountsAtMass(shrimpFraction);
-                reportTotalSBMCountsAtMass(shrimpFraction);
-                reportTotalCountsAtTimeStampAndTrimMass(shrimpFraction);
-                reportTotalCountsPerSecondPerSpeciesPerAnalysis(shrimpFraction);
-                reportWithinSpotRatiosAtInterpolatedTimes(shrimpFraction);
-                reportMeanRatiosPerSpot(shrimpFraction);
+                // sept 2017 what is this and why here??  when different subsets might come thru - not used anyway shrimpFraction.setSpotNumber(f + 1);
+                if (summaryOnly) {
+                    reportMeanRatiosPerSpot(shrimpFraction);
+                } else {
+                    reportTotalIonCountsAtMass(shrimpFraction);
+                    reportTotalSBMCountsAtMass(shrimpFraction);
+                    reportTotalCountsAtTimeStampAndTrimMass(shrimpFraction);
+                    reportTotalCountsPerSecondPerSpeciesPerAnalysis(shrimpFraction);
+                    reportWithinSpotRatiosAtInterpolatedTimes(shrimpFraction);
+                    reportMeanRatiosPerSpot(shrimpFraction);
+                }
 
             } // end of fractions loop
 
