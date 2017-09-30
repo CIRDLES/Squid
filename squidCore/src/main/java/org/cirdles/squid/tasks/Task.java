@@ -83,7 +83,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected String provenance;
     protected long dateRevised;
     private String filterForRefMatSpotNames;
-    private int countOfFilteredRefMatSpots;
     
     protected List<String> ratioNames;
     // cannot be serialized because of JavaFX private final SimpleStringProperty fields
@@ -115,11 +114,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean changed;
 
     public Task() {
-        this("New Task", null, "", 0);
+        this("New Task", null, "");
     }
 
     public Task(String name) {
-        this(name, null, "", 0);
+        this(name, null, "");
     }
 
     /**
@@ -127,7 +126,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param name
      * @param prawnFile
      */
-    public Task(String name, PrawnFile prawnFile, String filterForRefMatSpotNames, int countOfFilteredRefMatSpots) {
+    public Task(String name, PrawnFile prawnFile, String filterForRefMatSpotNames) {
         this.name = name;
         this.type = "specify Geochron or General";
         this.description = "describe task here";
@@ -136,7 +135,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.provenance = "provenance";
         this.dateRevised = 0l;
         this.filterForRefMatSpotNames = "";
-        this.countOfFilteredRefMatSpots = 0;
         
         this.ratioNames = new ArrayList<>();
         this.squidSessionModel = null;
@@ -168,7 +166,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("Reference Material Spot Name Filter: ' ")
                 .append(filterForRefMatSpotNames)
                 .append(" ' yields ")
-                .append(String.valueOf(countOfFilteredRefMatSpots))
+                .append(String.valueOf(referenceMaterialSpots.size()))
                 .append(" spots.");
         
         summary.append("\n\nTask Ratios: ");
@@ -782,15 +780,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
+    @Override
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
-    }
-
-    /**
-     * @param countOfFilteredRefMatSpots the countOfFilteredRefMatSpots to set
-     */
-    public void setCountOfFilteredRefMatSpots(int countOfFilteredRefMatSpots) {
-        this.countOfFilteredRefMatSpots = countOfFilteredRefMatSpots;
     }
 
     /**

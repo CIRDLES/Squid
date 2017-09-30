@@ -237,9 +237,4 @@ public interface TaskInterface {
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
 
-    /**
-     * @param countOfFilteredRefMatSpots the countOfFilteredRefMatSpots to set
-     */
-    public void setCountOfFilteredRefMatSpots(int countOfFilteredRefMatSpots);
-
 }

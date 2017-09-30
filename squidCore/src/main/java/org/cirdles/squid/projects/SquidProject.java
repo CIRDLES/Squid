@@ -55,7 +55,6 @@ public final class SquidProject implements Serializable {
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
-    private int countOfFilteredRefMatSpots;
     private double sessionDurationHours;
     private TaskInterface task;
 
@@ -67,7 +66,6 @@ public final class SquidProject implements Serializable {
 
         this.filterForRefMatSpotNames = "";
 
-        this.countOfFilteredRefMatSpots = 0;
         this.sessionDurationHours = 0.0;
 
         this.task = new Task();
@@ -101,7 +99,6 @@ public final class SquidProject implements Serializable {
         if (task != null) {
             task.setPrawnFile(prawnFile);
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-            task.setCountOfFilteredRefMatSpots(countOfFilteredRefMatSpots);
             task.setupSquidSessionSpecsAndReduceData();
         }
     }
@@ -111,7 +108,7 @@ public final class SquidProject implements Serializable {
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
         this.task = new Task(
-                taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames, countOfFilteredRefMatSpots);
+                taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames);
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setRatioNames(taskSquid25.getRatioNames());
@@ -431,20 +428,6 @@ public final class SquidProject implements Serializable {
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
-    }
-
-    /**
-     * @return the countOfFilteredRefMatSpots
-     */
-    public int getCountOfFilteredRefMatSpots() {
-        return countOfFilteredRefMatSpots;
-    }
-
-    /**
-     * @param countOfFilteredRefMatSpots the countOfFilteredRefMatSpots to set
-     */
-    public void setCountOfFilteredRefMatSpots(int countOfFilteredRefMatSpots) {
-        this.countOfFilteredRefMatSpots = countOfFilteredRefMatSpots;
     }
 
     /**
