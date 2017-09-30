@@ -46,8 +46,6 @@ public class ReductionManagerController implements Initializable {
     @FXML
     private ToggleGroup toggleGroupRatioCalcMethod;
     @FXML
-    private ChoiceBox<String> referenceMaterialFistLetterChoiceBox;
-    @FXML
     private Button reduceDataButton;
     @FXML
     private ProgressIndicator reduceDataProgressIndicator;
@@ -63,11 +61,6 @@ public class ReductionManagerController implements Initializable {
 
         calamariTabAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         calamariTabAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
-        ObservableList<String> refMatFistLetterChoiceBoxItems = FXCollections.observableArrayList("0", "A", "M", "T");
-        referenceMaterialFistLetterChoiceBox.setItems(refMatFistLetterChoiceBoxItems);
-        referenceMaterialFistLetterChoiceBox.setValue("T");
-
     }
 
     @FXML
@@ -77,23 +70,6 @@ public class ReductionManagerController implements Initializable {
             squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
             squidProject.testRunOfSessionModel();
         }
-//        
-//        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
-//            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
-//            new ReduceDataWorker(
-//                    squidProject.getPrawnFileHandler(),
-//                    true,//normalizeIonCountsToSBM,
-//                    false,//useLinearRegressionToCalculateRatios,
-//                    referenceMaterialFistLetterChoiceBox.getValue(),
-//                    new SquidBodorkosTask1(), // temporarily hard-wired
-//                    reduceDataProgressIndicator).execute();
-//        } else {
-//            JOptionPane.showMessageDialog(
-//                    null,
-//                    "Please specify a Prawn XML file for processing.",
-//                    "Calamari Warning",
-//                    JOptionPane.WARNING_MESSAGE);
-//        }
     }
 
 }

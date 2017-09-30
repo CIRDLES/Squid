@@ -124,7 +124,7 @@ public class ExpressionManagerController implements Initializable {
         expressionsAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         // update expressions
-        squidProject.getTask().setupSquidSessionSpecsAndReduceData();
+        squidProject.initializeTaskAndReduceData();
 
         initializeExpressionsListView();
 
@@ -229,29 +229,45 @@ public class ExpressionManagerController implements Initializable {
 
             if (originalExpressionTree.isSquidSwitchSCSummaryCalculation()) {
                 SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName());
+
                 if (task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName()) != null) {
                     if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
-                        //rmPeekTextArea.setText("Summary Function: " + spotSummary.getOperation().getName());
-                        rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        if (spotSummary.getSelectedSpots().size() > 0) {
+                            rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        } else {
+                            rmPeekTextArea.setText("No Reference Materials");
+                        }
                     } else {
                         rmPeekTextArea.setText("No Summary");
                     }
 
                     if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
-                        //unPeekTextArea.setText("Summary Function: " + spotSummary.getOperation().getName());
-                        unPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        if (spotSummary.getSelectedSpots().size() > 0) {
+                            unPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        } else {
+                            unPeekTextArea.setText("No Unknowns");
+                        }
                     } else {
                         unPeekTextArea.setText("No Summary");
                     }
                 }
+
             } else {
                 if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
-                    rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots));
+                    if (refMatSpots.size() > 0) {
+                        rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots));
+                    } else {
+                        rmPeekTextArea.setText("No Reference Materials");
+                    }
                 } else if (!originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
                     rmPeekTextArea.setText("Reference Materials not processed.");
                 }
                 if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
-                    unPeekTextArea.setText(peekDetailsPerSpot(unSpots));
+                    if (unSpots.size() > 0) {
+                        unPeekTextArea.setText(peekDetailsPerSpot(unSpots));
+                    } else {
+                        rmPeekTextArea.setText("No Unknowns");
+                    }
                 } else if (!originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
                     unPeekTextArea.setText("Unknowns not processed.");
                 }
@@ -400,7 +416,7 @@ public class ExpressionManagerController implements Initializable {
 
             squidProject.getTask().setChanged(true);
             // update expressions
-            squidProject.getTask().setupSquidSessionSpecsAndReduceData();
+            squidProject.initializeTaskAndReduceData();
 
             squidProject.getTask().evaluateTaskExpressions();
 

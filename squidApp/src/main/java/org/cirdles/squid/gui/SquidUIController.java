@@ -376,7 +376,6 @@ public class SquidUIController implements Initializable {
     @FXML
     private void saveAsSquidProjectMenuItemAction(ActionEvent event) {
         if (squidProject != null) {
-            SpotManagerController.saveProjectData();
             try {
                 File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
                 if (projectFile != null) {
@@ -427,7 +426,6 @@ public class SquidUIController implements Initializable {
     @FXML
     private void saveSquidProjectMenuItemAction(ActionEvent event) {
         if (squidProject != null) {
-            SpotManagerController.saveProjectData();
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
             } catch (IOException iOException) {

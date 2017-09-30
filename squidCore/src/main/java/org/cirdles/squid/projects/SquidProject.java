@@ -55,7 +55,7 @@ public final class SquidProject implements Serializable {
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
-    private List<Run> shrimpRunsRefMat;
+    private int countOfFilteredRefMatSpots;
     private double sessionDurationHours;
     private TaskInterface task;
 
@@ -67,7 +67,7 @@ public final class SquidProject implements Serializable {
 
         this.filterForRefMatSpotNames = "";
 
-        this.shrimpRunsRefMat = new ArrayList<>();
+        this.countOfFilteredRefMatSpots = 0;
         this.sessionDurationHours = 0.0;
 
         this.task = new Task();
@@ -94,12 +94,14 @@ public final class SquidProject implements Serializable {
 
     public void loadAndInitializeTask(TaskInterface task) {
         this.task = task;
-        initializeExistingProjectTask();
+        initializeTaskAndReduceData();
     }
 
-    public void initializeExistingProjectTask() {
+    public void initializeTaskAndReduceData() {
         if (task != null) {
             task.setPrawnFile(prawnFile);
+            task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+            task.setCountOfFilteredRefMatSpots(countOfFilteredRefMatSpots);
             task.setupSquidSessionSpecsAndReduceData();
         }
     }
@@ -108,7 +110,8 @@ public final class SquidProject implements Serializable {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
-        this.task = new Task(taskSquid25.getTaskName(), prawnFile);
+        this.task = new Task(
+                taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames, countOfFilteredRefMatSpots);
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setRatioNames(taskSquid25.getRatioNames());
@@ -431,17 +434,17 @@ public final class SquidProject implements Serializable {
     }
 
     /**
-     * @return shrimpRunsRefMat - list of reference material runs
+     * @return the countOfFilteredRefMatSpots
      */
-    public List<Run> getShrimpRunsRefMat() {
-        return shrimpRunsRefMat;
+    public int getCountOfFilteredRefMatSpots() {
+        return countOfFilteredRefMatSpots;
     }
 
     /**
-     * @param shrimpRunsRefMat the shrimpRunsRefMat to set
+     * @param countOfFilteredRefMatSpots the countOfFilteredRefMatSpots to set
      */
-    public void setShrimpRunsRefMat(List<Run> shrimpRunsRefMat) {
-        this.shrimpRunsRefMat = shrimpRunsRefMat;
+    public void setCountOfFilteredRefMatSpots(int countOfFilteredRefMatSpots) {
+        this.countOfFilteredRefMatSpots = countOfFilteredRefMatSpots;
     }
 
     /**
@@ -471,4 +474,5 @@ public final class SquidProject implements Serializable {
     public void setTask(TaskInterface task) {
         this.task = task;
     }
+
 }

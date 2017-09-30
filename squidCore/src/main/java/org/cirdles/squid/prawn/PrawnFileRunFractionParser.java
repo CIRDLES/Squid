@@ -132,9 +132,10 @@ public class PrawnFileRunFractionParser {
             shrimpFraction.setReducedPkHtFerr(reducedPkHtFerr);
 
             // determine reference material status
-            // hard coded for now
-            if (fractionID.toUpperCase(Locale.US).startsWith(referenceMaterialNameFilter.toUpperCase(Locale.US))) {
-                shrimpFraction.setReferenceMaterial(true);
+            if (referenceMaterialNameFilter.length() > 0) {
+                if (fractionID.toUpperCase(Locale.US).startsWith(referenceMaterialNameFilter.toUpperCase(Locale.US))) {
+                    shrimpFraction.setReferenceMaterial(true);
+                }
             }
         }
         return shrimpFraction;

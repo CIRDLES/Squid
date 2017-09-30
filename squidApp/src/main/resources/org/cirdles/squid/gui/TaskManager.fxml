@@ -11,7 +11,7 @@
    <children>
       <Label layoutX="24.0" layoutY="15.0" text="Task Name:" />
       <TextField fx:id="taskNameTextField" layoutX="127.0" layoutY="15.0" prefHeight="27.0" prefWidth="496.0" promptText="Task name" />
-      <Label fx:id="taskSummaryLabel" alignment="TOP_LEFT" layoutX="291.0" layoutY="282.0" prefHeight="296.0" prefWidth="611.0" style="-fx-font-size: 14; -fx-border-color: black;" text="Task Summary" />
+      <Label fx:id="taskSummaryLabel" alignment="TOP_LEFT" layoutX="116.0" layoutY="283.0" prefHeight="296.0" prefWidth="706.0" style="-fx-font-size: 14; -fx-border-color: black; -fx-background-color: white;" text="Task Summary" />
       <Label layoutX="649.0" layoutY="18.0" text="Type:" />
       <HBox layoutX="705.0" layoutY="22.0" prefHeight="21.0" prefWidth="181.0">
          <children>

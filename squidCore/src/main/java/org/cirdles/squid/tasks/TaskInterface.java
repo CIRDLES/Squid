@@ -231,5 +231,15 @@ public interface TaskInterface {
      * @return the unknownSpots
      */
     public List<ShrimpFractionExpressionInterface> getUnknownSpots();
+    
+        /**
+     * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
+     */
+    public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
+
+    /**
+     * @param countOfFilteredRefMatSpots the countOfFilteredRefMatSpots to set
+     */
+    public void setCountOfFilteredRefMatSpots(int countOfFilteredRefMatSpots);
 
 }

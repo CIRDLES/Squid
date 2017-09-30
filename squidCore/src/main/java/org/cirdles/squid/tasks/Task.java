@@ -82,6 +82,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected String labName;
     protected String provenance;
     protected long dateRevised;
+    private String filterForRefMatSpotNames;
+    private int countOfFilteredRefMatSpots;
+    
     protected List<String> ratioNames;
     // cannot be serialized because of JavaFX private final SimpleStringProperty fields
     protected transient Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
@@ -112,11 +115,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean changed;
 
     public Task() {
-        this("Default Empty Task", null);
+        this("New Task", null, "", 0);
     }
 
     public Task(String name) {
-        this(name, null);
+        this(name, null, "", 0);
     }
 
     /**
@@ -124,7 +127,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param name
      * @param prawnFile
      */
-    public Task(String name, PrawnFile prawnFile) {
+    public Task(String name, PrawnFile prawnFile, String filterForRefMatSpotNames, int countOfFilteredRefMatSpots) {
         this.name = name;
         this.type = "specify Geochron or General";
         this.description = "describe task here";
@@ -132,6 +135,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.labName = "lab name";
         this.provenance = "provenance";
         this.dateRevised = 0l;
+        this.filterForRefMatSpotNames = "";
+        this.countOfFilteredRefMatSpots = 0;
+        
         this.ratioNames = new ArrayList<>();
         this.squidSessionModel = null;
         squidSpeciesModelList = new ArrayList<>();
@@ -157,7 +163,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public String printSummaryData() {
         StringBuilder summary = new StringBuilder();
 
-        summary.append("Task Ratios: ");
+        summary.append("Task Audit:\n\n");
+        
+        summary.append("Reference Material Spot Name Filter: ' ")
+                .append(filterForRefMatSpotNames)
+                .append(" ' yields ")
+                .append(String.valueOf(countOfFilteredRefMatSpots))
+                .append(" spots.");
+        
+        summary.append("\n\nTask Ratios: ");
         summary.append("\t");
         summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");
         summary.append("\n\n");
@@ -204,7 +218,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             processAndSortExpressions();
 
-            squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, "T");
+            squidSessionModel = new SquidSessionModel(
+                    squidSpeciesModelList, squidRatiosModelList, true, false, filterForRefMatSpotNames);
 
             try {
 //                TODO - move this
@@ -762,6 +777,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setDateRevised(long dateRevised) {
         this.dateRevised = dateRevised;
+    }
+
+    /**
+     * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
+     */
+    public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
+        this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+    }
+
+    /**
+     * @param countOfFilteredRefMatSpots the countOfFilteredRefMatSpots to set
+     */
+    public void setCountOfFilteredRefMatSpots(int countOfFilteredRefMatSpots) {
+        this.countOfFilteredRefMatSpots = countOfFilteredRefMatSpots;
     }
 
     /**
