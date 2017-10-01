@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -31,15 +28,9 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  */
 @XStreamAlias("Operation")
 public class And extends Function {
-        //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(And.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of And " + theSUID);
-    }
+
+    private static final long serialVersionUID = 6873057946849919089L;
+
     /**
      *
      */
@@ -54,6 +45,7 @@ public class And extends Function {
 
     /**
      * And expects two boolean children.
+     *
      * @param childrenET the value of childrenET
      * @param shrimpFractions the value of shrimpFraction
      * @param task
@@ -64,7 +56,7 @@ public class And extends Function {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
         boolean retVal;
-        try {          
+        try {
             retVal = (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0]) && (convertObjectArrayToBooleans(childrenET.get(1).eval(shrimpFractions, task)[0])[0]);
         } catch (Exception e) {
             retVal = false;

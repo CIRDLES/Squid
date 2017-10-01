@@ -166,7 +166,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public String printTaskAudit() {
         StringBuilder summary = new StringBuilder();
 
-        summary.append(String.valueOf(referenceMaterialSpots.size()))
+        summary.append(" ")
+                .append(String.valueOf(referenceMaterialSpots.size()))
                 .append(" Reference Material Spots extracted by filter: ' ")
                 .append(filterForRefMatSpotNames)
                 .append(" '")
@@ -174,11 +175,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         summary.append("\n ")
                 .append(String.valueOf(unknownSpots.size()))
-                .append(" Unknown Spots");
+                .append(" Unknown Spots.");
 
         summary.append("\n\n ")
                 .append(String.valueOf(squidSpeciesModelList.size()))
-                .append(" Species");
+                .append(" Species.");
 
         summary.append("\n\n Task Ratios: ");
         summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");

@@ -131,12 +131,20 @@ public class TaskSquid25 implements Serializable {
                 String[] switchSC = lines[firstRow + 30].split("\t");
 
                 for (int i = 0; i < countOfEquations; i++) {
+                    // handle backwards logic of Squid25 where both ST, SA false, means both True
+                    boolean switchRM = Boolean.parseBoolean(switchST[i + 2]);
+                    boolean switchUN = Boolean.parseBoolean(switchSA[i + 2]);
+                    if (!switchRM && !switchUN) {
+                        switchRM = true;
+                        switchUN = true;
+                    }
+
                     if (prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]).length() > 0) {
                         taskSquid25.task25Equations.add(new TaskSquid25Equation(
                                 prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]),
                                 prepareSquid25ExcelEquationNameForSquid3(equationNames[i + 2]),
-                                Boolean.parseBoolean(switchST[i + 2]),
-                                Boolean.parseBoolean(switchSA[i + 2]),
+                                switchRM,
+                                switchUN,
                                 Boolean.parseBoolean(switchSC[i + 2])));
                     }
                 }
