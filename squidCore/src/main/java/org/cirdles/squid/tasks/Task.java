@@ -82,8 +82,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected String labName;
     protected String provenance;
     protected long dateRevised;
+    protected boolean useSBM;
+    protected boolean userLinFits;
     private String filterForRefMatSpotNames;
-    
+
     protected List<String> ratioNames;
     // cannot be serialized because of JavaFX private final SimpleStringProperty fields
     protected transient Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
@@ -125,6 +127,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @param name
      * @param prawnFile
+     * @param filterForRefMatSpotNames
      */
     public Task(String name, PrawnFile prawnFile, String filterForRefMatSpotNames) {
         this.name = name;
@@ -135,7 +138,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.provenance = "provenance";
         this.dateRevised = 0l;
         this.filterForRefMatSpotNames = "";
-        
+        this.useSBM = true;
+        this.userLinFits = false;
+
         this.ratioNames = new ArrayList<>();
         this.squidSessionModel = null;
         squidSpeciesModelList = new ArrayList<>();
@@ -158,21 +163,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public String printSummaryData() {
+    public String printTaskAudit() {
         StringBuilder summary = new StringBuilder();
 
-        summary.append("Task Audit:\n\n");
-        
-        summary.append("Reference Material Spot Name Filter: ' ")
+        summary.append(String.valueOf(referenceMaterialSpots.size()))
+                .append(" Reference Material Spots extracted by filter: ' ")
                 .append(filterForRefMatSpotNames)
-                .append(" ' yields ")
-                .append(String.valueOf(referenceMaterialSpots.size()))
+                .append(" '")
                 .append(" spots.");
-        
-        summary.append("\n\nTask Ratios: ");
-        summary.append("\t");
+
+        summary.append("\n ")
+                .append(String.valueOf(unknownSpots.size()))
+                .append(" Unknown Spots");
+
+        summary.append("\n\n ")
+                .append(String.valueOf(squidSpeciesModelList.size()))
+                .append(" Species");
+
+        summary.append("\n\n Task Ratios: ");
         summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");
-        summary.append("\n\n");
 
         int count = 0;
         for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
@@ -180,13 +189,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 count++;
             }
         }
-        summary.append("Task Expressions: ");
-        summary.append("\n\tHealthy: ");
+        summary.append("\n\n Task Expressions: ");
+        summary.append("\n\t Healthy: ");
         summary.append((String) (count > 0 ? String.valueOf(count) : "None")).append(" included.");
-        summary.append("\n\tUnHealthy: ");
+        summary.append("\n\t UnHealthy: ");
         summary.append((String) ((taskExpressionTreesOrdered.size() - count) > 0
                 ? String.valueOf(taskExpressionTreesOrdered.size() - count) : "None")).append(" included.");
-        summary.append("\n\n");
 
         return summary.toString();
     }
@@ -243,20 +251,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // since checking for dependencies after possible changes or new expressions
         buildExpressions();
 
-//        // experiment----------------
-//        Expression first = taskExpressionsOrdered.get(2);
-//        ((XMLSerializerInterface) first.getExpressionTree())
-//                .serializeXMLObject("TEST_SERIAL2.xml");
-//        ExpressionTreeInterface test = (ExpressionTreeInterface) this.readXMLObject("TEST_SERIAL2.xml", false);
-//        test.setName("TEST");
-//        Expression testExp = new Expression(test, first.getExcelExpressionString());
-//        if (taskExpressionsOrdered.contains(testExp)){
-//            taskExpressionsOrdered.remove(testExp);
-//            taskExpressionTreesOrdered.remove(test);
-//        }
-//        taskExpressionsOrdered.add(testExp);
-//        taskExpressionTreesOrdered.add((ExpressionTree) test);
-        //---------------
         // put expressions in execution order
         try {
             Collections.sort(taskExpressionTreesOrdered);
@@ -783,6 +777,38 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+    }
+
+    /**
+     * @return the useSBM
+     */
+    @Override
+    public boolean isUseSBM() {
+        return useSBM;
+    }
+
+    /**
+     * @param useSBM the useSBM to set
+     */
+    @Override
+    public void setUseSBM(boolean useSBM) {
+        this.useSBM = useSBM;
+    }
+
+    /**
+     * @return the userLinFits
+     */
+    @Override
+    public boolean isUserLinFits() {
+        return userLinFits;
+    }
+
+    /**
+     * @param userLinFits the userLinFits to set
+     */
+    @Override
+    public void setUserLinFits(boolean userLinFits) {
+        this.userLinFits = userLinFits;
     }
 
     /**

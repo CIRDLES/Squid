@@ -64,6 +64,14 @@ public class TaskManagerController implements Initializable {
     private TextField taskDescriptionTextField;
     @FXML
     private TextField provenanceTextField;
+    @FXML
+    private RadioButton yesSBMRadioButton;
+    @FXML
+    private RadioButton noSBMRadioButton;
+    @FXML
+    private RadioButton linearRegressionRatioCalcRadioButton;
+    @FXML
+    private RadioButton spotAverageRatioCalcRadioButton;
 
     /**
      * Initializes the controller class.
@@ -91,12 +99,26 @@ public class TaskManagerController implements Initializable {
         authorsNameTextField.setText(task.getAuthorName());
         labNameTextField.setText(task.getLabName());
         provenanceTextField.setText(task.getProvenance());
-        
-        if(task.getType().compareToIgnoreCase("GEOCHRON")!=0){
+
+        if (task.getType().compareToIgnoreCase("GEOCHRON") != 0) {
             generalTaskTypeRadioButton.setSelected(true);
+        } else {
+            geochronTaskTypeRadioButton.setSelected(true);
         }
 
-        taskSummaryLabel.setText(squidProject.getTask().printSummaryData());
+        if (task.isUseSBM()) {
+            yesSBMRadioButton.setSelected(true);
+        } else {
+            noSBMRadioButton.setSelected(true);
+        }
+
+        if (task.isUserLinFits()) {
+            linearRegressionRatioCalcRadioButton.setSelected(true);
+        } else {
+            spotAverageRatioCalcRadioButton.setSelected(true);
+        }
+
+        taskSummaryLabel.setText(squidProject.getTask().printTaskAudit());
     }
 
     private void setupListeners() {
@@ -140,11 +162,37 @@ public class TaskManagerController implements Initializable {
     @FXML
     private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
         task.setType("geochron");
+        task.setChanged(true);
     }
 
     @FXML
     private void generalTaskTypeRadioButtonAction(ActionEvent event) {
         task.setType("general");
+        task.setChanged(true);
+    }
+
+    @FXML
+    private void yesSBMRadioButtonAction(ActionEvent event) {
+        task.setUseSBM(true);
+        task.setChanged(true);
+    }
+
+    @FXML
+    private void noSBMRadioButtonActions(ActionEvent event) {
+        task.setUseSBM(false);
+        task.setChanged(true);
+    }
+
+    @FXML
+    private void linearRegressionRatioCalcRadioButtonAction(ActionEvent event) {
+        task.setUserLinFits(true);
+        task.setChanged(true);
+    }
+
+    @FXML
+    private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
+        task.setUserLinFits(false);
+        task.setChanged(true);
     }
 
 }

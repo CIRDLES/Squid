@@ -130,7 +130,7 @@ public interface TaskInterface {
      */
     List<MassStationDetail> makeListOfMassStationDetails();
 
-    String printSummaryData();
+    String printTaskAudit();
 
     public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
@@ -183,7 +183,7 @@ public interface TaskInterface {
     public void removeExpression(Expression expression);
 
     public void restoreRemovedExpressions();
-    
+
     public void addExpression(Expression exp);
 
     /**
@@ -231,10 +231,30 @@ public interface TaskInterface {
      * @return the unknownSpots
      */
     public List<ShrimpFractionExpressionInterface> getUnknownSpots();
-    
-        /**
+
+    /**
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
+
+    /**
+     * @return the useSBM
+     */
+    public boolean isUseSBM();
+
+    /**
+     * @param useSBM the useSBM to set
+     */
+    public void setUseSBM(boolean useSBM);
+
+    /**
+     * @return the userLinFits
+     */
+    public boolean isUserLinFits();
+
+    /**
+     * @param userLinFits the userLinFits to set
+     */
+    public void setUserLinFits(boolean userLinFits);
 
 }

@@ -23,6 +23,7 @@ import java.util.Locale;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javax.xml.bind.JAXBException;
+import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -146,7 +147,7 @@ public class FileHandler {
     }
 
     public static File selectSquid25TaskFile(SquidProject squidProject, Window ownerWindow)
-            throws IOException, JAXBException, SAXException {
+            throws SquidException, IOException, JAXBException, SAXException {
         File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
@@ -159,7 +160,7 @@ public class FileHandler {
             if (squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xls")) {
                 retVal = squidTaskFile;
             } else {
-                throw new IOException("Filename does not end with '.xls'");
+                throw new SquidException("Filename does not end with '.xls'");
             }
         }
 

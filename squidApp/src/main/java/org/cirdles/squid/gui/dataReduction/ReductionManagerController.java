@@ -42,8 +42,6 @@ public class ReductionManagerController implements Initializable {
     @FXML
     private AnchorPane calamariTabAnchorPane;
     @FXML
-    private ToggleGroup toggleGroupSMB;
-    @FXML
     private ToggleGroup toggleGroupRatioCalcMethod;
     @FXML
     private Button reduceDataButton;

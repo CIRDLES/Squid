@@ -203,7 +203,6 @@ public class SpotManagerController implements Initializable {
         MenuItem menuItem = new MenuItem("Clear list.");
         menuItem.setOnAction((evt) -> {
             squidProject.setFilterForRefMatSpotNames("");
-//            squidProject.setCountOfFilteredRefMatSpots(0);
             updateReferenceMaterialsList(true);
         });
         contextMenu.getItems().add(menuItem);
@@ -245,7 +244,6 @@ public class SpotManagerController implements Initializable {
         squidProject.setFilterForRefMatSpotNames(
                 filterSpotNameText.getText().toUpperCase(Locale.US).trim());
         updateReferenceMaterialsList(true);
-//        squidProject.setCountOfFilteredRefMatSpots(shrimpRunsRefMat.size());
     }
 
     private void updateReferenceMaterialsList(boolean updateTaskStatus) {

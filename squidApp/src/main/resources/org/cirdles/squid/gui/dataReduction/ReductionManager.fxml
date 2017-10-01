@@ -10,18 +10,8 @@
 
 <AnchorPane fx:id="calamariTabAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dataReduction.ReductionManagerController">
    <children>
-      <Label alignment="CENTER_RIGHT" layoutX="60.0" layoutY="67.0" prefHeight="17.0" prefWidth="250.0" text="Normalise Ion Counts for SBM?" />
       <Label alignment="CENTER_RIGHT" layoutX="60.0" layoutY="101.0" prefHeight="17.0" prefWidth="250.0" text="Select Ratio Calculation Method:" />
-      <HBox layoutX="350.0" layoutY="67.0">
-         <children>
-            <RadioButton layoutX="350.0" mnemonicParsing="false" prefWidth="50.0" selected="true" text="Yes">
-               <toggleGroup>
-                  <ToggleGroup fx:id="toggleGroupSMB" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton mnemonicParsing="false" prefHeight="12.0" prefWidth="50.0" text="No" toggleGroup="$toggleGroupSMB" />
-         </children>
-      </HBox>
+      <HBox layoutX="350.0" layoutY="67.0" />
       <HBox layoutX="350.0" layoutY="102.0">
          <children>
             <RadioButton layoutX="350.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="249.0" text="Linear regression to burn mid-time">

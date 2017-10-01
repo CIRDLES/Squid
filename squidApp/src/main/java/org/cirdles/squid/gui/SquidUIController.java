@@ -39,6 +39,7 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.projects.SquidProject;
@@ -704,7 +705,7 @@ public class SquidUIController implements Initializable {
                 squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
                 launchTaskManager();
             }
-        } catch (IOException | JAXBException | SAXException iOException) {
+        } catch (SquidException | IOException | JAXBException | SAXException iOException) {
         }
     }
 
