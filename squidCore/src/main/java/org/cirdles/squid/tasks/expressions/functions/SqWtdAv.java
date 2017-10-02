@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -32,20 +29,14 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  */
 @XStreamAlias("Operation")
 public class SqWtdAv extends Function {
-    //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(SqWtdAv.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of SqWtdAv " + theSUID);
-    }
+
+    private static final long serialVersionUID = 2338965097822849460L;
+
     /**
      * Provides the basic functionality of Squid's sqWtdAv by calculating
- WeightedAverage and returning intMean, intSigmaMean, MSWD, probability,
- intErr68, intMeanErr95 and encoding the labels for each cell of the
- values array produced by eval.
+     * WeightedAverage and returning intMean, intSigmaMean, MSWD, probability,
+     * intErr68, intMeanErr95 and encoding the labels for each cell of the
+     * values array produced by eval.
      *
      * @see
      * https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/squid2.5Basic/MathUtils.bas
@@ -74,7 +65,7 @@ public class SqWtdAv extends Function {
      */
     @Override
     public Object[][] eval(
-            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task)throws SquidException{
+            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
 
         Object[][] retVal;
         try {

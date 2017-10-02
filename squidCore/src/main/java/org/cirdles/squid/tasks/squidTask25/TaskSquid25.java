@@ -41,6 +41,8 @@ public class TaskSquid25 implements Serializable {
     private String taskType;
     private String taskName;
     private String taskDescription;
+    private String labName;
+    private String authorName;
     private List<String> ratioNames;
     private List<TaskSquid25Equation> task25Equations;
 
@@ -69,6 +71,9 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.taskType = lines[firstRow + 1].split("\t")[1];
                 taskSquid25.taskName = lines[firstRow + 2].split("\t")[1];
                 taskSquid25.taskDescription = lines[firstRow + 3].split("\t")[1];
+                              
+                taskSquid25.authorName = "";
+                taskSquid25.labName = lines[firstRow + 7].split("\t")[1];
 
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
                 int countOfRatios = Integer.valueOf(ratioStrings[1]);
@@ -249,6 +254,20 @@ public class TaskSquid25 implements Serializable {
      */
     public List<TaskSquid25Equation> getTask25Equations() {
         return task25Equations;
+    }
+
+    /**
+     * @return the labName
+     */
+    public String getLabName() {
+        return labName;
+    }
+
+    /**
+     * @return the authorName
+     */
+    public String getAuthorName() {
+        return authorName;
     }
 
 }

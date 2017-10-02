@@ -111,6 +111,9 @@ public final class SquidProject implements Serializable {
                 taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames);
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
+        this.task.setProvenance(taskSquid25.getSquidTaskFileName());
+        this.task.setAuthorName(taskSquid25.getAuthorName());
+        this.task.setLabName(taskSquid25.getLabName());
         this.task.setRatioNames(taskSquid25.getRatioNames());
 
         // first pass
@@ -131,7 +134,7 @@ public final class SquidProject implements Serializable {
         }
 
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceData();
+        initializeTaskAndReduceData();
 
     }
 

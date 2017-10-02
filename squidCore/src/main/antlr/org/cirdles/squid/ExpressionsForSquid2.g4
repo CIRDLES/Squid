@@ -83,7 +83,7 @@ FUNCTION :
     'Sqrt' | 'sqrt' | 
     'RobReg' | 'robReg' | 'robreg' |
     'SqBiweight' | 'sqBiweight' |
-    'SqWtAvg' | 'sqWtAvg' |
+    'SqWtdAv' | 'sqWtdAv' |
     'TotalCps' | 'totalCps' |
     'lookup' | 'max' | 'abs';
 
@@ -93,9 +93,9 @@ NAMED_EXPRESSION : '[' '"' ID (ID | '/' | ' ')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment
-LETTER : [a-zA-Z_%] ;
+LETTER : [a-zA-Z_%/] ;
 
-NUMBER : [0-9_] ;
+NUMBER : [0-9_%/] ;
 
 INT :   [0-9]+ ;
 

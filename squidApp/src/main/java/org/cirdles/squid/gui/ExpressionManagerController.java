@@ -291,21 +291,16 @@ public class ExpressionManagerController implements Initializable {
     private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots) {
         StringBuilder sb = new StringBuilder();
         for (ShrimpFractionExpressionInterface spot : spots) {
-
             if (spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree) != null) {
-
                 sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                try {
-                    sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree)[0][0], 12)));
-                } catch (Exception e) {
-                }
-                if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()) {
+                double[][] results
+                        = spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree);
+                for (int i = 0; i < results[0].length; i++) {
                     try {
-                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree)[0][1], 12)));
+                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
                     } catch (Exception e) {
                     }
                 }
-
                 sb.append("\n");
             }
         }
@@ -398,8 +393,7 @@ public class ExpressionManagerController implements Initializable {
         if (currentExpression != null) {
             Expression exp = parseAndAuditCurrentExcelExpression();
 
-            populatePeeks(exp);
-
+//            populatePeeks(exp);
             ExpressionTreeInterface expTree = exp.getExpressionTree();
 
             // until we have these in the edit box
@@ -423,6 +417,8 @@ public class ExpressionManagerController implements Initializable {
             // reveal new ordering etc
             populateExpressionsListView();
             expressionsListView.refresh();
+
+            populatePeeks(exp);
         } else {
             rmPeekTextArea.setText("No Expression due to parsing error.");
             unPeekTextArea.setText("No Expression due to parsing error.");

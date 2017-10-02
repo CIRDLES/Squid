@@ -131,11 +131,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public Task(String name, PrawnFile prawnFile, String filterForRefMatSpotNames) {
         this.name = name;
-        this.type = "specify Geochron or General";
-        this.description = "describe task here";
-        this.authorName = "author name";
-        this.labName = "lab name";
-        this.provenance = "provenance";
+        this.type = "geochron";
+        this.description = "";
+        this.authorName = "";
+        this.labName = "";
+        this.provenance = "";
         this.dateRevised = 0l;
         this.filterForRefMatSpotNames = "";
         this.useSBM = true;
@@ -553,6 +553,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public void evaluateTaskExpressions() {
+        
+        processAndSortExpressions();
 
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 
@@ -570,7 +572,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 // now evaluate expression
                 try {
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
-                } catch (SquidException squidException) {
+                } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
 
                 }
             }
