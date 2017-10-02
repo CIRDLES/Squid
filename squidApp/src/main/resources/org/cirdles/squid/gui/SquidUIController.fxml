@@ -38,7 +38,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Audit Session" />
                   <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Masses" />
-                  <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Edit Spots" />
+                  <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Choose Reference Materials" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Prawn File as ..." />
               </items>
@@ -64,16 +64,18 @@
             <Menu fx:id="dataReductionMenu" mnemonicParsing="false" text="Reduction">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#showReferenceMaterialDataMenutItemAction" text="Reference Materials" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#showUnknownDataMenuItemAction" text="Unknowns" />
+                  <MenuItem mnemonicParsing="false" onAction="#showReferenceMaterialDataMenutItemAction" text="Reference Materials Data" />
+                  <MenuItem mnemonicParsing="false" onAction="#showUnknownDataMenuItemAction" text="Unknowns Data" />
               </items>
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageExpressionsMenuItemAction" text="Manage Expressions" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Expression Builder" />
-                  <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from File" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />
+                  <Menu fx:id="openRecentExpressionFileMenu" mnemonicParsing="false" text="Load Recent Expression from xml File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
           </items>

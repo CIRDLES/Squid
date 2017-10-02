@@ -54,8 +54,23 @@ public class SpotFieldNode extends ExpressionTree {
         SpotFieldNode spotNode = new SpotFieldNode(methodNameForShrimpFraction.replace("get", ""), methodNameForShrimpFraction);
         return spotNode;
     }
-    
-        /**
+
+    @Override
+    public boolean amHealthy() {
+        return (methodNameForShrimpFraction.length() > 0);
+    }
+
+    @Override
+    public boolean isValid() {
+        return amHealthy();
+    }
+
+    @Override
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
+        return false;
+    }
+
+    /**
      *
      * @param xstream
      */
@@ -140,21 +155,6 @@ public class SpotFieldNode extends ExpressionTree {
 
     @Override
     public boolean isTypeFunctionOrOperation() {
-        return false;
-    }
-
-    @Override
-    public boolean amHealthy() {
-        return (methodNameForShrimpFraction.length() > 0);
-    }
-
-    @Override
-    public boolean isValid() {
-        return amHealthy();
-    }
-
-    @Override
-    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
         return false;
     }
 }

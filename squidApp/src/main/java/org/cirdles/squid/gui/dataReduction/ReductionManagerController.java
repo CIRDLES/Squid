@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui;
+package org.cirdles.squid.gui.dataReduction;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,16 +37,12 @@ import org.cirdles.squid.tasks.Task;
  *
  * @author James F. Bowring
  */
-public class AnalysisManagerController implements Initializable {
+public class ReductionManagerController implements Initializable {
 
     @FXML
     private AnchorPane calamariTabAnchorPane;
     @FXML
-    private ToggleGroup toggleGroupSMB;
-    @FXML
     private ToggleGroup toggleGroupRatioCalcMethod;
-    @FXML
-    private ChoiceBox<String> referenceMaterialFistLetterChoiceBox;
     @FXML
     private Button reduceDataButton;
     @FXML
@@ -63,11 +59,6 @@ public class AnalysisManagerController implements Initializable {
 
         calamariTabAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         calamariTabAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
-        ObservableList<String> refMatFistLetterChoiceBoxItems = FXCollections.observableArrayList("0", "A", "M", "T");
-        referenceMaterialFistLetterChoiceBox.setItems(refMatFistLetterChoiceBoxItems);
-        referenceMaterialFistLetterChoiceBox.setValue("T");
-
     }
 
     @FXML
@@ -77,23 +68,6 @@ public class AnalysisManagerController implements Initializable {
             squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
             squidProject.testRunOfSessionModel();
         }
-//        
-//        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
-//            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
-//            new ReduceDataWorker(
-//                    squidProject.getPrawnFileHandler(),
-//                    true,//normalizeIonCountsToSBM,
-//                    false,//useLinearRegressionToCalculateRatios,
-//                    referenceMaterialFistLetterChoiceBox.getValue(),
-//                    new SquidBodorkosTask1(), // temporarily hard-wired
-//                    reduceDataProgressIndicator).execute();
-//        } else {
-//            JOptionPane.showMessageDialog(
-//                    null,
-//                    "Please specify a Prawn XML file for processing.",
-//                    "Calamari Warning",
-//                    JOptionPane.WARNING_MESSAGE);
-//        }
     }
 
 }

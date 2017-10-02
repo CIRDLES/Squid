@@ -51,6 +51,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
 public class ExpressionParser {
 
     private Map<String, ExpressionTreeInterface> namedExpressionsMap;
+    private boolean isScalarFunctionFlag;
 
     public ExpressionParser() {
         this.namedExpressionsMap = new HashMap<>();
@@ -67,6 +68,8 @@ public class ExpressionParser {
      * @return
      */
     public ExpressionTreeInterface parseExpressionStringAndBuildExpressionTree(Expression expression) {
+        // true until reset by function
+        isScalarFunctionFlag = true;
         ExpressionTreeInterface returnExpressionTree = new ExpressionTreeParsedFromExcelString(expression.getName());
 
         // Get our lexer
@@ -209,6 +212,7 @@ public class ExpressionParser {
 
             case FUNCTION:
                 OperationOrFunctionInterface function = Function.operationFactory(FUNCTIONS_MAP.get(token));
+                isScalarFunctionFlag = function.isScalarResult();
                 retExpTree = new ExpressionTreeParsedFromExcelString(function);
                 break;
 
@@ -228,8 +232,15 @@ public class ExpressionParser {
                 if (retExpTreeKnown == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
-                        && ((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode) {
+                        && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
+                        && isScalarFunctionFlag) {
+                    // this is the NU switch case
                     retExpTree = retExpTreeKnown;
+                } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
+                        && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
+                        && !isScalarFunctionFlag) {
+                    // this is the non NU switch case
+                    retExpTree = new VariableNodeForIsotopicRatios(retExpTreeKnown.getName());
                 } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode) || (retExpTreeKnown instanceof SpotFieldNode)) {
                     retExpTree = retExpTreeKnown;
                 } else {

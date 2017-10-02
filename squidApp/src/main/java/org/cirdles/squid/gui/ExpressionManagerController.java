@@ -124,7 +124,7 @@ public class ExpressionManagerController implements Initializable {
         expressionsAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         // update expressions
-        squidProject.getTask().setupSquidSessionSpecs();
+        squidProject.initializeTaskAndReduceData();
 
         initializeExpressionsListView();
 
@@ -229,29 +229,45 @@ public class ExpressionManagerController implements Initializable {
 
             if (originalExpressionTree.isSquidSwitchSCSummaryCalculation()) {
                 SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName());
+
                 if (task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName()) != null) {
                     if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
-                        //rmPeekTextArea.setText("Summary Function: " + spotSummary.getOperation().getName());
-                        rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        if (spotSummary.getSelectedSpots().size() > 0) {
+                            rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        } else {
+                            rmPeekTextArea.setText("No Reference Materials");
+                        }
                     } else {
                         rmPeekTextArea.setText("No Summary");
                     }
 
                     if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
-                        //unPeekTextArea.setText("Summary Function: " + spotSummary.getOperation().getName());
-                        unPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        if (spotSummary.getSelectedSpots().size() > 0) {
+                            unPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        } else {
+                            unPeekTextArea.setText("No Unknowns");
+                        }
                     } else {
                         unPeekTextArea.setText("No Summary");
                     }
                 }
+
             } else {
                 if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
-                    rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots));
+                    if (refMatSpots.size() > 0) {
+                        rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots));
+                    } else {
+                        rmPeekTextArea.setText("No Reference Materials");
+                    }
                 } else if (!originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
                     rmPeekTextArea.setText("Reference Materials not processed.");
                 }
                 if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
-                    unPeekTextArea.setText(peekDetailsPerSpot(unSpots));
+                    if (unSpots.size() > 0) {
+                        unPeekTextArea.setText(peekDetailsPerSpot(unSpots));
+                    } else {
+                        rmPeekTextArea.setText("No Unknowns");
+                    }
                 } else if (!originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
                     unPeekTextArea.setText("Unknowns not processed.");
                 }
@@ -275,21 +291,16 @@ public class ExpressionManagerController implements Initializable {
     private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots) {
         StringBuilder sb = new StringBuilder();
         for (ShrimpFractionExpressionInterface spot : spots) {
-
             if (spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree) != null) {
-
                 sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                try {
-                    sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree)[0][0], 12)));
-                } catch (Exception e) {
-                }
-                if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()) {
+                double[][] results
+                        = spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree);
+                for (int i = 0; i < results[0].length; i++) {
                     try {
-                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree)[0][1], 12)));
+                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
                     } catch (Exception e) {
                     }
                 }
-
                 sb.append("\n");
             }
         }
@@ -300,7 +311,7 @@ public class ExpressionManagerController implements Initializable {
         if (expression != null) {
 
             currentExpression = expression;
-            //  originalExpressionTree = ((ExpressionTree) currentExpression.getExpressionTree()).copy();
+
             originalExpressionTree = currentExpression.getExpressionTree();
 
             expressionNameTextField.setText(currentExpression.getName());
@@ -382,8 +393,6 @@ public class ExpressionManagerController implements Initializable {
         if (currentExpression != null) {
             Expression exp = parseAndAuditCurrentExcelExpression();
 
-            populatePeeks(exp);
-
             ExpressionTreeInterface expTree = exp.getExpressionTree();
 
             // until we have these in the edit box
@@ -400,13 +409,15 @@ public class ExpressionManagerController implements Initializable {
 
             squidProject.getTask().setChanged(true);
             // update expressions
-            squidProject.getTask().setupSquidSessionSpecs();
+            squidProject.initializeTaskAndReduceData();
 
             squidProject.getTask().evaluateTaskExpressions();
 
             // reveal new ordering etc
             populateExpressionsListView();
             expressionsListView.refresh();
+
+            populatePeeks(exp);
         } else {
             rmPeekTextArea.setText("No Expression due to parsing error.");
             unPeekTextArea.setText("No Expression due to parsing error.");

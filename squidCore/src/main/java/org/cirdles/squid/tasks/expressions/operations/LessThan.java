@@ -17,6 +17,7 @@ package org.cirdles.squid.tasks.expressions.operations;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -56,7 +57,7 @@ public class LessThan extends Operation {
         try {
             retVal = (double)childrenET.get(0).eval(shrimpFractions, task)[0][0]
                     < (double)childrenET.get(1).eval(shrimpFractions, task)[0][0];
-        } catch (Exception e) {
+        } catch (SquidException e) {
             retVal = false;
         }
         return new Object[][]{{retVal}};
@@ -72,7 +73,7 @@ public class LessThan extends Operation {
         String retVal
                 = "<mrow>\n"
                 + toStringAnotherExpression(childrenET.get(0))
-                + "<mo>&#60;</mo>\n"
+                + "<mo>&lt;</mo>\n"
                 + toStringAnotherExpression(childrenET.get(1))
                 + "</mrow>\n";
 

@@ -228,16 +228,26 @@ public class ExpressionTree
     public int compareTo(ExpressionTree exp) {
         int retVal = 0;
         if (this != exp) {
-            if (this.usesAnotherExpression(exp)) {
+            if (!amHealthy()) {
                 // this object comes after exp
                 retVal = 1;
-            } else if (exp.usesAnotherExpression(this)) {
+            } else if (!exp.amHealthy()) {
                 // this object comes before exp
                 retVal = -1;
             }
             if (retVal == 0) {
+                if (usesAnotherExpression(exp)) {
+                    // this object comes after exp
+                    retVal = 1;
+                } else if (exp.usesAnotherExpression(this)) {
+                    // this object comes before exp
+                    retVal = -1;
+                }
+            }
+            if (retVal == 0) {
                 // then compare has ratios of interest
                 if (hasRatiosOfInterest() && !exp.hasRatiosOfInterest()) {
+                    // this object comes before exp
                     retVal = -1;
                 } else if (!hasRatiosOfInterest() && exp.hasRatiosOfInterest()) {
                     retVal = 1;
@@ -246,6 +256,7 @@ public class ExpressionTree
             if (retVal == 0) {
                 // then compare is special built-in UPbTh expression
                 if (isSquidSpecialUPbThExpression() && !exp.isSquidSpecialUPbThExpression()) {
+                    // this object comes before exp
                     retVal = -1;
                 } else if (!isSquidSpecialUPbThExpression() && exp.isSquidSpecialUPbThExpression()) {
                     retVal = 1;
@@ -254,6 +265,7 @@ public class ExpressionTree
             if (retVal == 0) {
                 // then compare is for ref materials only
                 if (isSquidSwitchSTReferenceMaterialCalculation() && !exp.isSquidSwitchSTReferenceMaterialCalculation()) {
+                    // this object comes before exp
                     retVal = -1;
                 } else if (!isSquidSwitchSTReferenceMaterialCalculation() && exp.isSquidSwitchSTReferenceMaterialCalculation()) {
                     retVal = 1;
@@ -262,6 +274,7 @@ public class ExpressionTree
             if (retVal == 0) {
                 // then compare is for unknowns materials only
                 if (isSquidSwitchSAUnknownCalculation() && !exp.isSquidSwitchSAUnknownCalculation()) {
+                    // this object comes before exp
                     retVal = -1;
                 } else if (!isSquidSwitchSAUnknownCalculation() && exp.isSquidSwitchSAUnknownCalculation()) {
                     retVal = 1;
@@ -270,9 +283,10 @@ public class ExpressionTree
             if (retVal == 0) {
                 // then compare is summary
                 if (isSquidSwitchSCSummaryCalculation() && !exp.isSquidSwitchSCSummaryCalculation()) {
-                    retVal = -1;
-                } else if (!isSquidSwitchSCSummaryCalculation() && exp.isSquidSwitchSCSummaryCalculation()) {
                     retVal = 1;
+                } else if (!isSquidSwitchSCSummaryCalculation() && exp.isSquidSwitchSCSummaryCalculation()) {
+                    // this object comes before exp
+                    retVal = -1;
                 }
             }
             if (retVal == 0) {
@@ -290,25 +304,31 @@ public class ExpressionTree
         if (this == obj) {
             retVal = true;
         } else if (obj instanceof ExpressionTree) {
-            retVal = !(this.usesAnotherExpression((ExpressionTree) obj)
-                    && !((ExpressionTree) obj).usesAnotherExpression(this));
-            if (retVal) {
-                retVal = (hasRatiosOfInterest() == ((ExpressionTree) obj).hasRatiosOfInterest());
-            }
-            if (retVal) {
-                retVal = (isSquidSpecialUPbThExpression() == ((ExpressionTree) obj).isSquidSpecialUPbThExpression());
-            }
-            if (retVal) {
-                retVal = (isSquidSwitchSTReferenceMaterialCalculation() == ((ExpressionTree) obj).isSquidSwitchSTReferenceMaterialCalculation());
-            }
-            if (retVal) {
-                retVal = (isSquidSwitchSAUnknownCalculation() == ((ExpressionTree) obj).isSquidSwitchSAUnknownCalculation());
-            }
-            if (retVal) {
-                retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
-            }
-            if (retVal) {
-                retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
+            retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
+
+            if (!retVal) {
+                retVal = !(usesAnotherExpression((ExpressionTree) obj)
+                        && !((ExpressionTree) obj).usesAnotherExpression(this));
+                if (retVal) {
+                    retVal = !amHealthy() && !((ExpressionTree) obj).amHealthy();
+                }
+                if (retVal) {
+                    retVal = (hasRatiosOfInterest() == ((ExpressionTree) obj).hasRatiosOfInterest());
+                }
+                if (retVal) {
+                    retVal = (isSquidSpecialUPbThExpression() == ((ExpressionTree) obj).isSquidSpecialUPbThExpression());
+                }
+                if (retVal) {
+                    retVal = (isSquidSwitchSTReferenceMaterialCalculation() == ((ExpressionTree) obj).isSquidSwitchSTReferenceMaterialCalculation());
+                }
+                if (retVal) {
+                    retVal = (isSquidSwitchSAUnknownCalculation() == ((ExpressionTree) obj).isSquidSwitchSAUnknownCalculation());
+                }
+                if (retVal) {
+                    retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
+                }
+//            if (retVal) {
+//                retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
             }
         }
 
@@ -411,12 +431,7 @@ public class ExpressionTree
      */
     @Override
     public String customizeXML(String xml) {
-        String xmlR = xml;
-
-        xmlR = xmlR.replaceFirst("<ExpressionTree>",
-                XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA);
-
-        return xmlR;
+        return XMLSerializerInterface.super.customizeXML(xml);
     }
 
     /**

@@ -52,17 +52,17 @@ public class VariableNodeForSummary extends ExpressionTree {
 
     @Override
     public boolean amHealthy() {
-        return (name.length() > 0) && name.compareTo(MISSING_EXPRESSION_STRING) != 0;
+        return (name.length() > 0);
     }
 
     @Override
     public boolean isValid() {
-        return (name != null);
+        return (name.length() > 0);
     }
 
     @Override
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
-        return name.compareToIgnoreCase(exp.getName()) == 0;
+        return false;
     }
 
     /**

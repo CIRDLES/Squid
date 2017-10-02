@@ -48,6 +48,15 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     public VariableNodeForPerSpotTaskExpressions(String name) {
         this.name = name;
     }
+    @Override
+    public boolean amHealthy() {
+        return (name.length() > 0);
+    }
+
+    @Override
+    public boolean isValid() {
+        return (name.length() > 0);
+    }
 
     /**
      *

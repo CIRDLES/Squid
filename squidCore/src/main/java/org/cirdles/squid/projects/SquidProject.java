@@ -55,7 +55,6 @@ public final class SquidProject implements Serializable {
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
-    private List<Run> shrimpRunsRefMat;
     private double sessionDurationHours;
     private TaskInterface task;
 
@@ -67,7 +66,6 @@ public final class SquidProject implements Serializable {
 
         this.filterForRefMatSpotNames = "";
 
-        this.shrimpRunsRefMat = new ArrayList<>();
         this.sessionDurationHours = 0.0;
 
         this.task = new Task();
@@ -75,10 +73,10 @@ public final class SquidProject implements Serializable {
 
     public void testRunOfSessionModel() {
 
+        initializeTaskAndReduceData();
         task.evaluateTaskExpressions();
-
         try {
-            prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions());
+            prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions(), false, true);
         } catch (IOException iOException) {
         }
     }
@@ -94,27 +92,39 @@ public final class SquidProject implements Serializable {
 
     public void loadAndInitializeTask(TaskInterface task) {
         this.task = task;
-        initializeExistingProjectTask();
+        initializeTaskAndReduceData();
     }
 
-    public void initializeExistingProjectTask() {
+    public void initializeTaskAndReduceData() {
         if (task != null) {
             task.setPrawnFile(prawnFile);
-            task.setupSquidSessionSpecs();
+            task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+            task.setupSquidSessionSpecsAndReduceData();
         }
+    }
+
+    public void createNewTask() {
+        this.task = new Task(
+                "New Task", prawnFile, filterForRefMatSpotNames);
+        this.task.setChanged(true);
+        initializeTaskAndReduceData();
     }
 
     public void createTaskFromImportedSquid25Task(File squidTaskFile) {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
-        this.task = new Task(taskSquid25.getTaskName(), prawnFile);
+        this.task = new Task(
+                taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames);
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
+        this.task.setProvenance(taskSquid25.getSquidTaskFileName());
+        this.task.setAuthorName(taskSquid25.getAuthorName());
+        this.task.setLabName(taskSquid25.getLabName());
         this.task.setRatioNames(taskSquid25.getRatioNames());
 
         // first pass
-        this.task.setupSquidSessionSpecs();
+        this.task.setupSquidSessionSpecsAndReduceData();
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
@@ -131,7 +141,7 @@ public final class SquidProject implements Serializable {
         }
 
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecs();
+        initializeTaskAndReduceData();
 
     }
 
@@ -431,20 +441,6 @@ public final class SquidProject implements Serializable {
     }
 
     /**
-     * @return shrimpRunsRefMat - list of reference material runs
-     */
-    public List<Run> getShrimpRunsRefMat() {
-        return shrimpRunsRefMat;
-    }
-
-    /**
-     * @param shrimpRunsRefMat the shrimpRunsRefMat to set
-     */
-    public void setShrimpRunsRefMat(List<Run> shrimpRunsRefMat) {
-        this.shrimpRunsRefMat = shrimpRunsRefMat;
-    }
-
-    /**
      * @return the sessionDurationHours
      */
     public double getSessionDurationHours() {
@@ -471,4 +467,5 @@ public final class SquidProject implements Serializable {
     public void setTask(TaskInterface task) {
         this.task = task;
     }
+
 }

@@ -15,9 +15,9 @@
  */
 package org.cirdles.squid.gui;
 
+import com.sun.javafx.collections.ObservableListWrapper;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -25,6 +25,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -74,6 +75,10 @@ public class SpotManagerController implements Initializable {
     private Button saveSpotNameButton;
     @FXML
     private AnchorPane spotManagerPane;
+    @FXML
+    private Label rmFilterLabel;
+    @FXML
+    private Label rmCountLabel;
 
     /**
      * Initializes the controller class.
@@ -94,13 +99,16 @@ public class SpotManagerController implements Initializable {
     private void setUpPrawnFile() {
 
         shrimpRuns = FXCollections.observableArrayList(squidProject.getPrawnFileRuns());
-        shrimpRunsRefMat = FXCollections.observableArrayList(squidProject.getShrimpRunsRefMat());
-        shrimpRefMatList.setItems(shrimpRunsRefMat);
 
         setUpShrimpFractionList();
         saveSpotNameButton.setDisable(false);
         setFilteredSpotsAsRefMatButton.setDisable(false);
 
+        // filter runs to populate ref mat list 
+        filterRuns(squidProject.getFilterForRefMatSpotNames());
+        updateReferenceMaterialsList(false);
+        // restore spot list to full population
+        filterRuns("");
     }
 
     private void setUpShrimpFractionList() {
@@ -196,8 +204,8 @@ public class SpotManagerController implements Initializable {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Clear list.");
         menuItem.setOnAction((evt) -> {
-            shrimpRunsRefMat.clear();
-            shrimpRefMatList.setItems(shrimpRunsRefMat);
+            squidProject.setFilterForRefMatSpotNames("");
+            updateReferenceMaterialsList(true);
         });
         contextMenu.getItems().add(menuItem);
         return contextMenu;
@@ -224,11 +232,10 @@ public class SpotManagerController implements Initializable {
 
     @FXML
     private void filterSpotNameKeyReleased(KeyEvent event) {
-        filterRuns();
+        filterRuns(filterSpotNameText.getText().toUpperCase(Locale.US).trim());
     }
 
-    private void filterRuns() {
-        String filterString = filterSpotNameText.getText().toUpperCase(Locale.US).trim();
+    private void filterRuns(String filterString) {
         Predicate<PrawnFile.Run> filter = new RunsViewModel.SpotNameMatcher(filterString);
         runsModel.filterProperty().set(filter);
         spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
@@ -236,9 +243,32 @@ public class SpotManagerController implements Initializable {
 
     @FXML
     private void setFilteredSpotsToRefMatAction(ActionEvent event) {
+        squidProject.setFilterForRefMatSpotNames(
+                filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+        updateReferenceMaterialsList(true);
+    }
+
+    private void updateReferenceMaterialsList(boolean updateTaskStatus) {
+        String filter = squidProject.getFilterForRefMatSpotNames();
+        // initialize list
         shrimpRunsRefMat = runsModel.getViewableShrimpRuns();
+        if (filter.length() == 0) {
+            // prevent populating ref mat list with no filter
+            shrimpRunsRefMat.clear();
+        } else {
+            shrimpRunsRefMat = runsModel.getViewableShrimpRuns();
+        }
         shrimpRefMatList.setItems(shrimpRunsRefMat);
-        squidProject.setFilterForRefMatSpotNames(filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+        rmFilterLabel.setText(
+                squidProject.getFilterForRefMatSpotNames().length() > 0 
+                        ? squidProject.getFilterForRefMatSpotNames() 
+                        : "NO FILTER");
+        rmCountLabel.setText(String.valueOf(shrimpRunsRefMat.size()));
+        
+        if (updateTaskStatus){
+            squidProject.getTask().setChanged(true);
+        }
+
     }
 
     @FXML
@@ -251,30 +281,4 @@ public class SpotManagerController implements Initializable {
             shrimpRefMatList.refresh();
         }
     }
-
-//    private void savePrawnFileAction(ActionEvent event) {
-//        try {
-//            FileHandler.savePrawnFile(squidProject, primaryStageWindow);
-//            shrimpFractionList.refresh();
-//            shrimpRefMatList.refresh();
-//        } catch (IOException | JAXBException | SAXException iOException) {
-//        }
-//    }
-
-    /**
-     * Saves underlying List to squidProject so it can be serialized
-     */
-    public static void saveProjectData() {
-        if (shrimpRunsRefMat != null) {
-            List<PrawnFile.Run> plainListRefMat = new ArrayList<>(shrimpRunsRefMat.size());
-            for (PrawnFile.Run r : shrimpRunsRefMat) {
-                plainListRefMat.add(r);
-            }
-
-            squidProject.setShrimpRunsRefMat(plainListRefMat);
-        } else {
-            squidProject.setShrimpRunsRefMat(new ArrayList<>());
-        }
-    }
-
 }

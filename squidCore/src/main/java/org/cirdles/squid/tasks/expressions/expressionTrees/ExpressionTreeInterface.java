@@ -20,6 +20,8 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
 /**
  *
@@ -225,7 +227,10 @@ public interface ExpressionTreeInterface {
         argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditOperationArgumentCount());
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
             // SpotFieldNode is an ExpressionTree without Children
-            if ((child instanceof ExpressionTree) && !(child instanceof SpotFieldNode)) {
+            if ((child instanceof ExpressionTree) 
+                    && !(child instanceof SpotFieldNode)
+                    && !(child instanceof VariableNodeForIsotopicRatios)
+                    && !(child instanceof VariableNodeForPerSpotTaskExpressions)) {
                 child.auditExpressionTreeDependencies(argumentAudit);
             }
         }

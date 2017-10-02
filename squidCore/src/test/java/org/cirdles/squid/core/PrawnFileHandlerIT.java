@@ -116,14 +116,9 @@ public class PrawnFileHandlerIT {
         List<ShrimpFractionExpressionInterface> shrimpFractions = task.processRunFractions(prawnFileData, squidSessionModel);
         
         try {
-            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions);
+            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions, true, false);
         } catch (IOException iOException) {
-        }
-        
-//        prawnFileHandler.writeReportsFromPrawnFile(prawnFile.getAbsolutePath(), // prawnFileLocation
-//                true,   // useSBM
-//                false,  // userLinFits
-//                "T");   // first letter of reference material                 
+        }             
         
         assertThat(reportsFolder.listFiles()).hasSize(1); //Temp Calamari Reports Folder
         assertThat(reportsFolder.listFiles()[0].listFiles()).hasSize(1); //Reports folder with name of this Prawn File

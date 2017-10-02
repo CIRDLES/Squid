@@ -15,7 +15,7 @@
             <Insets />
          </opaqueInsets>
       </TreeView>
-      <CheckBox fx:id="checkbox" layoutX="529.0" layoutY="5.0" mnemonicParsing="false" onAction="#duplicatesChecked" text="Dispay Duplicates Only" textFill="#ee3704">
+      <CheckBox fx:id="checkbox" layoutX="529.0" layoutY="5.0" mnemonicParsing="false" onAction="#duplicatesChecked" text="Display Duplicates Only" textFill="#ee3704">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></CheckBox>

@@ -68,8 +68,8 @@ public final class Squid3Constants {
      */
     public static final String XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA
             = "<?xml version=\"1.0\"?>\n"
-            + "<!-- SQUIDTASK_EXPRESSIONTREE_DATA_FILE -->\n"
-            + "<ExpressionTree xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "<!-- SQUIDTASK_EXPRESSION_DATA_FILE -->\n"
+            + "<Expression xmlns=\"https://raw.githubusercontent.com\"\n"
             + " xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
             + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + " xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
@@ -77,8 +77,8 @@ public final class Squid3Constants {
 
     public static final String XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA
             = "<?xml version=\"1.0\"?>\n"
-            + "<!-- SQUIDTASK_EXPRESSIONTREE_DATA_FILE -->\n"
-            + "<ExpressionTree xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "<!-- SQUIDTASK_EXPRESSION_DATA_FILE -->\n"
+            + "<Expression xmlns=\"https://raw.githubusercontent.com\"\n"
             + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"

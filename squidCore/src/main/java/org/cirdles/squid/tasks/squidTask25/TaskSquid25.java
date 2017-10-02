@@ -41,6 +41,8 @@ public class TaskSquid25 implements Serializable {
     private String taskType;
     private String taskName;
     private String taskDescription;
+    private String labName;
+    private String authorName;
     private List<String> ratioNames;
     private List<TaskSquid25Equation> task25Equations;
 
@@ -69,6 +71,9 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.taskType = lines[firstRow + 1].split("\t")[1];
                 taskSquid25.taskName = lines[firstRow + 2].split("\t")[1];
                 taskSquid25.taskDescription = lines[firstRow + 3].split("\t")[1];
+                              
+                taskSquid25.authorName = "";
+                taskSquid25.labName = lines[firstRow + 7].split("\t")[1];
 
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
                 int countOfRatios = Integer.valueOf(ratioStrings[1]);
@@ -131,12 +136,20 @@ public class TaskSquid25 implements Serializable {
                 String[] switchSC = lines[firstRow + 30].split("\t");
 
                 for (int i = 0; i < countOfEquations; i++) {
+                    // handle backwards logic of Squid25 where both ST, SA false, means both True
+                    boolean switchRM = Boolean.parseBoolean(switchST[i + 2]);
+                    boolean switchUN = Boolean.parseBoolean(switchSA[i + 2]);
+                    if (!switchRM && !switchUN) {
+                        switchRM = true;
+                        switchUN = true;
+                    }
+
                     if (prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]).length() > 0) {
                         taskSquid25.task25Equations.add(new TaskSquid25Equation(
                                 prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]),
                                 prepareSquid25ExcelEquationNameForSquid3(equationNames[i + 2]),
-                                Boolean.parseBoolean(switchST[i + 2]),
-                                Boolean.parseBoolean(switchSA[i + 2]),
+                                switchRM,
+                                switchUN,
                                 Boolean.parseBoolean(switchSC[i + 2])));
                     }
                 }
@@ -155,6 +168,8 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
         retVal = retVal.replace("[\"Total 206cts/sec\"]", "totalCps([\"206\"])");
         retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
+        retVal = retVal.replace("[\"Bkrdcts/sec\"]", "totalCps([\"BKG\"])");
+        retVal = retVal.replace("9511", "95");
         retVal = retVal.replace("(Ma)", "");
 
         // regex for robreg with four arguments = robreg.*\)
@@ -179,7 +194,7 @@ public class TaskSquid25 implements Serializable {
             // do not accept field names as being equations
             //retVal = "";
         } else if (!excelString.contains("(") && !excelString.contains("[")) {
-            // do not accept constants as being equations - this reults from the conflation in Squid2.5 between equations and outputs
+            // do not accept constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
             retVal = "";
         }
 
@@ -190,6 +205,7 @@ public class TaskSquid25 implements Serializable {
         String retVal = "";
 
         retVal = excelString.replace("|", "");
+        retVal = retVal.replace("(Ma)", "");
 
         return retVal;
     }
@@ -241,6 +257,20 @@ public class TaskSquid25 implements Serializable {
      */
     public List<TaskSquid25Equation> getTask25Equations() {
         return task25Equations;
+    }
+
+    /**
+     * @return the labName
+     */
+    public String getLabName() {
+        return labName;
+    }
+
+    /**
+     * @return the authorName
+     */
+    public String getAuthorName() {
+        return authorName;
     }
 
 }

@@ -13,43 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions.functions;
+package org.cirdles.squid.tasks.expressions.operations;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToBooleans;
 
 /**
  *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class And extends Function {
-
-    private static final long serialVersionUID = 6873057946849919089L;
+public class LessThanEqual extends Operation {
 
     /**
      *
      */
-    public And() {
-        name = "and";
+    public LessThanEqual() {
+        super();
+        name = "lessThanEqual";
         argumentCount = 2;
-        precedence = 4;
+        precedence = 1;
         rowCount = 1;
         colCount = 1;
-        labelsForOutputValues = new String[][]{{"Conjuction"}};
+        labelsForOutputValues = new String[][]{{"Predicate"}};
     }
 
     /**
-     * And expects two boolean children.
      *
      * @param childrenET the value of childrenET
      * @param shrimpFractions the value of shrimpFraction
      * @param task
-     * @return the Object[1][1] containing boolean
+     * @return the double[][]
      */
     @Override
     public Object[][] eval(
@@ -57,11 +55,11 @@ public class And extends Function {
 
         boolean retVal;
         try {
-            retVal = (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0]) && (convertObjectArrayToBooleans(childrenET.get(1).eval(shrimpFractions, task)[0])[0]);
-        } catch (Exception e) {
+            retVal = (double)childrenET.get(0).eval(shrimpFractions, task)[0][0]
+                    <= (double)childrenET.get(1).eval(shrimpFractions, task)[0][0];
+        } catch (SquidException e) {
             retVal = false;
         }
-
         return new Object[][]{{retVal}};
     }
 
@@ -73,15 +71,11 @@ public class And extends Function {
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
-                = "<mrow>"
-                + "<mi>and</mi>"
-                + "<mfenced>";
-
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
-
-        retVal += "</mfenced></mrow>\n";
+                = "<mrow>\n"
+                + toStringAnotherExpression(childrenET.get(0))
+                + "<mo>&lt;=</mo>\n"
+                + toStringAnotherExpression(childrenET.get(1))
+                + "</mrow>\n";
 
         return retVal;
     }

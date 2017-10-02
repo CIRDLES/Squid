@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -33,15 +30,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class AgePb76 extends Function {
 
-    //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(AgePb76.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of AgePb76 " + theSUID);
-    }
+    private static final long serialVersionUID = -6711265919551953531L;
 
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and
@@ -82,7 +71,7 @@ public class AgePb76 extends Function {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(pb207_206RatioAndUnct[0], pb207_206RatioAndUnct[1]);
             retVal = new Object[][]{{agePb76[0], agePb76[1]}};
-        } catch (ArithmeticException e) {
+        } catch (ArithmeticException | IndexOutOfBoundsException e) {
             retVal = new Object[][]{{0.0, 0.0}};
         }
 

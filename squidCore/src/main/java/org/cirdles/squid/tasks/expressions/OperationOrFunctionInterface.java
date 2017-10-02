@@ -59,24 +59,44 @@ public interface OperationOrFunctionInterface {
      * @return the name
      */
     public String getName();
-    
+
     /**
      * @return the labelsForOutputValues
      */
     public String[][] getLabelsForOutputValues();
-    
-    public default String printOutputValues(){
+
+    public default String printOutputValues() {
         String retVal = "None Specified";
-        String [] outputArray = getLabelsForOutputValues()[0];
-        
-        if (outputArray.length > 0){
+        String[] outputArray = getLabelsForOutputValues()[0];
+
+        if (outputArray.length > 0) {
             retVal = " [";
-            for (int i = 0; i < outputArray.length; i ++){
-                retVal += outputArray[i] + (String)(i < (outputArray.length-1) ? ", " : "");
+            for (int i = 0; i < outputArray.length; i++) {
+                retVal += outputArray[i] + (String) (i < (outputArray.length - 1) ? ", " : "");
             }
             retVal += "]";
         }
-        
+
         return retVal;
+    }
+
+    /**
+     * @return the rowCount
+     */
+    public int getRowCount();
+
+    /**
+     * @return the colCount
+     */
+    public int getColCount();
+
+    /**
+     * Determines is this function/operation is "NU-switched" if
+     * ratiosOfInterest are present
+     *
+     * @return
+     */
+    public default boolean isScalarResult() {
+        return (getRowCount() == 1) && (getColCount() == 1);
     }
 }

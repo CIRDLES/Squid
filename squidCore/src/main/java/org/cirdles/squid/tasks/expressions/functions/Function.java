@@ -321,6 +321,7 @@ public abstract class Function
     /**
      * @return the rowCount
      */
+    @Override
     public int getRowCount() {
         return rowCount;
     }
@@ -328,6 +329,7 @@ public abstract class Function
     /**
      * @return the colCount
      */
+    @Override
     public int getColCount() {
         return colCount;
     }
@@ -335,6 +337,7 @@ public abstract class Function
     /**
      * @return the labelsForOutputValues
      */
+    @Override
     public String[][] getLabelsForOutputValues() {
         return labelsForOutputValues;
     }
