@@ -68,7 +68,8 @@ public class ExpressionParser {
      * @return
      */
     public ExpressionTreeInterface parseExpressionStringAndBuildExpressionTree(Expression expression) {
-        isScalarFunctionFlag = false;
+        // true until reset by function
+        isScalarFunctionFlag = true;
         ExpressionTreeInterface returnExpressionTree = new ExpressionTreeParsedFromExcelString(expression.getName());
 
         // Get our lexer

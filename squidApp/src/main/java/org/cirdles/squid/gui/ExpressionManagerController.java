@@ -311,7 +311,7 @@ public class ExpressionManagerController implements Initializable {
         if (expression != null) {
 
             currentExpression = expression;
-            //  originalExpressionTree = ((ExpressionTree) currentExpression.getExpressionTree()).copy();
+
             originalExpressionTree = currentExpression.getExpressionTree();
 
             expressionNameTextField.setText(currentExpression.getName());
@@ -393,7 +393,6 @@ public class ExpressionManagerController implements Initializable {
         if (currentExpression != null) {
             Expression exp = parseAndAuditCurrentExcelExpression();
 
-//            populatePeeks(exp);
             ExpressionTreeInterface expTree = exp.getExpressionTree();
 
             // until we have these in the edit box

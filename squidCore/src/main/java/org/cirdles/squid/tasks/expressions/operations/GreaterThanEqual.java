@@ -27,14 +27,14 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class LessThan extends Operation {
+public class GreaterThanEqual extends Operation {
 
     /**
      *
      */
-    public LessThan() {
+    public GreaterThanEqual() {
         super();
-        name = "lessThan";
+        name = "greaterThanEqual";
         argumentCount = 2;
         precedence = 1;
         rowCount = 1;
@@ -56,7 +56,7 @@ public class LessThan extends Operation {
         boolean retVal;
         try {
             retVal = (double)childrenET.get(0).eval(shrimpFractions, task)[0][0]
-                    < (double)childrenET.get(1).eval(shrimpFractions, task)[0][0];
+                    >= (double)childrenET.get(1).eval(shrimpFractions, task)[0][0];
         } catch (SquidException e) {
             retVal = false;
         }
@@ -73,7 +73,7 @@ public class LessThan extends Operation {
         String retVal
                 = "<mrow>\n"
                 + toStringAnotherExpression(childrenET.get(0))
-                + "<mo>&lt;</mo>\n"
+                + "<mo>>=</mo>\n"
                 + toStringAnotherExpression(childrenET.get(1))
                 + "</mrow>\n";
 

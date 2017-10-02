@@ -168,6 +168,8 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
         retVal = retVal.replace("[\"Total 206cts/sec\"]", "totalCps([\"206\"])");
         retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
+        retVal = retVal.replace("[\"Bkrdcts/sec\"]", "totalCps([\"BKG\"])");
+        retVal = retVal.replace("9511", "95");
         retVal = retVal.replace("(Ma)", "");
 
         // regex for robreg with four arguments = robreg.*\)
@@ -192,7 +194,7 @@ public class TaskSquid25 implements Serializable {
             // do not accept field names as being equations
             //retVal = "";
         } else if (!excelString.contains("(") && !excelString.contains("[")) {
-            // do not accept constants as being equations - this reults from the conflation in Squid2.5 between equations and outputs
+            // do not accept constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
             retVal = "";
         }
 
@@ -203,6 +205,7 @@ public class TaskSquid25 implements Serializable {
         String retVal = "";
 
         retVal = excelString.replace("|", "");
+        retVal = retVal.replace("(Ma)", "");
 
         return retVal;
     }

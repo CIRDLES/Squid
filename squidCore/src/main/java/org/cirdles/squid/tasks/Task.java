@@ -553,8 +553,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public void evaluateTaskExpressions() {
-        
-        processAndSortExpressions();
 
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 

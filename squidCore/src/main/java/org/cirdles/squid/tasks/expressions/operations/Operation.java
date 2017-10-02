@@ -37,6 +37,8 @@ public abstract class Operation
         Serializable,
         XMLSerializerInterface {
 
+    private static final long serialVersionUID = 7752181552732562245L;
+
     /**
      *
      */
@@ -102,6 +104,9 @@ public abstract class Operation
         OPERATIONS_MAP.put("^", pow().getName());
         OPERATIONS_MAP.put("==", equal().getName());
         OPERATIONS_MAP.put("<", lessThan().getName());
+        OPERATIONS_MAP.put("<=", lessThanEqual().getName());
+        OPERATIONS_MAP.put(">", greaterThan().getName());
+        OPERATIONS_MAP.put(">=", greaterThanEqual().getName());
     }
 
     /**
@@ -166,6 +171,30 @@ public abstract class Operation
      */
     public static OperationOrFunctionInterface lessThan() {
         return new LessThan();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface lessThanEqual() {
+        return new LessThanEqual();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface greaterThan() {
+        return new GreaterThan();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface greaterThanEqual() {
+        return new GreaterThanEqual();
     }
 
     /**

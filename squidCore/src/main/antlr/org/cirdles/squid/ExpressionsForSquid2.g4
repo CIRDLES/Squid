@@ -64,6 +64,9 @@ expr:   FUNCTION '(' exprList+ ')'    // func call like f(), f(x), f(1,2) switch
     |   expr ('^') expr
     |   expr '==' expr          // equality comparison (lowest priority op)
     |   expr '<' expr          // less than comparison (lowest priority op)
+    |   expr '<=' expr          // less than comparison (lowest priority op)
+    |   expr '>' expr          // less than comparison (lowest priority op)
+    |   expr '>=' expr          // less than comparison (lowest priority op)
     |   ARRAY_CALL
     |   NAMED_EXPRESSION
     |   ID                      // variable reference
@@ -93,9 +96,9 @@ NAMED_EXPRESSION : '[' '"' ID (ID | '/' | ' ')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment
-LETTER : [a-zA-Z_%/] ;
+LETTER : [a-zA-Z_%] ;
 
-NUMBER : [0-9_%/] ;
+NUMBER : [0-9_%] ;
 
 INT :   [0-9]+ ;
 

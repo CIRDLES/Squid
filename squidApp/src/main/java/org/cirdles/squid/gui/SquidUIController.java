@@ -168,7 +168,7 @@ public class SquidUIController implements Initializable {
         savePrawnFileCopyMenuItem.setDisable(false);
 
         //Task menu
-        newSquid3TaskMenuItem.setDisable(true);
+        newSquid3TaskMenuItem.setDisable(false);
         selectSquid3TaskFromLibraryMenu.setDisable(false);
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
@@ -695,6 +695,8 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void newSquid3TaskMenuItemAction(ActionEvent event) {
+        squidProject.createNewTask();
+        launchTaskManager();
     }
 
     @FXML

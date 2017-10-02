@@ -73,7 +73,7 @@ public final class SquidProject implements Serializable {
 
     public void testRunOfSessionModel() {
 
-        task.setupSquidSessionSpecsAndReduceData();
+        initializeTaskAndReduceData();
         task.evaluateTaskExpressions();
         try {
             prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions(), false, true);
@@ -101,6 +101,13 @@ public final class SquidProject implements Serializable {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
             task.setupSquidSessionSpecsAndReduceData();
         }
+    }
+
+    public void createNewTask() {
+        this.task = new Task(
+                "New Task", prawnFile, filterForRefMatSpotNames);
+        this.task.setChanged(true);
+        initializeTaskAndReduceData();
     }
 
     public void createTaskFromImportedSquid25Task(File squidTaskFile) {

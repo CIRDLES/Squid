@@ -65,13 +65,13 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
     @Override
     public void buildExpression(TaskInterface task) {
 
-        ExpressionParser parser = new ExpressionParser(task.getNamedExpressionsMap());
-        ExpressionTreeInterface parsedExp = parser.buildTree(parsedRPNreversedExcelString);
+//        ExpressionParser parser = new ExpressionParser(task.getNamedExpressionsMap());
+//        ExpressionTreeInterface parsedExp = parser.buildTree(parsedRPNreversedExcelString);
 
         // copy to this children, operation, and calculate ratiosOfInterest
-        this.childrenET = ((ExpressionTree) parsedExp).getChildrenET();
-        this.operation = ((ExpressionTree) parsedExp).getOperation();
-
+//        this.childrenET = ((ExpressionTree) parsedExp).getChildrenET();
+//        this.operation = ((ExpressionTree) parsedExp).getOperation();
+//
         this.ratiosOfInterest = getAllRatiosOfInterest();
 
         //other switches set outside of this operation
