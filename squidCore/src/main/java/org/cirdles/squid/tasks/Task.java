@@ -261,32 +261,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void updateUnhealthyExpressions() {
-        // reprocess all downstream expressions that are healthy but need updating because of this edit
+    /**
+     * Updates expressions by parsing to detect new health or new sickness
+     * 
+     */
+    public void updateExpressions() {
         Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
         for (Expression listedExp : expArray) {
-            // update known unhealthy expressions
-            if(!listedExp.amHealthy()) {
-                ExpressionTreeInterface original = listedExp.getExpressionTree();
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                if (listedExp.amHealthy()) // to detect ratios of interest
-                {
-                    if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
-                        ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
-                    }
+            ExpressionTreeInterface original = listedExp.getExpressionTree();
+            listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
-                    if (original != null) {
-                        listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
-                        listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
-                        listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
-                    }
-                    setChanged(true);
-                    setupSquidSessionSpecs();
-                } else {
-                    // restore switches
-                    listedExp.setExpressionTree(original);
-                }
+            if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
+                ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
             }
+            if (original != null) {
+                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
+                listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
+                listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
+            }
+            setChanged(true);
+            setupSquidSessionSpecs();
         }
     }
 

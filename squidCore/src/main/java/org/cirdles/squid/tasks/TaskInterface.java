@@ -259,6 +259,6 @@ public interface TaskInterface {
     
     public void ReduceData();
     
-    public void updateUnhealthyExpressions();
+    public void updateExpressions();
 
 }

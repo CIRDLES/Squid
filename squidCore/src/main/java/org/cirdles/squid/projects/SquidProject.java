@@ -123,6 +123,7 @@ public final class SquidProject implements Serializable {
         this.task.setAuthorName(taskSquid25.getAuthorName());
         this.task.setLabName(taskSquid25.getLabName());
         this.task.setRatioNames(taskSquid25.getRatioNames());
+        this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
 
         // first pass
         this.task.setupSquidSessionSpecs();
@@ -143,6 +144,8 @@ public final class SquidProject implements Serializable {
         }
 
         this.task.setChanged(true);
+        this.task.updateExpressions();
+        this.task.updateExpressions();
         initializeTaskAndReduceData();
 
     }

@@ -284,6 +284,17 @@ public class ExpressionManagerController implements Initializable {
 
     private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots) {
         StringBuilder sb = new StringBuilder();
+        
+        sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
+        String[][] resultLabels = ((ExpressionTree) originalExpressionTree).getOperation().getLabelsForOutputValues();
+        for (int i = 0; i < resultLabels[0].length; i++) {
+            try {
+                sb.append(String.format("%1$-" + 20 + "s", resultLabels[0][i], 12));
+            } catch (Exception e) {
+            }
+        }
+        sb.append("\n");
+        
         for (ShrimpFractionExpressionInterface spot : spots) {
             if (spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree) != null) {
                 sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
@@ -404,8 +415,8 @@ public class ExpressionManagerController implements Initializable {
             squidProject.getTask().setupSquidSessionSpecs();
 
             // two passes 
-            squidProject.getTask().updateUnhealthyExpressions();
-            squidProject.getTask().updateUnhealthyExpressions();
+            squidProject.getTask().updateExpressions();
+            squidProject.getTask().updateExpressions();
 
             squidProject.getTask().ReduceData();
 
