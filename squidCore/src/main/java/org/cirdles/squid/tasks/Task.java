@@ -209,7 +209,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void setupSquidSessionSpecsAndReduceData() {
+    public void setupSquidSessionSpecs() {
 
         if (changed) {
             // populate taskExpressionsTreesOrdered
@@ -228,17 +228,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             squidSessionModel = new SquidSessionModel(
                     squidSpeciesModelList, squidRatiosModelList, true, false, filterForRefMatSpotNames);
 
-            try {
-//                TODO - move this
-                shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
-            } catch (Exception e) {
-            }
             changed = false;
         }
     }
 
-    private void processAndSortExpressions() {
+    @Override
+    public void ReduceData() {
+        try {
+            shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+        } catch (Exception e) {
+        }
+    }
 
+    private void processAndSortExpressions() {
         // put expressions in execution order
         try {
             Collections.sort(taskExpressionTreesOrdered);
@@ -248,8 +250,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // now use existing ratios as basis for building and checking expressions in ascending execution order
         assembleNamedExpressionsMap();
 
-        // two passes needed to get in correct order worst case ***************************
-        // since checking for dependencies after possible changes or new expressions
         buildExpressions();
 
         // put expressions in execution order
@@ -258,14 +258,35 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             Collections.sort(taskExpressionsOrdered);
         } catch (Exception e) {
         }
+    }
 
-        buildExpressions();
+    @Override
+    public void updateUnhealthyExpressions() {
+        // reprocess all downstream expressions that are healthy but need updating because of this edit
+        Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+        for (Expression listedExp : expArray) {
+            // update known unhealthy expressions
+            if(!listedExp.amHealthy()) {
+                ExpressionTreeInterface original = listedExp.getExpressionTree();
+                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+                if (listedExp.amHealthy()) // to detect ratios of interest
+                {
+                    if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
+                        ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+                    }
 
-        // put expressions in execution order
-        try {
-            Collections.sort(taskExpressionTreesOrdered);
-            Collections.sort(taskExpressionsOrdered);
-        } catch (Exception e) {
+                    if (original != null) {
+                        listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
+                        listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
+                        listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
+                    }
+                    setChanged(true);
+                    setupSquidSessionSpecs();
+                } else {
+                    // restore switches
+                    listedExp.setExpressionTree(original);
+                }
+            }
         }
     }
 

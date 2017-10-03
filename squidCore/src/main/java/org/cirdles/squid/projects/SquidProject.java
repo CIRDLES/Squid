@@ -99,7 +99,8 @@ public final class SquidProject implements Serializable {
         if (task != null) {
             task.setPrawnFile(prawnFile);
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-            task.setupSquidSessionSpecsAndReduceData();
+            task.setupSquidSessionSpecs();
+            task.ReduceData();
         }
     }
 
@@ -124,7 +125,8 @@ public final class SquidProject implements Serializable {
         this.task.setRatioNames(taskSquid25.getRatioNames());
 
         // first pass
-        this.task.setupSquidSessionSpecsAndReduceData();
+        this.task.setupSquidSessionSpecs();
+        this.task.ReduceData();
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
