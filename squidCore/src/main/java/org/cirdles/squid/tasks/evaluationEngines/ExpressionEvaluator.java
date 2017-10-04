@@ -257,6 +257,8 @@ public class ExpressionEvaluator {
                 meanEqSig = wtdLinCorrResults.getSigmaIntercept();
             }
 
+            // this calcualtes the percent uncertainty without the 100 multiplier
+            // sept 2017 we are going to store the 1 sigma unct of meanEqSig instead
             double eqValFerr;
             if (meanEq == 0.0) {
                 eqValFerr = 1.0;
@@ -269,13 +271,19 @@ public class ExpressionEvaluator {
             double[] ratEqTime = eqTime.clone();
             double[] ratEqErr = new double[eqVal.length];
             for (int i = 0; i < ratEqErr.length; i++) {
+                // calculates 1 sigma abs unct
                 ratEqErr[i] = Math.abs(eqVal[i] * fractErr[i]);
             }
 
-            // April 20178 rounding of ratEqVal, meanEq, and eqValFerr occurs within this constructor
+//            // April 2017 rounding of ratEqVal, meanEq, and eqValFerr occurs within this constructor
+//            taskExpressionEvaluatedPerSpotPerScanModel
+//                    = new TaskExpressionEvaluatedPerSpotPerScanModel(
+//                            expression, ratEqVal, ratEqTime, ratEqErr, meanEq, eqValFerr);
+//            
+            // Sept 2017 rounding of ratEqVal, meanEq, and meanEqSig occurs within this constructor
             taskExpressionEvaluatedPerSpotPerScanModel
                     = new TaskExpressionEvaluatedPerSpotPerScanModel(
-                            expression, ratEqVal, ratEqTime, ratEqErr, meanEq, eqValFerr);
+                            expression, ratEqVal, ratEqTime, ratEqErr, meanEq, meanEqSig);
         }
 
         return taskExpressionEvaluatedPerSpotPerScanModel;

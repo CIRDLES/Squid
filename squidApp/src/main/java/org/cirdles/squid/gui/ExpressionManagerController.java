@@ -20,9 +20,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,7 +46,6 @@ import javafx.scene.web.WebView;
 import org.cirdles.ludwig.squid25.Utilities;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -58,7 +56,6 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInte
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  * FXML Controller class
@@ -174,17 +171,12 @@ public class ExpressionManagerController implements Initializable {
         });
 
         expressionsListView.setContextMenu(createExpressionsListViewContextMenu());
-
-        expressionsListView.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Expression>() {
-            public void changed(ObservableValue<? extends Expression> ov,
-                    Expression old_val, Expression new_val) {
-                if (new_val != null) {
-                    cancelEdit();
-                    populateExpressionDetails(new_val);
-                } else {
-                    vacateExpressionDetails();
-                }
+        expressionsListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<Expression>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Expression> exp) {
+                ObservableList<Expression> selected = expressionsListView.getSelectionModel().getSelectedItems();
+                toggleEditMode(false);
+                populateExpressionDetails(selected.get(0));
             }
         });
 
@@ -290,6 +282,20 @@ public class ExpressionManagerController implements Initializable {
 
     private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots) {
         StringBuilder sb = new StringBuilder();
+        
+        sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
+        String[][] resultLabels = ((ExpressionTree) originalExpressionTree).getOperation().getLabelsForOutputValues();
+        for (int i = 0; i < resultLabels[0].length; i++) {
+            try {
+                sb.append(String.format("%1$-" + 20 + "s", resultLabels[0][i], 12));
+            } catch (Exception e) {
+            }
+        }
+        if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()){
+            sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS", 12));
+        }
+        sb.append("\n");
+        
         for (ShrimpFractionExpressionInterface spot : spots) {
             if (spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree) != null) {
                 sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
@@ -395,7 +401,6 @@ public class ExpressionManagerController implements Initializable {
 
             ExpressionTreeInterface expTree = exp.getExpressionTree();
 
-            // until we have these in the edit box
             ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.selectedProperty().getValue());
             ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.selectedProperty().getValue());
 
@@ -408,8 +413,13 @@ public class ExpressionManagerController implements Initializable {
             currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim().replace("\n", ""));
 
             squidProject.getTask().setChanged(true);
-            // update expressions
-            squidProject.initializeTaskAndReduceData();
+            squidProject.getTask().setupSquidSessionSpecs();
+
+            // two passes 
+            squidProject.getTask().updateExpressions();
+            squidProject.getTask().updateExpressions();
+
+            squidProject.getTask().ReduceData();
 
             squidProject.getTask().evaluateTaskExpressions();
 
@@ -423,7 +433,8 @@ public class ExpressionManagerController implements Initializable {
             unPeekTextArea.setText("No Expression due to parsing error.");
         }
 
-        toggleEditMode(false);
+        toggleEditMode(
+                false);
     }
 
     private void toggleEditMode(boolean editMode) {

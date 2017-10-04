@@ -171,6 +171,7 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("[\"Bkrdcts/sec\"]", "totalCps([\"BKG\"])");
         retVal = retVal.replace("9511", "95");
         retVal = retVal.replace("(Ma)", "");
+        
 
         // regex for robreg with four arguments = robreg.*\)
         Pattern squid25FunctionPattern = Pattern.compile("^(.*)[r,R]obreg.*\\)", Pattern.CASE_INSENSITIVE);
@@ -186,7 +187,17 @@ public class TaskSquid25 implements Serializable {
         if (matcher.matches()) {
             String[] agePb76Parts = matcher.group().split(",");
             if (agePb76Parts.length > 1) {
-                retVal = retVal.replace(matcher.group(), agePb76Parts[0] + "," + agePb76Parts[1] + (agePb76Parts.length > 2 ? ")" : ""));
+                retVal = retVal.replace(matcher.group(), agePb76Parts[0] + ")" );
+            }
+        }
+        
+        // regex for sqWtdAv with four arguments = agePb76.*\)
+        squid25FunctionPattern = Pattern.compile("^(.*)[s,S]qWtdAv.*\\)", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.matches()) {
+            String[] sqWtdAvParts = matcher.group().split(",");
+            if (sqWtdAvParts.length > 1) {
+                retVal = retVal.replace(matcher.group(), sqWtdAvParts[0] + ")");
             }
         }
 
@@ -206,6 +217,7 @@ public class TaskSquid25 implements Serializable {
 
         retVal = excelString.replace("|", "");
         retVal = retVal.replace("(Ma)", "");
+        retVal = retVal.replace("/U", "U");
 
         return retVal;
     }

@@ -39,7 +39,7 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
 
     /**
      * Structure to store results of Squid Switch NU expression evaluation using
-     * ratios of interest and per SImon Bodorkos, rounded to 12 sig digits to
+     * ratios of interest and per Simon Bodorkos, rounded to 12 sig digits to
      * comply with VBA comparisons.
      *
      * @param expression
@@ -47,7 +47,7 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
      * @param ratEqTime
      * @param ratEqErr
      * @param ratioVal
-     * @param ratioFractErr
+     * @param ratioFractErr in Squid3 this is 1-sigma abs uncertainty
      */
     public TaskExpressionEvaluatedPerSpotPerScanModel(
             ExpressionTreeInterface expression, double[] ratEqVal, double[] ratEqTime, double[] ratEqErr, double ratioVal, double ratioFractErr) {
@@ -56,7 +56,6 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
         int sigDigs = 12;
 
         this.expression = expression;
-//        this.ratEqVal = Utilities.roundedToSize(ratEqVal.clone(), sigDigs);
         this.ratEqVal = ratEqVal.clone();
         this.ratEqTime = ratEqTime.clone();
         this.ratEqErr = ratEqErr.clone();
@@ -112,5 +111,5 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
     public double getRatioFractErr() {
         return ratioFractErr;
     }
-
+    
 }

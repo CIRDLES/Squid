@@ -77,7 +77,18 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     @Override
     public int compareTo(Expression expression) {
-        return ((ExpressionTree) expressionTree).compareTo((ExpressionTree) expression.getExpressionTree());
+        int retVal = 0;
+        if (this != expression) {
+            retVal = ((ExpressionTree) expressionTree).compareTo((ExpressionTree) expression.getExpressionTree());
+        }
+        if (retVal == 0) {
+            retVal = name.compareToIgnoreCase(expression.getName());
+        }
+        if (retVal == 0) {
+            retVal = excelExpressionString.compareToIgnoreCase(expression.getExcelExpressionString());
+        }
+
+        return retVal;
     }
 
     @Override

@@ -191,7 +191,7 @@ public interface TaskInterface {
      */
     public void setType(String type);
 
-    public void setupSquidSessionSpecsAndReduceData();
+    public void setupSquidSessionSpecs();
 
     public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
 
@@ -256,5 +256,9 @@ public interface TaskInterface {
      * @param userLinFits the userLinFits to set
      */
     public void setUserLinFits(boolean userLinFits);
+    
+    public void ReduceData();
+    
+    public void updateExpressions();
 
 }

@@ -463,19 +463,21 @@ public class CalamariReportsEngine {
             }
         }
 
-        // these expressions are spot-specific with no ratios-of-interest and INCLUDE those = Squid Switch "NU"
+        // these expressions are spot-specific and INCLUDE those = Squid Switch "NU" calculated from ratios-of-interest
         Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFraction.getTaskExpressionsEvaluationsPerSpot();
         for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
             double[] expressionResults = entry.getValue()[0];
             if (doWriteReportFiles) {
                 dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
                 if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[1] * 100.0, 12));
+                    dataLine.append(", ").append(Utilities.roundedToSize(
+                            calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12));
                 }
             } else {
                 dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
                 if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[1] * 100.0, 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
+                            calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
                 }
             }
         }
@@ -487,6 +489,10 @@ public class CalamariReportsEngine {
         } else {
             unknownMeanRatios_PerSpot.append(dataLine);
         }
+    }
+
+    private double calculatePercentUncertainty(double ratioVal, double ratioFractErr) {
+        return 100.0 * ((ratioVal == 0) ? 1.0 : Math.abs(ratioFractErr / ratioVal));
     }
 
     private void prepSpeciesReportFiles(ShrimpFraction shrimpFraction) throws IOException {
