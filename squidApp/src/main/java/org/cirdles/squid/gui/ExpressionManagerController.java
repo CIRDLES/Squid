@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -292,6 +290,9 @@ public class ExpressionManagerController implements Initializable {
                 sb.append(String.format("%1$-" + 20 + "s", resultLabels[0][i], 12));
             } catch (Exception e) {
             }
+        }
+        if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()){
+            sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS", 12));
         }
         sb.append("\n");
         
