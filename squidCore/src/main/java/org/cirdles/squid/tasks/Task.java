@@ -170,8 +170,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(String.valueOf(referenceMaterialSpots.size()))
                 .append(" Reference Material Spots extracted by filter: ' ")
                 .append(filterForRefMatSpotNames)
-                .append(" '")
-                .append(" spots.");
+                .append(" '.");
 
         summary.append("\n ")
                 .append(String.valueOf(unknownSpots.size()))
@@ -227,13 +226,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             squidSessionModel = new SquidSessionModel(
                     squidSpeciesModelList, squidRatiosModelList, true, false, filterForRefMatSpotNames);
+            
+            reduceData();
 
             changed = false;
         }
     }
 
     @Override
-    public void ReduceData() {
+    public void reduceData() {
         try {
             shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
         } catch (Exception e) {
@@ -541,7 +542,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         }
 
-        // prepare for tasks
+        // prepare for task expressions to be evaluated
         // setup spots
         shrimpFractions.forEach((spot) -> {
             List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated = new ArrayList<>();
@@ -572,7 +573,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 
         for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
-            if (expression.amHealthy()) {
+            if (expression.amHealthy() && expression.isRootExpressionTree()) {
                 // determine subset of spots to be evaluated - default = all
                 List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
                 if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {

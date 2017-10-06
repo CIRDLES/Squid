@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -30,7 +31,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
  *
  * @author James F. Bowring
  */
-public class ReducedUnknownsReportController implements Initializable {
+public class reducedDataReportManagerController implements Initializable {
 
     @FXML
     private AnchorPane reducedUnknownsReportAnchorPane;
@@ -47,11 +48,9 @@ public class ReducedUnknownsReportController implements Initializable {
 
         reducedUnknownsReportTextArea.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         reducedUnknownsReportTextArea.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
-        // todo: fix demeters law violation
+      
+         // todo: fix demeters law violation
         reducedUnknownsReportTextArea.setText(
-                squidProject.getPrawnFileHandler().getReportsEngine().getHeaderMeanRatios_PerSpot().toString().replaceAll(",", "")
-                + squidProject.getPrawnFileHandler().getReportsEngine().getUnknownMeanRatios_PerSpot().toString().replaceAll(",", ""));
+                squidProject.getPrawnFileHandler().getReportsEngine().produceCalamariReportByFlavor(SquidUI.calamariReportFlavor).replaceAll(",", ""));
     }
-
 }

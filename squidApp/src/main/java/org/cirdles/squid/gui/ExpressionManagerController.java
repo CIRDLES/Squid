@@ -414,12 +414,11 @@ public class ExpressionManagerController implements Initializable {
 
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecs();
-
+            
             // two passes 
             squidProject.getTask().updateExpressions();
             squidProject.getTask().updateExpressions();
 
-            squidProject.getTask().ReduceData();
 
             squidProject.getTask().evaluateTaskExpressions();
 

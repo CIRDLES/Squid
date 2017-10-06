@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import org.cirdles.squid.core.CalamariReportsEngine;
 
 /**
  *
@@ -36,6 +37,8 @@ public final class SquidUI extends Application {
     public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
     public static final int PIXEL_OFFSET_FOR_MENU = 40;
     public static Window primaryStageWindow;
+    public static CalamariReportsEngine.CalamariReportFlavors calamariReportFlavor;
+    
     protected static SquidAboutWindow squidAboutWindow;
     protected static Stage primaryStage;
 
