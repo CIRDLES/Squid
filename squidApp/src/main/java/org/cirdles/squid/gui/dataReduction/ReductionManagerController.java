@@ -17,20 +17,16 @@ package org.cirdles.squid.gui.dataReduction;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.tasks.Task;
 
 /**
  * FXML Controller class
@@ -66,7 +62,7 @@ public class ReductionManagerController implements Initializable {
 
         if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
             squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
-            squidProject.testRunOfSessionModel();
+            squidProject.reduceAndReport();
         }
     }
 

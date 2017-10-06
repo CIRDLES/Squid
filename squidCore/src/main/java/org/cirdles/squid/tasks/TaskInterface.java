@@ -257,7 +257,7 @@ public interface TaskInterface {
      */
     public void setUserLinFits(boolean userLinFits);
     
-    public void ReduceData();
+    public void reduceData();
     
     public void updateExpressions();
 

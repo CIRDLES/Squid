@@ -71,7 +71,7 @@ public final class SquidProject implements Serializable {
         this.task = new Task();
     }
 
-    public void testRunOfSessionModel() {
+    public void reduceAndReport() {
 
         initializeTaskAndReduceData();
         task.evaluateTaskExpressions();
@@ -100,7 +100,6 @@ public final class SquidProject implements Serializable {
             task.setPrawnFile(prawnFile);
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
             task.setupSquidSessionSpecs();
-            task.ReduceData();
         }
     }
 
@@ -127,7 +126,6 @@ public final class SquidProject implements Serializable {
 
         // first pass
         this.task.setupSquidSessionSpecs();
-        this.task.ReduceData();
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,6 +39,8 @@ import javafx.scene.layout.VBox;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.core.CalamariReportsEngine;
+import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
@@ -112,7 +115,7 @@ public class SquidUIController implements Initializable {
     private static Pane expressionManagerUI;
 
     private static Pane reductionManagerUI;
-    private static Pane reducedUnknownsReportManagerUI;
+    private static Pane reducedDataReportManagerUI;
 
     @FXML
     private MenuItem newSquid3TaskMenuItem;
@@ -288,7 +291,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(expressionManagerUI);
 
         mainPane.getChildren().remove(reductionManagerUI);
-        mainPane.getChildren().remove(reducedUnknownsReportManagerUI);
+        mainPane.getChildren().remove(reducedDataReportManagerUI);
 
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -594,17 +597,19 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchReducedUnknownsReportManager() {
+    private void launchReducedDataReportManager() {
         try {
-            reducedUnknownsReportManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/ReducedUnknownsReport.fxml"));
-            reducedUnknownsReportManagerUI.setId("ReducedUnknownsReport");
-            VBox.setVgrow(reducedUnknownsReportManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(reducedUnknownsReportManagerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(reducedUnknownsReportManagerUI);
-            reducedUnknownsReportManagerUI.setVisible(false);
+            reducedDataReportManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/reducedDataReportManager.fxml"));
+            reducedDataReportManagerUI.setId("reducedDataReportManagerUI");
+            VBox.setVgrow(reducedDataReportManagerUI, Priority.ALWAYS);
+            HBox.setHgrow(reducedDataReportManagerUI, Priority.ALWAYS);
+            mainPane.getChildren().add(reducedDataReportManagerUI);
+            reducedDataReportManagerUI.setVisible(false);
+
+            showUI(reducedDataReportManagerUI);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("ReducedUnknownsReport >>>>   " + iOException.getMessage());
+            System.out.println("reducedDataReportManagerUI >>>>   " + iOException.getMessage());
         }
     }
 
@@ -725,16 +730,6 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void showReferenceMaterialDataMenutItemAction(ActionEvent event) {
-    }
-
-    @FXML
-    private void showUnknownDataMenuItemAction(ActionEvent event) {
-        launchReducedUnknownsReportManager();
-        showUI(reducedUnknownsReportManagerUI);
-    }
-
-    @FXML
     private void loadExpressionFromXMLFileMenuItemAction(ActionEvent event) {
         try {
             File expressionFileXML = FileHandler.selectExpressionXMLFile(primaryStageWindow);
@@ -757,6 +752,43 @@ public class SquidUIController implements Initializable {
             }
         }
         return retVal;
+    }
+
+    @FXML
+    private void defaultEmptyRatioSetAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void default10SpeciesRatioSetAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void dataReductionMenuAction(Event event) {
+        squidProject.reduceAndReport();
+    }
+
+    @FXML
+    private void showWithinSpotRatiosReferenceMatMenutItemAction(ActionEvent event) {
+        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_REFERENCEMAT;
+        launchReducedDataReportManager();
+    }
+
+    @FXML
+    private void showWithinSpotRatiosUnknownsMenutItemAction(ActionEvent event) {
+        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_UNKNOWNS;
+        launchReducedDataReportManager();
+    }
+
+    @FXML
+    private void showMeanRatiosReferenceMatMenutItemAction(ActionEvent event) {
+        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_REFERENCEMAT;
+        launchReducedDataReportManager();
+    }
+
+    @FXML
+    private void showMeanRatiosUnknownMenutItemAction(ActionEvent event) {
+        SquidUI.calamariReportFlavor = MEAN_RATIOS_PER_SPOT_UNKNOWNS;
+        launchReducedDataReportManager();
     }
 
 }

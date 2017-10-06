@@ -59,13 +59,31 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Specify Isotopes" />
                   <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Select Ratios" />
+                  <Menu mnemonicParsing="false" text="Default Ratio Set">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
+                        <MenuItem mnemonicParsing="false" onAction="#default10SpeciesRatioSetAction" text="10 Species" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="11 Species" />
+                    </items>
+                  </Menu>
               </items>
             </Menu>
-            <Menu fx:id="dataReductionMenu" mnemonicParsing="false" text="Reduction">
+            <Menu fx:id="dataReductionMenu" mnemonicParsing="false" onMenuValidation="#dataReductionMenuAction" text="Reduction">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" />
-                  <MenuItem mnemonicParsing="false" onAction="#showReferenceMaterialDataMenutItemAction" text="Reference Materials Data" />
-                  <MenuItem mnemonicParsing="false" onAction="#showUnknownDataMenuItemAction" text="Unknowns Data" />
+                <MenuItem disable="true" mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" visible="false" />
+                  <Menu mnemonicParsing="false" text="Within-Spot Ratios">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="Reference Materials" />
+                        <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="Unknowns" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Mean Ratios per Spot">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="Reference Materials" />
+                        <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="Unknowns" />
+                    </items>
+                  </Menu>
               </items>
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
@@ -89,6 +107,7 @@
             </Menu>
             <Menu fx:id="manageReportsMenu" mnemonicParsing="false" text="Reports">
               <items>
+                  <MenuItem mnemonicParsing="false" text="Produce Sanity Check Reports" />
                 <MenuItem mnemonicParsing="false" text="Specify Reports Layout" />
               </items>
             </Menu>
