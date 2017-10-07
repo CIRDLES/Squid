@@ -9,6 +9,8 @@ Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
 ## Attention: Squid 2.5 Users
 
+### NOTE: If you have used a previous version of Squid3, you may need to find and delete the file "SquidPersistentState.ser" to allow Squid3 v0.1.n to run.
+
 We encourage you to download
 and evaluate the latest release, the ".jar" file found <a href="https://github.com/CIRDLES/Squid/releases" target="_blank">here</a>.  
 Squid requires <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">Java 1.8</a> or later.
