@@ -48,7 +48,7 @@ public final class SquidProject implements Serializable {
 
     private transient SquidPrefixTree prefixTree;
 
-    private PrawnFileHandler prawnFileHandler = new PrawnFileHandler();
+    private PrawnFileHandler prawnFileHandler;
     private String projectName;
     private String analystName;
     private String projectNotes;
@@ -71,16 +71,6 @@ public final class SquidProject implements Serializable {
         this.task = new Task();
     }
 
-    public void reduceAndReport() {
-
-        initializeTaskAndReduceData();
-        task.evaluateTaskExpressions();
-        try {
-            prawnFileHandler.getReportsEngine().produceReports(task.getShrimpFractions(), false, true);
-        } catch (IOException iOException) {
-        }
-    }
-
     public Map< String, TaskInterface> getTaskLibrary() {
         Map< String, TaskInterface> builtInTasks = new HashMap<>();
 
@@ -98,14 +88,15 @@ public final class SquidProject implements Serializable {
     public void initializeTaskAndReduceData() {
         if (task != null) {
             task.setPrawnFile(prawnFile);
+            task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-            task.setupSquidSessionSpecs();
+            task.setupSquidSessionSpecsAndReduceAndReport();
         }
     }
 
     public void createNewTask() {
         this.task = new Task(
-                "New Task", prawnFile, filterForRefMatSpotNames);
+                "New Task", prawnFile, filterForRefMatSpotNames, prawnFileHandler.getNewReportsEngine());
         this.task.setChanged(true);
         initializeTaskAndReduceData();
     }
@@ -115,7 +106,7 @@ public final class SquidProject implements Serializable {
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
         this.task = new Task(
-                taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames);
+                taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames, prawnFileHandler.getNewReportsEngine());
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setProvenance(taskSquid25.getSquidTaskFileName());
@@ -125,7 +116,7 @@ public final class SquidProject implements Serializable {
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
 
         // first pass
-        this.task.setupSquidSessionSpecs();
+        this.task.setupSquidSessionSpecsAndReduceAndReport();
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {

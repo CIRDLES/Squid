@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -59,29 +59,12 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Specify Isotopes" />
                   <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Select Ratios" />
-                  <Menu mnemonicParsing="false" text="Default Ratio Set">
+                  <Menu mnemonicParsing="false" text="Load a Default Ratio Set">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
                         <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
                         <MenuItem mnemonicParsing="false" onAction="#default10SpeciesRatioSetAction" text="10 Species" />
                         <MenuItem disable="true" mnemonicParsing="false" text="11 Species" />
-                    </items>
-                  </Menu>
-              </items>
-            </Menu>
-            <Menu fx:id="dataReductionMenu" mnemonicParsing="false" onMenuValidation="#dataReductionMenuAction" text="Reduction">
-              <items>
-                <MenuItem disable="true" mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Reduce Data" visible="false" />
-                  <Menu mnemonicParsing="false" text="Within-Spot Ratios">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="Reference Materials" />
-                        <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="Unknowns" />
-                    </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Mean Ratios per Spot">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="Reference Materials" />
-                        <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="Unknowns" />
                     </items>
                   </Menu>
               </items>
@@ -98,17 +81,31 @@
                 <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
           </items>
         </Menu>
-            <Menu fx:id="manageAnalysisMenu" mnemonicParsing="false" text="Analysis">
+            <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Reports">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#reduceDataMenuItemAction" text="Analyze Data using Expressions" />
-                  <MenuItem mnemonicParsing="false" text="Reference Material Results" />
-                  <MenuItem mnemonicParsing="false" text="Unknowns Results" />
+                  <Menu mnemonicParsing="false" text="Built-in Reports">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Within-Spot Ratios">
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="View Reference Materials" />
+                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="View Unknowns" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Mean Ratios per Spot">
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="View Reference Materials" />
+                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="View Unknowns" />
+                          </items>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
+                    </items>
+                  </Menu>
+                <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
               </items>
             </Menu>
-            <Menu fx:id="manageReportsMenu" mnemonicParsing="false" text="Reports">
+            <Menu disable="true" mnemonicParsing="false" text="Visualizations">
               <items>
-                  <MenuItem mnemonicParsing="false" text="Produce Sanity Check Reports" />
-                <MenuItem mnemonicParsing="false" text="Specify Reports Layout" />
+                <MenuItem mnemonicParsing="false" text="Action 1" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">

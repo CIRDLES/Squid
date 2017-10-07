@@ -120,12 +120,10 @@ public class ExpressionManagerController implements Initializable {
         expressionsAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         expressionsAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
-        // update expressions
-        squidProject.initializeTaskAndReduceData();
+        // update 
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
 
         initializeExpressionsListView();
-
-        squidProject.getTask().evaluateTaskExpressions();
 
         webEngine = expressionWebView.getEngine();
     }
@@ -413,7 +411,7 @@ public class ExpressionManagerController implements Initializable {
             currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim().replace("\n", ""));
 
             squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecs();
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
             
             // two passes 
             squidProject.getTask().updateExpressions();

@@ -19,6 +19,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -191,7 +192,7 @@ public interface TaskInterface {
      */
     public void setType(String type);
 
-    public void setupSquidSessionSpecs();
+    public void setupSquidSessionSpecsAndReduceAndReport();
 
     public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
 
@@ -256,9 +257,18 @@ public interface TaskInterface {
      * @param userLinFits the userLinFits to set
      */
     public void setUserLinFits(boolean userLinFits);
-    
-    public void reduceData();
-    
+
     public void updateExpressions();
 
+    /**
+     * @param reportsEngine the reportsEngine to set
+     */
+    public void setReportsEngine(CalamariReportsEngine reportsEngine);
+
+    /**
+     * The original Calamari Reports
+     */
+    public void produceSanityReportsToFiles();
+
+    public void updateRatioNames(List<String> ratioNames);
 }

@@ -17,6 +17,7 @@ package org.cirdles.squid.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -40,7 +41,9 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 /**
  * Calamari's reports engine.
  */
-public class CalamariReportsEngine {
+public class CalamariReportsEngine implements Serializable {
+
+    private static final long serialVersionUID = 9086141392949762545L;
 
     private transient String folderToWriteCalamariReportsPath;
     private transient String reportParameterValues;
@@ -91,6 +94,19 @@ public class CalamariReportsEngine {
         doWriteReportFiles = true;
     }
 
+    public void clearReports(){
+        refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
+        unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
+
+        headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+
+        headerMeanRatios_PerSpot = new StringBuilder();
+        refMatMeanRatios_PerSpot = new StringBuilder();
+        unknownMeanRatios_PerSpot = new StringBuilder();
+    }
+    
     /**
      * ReportsEngine to test results
      *

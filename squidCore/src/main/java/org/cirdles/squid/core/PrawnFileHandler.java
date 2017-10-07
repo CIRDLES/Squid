@@ -56,7 +56,6 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.xml.sax.SAXException;
 
@@ -70,7 +69,8 @@ public class PrawnFileHandler implements Serializable {
     private transient Unmarshaller jaxbUnmarshaller;
     private transient Marshaller jaxbMarshaller;
     private transient Consumer<Integer> progressSubscriber;
-    private transient CalamariReportsEngine reportsEngine;
+
+    private CalamariReportsEngine reportsEngine;
 
     private String currentPrawnFileLocation;
 
@@ -362,7 +362,9 @@ public class PrawnFileHandler implements Serializable {
      */
     public void initReportsEngineWithCurrentPrawnFileName() {
         // strip .xml from file name
-        reportsEngine.setNameOfPrawnXMLFile(new File(currentPrawnFileLocation).getName().split("\\.")[0]);
+        if (currentPrawnFileLocation != null) {
+            reportsEngine.setNameOfPrawnXMLFile(new File(currentPrawnFileLocation).getName().split("\\.")[0]);
+        }
     }
 
     /**
@@ -424,6 +426,13 @@ public class PrawnFileHandler implements Serializable {
      * @return
      */
     public CalamariReportsEngine getReportsEngine() {
+        initReportsEngineWithCurrentPrawnFileName();
+        return reportsEngine;
+    }
+
+    public CalamariReportsEngine getNewReportsEngine() {
+        reportsEngine = new CalamariReportsEngine();
+        initReportsEngineWithCurrentPrawnFileName();
         return reportsEngine;
     }
 

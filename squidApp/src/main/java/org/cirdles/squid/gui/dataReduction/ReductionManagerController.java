@@ -60,10 +60,10 @@ public class ReductionManagerController implements Initializable {
     @FXML
     private void handleReduceDataButtonAction(ActionEvent event) {
 
-        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
-            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
-            squidProject.reduceAndReport();
-        }
+//        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
+//            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
+//            squidProject.reduceAndReport();
+//        }
     }
 
 }

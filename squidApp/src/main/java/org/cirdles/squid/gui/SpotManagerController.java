@@ -15,9 +15,7 @@
  */
 package org.cirdles.squid.gui;
 
-import com.sun.javafx.collections.ObservableListWrapper;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -25,7 +23,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

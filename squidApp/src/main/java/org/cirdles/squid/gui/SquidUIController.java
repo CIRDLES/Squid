@@ -19,6 +19,7 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -37,8 +38,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.xml.bind.JAXBException;
-import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.Squid;
+import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -70,8 +71,6 @@ public class SquidUIController implements Initializable {
     private Menu manageExpressionsMenu;
     @FXML
     private Menu manageTasksMenu;
-    @FXML
-    private Menu manageAnalysisMenu;
     @FXML
     private MenuItem newSquidProjectMenuItem;
     @FXML
@@ -130,8 +129,6 @@ public class SquidUIController implements Initializable {
     @FXML
     private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
-    private Menu dataReductionMenu;
-    @FXML
     private Menu openRecentExpressionFileMenu;
 
     /**
@@ -152,9 +149,7 @@ public class SquidUIController implements Initializable {
         managePrawnFileMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
-        dataReductionMenu.setDisable(true);
         manageExpressionsMenu.setDisable(true);
-        manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 
         // Squid project menu items
@@ -262,8 +257,7 @@ public class SquidUIController implements Initializable {
             manageTasksMenu.setDisable(false);
             manageRatiosMenu.setDisable(true);
             manageExpressionsMenu.setDisable(true);
-            dataReductionMenu.setDisable(true);
-            manageAnalysisMenu.setDisable(true);
+            manageReportsMenu.setDisable(true);
 
             // log prawnFileFolderMRU
             squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
@@ -303,8 +297,6 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
-        dataReductionMenu.setDisable(true);
-        manageAnalysisMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
 
         // logo
@@ -409,8 +401,6 @@ public class SquidUIController implements Initializable {
         if (!"".equals(projectFileName)) {
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
-                squidProject.setPrawnFileHandler(new PrawnFileHandler());
-                squidProject.updatePrawnFileHandlerWithFileLocation();
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 buildProjectMenuMRU();
                 launchProjectManager();
@@ -516,7 +506,7 @@ public class SquidUIController implements Initializable {
             showUI(taskManagerUI);
             manageRatiosMenu.setDisable(false);
             manageExpressionsMenu.setDisable(false);
-            dataReductionMenu.setDisable(false);
+            manageReportsMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("taskManagerUI >>>>   " + iOException.getMessage());
@@ -538,12 +528,17 @@ public class SquidUIController implements Initializable {
 
     private void launchRatiosManager() {
         try {
+            mainPane.getChildren().remove(ratiosManagerUI);
+            squidProject.getTask().buildSquidSpeciesModelList();
+
             ratiosManagerUI = FXMLLoader.load(getClass().getResource("RatiosManager.fxml"));
             ratiosManagerUI.setId("RatiosManager");
             VBox.setVgrow(ratiosManagerUI, Priority.ALWAYS);
             HBox.setHgrow(ratiosManagerUI, Priority.ALWAYS);
             mainPane.getChildren().add(ratiosManagerUI);
             ratiosManagerUI.setVisible(false);
+
+            showUI(ratiosManagerUI);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("RatioManager >>>>   " + iOException.getMessage());
@@ -667,13 +662,9 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void selectRatiosMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(ratiosManagerUI);
-        squidProject.getTask().buildSquidSpeciesModelList();
         launchRatiosManager();
-        showUI(ratiosManagerUI);
     }
 
-    @FXML
     private void reduceDataMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(reductionManagerUI);
         launchReductionManager();
@@ -756,15 +747,14 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void defaultEmptyRatioSetAction(ActionEvent event) {
+        squidProject.getTask().updateRatioNames(new ArrayList<>());
+        launchRatiosManager();
     }
 
     @FXML
     private void default10SpeciesRatioSetAction(ActionEvent event) {
-    }
-
-    @FXML
-    private void dataReductionMenuAction(Event event) {
-        squidProject.reduceAndReport();
+        squidProject.getTask().updateRatioNames(DEFAULT_RATIOS_LIST_FOR_10_SPECIES);
+        launchRatiosManager();
     }
 
     @FXML
@@ -789,6 +779,16 @@ public class SquidUIController implements Initializable {
     private void showMeanRatiosUnknownMenutItemAction(ActionEvent event) {
         SquidUI.calamariReportFlavor = MEAN_RATIOS_PER_SPOT_UNKNOWNS;
         launchReducedDataReportManager();
+    }
+
+    @FXML
+    private void produceSanityCheckReportsAction(ActionEvent event) {
+        squidProject.getTask().produceSanityReportsToFiles();
+    }
+
+    @FXML
+    private void reportsMenuSelectedAction(Event event) {
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
     }
 
 }
