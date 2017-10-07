@@ -18,7 +18,7 @@ the help menu provides a link that
 initializes a new GitHub issue for you - please use freely.
 
 **CAUTION** The current version is only tested on a few 10-species Prawn xml files with
-the background as spot number 3.
+the background as mass station number 3.
 
 The current versions - Squid3-**0.1.n.jar** - prototype the development of the
 workflow support including project, task, and expression management features
