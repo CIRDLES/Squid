@@ -133,8 +133,7 @@ public final class SquidProject implements Serializable {
         }
 
         this.task.setChanged(true);
-        this.task.updateExpressions();
-        this.task.updateExpressions();
+        this.task.updateExpressions(2);
         initializeTaskAndReduceData();
 
     }

@@ -258,7 +258,7 @@ public interface TaskInterface {
      */
     public void setUserLinFits(boolean userLinFits);
 
-    public void updateExpressions();
+    public void updateExpressions(int repeats);
 
     /**
      * @param reportsEngine the reportsEngine to set

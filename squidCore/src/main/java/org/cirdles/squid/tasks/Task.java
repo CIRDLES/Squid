@@ -224,22 +224,22 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             buildSquidSpeciesModelList();
 
             populateTableOfSelectedRatiosFromRatiosList();
-            
+
+            buildSquidRatiosModelListFromMassStationDetails();
+
+            squidSessionModel = new SquidSessionModel(
+                    squidSpeciesModelList, squidRatiosModelList, true, false, filterForRefMatSpotNames);
+
+            try {
+                shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+            } catch (Exception e) {
+            }
+
+            processAndSortExpressions();
+
+            evaluateTaskExpressions();
+
             if (ratioNames.size() > 0) {
-                buildSquidRatiosModelListFromMassStationDetails();
-
-                processAndSortExpressions();
-
-                squidSessionModel = new SquidSessionModel(
-                        squidSpeciesModelList, squidRatiosModelList, true, false, filterForRefMatSpotNames);
-
-                try {
-                    shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
-                } catch (Exception e) {
-                }
-
-                evaluateTaskExpressions();
-
                 produceSummaryReportsForGUI();
             } else {
                 reportsEngine.clearReports();
@@ -253,7 +253,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void updateRatioNames(List<String> ratioNames) {
         this.ratioNames = ratioNames;
         changed = true;
-        setupSquidSessionSpecsAndReduceAndReport();
+        updateExpressions(2);
+        evaluateTaskExpressions();
     }
 
     private void produceSummaryReportsForGUI() {
@@ -296,23 +297,32 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     /**
-     * Updates expressions by parsing to detect new health or new sickness
+     * Updates expressions by parsing to detect new health or new sickness with
+     * two passes to capture side effects
      *
      */
-    public void updateExpressions() {
-        Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
-        for (Expression listedExp : expArray) {
-            ExpressionTreeInterface original = listedExp.getExpressionTree();
-            listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+    public void updateExpressions(int repeats) {
+        if (taskExpressionsOrdered.size() > 0) {
+            for (int i = 0; i < repeats; i++) {
+                Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+                for (Expression listedExp : expArray) {
+                    ExpressionTreeInterface original = listedExp.getExpressionTree();
+                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
-            if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
-                ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+                    if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
+                        ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+                    }
+                    if (original != null) {
+                        listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
+                        listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
+                        listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
+                    }
+                    setChanged(true);
+                    setupSquidSessionSpecsAndReduceAndReport();
+                }
             }
-            if (original != null) {
-                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
-                listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
-                listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
-            }
+        } else {
+            // no expressions
             setChanged(true);
             setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -723,6 +733,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         changed = true;
+        updateExpressions(1);
+
     }
 
     /**
