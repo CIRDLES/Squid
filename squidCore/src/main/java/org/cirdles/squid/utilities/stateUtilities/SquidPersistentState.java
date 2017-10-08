@@ -421,6 +421,7 @@ public class SquidPersistentState implements Serializable {
         try {
             SquidSerializer.serializeObjectToFile(this, getMySerializedName());
         } catch (SquidException squidException) {
+            System.out.println(squidException.getMessage());
         }
     }
 

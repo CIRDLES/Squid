@@ -73,7 +73,7 @@ public class RobReg extends Function {
             double slopeErr = Math.abs(robustReg2[2] - robustReg2[1]) / 2.0;
             double yIntErr = Math.abs(robustReg2[6] - robustReg2[5]) / 2.0;
             retVal = new Object[][]{{robustReg2[0], slopeErr, robustReg2[3], yIntErr}};
-        } catch (ArithmeticException e) {
+        } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0}};
         }
 

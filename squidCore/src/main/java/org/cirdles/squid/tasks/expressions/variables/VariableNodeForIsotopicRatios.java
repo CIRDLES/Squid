@@ -82,7 +82,7 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                 retVal[i] = convertArrayToObjects(values);
             }
 
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException methodException) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
         }
 
         return retVal;

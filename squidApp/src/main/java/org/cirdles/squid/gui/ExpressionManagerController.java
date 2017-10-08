@@ -280,7 +280,7 @@ public class ExpressionManagerController implements Initializable {
 
     private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots) {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
         String[][] resultLabels = ((ExpressionTree) originalExpressionTree).getOperation().getLabelsForOutputValues();
         for (int i = 0; i < resultLabels[0].length; i++) {
@@ -289,11 +289,11 @@ public class ExpressionManagerController implements Initializable {
             } catch (Exception e) {
             }
         }
-        if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()){
+        if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()) {
             sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS", 12));
         }
         sb.append("\n");
-        
+
         for (ShrimpFractionExpressionInterface spot : spots) {
             if (spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree) != null) {
                 sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
@@ -349,8 +349,9 @@ public class ExpressionManagerController implements Initializable {
             Expression selectedExpression = expressionsListView.getSelectionModel().getSelectedItem();
             if (selectedExpression != null) {
                 squidProject.getTask().removeExpression(selectedExpression);
-                expressionsListView.getItems().remove(selectedExpression);
-                expressionsListView.refresh();
+                populateExpressionsListView();
+//                expressionsListView.getItems().remove(selectedExpression);
+//                expressionsListView.refresh();
             }
         });
         contextMenu.getItems().add(menuItem);
@@ -410,15 +411,10 @@ public class ExpressionManagerController implements Initializable {
             currentExpression.setExpressionTree(expTree);
             currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim().replace("\n", ""));
 
+            squidProject.getTask().updateAffectedExpressions(2, currentExpression);
+            squidProject.getTask().updateAllExpressions(1);
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
-            
-            // two passes 
-            squidProject.getTask().updateExpressions();
-            squidProject.getTask().updateExpressions();
-
-
-            squidProject.getTask().evaluateTaskExpressions();
 
             // reveal new ordering etc
             populateExpressionsListView();
@@ -430,8 +426,7 @@ public class ExpressionManagerController implements Initializable {
             unPeekTextArea.setText("No Expression due to parsing error.");
         }
 
-        toggleEditMode(
-                false);
+        toggleEditMode(false);
     }
 
     private void toggleEditMode(boolean editMode) {

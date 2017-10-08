@@ -130,11 +130,10 @@ public final class SquidProject implements Serializable {
             expressionTree.setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
 
             this.task.getTaskExpressionsOrdered().add(expression);
+
         }
 
-        this.task.setChanged(true);
-        this.task.updateExpressions();
-        this.task.updateExpressions();
+        this.task.updateAllExpressions(2);
         initializeTaskAndReduceData();
 
     }

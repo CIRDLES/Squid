@@ -258,7 +258,7 @@ public interface TaskInterface {
      */
     public void setUserLinFits(boolean userLinFits);
 
-    public void updateExpressions();
+    public void updateAllExpressions(int repeats);
 
     /**
      * @param reportsEngine the reportsEngine to set
@@ -271,4 +271,6 @@ public interface TaskInterface {
     public void produceSanityReportsToFiles();
 
     public void updateRatioNames(List<String> ratioNames);
+    
+    public void updateAffectedExpressions(int repeats, Expression sourceExpression);
 }

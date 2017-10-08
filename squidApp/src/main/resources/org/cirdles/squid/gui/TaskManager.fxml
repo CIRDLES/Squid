@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane fx:id="taskManagerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+<AnchorPane fx:id="taskManagerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
    <children>
       <Label layoutX="24.0" layoutY="15.0" text="Task Name:" />
       <TextField fx:id="taskNameTextField" layoutX="127.0" layoutY="15.0" prefHeight="27.0" prefWidth="496.0" promptText="Task name" />
@@ -24,7 +24,7 @@
          </children>
       </HBox>
       <Label layoutX="21.0" layoutY="55.0" text="Description:" />
-      <TextField fx:id="taskDescriptionTextField" layoutX="127.0" layoutY="56.0" prefHeight="27.0" prefWidth="757.0" promptText="Task Description" />
+      <TextField fx:id="taskDescriptionTextField" layoutX="127.0" layoutY="56.0" prefHeight="27.0" prefWidth="757.0" promptText="Task Description" style="-fx-font-size: 12;" />
       <Label layoutX="55.0" layoutY="95.0" text="Author:" />
       <TextField fx:id="authorsNameTextField" layoutX="127.0" layoutY="96.0" prefHeight="27.0" prefWidth="306.0" promptText="Author's Name" />
       <Label layoutX="481.0" layoutY="95.0" text="Lab Name:" />

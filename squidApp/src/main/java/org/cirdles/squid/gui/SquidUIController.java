@@ -228,10 +228,8 @@ public class SquidUIController implements Initializable {
                     squidPersistentState.cleanExpressionListMRU();
                     openRecentExpressionFileMenu.getItems().remove(menuItem);
                 }
-            }
-            );
-            openRecentExpressionFileMenu.getItems()
-                    .add(menuItem);
+            });
+            openRecentExpressionFileMenu.getItems().add(menuItem);
         }
     }
 
@@ -529,6 +527,7 @@ public class SquidUIController implements Initializable {
     private void launchRatiosManager() {
         try {
             mainPane.getChildren().remove(ratiosManagerUI);
+            // critical for puplating table
             squidProject.getTask().buildSquidSpeciesModelList();
 
             ratiosManagerUI = FXMLLoader.load(getClass().getResource("RatiosManager.fxml"));
