@@ -82,7 +82,7 @@ public class ConcordiaTW extends Function {
             double[] concordiaTW
                     = org.cirdles.ludwig.isoplot3.Pub.concordiaTW(ratioXAndUnct[0], ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1]);
             retVal = new Object[][]{convertArrayToObjects(concordiaTW)};
-        } catch (ArithmeticException e) {
+        } catch (ArithmeticException  | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0}};
         }
 

@@ -74,7 +74,7 @@ public class SqWtdAv extends Function {
             double[] uncertaintyValues = transposeColumnVector(valuesAndUncertainties, 1);
             double[] weightedAverage = org.cirdles.ludwig.isoplot3.Means.weightedAverage(variableValues, uncertaintyValues);
             retVal = new Object[][]{convertArrayToObjects(weightedAverage)};
-        } catch (ArithmeticException e) {
+        } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
         }
 

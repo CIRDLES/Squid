@@ -252,9 +252,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void updateRatioNames(List<String> ratioNames) {
         this.ratioNames = ratioNames;
-        changed = true;
-        updateExpressions(2);
-        evaluateTaskExpressions();
+
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport();
+        updateAllExpressions(2);
+        processAndSortExpressions();
     }
 
     private void produceSummaryReportsForGUI() {
@@ -276,12 +278,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void processAndSortExpressions() {
-        // put expressions in execution order
-        try {
-            Collections.sort(taskExpressionTreesOrdered);
-            Collections.sort(taskExpressionsOrdered);
-        } catch (Exception e) {
+        // populate taskExpressionsTreesOrdered
+        taskExpressionTreesOrdered.clear();
+        for (Expression exp : taskExpressionsOrdered) {
+            taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
         }
+
         // now use existing ratios as basis for building and checking expressions in ascending execution order
         assembleNamedExpressionsMap();
 
@@ -297,44 +299,66 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     /**
+     *
+     */
+    public void updateAffectedExpressions(int repeats, Expression sourceExpression) {
+        for (int i = 0; i < repeats; i++) {
+            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+            for (Expression listedExp : expArray) {
+                if (listedExp.getExpressionTree().usesAnotherExpression(sourceExpression.getExpressionTree())) {
+                    updateSingleExpression(listedExp);
+                }
+            }
+            processAndSortExpressions();
+        }
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport();
+    }
+
+    @Override
+    /**
      * Updates expressions by parsing to detect new health or new sickness with
      * two passes to capture side effects
      *
      */
-    public void updateExpressions(int repeats) {
-        if (taskExpressionsOrdered.size() > 0) {
-            for (int i = 0; i < repeats; i++) {
-                Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
-                for (Expression listedExp : expArray) {
-                    ExpressionTreeInterface original = listedExp.getExpressionTree();
-                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-
-                    if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
-                        ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
-                    }
-                    if (original != null) {
-                        listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
-                        listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
-                        listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
-                    }
-                    setChanged(true);
-                    setupSquidSessionSpecsAndReduceAndReport();
-                }
+    public void updateAllExpressions(int repeats) {
+        for (int i = 0; i < repeats; i++) {
+            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+            for (Expression listedExp : expArray) {
+                updateSingleExpression(listedExp);
             }
-        } else {
-            // no expressions
-            setChanged(true);
-            setupSquidSessionSpecsAndReduceAndReport();
+            processAndSortExpressions();
         }
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport();
+    }
+
+    private void updateSingleExpression(Expression listedExp) {
+        ExpressionTreeInterface original = listedExp.getExpressionTree();
+        listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+
+        if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
+            ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+        }
+        if (original != null) {
+            listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
+            listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
+            listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
+        }
+
+        processAndSortExpressions();
+        processAndSortExpressions();
     }
 
     @Override
     public void removeExpression(Expression expression) {
         if (expression != null) {
-            taskExpressionTreesOrdered.remove((ExpressionTree) expression.getExpressionTree());
             taskExpressionsOrdered.remove(expression);
             taskExpressionsRemoved.add(expression);
             processAndSortExpressions();
+            updateAffectedExpressions(2, expression);
+            setChanged(true);
+            setupSquidSessionSpecsAndReduceAndReport();
         }
     }
 
@@ -349,8 +373,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void addExpression(Expression exp) {
         taskExpressionsOrdered.add(exp);
-        taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
         processAndSortExpressions();
+        updateAllExpressions(3);
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport();
     }
 
     private void createMapOfIndexToMassStationDetails() {
@@ -732,9 +758,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         }
 
-        changed = true;
-        updateExpressions(1);
-
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport();
+        updateAllExpressions(2);
+        processAndSortExpressions();
     }
 
     /**

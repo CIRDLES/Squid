@@ -33,6 +33,8 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     private static final long serialVersionUID = -7828719973319583270L;
 
     private static String lookupMethodNameForShrimpFraction = "getTaskExpressionsEvaluationsPerSpotByField";
+    
+    private boolean healthy;
 
     /**
      *
@@ -47,10 +49,11 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
      */
     public VariableNodeForPerSpotTaskExpressions(String name) {
         this.name = name;
+        this.healthy = true;
     }
     @Override
     public boolean amHealthy() {
-        return (name.length() > 0);
+        return (name.length() > 0) && healthy;
     }
 
     @Override
@@ -82,7 +85,8 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         Object[][] retVal = new Object[shrimpFractions.size()][];
-
+        if (task.getNamedExpressionsMap().get(name).amHealthy()){
+            healthy = true;
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
                     lookupMethodNameForShrimpFraction,
@@ -94,6 +98,9 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
             throw new SquidException("Could not find variable " + name);
+        }
+        } else {
+            healthy = false;
         }
 
         return retVal;

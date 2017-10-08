@@ -228,10 +228,8 @@ public class SquidUIController implements Initializable {
                     squidPersistentState.cleanExpressionListMRU();
                     openRecentExpressionFileMenu.getItems().remove(menuItem);
                 }
-            }
-            );
-            openRecentExpressionFileMenu.getItems()
-                    .add(menuItem);
+            });
+            openRecentExpressionFileMenu.getItems().add(menuItem);
         }
     }
 
