@@ -495,6 +495,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void launchTaskManager() {
+        mainPane.getChildren().remove(taskManagerUI);
         try {
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
             taskManagerUI.setId("TaskManager");
@@ -672,7 +673,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void manageTaskMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(taskManagerUI);
+//        mainPane.getChildren().remove(taskManagerUI);
         launchTaskManager();
     }
 
