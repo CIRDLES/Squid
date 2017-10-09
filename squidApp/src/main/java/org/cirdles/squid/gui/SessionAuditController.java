@@ -65,7 +65,7 @@ public class SessionAuditController implements Initializable {
     
     /**
      * Prepares the TreeView to be displayed
-     * @param hasBeenChecked determines whether the duplicate CheckBox has been checked
+     * @param showDupesOnly determines whether the duplicate CheckBox has been checked
      */
     private void setUpPrawnFileAuditTreeView(boolean showDupesOnly) {
         prawnAuditTree.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);

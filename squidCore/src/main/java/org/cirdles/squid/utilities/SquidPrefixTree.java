@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -34,7 +36,7 @@ public class SquidPrefixTree {
 
     private SquidPrefixTree parent;
     private List<SquidPrefixTree> children;
-    private Character charValue;
+    private SquidPrefixTreeNode node;
     private String stringValue;
     private int countOfSpecies;
     private int countOfScans;
@@ -44,14 +46,14 @@ public class SquidPrefixTree {
     private Map<Integer, Integer> mapOfScansFrequencies;
 
     public SquidPrefixTree() {
-        this(ROOT);
+        this(new SquidPrefixTreeNode(ROOT));
     }
 
-    public SquidPrefixTree(Character value) {
+    public SquidPrefixTree(SquidPrefixTreeNode node) {
         this.parent = null;
         this.children = new ArrayList<>();
-        this.charValue = value;
-        this.stringValue = value.toString().toUpperCase(Locale.US);
+        this.node = node;
+        this.stringValue = node.getValue().toString().toUpperCase(Locale.US);
         this.countOfSpecies = 0;
         this.countOfScans = 0;
         this.countOfDups = 0;
@@ -63,40 +65,70 @@ public class SquidPrefixTree {
     public SquidPrefixTree insert(String myWord) {
         SquidPrefixTree target = this;
         String word = myWord.toUpperCase(Locale.US);
+        boolean hasDupString = containsDupString(word);
         for (int i = 0; i < word.length(); i++) {
-            Character letter = word.charAt(i);
-            target = target.findTargetChild(letter);
-            target.stringValue = word.substring(0, i + 1);
+            if (!hasDupString) {
 
-            // add special leaf condition if last letter
-            if (i == (word.length() - 1)) {
-                SquidPrefixTree leaf = new SquidPrefixTree(LEAF);
-                leaf.parent = target;
-                target.children.add(leaf);
-                if (target.stringValue.toUpperCase(Locale.US).contains("-DUP-")) {
+                SquidPrefixTreeNode currentNode = new SquidPrefixTreeNode(word.charAt(i));
+                target = target.findTargetChild(currentNode);
+                target.stringValue = word.substring(0, i + 1);
+
+                // add special leaf condition if last letter
+                if (i == (word.length() - 1)) {
+                    createLeafNode(target);
+                }
+            } else {
+                String remainingString = word.substring(i, word.length());
+                Pattern pattern = Pattern.compile("-DUP-.*");
+                Matcher matcher = pattern.matcher(remainingString);
+                SquidPrefixTreeNode currentNode;
+
+                if (matcher.matches()) {
+                    currentNode = new SquidPrefixTreeNode(remainingString.substring(0, 5));
+                    //this makes i jump to index after -DUP-
+                    i = i + 4;
+                } else {
+                    currentNode = new SquidPrefixTreeNode(word.charAt(i));
+                }
+                target = target.findTargetChild(currentNode);
+                target.stringValue = word.substring(0, i + 1);
+
+                if (i == (word.length() - 1)) {
+                    SquidPrefixTree leaf = createLeafNode(target);
                     leaf.countOfDups = 1;
                 }
             }
-
         }
 
         return target;
     }
 
-    public SquidPrefixTree findTargetChild(Character value) {
+    private SquidPrefixTree createLeafNode(SquidPrefixTree target) {
+        SquidPrefixTree leaf = new SquidPrefixTree(new SquidPrefixTreeNode(LEAF));
+        leaf.parent = target;
+        target.children.add(leaf);
+
+        return leaf;
+    }
+
+    private boolean containsDupString(String word) {
+        return word.contains("-DUP-");
+    }
+
+    public SquidPrefixTree findTargetChild(SquidPrefixTreeNode node) {
         SquidPrefixTree tree = null;
+
         for (int i = 0; i < children.size(); i++) {
-            if (children.get(i).charValue.compareTo(value) == 0) {
+            if (children.get(i).getNode().getValue().compareTo(node.getValue()) == 0) {
                 tree = children.get(i);
             }
         }
 
         if (tree == null) {
-            tree = new SquidPrefixTree(value);
+            tree = new SquidPrefixTree(node);
             parent = this;
             children.add(tree);
         }
-
         return tree;
     }
 
@@ -104,7 +136,7 @@ public class SquidPrefixTree {
         SquidPrefixTree target = this;
         for (int i = 0; i < prefix.length(); i++) {
             Character letter = prefix.charAt(i);
-            target = target.findTargetChild(letter);
+            target = target.findTargetChild(new SquidPrefixTreeNode(letter));
         }
 
         return target;
@@ -129,13 +161,13 @@ public class SquidPrefixTree {
 
     private void sortChildren(List<SquidPrefixTree> children) {
         Collections.sort(children, (SquidPrefixTree pt1, SquidPrefixTree pt2)
-                -> (pt1.getCharValue().compareTo(pt2.charValue)));
+                -> (pt1.getNode().getValue().compareTo(pt2.getNode().getValue())));
     }
 
     private int countAnalysisLeaves() {
         int retVal = 0;
         for (int i = 0; i < children.size(); i++) {
-            if (children.get(i).charValue.compareTo(LEAF) == 0) {
+            if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) == 0) {
                 retVal++;
             } else {
                 int childCountOfLeaves = children.get(i).countAnalysisLeaves();
@@ -153,7 +185,7 @@ public class SquidPrefixTree {
     private Map<Integer, Integer> countSpeciesFrequencies() {
 
         for (int i = 0; i < children.size(); i++) {
-            if (children.get(i).charValue.compareTo(LEAF) == 0) {
+            if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) == 0) {
                 int childCountOfSpecies = children.get(i).countOfSpecies;
                 mapOfSpeciesFrequencies.put(childCountOfSpecies, 1);
             } else {
@@ -167,7 +199,7 @@ public class SquidPrefixTree {
     private Map<Integer, Integer> countScansFrequencies() {
 
         for (int i = 0; i < children.size(); i++) {
-            if (children.get(i).charValue.compareTo(LEAF) == 0) {
+            if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) == 0) {
                 int childCountOfScans = children.get(i).countOfScans;
                 mapOfScansFrequencies.put(childCountOfScans, 1);
             } else {
@@ -181,7 +213,7 @@ public class SquidPrefixTree {
     private int countDups() {
         int retVal = 0;
         for (int i = 0; i < children.size(); i++) {
-            if (children.get(i).charValue.compareTo(LEAF) == 0) {
+            if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) == 0) {
                 retVal += children.get(i).countOfDups;
             } else {
                 int childCountOfDups = children.get(i).countDups();
@@ -235,7 +267,7 @@ public class SquidPrefixTree {
     }
 
     public boolean isleaf() {
-        return charValue.compareTo(LEAF) == 0;
+        return getNode().getValue().compareTo(String.valueOf(LEAF)) == 0;
     }
 
     /**
@@ -255,8 +287,8 @@ public class SquidPrefixTree {
     /**
      * @return the charValue
      */
-    public Character getCharValue() {
-        return charValue;
+    public SquidPrefixTreeNode getNode() {
+        return node;
     }
 
     /**
@@ -338,26 +370,15 @@ public class SquidPrefixTree {
 
     public void prettyPrint(int depth) {
         for (int i = 0; i < children.size(); i++) {
-            if (children.get(i).charValue.compareTo(LEAF) != 0) {
-                System.out.println(children.get(i).stringValue + "  >>> " + children.get(i).charValue + "  = " + children.get(i).countAnalysisLeaves());
+            if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) != 0) {
+                System.out.println(children.get(i).stringValue + " >>> " + children.get(i).getNode().getValue() + " = " + children.get(i).countAnalysisLeaves());
+
                 for (int j = 0; j < depth; j++) {
-                    System.out.print("   ");
+                    System.out.print("  ");
                 }
                 children.get(i).prettyPrint(depth + 1);
             }
         }
 
     }
-
-    public static void main(String[] args) {
-        SquidPrefixTree root = new SquidPrefixTree();
-        root.insert("uaf.g");
-        root.insert("uaf.h");
-        root.insert("ua");
-        root.insert("abcd");
-
-        root.countAnalysisLeaves();
-        root.prettyPrint(0);
-    }
-
 }
