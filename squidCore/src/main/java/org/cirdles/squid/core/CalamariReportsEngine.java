@@ -94,7 +94,7 @@ public class CalamariReportsEngine implements Serializable {
         doWriteReportFiles = true;
     }
 
-    public void clearReports(){
+    public void clearReports() {
         refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
         unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
 
@@ -106,7 +106,7 @@ public class CalamariReportsEngine implements Serializable {
         refMatMeanRatios_PerSpot = new StringBuilder();
         unknownMeanRatios_PerSpot = new StringBuilder();
     }
-    
+
     /**
      * ReportsEngine to test results
      *
@@ -525,14 +525,16 @@ public class CalamariReportsEngine implements Serializable {
         for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
             double[] expressionResults = entry.getValue()[0];
             if (doWriteReportFiles) {
-                dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
                 if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                    dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
+//                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
                     dataLine.append(", ").append(Utilities.roundedToSize(
                             calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12));
                 }
             } else {
-                dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
                 if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
+//                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
                     dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
                             calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
                 }
@@ -556,7 +558,9 @@ public class CalamariReportsEngine implements Serializable {
         String[] namesOfSpecies = shrimpFraction.getNamesOfSpecies();
         int countOfIntegrations = shrimpFraction.getPeakMeasurementsCount();
 
-        ionIntegrations_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "Check_01_IonIntegrations_PerScan.csv");
+        if (doWriteReportFiles) {
+            ionIntegrations_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "Check_01_IonIntegrations_PerScan.csv");
+        }
         StringBuilder header = new StringBuilder();
         header.append("Title, Date, Scan, Type, Dead_time_ns");
 
@@ -572,7 +576,10 @@ public class CalamariReportsEngine implements Serializable {
             Files.write(ionIntegrations_PerScan.toPath(), header.toString().getBytes(UTF_8));
         }
 
-        sBMIntegrations_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "Check_02_SBMIntegrations_PerScan.csv");
+        if (doWriteReportFiles) {
+            sBMIntegrations_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "Check_02_SBMIntegrations_PerScan.csv");
+        }
+
         header = new StringBuilder();
         header.append("Title, Date, Scan, Type, SBM_zero_cps");
 
@@ -588,7 +595,9 @@ public class CalamariReportsEngine implements Serializable {
             Files.write(sBMIntegrations_PerScan.toPath(), header.toString().getBytes(UTF_8));
         }
 
-        totalCounts_IonsAndSBM_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_01_TotalCounts_IonsAndSBM_PerScan.csv");
+        if (doWriteReportFiles) {
+            totalCounts_IonsAndSBM_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_01_TotalCounts_IonsAndSBM_PerScan.csv");
+        }
         header = new StringBuilder();
         header.append("Title, Date, Scan, Type");
 
@@ -605,7 +614,9 @@ public class CalamariReportsEngine implements Serializable {
             Files.write(totalCounts_IonsAndSBM_PerScan.toPath(), header.toString().getBytes(UTF_8));
         }
 
-        nuclideCPS_PerSpot = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_02_NuclideCPS_PerSpot.csv");
+        if (doWriteReportFiles) {
+            nuclideCPS_PerSpot = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_02_NuclideCPS_PerSpot.csv");
+        }
         header = new StringBuilder();
         header.append("Title, Date, Type");
 
@@ -624,7 +635,10 @@ public class CalamariReportsEngine implements Serializable {
 
     private void prepRatiosReportFiles(ShrimpFraction shrimpFraction) throws IOException {
         // report Squid_03 headers
-        withinSpotRatios_PerScanMinus1 = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_03_WithinSpotRatios_PerScanMinus1.csv");
+        if (doWriteReportFiles) {
+            withinSpotRatios_PerScanMinus1 = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_03_WithinSpotRatios_PerScanMinus1.csv");
+        }
+
         headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
         StringBuilder headerWithinSpotRatios_PerScanMinus1_2 = new StringBuilder();
 
@@ -695,7 +709,9 @@ public class CalamariReportsEngine implements Serializable {
         unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
 
         // report squid_04 headers *********************************************
-        meanRatios_PerSpot = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_04_MeanRatios_PerSpot.csv");
+        if (doWriteReportFiles) {
+            meanRatios_PerSpot = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_04_MeanRatios_PerSpot.csv");
+        }
         headerMeanRatios_PerSpot = new StringBuilder();
         StringBuilder headerMeanRatios_PerSpot2 = new StringBuilder();
         if (doWriteReportFiles) {
