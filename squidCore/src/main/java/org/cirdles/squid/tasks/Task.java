@@ -126,6 +126,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this(name, null, "", null);
     }
 
+    public Task(String name, CalamariReportsEngine reportsEngine) {
+        this(name, null, "", reportsEngine);
+    }
+
     /**
      *
      * @param name

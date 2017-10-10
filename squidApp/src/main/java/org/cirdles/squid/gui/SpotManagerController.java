@@ -240,7 +240,7 @@ public class SpotManagerController implements Initializable {
 
     @FXML
     private void setFilteredSpotsToRefMatAction(ActionEvent event) {
-        squidProject.setFilterForRefMatSpotNames(
+        squidProject.updateFilterForRefMatSpotNames(
                 filterSpotNameText.getText().toUpperCase(Locale.US).trim());
         updateReferenceMaterialsList(true);
     }
