@@ -80,9 +80,16 @@ public final class SquidProject implements Serializable {
         return builtInTasks;
     }
 
-    public void loadAndInitializeTask(TaskInterface task) {
+    public void loadAndInitializeLibraryTask(TaskInterface task) {
         this.task = task;
-        initializeTaskAndReduceData();
+        task.setPrawnFile(prawnFile);
+        this.task.setReportsEngine(prawnFileHandler.getReportsEngine());
+        this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        // first pass
+        this.task.setupSquidSessionSpecsAndReduceAndReport();
+        this.task.updateAllExpressions(2);
+        this.task.setChanged(true);
+        this.task.setupSquidSessionSpecsAndReduceAndReport();
     }
 
     public void initializeTaskAndReduceData() {
@@ -91,6 +98,7 @@ public final class SquidProject implements Serializable {
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
             task.updateAllExpressions(2);
+            task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport();
         }
     }
@@ -134,9 +142,7 @@ public final class SquidProject implements Serializable {
 
         }
 
-        this.task.updateAllExpressions(2);
         initializeTaskAndReduceData();
-
     }
 
     public void setupPrawnFile(File prawnXMLFileNew)

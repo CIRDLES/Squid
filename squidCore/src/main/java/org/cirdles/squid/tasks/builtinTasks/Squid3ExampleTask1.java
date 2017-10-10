@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.builtinTasks;
 
+import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
@@ -46,18 +47,8 @@ public class Squid3ExampleTask1 extends Task {
         this.provenance = "Builtin task.";
         this.dateRevised = 0l;
 
-        ratioNames.add("204/206");
-        ratioNames.add("207/206");
-        ratioNames.add("208/206");
-        ratioNames.add("238/196");
-        ratioNames.add("206/238");
-        ratioNames.add("254/238");
-        ratioNames.add("248/254");
-        ratioNames.add("206/270");
-        ratioNames.add("270/254");
-        ratioNames.add("206/254");
-        ratioNames.add("238/206");
-
+        this.ratioNames = DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+        
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString));
         taskExpressionsOrdered.add(
@@ -72,6 +63,5 @@ public class Squid3ExampleTask1 extends Task {
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString));
         taskExpressionsOrdered.add(new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
-
     }
 }
