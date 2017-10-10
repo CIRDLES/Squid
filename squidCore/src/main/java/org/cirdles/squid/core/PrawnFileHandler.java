@@ -426,6 +426,9 @@ public class PrawnFileHandler implements Serializable {
      * @return
      */
     public CalamariReportsEngine getReportsEngine() {
+        if (reportsEngine == null){
+            reportsEngine = new CalamariReportsEngine();
+        }
         initReportsEngineWithCurrentPrawnFileName();
         return reportsEngine;
     }

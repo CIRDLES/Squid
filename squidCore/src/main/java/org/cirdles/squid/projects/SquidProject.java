@@ -68,7 +68,7 @@ public final class SquidProject implements Serializable {
 
         this.sessionDurationHours = 0.0;
 
-        this.task = new Task();
+        this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -151,6 +151,9 @@ public final class SquidProject implements Serializable {
         prawnXMLFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
+        task.setPrawnFile(prawnFile);
+        task.buildSquidSpeciesModelList();
+
     }
 
     public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
@@ -438,6 +441,13 @@ public final class SquidProject implements Serializable {
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+    }
+
+    public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
+        this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+        if (task != null) {
+            task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        }
     }
 
     /**
