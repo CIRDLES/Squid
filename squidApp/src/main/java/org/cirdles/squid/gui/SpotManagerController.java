@@ -240,7 +240,7 @@ public class SpotManagerController implements Initializable {
 
     @FXML
     private void setFilteredSpotsToRefMatAction(ActionEvent event) {
-        squidProject.setFilterForRefMatSpotNames(
+        squidProject.updateFilterForRefMatSpotNames(
                 filterSpotNameText.getText().toUpperCase(Locale.US).trim());
         updateReferenceMaterialsList(true);
     }
@@ -271,7 +271,7 @@ public class SpotManagerController implements Initializable {
     @FXML
     private void saveSpotNameAction(ActionEvent event) {
         if (saveSpotNameButton.getUserData() != null) {
-            ((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).setValue(selectedSpotNameText.getText().trim().toUpperCase(Locale.US));
+            ((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).setValue(selectedSpotNameText.getText().trim());
             squidProject.processPrawnSessionForDuplicateSpotNames();
             squidProject.generatePrefixTreeFromSpotNames();
             shrimpFractionList.refresh();

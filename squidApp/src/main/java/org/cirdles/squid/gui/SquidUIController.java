@@ -208,7 +208,7 @@ public class SquidUIController implements Initializable {
             MenuItem menuItem = new MenuItem(entry.getKey());
             menuItem.setOnAction((ActionEvent t) -> {
                 // get a new library
-                squidProject.loadAndInitializeTask(squidProject.getTaskLibrary().get(menuItem.getText()));
+                squidProject.loadAndInitializeLibraryTask(squidProject.getTaskLibrary().get(menuItem.getText()));
                 launchTaskManager();
             });
             selectSquid3TaskFromLibraryMenu.getItems().add(menuItem);

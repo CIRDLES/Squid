@@ -68,7 +68,7 @@ public final class SquidProject implements Serializable {
 
         this.sessionDurationHours = 0.0;
 
-        this.task = new Task();
+        this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -80,9 +80,16 @@ public final class SquidProject implements Serializable {
         return builtInTasks;
     }
 
-    public void loadAndInitializeTask(TaskInterface task) {
+    public void loadAndInitializeLibraryTask(TaskInterface task) {
         this.task = task;
-        initializeTaskAndReduceData();
+        task.setPrawnFile(prawnFile);
+        this.task.setReportsEngine(prawnFileHandler.getReportsEngine());
+        this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        // first pass
+        this.task.setupSquidSessionSpecsAndReduceAndReport();
+        this.task.updateAllExpressions(2);
+        this.task.setChanged(true);
+        this.task.setupSquidSessionSpecsAndReduceAndReport();
     }
 
     public void initializeTaskAndReduceData() {
@@ -91,6 +98,7 @@ public final class SquidProject implements Serializable {
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
             task.updateAllExpressions(2);
+            task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport();
         }
     }
@@ -134,9 +142,7 @@ public final class SquidProject implements Serializable {
 
         }
 
-        this.task.updateAllExpressions(2);
         initializeTaskAndReduceData();
-
     }
 
     public void setupPrawnFile(File prawnXMLFileNew)
@@ -145,6 +151,9 @@ public final class SquidProject implements Serializable {
         prawnXMLFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
+        task.setPrawnFile(prawnFile);
+        task.buildSquidSpeciesModelList();
+
     }
 
     public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
@@ -432,6 +441,13 @@ public final class SquidProject implements Serializable {
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+    }
+
+    public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
+        this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+        if (task != null) {
+            task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        }
     }
 
     /**
