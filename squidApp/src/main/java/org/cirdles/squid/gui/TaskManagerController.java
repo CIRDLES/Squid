@@ -86,7 +86,6 @@ public class TaskManagerController implements Initializable {
 
         if (squidProject.getTask() != null) {
             task = squidProject.getTask();
-            squidProject.initializeTaskAndReduceData();
             populateTaskFields();
             setupListeners();
         } else {

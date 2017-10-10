@@ -272,7 +272,7 @@ public class ExpressionManagerController implements Initializable {
             sb.append("\t");
             sb.append(String.format("%1$-" + 13 + "s", labels[0][i]));
             sb.append(": ");
-            sb.append(spotSummary.getValues()[0][i]);
+            sb.append(Utilities.roundedToSize(spotSummary.getValues()[0][i], 12));
             sb.append("\n");
         }
         return sb.toString();
