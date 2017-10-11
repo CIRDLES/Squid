@@ -17,6 +17,7 @@ package org.cirdles.squid.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Predicate;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -86,7 +87,7 @@ public class RunsViewModel {
 
         @Override
         public boolean test(PrawnFile.Run run) {
-            return run.getPar().get(0).getValue().startsWith(spotName);
+            return run.getPar().get(0).getValue().toUpperCase(Locale.US).trim().startsWith(spotName);
         }
     }
 
