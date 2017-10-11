@@ -276,6 +276,9 @@ public class SpotManagerController implements Initializable {
             squidProject.generatePrefixTreeFromSpotNames();
             shrimpFractionList.refresh();
             shrimpRefMatList.refresh();
+            // refresh textbox in case "DUP" is removed or created
+            selectedSpotNameText.setText(((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).getValue());
+            
         }
     }
 }
