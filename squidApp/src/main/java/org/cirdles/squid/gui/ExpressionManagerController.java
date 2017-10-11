@@ -124,6 +124,9 @@ public class ExpressionManagerController implements Initializable {
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
 
         initializeExpressionsListView();
+        
+        rmPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
+        unPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
 
         webEngine = expressionWebView.getEngine();
     }
