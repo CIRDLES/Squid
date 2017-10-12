@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.utilities;
+package org.cirdles.squid.utilities.SquidPrefixTree;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -368,17 +367,32 @@ public class SquidPrefixTree {
         return mapOfScansFrequencies;
     }
 
-    public void prettyPrint(int depth) {
+    public StringBuilder prettyPrint(int depth) {
+        StringBuilder string = new StringBuilder();
+        prettyPrint(depth, string);
+        return string;
+    }
+    
+    private StringBuilder prettyPrint(int depth, StringBuilder string){
         for (int i = 0; i < children.size(); i++) {
             if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) != 0) {
-                System.out.println(children.get(i).stringValue + " >>> " + children.get(i).getNode().getValue() + " = " + children.get(i).countAnalysisLeaves());
-
+                string.append(children.get(i).stringValue).append(" >>> ").append(children.get(i).getNode().getValue()).append(" = ").append(children.get(i).countAnalysisLeaves()).append("\n");
                 for (int j = 0; j < depth; j++) {
-                    System.out.print("  ");
+                    string.append("  ");
                 }
-                children.get(i).prettyPrint(depth + 1);
+                children.get(i).prettyPrint(depth + 1, string);
             }
+            if (i == children.size() - 1)
+                string.append("\n");
         }
-
+        return string;
+    }
+    
+    public static void main (String args[]){
+        SquidPrefixTree root = new SquidPrefixTree();
+        root.insert("a.f.s-DUP-");
+        
+        root.insert("df.cvsd");
+        System.out.println(root.prettyPrint(1));
     }
 }

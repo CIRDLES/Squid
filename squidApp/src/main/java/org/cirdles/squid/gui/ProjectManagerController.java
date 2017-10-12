@@ -28,7 +28,7 @@ import javafx.scene.layout.Pane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.utilities.SquidPrefixTree;
+import org.cirdles.squid.utilities.SquidPrefixTree.SquidPrefixTree;
 
 /**
  * FXML Controller class
