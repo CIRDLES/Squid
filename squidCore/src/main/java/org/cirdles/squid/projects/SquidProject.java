@@ -36,7 +36,7 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.xml.sax.SAXException;
-import org.cirdles.squid.utilities.SquidPrefixTree.SquidPrefixTree;
+import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 
 /**
