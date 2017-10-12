@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
@@ -246,20 +247,22 @@ public final class SquidProject implements Serializable {
         List<Run> runs = prawnFile.getRun();
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
-            String spotName = runs.get(i).getPar().get(0).getValue();
+            String spotName = runs.get(i).getPar().get(0).getValue().trim();
+            String spotNameKey = spotName.toUpperCase(Locale.US);
             // remove existing duplicate label in case editing occurred
             int indexDUP = spotName.indexOf("-DUP");
             if (indexDUP > 0) {
                 runs.get(i).getPar().get(0).setValue(spotName.substring(0, spotName.indexOf("-DUP")));
                 spotName = runs.get(i).getPar().get(0).getValue();
+                spotNameKey = spotName.toUpperCase(Locale.US);
             }
-            if (spotNameCountMap.containsKey(spotName)) {
-                int count = spotNameCountMap.get(spotName);
+            if (spotNameCountMap.containsKey(spotNameKey)) {
+                int count = spotNameCountMap.get(spotNameKey);
                 count++;
-                spotNameCountMap.put(spotName, count);
+                spotNameCountMap.put(spotNameKey, count);
                 runs.get(i).getPar().get(0).setValue(spotName + "-DUP-" + count);
             } else {
-                spotNameCountMap.put(spotName, 0);
+                spotNameCountMap.put(spotNameKey, 0);
             }
         }
     }
