@@ -791,4 +791,19 @@ public class SquidUIController implements Initializable {
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
     }
 
+    @FXML
+    private void showSquid3GithubRepo(ActionEvent event) {
+        BrowserControl.showURI("https://github.com/CIRDLES/Squid");
+    }
+
+    @FXML
+    private void showSquid3DevNotes(ActionEvent event) {
+        BrowserControl.showURI("https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Intro");
+    }
+
+    @FXML
+    private void showTopsoilGithubRepo(ActionEvent event) {
+        BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
+    }
+
 }

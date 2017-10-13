@@ -353,8 +353,6 @@ public class ExpressionManagerController implements Initializable {
             if (selectedExpression != null) {
                 squidProject.getTask().removeExpression(selectedExpression);
                 populateExpressionsListView();
-//                expressionsListView.getItems().remove(selectedExpression);
-//                expressionsListView.refresh();
             }
         });
         contextMenu.getItems().add(menuItem);

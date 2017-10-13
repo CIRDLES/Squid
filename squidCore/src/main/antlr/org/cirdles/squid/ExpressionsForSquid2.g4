@@ -80,6 +80,7 @@ FUNCTION :
     'AgePb76' | 'agePb76' | 
     'And' | 'and' | 
     'ConcordiaTW' | 'concordiaTW' |
+    'Concordia' | 'concordia' |
     'Exp' | 'exp' |  
     'If' | 'if' | 
     'Ln' | 'ln' | 

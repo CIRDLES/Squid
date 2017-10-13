@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -71,7 +72,7 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.taskType = lines[firstRow + 1].split("\t")[1];
                 taskSquid25.taskName = lines[firstRow + 2].split("\t")[1];
                 taskSquid25.taskDescription = lines[firstRow + 3].split("\t")[1];
-                              
+
                 taskSquid25.authorName = "";
                 taskSquid25.labName = lines[firstRow + 7].split("\t")[1];
 
@@ -171,7 +172,6 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("[\"Bkrdcts/sec\"]", "totalCps([\"BKG\"])");
         retVal = retVal.replace("9511", "95");
         retVal = retVal.replace("(Ma)", "");
-        
 
         // regex for robreg with four arguments = robreg.*\)
         Pattern squid25FunctionPattern = Pattern.compile("^(.*)[r,R]obreg.*\\)", Pattern.CASE_INSENSITIVE);
@@ -187,10 +187,10 @@ public class TaskSquid25 implements Serializable {
         if (matcher.matches()) {
             String[] agePb76Parts = matcher.group().split(",");
             if (agePb76Parts.length > 1) {
-                retVal = retVal.replace(matcher.group(), agePb76Parts[0] + ")" );
+                retVal = retVal.replace(matcher.group(), agePb76Parts[0] + ")");
             }
         }
-        
+
         // regex for sqWtdAv with four arguments = agePb76.*\)
         squid25FunctionPattern = Pattern.compile("^(.*)[s,S]qWtdAv.*\\)", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
@@ -201,11 +201,37 @@ public class TaskSquid25 implements Serializable {
             }
         }
 
-        if (excelString.startsWith("[")) {
-            // do not accept field names as being equations
-            //retVal = "";
-        } else if (!excelString.contains("(") && !excelString.contains("[")) {
-            // do not accept constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
+        boolean handledConcordiaTW = false;
+        // regex for concordiaTW with up to seven arguments = concordiaTW.*\) x, sigma, y sigma , 3 optional
+        squid25FunctionPattern = Pattern.compile("^(.*)[c,C]oncordiaTW.*\\)", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.matches()) {
+            String[] concordiaTWParts = matcher.group().split(",");
+            retVal = retVal.replace(matcher.group(), concordiaTWParts[0] + "," + concordiaTWParts[2] + (concordiaTWParts.length > 3 ? ")" : ""));
+            handledConcordiaTW = true;
+        }
+
+        if (!handledConcordiaTW) {
+            // regex for concordia with up to eight arguments = concordia.*\) x, sigma, y, sigma , rho,  3 optional
+            squid25FunctionPattern = Pattern.compile("^(.*)[c,C]oncordia.*\\)", Pattern.CASE_INSENSITIVE);
+            matcher = squid25FunctionPattern.matcher(retVal);
+            if (matcher.matches()) {
+                String[] concordiaParts = matcher.group().split(",");
+                retVal = retVal.replace(matcher.group(), concordiaParts[0] + "," + concordiaParts[2] + "," + concordiaParts[4] + (concordiaParts.length > 5 ? ")" : ""));
+            }
+        }
+
+        // remove leading mulitpliers meant for output tables
+        retVal = retVal.replace("1000*", "");
+        retVal = retVal.replace("100*", "");
+
+        // do not accept constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
+        if (!excelString.contains("(") && !excelString.contains("[")) {
+            retVal = "";
+        }
+
+        // do not include calls to error functions of Age as in AgeErPb76 etc
+        if (excelString.toUpperCase(Locale.US).contains("AGEER")) {
             retVal = "";
         }
 
@@ -218,6 +244,9 @@ public class TaskSquid25 implements Serializable {
         retVal = excelString.replace("|", "");
         retVal = retVal.replace("(Ma)", "");
         retVal = retVal.replace("/U", "U");
+        // remove leading mulitpliers meant for output tables
+        retVal = retVal.replace("1000*", "");
+        retVal = retVal.replace("100*", "");
 
         return retVal;
     }
