@@ -372,8 +372,8 @@ public class SquidPrefixTree {
         prettyPrint(depth, string);
         return string;
     }
-    
-    private StringBuilder prettyPrint(int depth, StringBuilder string){
+
+    private StringBuilder prettyPrint(int depth, StringBuilder string) {
         for (int i = 0; i < children.size(); i++) {
             if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) != 0) {
                 string.append(children.get(i).stringValue).append(" >>> ").append(children.get(i).getNode().getValue()).append(" = ").append(children.get(i).countAnalysisLeaves()).append("\n");
@@ -382,16 +382,14 @@ public class SquidPrefixTree {
                 }
                 children.get(i).prettyPrint(depth + 1, string);
             }
-            if (i == children.size() - 1)
-                string.append("\n");
         }
         return string;
     }
-    
-    public static void main (String args[]){
+
+    public static void main(String args[]) {
         SquidPrefixTree root = new SquidPrefixTree();
         root.insert("a.f.s-DUP-");
-        
+
         root.insert("df.cvsd");
         System.out.println(root.prettyPrint(1));
     }
