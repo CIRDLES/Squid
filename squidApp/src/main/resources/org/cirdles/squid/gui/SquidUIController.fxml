@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -114,7 +114,9 @@
                   <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
                   <Menu mnemonicParsing="false" text="Online Resources">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="GitHub Repository" />
+                      <MenuItem mnemonicParsing="false" onAction="#showSquid3GithubRepo" text="Squid3 GitHub Repository" />
+                        <MenuItem mnemonicParsing="false" onAction="#showSquid3DevNotes" text="Squid3 Development Notes" />
+                        <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
                     </items>
                   </Menu>
             <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
