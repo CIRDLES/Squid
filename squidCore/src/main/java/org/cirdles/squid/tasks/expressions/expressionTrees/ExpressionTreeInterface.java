@@ -65,6 +65,11 @@ public interface ExpressionTreeInterface {
     public boolean isRootExpressionTree();
 
     /**
+     * @param rootExpressionTree the rootExpressionTree to set
+     */
+    public void setRootExpressionTree(boolean rootExpressionTree);
+
+    /**
      *
      * @return
      */
@@ -227,7 +232,7 @@ public interface ExpressionTreeInterface {
         argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditOperationArgumentCount());
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
             // SpotFieldNode is an ExpressionTree without Children
-            if ((child instanceof ExpressionTree) 
+            if ((child instanceof ExpressionTree)
                     && !(child instanceof SpotFieldNode)
                     && !(child instanceof VariableNodeForIsotopicRatios)
                     && !(child instanceof VariableNodeForPerSpotTaskExpressions)) {

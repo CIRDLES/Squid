@@ -124,6 +124,7 @@ public class ExpressionParser {
                     } catch (Exception e) {
                     }
                 }
+                returnExpressionTree.setRootExpressionTree(true);
             }
         }
 
