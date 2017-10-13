@@ -124,6 +124,8 @@ public class ExpressionParser {
                     } catch (Exception e) {
                     }
                 }
+                // be sure top level expression is root
+                returnExpressionTree.setRootExpressionTree(true);
             }
         }
 
