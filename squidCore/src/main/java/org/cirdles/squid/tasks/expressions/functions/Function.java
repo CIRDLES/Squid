@@ -84,6 +84,8 @@ public abstract class Function
 
         FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
         FUNCTIONS_MAP.put("ConcordiaTW", "concordiaTW");
+        FUNCTIONS_MAP.put("concordia", "concordia");
+        FUNCTIONS_MAP.put("Concordia", "concordia");
 
         FUNCTIONS_MAP.put("exp", "exp");
         FUNCTIONS_MAP.put("Exp", "exp");
@@ -199,6 +201,14 @@ public abstract class Function
      *
      * @return
      */
+    public static OperationOrFunctionInterface concordia() {
+        return new Concordia();
+    }
+
+    /**
+     *
+     * @return
+     */
     public static OperationOrFunctionInterface and() {
         return new And();
     }
@@ -234,8 +244,8 @@ public abstract class Function
     public static OperationOrFunctionInterface abs() {
         return new Abs();
     }
-    
-       /**
+
+    /**
      *
      * @return
      */
