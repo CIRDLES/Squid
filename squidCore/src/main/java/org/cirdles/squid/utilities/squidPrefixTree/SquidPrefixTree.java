@@ -385,12 +385,4 @@ public class SquidPrefixTree {
         }
         return string;
     }
-
-    public static void main(String args[]) {
-        SquidPrefixTree root = new SquidPrefixTree();
-        root.insert("a.f.s-DUP-");
-
-        root.insert("df.cvsd");
-        System.out.println(root.prettyPrint(1));
-    }
 }
