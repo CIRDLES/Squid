@@ -76,7 +76,6 @@ public class CalamariReportsEngine implements Serializable {
      *
      */
     public CalamariReportsEngine() {
-        // folderToWriteCalamariReports = new File(System.getProperty("user.dir"));
         folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
         nameOfPrawnXMLFile = "";
 
@@ -848,13 +847,6 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     /**
-     * @return the folderToWriteCalamariReports
-     */
-    public File getFolderToWriteCalamariReports() {
-        return folderToWriteCalamariReports;
-    }
-
-    /**
      * @param aFolderToWriteCalamariReports the folderToWriteCalamariReports to
      * set
      */
@@ -867,13 +859,6 @@ public class CalamariReportsEngine implements Serializable {
      */
     public void setNameOfPrawnXMLFile(String nameOfPrawnXMLFile) {
         this.nameOfPrawnXMLFile = nameOfPrawnXMLFile;
-    }
-
-    /**
-     * @return the folderToWriteCalamariReportsPath
-     */
-    public String getFolderToWriteCalamariReportsPath() {
-        return folderToWriteCalamariReportsPath;
     }
 
     /**
