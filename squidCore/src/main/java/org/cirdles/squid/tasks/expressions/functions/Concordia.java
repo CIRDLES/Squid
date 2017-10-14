@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -33,16 +30,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  */
 @XStreamAlias("Operation")
 public class Concordia extends Function {
-    //    private static final long serialVersionUID = 6522574920235718028L;
 
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Concordia.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Concordia " + theSUID);
-    }
+    private static final long serialVersionUID = 4127169946137305310L;
 
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and

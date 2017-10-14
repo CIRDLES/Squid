@@ -109,14 +109,9 @@ public class CalamariFileUtilities {
     }
 
     public static void initCalamariReportsFolder(PrawnFileHandler prawnFileHandler) {
-        try {
-            // point to directory, but no default choice
-            prawnFileHandler.setCurrentPrawnFileLocation(exampleFolder.getCanonicalPath());
-        } catch (IOException iOException) {
-        }
-
         prawnFileHandler.getReportsEngine()
                 .setFolderToWriteCalamariReports(Squid.DEFAULT_SQUID3_REPORTS_FOLDER);
-
+        
+        prawnFileHandler.initReportsEngineWithCurrentPrawnFileName();
     }
 }
