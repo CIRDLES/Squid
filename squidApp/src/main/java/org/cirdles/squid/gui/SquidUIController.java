@@ -307,6 +307,7 @@ public class SquidUIController implements Initializable {
 
         squidProject = new SquidProject();
 
+        // this updates output folder for reports to current version
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
     }
@@ -408,6 +409,10 @@ public class SquidUIController implements Initializable {
                 throw new IOException();
             }
         }
+
+        // this updates output folder for reports to current version
+        CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
+
     }
 
     @FXML
