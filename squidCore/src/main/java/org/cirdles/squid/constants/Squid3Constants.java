@@ -106,6 +106,8 @@ public final class Squid3Constants {
             DEFAULT_RATIOS_LIST_FOR_10_SPECIES.add(ratios[i]);
         }
     }
+    
+    public static final String DUPLICATE_STRING = "-DUP-";
                     
 
 }

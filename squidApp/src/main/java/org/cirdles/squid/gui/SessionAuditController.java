@@ -92,7 +92,8 @@ public class SessionAuditController implements Initializable {
         TreeItem<String> rootItem = new TreeItem<>("Spots", null);
         if(hasDuplicates){
             rootItem.setValue(
-                    "***This file has duplicate names. Change names of duplicates in PrawnFile>Edit Spots***" + 
+                    "***This file has duplicate names. Change names of duplicates in PrawnFile > Manage Spots & "
+                            + "Choose Reference Materials***" + 
                     "\n\nSpots by prefix: " + summaryStatsString);
         }else{
             rootItem.setValue("Spots by prefix:" + summaryStatsString);

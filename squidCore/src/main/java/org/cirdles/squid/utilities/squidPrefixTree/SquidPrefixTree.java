@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 
 /**
  *
@@ -52,7 +53,7 @@ public class SquidPrefixTree {
         this.parent = null;
         this.children = new ArrayList<>();
         this.node = node;
-        this.stringValue = node.getValue().toString().toUpperCase(Locale.US);
+        this.stringValue = node.getValue().toUpperCase(Locale.US);
         this.countOfSpecies = 0;
         this.countOfScans = 0;
         this.countOfDups = 0;
@@ -61,6 +62,11 @@ public class SquidPrefixTree {
         mapOfScansFrequencies = new HashMap<>();
     }
 
+    /**
+     * 
+     * @param myWord
+     * @return SquidPrefixTree with inserted word
+     */
     public SquidPrefixTree insert(String myWord) {
         SquidPrefixTree target = this;
         String word = myWord.toUpperCase(Locale.US);
@@ -78,14 +84,13 @@ public class SquidPrefixTree {
                 }
             } else {
                 String remainingString = word.substring(i, word.length());
-                Pattern pattern = Pattern.compile("-DUP-.*");
+                Pattern pattern = Pattern.compile(DUPLICATE_STRING + ".*");
                 Matcher matcher = pattern.matcher(remainingString);
                 SquidPrefixTreeNode currentNode;
 
                 if (matcher.matches()) {
                     currentNode = new SquidPrefixTreeNode(remainingString.substring(0, 5));
-                    //this makes i jump to index after -DUP-
-                    i = i + 4;
+                    i = i + DUPLICATE_STRING.length()-1;
                 } else {
                     currentNode = new SquidPrefixTreeNode(word.charAt(i));
                 }
@@ -114,6 +119,11 @@ public class SquidPrefixTree {
         return word.contains("-DUP-");
     }
 
+    /**
+     * 
+     * @param node
+     * @return target SquidPrefixTree
+     */
     public SquidPrefixTree findTargetChild(SquidPrefixTreeNode node) {
         SquidPrefixTree tree = null;
 
@@ -131,6 +141,11 @@ public class SquidPrefixTree {
         return tree;
     }
 
+    /**
+     * 
+     * @param prefix
+     * @return target SquidPrefixTree
+     */
     public SquidPrefixTree findPrefix(String prefix) {
         SquidPrefixTree target = this;
         for (int i = 0; i < prefix.length(); i++) {
@@ -141,6 +156,10 @@ public class SquidPrefixTree {
         return target;
     }
 
+    /**
+     * Prepares statistics for internal methods. 
+     * Must be called before any statistical methods for accurate representation.
+     */
     public void prepareStatistics() {
         sort();
         countAnalysisLeaves();
@@ -228,7 +247,7 @@ public class SquidPrefixTree {
     }
 
     private void updateFrequencyMap(Map<Integer, Integer> targetMap, Map<Integer, Integer> sourceMap) {
-        for (Map.Entry<Integer, Integer> entry : sourceMap.entrySet()) {
+        sourceMap.entrySet().forEach((entry) -> {
             int key = entry.getKey();
             int count = entry.getValue();
             if (targetMap.containsKey(key)) {
@@ -236,35 +255,47 @@ public class SquidPrefixTree {
             } else {
                 targetMap.put(key, count);
             }
-        }
+        });
     }
 
+    /**
+     * Builds string to return all relevant statistical data for current SquidPrefixTree
+     * @return string containing statistical data
+     */
     public String buildSummaryDataString() {
         // build species and scans count string        
         StringBuilder speciesCountBuffer = new StringBuilder();
-        for (Integer count : mapOfSpeciesFrequencies.keySet()) {
-            speciesCountBuffer.append("[" + String.format("%1$ 2d", count) + " in " + String.format("%1$ 3d", mapOfSpeciesFrequencies.get(count)) + "]");
-        }
+        mapOfSpeciesFrequencies.keySet().forEach((count) -> {
+            speciesCountBuffer.append("[").append(String.format("%1$ 2d", count)).append(" in ").append(String.format("%1$ 3d", mapOfSpeciesFrequencies.get(count))).append("]");
+        });
         String speciesCounts = speciesCountBuffer.toString();
 
         StringBuilder scansCountsBuffer = new StringBuilder();
-        for (Integer count : mapOfScansFrequencies.keySet()) {
-            scansCountsBuffer.append("[" + String.format("%1$ 2d", count) + " in " + String.format("%1$ 3d", mapOfScansFrequencies.get(count)) + "]");
-        }
+        mapOfScansFrequencies.keySet().forEach((count) -> {
+            scansCountsBuffer.append("[").append(String.format("%1$ 2d", count)).append(" in ").append(String.format("%1$ 3d", mapOfScansFrequencies.get(count))).append("]");
+        });
         String scansCounts = scansCountsBuffer.toString();
-
-        String summary = " Analyses=" + String.format("%1$ 3d", countOfLeaves)
-                + "; Dups=" + String.format("%1$ 3d", countOfDups)
+        
+        String summary = " Analyses =" + String.format("%1$ 3d", countOfLeaves)
+                + "; Dups =" + String.format("%1$ 3d", countOfDups)
                 + "; Species:" + speciesCounts
-                + "; Scans:" + scansCounts;
+                + "; Scans:" +   scansCounts;
 
         return summary;
     }
 
+    /**
+     * 
+     * @return Whether the current SquidPrefixTree has children
+     */
     public boolean hasChildren() {
         return children.size() > 0;
     }
 
+    /**
+     * 
+     * @return Whether the current SquidPrefixTree is a leaf node
+     */
     public boolean isleaf() {
         return getNode().getValue().compareTo(String.valueOf(LEAF)) == 0;
     }
@@ -367,8 +398,13 @@ public class SquidPrefixTree {
         return mapOfScansFrequencies;
     }
 
-    public StringBuilder prettyPrint(int depth) {
+    /**
+     * Displays the entire SquidPrefixTree in a hierarchical fashion.
+     * @return the string to display the current SquidPrefixTree
+     */
+    public StringBuilder prettyPrint() {
         StringBuilder string = new StringBuilder();
+        int depth = 0;
         prettyPrint(depth, string);
         return string;
     }
@@ -376,10 +412,10 @@ public class SquidPrefixTree {
     private StringBuilder prettyPrint(int depth, StringBuilder string) {
         for (int i = 0; i < children.size(); i++) {
             if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) != 0) {
-                string.append(children.get(i).stringValue).append(" >>> ").append(children.get(i).getNode().getValue()).append(" = ").append(children.get(i).countAnalysisLeaves()).append("\n");
                 for (int j = 0; j < depth; j++) {
                     string.append("  ");
-                }
+                } 
+                string.append(children.get(i).stringValue).append(" >>> ").append(children.get(i).getNode().getValue()).append(" = ").append(children.get(i).countAnalysisLeaves()).append("\n");
                 children.get(i).prettyPrint(depth + 1, string);
             }
         }

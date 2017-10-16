@@ -22,19 +22,19 @@ package org.cirdles.squid.utilities.squidPrefixTree;
 public class SquidPrefixTreeNode {
 
     private String value;
-    private boolean isSingleCharacter;
+    private boolean singleCharacter;
 
-    public SquidPrefixTreeNode() {
+    private SquidPrefixTreeNode() {
     }
 
     public SquidPrefixTreeNode(Character character) {
         this.value = String.valueOf(character);
-        this.isSingleCharacter = value.length() == 1;
+        this.singleCharacter = value.length() == 1;
     }
 
     public SquidPrefixTreeNode(String string) {
         this.value = string;
-        this.isSingleCharacter = value.length() > 1;
+        this.singleCharacter = value.length() <= 1;
     }
 
     /**
@@ -47,11 +47,24 @@ public class SquidPrefixTreeNode {
     }
 
     /**
-     *
-     * @return isSingleCharacter
+     * @param value the value to set
      */
-    public boolean getIsSingleCharacter() {
-        return this.isSingleCharacter;
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
+     * @return the singleCharacter
+     */
+    public boolean isSingleCharacter() {
+        return singleCharacter;
+    }
+
+    /**
+     * @param singleCharacter the singleCharacter to set
+     */
+    public void setSingleCharacter(boolean singleCharacter) {
+        this.singleCharacter = singleCharacter;
     }
 
 }
