@@ -215,7 +215,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? "  +" : "  -");
             signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? "  +" : "  -");
             signature.append(((ExpressionTree) expressionTree).isSquidSpecialUPbThExpression() ? "  +  " : "  -  ");
-            signature.append(((ExpressionTree) expressionTree).getName());
+            signature.append(name);//((ExpressionTree) expressionTree).getName());
         } else {
             signature.append("  Parsing Error! ").append(name);
         }
