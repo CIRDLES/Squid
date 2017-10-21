@@ -327,8 +327,9 @@ public class ExpressionTree
                 if (retVal) {
                     retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
                 }
-//            if (retVal) {
-//                retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
+                if (retVal) {
+                    retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
+                }
             }
         }
 

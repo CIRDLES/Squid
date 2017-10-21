@@ -524,21 +524,21 @@ public class CalamariReportsEngine implements Serializable {
         for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
             double[] expressionResults = entry.getValue()[0];
             if (doWriteReportFiles) {
-                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
 //                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                    dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
+                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
                     dataLine.append(", ").append(Utilities.roundedToSize(
                             calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12));
                 }
             } else {
-                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
 //                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
-                            calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
+                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
+                                calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
+                    }
                 }
             }
-        }
 
         dataLine.append("\n");
 
