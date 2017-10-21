@@ -15,7 +15,9 @@
  */
 package org.cirdles.squid.tasks.builtinTasks;
 
-import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+import java.util.ArrayList;
+import java.util.List;
+import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_11_SPECIES;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
@@ -47,8 +49,8 @@ public class Squid3ExampleTask1 extends Task {
         this.provenance = "Builtin task.";
         this.dateRevised = 0l;
 
-        this.ratioNames = DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
-        
+        this.ratioNames = populateRatioNames();
+
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString));
         taskExpressionsOrdered.add(
@@ -63,5 +65,13 @@ public class Squid3ExampleTask1 extends Task {
         taskExpressionsOrdered.add(
                 new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString));
         taskExpressionsOrdered.add(new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
+    }
+
+    private List<String> populateRatioNames() {
+        List<String> default10Ratios = new ArrayList<>();
+        for (int i = 0; i < DEFAULT_RATIOS_LIST_FOR_11_SPECIES.length; i++) {
+            default10Ratios.add(DEFAULT_RATIOS_LIST_FOR_11_SPECIES[i]);
+        }
+        return default10Ratios;
     }
 }

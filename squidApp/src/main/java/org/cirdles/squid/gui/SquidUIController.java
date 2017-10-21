@@ -39,7 +39,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.Squid;
-import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_11_SPECIES;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -758,7 +758,15 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void default10SpeciesRatioSetAction(ActionEvent event) {
-        squidProject.getTask().updateRatioNames(DEFAULT_RATIOS_LIST_FOR_10_SPECIES);
+    }
+    
+    @FXML
+    private void default11SpeciesRatioSetAction(ActionEvent event) {
+        List<String> default11Ratios = new ArrayList<>();
+        for(int i = 0; i < DEFAULT_RATIOS_LIST_FOR_11_SPECIES.length; i++){
+            default11Ratios.add(DEFAULT_RATIOS_LIST_FOR_11_SPECIES[i]);
+        }
+        squidProject.getTask().updateRatioNames(default11Ratios);
         launchRatiosManager();
     }
 
