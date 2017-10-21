@@ -68,10 +68,10 @@ public class Squid3ExampleTask1 extends Task {
     }
 
     private List<String> populateRatioNames() {
-        List<String> default10Ratios = new ArrayList<>();
-        for (int i = 0; i < DEFAULT_RATIOS_LIST_FOR_11_SPECIES.length; i++) {
-            default10Ratios.add(DEFAULT_RATIOS_LIST_FOR_11_SPECIES[i]);
+        List<String> default11Ratios = new ArrayList<>();
+        for (String DEFAULT_RATIOS_LIST_FOR_11_SPECIES1 : DEFAULT_RATIOS_LIST_FOR_11_SPECIES) {
+            default11Ratios.add(DEFAULT_RATIOS_LIST_FOR_11_SPECIES1);
         }
-        return default10Ratios;
+        return default11Ratios;
     }
 }

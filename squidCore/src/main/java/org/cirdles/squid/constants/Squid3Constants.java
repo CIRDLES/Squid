@@ -97,6 +97,10 @@ public final class Squid3Constants {
     public static final String URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL
             = "Schema/SquidTask_ExpressionXMLSchema.xsd";
 
+    /**
+     * Acts as default set of ratios when loading a default ratio set.
+     * Must be converted to List.
+     */
     public static final String[] DEFAULT_RATIOS_LIST_FOR_11_SPECIES = new String[]{
         "204/206", "207/206", "208/206", "238/196", "206/238", "254/238",
         "248/254", "206/270", "270/254", "206/254", "238/206"};

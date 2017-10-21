@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -763,8 +764,8 @@ public class SquidUIController implements Initializable {
     @FXML
     private void default11SpeciesRatioSetAction(ActionEvent event) {
         List<String> default11Ratios = new ArrayList<>();
-        for(int i = 0; i < DEFAULT_RATIOS_LIST_FOR_11_SPECIES.length; i++){
-            default11Ratios.add(DEFAULT_RATIOS_LIST_FOR_11_SPECIES[i]);
+        for (String DEFAULT_RATIOS_LIST_FOR_11_SPECIES1 : DEFAULT_RATIOS_LIST_FOR_11_SPECIES) {
+            default11Ratios.add(DEFAULT_RATIOS_LIST_FOR_11_SPECIES1);
         }
         squidProject.getTask().updateRatioNames(default11Ratios);
         launchRatiosManager();
