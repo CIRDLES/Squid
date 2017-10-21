@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.constants;
 
+
 /**
  *
  * @author bowring
