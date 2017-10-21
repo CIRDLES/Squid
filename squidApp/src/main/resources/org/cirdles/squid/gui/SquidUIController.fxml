@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -63,8 +63,8 @@
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
                         <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
-                        <MenuItem mnemonicParsing="false" onAction="#default10SpeciesRatioSetAction" text="10 Species" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="11 Species" />
+                        <MenuItem disable="true" mnemonicParsing="false" onAction="#default10SpeciesRatioSetAction" text="10 Species" />
+                        <MenuItem mnemonicParsing="false" onAction="#default11SpeciesRatioSetAction" text="11 Species" />
                     </items>
                   </Menu>
               </items>
