@@ -117,7 +117,8 @@ public abstract class Function
         FUNCTIONS_MAP.put("max", "max");
 
         FUNCTIONS_MAP.put("abs", "abs");
-        FUNCTIONS_MAP.put("xxx", "abs");
+        
+        FUNCTIONS_MAP.put("average", "average");
     }
 
     public Function() {
@@ -249,8 +250,8 @@ public abstract class Function
      *
      * @return
      */
-    public static OperationOrFunctionInterface xxx() {
-        return new Abs();
+    public static OperationOrFunctionInterface average() {
+        return new Average();
     }
 
     /**

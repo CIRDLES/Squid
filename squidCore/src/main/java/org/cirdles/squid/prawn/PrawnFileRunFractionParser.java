@@ -28,7 +28,6 @@ import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
 import org.cirdles.squid.algorithms.PoissonLimitsCountLessThanEqual100;
 import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
-import static org.cirdles.squid.constants.Squid3Constants.HARD_WIRED_INDEX_OF_BACKGROUND;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.ludwig.squid25.Utilities;
@@ -87,9 +86,9 @@ public class PrawnFileRunFractionParser {
      * @param referenceMaterialLetter
      * @return the org.cirdles.squid.shrimp.ShrimpFraction
      */
-    public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, String referenceMaterialLetter) {
+    public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, int indexOfBackgroundSpecies, String referenceMaterialLetter) {
         SquidSessionModel squidSessionSpecs = new SquidSessionModel(
-                null, null, useSBM, userLinFits, referenceMaterialLetter);
+                null, null, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter);
 
         return processRunFraction(runFraction, squidSessionSpecs);
     }
@@ -98,13 +97,14 @@ public class PrawnFileRunFractionParser {
 
         boolean useSBM = squidSessionSpecs.isUseSBM();
         boolean userLinFits = squidSessionSpecs.isUserLinFits();
+        int indexOfBackgroundSpecies = squidSessionSpecs.getIndexOfBackgroundSpecies();
         String referenceMaterialNameFilter = squidSessionSpecs.getReferenceMaterialNameFilter();
 
         ShrimpFraction shrimpFraction = null;
         prepareRunFractionMetaData(runFraction, squidSessionSpecs);
         if (nScans > 1) {
             parseRunFractionData();
-            calculateTotalPerSpeciesCPS();
+            calculateTotalPerSpeciesCPS(indexOfBackgroundSpecies);
             calculateIsotopicRatios(useSBM, userLinFits);
             calculateInterpolatedPeakHeights();
 
@@ -301,7 +301,7 @@ public class PrawnFileRunFractionParser {
         }
     }
 
-    private void calculateTotalPerSpeciesCPS() {
+    private void calculateTotalPerSpeciesCPS(int indexOfBackgroundSpecies) {
         // Calculate Total CPS per Species = Step 2 of Development for SHRIMP
         // (see wiki: https://github.com/CIRDLES/ET_Redux/wiki/Development-for-SHRIMP:-Step-2)
 
@@ -316,7 +316,7 @@ public class PrawnFileRunFractionParser {
                 // calculate corrected (by sbmZeroCps) SBMCps
                 sbmCps[scanNum][speciesMeasurementIndex] = (totalCountsSBM[scanNum][speciesMeasurementIndex] / countTimeSec[speciesMeasurementIndex]) - sbmZeroCps;
 
-                if (speciesMeasurementIndex == HARD_WIRED_INDEX_OF_BACKGROUND) {
+                if (speciesMeasurementIndex == indexOfBackgroundSpecies) {
                     backgroundCpsArray[scanNum] = pkCps[scanNum][speciesMeasurementIndex];
                     sumBackgroundCps += pkCps[scanNum][speciesMeasurementIndex];
                 }
@@ -325,7 +325,7 @@ public class PrawnFileRunFractionParser {
 
         // determine backgroundCps if background species exists
         double backgroundCps = 0.0;
-        if (HARD_WIRED_INDEX_OF_BACKGROUND >= 0) {
+        if (indexOfBackgroundSpecies >= 0) {
             backgroundCps = sumBackgroundCps / nScans;
 
             if (backgroundCps >= 10.0) {
@@ -338,7 +338,7 @@ public class PrawnFileRunFractionParser {
         double[] sumOfCorrectedPeaks = new double[nSpecies];
         for (int scanNum = 0; scanNum < nScans; scanNum++) {
             for (int speciesMeasurementIndex = 0; speciesMeasurementIndex < nSpecies; speciesMeasurementIndex++) {
-                if (speciesMeasurementIndex != HARD_WIRED_INDEX_OF_BACKGROUND) {
+                if (speciesMeasurementIndex != indexOfBackgroundSpecies) {
                     // correct PeakCps to NetPkCps
                     pkNetCps[scanNum][speciesMeasurementIndex] = pkCps[scanNum][speciesMeasurementIndex] - backgroundCps;
                     sumOfCorrectedPeaks[speciesMeasurementIndex] += pkNetCps[scanNum][speciesMeasurementIndex];
@@ -347,7 +347,7 @@ public class PrawnFileRunFractionParser {
                     if (absNetPeakCps > 1.0e-6) {
                         double calcVariance
                                 = totalCounts[scanNum][speciesMeasurementIndex]//
-                                + (Math.abs(backgroundCps) * Math.pow(countTimeSec[speciesMeasurementIndex] / countTimeSec[HARD_WIRED_INDEX_OF_BACKGROUND], 2));
+                                + (Math.abs(backgroundCps) * Math.pow(countTimeSec[speciesMeasurementIndex] / countTimeSec[indexOfBackgroundSpecies], 2));
                         pkFerr[scanNum][speciesMeasurementIndex]
                                 = Math.sqrt(calcVariance) / absNetPeakCps / countTimeSec[speciesMeasurementIndex];
                     } else {

@@ -20,8 +20,8 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -118,7 +118,7 @@ public class TaskXMLConverter implements Converter {
         task.setName(reader.getValue());
         reader.moveUp();
 
-        List<ExpressionTree> taskExpressions = new ArrayList<>();
+        SortedSet<ExpressionTree> taskExpressions = new TreeSet<>();
         reader.moveDown();
         while (reader.hasMoreChildren()) {
             reader.moveDown();

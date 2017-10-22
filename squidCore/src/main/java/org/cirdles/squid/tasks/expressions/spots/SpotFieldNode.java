@@ -70,6 +70,11 @@ public class SpotFieldNode extends ExpressionTree {
         return false;
     }
 
+    @Override
+    public boolean usesOtherExpression() {
+        return false;
+    }
+
     /**
      *
      * @param xstream
