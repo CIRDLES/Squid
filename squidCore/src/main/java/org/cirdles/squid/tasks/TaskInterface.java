@@ -19,6 +19,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
@@ -38,7 +39,7 @@ public interface TaskInterface {
 
     public ExpressionTreeInterface findNamedExpression(String ratioName);
 
-    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText);
+    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU);
 
     public void buildSquidSpeciesModelList();
 
@@ -90,6 +91,11 @@ public interface TaskInterface {
     public List<String> getRatioNames();
 
     /**
+     * @return the nominalMasses
+     */
+    public List<String> getNominalMasses();
+
+    /**
      * @param prawnFile the prawnFile to set
      */
     public void setPrawnFile(PrawnFile prawnFile);
@@ -119,7 +125,7 @@ public interface TaskInterface {
     /**
      * @return the taskExpressionsOrdered
      */
-    List<ExpressionTree> getTaskExpressionTreesOrdered();
+    SortedSet<ExpressionTree> getTaskExpressionTreesOrdered();
 
     /**
      * @return the type
@@ -166,6 +172,11 @@ public interface TaskInterface {
     public void setProvenance(String provenance);
 
     /**
+     * @param nominalMasses the nominalMasses to set
+     */
+    public void setNominalMasses(List<String> nominalMasses);
+
+    /**
      * @param ratioNames the ratioNames to set
      */
     public void setRatioNames(List<String> ratioNames);
@@ -179,7 +190,7 @@ public interface TaskInterface {
     /**
      * @param taskExpressionsOrdered the taskExpressionsOrdered to set
      */
-    public void setTaskExpressionTreesOrdered(List<ExpressionTree> taskExpressionsOrdered);
+    public void setTaskExpressionTreesOrdered(SortedSet<ExpressionTree> taskExpressionsOrdered);
 
     public void removeExpression(Expression expression);
 
@@ -209,7 +220,7 @@ public interface TaskInterface {
     /**
      * @return the taskExpressionsOrdered
      */
-    public List<Expression> getTaskExpressionsOrdered();
+    public SortedSet<Expression> getTaskExpressionsOrdered();
 
     /**
      * @param changed the changed to set
@@ -258,6 +269,16 @@ public interface TaskInterface {
      */
     public void setUserLinFits(boolean userLinFits);
 
+    /**
+     * @return the indexOfBackgroundSpecies
+     */
+    public int getIndexOfBackgroundSpecies();
+
+    /**
+     * @param indexOfBackgroundSpecies the indexOfBackgroundSpecies to set
+     */
+    public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies);
+
     public void updateAllExpressions(int repeats);
 
     /**
@@ -271,6 +292,6 @@ public interface TaskInterface {
     public void produceSanityReportsToFiles();
 
     public void updateRatioNames(List<String> ratioNames);
-    
+
     public void updateAffectedExpressions(int repeats, Expression sourceExpression);
 }

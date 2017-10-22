@@ -16,7 +16,6 @@
 package org.cirdles.squid.constants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public final class Squid3Constants {
     /**
      *
      */
-    public static final int HARD_WIRED_INDEX_OF_BACKGROUND = 2;
+    public static final int HARD_WIRED_INDEX_OF_BACKGROUND = 9;
 
     /**
      *

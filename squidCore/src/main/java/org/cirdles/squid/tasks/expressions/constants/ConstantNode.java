@@ -98,6 +98,12 @@ public class ConstantNode extends ExpressionTree {
         return false;
     }
 
+    @Override
+    public boolean usesOtherExpression() {
+        return false;
+    }
+
+    
     /**
      *
      * @param xstream

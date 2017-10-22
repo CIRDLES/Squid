@@ -33,13 +33,18 @@ public class SquidSessionModel implements Serializable {
     private List<SquidRatiosModel> squidRatiosModelList;
     private boolean useSBM;
     private boolean userLinFits;
+    private int indexOfBackgroundSpecies;
     private String referenceMaterialNameFilter;
 
-    public SquidSessionModel(List<SquidSpeciesModel> squidSpeciesSpecsList, List<SquidRatiosModel> squidRatiosSpecsList, boolean useSBM, boolean userLinFits, String referenceMaterialNameFilter) {
+    public SquidSessionModel(List<SquidSpeciesModel> squidSpeciesSpecsList, 
+            List<SquidRatiosModel> squidRatiosSpecsList, 
+            boolean useSBM, boolean userLinFits,int indexOfBackgroundSpecies, 
+            String referenceMaterialNameFilter) {
         this.squidSpeciesModelList = squidSpeciesSpecsList == null ? new ArrayList<>() : squidSpeciesSpecsList;
         this.squidRatiosModelList = squidRatiosSpecsList == null ? new ArrayList<>() : squidRatiosSpecsList;
         this.useSBM = useSBM;
         this.userLinFits = userLinFits;
+        this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
         this.referenceMaterialNameFilter = referenceMaterialNameFilter;
     }
 
@@ -117,6 +122,20 @@ public class SquidSessionModel implements Serializable {
      */
     public void setUserLinFits(boolean userLinFits) {
         this.userLinFits = userLinFits;
+    }
+
+    /**
+     * @return the indexOfBackgroundSpecies
+     */
+    public int getIndexOfBackgroundSpecies() {
+        return indexOfBackgroundSpecies;
+    }
+
+    /**
+     * @param indexOfBackgroundSpecies the indexOfBackgroundSpecies to set
+     */
+    public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies) {
+        this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
     }
 
     /**

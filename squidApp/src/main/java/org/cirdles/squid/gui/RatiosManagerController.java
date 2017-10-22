@@ -104,6 +104,7 @@ public class RatiosManagerController implements Initializable {
 
             if (squidSpeciesList.get(i).getIsBackground()) {
                 indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
+                squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
             }
 
             ratiosGridPane.getRowConstraints().add(con);

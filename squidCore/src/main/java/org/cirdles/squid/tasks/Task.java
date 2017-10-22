@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -86,8 +87,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected long dateRevised;
     protected boolean useSBM;
     protected boolean userLinFits;
-    private String filterForRefMatSpotNames;
+    protected int indexOfBackgroundSpecies;
+    protected String filterForRefMatSpotNames;
 
+    protected List<String> nominalMasses;
     protected List<String> ratioNames;
     // cannot be serialized because of JavaFX private final SimpleStringProperty fields
     protected transient Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
@@ -99,9 +102,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      */
-    protected List<ExpressionTree> taskExpressionTreesOrdered;
-    protected List<Expression> taskExpressionsOrdered;
-    protected List<Expression> taskExpressionsRemoved;
+    protected SortedSet<ExpressionTree> taskExpressionTreesOrdered;
+    protected SortedSet<Expression> taskExpressionsOrdered;
+    protected SortedSet<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
 
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
@@ -148,16 +151,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.filterForRefMatSpotNames = "";
         this.useSBM = true;
         this.userLinFits = false;
+        this.indexOfBackgroundSpecies = -1;
 
+        this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
         this.squidSessionModel = null;
         squidSpeciesModelList = new ArrayList<>();
         squidRatiosModelList = new ArrayList<>();
         tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
 
-        this.taskExpressionTreesOrdered = new ArrayList<>();
-        this.taskExpressionsOrdered = new ArrayList<>();
-        this.taskExpressionsRemoved = new ArrayList<>();
+        this.taskExpressionTreesOrdered = new TreeSet<>();
+        this.taskExpressionsOrdered = new TreeSet<>();
+        this.taskExpressionsRemoved = new TreeSet<>();
         this.namedExpressionsMap = new LinkedHashMap<>();
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
 
@@ -176,8 +181,35 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         StringBuilder summary = new StringBuilder();
 
         summary.append(" ")
+                .append("Prawn File provides ")
                 .append(String.valueOf(squidSpeciesModelList.size()))
-                .append(" Species.");
+                .append(" Species:");
+
+        summary.append("\n      ");
+        for (int i = 0; i < squidSpeciesModelList.size(); i++) {
+            summary.append(squidSpeciesModelList.get(i).getPrawnFileIsotopeName());
+            summary.append((i == (squidSpeciesModelList.size() - 1) ? "" : ", "));
+        }
+
+        summary.append("\n ")
+                .append("Task File names ")
+                .append(String.valueOf(nominalMasses.size()))
+                .append(" Masses:");
+
+        summary.append("\n      ");
+        for (int i = 0; i < nominalMasses.size(); i++) {
+            summary.append(nominalMasses.get(i));
+            summary.append((i == (nominalMasses.size() - 1) ? "" : ", "));
+        }
+//
+//        summary.append("\n ")
+//                .append("Squid3 adopts these isotope names: ");
+//
+//        summary.append("\n  ");
+//        for (int i = 0; i < squidSpeciesModelList.size(); i++) {
+//            summary.append(squidSpeciesModelList.get(i).getIsotopeName());
+//            summary.append((i == (squidSpeciesModelList.size() - 1) ? "" : ", "));
+//        }
 
         summary.append("\n\n Task Ratios: ");
         summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");
@@ -209,8 +241,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText) {
+    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU) {
         Expression exp = new Expression(name, originalExpressionText);
+        exp.setSquidSwitchNU(eqnSwitchNU);
         exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
         return exp;
@@ -220,11 +253,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setupSquidSessionSpecsAndReduceAndReport() {
 
         if (changed) {
-            // populate taskExpressionsTreesOrdered
-            taskExpressionTreesOrdered.clear();
-            for (Expression exp : taskExpressionsOrdered) {
-                taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
-            }
+            reorderExpressions();
+
             buildSquidSpeciesModelList();
 
             populateTableOfSelectedRatiosFromRatiosList();
@@ -232,7 +262,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             buildSquidRatiosModelListFromMassStationDetails();
 
             squidSessionModel = new SquidSessionModel(
-                    squidSpeciesModelList, squidRatiosModelList, true, false, filterForRefMatSpotNames);
+                    squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames);
 
             try {
                 shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
@@ -260,7 +290,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);
-        processAndSortExpressions();
+//        processAndSortExpressions();
     }
 
     private void produceSummaryReportsForGUI() {
@@ -281,24 +311,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
-    private void processAndSortExpressions() {
-        // populate taskExpressionsTreesOrdered
+    private void reorderExpressions() {
+        Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+        taskExpressionsOrdered.clear();
         taskExpressionTreesOrdered.clear();
-        for (Expression exp : taskExpressionsOrdered) {
-            taskExpressionTreesOrdered.add((ExpressionTree) exp.getExpressionTree());
+        for (Expression listedExp : expArray) {
+            taskExpressionsOrdered.add(listedExp);
+            taskExpressionTreesOrdered.add((ExpressionTree) listedExp.getExpressionTree());
         }
 
-        // now use existing ratios as basis for building and checking expressions in ascending execution order
+    }
+
+    public void processAndSortExpressions() {
+
+        reorderExpressions();
+
         assembleNamedExpressionsMap();
 
         buildExpressions();
 
-        // put expressions in execution order
-        try {
-            Collections.sort(taskExpressionTreesOrdered);
-            Collections.sort(taskExpressionsOrdered);
-        } catch (Exception e) {
-        }
+        evaluateTaskExpressions();
+
     }
 
     @Override
@@ -322,7 +355,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     /**
      * Updates expressions by parsing to detect new health or new sickness with
-     * two passes to capture side effects
+     * 'repeats' passes to capture side effects
      *
      */
     public void updateAllExpressions(int repeats) {
@@ -333,8 +366,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
             processAndSortExpressions();
         }
+
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
+
+        processAndSortExpressions();
     }
 
     private void updateSingleExpression(Expression listedExp) {
@@ -350,8 +386,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
         }
 
-        processAndSortExpressions();
-        processAndSortExpressions();
+//        processAndSortExpressions();
+//        processAndSortExpressions();
     }
 
     @Override
@@ -410,6 +446,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     // only these two fields change
                     massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
                     massStationDetail.setIsBackground(ssm.getIsBackground());
+                    if (ssm.getIsBackground()) {
+                        indexOfBackgroundSpecies = massStationDetail.getMassStationIndex();
+                    }
                 }
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
@@ -727,6 +766,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             listOfMassStationDetails.add(entry.getValue());
             if (entry.getValue().getIsBackground()) {
                 entry.getValue().setIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
+                indexOfBackgroundSpecies = entry.getKey();
             }
         }
         return listOfMassStationDetails;
@@ -765,7 +805,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);
-        processAndSortExpressions();
+//        processAndSortExpressions();
     }
 
     /**
@@ -905,10 +945,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
+     * @return the indexOfBackgroundSpecies
+     */
+    public int getIndexOfBackgroundSpecies() {
+        return indexOfBackgroundSpecies;
+    }
+
+    /**
+     * @param indexOfBackgroundSpecies the indexOfBackgroundSpecies to set
+     */
+    public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies) {
+        this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
+    }
+
+    /**
      * @return the taskExpressionTreesOrdered
      */
     @Override
-    public List<ExpressionTree> getTaskExpressionTreesOrdered() {
+    public SortedSet<ExpressionTree> getTaskExpressionTreesOrdered() {
         return taskExpressionTreesOrdered;
     }
 
@@ -916,7 +970,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
      */
     @Override
-    public void setTaskExpressionTreesOrdered(List<ExpressionTree> taskExpressionTreesOrdered) {
+    public void setTaskExpressionTreesOrdered(SortedSet<ExpressionTree> taskExpressionTreesOrdered) {
         this.taskExpressionTreesOrdered = taskExpressionTreesOrdered;
     }
 
@@ -951,6 +1005,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setProvenance(String provenance) {
         this.provenance = provenance;
+    }
+
+    /**
+     * @return the nominalMasses
+     */
+    public List<String> getNominalMasses() {
+        return nominalMasses;
+    }
+
+    /**
+     * @param nominalMasses the nominalMasses to set
+     */
+    public void setNominalMasses(List<String> nominalMasses) {
+        this.nominalMasses = nominalMasses;
     }
 
     /**
@@ -1032,7 +1100,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the taskExpressionsOrdered
      */
     @Override
-    public List<Expression> getTaskExpressionsOrdered() {
+    public SortedSet<Expression> getTaskExpressionsOrdered() {
         return taskExpressionsOrdered;
     }
 
@@ -1071,6 +1139,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param reportsEngine the reportsEngine to set
      */
+    @Override
     public void setReportsEngine(CalamariReportsEngine reportsEngine) {
         this.reportsEngine = reportsEngine;
     }
