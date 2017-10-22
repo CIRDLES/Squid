@@ -44,6 +44,7 @@ public class TaskSquid25 implements Serializable {
     private String taskDescription;
     private String labName;
     private String authorName;
+    private List<String> nominalMasses;
     private List<String> ratioNames;
     private List<TaskSquid25Equation> task25Equations;
 
@@ -76,6 +77,13 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.authorName = "";
                 taskSquid25.labName = lines[firstRow + 7].split("\t")[1];
 
+                String[] nominalMasses = lines[firstRow + 13].split("\t");
+                int countOfMasses = Integer.valueOf(nominalMasses[1]);
+                taskSquid25.nominalMasses = new ArrayList<>();
+                for (int i = 0; i < countOfMasses; i++) {
+                    taskSquid25.nominalMasses.add(nominalMasses[i + 2]);
+                }
+
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
                 int countOfRatios = Integer.valueOf(ratioStrings[1]);
                 taskSquid25.ratioNames = new ArrayList<>();
@@ -92,7 +100,8 @@ public class TaskSquid25 implements Serializable {
                             prepareSquid25ExcelEquationNameForSquid3(primaryUThPbEqn[0]),
                             true,
                             true,
-                            false));
+                            false,
+                            true));
                 }
 
                 String[] secondaryUThPbEqn = lines[firstRow + 23].split("\t");
@@ -102,7 +111,8 @@ public class TaskSquid25 implements Serializable {
                             prepareSquid25ExcelEquationNameForSquid3(secondaryUThPbEqn[0]),
                             true,
                             true,
-                            false));
+                            false,
+                            true));
                 }
 
                 String[] ThUEqn = lines[firstRow + 24].split("\t");
@@ -112,7 +122,8 @@ public class TaskSquid25 implements Serializable {
                             prepareSquid25ExcelEquationNameForSquid3(ThUEqn[0]),
                             true,
                             true,
-                            false));
+                            false,
+                            true));
                 }
 
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
@@ -122,7 +133,8 @@ public class TaskSquid25 implements Serializable {
                             prepareSquid25ExcelEquationNameForSquid3(ppmParentEqn[0]),
                             true,
                             true,
-                            false));
+                            false,
+                            true));
                 }
 
                 String[] equations = lines[firstRow + 26].split("\t");
@@ -135,6 +147,8 @@ public class TaskSquid25 implements Serializable {
                 String[] switchSA = lines[firstRow + 29].split("\t");
 
                 String[] switchSC = lines[firstRow + 30].split("\t");
+
+                String[] switchNU = lines[firstRow + 32].split("\t");
 
                 for (int i = 0; i < countOfEquations; i++) {
                     // handle backwards logic of Squid25 where both ST, SA false, means both True
@@ -151,7 +165,8 @@ public class TaskSquid25 implements Serializable {
                                 prepareSquid25ExcelEquationNameForSquid3(equationNames[i + 2]),
                                 switchRM,
                                 switchUN,
-                                Boolean.parseBoolean(switchSC[i + 2])));
+                                Boolean.parseBoolean(switchSC[i + 2]),
+                                Boolean.parseBoolean(switchNU[i + 2])));
                     }
                 }
 
@@ -284,6 +299,13 @@ public class TaskSquid25 implements Serializable {
      */
     public String getTaskDescription() {
         return taskDescription;
+    }
+
+    /**
+     * @return the nominalMasses
+     */
+    public List<String> getNominalMasses() {
+        return nominalMasses;
     }
 
     /**

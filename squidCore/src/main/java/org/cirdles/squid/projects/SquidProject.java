@@ -87,6 +87,7 @@ public final class SquidProject implements Serializable {
         this.task.setReportsEngine(prawnFileHandler.getReportsEngine());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
         // first pass
+        this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
         this.task.updateAllExpressions(2);
         this.task.setChanged(true);
@@ -122,16 +123,18 @@ public final class SquidProject implements Serializable {
         this.task.setProvenance(taskSquid25.getSquidTaskFileName());
         this.task.setAuthorName(taskSquid25.getAuthorName());
         this.task.setLabName(taskSquid25.getLabName());
+        this.task.setNominalMasses(taskSquid25.getNominalMasses());
         this.task.setRatioNames(taskSquid25.getRatioNames());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
 
         // first pass
+        this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
             Expression expression = this.task.generateExpressionFromRawExcelStyleText(
-                    task25Eqn.getEquationName(), task25Eqn.getExcelEquationString());
+                    task25Eqn.getEquationName(), task25Eqn.getExcelEquationString(), task25Eqn.isEqnSwitchNU());
 
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
             System.out.println(">>>>>   " + expressionTree.getName());

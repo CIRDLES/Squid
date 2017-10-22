@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.SortedSet;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -188,7 +189,8 @@ public class ExpressionManagerController implements Initializable {
     private Expression parseAndAuditCurrentExcelExpression() {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText().length() == 0 ? "Anonymous" : expressionNameTextField.getText(),
-                expressionExcelTextArea.getText().trim().replace("\n", ""));
+                expressionExcelTextArea.getText().trim().replace("\n", ""),
+                currentExpression.isSquidSwitchNU());
 
         ExpressionTreeInterface expTree = exp.getExpressionTree();
         // to detect ratios of interest
@@ -344,7 +346,7 @@ public class ExpressionManagerController implements Initializable {
     }
 
     private void populateExpressionsListView() {
-        List<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
+        SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
         ObservableList<Expression> items
                 = FXCollections.observableArrayList(namedExpressions);
         expressionsListView.setItems(items);
@@ -403,7 +405,7 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private void saveButtonAction(ActionEvent event) {
         if (currentExpression != null) {
-            Expression exp = parseAndAuditCurrentExcelExpression();
+            Expression exp = parseAndAuditCurrentExcelExpression();           
 
             ExpressionTreeInterface expTree = exp.getExpressionTree();
 

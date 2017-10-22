@@ -30,7 +30,8 @@ repositories {
 }
 
 dependencies {
-    compile "com.github.cirdles:Commons:-SNAPSHOT"
+    compile 'com.github.cirdles:Commons:bc38781605'
+    //compile "com.github.cirdles:Commons:-SNAPSHOT"
     compile "org.apache.commons:commons-math3:3.6.1"   
     compile "com.google.guava:guava:20.0"    
     compile "com.github.cirdles:LudwigLibrary:-SNAPSHOT"

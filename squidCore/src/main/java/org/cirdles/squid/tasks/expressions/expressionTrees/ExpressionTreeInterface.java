@@ -92,6 +92,8 @@ public interface ExpressionTreeInterface {
     public boolean isValid();
 
     public boolean usesAnotherExpression(ExpressionTreeInterface exp);
+    
+    public boolean usesOtherExpression();
 
     /**
      * @return the squidSwitchSTReferenceMaterialCalculation

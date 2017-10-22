@@ -65,6 +65,11 @@ public class VariableNodeForSummary extends ExpressionTree {
         return false;
     }
 
+    @Override
+    public boolean usesOtherExpression() {
+        return true;
+    }
+
     /**
      *
      * @param xstream

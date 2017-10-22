@@ -221,6 +221,18 @@ public class ExpressionTree
     }
 
     @Override
+    public boolean usesOtherExpression() {
+        boolean retVal = false;
+        for (ExpressionTreeInterface exp : childrenET) {
+            retVal = retVal || exp.usesOtherExpression() || (exp instanceof VariableNodeForPerSpotTaskExpressions);
+            if (retVal) {
+                break;
+            }
+        }
+        return retVal;
+    }
+
+    @Override
     /**
      * This arranges expressions in ascending order of evaluation. Checking for
      * circular references is done elsewhere.
@@ -228,10 +240,10 @@ public class ExpressionTree
     public int compareTo(ExpressionTree exp) {
         int retVal = 0;
         if (this != exp) {
-            if (!amHealthy()) {
+            if (!amHealthy() && exp.amHealthy()) {
                 // this object comes after exp
                 retVal = 1;
-            } else if (!exp.amHealthy()) {
+            } else if (amHealthy() && !exp.amHealthy()) {
                 // this object comes before exp
                 retVal = -1;
             }
@@ -240,6 +252,15 @@ public class ExpressionTree
                     // this object comes after exp
                     retVal = 1;
                 } else if (exp.usesAnotherExpression(this)) {
+                    // this object comes before exp
+                    retVal = -1;
+                }
+            }
+            if (retVal == 0) {
+                if (usesOtherExpression()) {
+                    // this object comes after exp
+                    retVal = 1;
+                } else if (exp.usesOtherExpression()) {
                     // this object comes before exp
                     retVal = -1;
                 }
@@ -291,7 +312,7 @@ public class ExpressionTree
             }
             if (retVal == 0) {
                 // then compare on names so we have a complete ordering
-                retVal = name.compareTo(exp.getName());
+                retVal = getName().compareTo(exp.getName());
             }
         }
 
@@ -304,13 +325,16 @@ public class ExpressionTree
         if (this == obj) {
             retVal = true;
         } else if (obj instanceof ExpressionTree) {
-            retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
+            retVal = (getName().compareTo(((ExpressionTree) obj).getName()) == 0);
 
             if (!retVal) {
                 retVal = !(usesAnotherExpression((ExpressionTree) obj)
                         && !((ExpressionTree) obj).usesAnotherExpression(this));
                 if (retVal) {
-                    retVal = !amHealthy() && !((ExpressionTree) obj).amHealthy();
+                    retVal = usesOtherExpression() && ((ExpressionTree) obj).usesOtherExpression();
+                }
+                if (retVal) {
+                    retVal = amHealthy() && ((ExpressionTree) obj).amHealthy();
                 }
                 if (retVal) {
                     retVal = (hasRatiosOfInterest() == ((ExpressionTree) obj).hasRatiosOfInterest());
@@ -328,7 +352,7 @@ public class ExpressionTree
                     retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
                 }
                 if (retVal) {
-                    retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
+                    retVal = (getName().compareTo(((ExpressionTree) obj).getName()) == 0);
                 }
             }
         }

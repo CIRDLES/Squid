@@ -526,14 +526,14 @@ public class CalamariReportsEngine implements Serializable {
             if (doWriteReportFiles) {
 //                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
                     dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
-                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                if (expressionResults.length > 1){//((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
                     dataLine.append(", ").append(Utilities.roundedToSize(
                             calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12));
                 }
             } else {
 //                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
                     dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
-                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                if (expressionResults.length > 1){//((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
                         dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
                                 calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
                     }
