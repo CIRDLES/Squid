@@ -94,7 +94,7 @@ public class PrawnFileHandler implements Serializable {
     }
 
     /**
-     * Interface for use with no task
+     * Interface for use with no task Update - hard-codes background index of 2
      *
      * @param prawnFileLocation
      * @param useSBM
@@ -112,7 +112,7 @@ public class PrawnFileHandler implements Serializable {
     }
 
     /**
-     * Interface for use with task
+     * Interface for use with task Update - hard-codes background index of 2
      *
      * @param prawnFileLocation the value of prawnFileLocation
      * @param useSBM the value of useSBM
@@ -124,7 +124,26 @@ public class PrawnFileHandler implements Serializable {
      * @throws org.xml.sax.SAXException
      * @return the java.util.List<org.cirdles.squid.shrimp.ShrimpFraction>
      */
-    public List<ShrimpFractionExpressionInterface> extractShrimpFractionsFromPrawnFile(String prawnFileLocation, boolean useSBM, boolean userLinFits,int indexOfBackgroundSpecies, String referenceMaterialLetter, TaskInterface task)
+    public List<ShrimpFractionExpressionInterface> extractShrimpFractionsFromPrawnFile(String prawnFileLocation, boolean useSBM, boolean userLinFits, String referenceMaterialLetter, TaskInterface task)
+            throws IOException, MalformedURLException, JAXBException, SAXException {
+        return extractShrimpFractionsFromPrawnFile(prawnFileLocation, useSBM, userLinFits, 2, referenceMaterialLetter, task);
+    }
+
+    /**
+     * Interface for use with task
+     *
+     * @param prawnFileLocation the value of prawnFileLocation
+     * @param useSBM the value of useSBM
+     * @param userLinFits the value of userLinFits
+     * @param indexOfBackgroundSpecies
+     * @param referenceMaterialLetter the value of referenceMaterialLetter
+     * @param task
+     * @throws MalformedURLException
+     * @throws JAXBException
+     * @throws org.xml.sax.SAXException
+     * @return the java.util.List<org.cirdles.squid.shrimp.ShrimpFraction>
+     */
+    public List<ShrimpFractionExpressionInterface> extractShrimpFractionsFromPrawnFile(String prawnFileLocation, boolean useSBM, boolean userLinFits, int indexOfBackgroundSpecies, String referenceMaterialLetter, TaskInterface task)
             throws IOException, MalformedURLException, JAXBException, SAXException {
         currentPrawnFileLocation = prawnFileLocation;
 
@@ -426,7 +445,7 @@ public class PrawnFileHandler implements Serializable {
      * @return
      */
     public CalamariReportsEngine getReportsEngine() {
-        if (reportsEngine == null){
+        if (reportsEngine == null) {
             reportsEngine = new CalamariReportsEngine();
         }
         initReportsEngineWithCurrentPrawnFileName();
