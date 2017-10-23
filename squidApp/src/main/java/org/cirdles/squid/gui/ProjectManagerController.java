@@ -59,7 +59,6 @@ public class ProjectManagerController implements Initializable {
     private Label loginCommentLabel;
 
 
-
     /**
      * Initializes the controller class.
      *

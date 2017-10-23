@@ -138,7 +138,6 @@ public class RatiosManagerController implements Initializable {
         public SquidRatioButton(int row, int col, String ratioName, boolean selected) {
             super(selected ? ratioName : "");
 
-            setHeight(25);
             setTooltip(new Tooltip(ratioName));
             setOnAction(new SquidButtonEventHandler(row, col, ratioName, selected));
 

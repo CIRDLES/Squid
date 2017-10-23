@@ -48,6 +48,8 @@ public class MassesAuditController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -62,9 +64,7 @@ public class MassesAuditController implements Initializable {
     }
 
     private void displayMassStationsForReview() {
-        // assume user has got the file healthy - same number of mass stations throughout - check later
-        // let's present the stations from the first run table
-        
+  
         int heightOfMassPlot = 150;
 
         // plotting mass variations

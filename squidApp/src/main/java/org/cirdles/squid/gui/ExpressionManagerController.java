@@ -339,12 +339,6 @@ public class ExpressionManagerController implements Initializable {
         }
     }
 
-    private void vacateExpressionDetails() {
-        expressionNameTextField.setText("");
-        expressionExcelTextArea.setText("");
-        expressionAuditTextArea.setText("Audit:");
-    }
-
     private void populateExpressionsListView() {
         SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
         ObservableList<Expression> items
