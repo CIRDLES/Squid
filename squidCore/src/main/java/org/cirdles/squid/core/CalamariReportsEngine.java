@@ -661,7 +661,7 @@ public class CalamariReportsEngine implements Serializable {
         while (squidRatiosIterator.hasNext()) {
             SquidRatiosModel entry = squidRatiosIterator.next();
             if (entry.isActive()) {
-                String displayNameNoSpaces = entry.getDisplayNameNoSpaces();
+                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20,entry.getDisplayNameNoSpaces().length()));
                 if (doWriteReportFiles) {
                     headerWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".InterpTime");
                     headerWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".Value");
@@ -680,7 +680,7 @@ public class CalamariReportsEngine implements Serializable {
         // prepare headers for any task expressions
         List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFraction.getTaskExpressionsForScansEvaluated();
         for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
-            String expressionName = taskExpressionEval.getExpression().getName();
+            String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20,taskExpressionEval.getExpression().getName().length()));
             if (doWriteReportFiles) {
                 headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Time");
                 headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Value");
@@ -731,7 +731,7 @@ public class CalamariReportsEngine implements Serializable {
         while (squidRatiosIterator.hasNext()) {
             SquidRatiosModel entry = squidRatiosIterator.next();
             if (entry.isActive()) {
-                String displayNameNoSpaces = entry.getDisplayNameNoSpaces();
+                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20,entry.getDisplayNameNoSpaces().length()));
                 if (doWriteReportFiles) {
                     headerMeanRatios_PerSpot.append(", ").append(displayNameNoSpaces).append(".MinIndex");
                     headerMeanRatios_PerSpot.append(", ").append(displayNameNoSpaces).append(".Value");
@@ -751,7 +751,7 @@ public class CalamariReportsEngine implements Serializable {
         // currently, this duplicates these ouputs since they are stroed in the per scan results too
         Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFraction.getTaskExpressionsEvaluationsPerSpot();
         for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
-            String expressionName = entry.getKey().getName();
+            String expressionName = entry.getKey().getName().substring(0, Math.min(20,entry.getKey().getName().length()));
             if (doWriteReportFiles) {
                 headerMeanRatios_PerSpot.append(", ").append(expressionName).append(".Value");
                 if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
