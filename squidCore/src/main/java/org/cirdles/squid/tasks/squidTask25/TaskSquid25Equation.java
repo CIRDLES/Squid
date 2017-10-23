@@ -26,13 +26,17 @@ public class TaskSquid25Equation {
     private final boolean eqnSwitchST;
     private final boolean eqnSwitchSA;
     private final boolean eqnSwitchSC;
+    private final boolean eqnSwitchNU;
 
-    public TaskSquid25Equation(String excelEquationString, String equationName, boolean eqnSwitchST, boolean eqnSwitchSA, boolean eqnSwitchSC) {
+    public TaskSquid25Equation(
+            String excelEquationString, String equationName, 
+            boolean eqnSwitchST, boolean eqnSwitchSA, boolean eqnSwitchSC, boolean eqnSwitchNU) {
         this.excelEquationString = excelEquationString;
         this.equationName = equationName;
         this.eqnSwitchST = eqnSwitchST;
         this.eqnSwitchSA = eqnSwitchSA;
         this.eqnSwitchSC = eqnSwitchSC;
+        this.eqnSwitchNU = eqnSwitchNU;
     }
 
     /**
@@ -61,6 +65,13 @@ public class TaskSquid25Equation {
      */
     public boolean isEqnSwitchSA() {
         return eqnSwitchSA;
+    }
+
+    /**
+     * @return the eqnSwitchNU
+     */
+    public boolean isEqnSwitchNU() {
+        return eqnSwitchNU;
     }
 
     /**

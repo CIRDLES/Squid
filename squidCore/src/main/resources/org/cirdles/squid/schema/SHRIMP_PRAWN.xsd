@@ -25,6 +25,7 @@
 
             Created: 24.October.2015
             Revised: 14.November.2016
+            Revised: 23.October.2017
             
         </xs:documentation>
     </xs:annotation>    
@@ -208,7 +209,15 @@
             quality control.-->           
             <xs:enumeration value="stage_y"/>
             <!-- Description-->           
-            <xs:enumeration value="stage_z"/>
+            <xs:enumeration value="stage_z"/>           
+            <!-- Description-->
+            <xs:enumeration value="stage_center_left_y"/>
+            <!-- Description-->
+            <xs:enumeration value="stage_center_left_z"/>
+            <!-- Description-->
+            <xs:enumeration value="stage_center_right_y"/>
+            <!-- Description-->
+            <xs:enumeration value="stage_center_right_z"/>                      
             <!-- Description-->           
             <xs:enumeration value="stage_map_quad_cal"/>
             <!-- Description-->           

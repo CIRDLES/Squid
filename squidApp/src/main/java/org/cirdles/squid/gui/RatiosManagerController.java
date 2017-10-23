@@ -50,8 +50,8 @@ public class RatiosManagerController implements Initializable {
     @FXML
     private GridPane ratiosGridPane;
 
-    private final int BUTTON_WIDTH = 70;
-    private final int BUTTON_HEIGHT = 30;
+    private final int BUTTON_WIDTH = 50;
+    private final int BUTTON_HEIGHT = 25;
 
     private List<SquidSpeciesModel> squidSpeciesList;
     private int indexOfBackgroundSpecies;
@@ -95,15 +95,16 @@ public class RatiosManagerController implements Initializable {
 
         for (int i = 0; i < squidSpeciesList.size(); i++) {
             Text colText = new Text(squidSpeciesList.get(i).getIsotopeName());
-            colText.setFont(Font.font("Courier New", FontWeight.BOLD, 16));
+            colText.setFont(Font.font("Courier New", FontWeight.BOLD, 12));
             ratiosGridPane.add(colText, 0, i + 1);
             
             Text rowText = new Text(squidSpeciesList.get(i).getIsotopeName());
-            rowText.setFont(Font.font("Courier New", FontWeight.BOLD, 16));
+            rowText.setFont(Font.font("Courier New", FontWeight.BOLD, 12));
             ratiosGridPane.add(rowText, i + 1, 0);
 
             if (squidSpeciesList.get(i).getIsBackground()) {
                 indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
+                squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
             }
 
             ratiosGridPane.getRowConstraints().add(con);
@@ -113,7 +114,8 @@ public class RatiosManagerController implements Initializable {
 
         populateRatioGrid();
 
-        ratiosGridPane.setLayoutX(25);
+        ratiosGridPane.setLayoutX(10);
+        ratiosGridPane.setLayoutY(10);
 
     }
 
@@ -149,7 +151,7 @@ public class RatiosManagerController implements Initializable {
                     + "    -fx-background-color: #00BFFF;\n"
                     + "    -fx-font-family: \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
                     + "    -fx-font-weight: bold;\n"
-                    + "    -fx-font-size: 9pt;\n"
+                    + "    -fx-font-size: 7pt;\n"
                     + "    -fx-text-fill: White;/*  #d8d8d8;*/\n"
             );
         }

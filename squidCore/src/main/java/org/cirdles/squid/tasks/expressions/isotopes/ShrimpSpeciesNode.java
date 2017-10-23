@@ -104,6 +104,11 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
         return false;
     }
+    
+    @Override
+    public boolean usesOtherExpression() {
+        return false;
+    }
 
     /**
      *

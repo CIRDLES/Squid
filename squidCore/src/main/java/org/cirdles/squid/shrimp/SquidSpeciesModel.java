@@ -35,6 +35,7 @@ public class SquidSpeciesModel implements
     private int massStationIndex;
     private String massStationSpeciesName;
     private String isotopeName;
+    private String prawnFileIsotopeName;
     private String elementName;
     private boolean isBackground;
 
@@ -46,6 +47,7 @@ public class SquidSpeciesModel implements
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
+        this.prawnFileIsotopeName = isotopeName;
         this.elementName = elementName;
         this.isBackground = isBackground;
         }
@@ -123,6 +125,13 @@ public class SquidSpeciesModel implements
         if (isotopeName.compareToIgnoreCase(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL) != 0) {
             this.isotopeName = isotopeName;
         }
+    }
+
+    /**
+     * @return the prawnFileIsotopeName
+     */
+    public String getPrawnFileIsotopeName() {
+        return prawnFileIsotopeName;
     }
 
     /**

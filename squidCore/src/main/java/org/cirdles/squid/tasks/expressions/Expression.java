@@ -52,6 +52,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     private String name;
     private String excelExpressionString;
+    private boolean squidSwitchNU;
     private ExpressionTreeInterface expressionTree;
     private transient String parsingStatusReport;
     private transient List<String> argumentAudit;
@@ -70,6 +71,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString) {
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
+        this.squidSwitchNU = false;
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
@@ -80,12 +82,6 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         int retVal = 0;
         if (this != expression) {
             retVal = ((ExpressionTree) expressionTree).compareTo((ExpressionTree) expression.getExpressionTree());
-        }
-        if (retVal == 0) {
-            retVal = name.compareToIgnoreCase(expression.getName());
-        }
-        if (retVal == 0) {
-            retVal = excelExpressionString.compareToIgnoreCase(expression.getExcelExpressionString());
         }
 
         return retVal;
@@ -215,7 +211,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? "  +" : "  -");
             signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? "  +" : "  -");
             signature.append(((ExpressionTree) expressionTree).isSquidSpecialUPbThExpression() ? "  +  " : "  -  ");
-            signature.append(((ExpressionTree) expressionTree).getName());
+            signature.append(name);//((ExpressionTree) expressionTree).getName());
         } else {
             signature.append("  Parsing Error! ").append(name);
         }
@@ -249,6 +245,20 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
      */
     public void setExcelExpressionString(String excelExpressionString) {
         this.excelExpressionString = excelExpressionString;
+    }
+
+    /**
+     * @return the squidSwitchNU
+     */
+    public boolean isSquidSwitchNU() {
+        return squidSwitchNU;
+    }
+
+    /**
+     * @param squidSwitchNU the squidSwitchNU to set
+     */
+    public void setSquidSwitchNU(boolean squidSwitchNU) {
+        this.squidSwitchNU = squidSwitchNU;
     }
 
     /**

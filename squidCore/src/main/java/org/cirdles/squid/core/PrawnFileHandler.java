@@ -108,7 +108,7 @@ public class PrawnFileHandler implements Serializable {
      */
     public List<ShrimpFractionExpressionInterface> extractShrimpFractionsFromPrawnFile(String prawnFileLocation, boolean useSBM, boolean userLinFits, String referenceMaterialLetter)
             throws IOException, MalformedURLException, JAXBException, SAXException {
-        return extractShrimpFractionsFromPrawnFile(prawnFileLocation, useSBM, userLinFits, referenceMaterialLetter, null);
+        return extractShrimpFractionsFromPrawnFile(prawnFileLocation, useSBM, userLinFits, 2, referenceMaterialLetter, null);
     }
 
     /**
@@ -124,7 +124,7 @@ public class PrawnFileHandler implements Serializable {
      * @throws org.xml.sax.SAXException
      * @return the java.util.List<org.cirdles.squid.shrimp.ShrimpFraction>
      */
-    public List<ShrimpFractionExpressionInterface> extractShrimpFractionsFromPrawnFile(String prawnFileLocation, boolean useSBM, boolean userLinFits, String referenceMaterialLetter, TaskInterface task)
+    public List<ShrimpFractionExpressionInterface> extractShrimpFractionsFromPrawnFile(String prawnFileLocation, boolean useSBM, boolean userLinFits,int indexOfBackgroundSpecies, String referenceMaterialLetter, TaskInterface task)
             throws IOException, MalformedURLException, JAXBException, SAXException {
         currentPrawnFileLocation = prawnFileLocation;
 
@@ -142,7 +142,7 @@ public class PrawnFileHandler implements Serializable {
             PrawnFile.Run runFraction = prawnFile.getRun().get(f);
 //            if ((runFraction.getPar().get(0).getValue().compareToIgnoreCase("T.1.1.1") == 0)) {
             ShrimpFraction shrimpFraction
-                    = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, useSBM, userLinFits, referenceMaterialLetter);
+                    = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter);
             if (shrimpFraction != null) {
                 shrimpFraction.setSpotNumber(f + 1);
                 shrimpFraction.setNameOfMount(nameOfMount);
@@ -191,7 +191,7 @@ public class PrawnFileHandler implements Serializable {
      */
     public void writeReportsFromPrawnFile(String prawnFileLocation, boolean useSBM, boolean userLinFits, String referenceMaterialLetter, TaskInterface task)
             throws IOException, MalformedURLException, JAXBException, SAXException {
-        List<ShrimpFractionExpressionInterface> shrimpFractions = extractShrimpFractionsFromPrawnFile(prawnFileLocation, useSBM, userLinFits, referenceMaterialLetter, task);
+        List<ShrimpFractionExpressionInterface> shrimpFractions = extractShrimpFractionsFromPrawnFile(prawnFileLocation, useSBM, userLinFits, 2, referenceMaterialLetter, task);
         reportsEngine.produceReports(shrimpFractions, true, false);
     }
 
