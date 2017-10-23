@@ -116,7 +116,7 @@ public class SquidPrefixTree {
     }
 
     private boolean containsDupString(String word) {
-        return word.contains("-DUP-");
+        return word.contains(DUPLICATE_STRING);
     }
 
     /**
