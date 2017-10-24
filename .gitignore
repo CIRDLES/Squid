@@ -31,7 +31,6 @@ private/
 *.iml
 
 # Generated
-Schema/
 *.txt
 *.html
 *.xml
