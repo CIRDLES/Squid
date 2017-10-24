@@ -93,6 +93,7 @@ public class SpotFieldNode extends ExpressionTree {
      * @param shrimpFractions
      * @param task
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {

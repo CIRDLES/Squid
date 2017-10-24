@@ -18,6 +18,7 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
@@ -45,6 +46,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.cirdles.ludwig.squid25.Utilities;
+import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -58,6 +60,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 
 /**
@@ -213,9 +216,6 @@ public class ExpressionManagerController implements Initializable {
     }
 
     private void populatePeeks(Expression exp) {
-//        originalExpressionTree = exp.getExpressionTree();
-//        currentExpression = exp;
-
         if ((exp == null) || (!exp.amHealthy())) {
             rmPeekTextArea.setText("No expression.");
             unPeekTextArea.setText("No expression.");
@@ -312,8 +312,32 @@ public class ExpressionManagerController implements Initializable {
                 sb.append("\n");
             }
 
-        } else {
+        } else if (editedExp instanceof SpotFieldNode) {
+            // special case where the expressionTree is a field in spot (non-ratio)
+            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
+            sb.append(String.format("%1$-" + 20 + "s", editedExp.getName()));
+            sb.append("\n");
 
+            for (ShrimpFractionExpressionInterface spot : spots) {
+                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+                List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
+                singleSpot.add(spot);
+
+                try {
+                    double[][] results = ExpressionTreeInterface.convertObjectArrayToDoubles(editedExp.eval(singleSpot, null));
+                    for (int i = 0; i < results[0].length; i++) {
+                    try {
+                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
+                    } catch (Exception e) {
+                    }
+                }
+                sb.append("\n");
+                } catch (SquidException squidException) {
+                }
+                
+            }
+            
+        } else {
             sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
             if (((ExpressionTree) originalExpressionTree).getOperation() != null) {
                 String[][] resultLabels = ((ExpressionTree) originalExpressionTree).getOperation().getLabelsForOutputValues();
