@@ -23,6 +23,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 
 /**
  *
@@ -31,6 +32,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
 
     private static final long serialVersionUID = -2296889996415038672L;
+    private ShrimpSpeciesNode numerator;
+    private ShrimpSpeciesNode denominator;
 
     public static String lookupMethodNameForShrimpFraction = "getIsotopicRatioValuesByStringName";
 
@@ -46,7 +49,13 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
      * @param name
      */
     public VariableNodeForIsotopicRatios(String name) {
+        this(name, null, null);
+    }
+
+    public VariableNodeForIsotopicRatios(String name, ShrimpSpeciesNode numerator, ShrimpSpeciesNode denominator) {
         this.name = name;
+        this.numerator = numerator;
+        this.denominator = denominator;
     }
 
     /**
@@ -84,6 +93,25 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
         }
+
+        return retVal;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String toStringMathML() {
+        String retVal
+                = "<mfrac>\n"
+                + "<mrow>\n"
+                + numerator.toStringMathML()
+                + "\n</mrow>\n"
+                + "<mrow>\n"
+                + denominator.toStringMathML()
+                + "\n</mrow>\n"
+                + "</mfrac>\n";
 
         return retVal;
     }

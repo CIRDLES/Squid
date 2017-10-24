@@ -69,7 +69,7 @@ public class ExpressionParser {
      */
     public ExpressionTreeInterface parseExpressionStringAndBuildExpressionTree(Expression expression) {
         eqnSwitchNU = expression.isSquidSwitchNU();
-        
+
         ExpressionTreeInterface returnExpressionTree = new ExpressionTreeParsedFromExcelString(expression.getName());
 
         // Get our lexer
@@ -118,8 +118,8 @@ public class ExpressionParser {
             returnExpressionTree = buildTree(parsedRPN);
             if (returnExpressionTree != null) {
                 // if single objects are the actual expression, don't change
-                if (!(returnExpressionTree instanceof ConstantNode) 
-                        && !(returnExpressionTree instanceof SpotFieldNode) 
+                if (!(returnExpressionTree instanceof ConstantNode)
+                        && !(returnExpressionTree instanceof SpotFieldNode)
                         && !(returnExpressionTree instanceof ShrimpSpeciesNode)
                         && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)) {
                     try {
@@ -238,14 +238,17 @@ public class ExpressionParser {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
-                        && eqnSwitchNU){
+                        && eqnSwitchNU) {
                     // this is the NU switch case
                     retExpTree = retExpTreeKnown;
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
-                        && !eqnSwitchNU){
+                        && !eqnSwitchNU) {
                     // this is the non NU switch case 
-                    retExpTree = new VariableNodeForIsotopicRatios(retExpTreeKnown.getName());
+                    retExpTree = new VariableNodeForIsotopicRatios(
+                            retExpTreeKnown.getName(),
+                            (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
+                            (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET());
                 } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode) || (retExpTreeKnown instanceof SpotFieldNode)) {
                     retExpTree = retExpTreeKnown;
                 } else {

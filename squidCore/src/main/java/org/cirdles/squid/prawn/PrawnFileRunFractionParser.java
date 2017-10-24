@@ -83,6 +83,7 @@ public class PrawnFileRunFractionParser {
      * @param runFraction
      * @param useSBM
      * @param userLinFits
+     * @param indexOfBackgroundSpecies
      * @param referenceMaterialLetter
      * @return the org.cirdles.squid.shrimp.ShrimpFraction
      */
