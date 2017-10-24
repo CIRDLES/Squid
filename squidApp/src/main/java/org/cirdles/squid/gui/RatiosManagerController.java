@@ -114,8 +114,10 @@ public class RatiosManagerController implements Initializable {
 
         populateRatioGrid();
 
-        ratiosGridPane.setLayoutX(10);
-        ratiosGridPane.setLayoutY(10);
+        // center in window
+        double width = primaryStageWindow.getScene().getWidth();
+        ratiosGridPane.setLayoutX((width - (squidSpeciesList.size() + 1 ) * BUTTON_WIDTH ) / 2.0);
+        ratiosGridPane.setLayoutY(15);
 
     }
 
@@ -150,7 +152,7 @@ public class RatiosManagerController implements Initializable {
                     + "    -fx-background-color: #00BFFF;\n"
                     + "    -fx-font-family: \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
                     + "    -fx-font-weight: bold;\n"
-                    + "    -fx-font-size: 7pt;\n"
+                    + "    -fx-font-size: 6pt;\n"
                     + "    -fx-text-fill: White;/*  #d8d8d8;*/\n"
             );
         }
