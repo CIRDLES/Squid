@@ -20,9 +20,6 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -404,12 +401,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void removeExpression(Expression expression) {
         if (expression != null) {
-            taskExpressionsOrdered.remove(expression);
-            taskExpressionsRemoved.add(expression);
-            processAndSortExpressions();
-            updateAffectedExpressions(2, expression);
-            setChanged(true);
-            setupSquidSessionSpecsAndReduceAndReport();
+            if (taskExpressionsOrdered.remove(expression)) {
+                taskExpressionsRemoved.add(expression);
+                processAndSortExpressions();
+                updateAffectedExpressions(2, expression);
+                setChanged(true);
+                setupSquidSessionSpecsAndReduceAndReport();
+            }
         }
     }
 
@@ -688,7 +686,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 unknownSpots.add(spot);
             }
         }
-        
+
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
             ((ShrimpFraction) spot).calculateSpotHours(baseTimeOfFirstRefMatForCalcHoursField);
         }

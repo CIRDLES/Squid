@@ -99,7 +99,8 @@ public final class SquidProject implements Serializable {
             task.setPrawnFile(prawnFile);
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-            task.updateAllExpressions(2);
+            // four passes needed for percolating results
+            task.updateAllExpressions(4);
             task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport();
         }
