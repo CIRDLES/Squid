@@ -272,8 +272,12 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getIsotopicRatioValuesByStringName(String name) {
+        double[][] ratioAndUnct = new double[][]{{0.0, 0.0}};
         SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
-        double[][] ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
+        if (ratio != null) {
+            ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
+        }
+
         return ratioAndUnct;
     }
 

@@ -58,6 +58,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 
 /**
  * FXML Controller class
@@ -212,6 +213,8 @@ public class ExpressionManagerController implements Initializable {
     }
 
     private void populatePeeks(Expression exp) {
+//        originalExpressionTree = exp.getExpressionTree();
+//        currentExpression = exp;
 
         if ((exp == null) || (!exp.amHealthy())) {
             rmPeekTextArea.setText("No expression.");
@@ -251,7 +254,7 @@ public class ExpressionManagerController implements Initializable {
             } else {
                 if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
                     if (refMatSpots.size() > 0) {
-                        rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots));
+                        rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots, exp.getExpressionTree()));
                     } else {
                         rmPeekTextArea.setText("No Reference Materials");
                     }
@@ -260,7 +263,7 @@ public class ExpressionManagerController implements Initializable {
                 }
                 if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
                     if (unSpots.size() > 0) {
-                        unPeekTextArea.setText(peekDetailsPerSpot(unSpots));
+                        unPeekTextArea.setText(peekDetailsPerSpot(unSpots, exp.getExpressionTree()));
                     } else {
                         rmPeekTextArea.setText("No Unknowns");
                     }
@@ -284,23 +287,45 @@ public class ExpressionManagerController implements Initializable {
         return sb.toString();
     }
 
-    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots) {
+    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface editedExp) {
         StringBuilder sb = new StringBuilder();
 
         if (originalExpressionTree instanceof ShrimpSpeciesNode) {
             sb.append("Please specify property of species such as totalCps.");
+        } else if (editedExp instanceof VariableNodeForIsotopicRatios) {
+            // special case where the expressionTree is a ratio
+            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
+            sb.append(String.format("%1$-" + 20 + "s", editedExp.getName()));
+            sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS"));
+            sb.append("\n");
+
+            for (ShrimpFractionExpressionInterface spot : spots) {
+                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+                double[][] results
+                        = spot.getIsotopicRatioValuesByStringName(editedExp.getName());
+                for (int i = 0; i < results[0].length; i++) {
+                    try {
+                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
+                    } catch (Exception e) {
+                    }
+                }
+                sb.append("\n");
+            }
+
         } else {
 
             sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-            String[][] resultLabels = ((ExpressionTree) originalExpressionTree).getOperation().getLabelsForOutputValues();
-            for (int i = 0; i < resultLabels[0].length; i++) {
-                try {
-                    sb.append(String.format("%1$-" + 20 + "s", resultLabels[0][i], 12));
-                } catch (Exception e) {
+            if (((ExpressionTree) originalExpressionTree).getOperation() != null) {
+                String[][] resultLabels = ((ExpressionTree) originalExpressionTree).getOperation().getLabelsForOutputValues();
+                for (int i = 0; i < resultLabels[0].length; i++) {
+                    try {
+                        sb.append(String.format("%1$-" + 20 + "s", resultLabels[0][i]));
+                    } catch (Exception e) {
+                    }
                 }
-            }
-            if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()) {
-                sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS", 12));
+                if (((ExpressionTree) originalExpressionTree).hasRatiosOfInterest()) {
+                    sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS"));
+                }
             }
             sb.append("\n");
 
@@ -399,7 +424,7 @@ public class ExpressionManagerController implements Initializable {
     @FXML
     private void saveButtonAction(ActionEvent event) {
         if (currentExpression != null) {
-            Expression exp = parseAndAuditCurrentExcelExpression();           
+            Expression exp = parseAndAuditCurrentExcelExpression();
 
             ExpressionTreeInterface expTree = exp.getExpressionTree();
 

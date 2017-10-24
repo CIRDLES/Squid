@@ -375,9 +375,12 @@ public class ExpressionTree
     public String auditOperationArgumentCount() {
         StringBuilder audit = new StringBuilder();
         if (operation == null) {
-            if (!(this instanceof ConstantNode) && !(this instanceof SpotFieldNode) && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)) {
+            if (!(this instanceof ConstantNode)
+                    && !(this instanceof SpotFieldNode)
+                    && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)
+                    && !(((ExpressionTreeInterface) this) instanceof VariableNodeForIsotopicRatios)) {
                 audit.append("    ").append(this.getName()).append(" is unhealthy expression");
-            } else {//if (this instanceof ConstantNode) {
+            } else {
                 if (this.amHealthy()) {
                     audit.append(this.getName()).append(" is healthy ").append(this.getClass().getSimpleName());
                 } else if (this.getParentET() == null) {// only if ConstantNode is top of tree vs within an already autided expressiontree

@@ -160,10 +160,10 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
-        if (!(expressionTree instanceof ConstantNode) && !(expressionTree instanceof SpotFieldNode) && !(expressionTree instanceof ShrimpSpeciesNode)) {
-            // ConstantNode and SpotFieldNode has name already and plays role of toplevel expression here
-            expressionTree.setName(name);
-        }
+//        if (!(expressionTree instanceof ConstantNode) && !(expressionTree instanceof SpotFieldNode) && !(expressionTree instanceof ShrimpSpeciesNode)) {
+//            // ConstantNode and SpotFieldNode has name already and plays role of toplevel expression here
+//            expressionTree.setName(name);
+//        }
     }
 
     public String produceExpressionTreeAudit() {

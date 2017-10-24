@@ -118,7 +118,10 @@ public class ExpressionParser {
             returnExpressionTree = buildTree(parsedRPN);
             if (returnExpressionTree != null) {
                 // if single objects are the actual expression, don't change
-                if (!(returnExpressionTree instanceof ConstantNode) && !(returnExpressionTree instanceof SpotFieldNode) && !(returnExpressionTree instanceof ShrimpSpeciesNode)) {
+                if (!(returnExpressionTree instanceof ConstantNode) 
+                        && !(returnExpressionTree instanceof SpotFieldNode) 
+                        && !(returnExpressionTree instanceof ShrimpSpeciesNode)
+                        && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)) {
                     try {
                         returnExpressionTree.setName(expression.getName());
                     } catch (Exception e) {

@@ -21,7 +21,6 @@ import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -290,13 +289,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);
-//        processAndSortExpressions();
     }
 
     private void produceSummaryReportsForGUI() {
-        try {
-            reportsEngine.produceReports(shrimpFractions, false, true);
-        } catch (IOException iOException) {
+        if (unknownSpots.size() > 0) {
+            try {
+                reportsEngine.produceReports(shrimpFractions,
+                        (ShrimpFraction) unknownSpots.get(0),
+                        referenceMaterialSpots.size() > 0
+                        ? (ShrimpFraction) referenceMaterialSpots.get(0) : (ShrimpFraction) unknownSpots.get(0),
+                        false, true);
+            } catch (IOException iOException) {
+            }
         }
     }
 
@@ -305,9 +309,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public void produceSanityReportsToFiles() {
-        try {
-            reportsEngine.produceReports(shrimpFractions, true, false);
-        } catch (IOException iOException) {
+        if (unknownSpots.size() > 0) {
+            try {
+                reportsEngine.produceReports(shrimpFractions,
+                        (ShrimpFraction) unknownSpots.get(0),
+                        (ShrimpFraction) unknownSpots.get(0), true, false);
+            } catch (IOException iOException) {
+            }
         }
     }
 
@@ -683,6 +691,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void evaluateTaskExpressions() {
 
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
+        // prep spots
+        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
+            spot.getTaskExpressionsForScansEvaluated().clear();
+        }
 
         for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
             if (expression.amHealthy() && expression.isRootExpressionTree()) {
