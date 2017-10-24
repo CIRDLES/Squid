@@ -44,7 +44,6 @@ public class PrawnFileRunFractionParser {
 
     private String fractionID;
     private long dateTimeMilliseconds;
-    private long baseTimeOfFirstRefMatForCalcHoursField;
     private double[][] totalCounts;
     private double[][] totalCountsOneSigmaAbs;
     private double[][] totalCountsSBM;
@@ -75,7 +74,6 @@ public class PrawnFileRunFractionParser {
      */
     public PrawnFileRunFractionParser() {
         dateTimeMilliseconds = 0l;
-        baseTimeOfFirstRefMatForCalcHoursField = 0l;
     }
 
     /**
@@ -94,6 +92,12 @@ public class PrawnFileRunFractionParser {
         return processRunFraction(runFraction, squidSessionSpecs);
     }
 
+    /**
+     * 
+     * @param runFraction
+     * @param squidSessionSpecs
+     * @return 
+     */
     public ShrimpFraction processRunFraction(Run runFraction, SquidSessionModel squidSessionSpecs) {
 
         boolean useSBM = squidSessionSpecs.isUseSBM();
@@ -111,7 +115,6 @@ public class PrawnFileRunFractionParser {
 
             shrimpFraction = new ShrimpFraction(fractionID, isotopicRatiosII);
             shrimpFraction.setDateTimeMilliseconds(dateTimeMilliseconds);
-            shrimpFraction.setHours(calculateHours());
             shrimpFraction.setDeadTimeNanoseconds(deadTimeNanoseconds);
             shrimpFraction.setSbmZeroCps(sbmZeroCps);
             shrimpFraction.setCountTimeSec(countTimeSec);
@@ -140,16 +143,6 @@ public class PrawnFileRunFractionParser {
             }
         }
         return shrimpFraction;
-    }
-
-    private double calculateHours() {
-        long deltaTime = dateTimeMilliseconds - baseTimeOfFirstRefMatForCalcHoursField;
-
-        BigDecimal deltaTimeBD = new BigDecimal(String.valueOf(deltaTime));
-
-        BigDecimal hrs = deltaTimeBD.divide(new BigDecimal("3600000"), MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_UP);
-
-        return hrs.doubleValue();
     }
 
     private void prepareRunFractionMetaData(PrawnFile.Run runFraction, SquidSessionModel squidSessionSpecs) {
@@ -734,21 +727,4 @@ public class PrawnFileRunFractionParser {
             // the remainder of the math is done on a per-expression basis
         }
     }
-
-    /**
-     *
-     * @return
-     */
-    public long getBaseTimeOfFirstRefMatForCalcHoursField() {
-        return baseTimeOfFirstRefMatForCalcHoursField;
-    }
-
-    /**
-     * @param baseTimeOfFirstRefMatForCalcHoursField the
-     * baseTimeOfFirstRefMatForCalcHoursField to set
-     */
-    public void setBaseTimeOfFirstRefMatForCalcHoursField(long baseTimeOfFirstRefMatForCalcHoursField) {
-        this.baseTimeOfFirstRefMatForCalcHoursField = baseTimeOfFirstRefMatForCalcHoursField;
-    }
-
 }

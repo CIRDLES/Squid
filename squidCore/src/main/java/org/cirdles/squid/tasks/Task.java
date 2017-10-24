@@ -20,6 +20,9 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -652,12 +655,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     nameOfMount = "No-Mount-Name";
                 }
                 shrimpFraction.setNameOfMount(nameOfMount);
-
-                // preparing for field "Hours" specified as time in hours elapsed since first ref material analysis start = hh.###
-                if ((PRAWN_FILE_RUN_FRACTION_PARSER.getBaseTimeOfFirstRefMatForCalcHoursField() == 0l)
-                        && shrimpFraction.isReferenceMaterial()) {
-                    PRAWN_FILE_RUN_FRACTION_PARSER.setBaseTimeOfFirstRefMatForCalcHoursField(shrimpFraction.getDateTimeMilliseconds());
-                }
+//
+//                // preparing for field "Hours" specified as time in hours elapsed since first ref material analysis start = hh.###
+//                if ((PRAWN_FILE_RUN_FRACTION_PARSER.getBaseTimeOfFirstRefMatForCalcHoursField() == 0l)
+//                        && shrimpFraction.isReferenceMaterial()) {
+//                    PRAWN_FILE_RUN_FRACTION_PARSER.setBaseTimeOfFirstRefMatForCalcHoursField(shrimpFraction.getDateTimeMilliseconds());
+//                }
                 shrimpFractions.add(shrimpFraction);
             }
         }
@@ -669,16 +672,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.setTaskExpressionsForScansEvaluated(taskExpressionsForScansEvaluated);
         });
 
-        // subdivide spots
+        // subdivide spots and calculate hours
         referenceMaterialSpots = new ArrayList<>();
         unknownSpots = new ArrayList<>();
-        shrimpFractions.forEach((spot) -> {
+        boolean firstReferenceMaterial = true;
+        long baseTimeOfFirstRefMatForCalcHoursField = 0l;
+        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
             if (spot.isReferenceMaterial()) {
                 referenceMaterialSpots.add(spot);
+                if (firstReferenceMaterial) {
+                    baseTimeOfFirstRefMatForCalcHoursField = spot.getDateTimeMilliseconds();
+                    firstReferenceMaterial = false;
+                }
             } else {
                 unknownSpots.add(spot);
             }
-        });
+        }
+        
+        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
+            ((ShrimpFraction) spot).calculateSpotHours(baseTimeOfFirstRefMatForCalcHoursField);
+        }
 
         return shrimpFractions;
     }

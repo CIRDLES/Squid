@@ -16,6 +16,9 @@
 package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +116,16 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         this();
         this.fractionID = fractionID;
         this.isotopicRatiosII = isotopicRatiosII;
+    }
+
+    public void calculateSpotHours(long baseTimeOfFirstRefMatForCalcHoursField) {
+        long deltaTime = dateTimeMilliseconds - baseTimeOfFirstRefMatForCalcHoursField;
+
+        BigDecimal deltaTimeBD = new BigDecimal(String.valueOf(deltaTime));
+
+        BigDecimal hrs = deltaTimeBD.divide(new BigDecimal("3600000"), MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_UP);
+
+        hours = hrs.doubleValue();
     }
 
     /**
