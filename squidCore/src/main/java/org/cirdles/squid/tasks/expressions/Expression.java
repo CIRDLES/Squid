@@ -66,13 +66,13 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public Expression(String name, String excelExpressionString) {
-        this(new ExpressionTree(name), excelExpressionString);
+        this(new ExpressionTree(name), excelExpressionString, false);
     }
 
-    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString) {
+    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU) {
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
-        this.squidSwitchNU = false;
+        this.squidSwitchNU = squidSwitchNU;
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();

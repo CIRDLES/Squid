@@ -50,18 +50,18 @@ public class Squid3ExampleTask1 extends Task {
         this.ratioNames = DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
         
         taskExpressionsOrdered.add(
-                new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString));
+                new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString, true));
         taskExpressionsOrdered.add(
-                new Expression(new CustomExpression_LnPbR_U(), CustomExpression_LnPbR_U.excelExpressionString));
+                new Expression(new CustomExpression_LnPbR_U(), CustomExpression_LnPbR_U.excelExpressionString, true));
         taskExpressionsOrdered.add(
-                new Expression(new SquidExpressionMinus1(), SquidExpressionMinus1.excelExpressionString));
+                new Expression(new SquidExpressionMinus1(), SquidExpressionMinus1.excelExpressionString, true));
         // this next expression should be last in execution, but placement here serves as a test for sorting execution order
         taskExpressionsOrdered.add(
-                new Expression(new CustomExpression_Net204BiWt(), CustomExpression_Net204BiWt.excelExpressionString));
+                new Expression(new CustomExpression_Net204BiWt(), CustomExpression_Net204BiWt.excelExpressionString, false));
         taskExpressionsOrdered.add(
-                new Expression(new SquidExpressionMinus4(), SquidExpressionMinus4.excelExpressionString));
+                new Expression(new SquidExpressionMinus4(), SquidExpressionMinus4.excelExpressionString, true));
         taskExpressionsOrdered.add(
-                new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString));
-        taskExpressionsOrdered.add(new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString));
+                new Expression(new SquidExpressionMinus3(), SquidExpressionMinus3.excelExpressionString, true));
+        taskExpressionsOrdered.add(new Expression(new CustomExpression_Net204cts_sec(), CustomExpression_Net204cts_sec.excelExpressionString, false));
     }
 }
