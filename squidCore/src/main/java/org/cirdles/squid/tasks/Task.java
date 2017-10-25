@@ -28,6 +28,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import javafx.collections.transformation.SortedList;
+import org.apache.commons.collections4.list.TreeList;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -393,21 +395,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
             listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
         }
-
-//        processAndSortExpressions();
-//        processAndSortExpressions();
     }
 
     @Override
     public void removeExpression(Expression expression) {
         if (expression != null) {
-            if (taskExpressionsOrdered.remove(expression)) {
-                taskExpressionsRemoved.add(expression);
-                processAndSortExpressions();
-                updateAffectedExpressions(2, expression);
-                setChanged(true);
-                setupSquidSessionSpecsAndReduceAndReport();
-            }
+            // having issues with remove, so handling by hand
+            // it appears java has a bug since even when coparator and equals have correct result
+            SortedSet<Expression> taskBasket = new TreeSet<>();
+            for (Expression exp : taskExpressionsOrdered) {
+                if (!exp.equals(expression)) {
+                    taskBasket.add(exp);
+                }
+            }   
+            taskExpressionsOrdered = taskBasket;
+            taskExpressionsRemoved.add(expression);
+            processAndSortExpressions();
+            updateAffectedExpressions(2, expression);
+            setChanged(true);
+            setupSquidSessionSpecsAndReduceAndReport();
         }
     }
 
