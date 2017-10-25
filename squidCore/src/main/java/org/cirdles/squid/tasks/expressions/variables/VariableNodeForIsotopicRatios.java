@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Objects;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -35,7 +36,7 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     private ShrimpSpeciesNode numerator;
     private ShrimpSpeciesNode denominator;
 
-    public static String lookupMethodNameForShrimpFraction = "getIsotopicRatioValuesByStringName";
+    public final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION = "getIsotopicRatioValuesByStringName";
 
     /**
      *
@@ -56,6 +57,19 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
         this.name = name;
         this.numerator = numerator;
         this.denominator = denominator;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.numerator);
+        hash = 31 * hash + Objects.hashCode(this.denominator);
+        return hash;
     }
 
     /**
@@ -84,7 +98,7 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
 
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
-                    lookupMethodNameForShrimpFraction,
+                    LOOKUP_METHODNAME_FOR_SHRIMPFRACTION,
                     new Class[]{String.class});
             for (int i = 0; i < shrimpFractions.size(); i++) {
                 double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0];

@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -54,8 +55,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     private String excelExpressionString;
     private boolean squidSwitchNU;
     private ExpressionTreeInterface expressionTree;
-    private transient String parsingStatusReport;
-    private transient List<String> argumentAudit;
+    private String parsingStatusReport;
+    private List<String> argumentAudit;
 
     /**
      * Needed for XML unmarshal
@@ -92,7 +93,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         boolean retVal = false;
         if (this == obj) {
             retVal = true;
-        } else if (obj instanceof Expression && (expressionTree instanceof ExpressionTreeInterface)) {
+        } else if (obj instanceof Expression && (expressionTree != null)) {
             // note checking if expressionTree is null due to bad parsing
             retVal = ((ExpressionTree) expressionTree).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
         }
@@ -176,7 +177,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             auditExpressionTreeDependencies();
             auditReport
                     += "Expression healthy: "
-                    + String.valueOf(expressionTree.amHealthy()).toUpperCase();
+                    + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.US);
             if (argumentAudit.size() > 0) {
                 auditReport += "\nAudit:\n";
                 for (String audit : argumentAudit) {

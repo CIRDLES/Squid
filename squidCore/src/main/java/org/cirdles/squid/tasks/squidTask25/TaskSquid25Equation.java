@@ -15,11 +15,13 @@
  */
 package org.cirdles.squid.tasks.squidTask25;
 
+import java.io.Serializable;
+
 /**
  *
  * @author James F. Bowring
  */
-public class TaskSquid25Equation {
+public class TaskSquid25Equation implements Serializable {
 
     private final String excelEquationString;
     private final String equationName;

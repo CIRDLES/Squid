@@ -116,20 +116,20 @@ public class ExpressionParser {
             Collections.reverse(parsedRPN);
 
             returnExpressionTree = buildTree(parsedRPN);
-            if (returnExpressionTree != null) {
-                // if single objects are the actual expression, don't change
-                if (!(returnExpressionTree instanceof ConstantNode)
-                        && !(returnExpressionTree instanceof SpotFieldNode)
-                        && !(returnExpressionTree instanceof ShrimpSpeciesNode)
-                        && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)) {
-                    try {
-                        returnExpressionTree.setName(expression.getName());
-                    } catch (Exception e) {
-                    }
-                }
-                // be sure top level expression is root
-                returnExpressionTree.setRootExpressionTree(true);
+//            if (returnExpressionTree != null) {
+            // if single objects are the actual expression, don't change
+            if (!(returnExpressionTree instanceof ConstantNode)
+                    && !(returnExpressionTree instanceof SpotFieldNode)
+                    && !(returnExpressionTree instanceof ShrimpSpeciesNode)
+                    && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)) {
+//                    try {
+                returnExpressionTree.setName(expression.getName());
+//                    } catch (Exception e) {
+//                    }
             }
+            // be sure top level expression is root
+            returnExpressionTree.setRootExpressionTree(true);
+//            }
         }
 
         return returnExpressionTree;
@@ -217,7 +217,6 @@ public class ExpressionParser {
 
             case FUNCTION:
                 OperationOrFunctionInterface function = Function.operationFactory(FUNCTIONS_MAP.get(token));
-//                isScalarFunctionFlag = function.isScalarResult();
                 retExpTree = new ExpressionTreeParsedFromExcelString(function);
                 break;
 
@@ -255,6 +254,9 @@ public class ExpressionParser {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());
                 }
                 break;
+                
+                default:
+                    break;
         }
 
         if (exp != null) {

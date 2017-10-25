@@ -268,6 +268,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             try {
                 shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
             } catch (Exception e) {
+                // ignore for now
             }
 
             processAndSortExpressions();
@@ -322,7 +323,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void reorderExpressions() {
-        Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+        Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
         taskExpressionsOrdered.clear();
         taskExpressionTreesOrdered.clear();
         for (Expression listedExp : expArray) {
@@ -350,7 +351,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void updateAffectedExpressions(int repeats, Expression sourceExpression) {
         for (int i = 0; i < repeats; i++) {
-            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
             for (Expression listedExp : expArray) {
                 if (listedExp.getExpressionTree().usesAnotherExpression(sourceExpression.getExpressionTree())) {
                     updateSingleExpression(listedExp);
@@ -370,7 +371,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void updateAllExpressions(int repeats) {
         for (int i = 0; i < repeats; i++) {
-            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
             for (Expression listedExp : expArray) {
                 updateSingleExpression(listedExp);
             }
@@ -1102,7 +1103,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public boolean[][] getTableOfSelectedRatiosByMassStationIndex() {
-        return tableOfSelectedRatiosByMassStationIndex;
+        return tableOfSelectedRatiosByMassStationIndex.clone();
     }
 
     private void resetTableOfSelectedRatiosByMassStationIndex() {

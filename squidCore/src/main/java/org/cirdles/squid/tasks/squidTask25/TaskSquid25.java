@@ -67,7 +67,7 @@ public class TaskSquid25 implements Serializable {
 
                 taskSquid25.squidVersion = lines[0].split("\t")[1];
 
-                int firstRow = Integer.valueOf(lines[1].split("\t")[1]) - 1;
+                int firstRow = Integer.parseInt(lines[1].split("\t")[1]) - 1;
 
                 taskSquid25.squidTaskFileName = lines[firstRow].split("\t")[1];
                 taskSquid25.taskType = lines[firstRow + 1].split("\t")[1];

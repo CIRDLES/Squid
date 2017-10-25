@@ -56,6 +56,11 @@ public class SpotFieldNode extends ExpressionTree {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
     public boolean amHealthy() {
         return (methodNameForShrimpFraction.length() > 0);
     }
