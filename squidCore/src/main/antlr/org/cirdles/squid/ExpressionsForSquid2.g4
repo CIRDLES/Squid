@@ -90,7 +90,7 @@ FUNCTION :
     'SqWtdAv' | 'sqWtdAv' |
     'TotalCps' | 'totalCps' |
     'lookup' | 'max' | 'abs' |
-    'average' ;
+    'average' | 'count';
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 
