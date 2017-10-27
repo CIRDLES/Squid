@@ -286,9 +286,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void updateRatioNames(List<String> ratioNames) {
-        this.ratioNames = ratioNames;
-
+    public void updateRatioNames(String[] ratioNames) {
+        this.ratioNames.clear();
+        for (String rn : ratioNames){
+            this.ratioNames.add(rn);
+        }
+        
+        populateTableOfSelectedRatiosFromRatiosList();
+        
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);

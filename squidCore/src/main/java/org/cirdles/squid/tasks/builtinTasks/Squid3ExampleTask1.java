@@ -47,7 +47,9 @@ public class Squid3ExampleTask1 extends Task {
         this.provenance = "Builtin task.";
         this.dateRevised = 0l;
 
-        this.ratioNames = DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+        for (String rn : DEFAULT_RATIOS_LIST_FOR_10_SPECIES){
+            this.ratioNames.add(rn);
+        }
         
         taskExpressionsOrdered.add(
                 new Expression(new CustomExpression_LnUO_U(), CustomExpression_LnUO_U.excelExpressionString, true));

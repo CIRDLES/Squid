@@ -291,7 +291,7 @@ public interface TaskInterface {
      */
     public void produceSanityReportsToFiles();
 
-    public void updateRatioNames(List<String> ratioNames);
+    public void updateRatioNames(String[] ratioNames);
 
     public void updateAffectedExpressions(int repeats, Expression sourceExpression);
 }

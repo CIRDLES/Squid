@@ -752,7 +752,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void defaultEmptyRatioSetAction(ActionEvent event) {
-        squidProject.getTask().updateRatioNames(new ArrayList<>());
+        squidProject.getTask().updateRatioNames(new String[]{});
         launchRatiosManager();
     }
 

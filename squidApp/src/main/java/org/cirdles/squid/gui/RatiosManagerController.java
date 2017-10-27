@@ -127,7 +127,7 @@ public class RatiosManagerController implements Initializable {
                 if ((i != j) && (i != indexOfBackgroundSpecies) && (j != indexOfBackgroundSpecies)) {
                     Button ratioButton = new SquidRatioButton(
                             i, j,
-                            squidSpeciesList.get(i).getIsotopeName() + "/" + squidSpeciesList.get(j).getIsotopeName(),
+                            squidSpeciesList.get(i).getIsotopeName() + ":" + squidSpeciesList.get(j).getIsotopeName(),
                             SquidUIController.squidProject.getTask().getTableOfSelectedRatiosByMassStationIndex()[i][j]);
                     ratiosGridPane.add(ratioButton, j + 1, i + 1);
                 }
