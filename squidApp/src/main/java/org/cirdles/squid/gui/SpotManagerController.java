@@ -161,6 +161,7 @@ public class SpotManagerController implements Initializable {
                 squidProject.removeRunFromPrawnFile(selectedRun);
                 spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
                 
+                squidProject.generatePrefixTreeFromSpotNames();
                 rmCountLabel.setText(String.valueOf(shrimpRunsRefMat.size()));
                 squidProject.getTask().setChanged(true);
             }
