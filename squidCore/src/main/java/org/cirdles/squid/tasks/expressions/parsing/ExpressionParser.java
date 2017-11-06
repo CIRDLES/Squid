@@ -248,7 +248,9 @@ public class ExpressionParser {
                             retExpTreeKnown.getName(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET());
-                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode) || (retExpTreeKnown instanceof SpotFieldNode)) {
+                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode) 
+                        || (retExpTreeKnown instanceof SpotFieldNode)
+                        || (retExpTreeKnown instanceof VariableNodeForIsotopicRatios)) {
                     retExpTree = retExpTreeKnown;
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());

@@ -229,6 +229,9 @@ public class ExpressionManagerController implements Initializable {
             if (originalExpressionTree.isSquidSwitchSCSummaryCalculation()) {
                 SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName());
 
+                rmPeekTextArea.setText("No Summary");
+                unPeekTextArea.setText("No Summary");
+
                 if (task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName()) != null) {
                     if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
                         if (spotSummary.getSelectedSpots().size() > 0) {
@@ -236,8 +239,6 @@ public class ExpressionManagerController implements Initializable {
                         } else {
                             rmPeekTextArea.setText("No Reference Materials");
                         }
-                    } else {
-                        rmPeekTextArea.setText("No Summary");
                     }
 
                     if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
@@ -246,8 +247,6 @@ public class ExpressionManagerController implements Initializable {
                         } else {
                             unPeekTextArea.setText("No Unknowns");
                         }
-                    } else {
-                        unPeekTextArea.setText("No Summary");
                     }
                 }
 
@@ -326,17 +325,17 @@ public class ExpressionManagerController implements Initializable {
                 try {
                     double[][] results = ExpressionTreeInterface.convertObjectArrayToDoubles(editedExp.eval(singleSpot, null));
                     for (int i = 0; i < results[0].length; i++) {
-                    try {
-                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
-                    } catch (Exception e) {
+                        try {
+                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
+                        } catch (Exception e) {
+                        }
                     }
-                }
-                sb.append("\n");
+                    sb.append("\n");
                 } catch (SquidException squidException) {
                 }
-                
+
             }
-            
+
         } else {
             sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
             if (((ExpressionTree) originalExpressionTree).getOperation() != null) {
