@@ -43,6 +43,7 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
 /**
  *
@@ -248,17 +249,19 @@ public class ExpressionParser {
                             retExpTreeKnown.getName(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET());
-                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode) 
+                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
                         || (retExpTreeKnown instanceof SpotFieldNode)
                         || (retExpTreeKnown instanceof VariableNodeForIsotopicRatios)) {
                     retExpTree = retExpTreeKnown;
+                } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
+                    retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName());
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());
                 }
                 break;
-                
-                default:
-                    break;
+
+            default:
+                break;
         }
 
         if (exp != null) {

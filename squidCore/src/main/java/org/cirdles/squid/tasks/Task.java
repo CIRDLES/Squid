@@ -164,8 +164,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.taskExpressionTreesOrdered = new TreeSet<>();
         this.taskExpressionsOrdered = new TreeSet<>();
         this.taskExpressionsRemoved = new TreeSet<>();
-        this.namedExpressionsMap = new LinkedHashMap<>();
-        this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
+        this.namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         this.shrimpFractions = new ArrayList<>();
         this.referenceMaterialSpots = new ArrayList<>();

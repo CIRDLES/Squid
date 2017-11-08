@@ -193,10 +193,12 @@ public class TaskSquid25 implements Serializable {
         Matcher matcher = squid25FunctionPattern.matcher(retVal);
         if (matcher.matches()) {
             String[] robregParts = matcher.group().split(",");
-            retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + (robregParts.length > 2 ? ")" : ""));
+            if (robregParts.length > 1) {
+                retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + (robregParts.length > 2 ? ")" : ""));
+            }
         }
 
-        // regex for robreg with four arguments = agePb76.*\)
+        // regex for robreg with four arguments = robreg.*\)
         squid25FunctionPattern = Pattern.compile("^(.*)[a,A]gePb76.*\\)", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
         if (matcher.matches()) {
@@ -206,13 +208,23 @@ public class TaskSquid25 implements Serializable {
             }
         }
 
-        // regex for sqWtdAv with four arguments = agePb76.*\)
+        // regex for sqWtdAv with four arguments = sqWtdAv.*\)
         squid25FunctionPattern = Pattern.compile("^(.*)[s,S]qWtdAv.*\\)", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
         if (matcher.matches()) {
             String[] sqWtdAvParts = matcher.group().split(",");
             if (sqWtdAvParts.length > 1) {
                 retVal = retVal.replace(matcher.group(), sqWtdAvParts[0] + ")");
+            }
+        }
+
+        // regex for sqBiweight with five arguments = sqBiweight.*\)
+        squid25FunctionPattern = Pattern.compile("^(.*)[s,S]qBiweight.*\\)", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.matches()) {
+            String[] sqBiweightParts = matcher.group().split(",");
+            if (sqBiweightParts.length > 1) {
+                retVal = retVal.replace(matcher.group(), sqBiweightParts[0] + "," + sqBiweightParts[1] + (sqBiweightParts.length > 2 ? ")" : ""));
             }
         }
 
@@ -262,6 +274,8 @@ public class TaskSquid25 implements Serializable {
         // remove leading mulitpliers meant for output tables
         retVal = retVal.replace("1000*", "");
         retVal = retVal.replace("100*", "");
+        // remove spaces
+        retVal = retVal.replace(" ", "");
 
         return retVal;
     }
