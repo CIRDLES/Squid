@@ -55,6 +55,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -226,7 +227,17 @@ public class ExpressionManagerController implements Initializable {
             List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
             List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
 
-            if (originalExpressionTree.isSquidSwitchSCSummaryCalculation()) {
+            if (originalExpressionTree instanceof ConstantNode) {
+                rmPeekTextArea.setText("Not used");
+                unPeekTextArea.setText("Not used");
+                if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
+                    rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 12));
+                }
+                if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
+                    unPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 12));
+                }
+
+            } else if (originalExpressionTree.isSquidSwitchSCSummaryCalculation()) {
                 SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName());
 
                 rmPeekTextArea.setText("No Summary");

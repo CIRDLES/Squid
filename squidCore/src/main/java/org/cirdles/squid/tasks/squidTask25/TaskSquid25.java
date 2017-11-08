@@ -252,11 +252,6 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("1000*", "");
         retVal = retVal.replace("100*", "");
 
-        // do not accept constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
-        if (!excelString.contains("(") && !excelString.contains("[")) {
-            retVal = "";
-        }
-
         // do not include calls to error functions of Age as in AgeErPb76 etc
         if (excelString.toUpperCase(Locale.US).contains("AGEER")) {
             retVal = "";
