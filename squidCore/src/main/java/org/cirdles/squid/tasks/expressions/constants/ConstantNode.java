@@ -90,7 +90,7 @@ public class ConstantNode extends ExpressionTree {
 
     @Override
     public boolean isValid() {
-        return (name.length() > 0) && (value != null);
+        return (name.length() > 0) && (value != null) && amHealthy();
     }
 
     @Override
@@ -145,11 +145,6 @@ public class ConstantNode extends ExpressionTree {
     @Override
     public String toStringMathML() {
         return "<mn>" + name + "</mn>\n";
-    }
-
-    @Override
-    public boolean isRootExpressionTree() {
-        return false;
     }
 
     /**

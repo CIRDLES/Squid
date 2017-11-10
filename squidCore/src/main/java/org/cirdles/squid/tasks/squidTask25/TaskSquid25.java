@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
+import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 
 /**
  *
@@ -251,6 +252,13 @@ public class TaskSquid25 implements Serializable {
         // remove leading mulitpliers meant for output tables
         retVal = retVal.replace("1000*", "");
         retVal = retVal.replace("100*", "");
+
+        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs		
+        if (!excelString.contains("(") && !excelString.contains("[")) {
+            if (!ShuntingYard.isNumber(excelString)) {
+                retVal = "";
+            }
+        }
 
         // do not include calls to error functions of Age as in AgeErPb76 etc
         if (excelString.toUpperCase(Locale.US).contains("AGEER")) {

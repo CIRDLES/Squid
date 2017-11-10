@@ -117,20 +117,20 @@ public class ExpressionParser {
             Collections.reverse(parsedRPN);
 
             returnExpressionTree = buildTree(parsedRPN);
-//            if (returnExpressionTree != null) {
+
             // if single objects are the actual expression, don't change
-            if (!(returnExpressionTree instanceof ConstantNode)
-                    && !(returnExpressionTree instanceof SpotFieldNode)
+            if (!(returnExpressionTree instanceof SpotFieldNode)
                     && !(returnExpressionTree instanceof ShrimpSpeciesNode)
-                    && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)) {
-//                    try {
+                    && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)
+                    && !(returnExpressionTree instanceof VariableNodeForSummary)
+                    && returnExpressionTree.isValid()) {
+
                 returnExpressionTree.setName(expression.getName());
-//                    } catch (Exception e) {
-//                    }
+
             }
             // be sure top level expression is root
             returnExpressionTree.setRootExpressionTree(true);
-//            }
+
         }
 
         return returnExpressionTree;

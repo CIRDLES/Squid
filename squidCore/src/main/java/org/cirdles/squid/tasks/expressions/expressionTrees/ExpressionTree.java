@@ -378,7 +378,8 @@ public class ExpressionTree
             if (!(this instanceof ConstantNode)
                     && !(this instanceof SpotFieldNode)
                     && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)
-                    && !(((ExpressionTreeInterface) this) instanceof VariableNodeForIsotopicRatios)) {
+                    && !(((ExpressionTreeInterface) this) instanceof VariableNodeForIsotopicRatios)
+                    && !(((ExpressionTreeInterface) this) instanceof VariableNodeForSummary)) {
                 audit.append("    ").append(this.getName()).append(" is unhealthy expression");
             } else {
                 if (this.amHealthy()) {

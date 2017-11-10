@@ -231,10 +231,16 @@ public class ExpressionManagerController implements Initializable {
                 rmPeekTextArea.setText("Not used");
                 unPeekTextArea.setText("Not used");
                 if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
-                    rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 12));
+                    try {
+                        rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 12));
+                    } catch (Exception e) {
+                    }
                 }
                 if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
-                    unPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 12));
+                    try {
+                        unPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 12));
+                    } catch (Exception e) {
+                    }
                 }
 
             } else if (originalExpressionTree.isSquidSwitchSCSummaryCalculation()) {
