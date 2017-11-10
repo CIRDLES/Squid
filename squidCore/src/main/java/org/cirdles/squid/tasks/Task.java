@@ -288,12 +288,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void updateRatioNames(String[] ratioNames) {
         this.ratioNames.clear();
-        for (String rn : ratioNames){
+        for (String rn : ratioNames) {
             this.ratioNames.add(rn);
         }
-        
+
         populateTableOfSelectedRatiosFromRatiosList();
-        
+
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);
@@ -413,7 +413,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 if (!exp.equals(expression)) {
                     taskBasket.add(exp);
                 }
-            }   
+            }
             taskExpressionsOrdered = taskBasket;
             taskExpressionsRemoved.add(expression);
             processAndSortExpressions();
@@ -749,15 +749,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void evaluateExpressionForSpotSet(
             ExpressionTreeInterface expression,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
-        // determine type of expression
-        if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
-            double[][] values = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
-            taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
-                    new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), values, spotsForExpression));
-        } else {
-            // perform expression on each spot
-            for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
-                evaluateExpressionForSpot(expression, spot);
+        if (spotsForExpression.size() > 0) {
+            // determine type of expression
+            if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
+                double[][] values;
+                if ((expression instanceof ConstantNode) || ((ExpressionTree) expression).getOperation().isScalarResult()) {
+                    // create list of one spot, since we only need to look up value once
+                    List<ShrimpFractionExpressionInterface> singleSpotForExpression = new ArrayList<>();
+                    singleSpotForExpression.add(spotsForExpression.get(0));
+                    values = convertObjectArrayToDoubles(expression.eval(singleSpotForExpression, this));
+                } else {
+                    values = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
+                }
+
+                taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
+                        new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), values, spotsForExpression));
+            } else {
+                // perform expression on each spot
+                for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+                    evaluateExpressionForSpot(expression, spot);
+                }
             }
         }
     }

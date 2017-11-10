@@ -233,9 +233,24 @@ public class ExpressionParser {
                 break;
 
             case NAMED_EXPRESSION:
-                ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(token.replace("[\"", "").replace("\"]", ""));
+                String expressionName = token.replace("[\"", "").replace("\"]", "");
+                ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(expressionName);
                 if (retExpTreeKnown == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
+                    // let's see if we have an array reference
+                    int index = 0;
+                    String lastTwo = expressionName.substring(expressionName.length() - 2);
+                    if (ShuntingYard.isNumber(lastTwo)) {
+                        // index = first digit - 1 (converting from vertical 1-based excel to horiz 0-based java
+                        index = Integer.parseInt(lastTwo.substring(0, 1)) - 1;
+                        String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
+                        if (index >= 0) {
+                            System.out.println("found array call " + expressionName + "   " + baseExpressionName + "  " + index);
+                            retExpTree = new VariableNodeForSummary(baseExpressionName);
+                        }
+                    }
+                    
+//                    retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
                         && eqnSwitchNU) {
