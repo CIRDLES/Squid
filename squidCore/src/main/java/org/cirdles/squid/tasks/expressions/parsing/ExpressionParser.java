@@ -246,10 +246,20 @@ public class ExpressionParser {
                         String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
                         if (index >= 0) {
                             System.out.println("found array call " + expressionName + "   " + baseExpressionName + "  " + index);
-                            retExpTree = new VariableNodeForSummary(baseExpressionName);
+                            retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
+                            if (retExpTreeKnown != null) {
+                                // we have an array index reference to a known expression
+                                if (index ==0){
+                                    //this is equivalent to calling the expression with no inices
+                                    retExpTree = retExpTreeKnown;
+                                } else {
+                                    retExpTree = new VariableNodeForSummary(baseExpressionName, index);
+                                    namedExpressionsMap.put(expressionName, retExpTree);
+                                }                               
+                            }
                         }
                     }
-                    
+
 //                    retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
