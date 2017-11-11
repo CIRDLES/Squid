@@ -131,7 +131,6 @@ public class VariableNodeForSummary extends ExpressionTree {
     public String toStringMathML() {
         String retVal
                 = "<mtext>\n"
-//                + name + (index > 0 ? "[" + index + "]" : "")
                 + name +  "[" + index + "]" 
                 + "</mtext>\n";
 

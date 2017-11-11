@@ -324,7 +324,7 @@ public class ShuntingYard {
                 retVal = COMMA;
             } else if (FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
-            } else if (token.matches("\\[\"(.*?)\"\\]")) {
+            } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;
             } else if (isNumber(token)) {
                 retVal = NUMBER;
