@@ -276,7 +276,8 @@ public class ExpressionParser {
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET());
                 } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
                         || (retExpTreeKnown instanceof SpotFieldNode)
-                        || (retExpTreeKnown instanceof VariableNodeForIsotopicRatios)) {
+                        || (retExpTreeKnown instanceof VariableNodeForIsotopicRatios)
+                        || (retExpTreeKnown instanceof VariableNodeForSummary)) {
                     retExpTree = retExpTreeKnown;
                 } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
                     retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName());
