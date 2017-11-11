@@ -139,9 +139,13 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                 + "\n</mrow>\n"
                 + "</mfrac>\n";
 
-//        if (uncertaintyReference) {
-//            // retVal = "<mfenced>\n" + retVal + "</mfenced>[1]\n";
-//        }
+        if (uncertaintyDirective.length() > 0) {
+            retVal = "<mrow>\n<msup>\n<mfenced>\n"
+                    + retVal
+                    + "</mfenced>\n"
+                    + "<mtext>" + uncertaintyDirective + "</mtext>\n"
+                    + "</msup>\n</mrow>\n";
+        }
 
         return retVal;
     }
