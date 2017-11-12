@@ -252,9 +252,9 @@ public class SquidUIController implements Initializable {
             managePrawnFileMenu.setDisable(false);
             buildTaskLibraryMenu();
             manageTasksMenu.setDisable(false);
-            manageRatiosMenu.setDisable(true);
-            manageExpressionsMenu.setDisable(true);
-            manageReportsMenu.setDisable(true);
+            manageRatiosMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
             // log prawnFileFolderMRU
             squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());

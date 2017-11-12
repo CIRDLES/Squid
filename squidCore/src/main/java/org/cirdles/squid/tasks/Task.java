@@ -481,8 +481,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
                     // only these three fields change
                     massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
-                    massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
-                    index++;
+                    if (nominalMasses.size() > 0) {
+                        massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
+                        index++;
+                    }
 
                     massStationDetail.setIsBackground(ssm.getIsBackground());
                     if (ssm.getIsBackground()) {

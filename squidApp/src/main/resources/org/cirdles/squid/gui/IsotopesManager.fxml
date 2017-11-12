@@ -21,9 +21,9 @@
               <TableView fx:id="isotopesTableView" editable="true" prefHeight="580.0" VBox.vgrow="ALWAYS">
                   <columns>
                       <TableColumn fx:id="massLabelColumn" editable="false" prefWidth="126.0" sortable="false" style="-fx-alignment: CENTER;" text="Mass Station Label" />
-                      <TableColumn fx:id="elementLabelColumn" prefWidth="127.0" sortable="false" style="-fx-alignment: CENTER;" text="Element Label" />
+                      <TableColumn fx:id="elementLabelColumn" editable="false" prefWidth="127.0" sortable="false" style="-fx-alignment: CENTER;" text="Element Label" />
                       <TableColumn fx:id="isotopeLabelColumn" prefWidth="197.0" sortable="false" style="-fx-alignment: CENTER;" text="Isotope Label (edit)" />
-                  <TableColumn fx:id="taskIsotopeLabelColumn" prefWidth="106.0" style="-fx-alignment: CENTER;" text="Task Isotope Label" />
+                  <TableColumn fx:id="taskIsotopeLabelColumn" editable="false" prefWidth="106.0" sortable="false" style="-fx-alignment: CENTER;" text="Task Isotope Label" />
                   </columns>
                   <columnResizePolicy>
                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
