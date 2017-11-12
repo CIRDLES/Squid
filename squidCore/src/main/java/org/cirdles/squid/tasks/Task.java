@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -192,7 +193,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             summary.append(String.format("%1$-" + 7 + "s", squidSpeciesModelList.get(i).getPrawnFileIsotopeName() + comma));
         }
 
-        summary.append("\n ")
+        summary.append("\n\n ")
                 .append("Task File names ")
                 .append(String.valueOf(nominalMasses.size()))
                 .append(" Masses:");
@@ -203,6 +204,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             summary.append(String.format("%1$-" + 7 + "s", nominalMasses.get(i) + comma));
         }
 
+        Collections.sort(ratioNames);
         int countOfRatios = ratioNames.size();
         summary.append("\n\n Task Ratios: ");
         summary.append((String) (countOfRatios > 0 ? String.valueOf(countOfRatios) : "None")).append(" chosen.");
@@ -489,7 +491,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void applyTaskIsotopeLabels() {
         int index = 0;
         for (SquidSpeciesModel ssm : squidSpeciesModelList) {
-            MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());            
+            MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
             ssm.setIsotopeName(nominalMasses.get(index));
             massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
             index++;
@@ -831,7 +833,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return listOfMassStationDetails;
     }
 
-    
     @Override
     public void populateTableOfSelectedRatiosFromRatiosList() {
         resetTableOfSelectedRatiosByMassStationIndex();
@@ -866,7 +867,47 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);
-//        processAndSortExpressions();
+    }
+
+    @Override
+    public void updateTableOfSelectedRatiosByRowOrCol(int row, int col, boolean selected) {
+        if (row == -1) {
+            String den = mapOfIndexToMassStationDetails.get(col).getIsotopeLabel();
+            for (int i = 0; i < mapOfIndexToMassStationDetails.size(); i++) {
+                String num = mapOfIndexToMassStationDetails.get(i).getIsotopeLabel();
+                if (num.compareTo(den) != 0) {
+                    String ratioName = num + "/" + den;
+                    if (selected) {
+                        if (!ratioNames.contains(ratioName)) {
+                            ratioNames.add(ratioName);
+                        }
+                    } else {
+                        ratioNames.remove(ratioName);
+                    }
+                }
+            }
+        }
+
+        if (col == -1) {
+            String num = mapOfIndexToMassStationDetails.get(row).getIsotopeLabel();
+            for (int i = 0; i < mapOfIndexToMassStationDetails.size(); i++) {
+                String den = mapOfIndexToMassStationDetails.get(i).getIsotopeLabel();
+                if (num.compareTo(den) != 0) {
+                    String ratioName = num + "/" + den;
+                    if (selected) {
+                        if (!ratioNames.contains(ratioName)) {
+                            ratioNames.add(ratioName);
+                        }
+                    } else {
+                        ratioNames.remove(ratioName);
+                    }
+                }
+            }
+        }
+
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport();
+        updateAllExpressions(2);
     }
 
     /**

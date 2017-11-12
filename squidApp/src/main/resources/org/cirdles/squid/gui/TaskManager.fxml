@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -11,7 +12,6 @@
    <children>
       <Label layoutX="24.0" layoutY="15.0" text="Task Name:" />
       <TextField fx:id="taskNameTextField" layoutX="127.0" layoutY="15.0" prefHeight="27.0" prefWidth="496.0" promptText="Task name" />
-      <Label fx:id="taskSummaryLabel" alignment="TOP_LEFT" layoutX="127.0" layoutY="320.0" prefHeight="275.0" prefWidth="757.0" style="-fx-font-size: 12; -fx-border-color: black; -fx-background-color: white; -fx-font-family: Courier New; -fx-font-weight: bold;" text="Task Audit" />
       <Label layoutX="649.0" layoutY="15.0" text="Type:" />
       <HBox layoutX="705.0" layoutY="20.0" prefHeight="21.0" prefWidth="181.0">
          <children>
@@ -55,5 +55,6 @@
       </HBox>
       <Label layoutX="20.0" layoutY="175.0" text="Parameters:" />
       <Label layoutX="70.0" layoutY="317.0" text="Audit:" />
+      <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="322.0" prefHeight="279.0" prefWidth="757.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
    </children>
 </AnchorPane>

@@ -180,6 +180,7 @@ public class IsotopesManagerController implements Initializable {
         task.applyTaskIsotopeLabels();
         task.setChanged(true);
         isotopesTableView.refresh();
+        task.setupSquidSessionSpecsAndReduceAndReport();
         task.updateAllExpressions(2);
     }
 

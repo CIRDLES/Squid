@@ -22,8 +22,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
@@ -40,8 +40,6 @@ import org.cirdles.squid.tasks.TaskInterface;
 public class TaskManagerController implements Initializable {
 
     private TaskInterface task;
-    @FXML
-    private Label taskSummaryLabel;
     @FXML
     private AnchorPane taskManagerAnchorPane;
     @FXML
@@ -72,6 +70,8 @@ public class TaskManagerController implements Initializable {
     private RadioButton linearRegressionRatioCalcRadioButton;
     @FXML
     private RadioButton spotAverageRatioCalcRadioButton;
+    @FXML
+    private TextArea taskAuditTextArea;
 
     /**
      * Initializes the controller class.
@@ -89,7 +89,7 @@ public class TaskManagerController implements Initializable {
             populateTaskFields();
             setupListeners();
         } else {
-            taskSummaryLabel.setText("No Task information available");
+            taskAuditTextArea.setText("No Task information available");
         }
     }
 
@@ -119,7 +119,7 @@ public class TaskManagerController implements Initializable {
             spotAverageRatioCalcRadioButton.setSelected(true);
         }
 
-        taskSummaryLabel.setText(squidProject.getTask().printTaskAudit());
+        taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
     }
 
     private void setupListeners() {

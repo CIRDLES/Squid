@@ -19,7 +19,6 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -403,6 +402,7 @@ public class SquidUIController implements Initializable {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 buildProjectMenuMRU();
                 launchProjectManager();
+                launchTaskManager();
                 saveSquidProjectMenuItem.setDisable(false);
             } else {
                 saveSquidProjectMenuItem.setDisable(true);

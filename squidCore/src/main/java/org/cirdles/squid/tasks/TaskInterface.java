@@ -298,4 +298,6 @@ public interface TaskInterface {
     public void applyTaskIsotopeLabels();
 
     public void populateTableOfSelectedRatiosFromRatiosList();
+    
+    public void updateTableOfSelectedRatiosByRowOrCol(int row, int col, boolean selected);
 }
