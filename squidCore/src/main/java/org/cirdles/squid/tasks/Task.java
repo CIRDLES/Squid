@@ -22,15 +22,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import javafx.collections.transformation.SortedList;
-import org.apache.commons.collections4.list.TreeList;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -108,6 +105,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected SortedSet<Expression> taskExpressionsOrdered;
     protected SortedSet<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
+    protected Map<String, ConstantNode> namedConstantsMap;
 
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
@@ -166,6 +164,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.taskExpressionsOrdered = new TreeSet<>();
         this.taskExpressionsRemoved = new TreeSet<>();
         this.namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         this.shrimpFractions = new ArrayList<>();
@@ -243,6 +242,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\t UnHealthy: ");
         summary.append((String) ((taskExpressionTreesOrdered.size() - count) > 0
                 ? String.valueOf(taskExpressionTreesOrdered.size() - count) : "None")).append(" included.");
+
+        summary.append("\n\n Task Constants: \n ");
+        if (namedConstantsMap.size() > 0) {
+            for (Map.Entry<String, ConstantNode> entry : namedConstantsMap.entrySet()) {
+                summary.append(" <").append(entry.getKey()).append(" = ").append((double) entry.getValue().getValue()).append(">");
+            }
+        } else {
+            summary.append(" No constants supplied.");
+        }
 
         return summary.toString();
     }
@@ -555,6 +563,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ExpressionTreeInterface testConstant = new ConstantNode("TEST_CONSTANT", 999.999);
         namedExpressionsMap.put(testConstant.getName(), testConstant);
 
+        for (Map.Entry<String, ConstantNode> entry : namedConstantsMap.entrySet()) {
+            namedExpressionsMap.put(entry.getKey(), entry.getValue());
+        }
+
         // TODO: make a SpotFieldNode factory
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         namedExpressionsMap.put(expHours.getName(), expHours);
@@ -730,9 +742,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
         // prep spots
-        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
+        shrimpFractions.forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
-        }
+        });
 
         for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
             if (expression.amHealthy() && expression.isRootExpressionTree()) {
@@ -811,7 +823,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             try {
                 double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
                 spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
-            } catch (Exception squidException) {
+            } catch (SquidException squidException) {
                 System.out.println(squidException.getMessage());
             }
         }
@@ -1196,6 +1208,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public Map<String, ExpressionTreeInterface> getNamedExpressionsMap() {
         return namedExpressionsMap;
+    }
+
+    /**
+     * @return the namedConstantsMap
+     */
+    public Map<String, ConstantNode> getNamedConstantsMap() {
+        if (namedConstantsMap == null) {
+            this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        }
+        return namedConstantsMap;
     }
 
     /**

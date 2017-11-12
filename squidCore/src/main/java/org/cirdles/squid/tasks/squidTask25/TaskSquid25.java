@@ -48,6 +48,8 @@ public class TaskSquid25 implements Serializable {
     private List<String> nominalMasses;
     private List<String> ratioNames;
     private List<TaskSquid25Equation> task25Equations;
+    private List<String> constantNames;
+    private List<String> constantValues;
 
     public static TaskSquid25 importSquidTaskFile(File squidTaskFile) {
 
@@ -171,6 +173,17 @@ public class TaskSquid25 implements Serializable {
                     }
                 }
 
+                String[] constantNamesSource = lines[firstRow + 40].split("\t");
+                String[] constantValuesSource = lines[firstRow + 41].split("\t");
+
+                int countOfConstants = Integer.valueOf(constantNamesSource[1]);
+                taskSquid25.constantNames = new ArrayList<>();
+                taskSquid25.constantValues = new ArrayList<>();
+                for (int i = 0; i < countOfConstants; i++) {
+                    taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
+                    taskSquid25.constantValues.add(constantValuesSource[i + 2]);
+                }
+
             }
         } catch (IOException iOException) {
         }
@@ -249,6 +262,24 @@ public class TaskSquid25 implements Serializable {
                 String[] concordiaParts = matcher.group().split(",");
                 retVal = retVal.replace(matcher.group(), concordiaParts[0] + "," + concordiaParts[2] + "," + concordiaParts[4] + (concordiaParts.length > 5 ? ")" : ""));
             }
+        }
+        
+        // remove "<" and ">" from constants
+        squid25FunctionPattern = Pattern.compile("<(.[^>]*)>", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.find()) {
+            String constant = matcher.group();
+            constant = constant.substring(1, constant.length() - 1);
+            retVal = retVal.replace(matcher.group(), constant);
+        }
+        
+        // remove "/" and " " from expressions that contain letters only
+        squid25FunctionPattern = Pattern.compile("\\[\\\"\\D*\\\"\\]", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.find()) {
+            String name = matcher.group();
+            name = name.replaceAll("/", "").replaceAll(" ", "");
+            retVal = retVal.replace(matcher.group(), name);
         }
 
         // remove leading mulitpliers meant for output tables
@@ -353,6 +384,20 @@ public class TaskSquid25 implements Serializable {
      */
     public String getAuthorName() {
         return authorName;
+    }
+
+    /**
+     * @return the constantNames
+     */
+    public List<String> getConstantNames() {
+        return constantNames;
+    }
+
+    /**
+     * @return the constantValues
+     */
+    public List<String> getConstantValues() {
+        return constantValues;
     }
 
 }
