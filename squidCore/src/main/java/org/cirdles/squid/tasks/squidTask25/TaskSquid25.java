@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
+import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 
 /**
  *
@@ -47,6 +48,8 @@ public class TaskSquid25 implements Serializable {
     private List<String> nominalMasses;
     private List<String> ratioNames;
     private List<TaskSquid25Equation> task25Equations;
+    private List<String> constantNames;
+    private List<String> constantValues;
 
     public static TaskSquid25 importSquidTaskFile(File squidTaskFile) {
 
@@ -67,7 +70,7 @@ public class TaskSquid25 implements Serializable {
 
                 taskSquid25.squidVersion = lines[0].split("\t")[1];
 
-                int firstRow = Integer.valueOf(lines[1].split("\t")[1]) - 1;
+                int firstRow = Integer.parseInt(lines[1].split("\t")[1]) - 1;
 
                 taskSquid25.squidTaskFileName = lines[firstRow].split("\t")[1];
                 taskSquid25.taskType = lines[firstRow + 1].split("\t")[1];
@@ -170,6 +173,17 @@ public class TaskSquid25 implements Serializable {
                     }
                 }
 
+                String[] constantNamesSource = lines[firstRow + 40].split("\t");
+                String[] constantValuesSource = lines[firstRow + 41].split("\t");
+
+                int countOfConstants = Integer.valueOf(constantNamesSource[1]);
+                taskSquid25.constantNames = new ArrayList<>();
+                taskSquid25.constantValues = new ArrayList<>();
+                for (int i = 0; i < countOfConstants; i++) {
+                    taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
+                    taskSquid25.constantValues.add(constantValuesSource[i + 2]);
+                }
+
             }
         } catch (IOException iOException) {
         }
@@ -187,16 +201,20 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("[\"Bkrdcts/sec\"]", "totalCps([\"BKG\"])");
         retVal = retVal.replace("9511", "95");
         retVal = retVal.replace("(Ma)", "");
+        // assume most calls to uncertainty are for percent
+        retVal = retVal.replace("[±\"", "[%\"");
 
         // regex for robreg with four arguments = robreg.*\)
         Pattern squid25FunctionPattern = Pattern.compile("^(.*)[r,R]obreg.*\\)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = squid25FunctionPattern.matcher(retVal);
         if (matcher.matches()) {
             String[] robregParts = matcher.group().split(",");
-            retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + (robregParts.length > 2 ? ")" : ""));
+            if (robregParts.length > 1) {
+                retVal = retVal.replace(matcher.group(), robregParts[0] + "," + robregParts[1] + (robregParts.length > 2 ? ")" : ""));
+            }
         }
 
-        // regex for robreg with four arguments = agePb76.*\)
+        // regex for robreg with four arguments = robreg.*\)
         squid25FunctionPattern = Pattern.compile("^(.*)[a,A]gePb76.*\\)", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
         if (matcher.matches()) {
@@ -206,13 +224,23 @@ public class TaskSquid25 implements Serializable {
             }
         }
 
-        // regex for sqWtdAv with four arguments = agePb76.*\)
+        // regex for sqWtdAv with four arguments = sqWtdAv.*\)
         squid25FunctionPattern = Pattern.compile("^(.*)[s,S]qWtdAv.*\\)", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
         if (matcher.matches()) {
             String[] sqWtdAvParts = matcher.group().split(",");
             if (sqWtdAvParts.length > 1) {
                 retVal = retVal.replace(matcher.group(), sqWtdAvParts[0] + ")");
+            }
+        }
+
+        // regex for sqBiweight with five arguments = sqBiweight.*\)
+        squid25FunctionPattern = Pattern.compile("^(.*)[s,S]qBiweight.*\\)", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.matches()) {
+            String[] sqBiweightParts = matcher.group().split(",");
+            if (sqBiweightParts.length > 1) {
+                retVal = retVal.replace(matcher.group(), sqBiweightParts[0] + "," + sqBiweightParts[1] + (sqBiweightParts.length > 2 ? ")" : ""));
             }
         }
 
@@ -235,14 +263,34 @@ public class TaskSquid25 implements Serializable {
                 retVal = retVal.replace(matcher.group(), concordiaParts[0] + "," + concordiaParts[2] + "," + concordiaParts[4] + (concordiaParts.length > 5 ? ")" : ""));
             }
         }
+        
+        // remove "<" and ">" from constants
+        squid25FunctionPattern = Pattern.compile("<(.[^>]*)>", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.find()) {
+            String constant = matcher.group();
+            constant = constant.substring(1, constant.length() - 1);
+            retVal = retVal.replace(matcher.group(), constant);
+        }
+        
+        // remove "/" and " " from expressions that contain letters only
+        squid25FunctionPattern = Pattern.compile("\\[\\\"\\D*\\\"\\]", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        if (matcher.find()) {
+            String name = matcher.group();
+            name = name.replaceAll("/", "").replaceAll(" ", "");
+            retVal = retVal.replace(matcher.group(), name);
+        }
 
         // remove leading mulitpliers meant for output tables
         retVal = retVal.replace("1000*", "");
         retVal = retVal.replace("100*", "");
 
-        // do not accept constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
+        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs		
         if (!excelString.contains("(") && !excelString.contains("[")) {
-            retVal = "";
+            if (!ShuntingYard.isNumber(excelString)) {
+                retVal = "";
+            }
         }
 
         // do not include calls to error functions of Age as in AgeErPb76 etc
@@ -262,6 +310,8 @@ public class TaskSquid25 implements Serializable {
         // remove leading mulitpliers meant for output tables
         retVal = retVal.replace("1000*", "");
         retVal = retVal.replace("100*", "");
+        // remove spaces
+        retVal = retVal.replace(" ", "");
 
         return retVal;
     }
@@ -334,6 +384,20 @@ public class TaskSquid25 implements Serializable {
      */
     public String getAuthorName() {
         return authorName;
+    }
+
+    /**
+     * @return the constantNames
+     */
+    public List<String> getConstantNames() {
+        return constantNames;
+    }
+
+    /**
+     * @return the constantValues
+     */
+    public List<String> getConstantValues() {
+        return constantValues;
     }
 
 }

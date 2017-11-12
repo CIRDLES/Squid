@@ -79,6 +79,8 @@ public class SpotManagerController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -158,6 +160,10 @@ public class SpotManagerController implements Initializable {
                 shrimpRunsRefMat.remove(selectedRun);
                 squidProject.removeRunFromPrawnFile(selectedRun);
                 spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
+                
+                squidProject.generatePrefixTreeFromSpotNames();
+                rmCountLabel.setText(String.valueOf(shrimpRunsRefMat.size()));
+                squidProject.getTask().setChanged(true);
             }
         });
         contextMenu.getItems().add(menuItem);
@@ -264,6 +270,7 @@ public class SpotManagerController implements Initializable {
         
         if (updateTaskStatus){
             squidProject.getTask().setChanged(true);
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
 
     }

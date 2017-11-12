@@ -53,6 +53,18 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 43 * hash + (this.healthy ? 1 : 0);
+        return hash;
+    }
+
+    @Override
     public boolean amHealthy() {
         return (name.length() > 0) && healthy;
     }

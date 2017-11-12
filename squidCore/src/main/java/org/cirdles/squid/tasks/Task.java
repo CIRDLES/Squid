@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -106,6 +105,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected SortedSet<Expression> taskExpressionsOrdered;
     protected SortedSet<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
+    protected Map<String, ConstantNode> namedConstantsMap;
 
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
@@ -163,8 +163,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.taskExpressionTreesOrdered = new TreeSet<>();
         this.taskExpressionsOrdered = new TreeSet<>();
         this.taskExpressionsRemoved = new TreeSet<>();
-        this.namedExpressionsMap = new LinkedHashMap<>();
-        this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
+        this.namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         this.shrimpFractions = new ArrayList<>();
         this.referenceMaterialSpots = new ArrayList<>();
@@ -187,32 +188,37 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         summary.append("\n      ");
         for (int i = 0; i < squidSpeciesModelList.size(); i++) {
-            summary.append(squidSpeciesModelList.get(i).getPrawnFileIsotopeName());
-            summary.append((i == (squidSpeciesModelList.size() - 1) ? "" : ", "));
+            String comma = (i == (squidSpeciesModelList.size() - 1) ? "" : ", ");
+            summary.append(String.format("%1$-" + 7 + "s", squidSpeciesModelList.get(i).getPrawnFileIsotopeName() + comma));
         }
 
-        summary.append("\n ")
+        summary.append("\n\n ")
                 .append("Task File names ")
                 .append(String.valueOf(nominalMasses.size()))
                 .append(" Masses:");
 
         summary.append("\n      ");
         for (int i = 0; i < nominalMasses.size(); i++) {
-            summary.append(nominalMasses.get(i));
-            summary.append((i == (nominalMasses.size() - 1) ? "" : ", "));
+            String comma = (i == (squidSpeciesModelList.size() - 1) ? "" : ", ");
+            summary.append(String.format("%1$-" + 7 + "s", nominalMasses.get(i) + comma));
         }
-//
-//        summary.append("\n ")
-//                .append("Squid3 adopts these isotope names: ");
-//
-//        summary.append("\n  ");
-//        for (int i = 0; i < squidSpeciesModelList.size(); i++) {
-//            summary.append(squidSpeciesModelList.get(i).getIsotopeName());
-//            summary.append((i == (squidSpeciesModelList.size() - 1) ? "" : ", "));
-//        }
 
+        Collections.sort(ratioNames);
+        int countOfRatios = ratioNames.size();
         summary.append("\n\n Task Ratios: ");
-        summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");
+        summary.append((String) (countOfRatios > 0 ? String.valueOf(countOfRatios) : "None")).append(" chosen.");
+        summary.append("\n  ");
+        for (int i = 0; i < countOfRatios; i++) {
+            summary.append(String.format("%1$-" + 6 + "s", ratioNames.get(i).split("/")[0]));
+        }
+        summary.append("\n  ");
+        for (int i = 0; i < countOfRatios; i++) {
+            summary.append(String.format("%1$-" + 6 + "s", "----"));
+        }
+        summary.append("\n  ");
+        for (int i = 0; i < countOfRatios; i++) {
+            summary.append(String.format("%1$-" + 6 + "s", ratioNames.get(i).split("/")[1]));
+        }
 
         summary.append("\n\n ")
                 .append(String.valueOf(referenceMaterialSpots.size()))
@@ -236,6 +242,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\t UnHealthy: ");
         summary.append((String) ((taskExpressionTreesOrdered.size() - count) > 0
                 ? String.valueOf(taskExpressionTreesOrdered.size() - count) : "None")).append(" included.");
+
+        summary.append("\n\n Task Constants: \n ");
+        if (namedConstantsMap.size() > 0) {
+            for (Map.Entry<String, ConstantNode> entry : namedConstantsMap.entrySet()) {
+                summary.append(" <").append(entry.getKey()).append(" = ").append((double) entry.getValue().getValue()).append(">");
+            }
+        } else {
+            summary.append(" No constants supplied.");
+        }
 
         return summary.toString();
     }
@@ -267,6 +282,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             try {
                 shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
             } catch (Exception e) {
+                // ignore for now
             }
 
             processAndSortExpressions();
@@ -284,19 +300,29 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void updateRatioNames(List<String> ratioNames) {
-        this.ratioNames = ratioNames;
+    public void updateRatioNames(String[] ratioNames) {
+        this.ratioNames.clear();
+        for (String rn : ratioNames) {
+            this.ratioNames.add(rn);
+        }
+
+        populateTableOfSelectedRatiosFromRatiosList();
 
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);
-//        processAndSortExpressions();
     }
 
     private void produceSummaryReportsForGUI() {
-        try {
-            reportsEngine.produceReports(shrimpFractions, false, true);
-        } catch (IOException iOException) {
+        if (unknownSpots.size() > 0) {
+            try {
+                reportsEngine.produceReports(shrimpFractions,
+                        (ShrimpFraction) unknownSpots.get(0),
+                        referenceMaterialSpots.size() > 0
+                        ? (ShrimpFraction) referenceMaterialSpots.get(0) : (ShrimpFraction) unknownSpots.get(0),
+                        false, true);
+            } catch (IOException iOException) {
+            }
         }
     }
 
@@ -305,14 +331,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public void produceSanityReportsToFiles() {
-        try {
-            reportsEngine.produceReports(shrimpFractions, true, false);
-        } catch (IOException iOException) {
+        if (unknownSpots.size() > 0) {
+            try {
+                reportsEngine.produceReports(shrimpFractions,
+                        (ShrimpFraction) unknownSpots.get(0),
+                        (ShrimpFraction) unknownSpots.get(0), true, false);
+            } catch (IOException iOException) {
+            }
         }
     }
 
     private void reorderExpressions() {
-        Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+        Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
         taskExpressionsOrdered.clear();
         taskExpressionTreesOrdered.clear();
         for (Expression listedExp : expArray) {
@@ -340,7 +370,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void updateAffectedExpressions(int repeats, Expression sourceExpression) {
         for (int i = 0; i < repeats; i++) {
-            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
             for (Expression listedExp : expArray) {
                 if (listedExp.getExpressionTree().usesAnotherExpression(sourceExpression.getExpressionTree())) {
                     updateSingleExpression(listedExp);
@@ -360,7 +390,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void updateAllExpressions(int repeats) {
         for (int i = 0; i < repeats; i++) {
-            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[0]);
+            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
             for (Expression listedExp : expArray) {
                 updateSingleExpression(listedExp);
             }
@@ -385,15 +415,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
             listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
         }
-
-//        processAndSortExpressions();
-//        processAndSortExpressions();
     }
 
     @Override
     public void removeExpression(Expression expression) {
         if (expression != null) {
-            taskExpressionsOrdered.remove(expression);
+            // having issues with remove, so handling by hand
+            // it appears java has a bug since even when coparator and equals have correct result
+            SortedSet<Expression> taskBasket = new TreeSet<>();
+            for (Expression exp : taskExpressionsOrdered) {
+                if (!exp.equals(expression)) {
+                    taskBasket.add(exp);
+                }
+            }
+            taskExpressionsOrdered = taskBasket;
             taskExpressionsRemoved.add(expression);
             processAndSortExpressions();
             updateAffectedExpressions(2, expression);
@@ -441,10 +476,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (mapOfIndexToMassStationDetails != null) {
             // update these if squidSpeciesModelList exists
             if (squidSpeciesModelList.size() > 0) {
+                int index = 0;
                 for (SquidSpeciesModel ssm : squidSpeciesModelList) {
                     MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
-                    // only these two fields change
+                    // only these three fields change
                     massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+                    if (nominalMasses.size() > 0) {
+                        massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
+                        index++;
+                    }
+
                     massStationDetail.setIsBackground(ssm.getIsBackground());
                     if (ssm.getIsBackground()) {
                         indexOfBackgroundSpecies = massStationDetail.getMassStationIndex();
@@ -453,6 +494,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
             }
+        }
+    }
+
+    @Override
+    public void applyTaskIsotopeLabels() {
+        int index = 0;
+        for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+            MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+            ssm.setIsotopeName(nominalMasses.get(index));
+            massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+            index++;
         }
     }
 
@@ -512,6 +564,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         //TODO: Make a constants factory
         ExpressionTreeInterface testConstant = new ConstantNode("TEST_CONSTANT", 999.999);
         namedExpressionsMap.put(testConstant.getName(), testConstant);
+
+        for (Map.Entry<String, ConstantNode> entry : namedConstantsMap.entrySet()) {
+            namedExpressionsMap.put(entry.getKey(), entry.getValue());
+        }
 
         // TODO: make a SpotFieldNode factory
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
@@ -644,12 +700,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     nameOfMount = "No-Mount-Name";
                 }
                 shrimpFraction.setNameOfMount(nameOfMount);
-
-                // preparing for field "Hours" specified as time in hours elapsed since first ref material analysis start = hh.###
-                if ((PRAWN_FILE_RUN_FRACTION_PARSER.getBaseTimeOfFirstRefMatForCalcHoursField() == 0l)
-                        && shrimpFraction.isReferenceMaterial()) {
-                    PRAWN_FILE_RUN_FRACTION_PARSER.setBaseTimeOfFirstRefMatForCalcHoursField(shrimpFraction.getDateTimeMilliseconds());
-                }
                 shrimpFractions.add(shrimpFraction);
             }
         }
@@ -661,16 +711,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.setTaskExpressionsForScansEvaluated(taskExpressionsForScansEvaluated);
         });
 
-        // subdivide spots
+        // subdivide spots and calculate hours
         referenceMaterialSpots = new ArrayList<>();
         unknownSpots = new ArrayList<>();
-        shrimpFractions.forEach((spot) -> {
+        boolean firstReferenceMaterial = true;
+        long baseTimeOfFirstRefMatForCalcHoursField = 0l;
+        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
             if (spot.isReferenceMaterial()) {
                 referenceMaterialSpots.add(spot);
+                if (firstReferenceMaterial) {
+                    baseTimeOfFirstRefMatForCalcHoursField = spot.getDateTimeMilliseconds();
+                    firstReferenceMaterial = false;
+                }
             } else {
                 unknownSpots.add(spot);
             }
-        });
+        }
+
+        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
+            ((ShrimpFraction) spot).calculateSpotHours(baseTimeOfFirstRefMatForCalcHoursField);
+        }
 
         return shrimpFractions;
     }
@@ -683,6 +743,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void evaluateTaskExpressions() {
 
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
+        // prep spots
+        shrimpFractions.forEach((spot) -> {
+            spot.getTaskExpressionsForScansEvaluated().clear();
+        });
 
         for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
             if (expression.amHealthy() && expression.isRootExpressionTree()) {
@@ -714,15 +778,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void evaluateExpressionForSpotSet(
             ExpressionTreeInterface expression,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
-        // determine type of expression
-        if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
-            double[][] values = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
-            taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
-                    new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), values, spotsForExpression));
-        } else {
-            // perform expression on each spot
-            for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
-                evaluateExpressionForSpot(expression, spot);
+        if (spotsForExpression.size() > 0) {
+            // determine type of expression
+            if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
+                double[][] values;
+                if ((expression instanceof ConstantNode) || ((ExpressionTree) expression).getOperation().isScalarResult()) {
+                    // create list of one spot, since we only need to look up value once
+                    List<ShrimpFractionExpressionInterface> singleSpotForExpression = new ArrayList<>();
+                    singleSpotForExpression.add(spotsForExpression.get(0));
+                    values = convertObjectArrayToDoubles(expression.eval(singleSpotForExpression, this));
+                } else {
+                    values = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
+                }
+
+                taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
+                        new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), values, spotsForExpression));
+            } else {
+                // perform expression on each spot
+                for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+                    evaluateExpressionForSpot(expression, spot);
+                }
             }
         }
     }
@@ -750,7 +825,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             try {
                 double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
                 spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
-            } catch (Exception squidException) {
+            } catch (SquidException squidException) {
                 System.out.println(squidException.getMessage());
             }
         }
@@ -772,7 +847,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return listOfMassStationDetails;
     }
 
-    private void populateTableOfSelectedRatiosFromRatiosList() {
+    @Override
+    public void populateTableOfSelectedRatiosFromRatiosList() {
         resetTableOfSelectedRatiosByMassStationIndex();
 
         for (int i = 0; i < ratioNames.size(); i++) {
@@ -805,7 +881,47 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);
-//        processAndSortExpressions();
+    }
+
+    @Override
+    public void updateTableOfSelectedRatiosByRowOrCol(int row, int col, boolean selected) {
+        if (row == -1) {
+            String den = mapOfIndexToMassStationDetails.get(col).getIsotopeLabel();
+            for (int i = 0; i < mapOfIndexToMassStationDetails.size(); i++) {
+                String num = mapOfIndexToMassStationDetails.get(i).getIsotopeLabel();
+                if (num.compareTo(den) != 0) {
+                    String ratioName = num + "/" + den;
+                    if (selected) {
+                        if (!ratioNames.contains(ratioName)) {
+                            ratioNames.add(ratioName);
+                        }
+                    } else {
+                        ratioNames.remove(ratioName);
+                    }
+                }
+            }
+        }
+
+        if (col == -1) {
+            String num = mapOfIndexToMassStationDetails.get(row).getIsotopeLabel();
+            for (int i = 0; i < mapOfIndexToMassStationDetails.size(); i++) {
+                String den = mapOfIndexToMassStationDetails.get(i).getIsotopeLabel();
+                if (num.compareTo(den) != 0) {
+                    String ratioName = num + "/" + den;
+                    if (selected) {
+                        if (!ratioNames.contains(ratioName)) {
+                            ratioNames.add(ratioName);
+                        }
+                    } else {
+                        ratioNames.remove(ratioName);
+                    }
+                }
+            }
+        }
+
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport();
+        updateAllExpressions(2);
     }
 
     /**
@@ -1073,7 +1189,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public boolean[][] getTableOfSelectedRatiosByMassStationIndex() {
-        return tableOfSelectedRatiosByMassStationIndex;
+        return tableOfSelectedRatiosByMassStationIndex.clone();
     }
 
     private void resetTableOfSelectedRatiosByMassStationIndex() {
@@ -1094,6 +1210,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public Map<String, ExpressionTreeInterface> getNamedExpressionsMap() {
         return namedExpressionsMap;
+    }
+
+    /**
+     * @return the namedConstantsMap
+     */
+    public Map<String, ConstantNode> getNamedConstantsMap() {
+        if (namedConstantsMap == null) {
+            this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        }
+        return namedConstantsMap;
     }
 
     /**

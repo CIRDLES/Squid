@@ -26,7 +26,7 @@ import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_M
  */
 public class ShuntingYard {
 
-    private static final Pattern numberPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
 
     /**
      *
@@ -124,9 +124,9 @@ public class ShuntingYard {
                     pop o2 off the operator stack, onto the output queue;
                     at the end of iteration push o1 onto the operator stack.
                      */
-                    operatorStack.push(token);
-                    lastWasOperationOrFunction = true;
-                    break;
+//                    operatorStack.push(token);
+//                    lastWasOperationOrFunction = true;
+//                    break;
                 case LEFT_PAREN:
                     operatorStack.push(token);
                     lastWasOperationOrFunction = true;
@@ -150,7 +150,7 @@ public class ShuntingYard {
                                 operatorStack.pop();
                                 try {
                                     String func;
-                                    try {
+//                                    try {
                                         peek = TokenTypes.getType(operatorStack.peek());
                                         if (peek.compareTo(TokenTypes.FUNCTION) == 0) {
                                             func = operatorStack.pop();
@@ -158,12 +158,12 @@ public class ShuntingYard {
                                             boolean w = wereValues.pop();
                                             if (w) {
                                                 a++;
-                                                String funcWithArgCount = func + ":" + String.valueOf(a);
+//                                                String funcWithArgCount = func + ":" + String.valueOf(a);
                                                 outputQueue.add(func);// temp simplify(funcWithArgCount);
                                             }
                                         }
-                                    } catch (Exception e) {
-                                    }
+//                                    } catch (Exception e) {
+//                                    }
 //                                    outputQueue.add(func);// temp simplify(funcWithArgCount);
                                 } catch (Exception e) {
                                 }
@@ -173,13 +173,13 @@ public class ShuntingYard {
                     lastWasOperationOrFunction = false;
                     break;
                 case NUMBER:
-                    outputQueue.add(token);
-                    if (!wereValues.empty()) {
-                        wereValues.pop();
-                        wereValues.push(true);
-                    }
-                    lastWasOperationOrFunction = false;
-                    break;
+//                    outputQueue.add(token);
+//                    if (!wereValues.empty()) {
+//                        wereValues.pop();
+//                        wereValues.push(true);
+//                    }
+//                    lastWasOperationOrFunction = false;
+//                    break;
                 case NAMED_CONSTANT:
                     outputQueue.add(token);
                     if (!wereValues.empty()) {
@@ -218,12 +218,14 @@ public class ShuntingYard {
                     try {
                         w = wereValues.pop();
                     } catch (Exception e) {
+                        // ignore
                     }
                     if (w) {
                         int a = 0;
                         try {
                             a = argCount.pop();
                         } catch (Exception e) {
+                            //ignore
                         }
                         argCount.push(a + 1);
                     }
@@ -322,7 +324,7 @@ public class ShuntingYard {
                 retVal = COMMA;
             } else if (FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
-            } else if (token.matches("\\[\"(.*?)\"\\]")) {
+            } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;
             } else if (isNumber(token)) {
                 retVal = NUMBER;
@@ -339,6 +341,6 @@ public class ShuntingYard {
      * @return
      */
     public static boolean isNumber(String string) {
-        return string != null && numberPattern.matcher(string).matches();
+        return string != null && NUMBER_PATTERN.matcher(string).matches();
     }
 }

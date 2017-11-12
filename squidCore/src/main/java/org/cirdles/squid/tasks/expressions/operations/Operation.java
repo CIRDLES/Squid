@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -93,7 +94,7 @@ public abstract class Operation
     /**
      *
      */
-    public final static Map<String, String> OPERATIONS_MAP = new HashMap<>();
+    public final static Map<String, String> OPERATIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     static {
 

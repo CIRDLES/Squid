@@ -43,6 +43,7 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
 /**
  *
@@ -69,7 +70,7 @@ public class ExpressionParser {
      */
     public ExpressionTreeInterface parseExpressionStringAndBuildExpressionTree(Expression expression) {
         eqnSwitchNU = expression.isSquidSwitchNU();
-        
+
         ExpressionTreeInterface returnExpressionTree = new ExpressionTreeParsedFromExcelString(expression.getName());
 
         // Get our lexer
@@ -116,17 +117,20 @@ public class ExpressionParser {
             Collections.reverse(parsedRPN);
 
             returnExpressionTree = buildTree(parsedRPN);
-            if (returnExpressionTree != null) {
-                // if single objects are the actual expression, don't change
-                if (!(returnExpressionTree instanceof ConstantNode) && !(returnExpressionTree instanceof SpotFieldNode) && !(returnExpressionTree instanceof ShrimpSpeciesNode)) {
-                    try {
-                        returnExpressionTree.setName(expression.getName());
-                    } catch (Exception e) {
-                    }
-                }
-                // be sure top level expression is root
-                returnExpressionTree.setRootExpressionTree(true);
+
+            // if single objects are the actual expression, don't change
+            if (!(returnExpressionTree instanceof SpotFieldNode)
+                    && !(returnExpressionTree instanceof ShrimpSpeciesNode)
+                    && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)
+                    && !(returnExpressionTree instanceof VariableNodeForSummary)
+                    && returnExpressionTree.isValid()) {
+
+                returnExpressionTree.setName(expression.getName());
+
             }
+            // be sure top level expression is root
+            returnExpressionTree.setRootExpressionTree(true);
+
         }
 
         return returnExpressionTree;
@@ -214,7 +218,6 @@ public class ExpressionParser {
 
             case FUNCTION:
                 OperationOrFunctionInterface function = Function.operationFactory(FUNCTIONS_MAP.get(token));
-//                isScalarFunctionFlag = function.isScalarResult();
                 retExpTree = new ExpressionTreeParsedFromExcelString(function);
                 break;
 
@@ -230,24 +233,66 @@ public class ExpressionParser {
                 break;
 
             case NAMED_EXPRESSION:
-                ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(token.replace("[\"", "").replace("\"]", ""));
+                // handle special cases of array index references and ± references to uncertainty
+                String uncertaintyDirective = "";
+                if (token.startsWith("[±")) {
+                    uncertaintyDirective = "±";
+                } else if (token.startsWith("[%")) {
+                    uncertaintyDirective = "%";
+                }
+                String expressionName = token.replace("[\"", "").replace("[±\"", "").replace("[%\"", "").replace("\"]", "");
+                ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(expressionName);
                 if (retExpTreeKnown == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
+                    // let's see if we have an array reference 
+                    int index = 0;
+                    String lastTwo = expressionName.substring(expressionName.length() - 2);
+                    if (ShuntingYard.isNumber(lastTwo)) {
+                        // index = first digit - 1 (converting from vertical 1-based excel to horiz 0-based java
+                        index = Integer.parseInt(lastTwo.substring(0, 1)) - 1;
+                        String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
+                        if (index >= 0) {
+                            retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
+                            if (retExpTreeKnown != null) {
+                                // we have an array index reference to a known expression
+                                if (index == 0) {
+                                    //this is equivalent to calling the expression with no inices
+                                    retExpTree = retExpTreeKnown;
+                                } else {
+                                    retExpTree = new VariableNodeForSummary(baseExpressionName, index);
+                                    namedExpressionsMap.put(expressionName, retExpTree);
+                                }
+                            }
+                        }
+                    }
+
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
-                        && eqnSwitchNU){
+                        && eqnSwitchNU) {
                     // this is the NU switch case
                     retExpTree = retExpTreeKnown;
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
-                        && !eqnSwitchNU){
+                        && !eqnSwitchNU) {
                     // this is the non NU switch case 
-                    retExpTree = new VariableNodeForIsotopicRatios(retExpTreeKnown.getName());
-                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode) || (retExpTreeKnown instanceof SpotFieldNode)) {
+                    retExpTree = new VariableNodeForIsotopicRatios(
+                            retExpTreeKnown.getName(),
+                            (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
+                            (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET(),
+                            uncertaintyDirective);
+                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
+                        || (retExpTreeKnown instanceof SpotFieldNode)
+                        || (retExpTreeKnown instanceof VariableNodeForIsotopicRatios)
+                        || (retExpTreeKnown instanceof VariableNodeForSummary)) {
                     retExpTree = retExpTreeKnown;
+                } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
+                    retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName());
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());
                 }
+                break;
+
+            default:
                 break;
         }
 

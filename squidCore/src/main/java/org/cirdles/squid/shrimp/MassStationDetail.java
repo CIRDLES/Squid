@@ -31,8 +31,9 @@ public class MassStationDetail implements Serializable {
     private int massStationIndex;
 
     private final SimpleStringProperty massStationLabel;
-    private final SimpleStringProperty isotopeLabel;
     private final SimpleStringProperty elementLabel;
+    private final SimpleStringProperty isotopeLabel;
+    private SimpleStringProperty taskIsotopeLabel;
 
     private boolean isBackground;
 
@@ -46,6 +47,7 @@ public class MassStationDetail implements Serializable {
         this.massStationIndex = massStationIndex;
         this.massStationLabel = new SimpleStringProperty(massStationLabel);
         this.isotopeLabel = new SimpleStringProperty(isotopeLabel);
+        this.taskIsotopeLabel = new SimpleStringProperty(isotopeLabel);
         this.elementLabel = new SimpleStringProperty(elementLabel);
         this.isBackground = isBackground;
 
@@ -101,6 +103,20 @@ public class MassStationDetail implements Serializable {
      */
     public void setIsotopeLabel(String label) {
         isotopeLabel.set(label);
+    }
+
+    /**
+     * @return the taskIsotopeLabel
+     */
+    public String getTaskIsotopeLabel() {
+        return taskIsotopeLabel.get();
+    }
+
+    /**
+     * @param taskIsotopeLabel the taskIsotopeLabel to set
+     */
+    public void setTaskIsotopeLabel(String label) {
+        taskIsotopeLabel.set(label);
     }
 
     /**

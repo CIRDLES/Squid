@@ -76,25 +76,56 @@ expr:   FUNCTION '(' exprList+ ')'    // func call like f(), f(x), f(1,2) switch
     ;
 exprList : expr (',' expr)* ;   // arg list
 
+// provides for case-insensitive function names
+fragment A:('a'|'A');
+fragment B:('b'|'B');
+fragment C:('c'|'C');
+fragment D:('d'|'D');
+fragment E:('e'|'E');
+fragment F:('f'|'F');
+fragment G:('g'|'G');
+fragment H:('h'|'H');
+fragment I:('i'|'I');
+fragment J:('j'|'J');
+fragment K:('k'|'K');
+fragment L:('l'|'L');
+fragment M:('m'|'M');
+fragment N:('n'|'N');
+fragment O:('o'|'O');
+fragment P:('p'|'P');
+fragment Q:('q'|'Q');
+fragment R:('r'|'R');
+fragment S:('s'|'S');
+fragment T:('t'|'T');
+fragment U:('u'|'U');
+fragment V:('v'|'V');
+fragment W:('w'|'W');
+fragment X:('x'|'X');
+fragment Y:('y'|'Y');
+fragment Z:('z'|'Z');
+
 FUNCTION : 
-    'AgePb76' | 'agePb76' | 
-    'And' | 'and' | 
-    'ConcordiaTW' | 'concordiaTW' |
-    'Concordia' | 'concordia' |
-    'Exp' | 'exp' |  
-    'If' | 'if' | 
-    'Ln' | 'ln' | 
-    'Sqrt' | 'sqrt' | 
-    'RobReg' | 'robReg' | 'robreg' |
-    'SqBiweight' | 'sqBiweight' |
-    'SqWtdAv' | 'sqWtdAv' |
-    'TotalCps' | 'totalCps' |
-    'lookup' | 'max' | 'abs' |
-    'average' ;
+    A G E P B '76' |
+    A N D |
+    C O N C O R D I A T W |
+    C O N C O R D I A |
+    E X P |
+    I F |
+    L N |
+    S Q R T |
+    R O B R E G |
+    S Q B I W E I G H T |
+    S Q W T D A V |
+    T O T A L C P S |
+    L O O K U P | 
+    M A X | 
+    A B S |
+    A V E R A G E | 
+    C O U N T ;
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 
-NAMED_EXPRESSION : '[' '"' ID (ID | '/' | ' ')* '"' ']' ;
+NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment

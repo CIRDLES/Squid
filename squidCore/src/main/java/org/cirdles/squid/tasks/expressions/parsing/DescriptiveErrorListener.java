@@ -43,10 +43,10 @@ public class DescriptiveErrorListener extends BaseErrorListener{
             return;
         }
 
-        String sourceName = recognizer.getInputStream().getSourceName();
-        if (!sourceName.isEmpty()) {
-            sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
-        }
+//        String sourceName = recognizer.getInputStream().getSourceName();
+//        if (!sourceName.isEmpty()) {
+//            sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
+//        }
 
         System.err.println("CUSTOM:  "  + "line " + line + ":" + charPositionInLine + " " + msg);
         syntaxErrors = msg;

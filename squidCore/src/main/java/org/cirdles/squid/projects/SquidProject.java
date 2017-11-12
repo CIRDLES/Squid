@@ -33,6 +33,8 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
 import org.cirdles.squid.tasks.builtinTasks.Squid3ExampleTask1;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.xml.sax.SAXException;
@@ -99,7 +101,8 @@ public final class SquidProject implements Serializable {
             task.setPrawnFile(prawnFile);
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-            task.updateAllExpressions(2);
+            // four passes needed for percolating results
+            task.updateAllExpressions(4);
             task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -143,9 +146,16 @@ public final class SquidProject implements Serializable {
             expressionTree.setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
 
             this.task.getTaskExpressionsOrdered().add(expression);
-
         }
-
+        
+        List<String> constantNames = taskSquid25.getConstantNames();
+        List<String> constantValues = taskSquid25.getConstantValues();
+        for (int i = 0; i < constantNames.size(); i ++){
+            double constantDouble = Double.parseDouble(constantValues.get(i));
+            ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
+            task.getNamedConstantsMap().put(constant.getName(), constant);
+        }
+                
         initializeTaskAndReduceData();
     }
 

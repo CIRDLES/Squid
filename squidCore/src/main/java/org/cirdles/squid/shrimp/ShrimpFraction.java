@@ -118,6 +118,16 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         this.isotopicRatiosII = isotopicRatiosII;
     }
 
+    public void calculateSpotHours(long baseTimeOfFirstRefMatForCalcHoursField) {
+        long deltaTime = dateTimeMilliseconds - baseTimeOfFirstRefMatForCalcHoursField;
+
+        BigDecimal deltaTimeBD = new BigDecimal(String.valueOf(deltaTime));
+
+        BigDecimal hrs = deltaTimeBD.divide(new BigDecimal("3600000"), MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_UP);
+
+        hours = hrs.doubleValue();
+    }
+
     /**
      * This method is needed by expression processing and referred to by its
      * String name.
@@ -272,8 +282,12 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getIsotopicRatioValuesByStringName(String name) {
+        double[][] ratioAndUnct = new double[][]{{0.0, 0.0}};
         SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
-        double[][] ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
+        if (ratio != null) {
+            ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
+        }
+
         return ratioAndUnct;
     }
 
