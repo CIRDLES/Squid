@@ -188,8 +188,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         summary.append("\n      ");
         for (int i = 0; i < squidSpeciesModelList.size(); i++) {
-            summary.append(squidSpeciesModelList.get(i).getPrawnFileIsotopeName());
-            summary.append((i == (squidSpeciesModelList.size() - 1) ? "" : ", "));
+            String comma = (i == (squidSpeciesModelList.size() - 1) ? "" : ", ");
+            summary.append(String.format("%1$-" + 7 + "s", squidSpeciesModelList.get(i).getPrawnFileIsotopeName() + comma));
         }
 
         summary.append("\n ")
@@ -199,21 +199,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         summary.append("\n      ");
         for (int i = 0; i < nominalMasses.size(); i++) {
-            summary.append(nominalMasses.get(i));
-            summary.append((i == (nominalMasses.size() - 1) ? "" : ", "));
+            String comma = (i == (squidSpeciesModelList.size() - 1) ? "" : ", ");
+            summary.append(String.format("%1$-" + 7 + "s", nominalMasses.get(i) + comma));
         }
-//
-//        summary.append("\n ")
-//                .append("Squid3 adopts these isotope names: ");
-//
-//        summary.append("\n  ");
-//        for (int i = 0; i < squidSpeciesModelList.size(); i++) {
-//            summary.append(squidSpeciesModelList.get(i).getIsotopeName());
-//            summary.append((i == (squidSpeciesModelList.size() - 1) ? "" : ", "));
-//        }
 
+        int countOfRatios = ratioNames.size();
         summary.append("\n\n Task Ratios: ");
-        summary.append((String) (ratioNames.size() > 0 ? String.valueOf(ratioNames.size()) : "None")).append(" chosen.");
+        summary.append((String) (countOfRatios > 0 ? String.valueOf(countOfRatios) : "None")).append(" chosen.");
+        summary.append("\n  ");
+        for (int i = 0; i < countOfRatios; i++) {
+            summary.append(String.format("%1$-" + 6 + "s", ratioNames.get(i).split("/")[0]));
+        }
+        summary.append("\n  ");
+        for (int i = 0; i < countOfRatios; i++) {
+            summary.append(String.format("%1$-" + 6 + "s", "----"));
+        }
+        summary.append("\n  ");
+        for (int i = 0; i < countOfRatios; i++) {
+            summary.append(String.format("%1$-" + 6 + "s", ratioNames.get(i).split("/")[1]));
+        }
 
         summary.append("\n\n ")
                 .append(String.valueOf(referenceMaterialSpots.size()))
@@ -462,10 +466,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (mapOfIndexToMassStationDetails != null) {
             // update these if squidSpeciesModelList exists
             if (squidSpeciesModelList.size() > 0) {
+                int index = 0;
                 for (SquidSpeciesModel ssm : squidSpeciesModelList) {
                     MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
-                    // only these two fields change
+                    // only these three fields change
                     massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+                    massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
+                    index++;
+
                     massStationDetail.setIsBackground(ssm.getIsBackground());
                     if (ssm.getIsBackground()) {
                         indexOfBackgroundSpecies = massStationDetail.getMassStationIndex();
@@ -474,6 +482,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
             }
+        }
+    }
+
+    @Override
+    public void applyTaskIsotopeLabels() {
+        int index = 0;
+        for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+            MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());            
+            ssm.setIsotopeName(nominalMasses.get(index));
+            massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+            index++;
         }
     }
 
@@ -665,12 +684,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     nameOfMount = "No-Mount-Name";
                 }
                 shrimpFraction.setNameOfMount(nameOfMount);
-//
-//                // preparing for field "Hours" specified as time in hours elapsed since first ref material analysis start = hh.###
-//                if ((PRAWN_FILE_RUN_FRACTION_PARSER.getBaseTimeOfFirstRefMatForCalcHoursField() == 0l)
-//                        && shrimpFraction.isReferenceMaterial()) {
-//                    PRAWN_FILE_RUN_FRACTION_PARSER.setBaseTimeOfFirstRefMatForCalcHoursField(shrimpFraction.getDateTimeMilliseconds());
-//                }
                 shrimpFractions.add(shrimpFraction);
             }
         }
@@ -818,7 +831,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return listOfMassStationDetails;
     }
 
-    private void populateTableOfSelectedRatiosFromRatiosList() {
+    
+    @Override
+    public void populateTableOfSelectedRatiosFromRatiosList() {
         resetTableOfSelectedRatiosByMassStationIndex();
 
         for (int i = 0; i < ratioNames.size(); i++) {

@@ -44,6 +44,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+import org.cirdles.squid.tasks.TaskInterface;
 
 /**
  * FXML Controller class
@@ -52,6 +53,7 @@ import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUN
  */
 public class IsotopesManagerController implements Initializable {
 
+    private TaskInterface task;
     @FXML
     private AnchorPane isotopesManagerAnchorPane;
     @FXML
@@ -62,6 +64,8 @@ public class IsotopesManagerController implements Initializable {
     private TableColumn<MassStationDetail, String> elementLabelColumn;
     @FXML
     private TableColumn<MassStationDetail, String> isotopeLabelColumn;
+    @FXML
+    private TableColumn<MassStationDetail, String> taskIsotopeLabelColumn;
 
     /**
      * Initializes the controller class.
@@ -74,15 +78,18 @@ public class IsotopesManagerController implements Initializable {
         isotopesManagerAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         isotopesManagerAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
+        task = squidProject.getTask();
+        
         setupIsotopeTable();
     }
 
     private void setupIsotopeTable() {
         ObservableList<MassStationDetail> massStationsData
-                = FXCollections.observableArrayList(squidProject.getTask().makeListOfMassStationDetails());
+                = FXCollections.observableArrayList(task.makeListOfMassStationDetails());
 
         massLabelColumn.setCellValueFactory(new PropertyValueFactory<>("massStationLabel"));
         elementLabelColumn.setCellValueFactory(new PropertyValueFactory<>("elementLabel"));
+        taskIsotopeLabelColumn.setCellValueFactory(new PropertyValueFactory<>("taskIsotopeLabel"));
 
         Callback<TableColumn<MassStationDetail, String>, TableCell<MassStationDetail, String>> cellFactory
                 = new Callback<TableColumn<MassStationDetail, String>, TableCell<MassStationDetail, String>>() {
@@ -102,9 +109,9 @@ public class IsotopesManagerController implements Initializable {
                     ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
                             .setIsotopeLabel(editIsotopeName);
                     SquidSpeciesModel ssm
-                            = squidProject.getTask().getSquidSpeciesModelList()
+                            = task.getSquidSpeciesModelList()
                                     .get(editEvent.getTablePosition().getRow());
-                    squidProject.getTask().setChanged(true);
+                    task.setChanged(true);
                     ssm.setIsotopeName(editIsotopeName);
                 } else {
                     ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
@@ -125,14 +132,14 @@ public class IsotopesManagerController implements Initializable {
                     public void handle(ActionEvent event) {
                         row.getItem().setIsotopeLabel(SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
                         SquidSpeciesModel ssm
-                                = squidProject.getTask().getSquidSpeciesModelList()
+                                = task.getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
-                        int previousIndex = squidProject.getTask().selectBackgroundSpeciesReturnPreviousIndex(ssm);
+                        int previousIndex = task.selectBackgroundSpeciesReturnPreviousIndex(ssm);
                         if (previousIndex >= 0) {
                             massStationsData.get(previousIndex).setIsotopeLabel(
-                                    squidProject.getTask().getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
+                                    task.getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
                         }
-                        squidProject.getTask().setChanged(true);
+                        task.setChanged(true);
                         isotopesTableView.refresh();
                     }
                 });
@@ -143,9 +150,9 @@ public class IsotopesManagerController implements Initializable {
                     @Override
                     public void handle(ActionEvent event) {
                         SquidSpeciesModel ssm
-                                = squidProject.getTask().getSquidSpeciesModelList()
+                                = task.getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
-                        squidProject.getTask().setChanged(true);
+                        task.setChanged(true);
                         ssm.setIsBackground(false);
                         row.getItem().setIsotopeLabel(ssm.getIsotopeName());
                         isotopesTableView.refresh();
@@ -166,6 +173,14 @@ public class IsotopesManagerController implements Initializable {
         isotopesTableView.setItems(massStationsData);
         isotopesTableView.setFixedCellSize(25);
         isotopesTableView.prefHeightProperty().bind(Bindings.size(isotopesTableView.getItems()).multiply(isotopesTableView.getFixedCellSize()).add(30));
+    }
+
+    @FXML
+    private void applyTaskIsotopeLabelsAction(ActionEvent event) {
+        task.applyTaskIsotopeLabels();
+        task.setChanged(true);
+        isotopesTableView.refresh();
+        task.updateAllExpressions(2);
     }
 
     class EditingCell extends TableCell<MassStationDetail, String> {

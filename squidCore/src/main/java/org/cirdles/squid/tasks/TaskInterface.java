@@ -294,4 +294,8 @@ public interface TaskInterface {
     public void updateRatioNames(String[] ratioNames);
 
     public void updateAffectedExpressions(int repeats, Expression sourceExpression);
+
+    public void applyTaskIsotopeLabels();
+
+    public void populateTableOfSelectedRatiosFromRatiosList();
 }
