@@ -56,6 +56,11 @@ public class SpotFieldNode extends ExpressionTree {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
     public boolean amHealthy() {
         return (methodNameForShrimpFraction.length() > 0);
     }
@@ -93,6 +98,7 @@ public class SpotFieldNode extends ExpressionTree {
      * @param shrimpFractions
      * @param task
      * @return
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {

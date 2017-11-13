@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -54,8 +55,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     private String excelExpressionString;
     private boolean squidSwitchNU;
     private ExpressionTreeInterface expressionTree;
-    private transient String parsingStatusReport;
-    private transient List<String> argumentAudit;
+    private String parsingStatusReport;
+    private List<String> argumentAudit;
 
     /**
      * Needed for XML unmarshal
@@ -65,13 +66,13 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public Expression(String name, String excelExpressionString) {
-        this(new ExpressionTree(name), excelExpressionString);
+        this(new ExpressionTree(name), excelExpressionString, false);
     }
 
-    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString) {
+    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU) {
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
-        this.squidSwitchNU = false;
+        this.squidSwitchNU = squidSwitchNU;
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
@@ -92,7 +93,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         boolean retVal = false;
         if (this == obj) {
             retVal = true;
-        } else if (obj instanceof Expression && (expressionTree instanceof ExpressionTreeInterface)) {
+        } else if (obj instanceof Expression && (expressionTree != null)) {
             // note checking if expressionTree is null due to bad parsing
             retVal = ((ExpressionTree) expressionTree).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
         }
@@ -160,10 +161,10 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
-        if (!(expressionTree instanceof ConstantNode) && !(expressionTree instanceof SpotFieldNode) && !(expressionTree instanceof ShrimpSpeciesNode)) {
-            // ConstantNode and SpotFieldNode has name already and plays role of toplevel expression here
-            expressionTree.setName(name);
-        }
+//        if (!(expressionTree instanceof ConstantNode) && !(expressionTree instanceof SpotFieldNode) && !(expressionTree instanceof ShrimpSpeciesNode)) {
+//            // ConstantNode and SpotFieldNode has name already and plays role of toplevel expression here
+//            expressionTree.setName(name);
+//        }
     }
 
     public String produceExpressionTreeAudit() {
@@ -176,7 +177,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             auditExpressionTreeDependencies();
             auditReport
                     += "Expression healthy: "
-                    + String.valueOf(expressionTree.amHealthy()).toUpperCase();
+                    + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.US);
             if (argumentAudit.size() > 0) {
                 auditReport += "\nAudit:\n";
                 for (String audit : argumentAudit) {

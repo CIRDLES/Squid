@@ -25,7 +25,7 @@ import org.cirdles.squid.Squid;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 
 /**
- * FXML Controller class
+ * FXML Controller class for About Window
  *
  * @author James F. Bowring
  */
@@ -40,6 +40,8 @@ public class AboutSquidController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

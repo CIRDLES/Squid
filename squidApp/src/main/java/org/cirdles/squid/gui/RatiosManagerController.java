@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -51,7 +52,7 @@ public class RatiosManagerController implements Initializable {
     private GridPane ratiosGridPane;
 
     private final int BUTTON_WIDTH = 50;
-    private final int BUTTON_HEIGHT = 25;
+    private final int BUTTON_HEIGHT = 32;
 
     private List<SquidSpeciesModel> squidSpeciesList;
     private int indexOfBackgroundSpecies;
@@ -76,6 +77,9 @@ public class RatiosManagerController implements Initializable {
         prepareRatioGrid();
     }
 
+    /**
+     * Note that JavaFx GridPane uses (col, row) instead of (row, col)
+     */
     private void prepareRatioGrid() {
 
         squidSpeciesList = squidProject.getTask().getSquidSpeciesModelList();
@@ -83,9 +87,9 @@ public class RatiosManagerController implements Initializable {
         indexOfBackgroundSpecies = -1;
 
         ratiosGridPane.getRowConstraints().clear();
-        RowConstraints con = new RowConstraints();
-        con.setPrefHeight(BUTTON_HEIGHT);
-        ratiosGridPane.getRowConstraints().add(con);
+        RowConstraints rowCon = new RowConstraints();
+        rowCon.setPrefHeight(BUTTON_HEIGHT);
+        ratiosGridPane.getRowConstraints().add(rowCon);
 
         ratiosGridPane.getColumnConstraints().clear();
         ColumnConstraints colcon = new ColumnConstraints(BUTTON_WIDTH);
@@ -94,28 +98,46 @@ public class RatiosManagerController implements Initializable {
         ratiosGridPane.getColumnConstraints().add(colcon);
 
         for (int i = 0; i < squidSpeciesList.size(); i++) {
-            Text colText = new Text(squidSpeciesList.get(i).getIsotopeName());
-            colText.setFont(Font.font("Courier New", FontWeight.BOLD, 12));
-            ratiosGridPane.add(colText, 0, i + 1);
-            
-            Text rowText = new Text(squidSpeciesList.get(i).getIsotopeName());
-            rowText.setFont(Font.font("Courier New", FontWeight.BOLD, 12));
-            ratiosGridPane.add(rowText, i + 1, 0);
-
             if (squidSpeciesList.get(i).getIsBackground()) {
                 indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
                 squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
+
+                Text colText = new Text(squidSpeciesList.get(i).getIsotopeName());
+                colText.setFont(Font.font("Courier New", FontWeight.BOLD, 12));
+                ratiosGridPane.add(colText, 0, i + 1);
+
+                Text rowText = new Text(squidSpeciesList.get(i).getIsotopeName());
+                rowText.setFont(Font.font("Courier New", FontWeight.BOLD, 12));
+                ratiosGridPane.add(rowText, i + 1, 0);
+            } else {
+                Button colButton = new SquidRowColButton(i, -1, squidSpeciesList.get(i).getIsotopeName());
+                ratiosGridPane.add(colButton, 0, i + 1);
+
+                Button rowButton = new SquidRowColButton(-1, i, squidSpeciesList.get(i).getIsotopeName());
+                ratiosGridPane.add(rowButton, i + 1, 0);
             }
 
-            ratiosGridPane.getRowConstraints().add(con);
-            ratiosGridPane.getColumnConstraints().add(colcon);
+            Label corLabel = new Label("ROW /\n COL");
+            corLabel.setFont(Font.font("Courier New", FontWeight.BOLD, 2));
+            corLabel.setStyle(
+                    "    -fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+                    + "    -fx-font-weight: bold;\n"
+                    + "    -fx-font-size: 7pt;\n"
+            );
+            corLabel.setWrapText(true);
 
+            ratiosGridPane.add(corLabel, 0, 0);
+
+            ratiosGridPane.getRowConstraints().add(rowCon);
+            ratiosGridPane.getColumnConstraints().add(colcon);
         }
 
         populateRatioGrid();
 
-        ratiosGridPane.setLayoutX(10);
-        ratiosGridPane.setLayoutY(10);
+        // center in window
+        double width = primaryStageWindow.getScene().getWidth();
+        ratiosGridPane.setLayoutX((width - (squidSpeciesList.size() + 1) * BUTTON_WIDTH) / 2.0);
+        ratiosGridPane.setLayoutY(15);
 
     }
 
@@ -125,7 +147,7 @@ public class RatiosManagerController implements Initializable {
                 if ((i != j) && (i != indexOfBackgroundSpecies) && (j != indexOfBackgroundSpecies)) {
                     Button ratioButton = new SquidRatioButton(
                             i, j,
-                            squidSpeciesList.get(i).getIsotopeName() + "/" + squidSpeciesList.get(j).getIsotopeName(),
+                            squidSpeciesList.get(i).getIsotopeName() + "/\n " + squidSpeciesList.get(j).getIsotopeName(),
                             SquidUIController.squidProject.getTask().getTableOfSelectedRatiosByMassStationIndex()[i][j]);
                     ratiosGridPane.add(ratioButton, j + 1, i + 1);
                 }
@@ -138,9 +160,10 @@ public class RatiosManagerController implements Initializable {
         public SquidRatioButton(int row, int col, String ratioName, boolean selected) {
             super(selected ? ratioName : "");
 
-            setHeight(25);
-            setTooltip(new Tooltip(ratioName));
-            setOnAction(new SquidButtonEventHandler(row, col, ratioName, selected));
+            Tooltip ratioToolTip = new Tooltip(ratioName);
+            setTooltip(ratioToolTip);
+
+            setOnAction(new SquidRatioButtonEventHandler(row, col, ratioName, selected));
 
             setPrefWidth(BUTTON_WIDTH - 2);
             setPrefHeight(BUTTON_HEIGHT - 2);
@@ -149,22 +172,55 @@ public class RatiosManagerController implements Initializable {
                     + "    -fx-border-color: black;\n"
                     + "    -fx-background-radius: 0;\n"
                     + "    -fx-background-color: #00BFFF;\n"
-                    + "    -fx-font-family: \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+                    + "    -fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
                     + "    -fx-font-weight: bold;\n"
-                    + "    -fx-font-size: 7pt;\n"
+                    + "    -fx-font-size: 8pt;\n"
                     + "    -fx-text-fill: White;/*  #d8d8d8;*/\n"
             );
+            setWrapText(true);
         }
     }
 
-    class SquidButtonEventHandler<ActionEvent> implements EventHandler {
+    class SquidRowColButton extends Button {
+
+        private Tooltip ratioToolTip;
+
+        public SquidRowColButton(int row, int col, String ratioName) {
+            super(ratioName);
+
+            ratioToolTip = new Tooltip("Click to select entire " + (String) (row == -1 ? "column" : "row"));
+            setTooltip(ratioToolTip);
+
+            setOnAction(new SquidRowColButtonEventHandler(row, col));
+
+            setPrefWidth(BUTTON_WIDTH - 2);
+            setPrefHeight(BUTTON_HEIGHT - 2);
+            setStyle("-fx-padding: 0 0 0 0;   \n"
+                    + "    -fx-border-width: 1;\n"
+                    + "    -fx-border-color: black;\n"
+                    + "    -fx-background-radius: 0;\n"
+                    + "    -fx-background-color: #ffa06d;\n"
+                    + "    -fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+                    + "    -fx-font-weight: bold;\n"
+                    + "    -fx-font-size: 9pt;\n"
+                    + "    -fx-text-fill: Black;/*  #d8d8d8;*/\n"
+            );
+            setWrapText(true);
+        }
+
+        public void setToolTipText(String tip) {
+            ratioToolTip.setText(tip);
+        }
+    }
+
+    class SquidRatioButtonEventHandler<ActionEvent> implements EventHandler {
 
         private final int row;
         private final int col;
         private final String ratioName;
         private boolean selected;
 
-        public SquidButtonEventHandler(int row, int col, String ratioName, boolean selected) {
+        public SquidRatioButtonEventHandler(int row, int col, String ratioName, boolean selected) {
             this.row = row;
             this.col = col;
             this.ratioName = ratioName;
@@ -177,8 +233,27 @@ public class RatiosManagerController implements Initializable {
             ((Button) event.getSource()).setText(selected ? ratioName : "");
 
             squidProject.getTask().updateTableOfSelectedRatiosByMassStationIndex(row, col, selected);
-
         }
     }
 
+    class SquidRowColButtonEventHandler<ActionEvent> implements EventHandler {
+
+        private final int row;
+        private final int col;
+        private boolean selected;
+
+        public SquidRowColButtonEventHandler(int row, int col) {
+            this.row = row;
+            this.col = col;
+            this.selected = false;
+        }
+
+        @Override
+        public void handle(Event event) {
+            selected = !selected;
+            ((SquidRowColButton) event.getSource()).setToolTipText("Click to " + (selected ? "de-" : "") + "select entire " + (String) (row == -1 ? "column" : "row"));
+            squidProject.getTask().updateTableOfSelectedRatiosByRowOrCol(row, col, selected);
+            populateRatioGrid();
+        }
+    }
 }

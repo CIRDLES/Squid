@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -72,53 +73,27 @@ public abstract class Function
     /**
      *
      */
-    public static final Map<String, String> FUNCTIONS_MAP = new HashMap<>();
+    public static final Map<String, String> FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     static {
 
         FUNCTIONS_MAP.put("agePb76", "agePb76");
-        FUNCTIONS_MAP.put("AgePb76", "agePb76");
-
         FUNCTIONS_MAP.put("and", "and");
-        FUNCTIONS_MAP.put("And", "and");
-
         FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
-        FUNCTIONS_MAP.put("ConcordiaTW", "concordiaTW");
         FUNCTIONS_MAP.put("concordia", "concordia");
-        FUNCTIONS_MAP.put("Concordia", "concordia");
-
         FUNCTIONS_MAP.put("exp", "exp");
-        FUNCTIONS_MAP.put("Exp", "exp");
-
         FUNCTIONS_MAP.put("if", "sqIf");
-        FUNCTIONS_MAP.put("If", "sqIf");
-
         FUNCTIONS_MAP.put("ln", "ln");
-        FUNCTIONS_MAP.put("Ln", "ln");
-
         FUNCTIONS_MAP.put("robReg", "robReg");
-        FUNCTIONS_MAP.put("RobReg", "robReg");
-        FUNCTIONS_MAP.put("robreg", "robReg");
-
         FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
-        FUNCTIONS_MAP.put("SqBiweight", "sqBiweight");
-
         FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
-        FUNCTIONS_MAP.put("SqWtdAv", "sqWtdAv");
-
         FUNCTIONS_MAP.put("sqrt", "sqrt");
-        FUNCTIONS_MAP.put("Sqrt", "sqrt");
-
         FUNCTIONS_MAP.put("TotalCps", "totalCps");
-        FUNCTIONS_MAP.put("totalCps", "totalCps");
-
         FUNCTIONS_MAP.put("lookup", "lookup");
-
         FUNCTIONS_MAP.put("max", "max");
-
         FUNCTIONS_MAP.put("abs", "abs");
-        
         FUNCTIONS_MAP.put("average", "average");
+        FUNCTIONS_MAP.put("count", "count");
     }
 
     public Function() {
@@ -252,6 +227,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface average() {
         return new Average();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface count() {
+        return new Count();
     }
 
     /**

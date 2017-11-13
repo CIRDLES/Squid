@@ -19,7 +19,6 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -253,9 +252,9 @@ public class SquidUIController implements Initializable {
             managePrawnFileMenu.setDisable(false);
             buildTaskLibraryMenu();
             manageTasksMenu.setDisable(false);
-            manageRatiosMenu.setDisable(true);
-            manageExpressionsMenu.setDisable(true);
-            manageReportsMenu.setDisable(true);
+            manageRatiosMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
             // log prawnFileFolderMRU
             squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
@@ -403,6 +402,7 @@ public class SquidUIController implements Initializable {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 buildProjectMenuMRU();
                 launchProjectManager();
+                launchTaskManager();
                 saveSquidProjectMenuItem.setDisable(false);
             } else {
                 saveSquidProjectMenuItem.setDisable(true);
@@ -752,7 +752,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void defaultEmptyRatioSetAction(ActionEvent event) {
-        squidProject.getTask().updateRatioNames(new ArrayList<>());
+        squidProject.getTask().updateRatioNames(new String[]{});
         launchRatiosManager();
     }
 

@@ -30,16 +30,16 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class Average extends Function {
+public class Count extends Function {
 
-//    private static final long serialVersionUID = -198041668841495965L;
+    //private static final long serialVersionUID = -198041668841495965L;
     private void readObject(
             ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Average.class.getCanonicalName()));
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Count.class.getCanonicalName()));
         long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Average " + theSUID);
+        System.out.println("Customized De-serialization of Count " + theSUID);
     }
 
     /**
@@ -49,13 +49,13 @@ public class Average extends Function {
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
      */
-    public Average() {
-        name = "average";
+    public Count() {
+        name = "count";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 4;
-        labelsForOutputValues = new String[][]{{"average"}};
+        labelsForOutputValues = new String[][]{{"count"}};
     }
 
     /**
@@ -75,17 +75,9 @@ public class Average extends Function {
         Object[][] retVal;
         try {
             double[] xValues = transposeColumnVector(childrenET.get(0).eval(shrimpFractions, task), 0);
-            double sum = 0.0;
-            double average = 0.0;
-            if (xValues.length > 0) {
-                for (int i = 0; i < xValues.length; i++) {
-                    sum += xValues[i];
-                }
-                average = sum / xValues.length;
-            }
-            retVal = new Object[][]{{average}};
+            retVal = new Object[][]{{xValues.length}};
         } catch (ArithmeticException | NullPointerException e) {
-            retVal = new Object[][]{{0.0}};
+            retVal = new Object[][]{{0}};
         }
 
         return retVal;
@@ -100,7 +92,7 @@ public class Average extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>average</mi>"
+                + "<mi>count</mi>"
                 + "<mfenced>";
 
         for (int i = 0; i < childrenET.size(); i++) {

@@ -22,7 +22,6 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
@@ -34,6 +33,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 public class VariableNodeForSummary extends ExpressionTree {
 
     private static final long serialVersionUID = -868256637199178058L;
+    
+    private int index;
 
     /**
      *
@@ -47,7 +48,19 @@ public class VariableNodeForSummary extends ExpressionTree {
      * @param name
      */
     public VariableNodeForSummary(String name) {
+        this(name, 0);
+    }
+
+    public VariableNodeForSummary(String name, int index) {
         this.name = name;
+        this.index = index;
+    }
+    
+    
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
     @Override
@@ -96,7 +109,15 @@ public class VariableNodeForSummary extends ExpressionTree {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);
-        double[][] values = detail.getValues();
+        double[][] valuesAll = detail.getValues();
+        double[][] values = valuesAll;
+        if (index > 0){
+            // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigmaabs
+            values = new double[1][valuesAll[0].length - index];
+            for (int i = index; i < valuesAll[0].length; i ++){
+                values[0][i - index] = valuesAll[0][i];
+            }
+        }
         Object[][] retVal = convertArrayToObjects(values);
 
         return retVal;
@@ -110,7 +131,7 @@ public class VariableNodeForSummary extends ExpressionTree {
     public String toStringMathML() {
         String retVal
                 = "<mtext>\n"
-                + name
+                + name +  "[" + index + "]" 
                 + "</mtext>\n";
 
         return retVal;
@@ -146,5 +167,11 @@ public class VariableNodeForSummary extends ExpressionTree {
     @Override
     public int argumentCount() {
         return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
     }
 }
