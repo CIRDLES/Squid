@@ -9,7 +9,7 @@ Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
 ## Attention: Squid 2.5 Users
 
-### NOTE: If you have used a previous version of Squid3, you may need to find and delete the file "SquidPersistentState.ser" to allow Squid3 v0.1.n to run.
+### NOTE: If you have used a previous version of Squid3, you may need to find and delete the file "SquidPersistentState.ser" to allow Squid3 v0.2.n to run.
 
 We encourage you to download
 and evaluate the latest release, the ".jar" file found <a href="https://github.com/CIRDLES/Squid/releases" target="_blank">here</a>.  
@@ -22,7 +22,7 @@ initializes a new GitHub issue for you - please use freely.
 **CAUTION** The current version is only tested on a few 10-species Prawn xml files with
 the background as mass station number 3.
 
-The current versions - Squid3-**0.1.n.jar** - prototype the development of the
+The current versions - Squid3-**0.2.n.jar** - prototype the development of the
 workflow support including project, task, and expression management features
 of Squid.  Squid provides for creating and saving Squid Project files that have an
 extension of ".squid" and are intended to save the current sate of work on a project.
