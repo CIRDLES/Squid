@@ -95,4 +95,5 @@ public final class Squid3Constants {
                         "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};       
     }                   
 
+    public static final String DUPLICATE_STRING = "-DUP-";
 }
