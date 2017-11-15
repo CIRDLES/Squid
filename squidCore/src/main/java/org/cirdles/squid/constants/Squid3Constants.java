@@ -90,8 +90,10 @@ public final class Squid3Constants {
 
     public static final String [] DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
     static{
+
         DEFAULT_RATIOS_LIST_FOR_10_SPECIES = new String[]{
                         "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};       
     }                   
 
+    public static final String DUPLICATE_STRING = "-DUP-";
 }

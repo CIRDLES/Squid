@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
+import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
@@ -38,7 +39,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.xml.sax.SAXException;
-import org.cirdles.squid.utilities.SquidPrefixTree;
+import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 
 /**
@@ -273,7 +274,7 @@ public final class SquidProject implements Serializable {
                 int count = spotNameCountMap.get(spotNameKey);
                 count++;
                 spotNameCountMap.put(spotNameKey, count);
-                runs.get(i).getPar().get(0).setValue(spotName + "-DUP-" + count);
+                runs.get(i).getPar().get(0).setValue(spotName + DUPLICATE_STRING + count);
             } else {
                 spotNameCountMap.put(spotNameKey, 0);
             }

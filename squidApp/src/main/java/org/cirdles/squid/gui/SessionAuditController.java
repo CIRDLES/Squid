@@ -28,7 +28,7 @@ import javafx.scene.layout.AnchorPane;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.utilities.SquidPrefixTree;
+import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
 /**
  * FXML Controller class
@@ -65,7 +65,7 @@ public class SessionAuditController implements Initializable {
     
     /**
      * Prepares the TreeView to be displayed
-     * @param hasBeenChecked determines whether the duplicate CheckBox has been checked
+     * @param showDupesOnly determines whether the duplicate CheckBox has been checked
      */
     private void setUpPrawnFileAuditTreeView(boolean showDupesOnly) {
         prawnAuditTree.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
@@ -92,7 +92,8 @@ public class SessionAuditController implements Initializable {
         TreeItem<String> rootItem = new TreeItem<>("Spots", null);
         if(hasDuplicates){
             rootItem.setValue(
-                    "***This file has duplicate names. Change names of duplicates in PrawnFile>Edit Spots***" + 
+                    "***This file has duplicate names. Change names of duplicates in PrawnFile > Manage Spots & "
+                            + "Choose Reference Materials***" + 
                     "\n\nSpots by prefix: " + summaryStatsString);
         }else{
             rootItem.setValue("Spots by prefix:" + summaryStatsString);
