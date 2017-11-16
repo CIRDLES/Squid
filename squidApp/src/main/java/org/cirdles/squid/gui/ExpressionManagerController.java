@@ -36,6 +36,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -115,6 +118,12 @@ public class ExpressionManagerController implements Initializable {
     private Button cancelButton;
     @FXML
     private Button auditButton;
+    @FXML
+    private TabPane spotTabPane;
+    @FXML
+    private Tab refMatTab;
+    @FXML
+    private Tab unkTab;
 
     /**
      * Initializes the controller class.
@@ -226,6 +235,14 @@ public class ExpressionManagerController implements Initializable {
 
             List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
             List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
+
+            // choose peek tab
+            SingleSelectionModel<Tab> selectionModel = spotTabPane.getSelectionModel();
+            if (refMatTab.isSelected() & !refMatSwitchCheckBox.isSelected()) {
+                selectionModel.select(unkTab);
+            } else if (unkTab.isSelected() & !unknownsSwitchCheckBox.isSelected()) {
+                selectionModel.select(refMatTab);
+            }
 
             if (originalExpressionTree instanceof ConstantNode) {
                 rmPeekTextArea.setText("Not used");

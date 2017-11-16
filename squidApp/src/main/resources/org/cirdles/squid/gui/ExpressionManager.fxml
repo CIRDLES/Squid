@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane fx:id="expressionsAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionManagerController">
+<AnchorPane fx:id="expressionsAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionManagerController">
    <children>
       <SplitPane dividerPositions="0.47020585048754066" prefHeight="640.0" prefWidth="925.0">
          <items>
@@ -66,9 +66,9 @@
                            <effect>
                               <InnerShadow />
                            </effect></Label>
-                        <TabPane layoutX="65.0" layoutY="400.0" prefHeight="181.0" prefWidth="400.0" style="-fx-tab-min-width: 180;" stylesheets="@css/projectManager.css" tabClosingPolicy="UNAVAILABLE">
+                        <TabPane fx:id="spotTabPane" layoutX="65.0" layoutY="400.0" prefHeight="181.0" prefWidth="400.0" style="-fx-tab-min-width: 180;" stylesheets="@css/projectManager.css" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
-                            <Tab closable="false" text="Reference Materials">
+                            <Tab fx:id="refMatTab" closable="false" text="Reference Materials">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="142.0" prefWidth="383.0">
                                        <children>
@@ -77,7 +77,7 @@
                                     </AnchorPane>
                               </content>
                             </Tab>
-                            <Tab closable="false" text="Unknowns">
+                            <Tab fx:id="unkTab" closable="false" text="Unknowns">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
