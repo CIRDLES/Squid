@@ -226,9 +226,12 @@ public class ExpressionManagerController implements Initializable {
     }
 
     private void populatePeeks(Expression exp) {
+        SingleSelectionModel<Tab> selectionModel = spotTabPane.getSelectionModel();
+        
         if ((exp == null) || (!exp.amHealthy())) {
             rmPeekTextArea.setText("No expression.");
             unPeekTextArea.setText("No expression.");
+            selectionModel.select(refMatTab);
         } else {
 
             TaskInterface task = squidProject.getTask();
@@ -237,7 +240,7 @@ public class ExpressionManagerController implements Initializable {
             List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
 
             // choose peek tab
-            SingleSelectionModel<Tab> selectionModel = spotTabPane.getSelectionModel();
+            
             if (refMatTab.isSelected() & !refMatSwitchCheckBox.isSelected()) {
                 selectionModel.select(unkTab);
             } else if (unkTab.isSelected() & !unknownsSwitchCheckBox.isSelected()) {

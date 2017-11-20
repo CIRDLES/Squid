@@ -55,6 +55,6 @@
       </HBox>
       <Label layoutX="20.0" layoutY="175.0" text="Parameters:" />
       <Label layoutX="70.0" layoutY="317.0" text="Audit:" />
-      <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="322.0" prefHeight="279.0" prefWidth="757.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
+      <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="322.0" prefHeight="290.0" prefWidth="757.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
    </children>
 </AnchorPane>

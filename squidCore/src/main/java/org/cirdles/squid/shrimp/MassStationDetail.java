@@ -33,7 +33,7 @@ public class MassStationDetail implements Serializable {
     private final SimpleStringProperty massStationLabel;
     private final SimpleStringProperty elementLabel;
     private final SimpleStringProperty isotopeLabel;
-    private SimpleStringProperty taskIsotopeLabel;
+    private final SimpleStringProperty taskIsotopeLabel;
 
     private boolean isBackground;
 

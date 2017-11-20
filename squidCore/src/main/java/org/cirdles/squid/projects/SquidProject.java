@@ -131,6 +131,14 @@ public final class SquidProject implements Serializable {
         this.task.setRatioNames(taskSquid25.getRatioNames());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
 
+        // determine index of background mass as specified in task
+        for (int i = 0;  i < taskSquid25.getNominalMasses().size(); i ++) {
+            if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
+                task.setIndexOfTaskBackgroundMass(i);
+                break;
+            }
+        }
+
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
@@ -148,15 +156,15 @@ public final class SquidProject implements Serializable {
 
             this.task.getTaskExpressionsOrdered().add(expression);
         }
-        
+
         List<String> constantNames = taskSquid25.getConstantNames();
         List<String> constantValues = taskSquid25.getConstantValues();
-        for (int i = 0; i < constantNames.size(); i ++){
+        for (int i = 0; i < constantNames.size(); i++) {
             double constantDouble = Double.parseDouble(constantValues.get(i));
             ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
             task.getNamedConstantsMap().put(constant.getName(), constant);
         }
-                
+
         initializeTaskAndReduceData();
     }
 

@@ -296,7 +296,7 @@ public interface TaskInterface {
 
     public void updateAffectedExpressions(int repeats, Expression sourceExpression);
 
-    public void applyTaskIsotopeLabels();
+    public void applyTaskIsotopeLabelsToMassStations();
 
     public void populateTableOfSelectedRatiosFromRatiosList();
     
@@ -306,4 +306,8 @@ public interface TaskInterface {
      * @return the namedConstantsMap
      */
     public Map<String, ConstantNode> getNamedConstantsMap();
+    
+    public void setIndexOfTaskBackgroundMass(int indexOfTask25BackgroundMass);
+    
+    public void applyMassStationLabelsToTask();
 }

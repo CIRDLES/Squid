@@ -20,6 +20,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -38,7 +40,6 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -87,6 +88,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean useSBM;
     protected boolean userLinFits;
     protected int indexOfBackgroundSpecies;
+    protected int indexOfTaskBackgroundMass;
     protected String filterForRefMatSpotNames;
 
     protected List<String> nominalMasses;
@@ -152,6 +154,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.useSBM = true;
         this.userLinFits = false;
         this.indexOfBackgroundSpecies = -1;
+        this.indexOfTaskBackgroundMass = -1;
 
         this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
@@ -193,20 +196,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         summary.append("\n\n ")
-                .append("Task File names ")
+                .append("Task File specifies ")
                 .append(String.valueOf(nominalMasses.size()))
-                .append(" Masses:");
+                .append(" Masses matching Species found in Prawn file:");
 
         summary.append("\n      ");
         for (int i = 0; i < nominalMasses.size(); i++) {
-            String comma = (i == (squidSpeciesModelList.size() - 1) ? "" : ", ");
+            String comma = (i == (nominalMasses.size() - 1) ? "" : ", ");
             summary.append(String.format("%1$-" + 7 + "s", nominalMasses.get(i) + comma));
         }
 
         Collections.sort(ratioNames);
         int countOfRatios = ratioNames.size();
         summary.append("\n\n Task Ratios: ");
-        summary.append((String) (countOfRatios > 0 ? String.valueOf(countOfRatios) : "None")).append(" chosen.");
+        summary.append((String) (countOfRatios > 0 ? String.valueOf(countOfRatios) : "None")).append(" specified using available masses.");
         summary.append("\n  ");
         for (int i = 0; i < countOfRatios; i++) {
             summary.append(String.format("%1$-" + 6 + "s", ratioNames.get(i).split("/")[0]));
@@ -482,7 +485,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     // only these three fields change
                     massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
                     if (nominalMasses.size() > 0) {
-                        massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
+                        if (indexOfTaskBackgroundMass == index) {
+                            massStationDetail.setTaskIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
+                        } else {
+                            massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
+                        }
                         index++;
                     }
 
@@ -493,19 +500,70 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
+                alignTaskMassStationsWithPrawnFile();
             }
         }
     }
 
     @Override
-    public void applyTaskIsotopeLabels() {
+    public void applyTaskIsotopeLabelsToMassStations() {
         int index = 0;
         for (SquidSpeciesModel ssm : squidSpeciesModelList) {
             MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
-            ssm.setIsotopeName(nominalMasses.get(index));
-            massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+            if ((ssm.getMassStationIndex() == indexOfTaskBackgroundMass) && (indexOfTaskBackgroundMass != indexOfBackgroundSpecies)) {
+                // changing mass station background to match task background
+                massStationDetail.setIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
+                selectBackgroundSpeciesReturnPreviousIndex(ssm);
+                indexOfBackgroundSpecies = indexOfTaskBackgroundMass;
+            } else {
+                ssm.setIsotopeName(nominalMasses.get(index));
+                massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
+            }
             index++;
         }
+
+        changed = true;
+        setupSquidSessionSpecsAndReduceAndReport();
+        updateAllExpressions(2);
+    }
+
+    @Override
+    public void applyMassStationLabelsToTask() {
+        // identify isotopelabels to change
+        List<Integer> changelings = new ArrayList<>();
+        for (int i = 0; i < nominalMasses.size(); i++) {
+            if (nominalMasses.get(i).compareToIgnoreCase(mapOfIndexToMassStationDetails.get(i).getIsotopeLabel()) != 0) {
+                changelings.add(i);
+            }
+        }
+
+        for (Expression exp : taskExpressionsOrdered) {
+            String excelString = exp.getExcelExpressionString();
+            for (int i = 0; i < changelings.size(); i++) {
+                int index = changelings.get(i);
+                if (excelString.contains(nominalMasses.get(index))) {
+                    System.out.println("CHANGE " + exp.getName() + " >> " + excelString + " >> " + mapOfIndexToMassStationDetails.get(index).getIsotopeLabel());
+                    excelString = excelString.replaceAll(nominalMasses.get(index), mapOfIndexToMassStationDetails.get(index).getIsotopeLabel());
+                    for (int r = 0; r < ratioNames.size(); r++) {
+                        if (ratioNames.get(r).contains(nominalMasses.get(index))) {
+                            ratioNames.set(r, ratioNames.get(r).replaceAll(nominalMasses.get(index), mapOfIndexToMassStationDetails.get(index).getIsotopeLabel()));
+                        }
+                    }
+                }
+            }
+            exp.setExcelExpressionString(excelString);
+        }
+
+        // update nominalMasses
+        for (int i = 0; i < changelings.size(); i++) {
+            nominalMasses.set(changelings.get(i), mapOfIndexToMassStationDetails.get(changelings.get(i)).getIsotopeLabel());
+        }
+
+        indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
+        
+        changed = true;
+        setupSquidSessionSpecsAndReduceAndReport();
+        updateAllExpressions(2);
     }
 
     private void buildSquidSpeciesModelListFromMassStationDetails() {
@@ -521,9 +579,44 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    private void alignTaskMassStationsWithPrawnFile() {
+        List<String> matchedNominalMasses = new ArrayList<>();
+        List<String> unMatchedNominalMasses = new ArrayList<>();
+        boolean[] recordedMatches = new boolean[mapOfIndexToMassStationDetails.size()];
+        if (mapOfIndexToMassStationDetails.size() < nominalMasses.size()) {
+
+            for (int i = 0; i < nominalMasses.size(); i++) {//            String taskIsotopeLabel : nominalMasses) {
+                String taskIsotopeLabel = nominalMasses.get(i);
+                boolean matched = false;
+                int intTaskIsotopeLabel = new BigDecimal(taskIsotopeLabel).add(new BigDecimal(0.5)).intValue();
+                for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
+                    if (!matched) {
+                        int intPrawnIsoptopeLabel = Integer.parseInt(entry.getValue().getIsotopeLabel());
+                        if ((intTaskIsotopeLabel == intPrawnIsoptopeLabel) && !recordedMatches[entry.getKey()]) {
+                            matchedNominalMasses.add(taskIsotopeLabel);
+                            recordedMatches[entry.getKey()] = true;
+                            matched = true;
+                        }
+                    }
+                }
+                if (!matched) {
+                    unMatchedNominalMasses.add(taskIsotopeLabel);
+                    if (i < indexOfTaskBackgroundMass) {
+                        indexOfTaskBackgroundMass--;
+                    }
+                }
+            }
+
+            // assume all matching is done
+            nominalMasses = matchedNominalMasses;
+            updateRatioNamesFromNominalMasses();
+
+        }
+    }
+
     @Override
     public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm) {
-        // there is at most one
+        // there is at most one background for now
         int retVal = -1;
 
         for (SquidSpeciesModel squidSpeciesModel : squidSpeciesModelList) {
@@ -924,6 +1017,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         updateAllExpressions(2);
     }
 
+    private void updateRatioNamesFromNominalMasses() {
+        List<String> revisedRatioNames = new ArrayList<>();
+        for (String ratioName : ratioNames) {
+            String[] ratioNameParts = ratioName.split("/");
+            if ((nominalMasses.contains(ratioNameParts[0])) && (nominalMasses.contains(ratioNameParts[1]))) {
+                revisedRatioNames.add(ratioName);
+            }
+        }
+
+        ratioNames = revisedRatioNames;
+    }
+
     /**
      * @return the name
      */
@@ -1072,6 +1177,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies) {
         this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
+    }
+
+    /**
+     *
+     * @param indexOfTaskBackgroundMass
+     */
+    public void setIndexOfTaskBackgroundMass(int indexOfTaskBackgroundMass) {
+        this.indexOfTaskBackgroundMass = indexOfTaskBackgroundMass;
     }
 
     /**

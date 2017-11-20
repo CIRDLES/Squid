@@ -47,6 +47,7 @@ public class TaskSquid25 implements Serializable {
     private String authorName;
     private List<String> nominalMasses;
     private List<String> ratioNames;
+    private String backgroundMass;
     private List<TaskSquid25Equation> task25Equations;
     private List<String> constantNames;
     private List<String> constantValues;
@@ -93,6 +94,9 @@ public class TaskSquid25 implements Serializable {
                 for (int i = 0; i < countOfRatios; i++) {
                     taskSquid25.ratioNames.add(ratioStrings[i + 2]);
                 }
+                
+                String[] backgroundStrings = lines[firstRow + 19].split("\t");
+                taskSquid25.backgroundMass = backgroundStrings[1];
 
                 taskSquid25.task25Equations = new ArrayList<>();
 
@@ -363,6 +367,13 @@ public class TaskSquid25 implements Serializable {
      */
     public List<String> getRatioNames() {
         return ratioNames;
+    }
+
+    /**
+     * @return the backgroundMass
+     */
+    public String getBackgroundMass() {
+        return backgroundMass;
     }
 
     /**
