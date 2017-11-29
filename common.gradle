@@ -57,11 +57,11 @@ task createFolders(description: 'Creates the source folders if they do not exist
     }
 }
 
-//compileJava {
-//    options.warnings = false
-//    options.deprecation = false
-//    options.compilerArgs += ["-Xlint:unchecked"]
-//}
+compileJava {
+    options.warnings = false
+    options.deprecation = false
+    options.compilerArgs += ["-Xlint:unchecked"]
+}
 
 //tasks.withType(JavaCompile) {
 //    println 'Compiler args: ' + options.compilerArgs

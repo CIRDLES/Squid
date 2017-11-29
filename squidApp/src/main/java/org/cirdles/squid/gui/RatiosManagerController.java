@@ -18,6 +18,7 @@ package org.cirdles.squid.gui;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -213,7 +214,7 @@ public class RatiosManagerController implements Initializable {
         }
     }
 
-    class SquidRatioButtonEventHandler<ActionEvent> implements EventHandler {
+    class SquidRatioButtonEventHandler implements EventHandler<ActionEvent> {
 
         private final int row;
         private final int col;
@@ -228,7 +229,7 @@ public class RatiosManagerController implements Initializable {
         }
 
         @Override
-        public void handle(Event event) {
+        public void handle(ActionEvent event) {
             selected = !selected;
             ((Button) event.getSource()).setText(selected ? ratioName : "");
 
@@ -236,7 +237,7 @@ public class RatiosManagerController implements Initializable {
         }
     }
 
-    class SquidRowColButtonEventHandler<ActionEvent> implements EventHandler {
+    class SquidRowColButtonEventHandler implements EventHandler<ActionEvent> {
 
         private final int row;
         private final int col;
@@ -249,7 +250,7 @@ public class RatiosManagerController implements Initializable {
         }
 
         @Override
-        public void handle(Event event) {
+        public void handle(ActionEvent event) {
             selected = !selected;
             ((SquidRowColButton) event.getSource()).setToolTipText("Click to " + (selected ? "de-" : "") + "select entire " + (String) (row == -1 ? "column" : "row"));
             squidProject.getTask().updateTableOfSelectedRatiosByRowOrCol(row, col, selected);
