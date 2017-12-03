@@ -90,6 +90,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected int indexOfBackgroundSpecies;
     protected int indexOfTaskBackgroundMass;
     protected String filterForRefMatSpotNames;
+    protected String filterForConcRefMatSpotNames;
 
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
@@ -124,15 +125,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean changed;
 
     public Task() {
-        this("New Task", null, "", null);
+        this("New Task", null, null);
     }
 
     public Task(String name) {
-        this(name, null, "", null);
+        this(name, null, null);
     }
 
     public Task(String name, CalamariReportsEngine reportsEngine) {
-        this(name, null, "", reportsEngine);
+        this(name, null, reportsEngine);
     }
 
     /**
@@ -142,7 +143,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param filterForRefMatSpotNames
      * @param reportsEngine
      */
-    public Task(String name, PrawnFile prawnFile, String filterForRefMatSpotNames, CalamariReportsEngine reportsEngine) {
+    public Task(String name, PrawnFile prawnFile, CalamariReportsEngine reportsEngine) {
         this.name = name;
         this.type = "geochron";
         this.description = "";
@@ -151,6 +152,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.provenance = "";
         this.dateRevised = 0l;
         this.filterForRefMatSpotNames = "";
+        this.filterForConcRefMatSpotNames = "";
         this.useSBM = true;
         this.userLinFits = false;
         this.indexOfBackgroundSpecies = -1;
@@ -1132,6 +1134,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
     }
+
+    @Override
+    /**
+     * 
+     */
+    public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
+        this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+    }        
 
     /**
      * @return the useSBM

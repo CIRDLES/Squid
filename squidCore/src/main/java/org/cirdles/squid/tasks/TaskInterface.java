@@ -249,6 +249,12 @@ public interface TaskInterface {
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
+    
+    /**
+     * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
+     */
+    public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
+
 
     /**
      * @return the useSBM

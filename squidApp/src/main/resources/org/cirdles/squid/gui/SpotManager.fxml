@@ -6,30 +6,51 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-<AnchorPane fx:id="spotManagerPane" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SpotManagerController">
+<AnchorPane fx:id="spotManagerPane" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SpotManagerController">
    <children>
-      <ListView fx:id="shrimpFractionList" layoutX="15.0" layoutY="83.0" prefHeight="468.0" prefWidth="435.0">
-         <tooltip>
-            <Tooltip text="Right-click spot for removal menu." />
-         </tooltip>
-      </ListView>
-      <TextField fx:id="selectedSpotNameText" layoutX="142.0" layoutY="583.0" prefHeight="27.0" prefWidth="167.0" promptText="no spot selected" />
-      <Label fx:id="headerLabel" layoutX="21.0" layoutY="60.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
-      <Label layoutX="21.0" layoutY="33.0" text="Filter by typing spot prefix:" />
-      <TextField fx:id="filterSpotNameText" layoutX="237.0" layoutY="34.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="68.0" promptText="type here" />
-      <Label fx:id="spotsShownLabel" layoutX="310.0" layoutY="34.0" prefHeight="28.0" prefWidth="140.0" style="-fx-font-size: 12;" text=" :0/0 shown" />
-      <ListView fx:id="shrimpRefMatList" layoutX="475.0" layoutY="83.0" prefHeight="468.0" prefWidth="435.0" />
-      <Button fx:id="setFilteredSpotsAsRefMatButton" layoutX="475.0" layoutY="581.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="31.0" prefWidth="435.0" text="Copy Filtered Spots to be Reference Material spots." />
-      <Label fx:id="headerLabelRefMat" layoutX="481.0" layoutY="60.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
-      <Label layoutX="16.0" layoutY="583.0" text="Edit Spot Name:" />
-      <Button fx:id="saveSpotNameButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="312.0" layoutY="581.0" mnemonicParsing="false" onAction="#saveSpotNameAction" prefHeight="31.0" prefWidth="130.0" text="Save Name" />
-      <Label layoutX="460.0" layoutY="3.0" prefHeight="20.0" prefWidth="366.0" text="Reference Material (RM) Spots for this Project:" />
-      <Label layoutX="17.0" layoutY="562.0" style="-fx-font-size: 11;" text="Hint: To remove a spot or split session, right mouse-click on spot for menu." />
-      <Label layoutX="5.0" layoutY="3.0" text="All Spots:" />
-      <Label layoutX="478.0" layoutY="562.0" style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
-      <Label layoutX="514.0" layoutY="33.0" text="RM Spots selected using filter: " />
-      <Label fx:id="rmFilterLabel" layoutX="768.0" layoutY="33.0" style="-fx-font-weight: bold;" text="filter" />
-      <Label fx:id="rmCountLabel" layoutX="475.0" layoutY="33.0" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
+      <Pane layoutX="5.0" layoutY="3.0">
+         <children>
+            <ListView fx:id="shrimpFractionList" layoutX="10.0" layoutY="65.0" prefHeight="499.0" prefWidth="435.0">
+               <tooltip>
+                  <Tooltip text="Right-click spot for removal menu." />
+               </tooltip>
+            </ListView>
+            <TextField fx:id="selectedSpotNameText" layoutX="137.0" layoutY="580.0" prefHeight="27.0" prefWidth="167.0" promptText="no spot selected" />
+            <Label fx:id="headerLabel" layoutX="16.0" layoutY="42.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+            <Label layoutX="16.0" layoutY="20.0" text="Filter by typing spot prefix:" />
+            <TextField fx:id="filterSpotNameText" layoutX="232.0" layoutY="21.0" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="68.0" promptText="type here" />
+            <Label fx:id="spotsShownLabel" layoutX="305.0" layoutY="21.0" prefHeight="28.0" prefWidth="140.0" style="-fx-font-size: 12;" text=" :0/0 shown" />
+            <Label layoutX="11.0" layoutY="580.0" text="Edit Spot Name:" />
+            <Button fx:id="saveSpotNameButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="307.0" layoutY="578.0" mnemonicParsing="false" onAction="#saveSpotNameAction" prefHeight="31.0" prefWidth="130.0" text="Save Name" />
+            <Label layoutX="12.0" layoutY="559.0" style="-fx-font-size: 11;" text="Hint: To remove a spot or split session, right mouse-click on spot for menu." />
+            <Label layoutX="4.0" text="All Spots:" />
+         </children>
+      </Pane>
+      <Pane layoutX="460.0" layoutY="3.0" prefHeight="397.0" prefWidth="462.0" style="-fx-border-color: black;">
+         <children>
+            <ListView fx:id="shrimpRefMatList" layoutX="15.0" layoutY="65.0" prefHeight="287.0" prefWidth="435.0" />
+            <Button fx:id="setFilteredSpotsAsRefMatButton" layoutX="15.0" layoutY="365.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="31.0" prefWidth="435.0" text="Copy Filtered Spots to Reference Material spots." />
+            <Label fx:id="headerLabelRefMat" layoutX="21.0" layoutY="42.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+            <Label layoutX="4.0" prefHeight="20.0" prefWidth="366.0" text="Reference Material (RM) Spots for this Project:" />
+            <Label layoutX="18.0" layoutY="346.0" style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
+            <Label layoutX="54.0" layoutY="20.0" text="RM Spots selected using filter: " />
+            <Label fx:id="rmFilterLabel" layoutX="308.0" layoutY="20.0" style="-fx-font-weight: bold;" text="filter" />
+            <Label fx:id="rmCountLabel" layoutX="15.0" layoutY="20.0" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
+         </children>
+      </Pane>
+      <Pane layoutX="460.0" layoutY="403.0" prefHeight="211.0" prefWidth="462.0" style="-fx-border-color: yellow; -fx-border-width: 3;">
+         <children>
+            <ListView fx:id="shrimpConcentrationRefMatList" layoutX="15.0" layoutY="63.0" prefHeight="101.0" prefWidth="435.0" />
+            <Button fx:id="setFilteredSpotsAsConcRefMatButton" layoutX="15.0" layoutY="178.0" mnemonicParsing="false" onAction="#setFilteredSpotsToConcRefMatAction" prefHeight="31.0" prefWidth="435.0" text="Copy Filtered Spots to Concentration Ref Mat spots." />
+            <Label fx:id="headerLabelConcRefMat" layoutX="21.0" layoutY="40.0" prefHeight="17.0" prefWidth="428.0" text="Header label" />
+            <Label layoutX="4.0" prefHeight="28.0" prefWidth="435.0" text="Concentration Reference Material Spots for this Project:" />
+            <Label layoutX="18.0" layoutY="159.0" style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
+            <Label layoutX="54.0" layoutY="18.0" text="Conc RM Spots selected using filter: " />
+            <Label fx:id="concrmFilterLabel" layoutX="352.0" layoutY="18.0" style="-fx-font-weight: bold;" text="filter" />
+            <Label fx:id="concrmCountLabel" layoutX="15.0" layoutY="18.0" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

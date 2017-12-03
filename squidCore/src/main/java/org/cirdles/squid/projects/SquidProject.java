@@ -59,6 +59,7 @@ public final class SquidProject implements Serializable {
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
+    private String filterForConcRefMatSpotNames;
     private double sessionDurationHours;
     private TaskInterface task;
 
@@ -69,6 +70,7 @@ public final class SquidProject implements Serializable {
         this.prawnFile = null;
 
         this.filterForRefMatSpotNames = "";
+        this.filterForConcRefMatSpotNames = "";
 
         this.sessionDurationHours = 0.0;
 
@@ -89,6 +91,7 @@ public final class SquidProject implements Serializable {
         task.setPrawnFile(prawnFile);
         this.task.setReportsEngine(prawnFileHandler.getReportsEngine());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
@@ -102,6 +105,7 @@ public final class SquidProject implements Serializable {
             task.setPrawnFile(prawnFile);
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+            task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
             // four passes needed for percolating results
             task.updateAllExpressions(4);
             task.setChanged(true);
@@ -111,7 +115,7 @@ public final class SquidProject implements Serializable {
 
     public void createNewTask() {
         this.task = new Task(
-                "New Task", prawnFile, filterForRefMatSpotNames, prawnFileHandler.getNewReportsEngine());
+                "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
         this.task.setChanged(true);
         initializeTaskAndReduceData();
     }
@@ -121,7 +125,7 @@ public final class SquidProject implements Serializable {
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
         this.task = new Task(
-                taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames, prawnFileHandler.getNewReportsEngine());
+                taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setProvenance(taskSquid25.getSquidTaskFileName());
@@ -130,9 +134,10 @@ public final class SquidProject implements Serializable {
         this.task.setNominalMasses(taskSquid25.getNominalMasses());
         this.task.setRatioNames(taskSquid25.getRatioNames());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
 
         // determine index of background mass as specified in task
-        for (int i = 0;  i < taskSquid25.getNominalMasses().size(); i ++) {
+        for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
             if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
                 task.setIndexOfTaskBackgroundMass(i);
                 break;
@@ -458,6 +463,9 @@ public final class SquidProject implements Serializable {
      * @return the filterForRefMatSpotNames
      */
     public String getFilterForRefMatSpotNames() {
+        if (filterForConcRefMatSpotNames == null){
+            filterForConcRefMatSpotNames = "";
+        }
         return filterForRefMatSpotNames;
     }
 
@@ -472,6 +480,21 @@ public final class SquidProject implements Serializable {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
         if (task != null) {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        }
+    }
+
+    public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
+        this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+    }
+
+    public String getFilterForConcRefMatSpotNames() {
+        return filterForConcRefMatSpotNames;
+    }
+
+    public void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
+        this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+        if (task != null) {
+            task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         }
     }
 
