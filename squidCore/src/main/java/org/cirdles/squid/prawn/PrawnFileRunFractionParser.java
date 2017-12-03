@@ -15,9 +15,6 @@
  */
 package org.cirdles.squid.prawn;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -225,6 +222,9 @@ public class PrawnFileRunFractionParser {
                 // record the trim_mass
                 trimMass[scanNum][speciesMeasurementIndex]
                         = Double.parseDouble(measurements.get(speciesMeasurementIndex).getPar().get(1).getValue());
+                
+                // Bodorkos via Ludwig call for trimTime here, but it is an easy on-the-fly calcuation:
+                // ***TrimTime[j, k] = (StartTime + time_stamp_sec[j, k]) / 3600***
 
                 // handle peakMeasurements measurements
                 String[] peakMeasurementsRaw = measurements.get(speciesMeasurementIndex).getData().get(0).getValue().split(",");

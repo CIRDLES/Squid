@@ -36,7 +36,6 @@ import static java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
 import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
 import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -54,9 +53,6 @@ import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
-import org.cirdles.squid.shrimp.ShrimpFraction;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.tasks.TaskInterface;
 import org.xml.sax.SAXException;
 
 /**
@@ -68,7 +64,6 @@ public class PrawnFileHandler implements Serializable {
 
     private transient Unmarshaller jaxbUnmarshaller;
     private transient Marshaller jaxbMarshaller;
-    private transient Consumer<Integer> progressSubscriber;
 
     private CalamariReportsEngine reportsEngine;
 
@@ -309,14 +304,6 @@ public class PrawnFileHandler implements Serializable {
      */
     public void setCurrentPrawnFileLocation(String aCurrentPrawnFileLocation) {
         currentPrawnFileLocation = aCurrentPrawnFileLocation;
-    }
-
-    /**
-     *
-     * @param progressSubscriber
-     */
-    public void setProgressSubscriber(Consumer<Integer> progressSubscriber) {
-        this.progressSubscriber = progressSubscriber;
     }
 
     /**
