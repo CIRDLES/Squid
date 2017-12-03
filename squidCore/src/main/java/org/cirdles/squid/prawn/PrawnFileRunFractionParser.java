@@ -87,16 +87,16 @@ public class PrawnFileRunFractionParser {
      */
     public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, int indexOfBackgroundSpecies, String referenceMaterialLetter) {
         SquidSessionModel squidSessionSpecs = new SquidSessionModel(
-                null, null, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter);
+                null, null, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter, "");
 
         return processRunFraction(runFraction, squidSessionSpecs);
     }
 
     /**
-     * 
+     *
      * @param runFraction
      * @param squidSessionSpecs
-     * @return 
+     * @return
      */
     public ShrimpFraction processRunFraction(Run runFraction, SquidSessionModel squidSessionSpecs) {
 
@@ -104,6 +104,7 @@ public class PrawnFileRunFractionParser {
         boolean userLinFits = squidSessionSpecs.isUserLinFits();
         int indexOfBackgroundSpecies = squidSessionSpecs.getIndexOfBackgroundSpecies();
         String referenceMaterialNameFilter = squidSessionSpecs.getReferenceMaterialNameFilter();
+        String concentrationReferenceMaterialNameFilter = squidSessionSpecs.getConcentrationReferenceMaterialNameFilter();
 
         ShrimpFraction shrimpFraction = null;
         prepareRunFractionMetaData(runFraction, squidSessionSpecs);
@@ -141,6 +142,14 @@ public class PrawnFileRunFractionParser {
                     shrimpFraction.setReferenceMaterial(true);
                 }
             }
+
+            // determine concentration reference material status
+            if (concentrationReferenceMaterialNameFilter.length() > 0) {
+                if (fractionID.toUpperCase(Locale.US).startsWith(concentrationReferenceMaterialNameFilter.toUpperCase(Locale.US))) {
+                    shrimpFraction.setConcentrationReferenceMaterial(true);
+                }
+            }
+
         }
         return shrimpFraction;
     }

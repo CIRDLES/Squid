@@ -58,6 +58,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double[][] netPkCps;
     private double[][] pkFerr;
     private boolean referenceMaterial;
+    private boolean concentrationReferenceMaterial;
     private boolean useSBM;
     private boolean userLinFits;
 
@@ -94,6 +95,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         netPkCps = new double[0][0];
         pkFerr = new double[0][0];
         referenceMaterial = false;
+        concentrationReferenceMaterial = false;
 
         reducedPkHt = new double[0][0];
         reducedPkHtFerr = new double[0][0];
@@ -460,6 +462,24 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         this.referenceMaterial = referenceMaterial;
     }
 
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public boolean isConcentrationReferenceMaterial() {
+        return concentrationReferenceMaterial;
+    }
+
+    /**
+     * 
+     * @param concentrationReferenceMaterial 
+     */
+    public void setConcentrationReferenceMaterial(boolean concentrationReferenceMaterial) {
+        this.concentrationReferenceMaterial = concentrationReferenceMaterial;
+    }
+
+    
     /**
      * @return the useSBM
      */

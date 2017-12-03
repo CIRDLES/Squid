@@ -28,6 +28,10 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_U_Th_Pb_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_SECONDARY_U_Th_Pb_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_Th_U_EQN_NAME;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 
 /**
@@ -48,6 +52,7 @@ public class TaskSquid25 implements Serializable {
     private List<String> nominalMasses;
     private List<String> ratioNames;
     private String backgroundMass;
+    private String parentNuclide;
     private List<TaskSquid25Equation> task25Equations;
     private List<String> constantNames;
     private List<String> constantValues;
@@ -94,9 +99,12 @@ public class TaskSquid25 implements Serializable {
                 for (int i = 0; i < countOfRatios; i++) {
                     taskSquid25.ratioNames.add(ratioStrings[i + 2]);
                 }
-                
+
                 String[] backgroundStrings = lines[firstRow + 19].split("\t");
                 taskSquid25.backgroundMass = backgroundStrings[1];
+
+                String[] parentNuclideStrings = lines[firstRow + 20].split("\t");
+                taskSquid25.parentNuclide = parentNuclideStrings[1];
 
                 taskSquid25.task25Equations = new ArrayList<>();
 
@@ -104,7 +112,7 @@ public class TaskSquid25 implements Serializable {
                 if (primaryUThPbEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]),
-                            prepareSquid25ExcelEquationNameForSquid3(primaryUThPbEqn[0]),
+                            SQUID_PRIMARY_U_Th_Pb_EQN_NAME, //prepareSquid25ExcelEquationNameForSquid3(primaryUThPbEqn[0]),
                             true,
                             true,
                             false,
@@ -115,7 +123,7 @@ public class TaskSquid25 implements Serializable {
                 if (secondaryUThPbEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]),
-                            prepareSquid25ExcelEquationNameForSquid3(secondaryUThPbEqn[0]),
+                            SQUID_SECONDARY_U_Th_Pb_EQN_NAME, //prepareSquid25ExcelEquationNameForSquid3(secondaryUThPbEqn[0]),
                             true,
                             true,
                             false,
@@ -126,7 +134,7 @@ public class TaskSquid25 implements Serializable {
                 if (ThUEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
-                            prepareSquid25ExcelEquationNameForSquid3(ThUEqn[0]),
+                            SQUID_Th_U_EQN_NAME, //prepareSquid25ExcelEquationNameForSquid3(ThUEqn[0]),
                             true,
                             true,
                             false,
@@ -137,7 +145,7 @@ public class TaskSquid25 implements Serializable {
                 if (ppmParentEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
-                            prepareSquid25ExcelEquationNameForSquid3(ppmParentEqn[0]),
+                            SQUID_PPM_PARENT_EQN_NAME, //prepareSquid25ExcelEquationNameForSquid3(ppmParentEqn[0]),
                             true,
                             true,
                             false,
@@ -267,7 +275,7 @@ public class TaskSquid25 implements Serializable {
                 retVal = retVal.replace(matcher.group(), concordiaParts[0] + "," + concordiaParts[2] + "," + concordiaParts[4] + (concordiaParts.length > 5 ? ")" : ""));
             }
         }
-        
+
         // remove "<" and ">" from constants
         squid25FunctionPattern = Pattern.compile("<(.[^>]*)>", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
@@ -276,7 +284,7 @@ public class TaskSquid25 implements Serializable {
             constant = constant.substring(1, constant.length() - 1);
             retVal = retVal.replace(matcher.group(), constant);
         }
-        
+
         // remove "/" and " " from expressions that contain letters only
         squid25FunctionPattern = Pattern.compile("\\[\\\"\\D*\\\"\\]", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
@@ -374,6 +382,14 @@ public class TaskSquid25 implements Serializable {
      */
     public String getBackgroundMass() {
         return backgroundMass;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getParentNuclide() {
+        return parentNuclide;
     }
 
     /**

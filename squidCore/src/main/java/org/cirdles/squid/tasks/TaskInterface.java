@@ -249,12 +249,11 @@ public interface TaskInterface {
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
-    
+
     /**
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
     public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
-
 
     /**
      * @return the useSBM
@@ -305,15 +304,48 @@ public interface TaskInterface {
     public void applyTaskIsotopeLabelsToMassStations();
 
     public void populateTableOfSelectedRatiosFromRatiosList();
-    
+
     public void updateTableOfSelectedRatiosByRowOrCol(int row, int col, boolean selected);
-    
+
     /**
      * @return the namedConstantsMap
      */
     public Map<String, ConstantNode> getNamedConstantsMap();
-    
+
     public void setIndexOfTaskBackgroundMass(int indexOfTask25BackgroundMass);
-    
+
     public void applyMassStationLabelsToTask();
+
+    /**
+     *
+     * @return
+     */
+    public String getParentNuclide();
+
+    /**
+     *
+     * @param parentNuclide
+     */
+    public void setParentNuclide(String parentNuclide);
+
+    /**
+     * @return the pdMeanParentEleA
+     */
+    public double getPdMeanParentEleA();
+
+    /**
+     * @param pdMeanParentEleA the pdMeanParentEleA to set
+     */
+    public void setPdMeanParentEleA(double pdMeanParentEleA);
+
+    /**
+     * @return the useCalculated_pdMeanParentEleA
+     */
+    public boolean isUseCalculated_pdMeanParentEleA();
+
+    /**
+     * @param useCalculated_pdMeanParentEleA the useCalculated_pdMeanParentEleA
+     * to set
+     */
+    public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA);
 }

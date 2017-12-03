@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
@@ -42,19 +43,21 @@
             <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" prefHeight="12.0" prefWidth="50.0" text="No" toggleGroup="$toggleGroupSMB" />
          </children>
       </HBox>
-      <Label layoutX="126.0" layoutY="215.0" prefHeight="28.0" prefWidth="202.0" text="Ratio Calculation Method:" />
-      <HBox layoutX="338.0" layoutY="220.0">
+      <Label layoutX="126.0" layoutY="210.0" prefHeight="28.0" prefWidth="202.0" text="Ratio Calculation Method:" />
+      <HBox layoutX="338.0" layoutY="215.0">
          <children>
-            <RadioButton fx:id="linearRegressionRatioCalcRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#linearRegressionRatioCalcRadioButtonAction" prefHeight="18.0" prefWidth="249.0" text="Linear regression to burn mid-time">
+            <RadioButton fx:id="linearRegressionRatioCalcRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#linearRegressionRatioCalcRadioButtonAction" opacity="0.98" prefHeight="18.0" prefWidth="249.0" text="Linear regression to burn mid-time">
                <toggleGroup>
                   <ToggleGroup fx:id="toggleGroupRatioCalcMethod" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false" onAction="#spotAverageRatioCalcRadioButtonAction" prefHeight="18.0" prefWidth="212.0" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
+            <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false" onAction="#spotAverageRatioCalcRadioButtonAction" opacity="0.98" prefHeight="18.0" prefWidth="212.0" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
          </children>
       </HBox>
       <Label layoutX="20.0" layoutY="175.0" text="Parameters:" />
-      <Label layoutX="70.0" layoutY="317.0" text="Audit:" />
-      <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="322.0" prefHeight="290.0" prefWidth="757.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
+      <Label layoutX="70.0" layoutY="302.0" text="Audit:" />
+      <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="307.0" prefHeight="300.0" prefWidth="757.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
+      <CheckBox fx:id="calcMeanConcetrationCheckBox" layoutX="337.0" layoutY="246.0" mnemonicParsing="false" onAction="#calcMeanConcetrationCheckBoxAction" opacity="0.95" text="Use calculated Mean Concentration of Parent from concentration reference materials" />
+      <Label layoutX="127.0" layoutY="241.0" prefHeight="28.0" prefWidth="173.0" text="Parent Concentration:" />
    </children>
 </AnchorPane>

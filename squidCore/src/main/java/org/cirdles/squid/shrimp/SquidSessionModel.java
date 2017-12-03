@@ -35,17 +35,22 @@ public class SquidSessionModel implements Serializable {
     private boolean userLinFits;
     private int indexOfBackgroundSpecies;
     private String referenceMaterialNameFilter;
+    private String concentrationReferenceMaterialNameFilter;
 
-    public SquidSessionModel(List<SquidSpeciesModel> squidSpeciesSpecsList, 
+    public SquidSessionModel(
+            List<SquidSpeciesModel> squidSpeciesSpecsList, 
             List<SquidRatiosModel> squidRatiosSpecsList, 
-            boolean useSBM, boolean userLinFits,int indexOfBackgroundSpecies, 
-            String referenceMaterialNameFilter) {
+            boolean useSBM, boolean userLinFits, 
+            int indexOfBackgroundSpecies, 
+            String referenceMaterialNameFilter, 
+            String concentrationReferenceMaterialNameFilter) {
         this.squidSpeciesModelList = squidSpeciesSpecsList == null ? new ArrayList<>() : squidSpeciesSpecsList;
         this.squidRatiosModelList = squidRatiosSpecsList == null ? new ArrayList<>() : squidRatiosSpecsList;
         this.useSBM = useSBM;
         this.userLinFits = userLinFits;
         this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
         this.referenceMaterialNameFilter = referenceMaterialNameFilter;
+        this.concentrationReferenceMaterialNameFilter = concentrationReferenceMaterialNameFilter;
     }
 
     public SortedSet<SquidRatiosModel> produceRatiosCopySortedSet() {
@@ -152,4 +157,19 @@ public class SquidSessionModel implements Serializable {
         this.referenceMaterialNameFilter = referenceMaterialNameFilter;
     }
 
+    /**
+     * 
+     * @return 
+     */
+    public String getConcentrationReferenceMaterialNameFilter() {
+        return concentrationReferenceMaterialNameFilter;
+    }
+
+    /**
+     * 
+     * @param concentrationReferenceMaterialNameFilter 
+     */
+    public void setConcentrationReferenceMaterialNameFilter(String concentrationReferenceMaterialNameFilter) {
+        this.concentrationReferenceMaterialNameFilter = concentrationReferenceMaterialNameFilter;
+    }
 }

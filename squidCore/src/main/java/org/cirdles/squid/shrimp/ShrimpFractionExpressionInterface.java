@@ -30,6 +30,12 @@ public interface ShrimpFractionExpressionInterface {
      * @return the referenceMaterial
      */
     public boolean isReferenceMaterial();
+    
+    /**
+     * 
+     * @return 
+     */
+    public boolean isConcentrationReferenceMaterial();
 
     /**
      * @return the pkInterp

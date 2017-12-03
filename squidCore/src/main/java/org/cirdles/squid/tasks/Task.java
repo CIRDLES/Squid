@@ -29,7 +29,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import org.cirdles.ludwig.squid25.SquidConstants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -87,8 +89,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected long dateRevised;
     protected boolean useSBM;
     protected boolean userLinFits;
+    // comes from prawn file mass station
     protected int indexOfBackgroundSpecies;
+    // comes from task
     protected int indexOfTaskBackgroundMass;
+    protected String parentNuclide;
     protected String filterForRefMatSpotNames;
     protected String filterForConcRefMatSpotNames;
 
@@ -112,6 +117,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
+    private List<ShrimpFractionExpressionInterface> concentrationReferenceMaterialSpots;
     private List<ShrimpFractionExpressionInterface> unknownSpots;
 
     /**
@@ -123,6 +129,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected CalamariReportsEngine reportsEngine;
 
     protected boolean changed;
+
+    // dec 2017 temporary storage of specialy calcluations
+    protected double pdMeanParentEleA;
+    protected boolean useCalculated_pdMeanParentEleA;
 
     public Task() {
         this("New Task", null, null);
@@ -157,6 +167,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.userLinFits = false;
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
+        this.parentNuclide = "";
 
         this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
@@ -174,16 +185,28 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.shrimpFractions = new ArrayList<>();
         this.referenceMaterialSpots = new ArrayList<>();
+        this.concentrationReferenceMaterialSpots = new ArrayList<>();
         this.unknownSpots = new ArrayList<>();
 
         this.prawnFile = prawnFile;
         this.reportsEngine = reportsEngine;
 
         this.changed = true;
+
+        this.pdMeanParentEleA = 0.0;
     }
 
     @Override
     public String printTaskAudit() {
+        // backward compatible 
+        // TODO: Remove after 2/1/2018
+        if (concentrationReferenceMaterialSpots == null) {
+            concentrationReferenceMaterialSpots = new ArrayList<>();
+        }
+        if (filterForConcRefMatSpotNames == null) {
+            filterForConcRefMatSpotNames = "";
+        }
+
         StringBuilder summary = new StringBuilder();
 
         summary.append(" ")
@@ -230,6 +253,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(" Reference Material Spots extracted by filter: ' ")
                 .append(filterForRefMatSpotNames)
                 .append(" '.");
+
+        summary.append("\n ")
+                .append(String.valueOf(concentrationReferenceMaterialSpots.size()))
+                .append(" Concentration Reference Material Spots extracted by filter: ' ")
+                .append(filterForConcRefMatSpotNames)
+                .append(" '.\n\t\t  Mean Conentration of Parent ")
+                .append(parentNuclide)
+                .append(" = ")
+                .append(String.valueOf(pdMeanParentEleA));
 
         summary.append("\n ")
                 .append(String.valueOf(unknownSpots.size()))
@@ -282,7 +314,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             buildSquidRatiosModelListFromMassStationDetails();
 
             squidSessionModel = new SquidSessionModel(
-                    squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames);
+                    squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
 
             try {
                 shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
@@ -340,7 +372,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             try {
                 reportsEngine.produceReports(shrimpFractions,
                         (ShrimpFraction) unknownSpots.get(0),
-                        (ShrimpFraction) unknownSpots.get(0), true, false);
+                        referenceMaterialSpots.size() > 0
+                        ? (ShrimpFraction) referenceMaterialSpots.get(0) : (ShrimpFraction) unknownSpots.get(0),
+                        true, false);
             } catch (IOException iOException) {
             }
         }
@@ -562,7 +596,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
-        
+
         changed = true;
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions(2);
@@ -808,6 +842,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         // subdivide spots and calculate hours
         referenceMaterialSpots = new ArrayList<>();
+        concentrationReferenceMaterialSpots = new ArrayList<>();
         unknownSpots = new ArrayList<>();
         boolean firstReferenceMaterial = true;
         long baseTimeOfFirstRefMatForCalcHoursField = 0l;
@@ -818,6 +853,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     baseTimeOfFirstRefMatForCalcHoursField = spot.getDateTimeMilliseconds();
                     firstReferenceMaterial = false;
                 }
+            } else if (spot.isConcentrationReferenceMaterial()) {
+                concentrationReferenceMaterialSpots.add(spot);
+                unknownSpots.add(spot);
             } else {
                 unknownSpots.add(spot);
             }
@@ -836,6 +874,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public void evaluateTaskExpressions() {
+        
+        // reset special fields
+        pdMeanParentEleA = 0.0;
 
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
         // prep spots
@@ -859,6 +900,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
 
+                }
+
+                // Intercept built-in expression SQUID_PPM_PARENT_EQN_NAME and calculate pdMeanParentEleA
+                // per https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
+                // this performs GetConcStdData               
+                if (expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME) == 0) {
+                    int counter = 0;
+                    double sumOfConcentrations = 0.0;
+                    for (ShrimpFractionExpressionInterface spot : concentrationReferenceMaterialSpots) {
+                        double concentration = spot.getTaskExpressionsEvaluationsPerSpot().get(expression)[0][0];
+                        if (concentration > SquidConstants.SQUID_TINY_VALUE) {
+                            sumOfConcentrations += concentration;
+                            counter++;
+                        }
+                    }
+                    if (counter > 0) {
+                        pdMeanParentEleA = sumOfConcentrations / counter;
+                    }
                 }
             }
         }
@@ -1137,11 +1196,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     /**
-     * 
+     *
      */
     public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
         this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
-    }        
+    }
 
     /**
      * @return the useSBM
@@ -1178,6 +1237,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the indexOfBackgroundSpecies
      */
+    @Override
     public int getIndexOfBackgroundSpecies() {
         return indexOfBackgroundSpecies;
     }
@@ -1193,8 +1253,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @param indexOfTaskBackgroundMass
      */
+    @Override
     public void setIndexOfTaskBackgroundMass(int indexOfTaskBackgroundMass) {
         this.indexOfTaskBackgroundMass = indexOfTaskBackgroundMass;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getParentNuclide() {
+        return parentNuclide;
+    }
+
+    /**
+     *
+     * @param parentNuclide
+     */
+    public void setParentNuclide(String parentNuclide) {
+        this.parentNuclide = parentNuclide;
     }
 
     /**
@@ -1391,5 +1468,33 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setReportsEngine(CalamariReportsEngine reportsEngine) {
         this.reportsEngine = reportsEngine;
+    }
+
+    /**
+     * @return the pdMeanParentEleA
+     */
+    public double getPdMeanParentEleA() {
+        return pdMeanParentEleA;
+    }
+
+    /**
+     * @param pdMeanParentEleA the pdMeanParentEleA to set
+     */
+    public void setPdMeanParentEleA(double pdMeanParentEleA) {
+        this.pdMeanParentEleA = pdMeanParentEleA;
+    }
+
+    /**
+     * @return the useCalculated_pdMeanParentEleA
+     */
+    public boolean isUseCalculated_pdMeanParentEleA() {
+        return useCalculated_pdMeanParentEleA;
+    }
+
+    /**
+     * @param useCalculated_pdMeanParentEleA the useCalculated_pdMeanParentEleA to set
+     */
+    public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA) {
+        this.useCalculated_pdMeanParentEleA = useCalculated_pdMeanParentEleA;
     }
 }

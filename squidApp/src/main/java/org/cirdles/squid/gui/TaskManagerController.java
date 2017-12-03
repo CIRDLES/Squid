@@ -22,6 +22,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -72,6 +73,8 @@ public class TaskManagerController implements Initializable {
     private RadioButton spotAverageRatioCalcRadioButton;
     @FXML
     private TextArea taskAuditTextArea;
+    @FXML
+    private CheckBox calcMeanConcetrationCheckBox;
 
     /**
      * Initializes the controller class.
@@ -118,6 +121,9 @@ public class TaskManagerController implements Initializable {
         } else {
             spotAverageRatioCalcRadioButton.setSelected(true);
         }
+        
+        calcMeanConcetrationCheckBox.setDisable(task.getPdMeanParentEleA() == 0.0);
+        calcMeanConcetrationCheckBox.setSelected((task.getPdMeanParentEleA() != 0.0) && task.isUseCalculated_pdMeanParentEleA());
 
         taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
     }
@@ -194,6 +200,11 @@ public class TaskManagerController implements Initializable {
     private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
         task.setUserLinFits(false);
         task.setChanged(true);
+    }
+
+    @FXML
+    private void calcMeanConcetrationCheckBoxAction(ActionEvent event) {
+        task.setUseCalculated_pdMeanParentEleA(calcMeanConcetrationCheckBox.isSelected());
     }
 
 }

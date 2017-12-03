@@ -100,4 +100,9 @@ public final class Squid3Constants {
 
     public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
 
+    public static final String SQUID_PPM_PARENT_EQN_NAME = "Ppm_Parent_eqn";
+    public static final String SQUID_Th_U_EQN_NAME = "Th/U_eqn";
+    public static final String SQUID_PRIMARY_U_Th_Pb_EQN_NAME = "Primary_U/Th/Pb_eqn";
+    public static final String SQUID_SECONDARY_U_Th_Pb_EQN_NAME = "Secondary_U/Th/Pb_eqn";
+
 }

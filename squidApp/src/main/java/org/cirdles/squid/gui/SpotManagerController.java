@@ -241,7 +241,7 @@ public class SpotManagerController implements Initializable {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Clear list.");
         menuItem.setOnAction((evt) -> {
-            squidProject.setFilterForRefMatSpotNames("");
+            squidProject.updateFilterForRefMatSpotNames("");
             updateReferenceMaterialsList(true);
         });
         contextMenu.getItems().add(menuItem);
@@ -252,7 +252,7 @@ public class SpotManagerController implements Initializable {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Clear list.");
         menuItem.setOnAction((evt) -> {
-            squidProject.setFilterForConcRefMatSpotNames("");
+            squidProject.updateFilterForConcRefMatSpotNames("");
             updateConcReferenceMaterialsList(true);
         });
         contextMenu.getItems().add(menuItem);

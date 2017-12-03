@@ -134,7 +134,8 @@ public final class SquidProject implements Serializable {
         this.task.setNominalMasses(taskSquid25.getNominalMasses());
         this.task.setRatioNames(taskSquid25.getRatioNames());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-        task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        this.task.setParentNuclide(taskSquid25.getParentNuclide());
 
         // determine index of background mass as specified in task
         for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
