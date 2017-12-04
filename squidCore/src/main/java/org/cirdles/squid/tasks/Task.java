@@ -847,16 +847,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         boolean firstReferenceMaterial = true;
         long baseTimeOfFirstRefMatForCalcHoursField = 0l;
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
+            // spots that are concentrationReferenceMaterial will also be in one of the other two buckets
+            if (spot.isConcentrationReferenceMaterial()) {
+                concentrationReferenceMaterialSpots.add(spot);
+            }
             if (spot.isReferenceMaterial()) {
                 referenceMaterialSpots.add(spot);
                 if (firstReferenceMaterial) {
                     baseTimeOfFirstRefMatForCalcHoursField = spot.getDateTimeMilliseconds();
                     firstReferenceMaterial = false;
                 }
-            } else if (spot.isConcentrationReferenceMaterial()) {
-                concentrationReferenceMaterialSpots.add(spot);
-                unknownSpots.add(spot);
-            } else {
+            }  else {
                 unknownSpots.add(spot);
             }
         }
