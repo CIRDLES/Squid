@@ -31,7 +31,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.ludwig.squid25.SquidConstants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_Th;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -257,7 +258,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(String.valueOf(concentrationReferenceMaterialSpots.size()))
                 .append(" Concentration Reference Material Spots extracted by filter: ' ")
                 .append(filterForConcRefMatSpotNames)
-                .append(" '.\n\t\t  Mean Conentration of Parent ")
+                .append(" '.\n\t\t  Mean Concentration of Parent ")
                 .append(parentNuclide)
                 .append(" = ")
                 .append(String.valueOf(pdMeanParentEleA));
@@ -904,10 +905,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
                 }
 
-                // Intercept built-in expression SQUID_PPM_PARENT_EQN_NAME and calculate pdMeanParentEleA
+                // Intercept built-in expression SQUID_PPM_PARENT_EQN_NAME_U or SQUID_PPM_PARENT_EQN_NAME_Th and calculate pdMeanParentEleA
                 // per https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
                 // this performs GetConcStdData               
-                if (expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME) == 0) {
+                if (((expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_U) == 0) 
+                        || (expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_Th) == 0))
+                        && !expression.getName().contains("ppm")){
+                    // we have the original supplied concentration from the task since the 'opposite' concentration involves "ppmU" or "ppmTh"
                     int counter = 0;
                     double sumOfConcentrations = 0.0;
                     for (ShrimpFractionExpressionInterface spot : concentrationReferenceMaterialSpots) {

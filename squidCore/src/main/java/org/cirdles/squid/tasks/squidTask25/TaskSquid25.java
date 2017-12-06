@@ -28,7 +28,8 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_Th;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_U_Th_Pb_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_SECONDARY_U_Th_Pb_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_Th_U_EQN_NAME;
@@ -134,7 +135,7 @@ public class TaskSquid25 implements Serializable {
                 if (ThUEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
-                            SQUID_Th_U_EQN_NAME, //prepareSquid25ExcelEquationNameForSquid3(ThUEqn[0]),
+                            SQUID_Th_U_EQN_NAME, 
                             true,
                             true,
                             false,
@@ -143,13 +144,37 @@ public class TaskSquid25 implements Serializable {
 
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
                 if (ppmParentEqn.length > 1) {
+                    // determine if this is ppmU" or "ppmTh" - the remaining of the two will be generated from the supplied one
+                    // we define the subexpression for calcluating "1.033" per Bodorkos
+                    // todo promote this and tie to physical constants model
+                    //String uConstant = "([\"238/232\"] * 137.88 / (137.88 - 1.0))";
+                    String uConstant = "(" + "1.0 / [\"" + SQUID_Th_U_EQN_NAME + "\"] * 137.88 / (137.88 - 1.0))";
+                    
+                    String ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
+                    String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_Th;
+                    String ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"]*[\"" + SQUID_Th_U_EQN_NAME + "\"] / " + uConstant;                   
+                    
+                    if (ppmParentEqn[1].contains("232")) {
+                        ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_Th; 
+                        ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
+                        ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_Th + "\"]*[\"" + SQUID_Th_U_EQN_NAME + "\"] * " + uConstant;
+                    } 
+                    
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
-                            SQUID_PPM_PARENT_EQN_NAME, //prepareSquid25ExcelEquationNameForSquid3(ppmParentEqn[0]),
+                            ppmEqnName,
                             true,
                             true,
                             false,
                             true));
+                    // record the "other" concentration
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                                ppmOtherEqn,
+                                ppmOtherEqnName,
+                                true,
+                                true,
+                                false,
+                                true));
                 }
 
                 String[] equations = lines[firstRow + 26].split("\t");
