@@ -887,7 +887,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getTaskExpressionsForScansEvaluated().clear();
         });
 
-        for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
+//        for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
+//todo: do we still need taskexpressions ordered?
+        for (Expression exp : taskExpressionsOrdered){   
+            ExpressionTreeInterface expression = exp.getExpressionTree();
+            
             if (expression.amHealthy() && expression.isRootExpressionTree()) {
                 // determine subset of spots to be evaluated - default = all
                 List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
@@ -910,7 +914,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 // this performs GetConcStdData               
                 if (((expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_U) == 0) 
                         || (expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_Th) == 0))
-                        && !expression.getName().contains("ppm")){
+                        && !exp.getExcelExpressionString().contains("ppm")){
                     // we have the original supplied concentration from the task since the 'opposite' concentration involves "ppmU" or "ppmTh"
                     int counter = 0;
                     double sumOfConcentrations = 0.0;
