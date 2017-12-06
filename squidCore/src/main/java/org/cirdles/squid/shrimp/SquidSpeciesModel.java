@@ -37,18 +37,20 @@ public class SquidSpeciesModel implements
     private String prawnFileIsotopeName;
     private String elementName;
     private boolean isBackground;
+    private String uThBearingName;
 
     public SquidSpeciesModel() {
-        this(-1, "NONE", "NONE", "NONE", false);
+        this(-1, "NONE", "NONE", "NONE", false, "No");
     }
 
-    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground) {
+    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground, String uThBearingAbbreviation) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
         this.prawnFileIsotopeName = isotopeName;
         this.elementName = elementName;
         this.isBackground = isBackground;
+        this.uThBearingName = uThBearingAbbreviation;
         }
 
     @Override
@@ -160,4 +162,14 @@ public class SquidSpeciesModel implements
     public void setIsBackground(boolean isBackground) {
         this.isBackground = isBackground;
     }
+
+    public String getuThBearingName() {
+        return uThBearingName;
+    }
+
+    public void setuThBearingName(String uThBearingName) {
+        this.uThBearingName = uThBearingName;
+    }
+    
+    
 }

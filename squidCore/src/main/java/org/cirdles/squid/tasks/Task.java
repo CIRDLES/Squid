@@ -99,8 +99,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
-    // cannot be serialized because of JavaFX private final SimpleStringProperty fields
-    protected transient Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
+    protected Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
     protected SquidSessionModel squidSessionModel;
     protected List<SquidSpeciesModel> squidSpeciesModelList;
     protected List<SquidRatiosModel> squidRatiosModelList;
@@ -533,6 +532,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     if (ssm.getIsBackground()) {
                         indexOfBackgroundSpecies = massStationDetail.getMassStationIndex();
                     }
+                    
+                    massStationDetail.setuThBearingName(ssm.getuThBearingName());
                 }
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
@@ -606,7 +607,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         squidSpeciesModelList = new ArrayList<>();
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
             SquidSpeciesModel spm = new SquidSpeciesModel(
-                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(), entry.getValue().getElementLabel(), entry.getValue().getIsBackground());
+                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(), entry.getValue().getElementLabel(), entry.getValue().getIsBackground(), entry.getValue().getuThBearingName());
 
             squidSpeciesModelList.add(spm);
         }

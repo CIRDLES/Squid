@@ -273,3 +273,13 @@
     -fx-background-color: derive(#8187ff, -20%);
     -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,.5), 1, 0, 0, 0);
 }
+
+/*  https://stackoverflow.com/questions/39512621/change-javafx-tableview-font-size  */
+.table-view .column-header-background .label{
+    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 10pt;
+}
+
+.table-view .table-column{
+    -fx-alignment:center;
+}

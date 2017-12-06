@@ -1,5 +1,5 @@
-/*
- * Copyright 2017 CIRDLES.org.
+/* 
+ * Copyright 2006 - 2017 James F. Bowring, CIRDLES.org, and Earth-Time.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.cirdles.squid.gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,10 +31,12 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -44,6 +47,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.shrimp.UThBearingEnum;
 import org.cirdles.squid.tasks.TaskInterface;
 
 /**
@@ -66,6 +70,8 @@ public class IsotopesManagerController implements Initializable {
     private TableColumn<MassStationDetail, String> isotopeLabelColumn;
     @FXML
     private TableColumn<MassStationDetail, String> taskIsotopeLabelColumn;
+    @FXML
+    private TableColumn<MassStationDetail, UThBearingEnum> uOrThBearingColumn;
 
     /**
      * Initializes the controller class.
@@ -84,23 +90,70 @@ public class IsotopesManagerController implements Initializable {
     }
 
     private void setupIsotopeTable() {
+        // ref: http://o7planning.org/en/11079/javafx-tableview-tutorial
+
         ObservableList<MassStationDetail> massStationsData
                 = FXCollections.observableArrayList(task.makeListOfMassStationDetails());
 
-        massLabelColumn.setCellValueFactory(new PropertyValueFactory<>("massStationLabel"));
-        elementLabelColumn.setCellValueFactory(new PropertyValueFactory<>("elementLabel"));
-        taskIsotopeLabelColumn.setCellValueFactory(new PropertyValueFactory<>("taskIsotopeLabel"));
+        // ==== massLabelColumn  ==
+        massLabelColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MassStationDetail, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MassStationDetail, String> param) {
+                MassStationDetail massStationDetail = param.getValue();
+                String massStationLabel = massStationDetail.getMassStationLabel();
+                return new SimpleObjectProperty<>(massStationLabel);
+            }
+        });
 
-        Callback<TableColumn<MassStationDetail, String>, TableCell<MassStationDetail, String>> cellFactory
-                = new Callback<TableColumn<MassStationDetail, String>, TableCell<MassStationDetail, String>>() {
+        // ==== elementLabelColumn  ==
+        elementLabelColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MassStationDetail, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MassStationDetail, String> param) {
+                MassStationDetail massStationDetail = param.getValue();
+                String elementLabel = massStationDetail.getElementLabel();
+                return new SimpleObjectProperty<>(elementLabel);
+            }
+        });
+
+        // ==== uOrThBearingColumn  ==
+        uOrThBearingColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MassStationDetail, UThBearingEnum>, ObservableValue<UThBearingEnum>>() {
+            @Override
+            public ObservableValue<UThBearingEnum> call(TableColumn.CellDataFeatures<MassStationDetail, UThBearingEnum> param) {
+                MassStationDetail massStationDetail = param.getValue();
+                String uThBearingName = massStationDetail.getuThBearingName();
+                UThBearingEnum uThBearing = UThBearingEnum.getByName(uThBearingName);
+                return new SimpleObjectProperty<>(uThBearing);
+            }
+        });
+
+        ObservableList<UThBearingEnum> uThBearingList = FXCollections.observableArrayList(UThBearingEnum.values());
+        uOrThBearingColumn.setCellFactory(ComboBoxTableCell.forTableColumn(uThBearingList));
+        uOrThBearingColumn.setOnEditCommit((CellEditEvent<MassStationDetail, UThBearingEnum> event) -> {
+            TablePosition<MassStationDetail, UThBearingEnum> pos = event.getTablePosition();
+            int row = pos.getRow();
+            MassStationDetail massStationDetail = event.getTableView().getItems().get(row);
+            UThBearingEnum newUThBearingName = event.getNewValue();
+            massStationDetail.setuThBearingName(newUThBearingName.getName());
+            SquidSpeciesModel ssm = task.getSquidSpeciesModelList().get(row);
+            ssm.setuThBearingName(newUThBearingName.getName());
+        });
+
+        // ==== isotopeLabelColumn  ==
+        isotopeLabelColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MassStationDetail, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MassStationDetail, String> param) {
+                MassStationDetail massStationDetail = param.getValue();
+                String isotopeLabel = massStationDetail.getIsotopeLabel();
+                return new SimpleObjectProperty<>(isotopeLabel);
+            }
+        });
+
+        isotopeLabelColumn.setCellFactory(new Callback<TableColumn<MassStationDetail, String>, TableCell<MassStationDetail, String>>() {
             @Override
             public TableCell<MassStationDetail, String> call(TableColumn param) {
                 return new EditingCell();
             }
-        };
-
-        isotopeLabelColumn.setCellValueFactory(new PropertyValueFactory<>("isotopeLabel"));
-        isotopeLabelColumn.setCellFactory(cellFactory);
+        });
         isotopeLabelColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<MassStationDetail, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<MassStationDetail, String> editEvent) {
@@ -118,6 +171,16 @@ public class IsotopesManagerController implements Initializable {
                 }
                 task.setChanged(true);
                 isotopesTableView.refresh();
+            }
+        });
+
+        // ==== taskIsotopeLabelColumn  ==
+        taskIsotopeLabelColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MassStationDetail, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MassStationDetail, String> param) {
+                MassStationDetail massStationDetail = param.getValue();
+                String taskIsotopeLabel = massStationDetail.getTaskIsotopeLabel();
+                return new SimpleObjectProperty<>(taskIsotopeLabel);
             }
         });
 

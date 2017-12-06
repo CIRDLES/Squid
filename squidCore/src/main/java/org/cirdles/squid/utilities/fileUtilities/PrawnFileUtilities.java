@@ -28,6 +28,7 @@ import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
 import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan;
 import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan.Measurement;
 import org.cirdles.squid.shrimp.MassStationDetail;
+import org.cirdles.squid.shrimp.UThBearingEnum;
 
 /**
  *
@@ -72,8 +73,15 @@ public final class PrawnFileUtilities {
             String elementLabel = massStationLabel.replace(isotopeLabel, "");
 
             boolean isBackground = massStationLabel.toUpperCase(Locale.US).contains("KG");
+            String uThBearingName = UThBearingEnum.N.getName();
+            if (elementLabel.toUpperCase(Locale.US).contains("U")){
+                uThBearingName = UThBearingEnum.U.getName();
+            } else if (elementLabel.toUpperCase(Locale.US).contains("TH")){
+                uThBearingName = UThBearingEnum.T.getName();
+            }
+            
             MassStationDetail massStationDetail
-                    = new MassStationDetail(index, massStationLabel, centeringTimeSec, isotopeLabel, elementLabel, isBackground);
+                    = new MassStationDetail(index, massStationLabel, centeringTimeSec, isotopeLabel, elementLabel, isBackground, uThBearingName);
 
             mapOfIndexToMassStationDetails.put(index, massStationDetail);
             index++;
