@@ -146,9 +146,8 @@ public class TaskSquid25 implements Serializable {
                 if (ppmParentEqn.length > 1) {
                     // determine if this is ppmU" or "ppmTh" - the remaining of the two will be generated from the supplied one
                     // we define the subexpression for calcluating "1.033" per Bodorkos
-                    // todo promote this and tie to physical constants model
-                    //String uConstant = "([\"238/232\"] * 137.88 / (137.88 - 1.0))";
-                    String uConstant = "(" + "1.0 / [\"" + SQUID_Th_U_EQN_NAME + "\"] * 137.88 / (137.88 - 1.0))";
+                    // TODO: promote this and tie to physical constants model
+                    String uConstant = "((238/232) * 137.88 / (137.88 - 1.0))";
                     
                     String ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
                     String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_Th;
