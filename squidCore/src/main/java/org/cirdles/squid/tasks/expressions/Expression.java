@@ -81,8 +81,13 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     @Override
     public int compareTo(Expression expression) {
         int retVal = 0;
-        if (this != expression) {
+        if (!((this == expression) || this.equals(expression))) {
             retVal = ((ExpressionTree) expressionTree).compareTo((ExpressionTree) expression.getExpressionTree());
+        }
+        
+        // in case expressiontrees have same name but expressions do not
+        if (retVal == 0) {
+            retVal = name.compareToIgnoreCase(expression.getName());
         }
 
         return retVal;
@@ -96,6 +101,11 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         } else if (obj instanceof Expression && (expressionTree != null)) {
             // note checking if expressionTree is null due to bad parsing
             retVal = ((ExpressionTree) expressionTree).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
+        }
+
+        // in case expressiontrees have same name but expressions do not
+        if (retVal) {
+            retVal = name.compareToIgnoreCase(((Expression) obj).getName()) == 0;
         }
 
         return retVal;
@@ -212,7 +222,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? "  +" : "  -");
             signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? "  +" : "  -");
             signature.append(((ExpressionTree) expressionTree).isSquidSpecialUPbThExpression() ? "  +  " : "  -  ");
-            signature.append(name);//((ExpressionTree) expressionTree).getName());
+            signature.append(name);
         } else {
             signature.append("  Parsing Error! ").append(name);
         }

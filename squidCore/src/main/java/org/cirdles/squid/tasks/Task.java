@@ -31,7 +31,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.ludwig.squid25.SquidConstants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_Th;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
@@ -66,6 +65,9 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateOverCountExpressions;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateParameterConstants;
 
 /**
  *
@@ -113,7 +115,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected SortedSet<Expression> taskExpressionsOrdered;
     protected SortedSet<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
-    protected Map<String, ConstantNode> namedConstantsMap;
+    protected Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap;
+    protected Map<String, ExpressionTreeInterface> namedConstantsMap;
 
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
@@ -180,6 +183,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.taskExpressionsOrdered = new TreeSet<>();
         this.taskExpressionsRemoved = new TreeSet<>();
         this.namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.namedOvercountExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
@@ -194,6 +198,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.changed = true;
 
         this.pdMeanParentEleA = 0.0;
+        
+        generateConstants();
+        generateBuiltInExpressions();
+    }
+
+    private void generateConstants(){
+        Map<String, ExpressionTreeInterface> parameterConstants = generateParameterConstants();
+        namedConstantsMap.putAll(parameterConstants);
+    }
+    
+    private void generateBuiltInExpressions() {
+        SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
+        taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
     }
 
     @Override
@@ -282,8 +299,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         summary.append("\n\n Task Constants: \n ");
         if (namedConstantsMap.size() > 0) {
-            for (Map.Entry<String, ConstantNode> entry : namedConstantsMap.entrySet()) {
-                summary.append(" <").append(entry.getKey()).append(" = ").append((double) entry.getValue().getValue()).append(">");
+            for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
+                summary.append(" <").append(entry.getKey()).append(" = ").append((double) ((ConstantNode)entry.getValue()).getValue()).append(">");
             }
         } else {
             summary.append(" No constants supplied.");
@@ -453,6 +470,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
             listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
             listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
+            listedExp.getExpressionTree().setSquidSpecialUPbThExpression(original.isSquidSpecialUPbThExpression());
+            listedExp.getExpressionTree().setRootExpressionTree(original.isRootExpressionTree());
         }
     }
 
@@ -460,7 +479,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void removeExpression(Expression expression) {
         if (expression != null) {
             // having issues with remove, so handling by hand
-            // it appears java has a bug since even when coparator and equals have correct result
+            // it appears java has a bug since even when comparator and equals have correct result
             SortedSet<Expression> taskBasket = new TreeSet<>();
             for (Expression exp : taskExpressionsOrdered) {
                 if (!exp.equals(expression)) {
@@ -533,7 +552,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     if (ssm.getIsBackground()) {
                         indexOfBackgroundSpecies = massStationDetail.getMassStationIndex();
                     }
-                    
+
                     massStationDetail.setuThBearingName(ssm.getuThBearingName());
                 }
             } else {
@@ -696,7 +715,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ExpressionTreeInterface testConstant = new ConstantNode("TEST_CONSTANT", 999.999);
         namedExpressionsMap.put(testConstant.getName(), testConstant);
 
-        for (Map.Entry<String, ConstantNode> entry : namedConstantsMap.entrySet()) {
+        for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
             namedExpressionsMap.put(entry.getKey(), entry.getValue());
         }
 
@@ -859,7 +878,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     baseTimeOfFirstRefMatForCalcHoursField = spot.getDateTimeMilliseconds();
                     firstReferenceMaterial = false;
                 }
-            }  else {
+            } else {
                 unknownSpots.add(spot);
             }
         }
@@ -877,7 +896,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public void evaluateTaskExpressions() {
-        
+
         // reset special fields
         pdMeanParentEleA = 0.0;
 
@@ -889,9 +908,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
 //        for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
 //todo: do we still need taskexpressions ordered?
-        for (Expression exp : taskExpressionsOrdered){   
+        for (Expression exp : taskExpressionsOrdered) {
             ExpressionTreeInterface expression = exp.getExpressionTree();
-            
+
             if (expression.amHealthy() && expression.isRootExpressionTree()) {
                 // determine subset of spots to be evaluated - default = all
                 List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
@@ -909,12 +928,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
                 }
 
-                // Intercept built-in expression SQUID_PPM_PARENT_EQN_NAME_U or SQUID_PPM_PARENT_EQN_NAME_Th and calculate pdMeanParentEleA
+                // Intercept built-in expression SQUID_PPM_PARENT_EQN_NAME_U or SQUID_PPM_PARENT_EQN_NAME_TH and calculate pdMeanParentEleA
                 // per https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
                 // this performs GetConcStdData               
-                if (((expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_U) == 0) 
-                        || (expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_Th) == 0))
-                        && !exp.getExcelExpressionString().contains("ppm")){
+                if (((expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_U) == 0)
+                        || (expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_TH) == 0))
+                        && !exp.getExcelExpressionString().contains("ppm")) {
                     // we have the original supplied concentration from the task since the 'opposite' concentration involves "ppmU" or "ppmTh"
                     int counter = 0;
                     double sumOfConcentrations = 0.0;
@@ -1425,7 +1444,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the namedConstantsMap
      */
-    public Map<String, ConstantNode> getNamedConstantsMap() {
+    @Override
+    public Map<String, ExpressionTreeInterface> getNamedConstantsMap() {
         if (namedConstantsMap == null) {
             this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         }
@@ -1502,7 +1522,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @param useCalculated_pdMeanParentEleA the useCalculated_pdMeanParentEleA to set
+     * @param useCalculated_pdMeanParentEleA the useCalculated_pdMeanParentEleA
+     * to set
      */
     public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA) {
         this.useCalculated_pdMeanParentEleA = useCalculated_pdMeanParentEleA;

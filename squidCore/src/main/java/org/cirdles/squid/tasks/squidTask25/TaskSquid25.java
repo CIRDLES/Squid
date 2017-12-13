@@ -28,11 +28,11 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_Th;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_U_Th_Pb_EQN_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_SECONDARY_U_Th_Pb_EQN_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_Th_U_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_TH;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_U;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 
 /**
@@ -109,14 +109,25 @@ public class TaskSquid25 implements Serializable {
 
                 taskSquid25.task25Equations = new ArrayList<>();
 
+                // determine where uranium or thorium is primary or secondary
+                String primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_U;
+                String primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
+
                 String[] primaryUThPbEqn = lines[firstRow + 22].split("\t");
                 if (primaryUThPbEqn.length > 1) {
+
+                    if (primaryUThPbEqn[1].contains("232")) {
+                        primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
+                        primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
+                    }
+
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]),
-                            SQUID_PRIMARY_U_Th_Pb_EQN_NAME, //prepareSquid25ExcelEquationNameForSquid3(primaryUThPbEqn[0]),
+                            primaryUThEqnName,
                             true,
                             true,
                             false,
+                            true,
                             true));
                 }
 
@@ -124,10 +135,11 @@ public class TaskSquid25 implements Serializable {
                 if (secondaryUThPbEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]),
-                            SQUID_SECONDARY_U_Th_Pb_EQN_NAME, //prepareSquid25ExcelEquationNameForSquid3(secondaryUThPbEqn[0]),
+                            primaryUThEqnOtherName,
                             true,
                             true,
                             false,
+                            true,
                             true));
                 }
 
@@ -135,45 +147,49 @@ public class TaskSquid25 implements Serializable {
                 if (ThUEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
-                            SQUID_Th_U_EQN_NAME, 
+                            SQUID_TH_U_EQN_NAME,
                             true,
                             true,
                             false,
+                            true,
                             true));
                 }
 
+                // determine where uranium or thorium is primary or secondary
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
                 if (ppmParentEqn.length > 1) {
                     // determine if this is ppmU" or "ppmTh" - the remaining of the two will be generated from the supplied one
                     // we define the subexpression for calcluating "1.033" per Bodorkos
                     // TODO: promote this and tie to physical constants model
                     String uConstant = "((238/232) * 137.88 / (137.88 - 1.0))";
-                    
+
                     String ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
-                    String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_Th;
-                    String ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"]*[\"" + SQUID_Th_U_EQN_NAME + "\"] / " + uConstant;                   
-                    
+                    String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
+                    String ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"]*[\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant;
+
                     if (ppmParentEqn[1].contains("232")) {
-                        ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_Th; 
+                        ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
                         ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
-                        ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_Th + "\"]*[\"" + SQUID_Th_U_EQN_NAME + "\"] * " + uConstant;
-                    } 
-                    
+                        ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_TH + "\"]*[\"" + SQUID_TH_U_EQN_NAME + "\"] * " + uConstant;
+                    }
+
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
                             ppmEqnName,
                             true,
                             true,
                             false,
+                            true,
                             true));
                     // record the "other" concentration
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                                ppmOtherEqn,
-                                ppmOtherEqnName,
-                                true,
-                                true,
-                                false,
-                                true));
+                            ppmOtherEqn,
+                            ppmOtherEqnName,
+                            true,
+                            true,
+                            false,
+                            false,
+                            true));
                 }
 
                 String[] equations = lines[firstRow + 26].split("\t");
@@ -205,7 +221,8 @@ public class TaskSquid25 implements Serializable {
                                 switchRM,
                                 switchUN,
                                 Boolean.parseBoolean(switchSC[i + 2]),
-                                Boolean.parseBoolean(switchNU[i + 2])));
+                                Boolean.parseBoolean(switchNU[i + 2]), 
+                                false));
                     }
                 }
 
@@ -322,7 +339,7 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("1000*", "");
         retVal = retVal.replace("100*", "");
 
-        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs		
+        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
         if (!excelString.contains("(") && !excelString.contains("[")) {
             if (!ShuntingYard.isNumber(excelString)) {
                 retVal = "";

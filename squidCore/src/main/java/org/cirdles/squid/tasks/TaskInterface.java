@@ -310,7 +310,7 @@ public interface TaskInterface {
     /**
      * @return the namedConstantsMap
      */
-    public Map<String, ConstantNode> getNamedConstantsMap();
+    public Map<String, ExpressionTreeInterface> getNamedConstantsMap();
 
     public void setIndexOfTaskBackgroundMass(int indexOfTask25BackgroundMass);
 

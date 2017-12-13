@@ -125,10 +125,12 @@ FUNCTION :
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 
-NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ')* '"' ']' ;
+NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ')* PARENS* (' %err')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment
+PARENS : '(' (LETTER | NUMBER | '.' | ' ')* ')';
+
 LETTER : [a-zA-Z_%] ('-')? ;
 
 NUMBER : [0-9_%]('.' [0-9])? ('-')? ;

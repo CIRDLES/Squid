@@ -216,6 +216,8 @@ public class ExpressionManagerController implements Initializable {
             expTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
             expTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
             expTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());
+            expTree.setSquidSpecialUPbThExpression(originalExpressionTree.isSquidSpecialUPbThExpression());
+            expTree.setRootExpressionTree(originalExpressionTree.isRootExpressionTree());
         }
 
         expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());

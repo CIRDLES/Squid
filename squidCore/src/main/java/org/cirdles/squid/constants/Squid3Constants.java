@@ -100,10 +100,14 @@ public final class Squid3Constants {
 
     public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
 
+    // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
+    public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "UncorrPb/Uconst";
+    public static final String SQUID_PRIMARY_UTH_EQN_NAME_TH = "UncorrPb/Thconst";
+    // Squid2.5 Th/U equation (-3)
+    public static final String SQUID_TH_U_EQN_NAME = "232/238";
+    // name for Squid2.5 Ppm parent eqn(-4) chosen based on U or Th in Primary; then other is calculated
     public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
-    public static final String SQUID_PPM_PARENT_EQN_NAME_Th = "ppmTh";
-    public static final String SQUID_Th_U_EQN_NAME = "Th/U_eqn";
-    public static final String SQUID_PRIMARY_U_Th_Pb_EQN_NAME = "Primary_U/Th/Pb_eqn";
-    public static final String SQUID_SECONDARY_U_Th_Pb_EQN_NAME = "Secondary_U/Th/Pb_eqn";
+    public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
+    
 
 }

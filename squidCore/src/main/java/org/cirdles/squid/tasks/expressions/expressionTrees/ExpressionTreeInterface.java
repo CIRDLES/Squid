@@ -92,7 +92,7 @@ public interface ExpressionTreeInterface {
     public boolean isValid();
 
     public boolean usesAnotherExpression(ExpressionTreeInterface exp);
-    
+
     public boolean usesOtherExpression();
 
     /**
@@ -127,6 +127,16 @@ public interface ExpressionTreeInterface {
      * squidSwitchSCSummaryCalculation to set
      */
     public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation);
+
+    /**
+     * @return the squidSpecialUPbThExpression
+     */
+    public boolean isSquidSpecialUPbThExpression();
+
+    /**
+     * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
+     */
+    public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression);
 
     /**
      *

@@ -32,15 +32,9 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  */
 @XStreamAlias("Operation")
 public class Abs extends Function {
-        //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Abs.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Abs " + theSUID);
-    }
+
+    private static final long serialVersionUID = -1991643174611662542L;
+
     /**
      *
      */

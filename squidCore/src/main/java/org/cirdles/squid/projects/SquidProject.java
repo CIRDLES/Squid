@@ -159,6 +159,7 @@ public final class SquidProject implements Serializable {
             expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
             expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
             expressionTree.setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
+            expressionTree.setSquidSpecialUPbThExpression(task25Eqn.isEqnSwitchSpecialBuiltin());
 
             this.task.getTaskExpressionsOrdered().add(expression);
         }

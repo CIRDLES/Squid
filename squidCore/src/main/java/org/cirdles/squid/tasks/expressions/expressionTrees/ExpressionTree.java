@@ -239,7 +239,8 @@ public class ExpressionTree
      */
     public int compareTo(ExpressionTree exp) {
         int retVal = 0;
-        if (this != exp) {
+//        if ((this != exp) && (!this.equals(exp))) {
+        if (!((this == exp) || (this.equals(exp)))) {
             if (!amHealthy() && exp.amHealthy()) {
                 // this object comes after exp
                 retVal = 1;
@@ -312,7 +313,7 @@ public class ExpressionTree
             }
             if (retVal == 0) {
                 // then compare on names so we have a complete ordering
-                retVal = getName().compareTo(exp.getName());
+                retVal = name.compareTo(exp.getName());
             }
         }
 
@@ -325,7 +326,7 @@ public class ExpressionTree
         if (this == obj) {
             retVal = true;
         } else if (obj instanceof ExpressionTree) {
-            retVal = (getName().compareTo(((ExpressionTree) obj).getName()) == 0);
+            retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
 
             if (!retVal) {
                 retVal = !(usesAnotherExpression((ExpressionTree) obj)
@@ -352,7 +353,7 @@ public class ExpressionTree
                     retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
                 }
                 if (retVal) {
-                    retVal = (getName().compareTo(((ExpressionTree) obj).getName()) == 0);
+                    retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
                 }
             }
         }
