@@ -122,7 +122,13 @@ public abstract class BuiltInExpressionsFactory {
                 "7-corr204Pb/206Pb",
                 "Pb46cor7( [\"207/206\"], sComm_64, sComm_74, [\"207corr206Pb/238UAge\"] )", false, true);
         perSpotExpressionsOrdered.add(expression7Corr46);
-
+        
+        Expression expression8Corr46 = buildExpression(
+                "8-corr204Pb/206Pb",
+                "Pb46cor8( [\"208/206\"], [\"232Th/238U\"], sComm_64, sComm_84, [\"208corr206Pb/238UAge\"] )", false, true);
+        perSpotExpressionsOrdered.add(expression8Corr46);
+        
+        
         return perSpotExpressionsOrdered;
     }
 
