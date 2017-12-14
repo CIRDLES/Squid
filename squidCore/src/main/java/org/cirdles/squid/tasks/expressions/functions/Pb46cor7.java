@@ -16,9 +16,13 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.ValueModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
@@ -28,9 +32,17 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class AgePb76 extends Function {
+public class Pb46cor7 extends Function {
 
-    private static final long serialVersionUID = -6711265919551953531L;
+    //private static final long serialVersionUID = -6711265919551953531L;
+    private void readObject(
+            ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Pb46cor7.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+        System.out.println("Customized De-serialization of Pb46cor7 " + theSUID);
+    }
 
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and
@@ -42,14 +54,14 @@ public class AgePb76 extends Function {
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
-    public AgePb76() {
+    public Pb46cor7() {
 
-        name = "agePb76";
-        argumentCount = 1;
+        name = "pb46cor7";
+        argumentCount = 2;
         precedence = 4;
         rowCount = 1;
-        colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "AgeErr"}};
+        colCount = 1;
+        labelsForOutputValues = new String[][]{{"pb46cor7"}};
     }
 
     /**
@@ -70,10 +82,11 @@ public class AgePb76 extends Function {
         Object[][] retVal;
         try {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
-            double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(pb207_206RatioAndUnct[0], pb207_206RatioAndUnct[1]);
-            retVal = new Object[][]{{agePb76[0], agePb76[1]}};
-        } catch (ArithmeticException | IndexOutOfBoundsException  | NullPointerException e) {
-            retVal = new Object[][]{{0.0, 0.0}};
+            double[] pb207corr206_238Age = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
+            double[] pb46cor7 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor7(pb207_206RatioAndUnct[0], pb207corr206_238Age[0]);
+            retVal = new Object[][]{{pb46cor7[0]}};
+        } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
+            retVal = new Object[][]{{0.0}};
         }
 
         return retVal;
@@ -88,7 +101,7 @@ public class AgePb76 extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>AgePb76</mi>"
+                + "<mi>Pb46cor7</mi>"
                 + "<mfenced>";
 
         for (int i = 0; i < childrenET.size(); i++) {

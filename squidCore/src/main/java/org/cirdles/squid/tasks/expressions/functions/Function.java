@@ -78,6 +78,8 @@ public abstract class Function
     static {
 
         FUNCTIONS_MAP.put("agePb76", "agePb76");
+        FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
+        
         FUNCTIONS_MAP.put("and", "and");
         FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
         FUNCTIONS_MAP.put("concordia", "concordia");
@@ -155,6 +157,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface agePb76() {
         return new AgePb76();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface pb46cor7() {
+        return new Pb46cor7();
     }
 
     /**

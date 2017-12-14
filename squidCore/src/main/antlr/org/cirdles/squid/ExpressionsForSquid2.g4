@@ -106,6 +106,7 @@ fragment Z:('z'|'Z');
 
 FUNCTION : 
     A G E P B '76' |
+    P B '46' C O R '7' |  
     A N D |
     C O N C O R D I A T W |
     C O N C O R D I A |
