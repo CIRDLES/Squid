@@ -115,21 +115,57 @@ public abstract class BuiltInExpressionsFactory {
      *
      * @return
      */
-    public static SortedSet<Expression> generatePerSpotExpressions() {
-        SortedSet<Expression> perSpotExpressionsOrdered = new TreeSet<>();
+    public static SortedSet<Expression> generatePerSpotPbCorrections() {
+        SortedSet<Expression> perSpotPbCorrectionsOrdered = new TreeSet<>();
 
         Expression expression7Corr46 = buildExpression(
                 "7-corr204Pb/206Pb",
                 "Pb46cor7( [\"207/206\"], sComm_64, sComm_74, [\"207corr206Pb/238UAge\"] )", false, true);
-        perSpotExpressionsOrdered.add(expression7Corr46);
-        
+        perSpotPbCorrectionsOrdered.add(expression7Corr46);
+
         Expression expression8Corr46 = buildExpression(
                 "8-corr204Pb/206Pb",
                 "Pb46cor8( [\"208/206\"], [\"232Th/238U\"], sComm_64, sComm_84, [\"208corr206Pb/238UAge\"] )", false, true);
-        perSpotExpressionsOrdered.add(expression8Corr46);
+        perSpotPbCorrectionsOrdered.add(expression8Corr46);
+
+        // for ref materials
+        Expression expression4corCom206 = buildExpression(
+                "4-corr%com206",
+                "100 * sComm_64 * [\"204/206\"]", true, true);
+        perSpotPbCorrectionsOrdered.add(expression4corCom206);
+
+        Expression expression7corCom206 = buildExpression(
+                "7-corr%com206",
+                "100 * sComm_64 * [\"204/206 fr.207\"]", true, false);
+        perSpotPbCorrectionsOrdered.add(expression7corCom206);
+
+        Expression expression8corCom206 = buildExpression(
+                "8-corr%com206",
+                "100 * sComm_64 * [\"204/206 fr.208\"]", true, false);
+        perSpotPbCorrectionsOrdered.add(expression8corCom206);
+
+        Expression expression4corCom208 = buildExpression(
+                "4-corr%com208",
+                "100 * sComm_84 / [\"208/206\"] * [\"204/206\"]", true, true);
+        perSpotPbCorrectionsOrdered.add(expression4corCom208);
+
+        Expression expression7corCom208 = buildExpression(
+                "7-corr%com208",
+                "100 * sComm_84 / [\"208/206\"] * [\"204/206 fr.207\"]", true, false);
+        perSpotPbCorrectionsOrdered.add(expression7corCom208);
         
+        // for samples
+        Expression expression7corCom206S = buildExpression(
+                "7-corr%com206S",
+                "100 * sComm_64 * [\"7-corr204Pb/206Pb\"]", false, true);
+        perSpotPbCorrectionsOrdered.add(expression7corCom206S);
         
-        return perSpotExpressionsOrdered;
+        Expression expression8corCom206S = buildExpression(
+                "8-corr%com206",
+                "100 * sComm_64 * [\"8-corr204Pb/206Pb\"]", false, true);
+        perSpotPbCorrectionsOrdered.add(expression8corCom206S);
+        
+        return perSpotPbCorrectionsOrdered;
     }
 
     private static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc) {

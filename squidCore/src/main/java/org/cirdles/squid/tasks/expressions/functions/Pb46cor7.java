@@ -67,12 +67,14 @@ public class Pb46cor7 extends Function {
     /**
      * Requires that child 0 is a VariableNode that evaluates to a double array
      * with one column representing the 207/206 IsotopicRatio and a row for each
-     * member of shrimpFractions.
+     * member of shrimpFractions. Requires that child 1 is a VariableNode that
+     * evaluates to a double array with one column representing the
+     * 207corr206Pb/238UAge and a row for each member of shrimpFractions.
      *
-     * @param childrenET list containing child 0
+     * @param childrenET list containing child 0 and 1
      * @param shrimpFractions a list of shrimpFractions
      * @param task
-     * @return the double[1][2] array of age, ageErr
+     * @return the double[1][1] array of pb46cor7
      * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
