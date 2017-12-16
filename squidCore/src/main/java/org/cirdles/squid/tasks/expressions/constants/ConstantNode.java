@@ -120,7 +120,7 @@ public class ConstantNode extends ExpressionTree {
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface tast) {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
         return new Object[][]{{value}};
     }
 
