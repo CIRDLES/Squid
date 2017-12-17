@@ -20,10 +20,10 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -104,7 +104,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
         taskExpressionsForScansEvaluated = new ArrayList<>();
 
-        taskExpressionsEvaluationsPerSpot = new TreeMap<>();
+        taskExpressionsEvaluationsPerSpot = new HashMap<>();
 
     }
 
