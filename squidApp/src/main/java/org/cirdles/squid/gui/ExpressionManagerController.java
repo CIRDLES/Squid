@@ -124,6 +124,8 @@ public class ExpressionManagerController implements Initializable {
     private Tab refMatTab;
     @FXML
     private Tab unkTab;
+    @FXML
+    private CheckBox concRefMatSwitchCheckBox;
 
     /**
      * Initializes the controller class.
@@ -215,6 +217,7 @@ public class ExpressionManagerController implements Initializable {
         if (originalExpressionTree != null) {
             expTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
             expTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
+            expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation());
             expTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());
             expTree.setSquidSpecialUPbThExpression(originalExpressionTree.isSquidSpecialUPbThExpression());
             expTree.setRootExpressionTree(originalExpressionTree.isRootExpressionTree());
@@ -229,7 +232,7 @@ public class ExpressionManagerController implements Initializable {
 
     private void populatePeeks(Expression exp) {
         SingleSelectionModel<Tab> selectionModel = spotTabPane.getSelectionModel();
-        
+
         if ((exp == null) || (!exp.amHealthy())) {
             rmPeekTextArea.setText("No expression.");
             unPeekTextArea.setText("No expression.");
@@ -240,10 +243,10 @@ public class ExpressionManagerController implements Initializable {
 
             List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
             List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
+            List<ShrimpFractionExpressionInterface> concRefMatSpots = task.getConcentrationReferenceMaterialSpots();
 
             // choose peek tab
-            
-            if (refMatTab.isSelected() & !refMatSwitchCheckBox.isSelected()) {
+            if (refMatTab.isSelected() & !refMatSwitchCheckBox.isSelected() & !concRefMatSwitchCheckBox.isSelected()) {
                 selectionModel.select(unkTab);
             } else if (unkTab.isSelected() & !unknownsSwitchCheckBox.isSelected()) {
                 selectionModel.select(refMatTab);
@@ -271,12 +274,20 @@ public class ExpressionManagerController implements Initializable {
                 rmPeekTextArea.setText("No Summary");
                 unPeekTextArea.setText("No Summary");
 
-                if (task.getTaskExpressionsEvaluationsPerSpotSet().get(originalExpressionTree.getName()) != null) {
+                if (spotSummary != null) {
                     if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
                         if (spotSummary.getSelectedSpots().size() > 0) {
                             rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
                         } else {
                             rmPeekTextArea.setText("No Reference Materials");
+                        }
+                    }
+
+                    if (originalExpressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                        if (spotSummary.getSelectedSpots().size() > 0) {
+                            rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
+                        } else {
+                            rmPeekTextArea.setText("No Concentration Reference Materials");
                         }
                     }
 
@@ -290,23 +301,28 @@ public class ExpressionManagerController implements Initializable {
                 }
 
             } else {
+                rmPeekTextArea.setText("Reference Materials not processed.");
                 if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
                     if (refMatSpots.size() > 0) {
                         rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots, exp.getExpressionTree()));
                     } else {
                         rmPeekTextArea.setText("No Reference Materials");
                     }
-                } else if (!originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
-                    rmPeekTextArea.setText("Reference Materials not processed.");
+                } else if (originalExpressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                    if (concRefMatSpots.size() > 0) {
+                        rmPeekTextArea.setText(peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree()));
+                    } else {
+                        rmPeekTextArea.setText("No Concentration Reference Materials");
+                    }
                 }
+
+                unPeekTextArea.setText("Unknowns not processed.");
                 if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
                     if (unSpots.size() > 0) {
                         unPeekTextArea.setText(peekDetailsPerSpot(unSpots, exp.getExpressionTree()));
                     } else {
                         rmPeekTextArea.setText("No Unknowns");
                     }
-                } else if (!originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
-                    unPeekTextArea.setText("Unknowns not processed.");
                 }
             }
         }
@@ -315,6 +331,9 @@ public class ExpressionManagerController implements Initializable {
     private String peekDetailsPerSummary(SpotSummaryDetails spotSummary) {
         String[][] labels = spotSummary.getOperation().getLabelsForOutputValues();
         StringBuilder sb = new StringBuilder();
+        if (concRefMatSwitchCheckBox.isSelected()) {
+            sb.append("Concentration Reference Materials Only\n\n");
+        }
         for (int i = 0; i < labels[0].length; i++) {
             sb.append("\t");
             sb.append(String.format("%1$-" + 13 + "s", labels[0][i]));
@@ -376,6 +395,9 @@ public class ExpressionManagerController implements Initializable {
             }
 
         } else {
+            if (concRefMatSwitchCheckBox.isSelected()) {
+                sb.append("Concentration Reference Materials Only\n\n");
+            }
             sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
             if (((ExpressionTree) originalExpressionTree).getOperation() != null) {
                 String[][] resultLabels = ((ExpressionTree) originalExpressionTree).getOperation().getLabelsForOutputValues();
@@ -421,6 +443,7 @@ public class ExpressionManagerController implements Initializable {
 
             refMatSwitchCheckBox.setSelected(((ExpressionTree) currentExpression.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
             unknownsSwitchCheckBox.setSelected(((ExpressionTree) currentExpression.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
+            concRefMatSwitchCheckBox.setSelected(((ExpressionTree) currentExpression.getExpressionTree()).isSquidSwitchConcentrationReferenceMaterialCalculation());
 
             populatePeeks(parseAndAuditCurrentExcelExpression());
         }
@@ -492,6 +515,7 @@ public class ExpressionManagerController implements Initializable {
 
             ((ExpressionTree) expTree).setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.selectedProperty().getValue());
             ((ExpressionTree) expTree).setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.selectedProperty().getValue());
+            ((ExpressionTree) expTree).setSquidSwitchConcentrationReferenceMaterialCalculation(concRefMatSwitchCheckBox.selectedProperty().getValue());
 
             ((ExpressionTree) expTree).setSquidSwitchSCSummaryCalculation(((ExpressionTree) originalExpressionTree).isSquidSwitchSCSummaryCalculation());
             ((ExpressionTree) expTree).setSquidSpecialUPbThExpression(((ExpressionTree) originalExpressionTree).isSquidSpecialUPbThExpression());
@@ -524,6 +548,7 @@ public class ExpressionManagerController implements Initializable {
         expressionExcelTextArea.setEditable(editMode);
         refMatSwitchCheckBox.setDisable(!editMode);
         unknownsSwitchCheckBox.setDisable(!editMode);
+        concRefMatSwitchCheckBox.setDisable(!editMode);
 
         editButton.setDisable(editMode);
         saveButton.setDisable(!editMode);
@@ -554,10 +579,24 @@ public class ExpressionManagerController implements Initializable {
 
     @FXML
     private void refMatSwitchCheckBoxOnAction(ActionEvent event) {
+        if (refMatSwitchCheckBox.isSelected()) {
+            concRefMatSwitchCheckBox.setSelected(false);
+        }
     }
 
     @FXML
     private void unknownsSwitchCheckBoxOnAction(ActionEvent event) {
+        if (unknownsSwitchCheckBox.isSelected()) {
+            concRefMatSwitchCheckBox.setSelected(false);
+        }
+    }
+
+    @FXML
+    private void concRefMatSwitchCheckBoxOnAction(ActionEvent event) {
+        if (concRefMatSwitchCheckBox.isSelected()) {
+            refMatSwitchCheckBox.setSelected(false);
+            unknownsSwitchCheckBox.setSelected(false);
+        }
     }
 
 }

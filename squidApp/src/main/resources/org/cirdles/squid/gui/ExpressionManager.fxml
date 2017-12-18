@@ -48,11 +48,11 @@
                            <effect>
                               <InnerShadow />
                            </effect></Label>
-                        <CheckBox fx:id="refMatSwitchCheckBox" disable="true" layoutX="65.0" layoutY="124.0" mnemonicParsing="false" onAction="#refMatSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="192.0" text="Reference Material (RM)">
+                        <CheckBox fx:id="refMatSwitchCheckBox" disable="true" layoutX="66.0" layoutY="124.0" mnemonicParsing="false" onAction="#refMatSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="143.0" text="Reference Material">
                            <effect>
                               <InnerShadow />
                            </effect></CheckBox>
-                        <CheckBox fx:id="unknownsSwitchCheckBox" disable="true" layoutX="263.0" layoutY="124.0" mnemonicParsing="false" onAction="#unknownsSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="180.0" text="Unknown Samples (UN)">
+                        <CheckBox fx:id="unknownsSwitchCheckBox" disable="true" layoutX="214.0" layoutY="124.0" mnemonicParsing="false" onAction="#unknownsSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="143.0" text="Unknown Samples">
                            <effect>
                               <InnerShadow />
                            </effect></CheckBox>
@@ -107,6 +107,11 @@
                      <effect>
                         <InnerShadow />
                      </effect></Label>
+                  <CheckBox fx:id="concRefMatSwitchCheckBox" disable="true" layoutX="360.0" layoutY="124.0" mnemonicParsing="false" onAction="#concRefMatSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="104.0" text="Conc RefMat">
+                     <effect>
+                        <InnerShadow />
+                     </effect>
+                  </CheckBox>
                </children>
             </AnchorPane>
          </items>

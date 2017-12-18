@@ -112,6 +112,8 @@ public class ExpressionTree
      *
      */
     protected boolean rootExpressionTree;
+    
+    protected boolean squidSwitchConcentrationReferenceMaterialCalculation;
 
     /**
      *
@@ -167,6 +169,7 @@ public class ExpressionTree
         this.squidSwitchSTReferenceMaterialCalculation = false;
         this.squidSwitchSAUnknownCalculation = false;
         this.squidSpecialUPbThExpression = false;
+        this.squidSwitchConcentrationReferenceMaterialCalculation = false;
         this.rootExpressionTree = false;
     }
 
@@ -179,6 +182,7 @@ public class ExpressionTree
         target.setSquidSwitchSTReferenceMaterialCalculation(squidSwitchSTReferenceMaterialCalculation);
         target.setSquidSwitchSAUnknownCalculation(squidSwitchSAUnknownCalculation);
         target.setSquidSpecialUPbThExpression(squidSpecialUPbThExpression);
+        target.setSquidSwitchConcentrationReferenceMaterialCalculation(squidSwitchConcentrationReferenceMaterialCalculation);
         target.setRootExpressionTree(rootExpressionTree);
 
         return target;
@@ -303,6 +307,15 @@ public class ExpressionTree
                 }
             }
             if (retVal == 0) {
+                // then compare is for concentration reference materials only
+                if (isSquidSwitchConcentrationReferenceMaterialCalculation()&& !exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                    // this object comes before exp
+                    retVal = -1;
+                } else if (!isSquidSwitchConcentrationReferenceMaterialCalculation() && exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                    retVal = 1;
+                }
+            }
+            if (retVal == 0) {
                 // then compare is summary
                 if (isSquidSwitchSCSummaryCalculation() && !exp.isSquidSwitchSCSummaryCalculation()) {
                     retVal = 1;
@@ -351,6 +364,9 @@ public class ExpressionTree
                 }
                 if (retVal) {
                     retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
+                }
+                if (retVal) {
+                    retVal = (isSquidSwitchConcentrationReferenceMaterialCalculation()== ((ExpressionTree) obj).isSquidSwitchConcentrationReferenceMaterialCalculation());
                 }
                 if (retVal) {
                     retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
@@ -771,6 +787,7 @@ public class ExpressionTree
     /**
      * @return the squidSpecialUPbThExpression
      */
+    @Override
     public boolean isSquidSpecialUPbThExpression() {
         return squidSpecialUPbThExpression;
     }
@@ -778,7 +795,24 @@ public class ExpressionTree
     /**
      * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
      */
+    @Override
     public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression) {
         this.squidSpecialUPbThExpression = squidSpecialUPbThExpression;
+    }
+
+    /**
+     * @return the squidSwitchConcentrationReferenceMaterialCalculation
+     */
+    @Override
+    public boolean isSquidSwitchConcentrationReferenceMaterialCalculation() {
+        return squidSwitchConcentrationReferenceMaterialCalculation;
+    }
+
+    /**
+     * @param squidSwitchConcentrationReferenceMaterialCalculation the squidSwitchConcentrationReferenceMaterialCalculation to set
+     */
+    @Override
+    public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation) {
+        this.squidSwitchConcentrationReferenceMaterialCalculation = squidSwitchConcentrationReferenceMaterialCalculation;
     }
 }

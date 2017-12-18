@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_TH;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_U;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
@@ -116,7 +116,7 @@ public class TaskSquid25 implements Serializable {
                 String[] primaryUThPbEqn = lines[firstRow + 22].split("\t");
                 if (primaryUThPbEqn.length > 1) {
 
-                    if (primaryUThPbEqn[1].contains("232")) {
+                    if (taskSquid25.parentNuclide.contains("232")) {
                         primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
                         primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
                     }
@@ -128,7 +128,7 @@ public class TaskSquid25 implements Serializable {
                             true,
                             false,
                             true,
-                            true));
+                            true, false));
                 }
 
                 String[] secondaryUThPbEqn = lines[firstRow + 23].split("\t");
@@ -140,7 +140,7 @@ public class TaskSquid25 implements Serializable {
                             true,
                             false,
                             true,
-                            true));
+                            true, false));
                 }
 
                 String[] ThUEqn = lines[firstRow + 24].split("\t");
@@ -152,44 +152,29 @@ public class TaskSquid25 implements Serializable {
                             true,
                             false,
                             true,
-                            true));
+                            true, false));
                 }
 
-                // determine where uranium or thorium is primary or secondary
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
                 if (ppmParentEqn.length > 1) {
-                    // determine if this is ppmU" or "ppmTh" - the remaining of the two will be generated from the supplied one
-                    // we define the subexpression for calcluating "1.033" per Bodorkos
-                    // TODO: promote this and tie to physical constants model
-                    String uConstant = "((238/232) * 137.88 / (137.88 - 1.0))";
-
-                    String ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
-                    String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
-                    String ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"]*[\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant;
-
-                    if (ppmParentEqn[1].contains("232")) {
-                        ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
-                        ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
-                        ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_TH + "\"]*[\"" + SQUID_TH_U_EQN_NAME + "\"] * " + uConstant;
-                    }
-
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
-                            ppmEqnName,
+                            SQUID_PPM_PARENT_EQN_NAME,
                             true,
                             true,
                             false,
                             true,
-                            true));
-                    // record the "other" concentration
+                            true, false));
+
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            ppmOtherEqn,
-                            ppmOtherEqnName,
-                            true,
-                            true,
+                            "CalculateMeanConcStd([\"" + SQUID_PPM_PARENT_EQN_NAME + "\"])",
+                            SQUID_MEAN_PPM_PARENT_NAME,
                             false,
                             false,
-                            true));
+                            true,
+                            false,
+                            true, true));
+
                 }
 
                 String[] equations = lines[firstRow + 26].split("\t");
@@ -221,8 +206,8 @@ public class TaskSquid25 implements Serializable {
                                 switchRM,
                                 switchUN,
                                 Boolean.parseBoolean(switchSC[i + 2]),
-                                Boolean.parseBoolean(switchNU[i + 2]), 
-                                false));
+                                Boolean.parseBoolean(switchNU[i + 2]),
+                                false, false));
                     }
                 }
 

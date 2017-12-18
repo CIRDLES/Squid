@@ -60,5 +60,6 @@ public class CustomExpression_Net204BiWt extends ExpressionTree implements Built
         setSquidSwitchSCSummaryCalculation(true);
         setSquidSwitchSTReferenceMaterialCalculation(true);
         setSquidSwitchSAUnknownCalculation(false);
+        setSquidSwitchConcentrationReferenceMaterialCalculation(false);
     }
 }

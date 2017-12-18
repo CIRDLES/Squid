@@ -29,9 +29,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import org.cirdles.ludwig.squid25.SquidConstants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -65,9 +64,10 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateOverCountExpressions;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateParameterConstants;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotPbCorrections;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
 
 /**
  *
@@ -117,10 +117,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
     protected Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap;
     protected Map<String, ExpressionTreeInterface> namedConstantsMap;
+    protected Map<String, ExpressionTreeInterface> namedParametersMap;
 
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
-    private List<ShrimpFractionExpressionInterface> concentrationReferenceMaterialSpots;
+    protected List<ShrimpFractionExpressionInterface> concentrationReferenceMaterialSpots;
     private List<ShrimpFractionExpressionInterface> unknownSpots;
 
     /**
@@ -133,8 +134,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected boolean changed;
 
-    // dec 2017 temporary storage of specialy calcluations
-    protected double pdMeanParentEleA;
     protected boolean useCalculated_pdMeanParentEleA;
 
     public Task() {
@@ -185,6 +184,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.namedOvercountExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         this.shrimpFractions = new ArrayList<>();
@@ -197,20 +197,30 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.changed = true;
 
-        this.pdMeanParentEleA = 0.0;
-        
         generateConstants();
+        generateParameters();
         generateBuiltInExpressions();
     }
 
-    private void generateConstants(){
-        Map<String, ExpressionTreeInterface> parameterConstants = generateParameterConstants();
-        namedConstantsMap.putAll(parameterConstants);
+    private void generateConstants() {
+        Map<String, ExpressionTreeInterface> constants = BuiltInExpressionsFactory.generateConstants();
+        namedConstantsMap.putAll(constants);
     }
-    
+
+    private void generateParameters() {
+        Map<String, ExpressionTreeInterface> parameters = BuiltInExpressionsFactory.generateParameters();
+        namedParametersMap.putAll(parameters);
+    }
+
     private void generateBuiltInExpressions() {
         SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
+
+        SortedSet<Expression> perSpotPbCorrections = generatePerSpotPbCorrections();
+        taskExpressionsOrdered.addAll(perSpotPbCorrections);
+        
+        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide);
+        taskExpressionsOrdered.addAll(perSpotConcentrations);
     }
 
     @Override
@@ -271,6 +281,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(filterForRefMatSpotNames)
                 .append(" '.");
 
+        String meanConcValue = "Not Calculated";
+        if (taskExpressionsEvaluationsPerSpotSet.get(SQUID_MEAN_PPM_PARENT_NAME) != null) {
+            meanConcValue = String.valueOf(taskExpressionsEvaluationsPerSpotSet.get(SQUID_MEAN_PPM_PARENT_NAME).getValues()[0][0]);
+        }
         summary.append("\n ")
                 .append(String.valueOf(concentrationReferenceMaterialSpots.size()))
                 .append(" Concentration Reference Material Spots extracted by filter: ' ")
@@ -278,7 +292,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(" '.\n\t\t  Mean Concentration of Parent ")
                 .append(parentNuclide)
                 .append(" = ")
-                .append(String.valueOf(pdMeanParentEleA));
+                .append(meanConcValue);
 
         summary.append("\n ")
                 .append(String.valueOf(unknownSpots.size()))
@@ -300,7 +314,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\n Task Constants: \n ");
         if (namedConstantsMap.size() > 0) {
             for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
-                summary.append(" <").append(entry.getKey()).append(" = ").append((double) ((ConstantNode)entry.getValue()).getValue()).append(">");
+                summary.append(" <").append(entry.getKey()).append(" = ").append((double) ((ConstantNode) entry.getValue()).getValue()).append(">");
             }
         } else {
             summary.append(" No constants supplied.");
@@ -469,6 +483,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (original != null) {
             listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
             listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
+            listedExp.getExpressionTree().setSquidSwitchConcentrationReferenceMaterialCalculation(original.isSquidSwitchConcentrationReferenceMaterialCalculation());
+
             listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(original.isSquidSwitchSCSummaryCalculation());
             listedExp.getExpressionTree().setSquidSpecialUPbThExpression(original.isSquidSpecialUPbThExpression());
             listedExp.getExpressionTree().setRootExpressionTree(original.isRootExpressionTree());
@@ -711,11 +727,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void assembleNamedExpressionsMap() {
         namedExpressionsMap.clear();
 
-        //TODO: Make a constants factory
-        ExpressionTreeInterface testConstant = new ConstantNode("TEST_CONSTANT", 999.999);
-        namedExpressionsMap.put(testConstant.getName(), testConstant);
-
         for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
+            namedExpressionsMap.put(entry.getKey(), entry.getValue());
+        }
+
+        for (Map.Entry<String, ExpressionTreeInterface> entry : namedParametersMap.entrySet()) {
             namedExpressionsMap.put(entry.getKey(), entry.getValue());
         }
 
@@ -897,9 +913,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void evaluateTaskExpressions() {
 
-        // reset special fields
-        pdMeanParentEleA = 0.0;
-
         taskExpressionsEvaluationsPerSpotSet = new TreeMap<>();
         // prep spots
         shrimpFractions.forEach((spot) -> {
@@ -914,10 +927,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             if (expression.amHealthy() && expression.isRootExpressionTree()) {
                 // determine subset of spots to be evaluated - default = all
                 List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
-                if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {
+
+                if (((ExpressionTree) expression).isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                    spotsForExpression = concentrationReferenceMaterialSpots;
+                } else if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {
                     spotsForExpression = unknownSpots;
-                }
-                if (!((ExpressionTree) expression).isSquidSwitchSAUnknownCalculation()) {
+                } else if (!((ExpressionTree) expression).isSquidSwitchSAUnknownCalculation()) {
                     spotsForExpression = referenceMaterialSpots;
                 }
 
@@ -926,27 +941,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
 
-                }
-
-                // Intercept built-in expression SQUID_PPM_PARENT_EQN_NAME_U or SQUID_PPM_PARENT_EQN_NAME_TH and calculate pdMeanParentEleA
-                // per https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
-                // this performs GetConcStdData               
-                if (((expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_U) == 0)
-                        || (expression.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_TH) == 0))
-                        && !exp.getExcelExpressionString().contains("ppm")) {
-                    // we have the original supplied concentration from the task since the 'opposite' concentration involves "ppmU" or "ppmTh"
-                    int counter = 0;
-                    double sumOfConcentrations = 0.0;
-                    for (ShrimpFractionExpressionInterface spot : concentrationReferenceMaterialSpots) {
-                        double concentration = spot.getTaskExpressionsEvaluationsPerSpot().get(expression)[0][0];
-                        if (concentration > SquidConstants.SQUID_TINY_VALUE) {
-                            sumOfConcentrations += concentration;
-                            counter++;
-                        }
-                    }
-                    if (counter > 0) {
-                        pdMeanParentEleA = sumOfConcentrations / counter;
-                    }
                 }
             }
         }
@@ -1117,6 +1111,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         ratioNames = revisedRatioNames;
+    }
+
+    public Expression getExpressionByName(String name) {
+        Expression exp = null;
+        for (Expression expression : taskExpressionsOrdered) {
+            if (expression.getName().compareToIgnoreCase(name) == 0) {
+                exp = expression;
+                break;
+            }
+        }
+        return exp;
     }
 
     /**
@@ -1493,6 +1498,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
+     * @return the concentrationReferenceMaterialSpots
+     */
+    public List<ShrimpFractionExpressionInterface> getConcentrationReferenceMaterialSpots() {
+        return concentrationReferenceMaterialSpots;
+    }
+
+    /**
      * @param reportsEngine the reportsEngine to set
      */
     @Override
@@ -1501,22 +1513,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the pdMeanParentEleA
-     */
-    public double getPdMeanParentEleA() {
-        return pdMeanParentEleA;
-    }
-
-    /**
-     * @param pdMeanParentEleA the pdMeanParentEleA to set
-     */
-    public void setPdMeanParentEleA(double pdMeanParentEleA) {
-        this.pdMeanParentEleA = pdMeanParentEleA;
-    }
-
-    /**
      * @return the useCalculated_pdMeanParentEleA
      */
+    @Override
     public boolean isUseCalculated_pdMeanParentEleA() {
         return useCalculated_pdMeanParentEleA;
     }
@@ -1525,6 +1524,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param useCalculated_pdMeanParentEleA the useCalculated_pdMeanParentEleA
      * to set
      */
+    @Override
     public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA) {
         this.useCalculated_pdMeanParentEleA = useCalculated_pdMeanParentEleA;
     }

@@ -123,7 +123,8 @@ FUNCTION :
     M A X | 
     A B S |
     A V E R A G E | 
-    C O U N T ;
+    C O U N T |
+    C A L C U L A T E M E A N C O N C S T D;
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 

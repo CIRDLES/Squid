@@ -105,7 +105,10 @@ public final class Squid3Constants {
     public static final String SQUID_PRIMARY_UTH_EQN_NAME_TH = "UncorrPb/Thconst";
     // Squid2.5 Th/U equation (-3)
     public static final String SQUID_TH_U_EQN_NAME = "232Th/238U";
-    // name for Squid2.5 Ppm parent eqn(-4) chosen based on U or Th in Primary; then other is calculated
+    // name for Squid2.5 Ppm parent eqn(-4) 
+    public static final String SQUID_PPM_PARENT_EQN_NAME = "Ppm Parent Eqn";
+    public static final String SQUID_MEAN_PPM_PARENT_NAME = "pdMeanParentEleA";
+    // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
     public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
     

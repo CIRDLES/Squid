@@ -28,7 +28,6 @@ import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -244,6 +243,11 @@ public interface TaskInterface {
      * @return the unknownSpots
      */
     public List<ShrimpFractionExpressionInterface> getUnknownSpots();
+    
+        /**
+     * @return the concentrationReferenceMaterialSpots
+     */
+    public List<ShrimpFractionExpressionInterface> getConcentrationReferenceMaterialSpots();
 
     /**
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
@@ -329,16 +333,6 @@ public interface TaskInterface {
     public void setParentNuclide(String parentNuclide);
 
     /**
-     * @return the pdMeanParentEleA
-     */
-    public double getPdMeanParentEleA();
-
-    /**
-     * @param pdMeanParentEleA the pdMeanParentEleA to set
-     */
-    public void setPdMeanParentEleA(double pdMeanParentEleA);
-
-    /**
      * @return the useCalculated_pdMeanParentEleA
      */
     public boolean isUseCalculated_pdMeanParentEleA();
@@ -348,4 +342,6 @@ public interface TaskInterface {
      * to set
      */
     public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA);
+    
+    public Expression getExpressionByName(String name);
 }

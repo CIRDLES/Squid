@@ -16,13 +16,9 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.ValueModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
@@ -34,15 +30,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class Pb46cor8 extends Function {
 
-    //private static final long serialVersionUID = -6711265919551953531L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Pb46cor8.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Pb46cor7 " + theSUID);
-    }
+    private static final long serialVersionUID = 6770836871819373387L;
 
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and
@@ -60,7 +48,7 @@ public class Pb46cor8 extends Function {
         argumentCount = 3;
         precedence = 4;
         rowCount = 1;
-        colCount = 1;
+        colCount = 2;
         labelsForOutputValues = new String[][]{{"pb46cor8"}};
     }
 

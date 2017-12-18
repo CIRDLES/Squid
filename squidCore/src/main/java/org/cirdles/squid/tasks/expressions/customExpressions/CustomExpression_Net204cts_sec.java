@@ -64,5 +64,6 @@ public class CustomExpression_Net204cts_sec extends ExpressionTree implements Bu
         setSquidSwitchSCSummaryCalculation(false);
         setSquidSwitchSTReferenceMaterialCalculation(true);
         setSquidSwitchSAUnknownCalculation(false);
+        setSquidSwitchConcentrationReferenceMaterialCalculation(false);
     }
 }

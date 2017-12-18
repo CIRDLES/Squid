@@ -54,6 +54,7 @@ public class CustomExpression_LnPbR_U extends ExpressionTree implements BuiltInE
         setRootExpressionTree(true);
         setSquidSwitchSCSummaryCalculation(false);
         setSquidSwitchSTReferenceMaterialCalculation(true);
+        setSquidSwitchConcentrationReferenceMaterialCalculation(false);
         setSquidSwitchSAUnknownCalculation(true);
     }
 }

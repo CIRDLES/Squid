@@ -137,6 +137,16 @@ public interface ExpressionTreeInterface {
      * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
      */
     public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression);
+    
+    /**
+     * @return the squidSwitchConcentrationReferenceMaterialCalculation
+     */
+    public boolean isSquidSwitchConcentrationReferenceMaterialCalculation();
+
+    /**
+     * @param squidSwitchConcentrationReferenceMaterialCalculation the squidSwitchConcentrationReferenceMaterialCalculation to set
+     */
+    public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation);
 
     /**
      *

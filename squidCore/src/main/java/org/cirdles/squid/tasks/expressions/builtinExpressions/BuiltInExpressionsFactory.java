@@ -19,6 +19,11 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -35,31 +40,81 @@ public abstract class BuiltInExpressionsFactory {
      *
      * @return
      */
-    public static Map<String, ExpressionTreeInterface> generateParameterConstants() {
-        Map<String, ExpressionTreeInterface> parameterConstants = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public static Map<String, ExpressionTreeInterface> generateConstants() {
+        Map<String, ExpressionTreeInterface> constants = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface constantStdUPbRatio = new ConstantNode("StdUPbRatio", 0.0906025999827849);
-        parameterConstants.put(constantStdUPbRatio.getName(), constantStdUPbRatio);
+        ExpressionTreeInterface r238_235s = new ConstantNode("r238_235s", 137.88);
+        constants.put(r238_235s.getName(), r238_235s);
 
-        ExpressionTreeInterface constantStd_76 = new ConstantNode("Std_76", 0.0587838486664528);
-        parameterConstants.put(constantStd_76.getName(), constantStd_76);
+        return constants;
+    }
 
-        ExpressionTreeInterface constantStdThPbRatio = new ConstantNode("StdThPbRatio", 0.0280476031222372);
-        parameterConstants.put(constantStdThPbRatio.getName(), constantStdThPbRatio);
+    /**
+     * TODO: these guys are hard coded for now, but need to be calculated from
+     * reference materials, physical constants, etc.
+     *
+     * @return
+     */
+    public static Map<String, ExpressionTreeInterface> generateParameters() {
+        Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface constantStdRad86fact = new ConstantNode("StdRad86fact", 0.309567309630921);
-        parameterConstants.put(constantStdRad86fact.getName(), constantStdRad86fact);
+        ExpressionTreeInterface stdUPbRatio = new ConstantNode("StdUPbRatio", 0.0906025999827849);
+        parameters.put(stdUPbRatio.getName(), stdUPbRatio);
 
-        ExpressionTreeInterface constantsComm_74 = new ConstantNode("sComm_74", 15.5773361);
-        parameterConstants.put(constantsComm_74.getName(), constantsComm_74);
+        ExpressionTreeInterface stdPpmU = new ConstantNode("Std_ppmU", 903);
+        parameters.put(stdPpmU.getName(), stdPpmU);
 
-        ExpressionTreeInterface constantsComm_64 = new ConstantNode("sComm_64", 17.821);
-        parameterConstants.put(constantsComm_64.getName(), constantsComm_64);
+        ExpressionTreeInterface std_76 = new ConstantNode("Std_76", 0.0587838486664528);
+        parameters.put(std_76.getName(), std_76);
 
-        ExpressionTreeInterface constantsComm_84 = new ConstantNode("sComm_84", 37.5933995);
-        parameterConstants.put(constantsComm_84.getName(), constantsComm_84);
+        ExpressionTreeInterface stdThPbRatio = new ConstantNode("StdThPbRatio", 0.0280476031222372);
+        parameters.put(stdThPbRatio.getName(), stdThPbRatio);
 
-        return parameterConstants;
+        ExpressionTreeInterface stdRad86fact = new ConstantNode("StdRad86fact", 0.309567309630921);
+        parameters.put(stdRad86fact.getName(), stdRad86fact);
+
+        ExpressionTreeInterface sComm_74 = new ConstantNode("sComm_74", 15.5773361);
+        parameters.put(sComm_74.getName(), sComm_74);
+
+        ExpressionTreeInterface sComm_64 = new ConstantNode("sComm_64", 17.821);
+        parameters.put(sComm_64.getName(), sComm_64);
+
+        ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", 37.5933995);
+        parameters.put(sComm_84.getName(), sComm_84);
+
+        return parameters;
+    }
+
+    public static SortedSet<Expression> generatePpmUandPpmTh(String parentNuclide) {
+        SortedSet<Expression> concentrationExpressionsOrdered = new TreeSet<>();
+
+        // TODO: promote this and tie to physical constants model
+        String uConstant = "((238/232) * r238_235s / (r238_235s - 1.0))";
+        
+        String ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
+        String ppmEquation = "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * Std_ppmU";
+
+        String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
+        String ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant;
+
+        if (parentNuclide.contains("232")) {
+            ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
+
+            ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
+            ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_TH + "\"] / [\"" + SQUID_TH_U_EQN_NAME + "\"] * " + uConstant;
+        }
+
+        Expression expressionPpmU = buildExpression(
+                ppmEqnName,
+                ppmEquation, true, true);
+        concentrationExpressionsOrdered.add(expressionPpmU);
+
+        Expression expressionPpmTh = buildExpression(
+                ppmOtherEqnName,
+                ppmOtherEqn, true, true);
+        concentrationExpressionsOrdered.add(expressionPpmTh);
+
+        return concentrationExpressionsOrdered;
     }
 
     /**
@@ -136,12 +191,12 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression7corCom206 = buildExpression(
                 "7-corr%com206",
-                "100 * sComm_64 * [\"204/206 fr.207\"]", true, false);
+                "100 * sComm_64 * [\"204/206 (fr. 207)\"]", true, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom206);
 
         Expression expression8corCom206 = buildExpression(
                 "8-corr%com206",
-                "100 * sComm_64 * [\"204/206 fr.208\"]", true, false);
+                "100 * sComm_64 * [\"204/206 (fr. 208)\"]", true, false);
         perSpotPbCorrectionsOrdered.add(expression8corCom206);
 
         Expression expression4corCom208 = buildExpression(
@@ -151,20 +206,20 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression7corCom208 = buildExpression(
                 "7-corr%com208",
-                "100 * sComm_84 / [\"208/206\"] * [\"204/206 fr.207\"]", true, false);
+                "100 * sComm_84 / [\"208/206\"] * [\"204/206 (fr. 207)\"]", true, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom208);
-        
+
         // for samples
         Expression expression7corCom206S = buildExpression(
                 "7-corr%com206S",
                 "100 * sComm_64 * [\"7-corr204Pb/206Pb\"]", false, true);
         perSpotPbCorrectionsOrdered.add(expression7corCom206S);
-        
+
         Expression expression8corCom206S = buildExpression(
-                "8-corr%com206",
+                "8-corr%com206S",
                 "100 * sComm_64 * [\"8-corr204Pb/206Pb\"]", false, true);
         perSpotPbCorrectionsOrdered.add(expression8corCom206S);
-        
+
         return perSpotPbCorrectionsOrdered;
     }
 
@@ -176,6 +231,7 @@ public abstract class BuiltInExpressionsFactory {
         expressionTree.setSquidSwitchSTReferenceMaterialCalculation(isRefMatCalc);
         expressionTree.setSquidSwitchSAUnknownCalculation(isSampleCalc);
 
+        expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
         expressionTree.setSquidSwitchSCSummaryCalculation(false);
         expressionTree.setSquidSpecialUPbThExpression(true);
         expressionTree.setRootExpressionTree(true);

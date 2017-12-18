@@ -54,7 +54,7 @@ public class Average extends Function {
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
-        colCount = 4;
+        colCount = 2;
         labelsForOutputValues = new String[][]{{"average"}};
     }
 

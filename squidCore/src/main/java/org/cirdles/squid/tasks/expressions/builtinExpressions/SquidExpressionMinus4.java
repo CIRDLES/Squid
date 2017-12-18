@@ -64,6 +64,7 @@ public class SquidExpressionMinus4 extends ExpressionTree implements BuiltInExpr
         setSquidSwitchSCSummaryCalculation(false);
         setSquidSwitchSTReferenceMaterialCalculation(true);
         setSquidSwitchSAUnknownCalculation(true);
+        setSquidSwitchConcentrationReferenceMaterialCalculation(false);
         setSquidSpecialUPbThExpression(true);
 
     }

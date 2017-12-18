@@ -28,6 +28,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -122,8 +123,13 @@ public class TaskManagerController implements Initializable {
             spotAverageRatioCalcRadioButton.setSelected(true);
         }
         
-        calcMeanConcetrationCheckBox.setDisable(task.getPdMeanParentEleA() == 0.0);
-        calcMeanConcetrationCheckBox.setSelected((task.getPdMeanParentEleA() != 0.0) && task.isUseCalculated_pdMeanParentEleA());
+        boolean hasZeroMeanConc = false;
+        try {
+            hasZeroMeanConc = (task.getTaskExpressionsEvaluationsPerSpotSet().get(SQUID_MEAN_PPM_PARENT_NAME).getValues()[0][0] == 0.0);
+        } catch (Exception e) {
+        }
+        calcMeanConcetrationCheckBox.setDisable(hasZeroMeanConc);
+        calcMeanConcetrationCheckBox.setSelected((!hasZeroMeanConc) && task.isUseCalculated_pdMeanParentEleA());
 
         taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
     }
