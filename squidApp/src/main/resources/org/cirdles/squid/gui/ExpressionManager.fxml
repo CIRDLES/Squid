@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -13,6 +14,7 @@
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
 <AnchorPane fx:id="expressionsAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionManagerController">
@@ -56,8 +58,13 @@
                            <effect>
                               <InnerShadow />
                            </effect></CheckBox>
+                        <CheckBox fx:id="concRefMatSwitchCheckBox" disable="true" layoutX="360.0" layoutY="124.0" mnemonicParsing="false" onAction="#concRefMatSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="104.0" text="Conc RefMat">
+                           <effect>
+                              <InnerShadow />
+                           </effect>
+                        </CheckBox>
                         <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="65.0" layoutY="151.0" prefHeight="106.0" prefWidth="400.0" style="-fx-font-size: 14;" styleClass="label" text="Audit of parsing and expression building." wrapText="true" />
-                        <WebView fx:id="expressionWebView" layoutX="65.0" layoutY="277.0" prefHeight="106.0" prefWidth="400.0" style="background: white;">
+                        <WebView fx:id="expressionWebView" layoutX="65.0" layoutY="262.0" prefHeight="134.0" prefWidth="400.0" style="background: white;">
                            <effect>
                               <InnerShadow />
                            </effect>
@@ -88,7 +95,33 @@
                             </Tab>
                           </tabs>
                         </TabPane>
+                        <Label layoutX="6.0" layoutY="254.0" text="Graph:">
+                           <effect>
+                              <InnerShadow />
+                           </effect>
+                        </Label>
+                        <CheckBox fx:id="graphHereCheckbox" layoutX="8.0" layoutY="295.0" mnemonicParsing="false" onAction="#graphHereCheckboxAction" selected="true" text="here &gt;&gt;">
+                           <font>
+                              <Font name="Lucida Sans Demibold" size="9.0" />
+                           </font>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </CheckBox>
+                        <CheckBox fx:id="graphBrowserCheckbox" layoutX="8.0" layoutY="310.0" mnemonicParsing="false" onAction="#graphBrowserCheckboxAction" text="browser">
+                           <font>
+                              <Font name="Lucida Sans Demibold" size="9.0" />
+                           </font>
+                        </CheckBox>
+                        <Label layoutX="6.0" layoutY="400.0" text="Peek:">
+                           <effect>
+                              <InnerShadow />
+                           </effect>
+                        </Label>
                      </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </Pane>
                   <ToolBar layoutY="595.0" prefHeight="43.0" prefWidth="485.0">
                     <items>
@@ -99,19 +132,6 @@
                         <Button fx:id="auditButton" layoutX="256.0" layoutY="10.0" mnemonicParsing="false" onAction="#auditButtonAction" text="Audit" translateX="15.0" />
                     </items>
                   </ToolBar>
-                  <Label layoutX="7.0" layoutY="268.0" text="Graph:">
-                     <effect>
-                        <InnerShadow />
-                     </effect></Label>
-                  <Label layoutX="7.0" layoutY="398.0" text="Peek:">
-                     <effect>
-                        <InnerShadow />
-                     </effect></Label>
-                  <CheckBox fx:id="concRefMatSwitchCheckBox" disable="true" layoutX="360.0" layoutY="124.0" mnemonicParsing="false" onAction="#concRefMatSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="104.0" text="Conc RefMat">
-                     <effect>
-                        <InnerShadow />
-                     </effect>
-                  </CheckBox>
                </children>
             </AnchorPane>
          </items>

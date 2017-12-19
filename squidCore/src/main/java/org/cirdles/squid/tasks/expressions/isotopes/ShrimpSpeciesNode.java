@@ -183,6 +183,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
                 + squidSpeciesModel.getElementName()
                 + "\n</mtext>\n"
                 + "</mstyle>\n"
+                + "<mtext/>"
                 + "</msubsup>\n";
 
         return retVal;

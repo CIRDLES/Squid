@@ -18,6 +18,8 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -53,6 +55,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
@@ -126,6 +129,13 @@ public class ExpressionManagerController implements Initializable {
     private Tab unkTab;
     @FXML
     private CheckBox concRefMatSwitchCheckBox;
+    @FXML
+    private CheckBox graphHereCheckbox;
+    @FXML
+    private CheckBox graphBrowserCheckbox;
+    private boolean graphLocal = true;
+    private boolean graphBrowser = false;
+    private ExpressionTreeInterface graphedExpressionTree;
 
     /**
      * Initializes the controller class.
@@ -147,6 +157,11 @@ public class ExpressionManagerController implements Initializable {
         unPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
 
         webEngine = expressionWebView.getEngine();
+
+        Tooltip tooltip = new Tooltip();
+        tooltip.setText("Choose local to see graph in panel to right.  De-select if expressions look poorly renedered and select browser instead.");
+        graphHereCheckbox.setTooltip(tooltip);
+        graphBrowserCheckbox.setTooltip(tooltip);
     }
 
     private void initializeExpressionsListView() {
@@ -208,26 +223,47 @@ public class ExpressionManagerController implements Initializable {
                 expressionExcelTextArea.getText().trim().replace("\n", ""),
                 currentExpression.isSquidSwitchNU());
 
-        ExpressionTreeInterface expTree = exp.getExpressionTree();
+        graphedExpressionTree = exp.getExpressionTree();
         // to detect ratios of interest
-        if (expTree instanceof BuiltInExpressionInterface) {
-            ((BuiltInExpressionInterface) expTree).buildExpression(squidProject.getTask());
+        if (graphedExpressionTree instanceof BuiltInExpressionInterface) {
+            ((BuiltInExpressionInterface) graphedExpressionTree).buildExpression(squidProject.getTask());
         }
 
         if (originalExpressionTree != null) {
-            expTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
-            expTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
-            expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation());
-            expTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());
-            expTree.setSquidSpecialUPbThExpression(originalExpressionTree.isSquidSpecialUPbThExpression());
-            expTree.setRootExpressionTree(originalExpressionTree.isRootExpressionTree());
+            graphedExpressionTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
+            graphedExpressionTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
+            graphedExpressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation());
+            graphedExpressionTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());
+            graphedExpressionTree.setSquidSpecialUPbThExpression(originalExpressionTree.isSquidSpecialUPbThExpression());
+            graphedExpressionTree.setRootExpressionTree(originalExpressionTree.isRootExpressionTree());
         }
 
         expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
 
-        webEngine.loadContent(ExpressionTreeWriterMathML.toStringBuilderMathML(exp.getExpressionTree()).toString());
+        graphExpressionTree();
 
         return exp;
+    }
+
+    private void graphExpressionTree() {
+        // decide where to graph expression
+        String graphContents = ExpressionTreeWriterMathML.toStringBuilderMathML(graphedExpressionTree).toString();
+        if (graphLocal) {
+            webEngine.loadContent(graphContents);
+        } else {
+            webEngine.loadContent("<html>\n"
+                    + "<h3> &nbsp; </h3>\n"
+                    + "<h3 style=\"text-align:center;\">Local graphing is off.</h3>\n"
+                    + "</html>");
+        }
+
+        if (graphBrowser) {
+            try {
+                Files.write(Paths.get("EXPRESSION.HTML"), graphContents.getBytes());
+                BrowserControl.showURI("EXPRESSION.HTML");
+            } catch (IOException iOException) {
+            }
+        }
     }
 
     private void populatePeeks(Expression exp) {
@@ -596,6 +632,20 @@ public class ExpressionManagerController implements Initializable {
         if (concRefMatSwitchCheckBox.isSelected()) {
             refMatSwitchCheckBox.setSelected(false);
             unknownsSwitchCheckBox.setSelected(false);
+        }
+    }
+
+    @FXML
+    private void graphHereCheckboxAction(ActionEvent event) {
+        graphLocal = !graphLocal;
+        graphExpressionTree();
+    }
+
+    @FXML
+    private void graphBrowserCheckboxAction(ActionEvent event) {
+        graphBrowser = !graphBrowser;
+        if (graphBrowser) {
+            graphExpressionTree();
         }
     }
 
