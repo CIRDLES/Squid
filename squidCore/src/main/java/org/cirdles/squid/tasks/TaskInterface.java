@@ -344,4 +344,6 @@ public interface TaskInterface {
     public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA);
     
     public Expression getExpressionByName(String name);
+    
+    public void generateBuiltInExpressions();
 }

@@ -199,7 +199,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         generateConstants();
         generateParameters();
-        generateBuiltInExpressions();
+        //generateBuiltInExpressions();
     }
 
     private void generateConstants() {
@@ -212,13 +212,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         namedParametersMap.putAll(parameters);
     }
 
-    private void generateBuiltInExpressions() {
+    public void generateBuiltInExpressions() {
         SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
 
         SortedSet<Expression> perSpotPbCorrections = generatePerSpotPbCorrections();
         taskExpressionsOrdered.addAll(perSpotPbCorrections);
-        
+
         SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide);
         taskExpressionsOrdered.addAll(perSpotConcentrations);
     }
@@ -309,12 +309,21 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append((String) (count > 0 ? String.valueOf(count) : "None")).append(" included.");
         summary.append("\n\t UnHealthy: ");
         summary.append((String) ((taskExpressionTreesOrdered.size() - count) > 0
-                ? String.valueOf(taskExpressionTreesOrdered.size() - count) : "None")).append(" included.");
+                ? String.valueOf(taskExpressionTreesOrdered.size() - count) : "None")).append(" excluded.");
 
-        summary.append("\n\n Task Constants: \n ");
+        summary.append("\n\n Task Constants (imported with task or hard-coded): \n");
         if (namedConstantsMap.size() > 0) {
             for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
-                summary.append(" <").append(entry.getKey()).append(" = ").append((double) ((ConstantNode) entry.getValue()).getValue()).append(">");
+                summary.append("\t").append(entry.getKey()).append(" = ").append((double) ((ConstantNode) entry.getValue()).getValue()).append("\n");
+            }
+        } else {
+            summary.append(" No constants supplied.");
+        }
+
+        summary.append("\n Task Parameters (currently hard-coded): \n");
+        if (namedParametersMap.size() > 0) {
+            for (Map.Entry<String, ExpressionTreeInterface> entry : namedParametersMap.entrySet()) {
+                summary.append("\t").append(entry.getKey()).append(" = ").append((double) ((ConstantNode) entry.getValue()).getValue()).append("\n");
             }
         } else {
             summary.append(" No constants supplied.");

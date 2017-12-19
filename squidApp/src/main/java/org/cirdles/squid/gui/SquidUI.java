@@ -34,7 +34,7 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 public final class SquidUI extends Application {
 
     public static final String SPOT_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
-    public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';-fx-fixed-cell-size: 18";
+    public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';-fx-fixed-cell-size: 20";
     public static final String PEEK_LIST_CSS_STYLE_SPECS = "-fx-font-size: 11px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
     
     public static final int PIXEL_OFFSET_FOR_MENU = 40;
