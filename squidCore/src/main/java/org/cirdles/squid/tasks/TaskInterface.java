@@ -346,4 +346,6 @@ public interface TaskInterface {
     public Expression getExpressionByName(String name);
     
     public void generateBuiltInExpressions();
+    
+    public void produceSummaryReportsForGUI();
 }

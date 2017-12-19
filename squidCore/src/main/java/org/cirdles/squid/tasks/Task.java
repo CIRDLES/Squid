@@ -366,11 +366,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             evaluateTaskExpressions();
 
-            if (ratioNames.size() > 0) {
-                produceSummaryReportsForGUI();
-            } else {
-                reportsEngine.clearReports();
-            }
+            reportsEngine.clearReports();
 
             changed = false;
         }
@@ -390,7 +386,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         updateAllExpressions(2);
     }
 
-    private void produceSummaryReportsForGUI() {
+    public void produceSummaryReportsForGUI() {
         if (unknownSpots.size() > 0) {
             try {
                 reportsEngine.produceReports(shrimpFractions,
