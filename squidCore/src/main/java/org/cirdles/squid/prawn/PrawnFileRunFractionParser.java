@@ -66,6 +66,13 @@ public class PrawnFileRunFractionParser {
     private double[][] reducedPkHt;
     private double[][] reducedPkHtFerr;
 
+    private int stageX;
+    private int stageY;
+    private int stageZ;
+    private int qtlY;
+    private int qtlZ;
+    private double primaryBeam;
+
     /**
      *
      */
@@ -115,6 +122,13 @@ public class PrawnFileRunFractionParser {
             shrimpFraction.setDateTimeMilliseconds(dateTimeMilliseconds);
             shrimpFraction.setDeadTimeNanoseconds(deadTimeNanoseconds);
             shrimpFraction.setSbmZeroCps(sbmZeroCps);
+            shrimpFraction.setStageX(stageX);
+            shrimpFraction.setStageY(stageY);
+            shrimpFraction.setStageZ(stageZ);
+            shrimpFraction.setQtlY(qtlY);
+            shrimpFraction.setQtlZ(qtlZ);
+            shrimpFraction.setPrimaryBeam(primaryBeam);
+            
             shrimpFraction.setCountTimeSec(countTimeSec);
             shrimpFraction.setNamesOfSpecies(namesOfSpecies);
             shrimpFraction.setPeakMeasurementsCount(peakMeasurementsCount);
@@ -157,6 +171,10 @@ public class PrawnFileRunFractionParser {
         nScans = Integer.parseInt(runFraction.getPar().get(3).getValue());
         deadTimeNanoseconds = Integer.parseInt(runFraction.getPar().get(4).getValue());
         sbmZeroCps = Integer.parseInt(runFraction.getPar().get(5).getValue());
+        stageX = Integer.parseInt(runFraction.getPar().get(10).getValue());
+        stageY = Integer.parseInt(runFraction.getPar().get(11).getValue());
+        stageZ = Integer.parseInt(runFraction.getPar().get(12).getValue());
+               
         runTableEntries = runFraction.getRunTable().getEntry();
         scans = runFraction.getSet().getScan();
         String[] firstIntegrations = runFraction.getSet().getScan().get(0).getMeasurement().get(0).getData().get(0).getValue().split(",");
@@ -171,6 +189,10 @@ public class PrawnFileRunFractionParser {
             dateTimeMilliseconds = dateFormat.parse(dateTime).getTime();
         } catch (ParseException parseException) {
         }
+        
+        qtlY = Integer.parseInt(runFraction.getSet().getPar().get(2).getValue());
+        qtlZ = Integer.parseInt(runFraction.getSet().getPar().get(4).getValue());
+        primaryBeam = Math.abs(Double.parseDouble(runFraction.getSet().getPar().get(5).getValue().replace("nA", "")));
 
         namesOfSpecies = new String[nSpecies];
         if (squidSessionSpecs.getSquidSpeciesModelList().isEmpty()) {

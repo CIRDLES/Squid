@@ -43,6 +43,12 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double hours;
     private int deadTimeNanoseconds;
     private int sbmZeroCps;
+    private int stageX;
+    private int stageY;
+    private int stageZ;
+    private int qtlY;
+    private int qtlZ;
+    private double primaryBeam;
     private double[] countTimeSec;
     private String[] namesOfSpecies;
     private int peakMeasurementsCount;
@@ -231,6 +237,90 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     public void setSbmZeroCps(int sbmZeroCps) {
         this.sbmZeroCps = sbmZeroCps;
+    }
+
+    /**
+     * @return the stageX
+     */
+    public int getStageX() {
+        return stageX;
+    }
+
+    /**
+     * @param stageX the stageX to set
+     */
+    public void setStageX(int stageX) {
+        this.stageX = stageX;
+    }
+
+    /**
+     * @return the stageY
+     */
+    public int getStageY() {
+        return stageY;
+    }
+
+    /**
+     * @param stageY the stageY to set
+     */
+    public void setStageY(int stageY) {
+        this.stageY = stageY;
+    }
+
+    /**
+     * @return the stageZ
+     */
+    public int getStageZ() {
+        return stageZ;
+    }
+
+    /**
+     * @param stageZ the stageZ to set
+     */
+    public void setStageZ(int stageZ) {
+        this.stageZ = stageZ;
+    }
+
+    /**
+     * @return the qtlY
+     */
+    public int getQtlY() {
+        return qtlY;
+    }
+
+    /**
+     * @param qtlY the qtlY to set
+     */
+    public void setQtlY(int qtlY) {
+        this.qtlY = qtlY;
+    }
+
+    /**
+     * @return the qtlZ
+     */
+    public int getQtlZ() {
+        return qtlZ;
+    }
+
+    /**
+     * @param qtlZ the qtlZ to set
+     */
+    public void setQtlZ(int qtlZ) {
+        this.qtlZ = qtlZ;
+    }
+
+    /**
+     * @return the primaryBeam
+     */
+    public double getPrimaryBeam() {
+        return primaryBeam;
+    }
+
+    /**
+     * @param primaryBeam the primaryBeam to set
+     */
+    public void setPrimaryBeam(double primaryBeam) {
+        this.primaryBeam = primaryBeam;
     }
 
     /**
@@ -463,8 +553,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     public boolean isConcentrationReferenceMaterial() {
@@ -472,14 +562,13 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     * 
-     * @param concentrationReferenceMaterial 
+     *
+     * @param concentrationReferenceMaterial
      */
     public void setConcentrationReferenceMaterial(boolean concentrationReferenceMaterial) {
         this.concentrationReferenceMaterial = concentrationReferenceMaterial;
     }
 
-    
     /**
      * @return the useSBM
      */
