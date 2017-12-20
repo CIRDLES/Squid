@@ -85,19 +85,19 @@ public abstract class BuiltInExpressionsFactory {
         return parameters;
     }
 
-    public static SortedSet<Expression> generatePpmUandPpmTh(String parentNuclide) {
+    public static SortedSet<Expression> generatePpmUandPpmTh(String primaryParentElement) {
         SortedSet<Expression> concentrationExpressionsOrdered = new TreeSet<>();
 
         // TODO: promote this and tie to physical constants model
         String uConstant = "((238/232) * r238_235s / (r238_235s - 1.0))";
-        
+
         String ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
         String ppmEquation = "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * Std_ppmU";
 
         String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
         String ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant;
 
-        if (parentNuclide.contains("232")) {
+        if (primaryParentElement.contains("232")) {
             ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
 
             ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
@@ -114,12 +114,40 @@ public abstract class BuiltInExpressionsFactory {
                 ppmOtherEqn, true, true);
         concentrationExpressionsOrdered.add(expressionPpmTh);
 
+        // Ludwig Q3 - additional equations to calculate 232Th/238U
+        /* NEED SIMON'S HELP
+            Else --i.e. if piNumDauPar = 2
+            --i.e. Switch.DirectAltPD = TRUE and therefore Secondary  
+            --U-Th/Pb expression (EqNum = -2) is NOT NULL  
+
+            If pbStd = FALSE --i.e. sample analysis  
+            Tot68_82_fromA plSpotOutputRw  
+            --Produces calculated 232Th/238U, total 206/238, and total  
+            --208/232 from calib. constants A(206/238) and A(208/232)  
+            --subroutine documented separately  
+            End If  
+
+            ThUfromA1A2 pbStd, plSpotOutputRw, TRUE --following from Ludwig:  
+            --NOTE: must recalc later because WtdMeanA1/2 range doesn't yet exist
+            --subroutine documented separately  
+
+            If pbStd = FALSE --i.e. sample analysis  
+            SecondaryParentPpmFromThU pbStd, plSpotOutputRw  
+            --subroutine documented separately   
+            End If  
+      
+  End If
+        
+        
+         */
         return concentrationExpressionsOrdered;
     }
 
     /**
      * TODO: These should probably be segregated to the end of the expression
      * list and not be sorted each time?
+     *
+     * Ludwig Q4 part 1
      *
      * @return
      */
@@ -170,7 +198,84 @@ public abstract class BuiltInExpressionsFactory {
      *
      * @return
      */
-    public static SortedSet<Expression> generatePerSpotPbCorrections() {
+    public static SortedSet<Expression> generateCorrectionsOfCalibrationConstants() {
+        SortedSet<Expression> correctionsOfCalibrationConstants = new TreeSet<>();
+
+        Expression expression4corr208Pb232Thcalibrconst = buildExpression(
+                "4-corr208Pb/232Thcalibr.const",
+                "(1 - [\"204/206\"] / [\"208/206\"] * sComm_84) * [\"UncorrPb/Thconst\"]", true, true);
+        correctionsOfCalibrationConstants.add(expression4corr208Pb232Thcalibrconst);
+
+        Expression expression4corr206Pb238Ucalibrconst = buildExpression(
+                "4-corr206Pb/238Ucalibr.const",
+                "(1 - [\"204/206\"] * sComm_64) * [\"UncorrPb/Uconst\"]", true, true);
+        correctionsOfCalibrationConstants.add(expression4corr206Pb238Ucalibrconst);
+
+        Expression expression7corr208Pb232Thcalibrconst = buildExpression(
+                "7-corr208Pb/232Thcalibr.const",
+                "(1 - [\"204/206 (fr. 207)\"] / [\"208/206\"] * sComm_84) * [\"UncorrPb/Thconst\"]", true, true);
+        correctionsOfCalibrationConstants.add(expression7corr208Pb232Thcalibrconst);
+
+        Expression expression7corr206Pb238Ucalibrconst = buildExpression(
+                "7-corr206Pb/238Ucalibr.const",
+                "(1 - [\"204/206 (fr. 207)\"] * sComm_64) * [\"UncorrPb/Uconst\"]", true, true);
+        correctionsOfCalibrationConstants.add(expression7corr206Pb238Ucalibrconst);
+
+        Expression expression8corr206Pb238Ucalibrconst = buildExpression(
+                "8-corr206Pb/238Ucalibr.const",
+                "(1 - [\"204/206 (fr. 208)\"] * sComm_84) * [\"UncorrPb/Uconst\"]", true, true);
+        correctionsOfCalibrationConstants.add(expression8corr206Pb238Ucalibrconst);
+
+        //--Now calculate common Pb-corrected calibration constant ERRORS: 
+        Expression expression4corr208Pb232Thcalibrconsterr = buildExpression(
+                "4-corr208Pb/232Thcalibr.const %err",
+                "sqrt(( sComm_84 / ( [\"208/206\"] / [\"204/206\"] - sComm_84 ) )^2 * [%\"204/206\"]^2 )", true, true);
+        correctionsOfCalibrationConstants.add(expression4corr208Pb232Thcalibrconsterr);
+
+        Expression expression4corr206Pb238Ucalibrconsterr = buildExpression(
+                "4-corr206Pb/238Ucalibr.const %err",
+                "sqrt(( sComm_64 / ( 1 / [\"204/206\"] - sComm_64 ) )^2 * [%\"204/206\"]^2 )", true, true);
+        correctionsOfCalibrationConstants.add(expression4corr206Pb238Ucalibrconsterr);
+
+        Expression expression7corr208Pb232Thcalibrconsterr = buildExpression(
+                "7-corr208Pb/232Thcalibr.const %err",
+                "sqrt([%\"UncorrPb/Thconst\"]^2 +  \n"
+                + "(( sComm_84 / ( [\"208/206\"] / [\"204/206 (fr. 207)\"] - sComm_84 ) )^2) * \n"
+                + "( [%\"208/206\"]^2 + [\"204/206 (fr. 207) %err\"]^2 ))", true, true);
+        correctionsOfCalibrationConstants.add(expression7corr208Pb232Thcalibrconsterr);
+
+        Expression expression7corr206Pb238Ucalibrconsterr = buildExpression(
+                "7-corr206Pb/238Ucalibr.const %err",
+                "sqrt([%\"UncorrPb/Uconst\"]^2 +\n"
+                + "(( sComm_64 / (1 / [\"204/206 (fr. 207)\"] - sComm_64 ) )^2) * \n"
+                + "[\"204/206 (fr. 207) %err\"]^2)", true, true);
+        correctionsOfCalibrationConstants.add(expression7corr206Pb238Ucalibrconsterr);
+
+        // TODO: FIX term1 = Simon
+        String term1 = "[%\"UncorrPb/Uconst\"]^2 +  \n"
+                + "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] / [\"8-corr206Pb/238Ucalibr.const\"] )^2 * 1";
+        String term3 = "( [\"208/206\"] * [%\"208/206\"] / \n"
+                + "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) )^2 ";
+        String term4 = "1 / ( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) +  \n"
+                + "sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [\"232Th/238U\"] )";
+        String term6 = "((" + term4 + ")* StdRad86fact * [\"232Th/238U\"] * [%\"232Th/238U\"] )^2";
+
+        Expression expression8corr206Pb238Ucalibrconsterr = buildExpression(
+                "8-corr206Pb/238Ucalibr.const %err",
+                "sqrt( (" + term1 + ") + ((" + term3 + ") * (" + term6 + ")) )", true, true);
+        correctionsOfCalibrationConstants.add(expression8corr206Pb238Ucalibrconsterr);
+
+        // TODO: Logic needed to decide which of these goes into "calib.const. %err"
+        return correctionsOfCalibrationConstants;
+    }
+
+    /**
+     * TODO: These should probably be segregated to the end of the expression
+     * list and not be sorted each time?
+     *
+     * @return
+     */
+    public static SortedSet<Expression> generatePerSpotProportionsOfCommonPb() {
         SortedSet<Expression> perSpotPbCorrectionsOrdered = new TreeSet<>();
 
         Expression expression7Corr46 = buildExpression(

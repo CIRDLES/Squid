@@ -136,6 +136,7 @@ public final class SquidProject implements Serializable {
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
         this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         this.task.setParentNuclide(taskSquid25.getParentNuclide());
+        this.task.setPrimaryParentElement(taskSquid25.getPrimaryParentElement());
         
         this.task.generateBuiltInExpressions();
 

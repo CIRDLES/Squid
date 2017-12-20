@@ -65,9 +65,10 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateCorrectionsOfCalibrationConstants;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateOverCountExpressions;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotPbCorrections;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 
 /**
  *
@@ -97,6 +98,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     // comes from task
     protected int indexOfTaskBackgroundMass;
     protected String parentNuclide;
+    protected String primaryParentElement;
     protected String filterForRefMatSpotNames;
     protected String filterForConcRefMatSpotNames;
 
@@ -170,13 +172,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
         this.parentNuclide = "";
+        this.primaryParentElement = "";
 
         this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
         this.squidSessionModel = null;
-        squidSpeciesModelList = new ArrayList<>();
-        squidRatiosModelList = new ArrayList<>();
-        tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
+        this.squidSpeciesModelList = new ArrayList<>();
+        this.squidRatiosModelList = new ArrayList<>();
+        this.tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
 
         this.taskExpressionTreesOrdered = new TreeSet<>();
         this.taskExpressionsOrdered = new TreeSet<>();
@@ -212,14 +215,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         namedParametersMap.putAll(parameters);
     }
 
+    @Override
     public void generateBuiltInExpressions() {
         SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
+        
+        SortedSet<Expression> correctionsOfCalibrationConstants = generateCorrectionsOfCalibrationConstants();
+        taskExpressionsOrdered.addAll(correctionsOfCalibrationConstants);
 
-        SortedSet<Expression> perSpotPbCorrections = generatePerSpotPbCorrections();
+        SortedSet<Expression> perSpotPbCorrections = generatePerSpotProportionsOfCommonPb();
         taskExpressionsOrdered.addAll(perSpotPbCorrections);
 
-        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide);
+        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(primaryParentElement);
         taskExpressionsOrdered.addAll(perSpotConcentrations);
     }
 
@@ -1314,6 +1321,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
+     *
+     * @return
+     */
+    @Override
+    public String getPrimaryParentElement() {
+        return primaryParentElement;
+    }
+
+    /**
+     *
+     * @param primaryParentElement
+     */
+    @Override
+    public void setPrimaryParentElement(String primaryParentElement) {
+        this.primaryParentElement = primaryParentElement;
+    }
+
+    /**
      * @return the taskExpressionTreesOrdered
      */
     @Override
@@ -1505,6 +1530,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the concentrationReferenceMaterialSpots
      */
+    @Override
     public List<ShrimpFractionExpressionInterface> getConcentrationReferenceMaterialSpots() {
         return concentrationReferenceMaterialSpots;
     }

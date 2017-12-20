@@ -243,8 +243,8 @@ public interface TaskInterface {
      * @return the unknownSpots
      */
     public List<ShrimpFractionExpressionInterface> getUnknownSpots();
-    
-        /**
+
+    /**
      * @return the concentrationReferenceMaterialSpots
      */
     public List<ShrimpFractionExpressionInterface> getConcentrationReferenceMaterialSpots();
@@ -342,10 +342,22 @@ public interface TaskInterface {
      * to set
      */
     public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA);
-    
+
     public Expression getExpressionByName(String name);
-    
+
     public void generateBuiltInExpressions();
-    
+
     public void produceSummaryReportsForGUI();
+
+    /**
+     *
+     * @return
+     */
+    public String getPrimaryParentElement();
+
+    /**
+     *
+     * @param primaryParentElement
+     */
+    public void setPrimaryParentElement(String primaryParentElement);
 }

@@ -128,7 +128,7 @@ FUNCTION :
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 
-NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ')* PARENS* (' %err')* '"' ']' ;
+NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '.')* PARENS* (' %err')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment
