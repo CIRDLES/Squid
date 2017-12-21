@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.ludwig.squid25.SquidConstants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
@@ -34,15 +31,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 @XStreamAlias("Operation")
 public class CalculateMeanConcStd extends Function {
 
-    //private static final long serialVersionUID = -198041668841495965L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(CalculateMeanConcStd.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of CalculateMeanConcStd " + theSUID);
-    }
+    private static final long serialVersionUID = -5093949907505008415L;
 
     /**
      * Provides the functionality of Squid2.5's GetConcStdData, calculating the

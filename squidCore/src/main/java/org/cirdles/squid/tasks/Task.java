@@ -296,8 +296,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(String.valueOf(concentrationReferenceMaterialSpots.size()))
                 .append(" Concentration Reference Material Spots extracted by filter: ' ")
                 .append(filterForConcRefMatSpotNames)
-                .append(" '.\n\t\t  Mean Concentration of Parent ")
-                .append(parentNuclide)
+                .append(" '.\n\t\t  Mean Concentration of Primary Parent Element ")
+                .append(primaryParentElement)
                 .append(" = ")
                 .append(meanConcValue);
 
@@ -1015,7 +1015,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
                 spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
             } catch (SquidException squidException) {
-                System.out.println(squidException.getMessage());
+//                System.out.println(squidException.getMessage() + " while processing " + expression.getName());
             }
         }
     }
