@@ -77,22 +77,26 @@ public class CalamariReportsEngine implements Serializable {
      *
      */
     public CalamariReportsEngine() {
-        folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
-        nameOfPrawnXMLFile = "";
+        this.folderToWriteCalamariReportsPath = "";
+        this.reportParameterValues = "";
+        this.reportNamePrefix = "";
 
-        refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
-        unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
+        this.folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
+        this.nameOfPrawnXMLFile = "";
 
-        headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
-        refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
-        unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        this.refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
+        this.unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
 
-        headerMeanRatios_PerSpot_Unknowns = new StringBuilder();
-        headerMeanRatios_PerSpot_RefMat = new StringBuilder();
-        refMatMeanRatios_PerSpot = new StringBuilder();
-        unknownMeanRatios_PerSpot = new StringBuilder();
+        this.headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        this.refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        this.unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
 
-        doWriteReportFiles = true;
+        this.headerMeanRatios_PerSpot_Unknowns = new StringBuilder();
+        this.headerMeanRatios_PerSpot_RefMat = new StringBuilder();
+        this.refMatMeanRatios_PerSpot = new StringBuilder();
+        this.unknownMeanRatios_PerSpot = new StringBuilder();
+
+        this.doWriteReportFiles = true;
     }
 
     public void clearReports() {
@@ -162,7 +166,9 @@ public class CalamariReportsEngine implements Serializable {
                     + reportParameterValues
                     + File.separator;
             File reportsFolder = new File(folderToWriteCalamariReportsPath);
-            reportsFolder.mkdirs();
+            if (!reportsFolder.mkdirs()) {
+                throw new IOException("Failed to delete reports folder '" + folderToWriteCalamariReportsPath + "'");
+            }
         }
 
         prepSpeciesReportFiles(shrimpFractionUnknown);
@@ -170,7 +176,6 @@ public class CalamariReportsEngine implements Serializable {
 
         for (int f = 0; f < shrimpFractions.size(); f++) {
             ShrimpFraction shrimpFraction = (ShrimpFraction) shrimpFractions.get(f);
-            // sept 2017 what is this and why here??  when different subsets might come thru - not used anyway shrimpFraction.setSpotNumber(f + 1);
             if (summaryOnly) {
                 reportWithinSpotRatiosAtInterpolatedTimes(shrimpFraction);
                 reportMeanRatiosPerSpot(shrimpFraction);
@@ -492,7 +497,7 @@ public class CalamariReportsEngine implements Serializable {
                     }
                 }
             }
-            
+
             dataLine.append("\n");
             if (shrimpFraction.isReferenceMaterial()) {
                 refMatWithinSpotRatios_PerScanMinus1.append(dataLine);

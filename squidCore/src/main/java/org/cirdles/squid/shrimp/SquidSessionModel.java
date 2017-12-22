@@ -38,11 +38,11 @@ public class SquidSessionModel implements Serializable {
     private String concentrationReferenceMaterialNameFilter;
 
     public SquidSessionModel(
-            List<SquidSpeciesModel> squidSpeciesSpecsList, 
-            List<SquidRatiosModel> squidRatiosSpecsList, 
-            boolean useSBM, boolean userLinFits, 
-            int indexOfBackgroundSpecies, 
-            String referenceMaterialNameFilter, 
+            List<SquidSpeciesModel> squidSpeciesSpecsList,
+            List<SquidRatiosModel> squidRatiosSpecsList,
+            boolean useSBM, boolean userLinFits,
+            int indexOfBackgroundSpecies,
+            String referenceMaterialNameFilter,
             String concentrationReferenceMaterialNameFilter) {
         this.squidSpeciesModelList = squidSpeciesSpecsList == null ? new ArrayList<>() : squidSpeciesSpecsList;
         this.squidRatiosModelList = squidRatiosSpecsList == null ? new ArrayList<>() : squidRatiosSpecsList;
@@ -51,6 +51,39 @@ public class SquidSessionModel implements Serializable {
         this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
         this.referenceMaterialNameFilter = referenceMaterialNameFilter;
         this.concentrationReferenceMaterialNameFilter = concentrationReferenceMaterialNameFilter;
+    }
+
+    public boolean updateFields(
+            List<SquidSpeciesModel> squidSpeciesSpecsList,
+            List<SquidRatiosModel> squidRatiosSpecsList,
+            boolean useSBM, boolean userLinFits,
+            int indexOfBackgroundSpecies,
+            String referenceMaterialNameFilter,
+            String concentrationReferenceMaterialNameFilter) {
+
+        boolean retVal = false;
+
+        retVal = !(this.squidSpeciesModelList.containsAll(squidSpeciesSpecsList) && squidSpeciesSpecsList.containsAll(this.squidSpeciesModelList));
+        if (!retVal) {
+            retVal = !(this.squidRatiosModelList.containsAll(squidRatiosSpecsList) && squidRatiosSpecsList.containsAll(this.squidRatiosModelList));
+        }
+        if (!retVal) {
+            retVal = !(this.useSBM == useSBM);
+        }
+        if (!retVal) {
+            retVal = !(this.userLinFits == userLinFits);
+        }
+        if (!retVal) {
+            retVal = !(this.indexOfBackgroundSpecies == indexOfBackgroundSpecies);
+        }
+        if (!retVal) {
+            retVal = !(this.referenceMaterialNameFilter.compareToIgnoreCase(referenceMaterialNameFilter) == 0);
+        }
+        if (!retVal) {
+            retVal = !(this.concentrationReferenceMaterialNameFilter.compareToIgnoreCase(concentrationReferenceMaterialNameFilter) == 0);
+        }
+
+        return retVal;
     }
 
     public SortedSet<SquidRatiosModel> produceRatiosCopySortedSet() {
@@ -158,16 +191,16 @@ public class SquidSessionModel implements Serializable {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getConcentrationReferenceMaterialNameFilter() {
         return concentrationReferenceMaterialNameFilter;
     }
 
     /**
-     * 
-     * @param concentrationReferenceMaterialNameFilter 
+     *
+     * @param concentrationReferenceMaterialNameFilter
      */
     public void setConcentrationReferenceMaterialNameFilter(String concentrationReferenceMaterialNameFilter) {
         this.concentrationReferenceMaterialNameFilter = concentrationReferenceMaterialNameFilter;

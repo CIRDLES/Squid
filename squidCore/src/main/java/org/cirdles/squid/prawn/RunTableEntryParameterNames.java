@@ -56,7 +56,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "RunTableEntryParameterNames")
+//@XmlType(name = "RunTableEntryParameterNames")
 @XmlEnum
 public enum RunTableEntryParameterNames implements Serializable{
 

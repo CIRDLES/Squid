@@ -722,7 +722,7 @@ public class PrawnFileRunFractionParser {
                 double scanPkCts;
 
                 double netPkCps = pkNetCps[scanNum][pkOrder];
-                if (netPkCps == SQUID_ERROR_VALUE) {
+                if (netPkCps <= SQUID_ERROR_VALUE) {
                     reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
                 } else {
                     scanPkCts = netPkCps * countTimeSec[pkOrder];

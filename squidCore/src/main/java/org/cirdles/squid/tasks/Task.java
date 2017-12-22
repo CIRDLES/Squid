@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -219,7 +220,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void generateBuiltInExpressions() {
         SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
-        
+
         SortedSet<Expression> correctionsOfCalibrationConstants = generateCorrectionsOfCalibrationConstants();
         taskExpressionsOrdered.addAll(correctionsOfCalibrationConstants);
 
@@ -360,13 +361,21 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             buildSquidRatiosModelListFromMassStationDetails();
 
-            squidSessionModel = new SquidSessionModel(
-                    squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
+            boolean requiresChanges = true;
+            if (squidSessionModel != null) {
+                requiresChanges = squidSessionModel.updateFields(
+                        squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
+                //System.out.println("UPDATE " + (requiresChanges ? "Required" : "NOT Required"));
+            }
 
-            try {
-                shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
-            } catch (Exception e) {
-                // ignore for now
+            if (requiresChanges) {
+                squidSessionModel = new SquidSessionModel(
+                        squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
+
+                try {
+                    shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+                } catch (Exception e) {
+                }
             }
 
             processAndSortExpressions();

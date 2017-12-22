@@ -21,9 +21,13 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
+import java.util.TreeSet;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -32,6 +36,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -50,6 +55,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.StringConverter;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
@@ -136,6 +142,9 @@ public class ExpressionManagerController implements Initializable {
     private boolean graphLocal = true;
     private boolean graphBrowser = false;
     private ExpressionTreeInterface graphedExpressionTree;
+    private ExpressionSortOrder expressionSortOrder;
+    @FXML
+    private ChoiceBox<ExpressionSortOrder> expressionFilterChoiceBox;
 
     /**
      * Initializes the controller class.
@@ -148,9 +157,11 @@ public class ExpressionManagerController implements Initializable {
         expressionsAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         expressionsAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
+        expressionSortOrder = ExpressionSortOrder.EVAL;
         // update 
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
 
+        initializeExpressionsSortFilterChoiceBox();
         initializeExpressionsListView();
 
         rmPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
@@ -164,6 +175,31 @@ public class ExpressionManagerController implements Initializable {
         graphBrowserCheckbox.setTooltip(tooltip);
     }
 
+    private void initializeExpressionsSortFilterChoiceBox() {
+        expressionFilterChoiceBox.setItems(FXCollections.observableArrayList(ExpressionSortOrder.values()));
+        //expressionFilterChoiceBox.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        //expressionFilterChoiceBox.setPrefHeight(15);
+        expressionFilterChoiceBox.getSelectionModel().select(expressionSortOrder);
+        expressionFilterChoiceBox.setConverter(new StringConverter<ExpressionSortOrder>() {
+            @Override
+            public String toString(ExpressionSortOrder object) {
+                return object.getDisplayName();
+            }
+
+            @Override
+            public ExpressionSortOrder fromString(String string) {
+                return null;
+            }
+        });
+        expressionFilterChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ExpressionSortOrder>() {
+            @Override
+            public void changed(ObservableValue observable, ExpressionSortOrder oldValue, ExpressionSortOrder newValue) {
+                expressionSortOrder = newValue;
+                populateExpressionsListView();
+            }
+        });
+    }
+
     private void initializeExpressionsListView() {
         expressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         expressionListHeaderLabel.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
@@ -174,7 +210,7 @@ public class ExpressionManagerController implements Initializable {
                 + String.format("%1$-" + 3 + "s", "RM")
                 + String.format("%1$-" + 3 + "s", "UN")
                 + String.format("%1$-" + 3 + "s", "SQ")
-                + String.format("%1$-" + 16 + "s", "Sorted in Execution Order"));
+                + String.format("%1$-" + 12 + "s", "Sorted "));
         Tooltip tooltip = new Tooltip();
         tooltip.setText("RI = Ratios of Interest; SC = Summary; RM = Reference Materials; UN = Unknowns; SQ = Special Squid UPbTh");
         expressionListHeaderLabel.setTooltip(tooltip);
@@ -215,6 +251,70 @@ public class ExpressionManagerController implements Initializable {
         });
 
         populateExpressionsListView();
+    }
+
+    private void populateExpressionsListView() {
+        SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
+
+        List<Expression> sortedExpressionsList = new ArrayList<>();
+        sortedExpressionsList.addAll(namedExpressions);
+        sortedExpressionsList.sort(
+                new Comparator<Expression>() {
+            @Override
+            public int compare(Expression exp1, Expression exp2) {
+                int retVal = 0;
+                switch (expressionSortOrder) {
+                    case EVAL:
+                        retVal = exp1.compareTo(exp2);
+                        break;
+                    case NAME:
+                        retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
+                        break;
+                    case NU:
+                        // true first
+                        retVal = Boolean.compare(exp2.isSquidSwitchNU(), exp1.isSquidSwitchNU());
+                        if (retVal == 0) {
+                            retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
+                        }
+                        break;
+                    case BUILTIN:
+                        // true first
+                        retVal = Boolean.compare(exp2.getExpressionTree().isSquidSpecialUPbThExpression(), exp1.getExpressionTree().isSquidSpecialUPbThExpression());
+                        if (retVal == 0) {
+                            retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
+                        }
+                        break;
+                }
+
+                return retVal;
+            }
+        }
+        );
+
+        ObservableList<Expression> items
+                = FXCollections.observableArrayList(sortedExpressionsList);
+        expressionsListView.setItems(items);
+    }
+
+    private enum ExpressionSortOrder {
+        EVAL(" by Evaluation Order"),
+        NAME(" by Name"),
+        NU(" by NU Switch"),
+        BUILTIN(" by Built-In vs. Custom");
+
+        private String displayName;
+
+        private ExpressionSortOrder(String displayName) {
+            this.displayName = displayName;
+        }
+
+        /**
+         * @return the displayName
+         */
+        public String getDisplayName() {
+            return displayName;
+        }
+
     }
 
     private Expression parseAndAuditCurrentExcelExpression() {
@@ -483,13 +583,6 @@ public class ExpressionManagerController implements Initializable {
 
             populatePeeks(parseAndAuditCurrentExcelExpression());
         }
-    }
-
-    private void populateExpressionsListView() {
-        SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
-        ObservableList<Expression> items
-                = FXCollections.observableArrayList(namedExpressions);
-        expressionsListView.setItems(items);
     }
 
     private ContextMenu createExpressionsListViewContextMenu() {

@@ -163,7 +163,9 @@ public class PrawnFileHandler implements Serializable {
 
         // delete tempURLtoXML.xml 
         if (isURL) {
-            pathToLocalPrawnXMLFile.toFile().delete();
+            if (!pathToLocalPrawnXMLFile.toFile().delete()) {
+                throw new IOException("Failed to delete temp file '" + pathToLocalPrawnXMLFile + "'");
+            }
         }
 
         // remove header up to <software tag
@@ -183,7 +185,7 @@ public class PrawnFileHandler implements Serializable {
         File prawnDataFile;
 
         // detect Operating System ... we need POSIX code for use on Ubuntu Server
-        String OS = System.getProperty("os.name").toLowerCase();
+        String OS = System.getProperty("os.name").toLowerCase(Locale.US);
         if (OS.toLowerCase().contains("win")) {
             Path pathTempXML = Paths.get(tempPrawnXMLFileName).toAbsolutePath();
             try (BufferedWriter writer = Files.newBufferedWriter(pathTempXML, StandardCharsets.UTF_8)) {
