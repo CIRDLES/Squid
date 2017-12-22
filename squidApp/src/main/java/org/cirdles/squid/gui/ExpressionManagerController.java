@@ -143,8 +143,12 @@ public class ExpressionManagerController implements Initializable {
     private boolean graphBrowser = false;
     private ExpressionTreeInterface graphedExpressionTree;
     private ExpressionSortOrder expressionSortOrder;
+    private ExpressionChoiceFilter expressionChoiceFilter;
+
     @FXML
-    private ChoiceBox<ExpressionSortOrder> expressionFilterChoiceBox;
+    private ChoiceBox<ExpressionSortOrder> expressionSorterChoiceBox;
+    @FXML
+    private ChoiceBox<ExpressionChoiceFilter> expressionChooserChoiceBox;
 
     /**
      * Initializes the controller class.
@@ -158,9 +162,11 @@ public class ExpressionManagerController implements Initializable {
         expressionsAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         expressionSortOrder = ExpressionSortOrder.EVAL;
+        expressionChoiceFilter = ExpressionChoiceFilter.ALL;
         // update 
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
 
+        initializeExpressionsChoiceFilterChoiceBox();
         initializeExpressionsSortFilterChoiceBox();
         initializeExpressionsListView();
 
@@ -175,12 +181,33 @@ public class ExpressionManagerController implements Initializable {
         graphBrowserCheckbox.setTooltip(tooltip);
     }
 
+    private void initializeExpressionsChoiceFilterChoiceBox() {
+        expressionChooserChoiceBox.setItems(FXCollections.observableArrayList(ExpressionChoiceFilter.values()));
+        expressionChooserChoiceBox.getSelectionModel().select(expressionChoiceFilter);
+        expressionChooserChoiceBox.setConverter(new StringConverter<ExpressionChoiceFilter>() {
+            @Override
+            public String toString(ExpressionChoiceFilter object) {
+                return object.getDisplayName();
+            }
+
+            @Override
+            public ExpressionChoiceFilter fromString(String string) {
+                return null;
+            }
+        });
+        expressionChooserChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ExpressionChoiceFilter>() {
+            @Override
+            public void changed(ObservableValue observable, ExpressionChoiceFilter oldValue, ExpressionChoiceFilter newValue) {
+                expressionChoiceFilter = newValue;
+                populateExpressionsListView();
+            }
+        });
+    }
+
     private void initializeExpressionsSortFilterChoiceBox() {
-        expressionFilterChoiceBox.setItems(FXCollections.observableArrayList(ExpressionSortOrder.values()));
-        //expressionFilterChoiceBox.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        //expressionFilterChoiceBox.setPrefHeight(15);
-        expressionFilterChoiceBox.getSelectionModel().select(expressionSortOrder);
-        expressionFilterChoiceBox.setConverter(new StringConverter<ExpressionSortOrder>() {
+        expressionSorterChoiceBox.setItems(FXCollections.observableArrayList(ExpressionSortOrder.values()));
+        expressionSorterChoiceBox.getSelectionModel().select(expressionSortOrder);
+        expressionSorterChoiceBox.setConverter(new StringConverter<ExpressionSortOrder>() {
             @Override
             public String toString(ExpressionSortOrder object) {
                 return object.getDisplayName();
@@ -191,7 +218,7 @@ public class ExpressionManagerController implements Initializable {
                 return null;
             }
         });
-        expressionFilterChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ExpressionSortOrder>() {
+        expressionSorterChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ExpressionSortOrder>() {
             @Override
             public void changed(ObservableValue observable, ExpressionSortOrder oldValue, ExpressionSortOrder newValue) {
                 expressionSortOrder = newValue;
@@ -210,7 +237,7 @@ public class ExpressionManagerController implements Initializable {
                 + String.format("%1$-" + 3 + "s", "RM")
                 + String.format("%1$-" + 3 + "s", "UN")
                 + String.format("%1$-" + 3 + "s", "SQ")
-                + String.format("%1$-" + 12 + "s", "Sorted "));
+                + String.format("%1$-" + 25 + "s", "From:            Sorted:"));
         Tooltip tooltip = new Tooltip();
         tooltip.setText("RI = Ratios of Interest; SC = Summary; RM = Reference Materials; UN = Unknowns; SQ = Special Squid UPbTh");
         expressionListHeaderLabel.setTooltip(tooltip);
@@ -255,9 +282,42 @@ public class ExpressionManagerController implements Initializable {
 
     private void populateExpressionsListView() {
         SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
-
         List<Expression> sortedExpressionsList = new ArrayList<>();
-        sortedExpressionsList.addAll(namedExpressions);
+
+        switch (expressionChoiceFilter) {
+            case ALL:
+                sortedExpressionsList.addAll(namedExpressions);
+                break;
+            case BUILTIN:
+                for (Expression exp : namedExpressions) {
+                    if (exp.getExpressionTree().isSquidSpecialUPbThExpression()) {
+                        sortedExpressionsList.add(exp);
+                    }
+                }
+                break;
+            case CUSTOM:
+                for (Expression exp : namedExpressions) {
+                    if (!exp.getExpressionTree().isSquidSpecialUPbThExpression()) {
+                        sortedExpressionsList.add(exp);
+                    }
+                }
+                break;
+            case HEALTHY:
+                for (Expression exp : namedExpressions) {
+                    if (exp.amHealthy()) {
+                        sortedExpressionsList.add(exp);
+                    }
+                }
+                break;
+            case UNHEALTHY:
+                for (Expression exp : namedExpressions) {
+                    if (!exp.amHealthy()) {
+                        sortedExpressionsList.add(exp);
+                    }
+                }
+                break;
+        }
+
         sortedExpressionsList.sort(
                 new Comparator<Expression>() {
             @Override
@@ -297,10 +357,10 @@ public class ExpressionManagerController implements Initializable {
     }
 
     private enum ExpressionSortOrder {
-        EVAL(" by Evaluation Order"),
-        NAME(" by Name"),
-        NU(" by NU Switch"),
-        BUILTIN(" by Built-In vs. Custom");
+        EVAL(" Evaluation Order"),
+        NAME(" Name"),
+        NU(" NU Switch"),
+        BUILTIN(" BuiltIn/Custom");
 
         private String displayName;
 
@@ -314,7 +374,27 @@ public class ExpressionManagerController implements Initializable {
         public String getDisplayName() {
             return displayName;
         }
+    }
 
+    private enum ExpressionChoiceFilter {
+        ALL("All"),
+        HEALTHY("Healthy"),
+        UNHEALTHY("Unhealthy"),
+        BUILTIN("BuiltIn"),
+        CUSTOM("Custom");
+
+        private String displayName;
+
+        private ExpressionChoiceFilter(String displayName) {
+            this.displayName = displayName;
+        }
+
+        /**
+         * @return the displayName
+         */
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
     private Expression parseAndAuditCurrentExcelExpression() {
