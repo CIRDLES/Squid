@@ -51,6 +51,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.xml.sax.SAXException;
@@ -98,7 +99,7 @@ public class PrawnFileHandler implements Serializable {
      * @throws SAXException
      */
     public PrawnFile unmarshallCurrentPrawnFileXML()
-            throws IOException, MalformedURLException, JAXBException, SAXException {
+            throws IOException, MalformedURLException, JAXBException, SAXException, SquidException {
         return unmarshallPrawnFileXML(currentPrawnFileLocation);
     }
 
@@ -113,7 +114,7 @@ public class PrawnFileHandler implements Serializable {
      * @throws SAXException
      */
     public PrawnFile unmarshallPrawnFileXML(String prawnFileLocation)
-            throws IOException, MalformedURLException, JAXBException, SAXException {
+            throws IOException, MalformedURLException, JAXBException, SAXException, SquidException{
 
         String localPrawnXMLFile = prawnFileLocation;
         PrawnFile myPrawnFile;
@@ -186,7 +187,7 @@ public class PrawnFileHandler implements Serializable {
 
         // detect Operating System ... we need POSIX code for use on Ubuntu Server
         String OS = System.getProperty("os.name").toLowerCase(Locale.US);
-        if (OS.toLowerCase().contains("win")) {
+        if (OS.toLowerCase(Locale.US).contains("win")) {
             Path pathTempXML = Paths.get(tempPrawnXMLFileName).toAbsolutePath();
             try (BufferedWriter writer = Files.newBufferedWriter(pathTempXML, StandardCharsets.UTF_8)) {
                 for (String line : lines) {
@@ -210,7 +211,9 @@ public class PrawnFileHandler implements Serializable {
 
         myPrawnFile = readRawDataFile(prawnDataFile);
 
-        prawnDataFile.delete();
+        if (!prawnDataFile.delete()){
+            throw new SquidException("Unable to delete temporaty prawnfile.");
+        }
 
         return myPrawnFile;
     }

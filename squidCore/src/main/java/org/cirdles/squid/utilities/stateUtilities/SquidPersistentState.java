@@ -33,7 +33,7 @@ public class SquidPersistentState implements Serializable {
     // class variables
     private static final long serialVersionUID = 9131785805774520290L;
     private static final String SQUID_PERSISTENT_STATE_FILE_NAME = "SquidPersistentState.ser";
-    private static SquidPersistentState instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
+    private static volatile SquidPersistentState instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
     private static final int MRU_COUNT = 10;
 
     // instance variables

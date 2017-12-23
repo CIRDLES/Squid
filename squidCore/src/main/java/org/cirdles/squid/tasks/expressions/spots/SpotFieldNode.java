@@ -61,6 +61,11 @@ public class SpotFieldNode extends ExpressionTree {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode(); 
+    }
+
+    @Override
     public boolean amHealthy() {
         return (methodNameForShrimpFraction.length() > 0);
     }

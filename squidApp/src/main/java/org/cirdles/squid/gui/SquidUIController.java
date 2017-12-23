@@ -38,7 +38,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.Squid;
-import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -322,7 +322,7 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
             }
-        } catch (IOException | JAXBException | SAXException anException) {
+        } catch (IOException | JAXBException | SAXException | SquidException anException) {
             String message = anException.getMessage();
             if (message == null) {
                 message = anException.getCause().getMessage();
@@ -353,7 +353,7 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
             }
-        } catch (IOException | JAXBException | SAXException anException) {
+        } catch (IOException | JAXBException | SAXException | SquidException anException) {
             String message = anException.getMessage();
             if (message == null) {
                 message = anException.getCause().getMessage();
@@ -690,7 +690,7 @@ public class SquidUIController implements Initializable {
                 squidProject.setupPrawnFile(prawnXMLFileNew);
                 launchProjectManager();
             }
-        } catch (IOException | JAXBException | SAXException iOException) {
+        } catch (IOException | JAXBException | SAXException | SquidException iOException) {
         }
     }
 
@@ -758,7 +758,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void default10SpeciesRatioSetAction(ActionEvent event) {
-        squidProject.getTask().updateRatioNames(DEFAULT_RATIOS_LIST_FOR_10_SPECIES);
+        squidProject.getTask().updateRatioNames(getDEFAULT_RATIOS_LIST_FOR_10_SPECIES());
         launchRatiosManager();
     }
 

@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.tasks.Task;
@@ -181,7 +182,7 @@ public final class SquidProject implements Serializable {
     }
 
     public void setupPrawnFile(File prawnXMLFileNew)
-            throws IOException, JAXBException, SAXException {
+            throws IOException, JAXBException, SAXException, SquidException {
 
         prawnXMLFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
@@ -192,7 +193,7 @@ public final class SquidProject implements Serializable {
     }
 
     public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
-            throws IOException, JAXBException, SAXException {
+            throws IOException, JAXBException, SAXException, SquidException {
 
         if (prawnXMLFilesNew.size() == 2) {
             PrawnFile prawnFile1 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(0).getCanonicalPath());
@@ -248,7 +249,7 @@ public final class SquidProject implements Serializable {
     }
 
     public PrawnFile deserializePrawnData()
-            throws IOException, JAXBException, SAXException {
+            throws IOException, JAXBException, SAXException, SquidException {
         return prawnFileHandler.unmarshallCurrentPrawnFileXML();
     }
 
@@ -363,7 +364,7 @@ public final class SquidProject implements Serializable {
             try {
                 prawnFileOriginal = deserializePrawnData();
                 runsCopy = new CopyOnWriteArrayList<>(prawnFileOriginal.getRun());
-            } catch (IOException | JAXBException | SAXException iOException) {
+            } catch (IOException | JAXBException | SAXException | SquidException iOException) {
             }
         } else {
             runsCopy = new CopyOnWriteArrayList<>(runs);

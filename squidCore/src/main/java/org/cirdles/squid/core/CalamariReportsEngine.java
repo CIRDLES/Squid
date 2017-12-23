@@ -45,9 +45,9 @@ public class CalamariReportsEngine implements Serializable {
 
     private static final long serialVersionUID = 9086141392949762545L;
 
-    private transient String folderToWriteCalamariReportsPath;
-    private transient String reportParameterValues;
-    private transient String reportNamePrefix;
+    private String folderToWriteCalamariReportsPath;
+    private String reportParameterValues;
+    private String reportNamePrefix;
 
     private File folderToWriteCalamariReports;
     private String nameOfPrawnXMLFile;
