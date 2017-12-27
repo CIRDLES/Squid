@@ -43,6 +43,7 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.projects.SquidProject;
@@ -114,6 +115,7 @@ public class SquidUIController implements Initializable {
 
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
+    private static Pane topsoilPlotUI;
 
     @FXML
     private MenuItem newSquid3TaskMenuItem;
@@ -129,6 +131,8 @@ public class SquidUIController implements Initializable {
     private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
     private Menu openRecentExpressionFileMenu;
+
+    private TopsoilWindow[] topsoilWindows;
 
     /**
      * Initializes the controller class.
@@ -283,6 +287,7 @@ public class SquidUIController implements Initializable {
 
         mainPane.getChildren().remove(reductionManagerUI);
         mainPane.getChildren().remove(reducedDataReportManagerUI);
+        mainPane.getChildren().remove(topsoilPlotUI);
 
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -811,4 +816,35 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
     }
 
+    @FXML
+    private void topsoilAction(ActionEvent event) {
+        mainPane.getChildren().remove(topsoilPlotUI);
+
+        try {
+            topsoilPlotUI = FXMLLoader.load(getClass().getResource("TopsoilPlot.fxml"));
+            topsoilPlotUI.setId("topsoilPlotUI");
+            VBox.setVgrow(topsoilPlotUI, Priority.ALWAYS);
+            HBox.setHgrow(topsoilPlotUI, Priority.ALWAYS);
+            mainPane.getChildren().add(topsoilPlotUI);
+            topsoilPlotUI.setVisible(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("MassesAudit >>>>   " + iOException.getMessage());
+        }
+        showUI(topsoilPlotUI);
+    }
+
+    @FXML
+    private void topsoilAction2(ActionEvent event) {
+        if (topsoilWindows != null) {
+            for (int i = 0; i < 6; i++) {
+                topsoilWindows[i].close();
+            }
+        }
+        topsoilWindows = new TopsoilWindow[6];
+        for (int i = 0; i < 6; i++) {
+            topsoilWindows[i] = new TopsoilWindow(primaryStage);
+            topsoilWindows[i].loadTopsoilWindow(i * 40, i);
+        }
+
+    }
 }

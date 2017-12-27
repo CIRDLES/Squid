@@ -103,9 +103,10 @@
                 <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
               </items>
             </Menu>
-            <Menu disable="true" mnemonicParsing="false" text="Visualizations">
+            <Menu mnemonicParsing="false" text="Visualizations">
               <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" onAction="#topsoilAction" text="Topsoil Onboard" />
+                  <MenuItem mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" />
               </items>
             </Menu>
             <Menu disable="true" mnemonicParsing="false" text="Archiving">

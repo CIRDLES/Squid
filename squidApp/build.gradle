@@ -29,6 +29,7 @@ repositories {
 
 dependencies {
     compile project(":squidCore")
+    compile 'com.github.cirdles.topsoil:app:master-SNAPSHOT'
 }
 
 task fatAppJar(type: Jar) {
