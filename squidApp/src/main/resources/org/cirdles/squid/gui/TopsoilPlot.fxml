@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vboxMaster" minHeight="-Infinity" minWidth="-Infinity" prefHeight="616.0" prefWidth="925.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TopsoilPlot">
+<VBox fx:id="vboxMaster" minHeight="-Infinity" minWidth="-Infinity" prefHeight="616.0" prefWidth="925.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TopsoilPlotController">
    <children>
       <HBox fx:id="plotAndConfig" />
-      <ToolBar fx:id="plotToolBar" prefHeight="40.0" prefWidth="938.0" style="-fx-background-color: blue;" />
+      <ToolBar fx:id="plotToolBar" prefHeight="40.0" prefWidth="938.0" style="-fx-background-color: #67ccff #67ccff;" />
    </children>
 </VBox>

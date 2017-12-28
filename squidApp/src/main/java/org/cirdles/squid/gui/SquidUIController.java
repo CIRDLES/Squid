@@ -16,6 +16,7 @@
  */
 package org.cirdles.squid.gui;
 
+import org.cirdles.squid.gui.topsoil.TopsoilWindow;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -46,6 +47,8 @@ import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
+import org.cirdles.squid.gui.topsoil.TopsoilPlotWetherill;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
@@ -55,6 +58,7 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
+import static org.cirdles.topsoil.plot.base.BasePlotProperties.TITLE;
 import org.xml.sax.SAXException;
 
 /**
@@ -820,16 +824,14 @@ public class SquidUIController implements Initializable {
     private void topsoilAction(ActionEvent event) {
         mainPane.getChildren().remove(topsoilPlotUI);
 
-        try {
-            topsoilPlotUI = FXMLLoader.load(getClass().getResource("TopsoilPlot.fxml"));
-            topsoilPlotUI.setId("topsoilPlotUI");
-            VBox.setVgrow(topsoilPlotUI, Priority.ALWAYS);
-            HBox.setHgrow(topsoilPlotUI, Priority.ALWAYS);
-            mainPane.getChildren().add(topsoilPlotUI);
-            topsoilPlotUI.setVisible(false);
-        } catch (IOException | RuntimeException iOException) {
-            System.out.println("MassesAudit >>>>   " + iOException.getMessage());
-        }
+        AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Example Wetherill using CM2 data");
+
+        topsoilPlotUI = topsoilPlot.initializePlotPane();
+        topsoilPlotUI.setId("topsoilPlotUI");
+        VBox.setVgrow(topsoilPlotUI, Priority.ALWAYS);
+        HBox.setHgrow(topsoilPlotUI, Priority.ALWAYS);
+        mainPane.getChildren().add(topsoilPlotUI);
+        topsoilPlotUI.setVisible(false);
         showUI(topsoilPlotUI);
     }
 
@@ -842,9 +844,12 @@ public class SquidUIController implements Initializable {
         }
         topsoilWindows = new TopsoilWindow[6];
         for (int i = 0; i < 6; i++) {
-            topsoilWindows[i] = new TopsoilWindow(primaryStage);
-            topsoilWindows[i].loadTopsoilWindow(i * 40, i);
+            AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Squid Test Plot #" + i);
+            topsoilWindows[i] = new TopsoilWindow(topsoilPlot);
+            topsoilWindows[i].loadTopsoilWindow(i * 40);
         }
+        
+        topsoilWindows[3].getTopsoilPlot().getPlot().getProperties().put(TITLE, "Testing Handle");
 
     }
 }

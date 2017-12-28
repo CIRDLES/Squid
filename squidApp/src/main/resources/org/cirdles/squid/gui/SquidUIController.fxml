@@ -105,8 +105,8 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Visualizations">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#topsoilAction" text="Topsoil Onboard" />
-                  <MenuItem mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" />
+                <MenuItem mnemonicParsing="false" onAction="#topsoilAction" text="Topsoil Demo" />
+                  <MenuItem disable="true" mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" visible="false" />
               </items>
             </Menu>
             <Menu disable="true" mnemonicParsing="false" text="Archiving">
