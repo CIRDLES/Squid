@@ -846,7 +846,7 @@ public class SquidUIController implements Initializable {
         for (int i = 0; i < 6; i++) {
             AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Squid Test Plot #" + i);
             topsoilWindows[i] = new TopsoilWindow(topsoilPlot);
-            topsoilWindows[i].loadTopsoilWindow(i * 40);
+            topsoilWindows[i].loadTopsoilWindow(i * 40, 100);
         }
         
         topsoilWindows[3].getTopsoilPlot().getPlot().getProperties().put(TITLE, "Testing Handle");

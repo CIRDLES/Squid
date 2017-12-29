@@ -17,26 +17,17 @@ package org.cirdles.squid.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
 import org.cirdles.topsoil.plot.JavaScriptPlot;
-import org.cirdles.topsoil.plot.Plot;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.CONCORDIA_LINE;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.ELLIPSES;
-import org.cirdles.topsoil.plot.internal.SVGSaver;
 
 /**
  *
@@ -44,72 +35,68 @@ import org.cirdles.topsoil.plot.internal.SVGSaver;
  */
 public class TopsoilPlotController implements Initializable {
 
-    @FXML
-    private HBox plotAndConfig;
-    @FXML
-    private ToolBar plotToolBar;
+    private static AbstractTopsoilPlot topsoilPlot;
+
+    /**
+     * Set this field with an AbstractTopsoilPlot instance in advance of loading
+     * this class.
+     *
+     * @param aTopsoilPlot the aTopsoilPlot to set
+     */
+    public static void setTopsoilPlot(AbstractTopsoilPlot aTopsoilPlot) {
+        topsoilPlot = aTopsoilPlot;
+    }
+
     @FXML
     private VBox vboxMaster;
-
-    private AnchorPane anchorPane;
-
-    public static Plot plot;
+    @FXML
+    private AnchorPane plotAndConfig;
+    @FXML
+    private ToolBar plotToolBar;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        if (plot instanceof JavaScriptPlot) {
+        if (topsoilPlot.getPlot() instanceof JavaScriptPlot) {
 
-            Node node = plot.displayAsNode();
-            anchorPane = new AnchorPane(node);
             vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
             vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
-            JavaScriptPlot javaScriptPlot = (JavaScriptPlot) plot;
+            Node topsoilPlotNode = topsoilPlot.getPlot().displayAsNode();
 
-            Button saveToSVG = new Button("Save as SVG");
-            saveToSVG.setOnAction(mouseEvent -> {
-                new SVGSaver().save(javaScriptPlot.displayAsSVGDocument());
-            });
+            plotAndConfig.getChildren().setAll(topsoilPlotNode);
+            AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
 
-            Button recenter = new Button("Re-center");
-            recenter.setOnAction(mouseEvent -> {
-                javaScriptPlot.recenter();
-            });
-
-            CheckBox ellipses = new CheckBox("Ellipses");
-            ellipses.setOnAction(mouseEvent -> {
-                boolean value = (boolean) plot.getProperties().get(ELLIPSES);
-                plot.setProperty(ELLIPSES, !value);
-            });
-
-            CheckBox concordiaLine = new CheckBox("Concordia");
-            concordiaLine.setSelected(true);
-            concordiaLine.setOnAction(mouseEvent -> {
-                boolean value = (boolean) plot.getProperties().get(CONCORDIA_LINE);
-                plot.setProperty(CONCORDIA_LINE, !value);
-            });
-            
-            Text loadingIndicator = new Text("Loading...");
-
-            javaScriptPlot.getLoadFuture().thenRunAsync(() -> {
-                loadingIndicator.visibleProperty().bind(
-                        javaScriptPlot.getWebEngine().getLoadWorker()
-                                .stateProperty().isEqualTo(Worker.State.RUNNING));
-            },
-                    Platform::runLater
-            );
-
-            plotToolBar.getItems().addAll(saveToSVG, recenter, ellipses, concordiaLine, loadingIndicator);
-
-            plotAndConfig.getChildren().setAll(anchorPane);
-            AnchorPane.setLeftAnchor(node, 0.0);
-            AnchorPane.setRightAnchor(node, 0.0);
-            AnchorPane.setTopAnchor(node, 0.0);
-            AnchorPane.setBottomAnchor(node, 0.0);
-
-            HBox.setHgrow(anchorPane, Priority.ALWAYS);
             VBox.setVgrow(plotAndConfig, Priority.ALWAYS);
+
+//            JavaScriptPlot javaScriptPlot = (JavaScriptPlot) topsoilPlot.getPlot();
+//
+//            Button saveToSVGButton = new Button("Save as SVG");
+//            saveToSVGButton.setOnAction(mouseEvent -> {
+//                new SVGSaver().save(javaScriptPlot.displayAsSVGDocument());
+//            });
+//
+//            Button recenterButton = new Button("Re-center");
+//            recenterButton.setOnAction(mouseEvent -> {
+//                javaScriptPlot.recenter();
+//            });
+//
+//            Text loadingIndicator = new Text("Loading...");
+//
+//            javaScriptPlot.getLoadFuture().thenRunAsync(() -> {
+//                loadingIndicator.visibleProperty().bind(
+//                        javaScriptPlot.getWebEngine().getLoadWorker()
+//                                .stateProperty().isEqualTo(Worker.State.RUNNING));
+//            },
+//                    Platform::runLater
+//            );
+//            plotToolBar.getItems().addAll(saveToSVGButton, recenterButton);
+            plotToolBar.getItems().addAll(topsoilPlot.toolbarControlsFactory());
+//            plotToolBar.getItems().add(loadingIndicator);
+
         }
     }
 }

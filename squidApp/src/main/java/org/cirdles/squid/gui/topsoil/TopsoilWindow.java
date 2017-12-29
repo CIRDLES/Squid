@@ -28,9 +28,7 @@ import javafx.stage.StageStyle;
 public final class TopsoilWindow {
 
     private AbstractTopsoilPlot topsoilPlot;
-    
-    private double xOffset = 0;
-    private double yOffset = 0;
+
     private Stage topsoilPlotWindow;
 
     private TopsoilWindow() {
@@ -40,7 +38,7 @@ public final class TopsoilWindow {
         this.topsoilPlot = topsoilPlot;
     }
 
-    public void loadTopsoilWindow(double x) {
+    public void loadTopsoilWindow(double x, double y) {
 
         Pane topsoilPlotUI = topsoilPlot.initializePlotPane();
 
@@ -48,7 +46,7 @@ public final class TopsoilWindow {
         topsoilPlotWindow = new Stage(StageStyle.DECORATED);
         // center on Squid
         topsoilPlotWindow.setX(x);
-        topsoilPlotWindow.setY(200);
+        topsoilPlotWindow.setY(y);
         topsoilPlotWindow.setResizable(true);
         topsoilPlotWindow.setScene(topsoilPlotScene);
         topsoilPlotWindow.setTitle("Topsoil Plot");

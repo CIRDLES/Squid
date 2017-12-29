@@ -15,29 +15,22 @@
  */
 package org.cirdles.squid.gui.topsoil;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.fxml.FXMLLoader;
+import javafx.application.Platform;
+import javafx.concurrent.Worker;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import org.cirdles.squid.gui.TopsoilPlotController;
-import org.cirdles.topsoil.app.isotope.IsotopeType;
-import org.cirdles.topsoil.app.plot.TopsoilPlotType;
-import static org.cirdles.topsoil.app.plot.variable.Variables.RHO;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_Y;
-import static org.cirdles.topsoil.app.plot.variable.Variables.X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.Y;
+import javafx.scene.text.Text;
+import org.cirdles.topsoil.plot.JavaScriptPlot;
 import org.cirdles.topsoil.plot.Plot;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.CONCORDIA_LINE;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.ISOTOPE_TYPE;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.TITLE;
+import org.cirdles.topsoil.plot.internal.SVGSaver;
 
 /**
  *
- * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
+ * @author James F. Bowring
  */
 public abstract class AbstractTopsoilPlot {
 
@@ -53,6 +46,45 @@ public abstract class AbstractTopsoilPlot {
      */
     public Plot getPlot() {
         return plot;
+    }
+
+    public void setSelectedAllData(boolean selected) {
+        for (Map<String, Object> datum : plot.getData()) {
+            datum.replace("Selected", selected);
+        }
+
+        plot.setData(plot.getData());
+    }
+
+    public List<Node> toolbarControlsFactory() {
+        List<Node> controls = new ArrayList<>();
+
+        JavaScriptPlot javaScriptPlot = (JavaScriptPlot) plot;
+
+        Text loadingIndicator = new Text("Loading...");
+        javaScriptPlot.getLoadFuture().thenRunAsync(() -> {
+            loadingIndicator.visibleProperty().bind(
+                    javaScriptPlot.getWebEngine().getLoadWorker()
+                            .stateProperty().isEqualTo(Worker.State.RUNNING));
+        },
+                Platform::runLater
+        );
+
+        Button saveToSVGButton = new Button("Save as SVG");
+        saveToSVGButton.setOnAction(mouseEvent -> {
+            new SVGSaver().save(javaScriptPlot.displayAsSVGDocument());
+        });
+
+        Button recenterButton = new Button("Re-center");
+        recenterButton.setOnAction(mouseEvent -> {
+            javaScriptPlot.recenter();
+        });
+
+        controls.add(loadingIndicator);
+        controls.add(saveToSVGButton);
+        controls.add(recenterButton);
+
+        return controls;
     }
 
 }
