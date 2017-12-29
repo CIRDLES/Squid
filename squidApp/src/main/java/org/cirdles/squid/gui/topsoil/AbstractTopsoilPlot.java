@@ -87,4 +87,32 @@ public abstract class AbstractTopsoilPlot {
         return controls;
     }
 
+    protected enum SigmaPresentationModes {
+        ONE_SIGMA_ABSOLUTE("1σ (abs)", 1.0),
+        TWO_SIGMA_ABSOLUTE("2σ (abs)", 2.0),
+        NINETY_FIVE_PERCENT_CONFIDENCE("95% Conf.", 2.4477);
+        
+        private String displayName;
+        private double sigmaMultiplier;
+
+        private SigmaPresentationModes(String displayName, double sigmaMultiplier) {
+            this.displayName = displayName;
+            this.sigmaMultiplier = sigmaMultiplier;
+        }
+
+        /**
+         * @return the displayName
+         */
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        /**
+         * @return the sigmaMultiplier
+         */
+        public double getSigmaMultiplier() {
+            return sigmaMultiplier;
+        }
+    }
+
 }

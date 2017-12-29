@@ -16,25 +16,22 @@
 package org.cirdles.squid.gui.topsoil;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
 import org.cirdles.squid.gui.TopsoilPlotController;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.EXAMPLE_CM2_DATASET;
 import org.cirdles.topsoil.app.isotope.IsotopeType;
-import static org.cirdles.topsoil.app.plot.variable.Variables.RHO;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_Y;
-import static org.cirdles.topsoil.app.plot.variable.Variables.X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.Y;
 import org.cirdles.topsoil.plot.base.BasePlotDefaultProperties;
 import static org.cirdles.topsoil.plot.base.BasePlotProperties.CONCORDIA_LINE;
 import static org.cirdles.topsoil.plot.base.BasePlotProperties.ELLIPSES;
@@ -43,6 +40,7 @@ import static org.cirdles.topsoil.plot.base.BasePlotProperties.ISOTOPE_TYPE;
 import static org.cirdles.topsoil.plot.base.BasePlotProperties.REGRESSION_ENVELOPE;
 import static org.cirdles.topsoil.plot.base.BasePlotProperties.REGRESSION_LINE;
 import static org.cirdles.topsoil.plot.base.BasePlotProperties.TITLE;
+import static org.cirdles.topsoil.plot.base.BasePlotProperties.UNCERTAINTY;
 import static org.cirdles.topsoil.plot.base.BasePlotProperties.X_AXIS;
 import static org.cirdles.topsoil.plot.base.BasePlotProperties.Y_AXIS;
 
@@ -93,6 +91,26 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         ellipsesCheckBox.setOnAction(mouseEvent -> {
             plot.setProperty(ELLIPSES, ellipsesCheckBox.isSelected());
         });
+        
+        ChoiceBox<SigmaPresentationModes> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(SigmaPresentationModes.values()));
+        uncertaintyChoiceBox.setValue(SigmaPresentationModes.TWO_SIGMA_ABSOLUTE);
+        uncertaintyChoiceBox.setConverter(new StringConverter<SigmaPresentationModes>() {
+            @Override
+            public String toString(SigmaPresentationModes object) {
+                return object.getDisplayName();
+            }
+
+            @Override
+            public SigmaPresentationModes fromString(String string) {
+                return null;
+            }
+        });
+        uncertaintyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SigmaPresentationModes>() {
+            @Override
+            public void changed(ObservableValue observable, SigmaPresentationModes oldValue, SigmaPresentationModes newValue) {
+                plot.setProperty(UNCERTAINTY, newValue.getSigmaMultiplier());
+            }
+        });
 
         ColorPicker ellipsesColorPicker = new ColorPicker(Color.RED);
         ellipsesColorPicker.setStyle(COLORPICKER_CSS_STYLE_SPECS);
@@ -130,6 +148,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         });
 
         controls.add(ellipsesCheckBox);
+        controls.add(uncertaintyChoiceBox);
         controls.add(ellipsesColorPicker);
         controls.add(allSelectedCheckBox);
         controls.add(concordiaLineCheckBox);

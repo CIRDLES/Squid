@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
@@ -34,7 +35,7 @@ import org.cirdles.topsoil.plot.JavaScriptPlot;
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class TopsoilPlotController implements Initializable {
-
+    
     private static AbstractTopsoilPlot topsoilPlot;
 
     /**
@@ -46,57 +47,35 @@ public class TopsoilPlotController implements Initializable {
     public static void setTopsoilPlot(AbstractTopsoilPlot aTopsoilPlot) {
         topsoilPlot = aTopsoilPlot;
     }
-
+    
     @FXML
     private VBox vboxMaster;
     @FXML
     private AnchorPane plotAndConfig;
     @FXML
     private ToolBar plotToolBar;
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        
         if (topsoilPlot.getPlot() instanceof JavaScriptPlot) {
-
+            
             vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
             vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
+            
             Node topsoilPlotNode = topsoilPlot.getPlot().displayAsNode();
-
+            
             plotAndConfig.getChildren().setAll(topsoilPlotNode);
             AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
             AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
             AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
             AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
-
+            
             VBox.setVgrow(plotAndConfig, Priority.ALWAYS);
 
-//            JavaScriptPlot javaScriptPlot = (JavaScriptPlot) topsoilPlot.getPlot();
-//
-//            Button saveToSVGButton = new Button("Save as SVG");
-//            saveToSVGButton.setOnAction(mouseEvent -> {
-//                new SVGSaver().save(javaScriptPlot.displayAsSVGDocument());
-//            });
-//
-//            Button recenterButton = new Button("Re-center");
-//            recenterButton.setOnAction(mouseEvent -> {
-//                javaScriptPlot.recenter();
-//            });
-//
-//            Text loadingIndicator = new Text("Loading...");
-//
-//            javaScriptPlot.getLoadFuture().thenRunAsync(() -> {
-//                loadingIndicator.visibleProperty().bind(
-//                        javaScriptPlot.getWebEngine().getLoadWorker()
-//                                .stateProperty().isEqualTo(Worker.State.RUNNING));
-//            },
-//                    Platform::runLater
-//            );
-//            plotToolBar.getItems().addAll(saveToSVGButton, recenterButton);
             plotToolBar.getItems().addAll(topsoilPlot.toolbarControlsFactory());
-//            plotToolBar.getItems().add(loadingIndicator);
-
+            plotToolBar.setPadding(Insets.EMPTY);
+            
         }
     }
 }
