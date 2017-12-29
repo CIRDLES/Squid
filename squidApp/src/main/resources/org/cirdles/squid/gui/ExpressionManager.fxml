@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
@@ -13,51 +15,59 @@
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane fx:id="expressionsAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionManagerController">
+<AnchorPane fx:id="expressionsAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionManagerController">
    <children>
-      <SplitPane dividerPositions="0.47020585048754066" prefHeight="640.0" prefWidth="925.0">
+      <SplitPane dividerPositions="0.5080160320641283" prefHeight="640.0" prefWidth="1000.0">
          <items>
             <AnchorPane prefHeight="638.0" prefWidth="428.0" styleClass="backgroundCalamari">
                <children>
-                  <Label fx:id="expressionListHeaderLabel" layoutX="22.0" layoutY="45.0" prefHeight="28.0" prefWidth="385.0" text="Header Label " />
-                  <ListView fx:id="expressionsListView" layoutX="22.0" layoutY="73.0" prefHeight="529.0" prefWidth="385.0" style="-fx-background-color: white; -fx-border-color: black;" stylesheets="@css/projectManager.css" />
-                  <Label layoutX="15.0" layoutY="14.0" prefHeight="17.0" prefWidth="216.0" text="Select an expression:">
+                  <Label fx:id="expressionListHeaderLabel" layoutX="22.0" layoutY="25.0" prefHeight="28.0" prefWidth="461.0" text="Header Label " />
+                  <ListView fx:id="expressionsListView" layoutX="22.0" layoutY="53.0" prefHeight="577.0" prefWidth="461.0" style="-fx-background-color: white; -fx-border-color: black;" stylesheets="@css/projectManager.css" />
+                  <Label layoutX="15.0" layoutY="4.0" prefHeight="17.0" prefWidth="216.0" text="Select an expression:">
                      <effect>
                         <InnerShadow />
                      </effect>
                   </Label>
+                  <ChoiceBox fx:id="expressionSorterChoiceBox" layoutX="338.0" layoutY="28.0" maxHeight="22.0" prefHeight="22.0" prefWidth="145.0" />
+                  <ChoiceBox fx:id="expressionChooserChoiceBox" layoutX="202.0" layoutY="28.0" maxHeight="22.0" prefHeight="22.0" prefWidth="85.0" />
                </children>
             </AnchorPane>
           <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="701.0" styleClass="backgroundCalamari">
                <children>
                   <Pane fx:id="expressionDetailsPane" prefHeight="595.0" prefWidth="473.0" styleClass="backgroundCalamari">
                      <children>
-                        <Label layoutX="6.0" layoutY="14.0" text="Name:">
+                        <Label layoutX="6.0" layoutY="4.0" text="Name:">
                            <effect>
                               <InnerShadow />
                            </effect></Label>
-                        <TextField fx:id="expressionNameTextField" editable="false" layoutX="65.0" layoutY="15.0" prefHeight="27.0" prefWidth="400.0" promptText="Expression Name" />
-                        <Label layoutX="6.0" layoutY="48.0" text="Excel:">
+                        <TextField fx:id="expressionNameTextField" editable="false" layoutX="65.0" layoutY="5.0" prefHeight="27.0" prefWidth="400.0" promptText="Expression Name" />
+                        <Label layoutX="6.0" layoutY="38.0" text="Excel:">
                            <effect>
                               <InnerShadow />
                            </effect></Label>
-                        <TextArea fx:id="expressionExcelTextArea" editable="false" layoutX="65.0" layoutY="44.0" prefHeight="74.0" prefWidth="400.0" promptText="Modified Squid 2.5 Excel &quot;Equation&quot;" style="-fx-font-size: 14;" styleClass="text-field" wrapText="true" />
+                        <TextArea fx:id="expressionExcelTextArea" editable="false" layoutX="65.0" layoutY="34.0" prefHeight="86.0" prefWidth="400.0" promptText="Modified Squid 2.5 Excel &quot;Equation&quot;" style="-fx-font-size: 14;" styleClass="text-field" wrapText="true" />
                         <Label layoutX="6.0" layoutY="119.0" text="Switch:">
                            <effect>
                               <InnerShadow />
                            </effect></Label>
-                        <CheckBox fx:id="refMatSwitchCheckBox" disable="true" layoutX="65.0" layoutY="124.0" mnemonicParsing="false" onAction="#refMatSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="192.0" text="Reference Material (RM)">
+                        <CheckBox fx:id="refMatSwitchCheckBox" disable="true" layoutX="66.0" layoutY="124.0" mnemonicParsing="false" onAction="#refMatSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="143.0" text="Reference Material">
                            <effect>
                               <InnerShadow />
                            </effect></CheckBox>
-                        <CheckBox fx:id="unknownsSwitchCheckBox" disable="true" layoutX="263.0" layoutY="124.0" mnemonicParsing="false" onAction="#unknownsSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="180.0" text="Unknown Samples (UN)">
+                        <CheckBox fx:id="unknownsSwitchCheckBox" disable="true" layoutX="214.0" layoutY="124.0" mnemonicParsing="false" onAction="#unknownsSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="143.0" text="Unknown Samples">
                            <effect>
                               <InnerShadow />
                            </effect></CheckBox>
+                        <CheckBox fx:id="concRefMatSwitchCheckBox" disable="true" layoutX="360.0" layoutY="124.0" mnemonicParsing="false" onAction="#concRefMatSwitchCheckBoxOnAction" opacity="0.9" prefHeight="18.0" prefWidth="104.0" text="Conc RefMat">
+                           <effect>
+                              <InnerShadow />
+                           </effect>
+                        </CheckBox>
                         <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="65.0" layoutY="151.0" prefHeight="106.0" prefWidth="400.0" style="-fx-font-size: 14;" styleClass="label" text="Audit of parsing and expression building." wrapText="true" />
-                        <WebView fx:id="expressionWebView" layoutX="65.0" layoutY="277.0" prefHeight="106.0" prefWidth="400.0" style="background: white;">
+                        <WebView fx:id="expressionWebView" layoutX="65.0" layoutY="262.0" prefHeight="134.0" prefWidth="400.0" style="background: white;">
                            <effect>
                               <InnerShadow />
                            </effect>
@@ -66,18 +76,18 @@
                            <effect>
                               <InnerShadow />
                            </effect></Label>
-                        <TabPane layoutX="65.0" layoutY="400.0" prefHeight="181.0" prefWidth="400.0" style="-fx-tab-min-width: 180;" stylesheets="@css/projectManager.css" tabClosingPolicy="UNAVAILABLE">
+                        <TabPane fx:id="spotTabPane" layoutX="65.0" layoutY="400.0" prefHeight="181.0" prefWidth="400.0" style="-fx-tab-min-width: 180;" stylesheets="@css/projectManager.css" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
-                            <Tab closable="false" text="Reference Materials">
+                            <Tab fx:id="refMatTab" closable="false" text="Reference Materials">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="142.0" prefWidth="383.0">
                                        <children>
-                                          <TextArea fx:id="rmPeekTextArea" editable="false" prefHeight="151.0" prefWidth="400.0" style="-fx-font-family: Courier New; -fx-font-size: 11;" />
+                                          <TextArea fx:id="rmPeekTextArea" editable="false" prefHeight="162.0" prefWidth="400.0" style="-fx-font-family: Courier New; -fx-font-size: 11;" />
                                        </children>
                                     </AnchorPane>
                               </content>
                             </Tab>
-                            <Tab closable="false" text="Unknowns">
+                            <Tab fx:id="unkTab" closable="false" text="Unknowns">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
@@ -88,7 +98,33 @@
                             </Tab>
                           </tabs>
                         </TabPane>
+                        <Label layoutX="6.0" layoutY="254.0" text="Graph:">
+                           <effect>
+                              <InnerShadow />
+                           </effect>
+                        </Label>
+                        <CheckBox fx:id="graphHereCheckbox" layoutX="5.0" layoutY="279.0" mnemonicParsing="false" onAction="#graphHereCheckboxAction" opacity="0.99" selected="true" style="-fx-text-fill: Secondary;" text="here &gt;&gt;">
+                           <font>
+                              <Font name="Lucida Sans Demibold" size="9.0" />
+                           </font>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </CheckBox>
+                        <CheckBox fx:id="graphBrowserCheckbox" layoutX="5.0" layoutY="294.0" mnemonicParsing="false" onAction="#graphBrowserCheckboxAction" opacity="0.98" style="-fx-text-fill: Secondary;" text="browser">
+                           <font>
+                              <Font name="Lucida Sans Demibold" size="9.0" />
+                           </font>
+                        </CheckBox>
+                        <Label layoutX="6.0" layoutY="400.0" text="Peek:">
+                           <effect>
+                              <InnerShadow />
+                           </effect>
+                        </Label>
                      </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </Pane>
                   <ToolBar layoutY="595.0" prefHeight="43.0" prefWidth="485.0">
                     <items>
@@ -99,14 +135,6 @@
                         <Button fx:id="auditButton" layoutX="256.0" layoutY="10.0" mnemonicParsing="false" onAction="#auditButtonAction" text="Audit" translateX="15.0" />
                     </items>
                   </ToolBar>
-                  <Label layoutX="7.0" layoutY="268.0" text="Graph:">
-                     <effect>
-                        <InnerShadow />
-                     </effect></Label>
-                  <Label layoutX="7.0" layoutY="398.0" text="Peek:">
-                     <effect>
-                        <InnerShadow />
-                     </effect></Label>
                </children>
             </AnchorPane>
          </items>

@@ -78,6 +78,10 @@ public abstract class Function
     static {
 
         FUNCTIONS_MAP.put("agePb76", "agePb76");
+        FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
+        FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
+        FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
+
         FUNCTIONS_MAP.put("and", "and");
         FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
         FUNCTIONS_MAP.put("concordia", "concordia");
@@ -161,6 +165,22 @@ public abstract class Function
      *
      * @return
      */
+    public static OperationOrFunctionInterface pb46cor7() {
+        return new Pb46cor7();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface pb46cor8() {
+        return new Pb46cor8();
+    }
+
+    /**
+     *
+     * @return
+     */
     public static OperationOrFunctionInterface sqWtdAv() {
         return new SqWtdAv();
     }
@@ -235,6 +255,10 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface count() {
         return new Count();
+    }
+    
+    public static OperationOrFunctionInterface calculateMeanConcStd(){
+        return new CalculateMeanConcStd();
     }
 
     /**

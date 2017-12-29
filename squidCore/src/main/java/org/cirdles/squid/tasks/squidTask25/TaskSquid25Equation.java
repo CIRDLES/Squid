@@ -27,18 +27,29 @@ public class TaskSquid25Equation implements Serializable {
     private final String equationName;
     private final boolean eqnSwitchST;
     private final boolean eqnSwitchSA;
+    private final boolean eqnSwitchConcST;
     private final boolean eqnSwitchSC;
     private final boolean eqnSwitchNU;
+    private final boolean eqnSwitchSpecialBuiltin;
 
     public TaskSquid25Equation(
-            String excelEquationString, String equationName, 
-            boolean eqnSwitchST, boolean eqnSwitchSA, boolean eqnSwitchSC, boolean eqnSwitchNU) {
+            String excelEquationString,
+            String equationName,
+            boolean eqnSwitchST,
+            boolean eqnSwitchSA,
+            boolean eqnSwitchSC,
+            boolean eqnSwitchNU,
+            boolean eqnSwitchSpecialBuiltin,
+            boolean eqnSwitchConcST) {
+
         this.excelEquationString = excelEquationString;
         this.equationName = equationName;
         this.eqnSwitchST = eqnSwitchST;
         this.eqnSwitchSA = eqnSwitchSA;
         this.eqnSwitchSC = eqnSwitchSC;
         this.eqnSwitchNU = eqnSwitchNU;
+        this.eqnSwitchSpecialBuiltin = eqnSwitchSpecialBuiltin;
+        this.eqnSwitchConcST = eqnSwitchConcST;
     }
 
     /**
@@ -81,6 +92,22 @@ public class TaskSquid25Equation implements Serializable {
      */
     public boolean isEqnSwitchSC() {
         return eqnSwitchSC;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isEqnSwitchSpecialBuiltin() {
+        return eqnSwitchSpecialBuiltin;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public boolean isEqnSwitchConcST() {
+        return eqnSwitchConcST;
     }
 
 }

@@ -257,14 +257,14 @@ public class ExpressionEvaluator {
                 meanEqSig = wtdLinCorrResults.getSigmaIntercept();
             }
 
-            // this calcualtes the percent uncertainty without the 100 multiplier
+            // this calculates the percent uncertainty without the 100 multiplier
             // sept 2017 we are going to store the 1 sigma unct of meanEqSig instead
-            double eqValFerr;
-            if (meanEq == 0.0) {
-                eqValFerr = 1.0;
-            } else {
-                eqValFerr = Math.abs(meanEqSig / meanEq);
-            }
+//            double eqValFerr;
+//            if (meanEq == 0.0) {
+//                eqValFerr = 1.0;
+//            } else {
+//                eqValFerr = Math.abs(meanEqSig / meanEq);
+//            }
 
             // for consistency with Bodorkos documentation
             double[] ratEqVal = eqVal.clone();

@@ -30,10 +30,10 @@ public class MassStationDetail implements Serializable {
 
     private int massStationIndex;
 
-    private final SimpleStringProperty massStationLabel;
-    private final SimpleStringProperty elementLabel;
-    private final SimpleStringProperty isotopeLabel;
-    private SimpleStringProperty taskIsotopeLabel;
+    private final String massStationLabel;
+    private final String elementLabel;
+    private String isotopeLabel;
+    private String taskIsotopeLabel;
 
     private boolean isBackground;
 
@@ -43,12 +43,22 @@ public class MassStationDetail implements Serializable {
     private final List<Integer> indicesOfScansAtMeasurementTimes;
     private List<Integer> indicesOfRunsAtMeasurementTimes;
 
-    public MassStationDetail(int massStationIndex, String massStationLabel, double centeringTimeSec, String isotopeLabel, String elementLabel, boolean isBackground) {
+    private String uThBearingName;
+
+    public MassStationDetail(
+            int massStationIndex,
+            String massStationLabel,
+            double centeringTimeSec,
+            String isotopeLabel,
+            String elementLabel,
+            boolean isBackground,
+            String uThBearingName) {
+
         this.massStationIndex = massStationIndex;
-        this.massStationLabel = new SimpleStringProperty(massStationLabel);
-        this.isotopeLabel = new SimpleStringProperty(isotopeLabel);
-        this.taskIsotopeLabel = new SimpleStringProperty(isotopeLabel);
-        this.elementLabel = new SimpleStringProperty(elementLabel);
+        this.massStationLabel = massStationLabel;
+        this.isotopeLabel = isotopeLabel;
+        this.taskIsotopeLabel = isotopeLabel;
+        this.elementLabel = elementLabel;
         this.isBackground = isBackground;
 
         this.centeringTimeSec = centeringTimeSec;
@@ -56,6 +66,8 @@ public class MassStationDetail implements Serializable {
         this.timesOfMeasuredTrimMasses = new ArrayList<>();
         this.indicesOfScansAtMeasurementTimes = new ArrayList<>();
         this.indicesOfRunsAtMeasurementTimes = new ArrayList<>();
+
+        this.uThBearingName = uThBearingName;
     }
 
     /**
@@ -80,7 +92,7 @@ public class MassStationDetail implements Serializable {
      * @return the massStationLabel
      */
     public String getMassStationLabel() {
-        return massStationLabel.get();
+        return massStationLabel;
     }
 
     /**
@@ -94,7 +106,7 @@ public class MassStationDetail implements Serializable {
      * @return the isotopeLabel
      */
     public String getIsotopeLabel() {
-        return isotopeLabel.get();
+        return isotopeLabel;
     }
 
     /**
@@ -102,28 +114,28 @@ public class MassStationDetail implements Serializable {
      * @param label
      */
     public void setIsotopeLabel(String label) {
-        isotopeLabel.set(label);
+        isotopeLabel = label;
     }
 
     /**
      * @return the taskIsotopeLabel
      */
     public String getTaskIsotopeLabel() {
-        return taskIsotopeLabel.get();
+        return taskIsotopeLabel;
     }
 
     /**
      * @param taskIsotopeLabel the taskIsotopeLabel to set
      */
     public void setTaskIsotopeLabel(String label) {
-        taskIsotopeLabel.set(label);
+        taskIsotopeLabel = label;
     }
 
     /**
      * @return the elementLabel
      */
     public String getElementLabel() {
-        return elementLabel.get();
+        return elementLabel;
     }
 
     /**
@@ -174,6 +186,20 @@ public class MassStationDetail implements Serializable {
      */
     public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
+    }
+
+    /**
+     * @return the uThBearingName
+     */
+    public String getuThBearingName() {
+        return uThBearingName;
+    }
+
+    /**
+     * @param uThBearingName the uThBearingName to set
+     */
+    public void setuThBearingName(String uThBearingName) {
+        this.uThBearingName = uThBearingName;
     }
 
 }

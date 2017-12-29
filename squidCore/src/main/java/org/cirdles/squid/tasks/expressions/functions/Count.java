@@ -43,18 +43,16 @@ public class Count extends Function {
     }
 
     /**
-     * Provides the functionality of Excel's average and returns "average" and
+     * Provides the functionality of Excel's count and returns "count" and
      * encoding the labels for each cell of the values array produced by eval.
      *
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
      */
     public Count() {
         name = "count";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
-        colCount = 4;
+        colCount = 2;
         labelsForOutputValues = new String[][]{{"count"}};
     }
 
@@ -65,7 +63,7 @@ public class Count extends Function {
      * @param childrenET list containing child 0
      * @param shrimpFractions a list of shrimpFractions
      * @param task
-     * @return the double[1][3] array of slope, slopeErr, y-Intercept, y-IntErr
+     * @return the double[1][1] array of count
      * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override

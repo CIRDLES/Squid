@@ -17,8 +17,9 @@ package org.cirdles.squid.utilities.xmlSerialization;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,14 +39,14 @@ public interface XMLSerializerInterface {
      * @param filename
      */
     public default void serializeXMLObject(String filename) {
-        FileWriter outFile = null;
+        OutputStreamWriter outFile = null;
         try {
             XStream xstream = new XStream(new DomDriver());
             customizeXstream(xstream);
             String xml = xstream.toXML(this).trim();
             xml = customizeXML(xml).trim();
 
-            outFile = new FileWriter(filename);
+            outFile = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8");
             try (PrintWriter out = new PrintWriter(outFile)) {
                 // Write xml to file
                 out.println(xml);

@@ -22,11 +22,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -72,6 +74,8 @@ public class TaskManagerController implements Initializable {
     private RadioButton spotAverageRatioCalcRadioButton;
     @FXML
     private TextArea taskAuditTextArea;
+    @FXML
+    private CheckBox calcMeanConcetrationCheckBox;
 
     /**
      * Initializes the controller class.
@@ -118,6 +122,14 @@ public class TaskManagerController implements Initializable {
         } else {
             spotAverageRatioCalcRadioButton.setSelected(true);
         }
+        
+        boolean hasZeroMeanConc = false;
+        try {
+            hasZeroMeanConc = (task.getTaskExpressionsEvaluationsPerSpotSet().get(SQUID_MEAN_PPM_PARENT_NAME).getValues()[0][0] == 0.0);
+        } catch (Exception e) {
+        }
+        calcMeanConcetrationCheckBox.setDisable(hasZeroMeanConc);
+        calcMeanConcetrationCheckBox.setSelected((!hasZeroMeanConc) && task.isUseCalculated_pdMeanParentEleA());
 
         taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
     }
@@ -194,6 +206,11 @@ public class TaskManagerController implements Initializable {
     private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
         task.setUserLinFits(false);
         task.setChanged(true);
+    }
+
+    @FXML
+    private void calcMeanConcetrationCheckBoxAction(ActionEvent event) {
+        task.setUseCalculated_pdMeanParentEleA(calcMeanConcetrationCheckBox.isSelected());
     }
 
 }

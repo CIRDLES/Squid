@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui.utilities;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -31,13 +32,20 @@ public class BrowserControl {
     public static void showURI(String location) {
         try {
             Desktop desktop = java.awt.Desktop.getDesktop();
-            URI oURL = new URI(location);
+            URI oURL = null;
+            if (location.contains("http")) {
+                oURL = new URI(location);
+            } else {
+                // assume file
+                File file = new File(location);
+                oURL = file.toURI();
+            }
             desktop.browse(oURL);
         } catch (URISyntaxException | IOException e) {
             // act dumb for now
         }
     }
-    
+
     public static String urlEncode(String text) {
         try {
             return URLEncoder.encode(text, "UTF-8");

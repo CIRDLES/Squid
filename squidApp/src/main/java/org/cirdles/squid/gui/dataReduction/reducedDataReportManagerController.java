@@ -51,6 +51,7 @@ public class reducedDataReportManagerController implements Initializable {
       
         reducedUnknownsReportTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
          // todo: fix demeters law violation
+        squidProject.getTask().produceSummaryReportsForGUI();
         reducedUnknownsReportTextArea.setText(
                 squidProject.getPrawnFileHandler().getReportsEngine().produceCalamariReportByFlavor(SquidUI.calamariReportFlavor).replaceAll(",", ""));
     }

@@ -59,12 +59,11 @@ public final class SquidSerializer {
      * @return
      */
     public static Object getSerializedObjectFromFile(String filename, boolean verbose) {
-        FileInputStream inputStream;
+        //FileInputStream inputStream;
         ObjectInputStream deserializedInputStream;
         Object deserializedObject = null;
 
-        try {
-            inputStream = new FileInputStream(filename);
+        try (FileInputStream inputStream = new FileInputStream(filename)) {
             deserializedInputStream = new ObjectInputStream(inputStream);
             deserializedObject = deserializedInputStream.readObject();
             inputStream.close();

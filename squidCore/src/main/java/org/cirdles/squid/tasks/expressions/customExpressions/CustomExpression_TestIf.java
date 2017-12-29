@@ -63,5 +63,6 @@ public class CustomExpression_TestIf {
         ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(true);
         ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
         ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
+        ((ExpressionTree) EXPRESSION).setSquidSwitchConcentrationReferenceMaterialCalculation(false);
     }
 }

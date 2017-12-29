@@ -17,6 +17,7 @@ package org.cirdles.squid.shrimp;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -30,26 +31,26 @@ public class SquidSpeciesModel implements
 
     private static final long serialVersionUID = 3001823455775925098L;
 
-    public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
-
     private int massStationIndex;
     private String massStationSpeciesName;
     private String isotopeName;
     private String prawnFileIsotopeName;
     private String elementName;
     private boolean isBackground;
+    private String uThBearingName;
 
     public SquidSpeciesModel() {
-        this(-1, "NONE", "NONE", "NONE", false);
+        this(-1, "NONE", "NONE", "NONE", false, "No");
     }
 
-    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground) {
+    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground, String uThBearingAbbreviation) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
         this.prawnFileIsotopeName = isotopeName;
         this.elementName = elementName;
         this.isBackground = isBackground;
+        this.uThBearingName = uThBearingAbbreviation;
         }
 
     @Override
@@ -161,4 +162,14 @@ public class SquidSpeciesModel implements
     public void setIsBackground(boolean isBackground) {
         this.isBackground = isBackground;
     }
+
+    public String getuThBearingName() {
+        return uThBearingName;
+    }
+
+    public void setuThBearingName(String uThBearingName) {
+        this.uThBearingName = uThBearingName;
+    }
+    
+    
 }

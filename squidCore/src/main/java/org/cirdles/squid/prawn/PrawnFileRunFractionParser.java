@@ -15,9 +15,6 @@
  */
 package org.cirdles.squid.prawn;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,6 +66,13 @@ public class PrawnFileRunFractionParser {
     private double[][] reducedPkHt;
     private double[][] reducedPkHtFerr;
 
+    private int stageX;
+    private int stageY;
+    private int stageZ;
+    private int qtlY;
+    private int qtlZ;
+    private double primaryBeam;
+
     /**
      *
      */
@@ -87,16 +91,16 @@ public class PrawnFileRunFractionParser {
      */
     public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, int indexOfBackgroundSpecies, String referenceMaterialLetter) {
         SquidSessionModel squidSessionSpecs = new SquidSessionModel(
-                null, null, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter);
+                null, null, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter, "");
 
         return processRunFraction(runFraction, squidSessionSpecs);
     }
 
     /**
-     * 
+     *
      * @param runFraction
      * @param squidSessionSpecs
-     * @return 
+     * @return
      */
     public ShrimpFraction processRunFraction(Run runFraction, SquidSessionModel squidSessionSpecs) {
 
@@ -104,6 +108,7 @@ public class PrawnFileRunFractionParser {
         boolean userLinFits = squidSessionSpecs.isUserLinFits();
         int indexOfBackgroundSpecies = squidSessionSpecs.getIndexOfBackgroundSpecies();
         String referenceMaterialNameFilter = squidSessionSpecs.getReferenceMaterialNameFilter();
+        String concentrationReferenceMaterialNameFilter = squidSessionSpecs.getConcentrationReferenceMaterialNameFilter();
 
         ShrimpFraction shrimpFraction = null;
         prepareRunFractionMetaData(runFraction, squidSessionSpecs);
@@ -117,6 +122,13 @@ public class PrawnFileRunFractionParser {
             shrimpFraction.setDateTimeMilliseconds(dateTimeMilliseconds);
             shrimpFraction.setDeadTimeNanoseconds(deadTimeNanoseconds);
             shrimpFraction.setSbmZeroCps(sbmZeroCps);
+            shrimpFraction.setStageX(stageX);
+            shrimpFraction.setStageY(stageY);
+            shrimpFraction.setStageZ(stageZ);
+            shrimpFraction.setQtlY(qtlY);
+            shrimpFraction.setQtlZ(qtlZ);
+            shrimpFraction.setPrimaryBeam(primaryBeam);
+            
             shrimpFraction.setCountTimeSec(countTimeSec);
             shrimpFraction.setNamesOfSpecies(namesOfSpecies);
             shrimpFraction.setPeakMeasurementsCount(peakMeasurementsCount);
@@ -141,6 +153,14 @@ public class PrawnFileRunFractionParser {
                     shrimpFraction.setReferenceMaterial(true);
                 }
             }
+
+            // determine concentration reference material status
+            if (concentrationReferenceMaterialNameFilter.length() > 0) {
+                if (fractionID.toUpperCase(Locale.US).startsWith(concentrationReferenceMaterialNameFilter.toUpperCase(Locale.US))) {
+                    shrimpFraction.setConcentrationReferenceMaterial(true);
+                }
+            }
+
         }
         return shrimpFraction;
     }
@@ -151,6 +171,10 @@ public class PrawnFileRunFractionParser {
         nScans = Integer.parseInt(runFraction.getPar().get(3).getValue());
         deadTimeNanoseconds = Integer.parseInt(runFraction.getPar().get(4).getValue());
         sbmZeroCps = Integer.parseInt(runFraction.getPar().get(5).getValue());
+        stageX = Integer.parseInt(runFraction.getPar().get(10).getValue());
+        stageY = Integer.parseInt(runFraction.getPar().get(11).getValue());
+        stageZ = Integer.parseInt(runFraction.getPar().get(12).getValue());
+               
         runTableEntries = runFraction.getRunTable().getEntry();
         scans = runFraction.getSet().getScan();
         String[] firstIntegrations = runFraction.getSet().getScan().get(0).getMeasurement().get(0).getData().get(0).getValue().split(",");
@@ -165,6 +189,10 @@ public class PrawnFileRunFractionParser {
             dateTimeMilliseconds = dateFormat.parse(dateTime).getTime();
         } catch (ParseException parseException) {
         }
+        
+        qtlY = Integer.parseInt(runFraction.getSet().getPar().get(2).getValue());
+        qtlZ = Integer.parseInt(runFraction.getSet().getPar().get(4).getValue());
+        primaryBeam = Math.abs(Double.parseDouble(runFraction.getSet().getPar().get(5).getValue().replace("nA", "")));
 
         namesOfSpecies = new String[nSpecies];
         if (squidSessionSpecs.getSquidSpeciesModelList().isEmpty()) {
@@ -216,6 +244,9 @@ public class PrawnFileRunFractionParser {
                 // record the trim_mass
                 trimMass[scanNum][speciesMeasurementIndex]
                         = Double.parseDouble(measurements.get(speciesMeasurementIndex).getPar().get(1).getValue());
+                
+                // Bodorkos via Ludwig call for trimTime here, but it is an easy on-the-fly calcuation:
+                // ***TrimTime[j, k] = (StartTime + time_stamp_sec[j, k]) / 3600***
 
                 // handle peakMeasurements measurements
                 String[] peakMeasurementsRaw = measurements.get(speciesMeasurementIndex).getData().get(0).getValue().split(",");
@@ -691,7 +722,7 @@ public class PrawnFileRunFractionParser {
                 double scanPkCts;
 
                 double netPkCps = pkNetCps[scanNum][pkOrder];
-                if (netPkCps == SQUID_ERROR_VALUE) {
+                if (netPkCps <= SQUID_ERROR_VALUE) {
                     reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
                 } else {
                     scanPkCts = netPkCps * countTimeSec[pkOrder];

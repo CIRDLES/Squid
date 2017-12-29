@@ -20,10 +20,10 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -43,6 +43,12 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double hours;
     private int deadTimeNanoseconds;
     private int sbmZeroCps;
+    private int stageX;
+    private int stageY;
+    private int stageZ;
+    private int qtlY;
+    private int qtlZ;
+    private double primaryBeam;
     private double[] countTimeSec;
     private String[] namesOfSpecies;
     private int peakMeasurementsCount;
@@ -58,6 +64,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double[][] netPkCps;
     private double[][] pkFerr;
     private boolean referenceMaterial;
+    private boolean concentrationReferenceMaterial;
     private boolean useSBM;
     private boolean userLinFits;
 
@@ -94,6 +101,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         netPkCps = new double[0][0];
         pkFerr = new double[0][0];
         referenceMaterial = false;
+        concentrationReferenceMaterial = false;
 
         reducedPkHt = new double[0][0];
         reducedPkHtFerr = new double[0][0];
@@ -102,7 +110,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
         taskExpressionsForScansEvaluated = new ArrayList<>();
 
-        taskExpressionsEvaluationsPerSpot = new TreeMap<>();
+        taskExpressionsEvaluationsPerSpot = new HashMap<>();
 
     }
 
@@ -229,6 +237,90 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     public void setSbmZeroCps(int sbmZeroCps) {
         this.sbmZeroCps = sbmZeroCps;
+    }
+
+    /**
+     * @return the stageX
+     */
+    public int getStageX() {
+        return stageX;
+    }
+
+    /**
+     * @param stageX the stageX to set
+     */
+    public void setStageX(int stageX) {
+        this.stageX = stageX;
+    }
+
+    /**
+     * @return the stageY
+     */
+    public int getStageY() {
+        return stageY;
+    }
+
+    /**
+     * @param stageY the stageY to set
+     */
+    public void setStageY(int stageY) {
+        this.stageY = stageY;
+    }
+
+    /**
+     * @return the stageZ
+     */
+    public int getStageZ() {
+        return stageZ;
+    }
+
+    /**
+     * @param stageZ the stageZ to set
+     */
+    public void setStageZ(int stageZ) {
+        this.stageZ = stageZ;
+    }
+
+    /**
+     * @return the qtlY
+     */
+    public int getQtlY() {
+        return qtlY;
+    }
+
+    /**
+     * @param qtlY the qtlY to set
+     */
+    public void setQtlY(int qtlY) {
+        this.qtlY = qtlY;
+    }
+
+    /**
+     * @return the qtlZ
+     */
+    public int getQtlZ() {
+        return qtlZ;
+    }
+
+    /**
+     * @param qtlZ the qtlZ to set
+     */
+    public void setQtlZ(int qtlZ) {
+        this.qtlZ = qtlZ;
+    }
+
+    /**
+     * @return the primaryBeam
+     */
+    public double getPrimaryBeam() {
+        return primaryBeam;
+    }
+
+    /**
+     * @param primaryBeam the primaryBeam to set
+     */
+    public void setPrimaryBeam(double primaryBeam) {
+        this.primaryBeam = primaryBeam;
     }
 
     /**
@@ -458,6 +550,23 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     public void setReferenceMaterial(boolean referenceMaterial) {
         this.referenceMaterial = referenceMaterial;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public boolean isConcentrationReferenceMaterial() {
+        return concentrationReferenceMaterial;
+    }
+
+    /**
+     *
+     * @param concentrationReferenceMaterial
+     */
+    public void setConcentrationReferenceMaterial(boolean concentrationReferenceMaterial) {
+        this.concentrationReferenceMaterial = concentrationReferenceMaterial;
     }
 
     /**

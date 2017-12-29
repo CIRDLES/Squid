@@ -28,6 +28,11 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_TH;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_U;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 
 /**
@@ -47,6 +52,9 @@ public class TaskSquid25 implements Serializable {
     private String authorName;
     private List<String> nominalMasses;
     private List<String> ratioNames;
+    private String backgroundMass;
+    private String parentNuclide;
+    private String primaryParentElement;
     private List<TaskSquid25Equation> task25Equations;
     private List<String> constantNames;
     private List<String> constantValues;
@@ -94,50 +102,86 @@ public class TaskSquid25 implements Serializable {
                     taskSquid25.ratioNames.add(ratioStrings[i + 2]);
                 }
 
+                String[] backgroundStrings = lines[firstRow + 19].split("\t");
+                taskSquid25.backgroundMass = backgroundStrings[1];
+
+                String[] parentNuclideStrings = lines[firstRow + 20].split("\t");
+                taskSquid25.parentNuclide = parentNuclideStrings[1];
+
                 taskSquid25.task25Equations = new ArrayList<>();
+
+                // determine where uranium or thorium is primary or secondary
+                String primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_U;
+                String primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
 
                 String[] primaryUThPbEqn = lines[firstRow + 22].split("\t");
                 if (primaryUThPbEqn.length > 1) {
+
+                    if (taskSquid25.parentNuclide.contains("232")) {
+                        primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
+                        primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
+                    }
+
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]),
-                            prepareSquid25ExcelEquationNameForSquid3(primaryUThPbEqn[0]),
+                            primaryUThEqnName,
                             true,
                             true,
                             false,
-                            true));
+                            true,
+                            true, false));
                 }
 
                 String[] secondaryUThPbEqn = lines[firstRow + 23].split("\t");
                 if (secondaryUThPbEqn.length > 1) {
+                    // this is the case of DirectAltPd = TRUE
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]),
-                            prepareSquid25ExcelEquationNameForSquid3(secondaryUThPbEqn[0]),
+                            primaryUThEqnOtherName,
                             true,
                             true,
                             false,
-                            true));
+                            true,
+                            true, false));
                 }
 
                 String[] ThUEqn = lines[firstRow + 24].split("\t");
                 if (ThUEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
-                            prepareSquid25ExcelEquationNameForSquid3(ThUEqn[0]),
+                            SQUID_TH_U_EQN_NAME,
                             true,
                             true,
                             false,
-                            true));
+                            true,
+                            true, false));
                 }
 
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
                 if (ppmParentEqn.length > 1) {
+                    if (ppmParentEqn[1].contains("238")) {
+                        taskSquid25.primaryParentElement = "238";
+                    } else {
+                        taskSquid25.primaryParentElement = "232";
+                    }
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
-                            prepareSquid25ExcelEquationNameForSquid3(ppmParentEqn[0]),
+                            SQUID_PPM_PARENT_EQN_NAME,
                             true,
                             true,
                             false,
-                            true));
+                            true,
+                            true, false));
+
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            "CalculateMeanConcStd([\"" + SQUID_PPM_PARENT_EQN_NAME + "\"])",
+                            SQUID_MEAN_PPM_PARENT_NAME,
+                            false,
+                            false,
+                            true,
+                            false,
+                            true, true));
+
                 }
 
                 String[] equations = lines[firstRow + 26].split("\t");
@@ -169,7 +213,8 @@ public class TaskSquid25 implements Serializable {
                                 switchRM,
                                 switchUN,
                                 Boolean.parseBoolean(switchSC[i + 2]),
-                                Boolean.parseBoolean(switchNU[i + 2])));
+                                Boolean.parseBoolean(switchNU[i + 2]),
+                                false, false));
                     }
                 }
 
@@ -263,7 +308,7 @@ public class TaskSquid25 implements Serializable {
                 retVal = retVal.replace(matcher.group(), concordiaParts[0] + "," + concordiaParts[2] + "," + concordiaParts[4] + (concordiaParts.length > 5 ? ")" : ""));
             }
         }
-        
+
         // remove "<" and ">" from constants
         squid25FunctionPattern = Pattern.compile("<(.[^>]*)>", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
@@ -272,7 +317,7 @@ public class TaskSquid25 implements Serializable {
             constant = constant.substring(1, constant.length() - 1);
             retVal = retVal.replace(matcher.group(), constant);
         }
-        
+
         // remove "/" and " " from expressions that contain letters only
         squid25FunctionPattern = Pattern.compile("\\[\\\"\\D*\\\"\\]", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
@@ -286,7 +331,7 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("1000*", "");
         retVal = retVal.replace("100*", "");
 
-        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs		
+        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
         if (!excelString.contains("(") && !excelString.contains("[")) {
             if (!ShuntingYard.isNumber(excelString)) {
                 retVal = "";
@@ -363,6 +408,29 @@ public class TaskSquid25 implements Serializable {
      */
     public List<String> getRatioNames() {
         return ratioNames;
+    }
+
+    /**
+     * @return the backgroundMass
+     */
+    public String getBackgroundMass() {
+        return backgroundMass;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getParentNuclide() {
+        return parentNuclide;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getPrimaryParentElement() {
+        return primaryParentElement;
     }
 
     /**

@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.tasks.Task;
@@ -59,6 +60,7 @@ public final class SquidProject implements Serializable {
     private File prawnXMLFile;
     private PrawnFile prawnFile;
     private String filterForRefMatSpotNames;
+    private String filterForConcRefMatSpotNames;
     private double sessionDurationHours;
     private TaskInterface task;
 
@@ -69,6 +71,7 @@ public final class SquidProject implements Serializable {
         this.prawnFile = null;
 
         this.filterForRefMatSpotNames = "";
+        this.filterForConcRefMatSpotNames = "";
 
         this.sessionDurationHours = 0.0;
 
@@ -89,6 +92,7 @@ public final class SquidProject implements Serializable {
         task.setPrawnFile(prawnFile);
         this.task.setReportsEngine(prawnFileHandler.getReportsEngine());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
@@ -102,6 +106,7 @@ public final class SquidProject implements Serializable {
             task.setPrawnFile(prawnFile);
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+            task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
             // four passes needed for percolating results
             task.updateAllExpressions(4);
             task.setChanged(true);
@@ -111,7 +116,7 @@ public final class SquidProject implements Serializable {
 
     public void createNewTask() {
         this.task = new Task(
-                "New Task", prawnFile, filterForRefMatSpotNames, prawnFileHandler.getNewReportsEngine());
+                "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
         this.task.setChanged(true);
         initializeTaskAndReduceData();
     }
@@ -121,7 +126,7 @@ public final class SquidProject implements Serializable {
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
         this.task = new Task(
-                taskSquid25.getTaskName(), prawnFile, filterForRefMatSpotNames, prawnFileHandler.getNewReportsEngine());
+                taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
         this.task.setType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setProvenance(taskSquid25.getSquidTaskFileName());
@@ -130,6 +135,19 @@ public final class SquidProject implements Serializable {
         this.task.setNominalMasses(taskSquid25.getNominalMasses());
         this.task.setRatioNames(taskSquid25.getRatioNames());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        this.task.setParentNuclide(taskSquid25.getParentNuclide());
+        this.task.setPrimaryParentElement(taskSquid25.getPrimaryParentElement());
+        
+        this.task.generateBuiltInExpressions();
+
+        // determine index of background mass as specified in task
+        for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
+            if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
+                task.setIndexOfTaskBackgroundMass(i);
+                break;
+            }
+        }
 
         // first pass
         this.task.setChanged(true);
@@ -144,24 +162,27 @@ public final class SquidProject implements Serializable {
             System.out.println(">>>>>   " + expressionTree.getName());
             expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
             expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
+            expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(task25Eqn.isEqnSwitchConcST());
+            
             expressionTree.setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
+            expressionTree.setSquidSpecialUPbThExpression(task25Eqn.isEqnSwitchSpecialBuiltin());
 
             this.task.getTaskExpressionsOrdered().add(expression);
         }
-        
+
         List<String> constantNames = taskSquid25.getConstantNames();
         List<String> constantValues = taskSquid25.getConstantValues();
-        for (int i = 0; i < constantNames.size(); i ++){
+        for (int i = 0; i < constantNames.size(); i++) {
             double constantDouble = Double.parseDouble(constantValues.get(i));
             ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
             task.getNamedConstantsMap().put(constant.getName(), constant);
         }
-                
+
         initializeTaskAndReduceData();
     }
 
     public void setupPrawnFile(File prawnXMLFileNew)
-            throws IOException, JAXBException, SAXException {
+            throws IOException, JAXBException, SAXException, SquidException {
 
         prawnXMLFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
@@ -172,7 +193,7 @@ public final class SquidProject implements Serializable {
     }
 
     public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
-            throws IOException, JAXBException, SAXException {
+            throws IOException, JAXBException, SAXException, SquidException {
 
         if (prawnXMLFilesNew.size() == 2) {
             PrawnFile prawnFile1 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(0).getCanonicalPath());
@@ -228,7 +249,7 @@ public final class SquidProject implements Serializable {
     }
 
     public PrawnFile deserializePrawnData()
-            throws IOException, JAXBException, SAXException {
+            throws IOException, JAXBException, SAXException, SquidException {
         return prawnFileHandler.unmarshallCurrentPrawnFileXML();
     }
 
@@ -343,7 +364,7 @@ public final class SquidProject implements Serializable {
             try {
                 prawnFileOriginal = deserializePrawnData();
                 runsCopy = new CopyOnWriteArrayList<>(prawnFileOriginal.getRun());
-            } catch (IOException | JAXBException | SAXException iOException) {
+            } catch (IOException | JAXBException | SAXException | SquidException iOException) {
             }
         } else {
             runsCopy = new CopyOnWriteArrayList<>(runs);
@@ -450,6 +471,9 @@ public final class SquidProject implements Serializable {
      * @return the filterForRefMatSpotNames
      */
     public String getFilterForRefMatSpotNames() {
+        if (filterForConcRefMatSpotNames == null){
+            filterForConcRefMatSpotNames = "";
+        }
         return filterForRefMatSpotNames;
     }
 
@@ -464,6 +488,21 @@ public final class SquidProject implements Serializable {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
         if (task != null) {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        }
+    }
+
+    public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
+        this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+    }
+
+    public String getFilterForConcRefMatSpotNames() {
+        return filterForConcRefMatSpotNames;
+    }
+
+    public void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
+        this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+        if (task != null) {
+            task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         }
     }
 

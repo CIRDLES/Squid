@@ -3,11 +3,11 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="massesAnchorPane" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
+<AnchorPane fx:id="massesAnchorPane" prefHeight="616.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
    <children>
-      <ScrollPane fx:id="massesAuditScrollPane" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari">
+      <ScrollPane fx:id="massesAuditScrollPane" prefHeight="616.0" prefWidth="1000.0" styleClass="backgroundCalamari">
         <content>
-          <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" />
+          <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="1000.0" styleClass="backgroundCalamari" />
         </content>
       </ScrollPane>
    </children>

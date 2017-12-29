@@ -45,5 +45,6 @@ public class CustomExpression_RawConcAge {
         ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(false);
         ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
         ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
+        ((ExpressionTree) EXPRESSION).setSquidSwitchConcentrationReferenceMaterialCalculation(false);
     }
 }

@@ -43,5 +43,6 @@ public class CustomExpression_Mean7_6 {
         ((ExpressionTree) EXPRESSION).setSquidSwitchSCSummaryCalculation(true);
         ((ExpressionTree) EXPRESSION).setSquidSwitchSTReferenceMaterialCalculation(true);
         ((ExpressionTree) EXPRESSION).setSquidSwitchSAUnknownCalculation(false);
+        ((ExpressionTree) EXPRESSION).setSquidSwitchConcentrationReferenceMaterialCalculation(false);
     }
 }

@@ -16,6 +16,7 @@
  */
 package org.cirdles.squid.gui;
 
+import org.cirdles.squid.gui.topsoil.TopsoilWindow;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -38,13 +39,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.Squid;
-import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
+import org.cirdles.squid.gui.topsoil.TopsoilPlotWetherill;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
@@ -54,6 +58,7 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
+import static org.cirdles.topsoil.plot.base.BasePlotProperties.TITLE;
 import org.xml.sax.SAXException;
 
 /**
@@ -114,6 +119,7 @@ public class SquidUIController implements Initializable {
 
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
+    private static Pane topsoilPlotUI;
 
     @FXML
     private MenuItem newSquid3TaskMenuItem;
@@ -129,6 +135,8 @@ public class SquidUIController implements Initializable {
     private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
     private Menu openRecentExpressionFileMenu;
+
+    private TopsoilWindow[] topsoilWindows;
 
     /**
      * Initializes the controller class.
@@ -283,6 +291,7 @@ public class SquidUIController implements Initializable {
 
         mainPane.getChildren().remove(reductionManagerUI);
         mainPane.getChildren().remove(reducedDataReportManagerUI);
+        mainPane.getChildren().remove(topsoilPlotUI);
 
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -322,7 +331,7 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
             }
-        } catch (IOException | JAXBException | SAXException anException) {
+        } catch (IOException | JAXBException | SAXException | SquidException anException) {
             String message = anException.getMessage();
             if (message == null) {
                 message = anException.getCause().getMessage();
@@ -353,7 +362,7 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
             }
-        } catch (IOException | JAXBException | SAXException anException) {
+        } catch (IOException | JAXBException | SAXException | SquidException anException) {
             String message = anException.getMessage();
             if (message == null) {
                 message = anException.getCause().getMessage();
@@ -690,7 +699,7 @@ public class SquidUIController implements Initializable {
                 squidProject.setupPrawnFile(prawnXMLFileNew);
                 launchProjectManager();
             }
-        } catch (IOException | JAXBException | SAXException iOException) {
+        } catch (IOException | JAXBException | SAXException | SquidException iOException) {
         }
     }
 
@@ -758,7 +767,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void default10SpeciesRatioSetAction(ActionEvent event) {
-        squidProject.getTask().updateRatioNames(DEFAULT_RATIOS_LIST_FOR_10_SPECIES);
+        squidProject.getTask().updateRatioNames(getDEFAULT_RATIOS_LIST_FOR_10_SPECIES());
         launchRatiosManager();
     }
 
@@ -811,4 +820,36 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
     }
 
+    @FXML
+    private void topsoilAction(ActionEvent event) {
+        mainPane.getChildren().remove(topsoilPlotUI);
+
+        AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Example Wetherill using CM2 data");
+
+        topsoilPlotUI = topsoilPlot.initializePlotPane();
+        topsoilPlotUI.setId("topsoilPlotUI");
+        VBox.setVgrow(topsoilPlotUI, Priority.ALWAYS);
+        HBox.setHgrow(topsoilPlotUI, Priority.ALWAYS);
+        mainPane.getChildren().add(topsoilPlotUI);
+        topsoilPlotUI.setVisible(false);
+        showUI(topsoilPlotUI);
+    }
+
+    @FXML
+    private void topsoilAction2(ActionEvent event) {
+        if (topsoilWindows != null) {
+            for (int i = 0; i < 6; i++) {
+                topsoilWindows[i].close();
+            }
+        }
+        topsoilWindows = new TopsoilWindow[6];
+        for (int i = 0; i < 6; i++) {
+            AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Squid Test Plot #" + i);
+            topsoilWindows[i] = new TopsoilWindow(topsoilPlot);
+            topsoilWindows[i].loadTopsoilWindow(i * 40, 100);
+        }
+        
+        topsoilWindows[3].getTopsoilPlot().getPlot().getProperties().put(TITLE, "Testing Handle");
+
+    }
 }

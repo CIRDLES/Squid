@@ -61,7 +61,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  *
  */
-@XmlType(name = "RunParameterNames")
+//@XmlType(name = "RunParameterNames")
 @XmlEnum
 public enum RunParameterNames implements Serializable {
 

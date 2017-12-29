@@ -106,6 +106,8 @@ fragment Z:('z'|'Z');
 
 FUNCTION : 
     A G E P B '76' |
+    P B '46' C O R '7' | 
+    P B '46' C O R '8' |  
     A N D |
     C O N C O R D I A T W |
     C O N C O R D I A |
@@ -121,14 +123,17 @@ FUNCTION :
     M A X | 
     A B S |
     A V E R A G E | 
-    C O U N T ;
+    C O U N T |
+    C A L C U L A T E M E A N C O N C S T D;
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 
-NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ')* '"' ']' ;
+NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.')* PARENS* (' %err')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment
+PARENS : '(' (LETTER | NUMBER | '.' | ' ')* ')';
+
 LETTER : [a-zA-Z_%] ('-')? ;
 
 NUMBER : [0-9_%]('.' [0-9])? ('-')? ;

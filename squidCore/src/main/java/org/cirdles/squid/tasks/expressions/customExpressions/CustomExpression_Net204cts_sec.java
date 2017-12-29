@@ -16,7 +16,7 @@
 package org.cirdles.squid.tasks.expressions.customExpressions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import static org.cirdles.squid.shrimp.SquidSpeciesModel.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -64,5 +64,6 @@ public class CustomExpression_Net204cts_sec extends ExpressionTree implements Bu
         setSquidSwitchSCSummaryCalculation(false);
         setSquidSwitchSTReferenceMaterialCalculation(true);
         setSquidSwitchSAUnknownCalculation(false);
+        setSquidSwitchConcentrationReferenceMaterialCalculation(false);
     }
 }

@@ -49,11 +49,19 @@ public class SpotManagerController implements Initializable {
 
     private static ObservableList<PrawnFile.Run> shrimpRuns;
     private static ObservableList<PrawnFile.Run> shrimpRunsRefMat;
+    private static ObservableList<PrawnFile.Run> shrimpRunsConcRefMat;
+
     private final RunsViewModel runsModel = new RunsViewModel();
+
+    @FXML
+    private AnchorPane spotManagerPane;
     @FXML
     private ListView<PrawnFile.Run> shrimpFractionList;
     @FXML
     private ListView<PrawnFile.Run> shrimpRefMatList;
+    @FXML
+    private ListView<PrawnFile.Run> shrimpConcentrationRefMatList;
+
     @FXML
     private TextField selectedSpotNameText;
 
@@ -70,15 +78,24 @@ public class SpotManagerController implements Initializable {
     private Label headerLabelRefMat;
     @FXML
     private Button saveSpotNameButton;
-    @FXML
-    private AnchorPane spotManagerPane;
+
     @FXML
     private Label rmFilterLabel;
     @FXML
     private Label rmCountLabel;
 
+    @FXML
+    private Button setFilteredSpotsAsConcRefMatButton;
+    @FXML
+    private Label headerLabelConcRefMat;
+    @FXML
+    private Label concrmFilterLabel;
+    @FXML
+    private Label concrmCountLabel;
+
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -90,9 +107,9 @@ public class SpotManagerController implements Initializable {
         setUpShrimpFractionListHeaders();
         saveSpotNameButton.setDisable(true);
         setFilteredSpotsAsRefMatButton.setDisable(true);
+        setFilteredSpotsAsConcRefMatButton.setDisable(true);
 
         setUpPrawnFile();
-
     }
 
     private void setUpPrawnFile() {
@@ -102,10 +119,16 @@ public class SpotManagerController implements Initializable {
         setUpShrimpFractionList();
         saveSpotNameButton.setDisable(false);
         setFilteredSpotsAsRefMatButton.setDisable(false);
+        setFilteredSpotsAsConcRefMatButton.setDisable(false);
 
         // filter runs to populate ref mat list 
         filterRuns(squidProject.getFilterForRefMatSpotNames());
         updateReferenceMaterialsList(false);
+
+        // filter runs to populate concentration ref mat list 
+        filterRuns(squidProject.getFilterForConcRefMatSpotNames());
+        updateConcReferenceMaterialsList(false);
+
         // restore spot list to full population
         filterRuns("");
     }
@@ -148,6 +171,15 @@ public class SpotManagerController implements Initializable {
 
         shrimpRefMatList.setContextMenu(createRefMatSpotsViewContextMenu());
 
+        // display of selected concentration reference materials
+        shrimpConcentrationRefMatList.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
+
+        shrimpConcentrationRefMatList.setCellFactory(
+                (lv)
+                -> new RunsViewModel.ShrimpFractionListCell()
+        );
+
+        shrimpConcentrationRefMatList.setContextMenu(createConcRefMatSpotsViewContextMenu());
     }
 
     private ContextMenu createAllSpotsViewContextMenu() {
@@ -158,11 +190,13 @@ public class SpotManagerController implements Initializable {
             if (selectedRun != null) {
                 runsModel.remove(selectedRun);
                 shrimpRunsRefMat.remove(selectedRun);
+                shrimpRunsConcRefMat.remove(selectedRun);
                 squidProject.removeRunFromPrawnFile(selectedRun);
                 spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
-                
+
                 squidProject.generatePrefixTreeFromSpotNames();
                 rmCountLabel.setText(String.valueOf(shrimpRunsRefMat.size()));
+                concrmCountLabel.setText(String.valueOf(shrimpRunsConcRefMat.size()));
                 squidProject.getTask().setChanged(true);
             }
         });
@@ -207,8 +241,19 @@ public class SpotManagerController implements Initializable {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Clear list.");
         menuItem.setOnAction((evt) -> {
-            squidProject.setFilterForRefMatSpotNames("");
+            squidProject.updateFilterForRefMatSpotNames("");
             updateReferenceMaterialsList(true);
+        });
+        contextMenu.getItems().add(menuItem);
+        return contextMenu;
+    }
+
+    private ContextMenu createConcRefMatSpotsViewContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem menuItem = new MenuItem("Clear list.");
+        menuItem.setOnAction((evt) -> {
+            squidProject.updateFilterForConcRefMatSpotNames("");
+            updateConcReferenceMaterialsList(true);
         });
         contextMenu.getItems().add(menuItem);
         return contextMenu;
@@ -226,6 +271,14 @@ public class SpotManagerController implements Initializable {
 
         headerLabelRefMat.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabelRefMat.setText(
+                String.format("%1$-" + 20 + "s", "Ref Mat Name")
+                + String.format("%1$-" + 12 + "s", "Date")
+                + String.format("%1$-" + 12 + "s", "Time")
+                + String.format("%1$-" + 6 + "s", "Peaks")
+                + String.format("%1$-" + 6 + "s", "Scans"));
+        
+        headerLabelConcRefMat.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
+        headerLabelConcRefMat.setText(
                 String.format("%1$-" + 20 + "s", "Ref Mat Name")
                 + String.format("%1$-" + 12 + "s", "Date")
                 + String.format("%1$-" + 12 + "s", "Time")
@@ -250,6 +303,13 @@ public class SpotManagerController implements Initializable {
                 filterSpotNameText.getText().toUpperCase(Locale.US).trim());
         updateReferenceMaterialsList(true);
     }
+    
+    @FXML
+    private void setFilteredSpotsToConcRefMatAction(ActionEvent event) {
+        squidProject.updateFilterForConcRefMatSpotNames(
+                filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+        updateConcReferenceMaterialsList(true);
+    }
 
     private void updateReferenceMaterialsList(boolean updateTaskStatus) {
         String filter = squidProject.getFilterForRefMatSpotNames();
@@ -263,12 +323,35 @@ public class SpotManagerController implements Initializable {
         }
         shrimpRefMatList.setItems(shrimpRunsRefMat);
         rmFilterLabel.setText(
-                squidProject.getFilterForRefMatSpotNames().length() > 0 
-                        ? squidProject.getFilterForRefMatSpotNames() 
-                        : "NO FILTER");
+                squidProject.getFilterForRefMatSpotNames().length() > 0
+                ? squidProject.getFilterForRefMatSpotNames()
+                : "NO FILTER");
         rmCountLabel.setText(String.valueOf(shrimpRunsRefMat.size()));
-        
-        if (updateTaskStatus){
+
+        if (updateTaskStatus) {
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        }
+    }
+
+    private void updateConcReferenceMaterialsList(boolean updateTaskStatus) {
+        String filter = squidProject.getFilterForConcRefMatSpotNames();
+        // initialize list
+        shrimpRunsConcRefMat = runsModel.getViewableShrimpRuns();
+        if (filter.length() == 0) {
+            // prevent populating ref mat list with no filter
+            shrimpRunsConcRefMat.clear();
+        } else {
+            shrimpRunsConcRefMat = runsModel.getViewableShrimpRuns();
+        }
+        shrimpConcentrationRefMatList.setItems(shrimpRunsConcRefMat);
+        concrmFilterLabel.setText(
+                squidProject.getFilterForConcRefMatSpotNames().length() > 0
+                ? squidProject.getFilterForConcRefMatSpotNames()
+                : "NO FILTER");
+        concrmCountLabel.setText(String.valueOf(shrimpRunsConcRefMat.size()));
+
+        if (updateTaskStatus) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -283,9 +366,10 @@ public class SpotManagerController implements Initializable {
             squidProject.generatePrefixTreeFromSpotNames();
             shrimpFractionList.refresh();
             shrimpRefMatList.refresh();
-            
+            shrimpConcentrationRefMatList.refresh();
+
             // refresh textbox in case "DUP" is removed or created
-            selectedSpotNameText.setText(((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).getValue());            
+            selectedSpotNameText.setText(((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).getValue());
         }
-    }
+    }  
 }

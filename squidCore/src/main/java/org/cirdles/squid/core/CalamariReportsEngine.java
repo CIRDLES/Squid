@@ -45,9 +45,9 @@ public class CalamariReportsEngine implements Serializable {
 
     private static final long serialVersionUID = 9086141392949762545L;
 
-    private transient String folderToWriteCalamariReportsPath;
-    private transient String reportParameterValues;
-    private transient String reportNamePrefix;
+    private String folderToWriteCalamariReportsPath;
+    private String reportParameterValues;
+    private String reportNamePrefix;
 
     private File folderToWriteCalamariReports;
     private String nameOfPrawnXMLFile;
@@ -77,22 +77,26 @@ public class CalamariReportsEngine implements Serializable {
      *
      */
     public CalamariReportsEngine() {
-        folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
-        nameOfPrawnXMLFile = "";
+        this.folderToWriteCalamariReportsPath = "";
+        this.reportParameterValues = "";
+        this.reportNamePrefix = "";
 
-        refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
-        unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
+        this.folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
+        this.nameOfPrawnXMLFile = "";
 
-        headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
-        refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
-        unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        this.refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
+        this.unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
 
-        headerMeanRatios_PerSpot_Unknowns = new StringBuilder();
-        headerMeanRatios_PerSpot_RefMat = new StringBuilder();
-        refMatMeanRatios_PerSpot = new StringBuilder();
-        unknownMeanRatios_PerSpot = new StringBuilder();
+        this.headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        this.refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        this.unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
 
-        doWriteReportFiles = true;
+        this.headerMeanRatios_PerSpot_Unknowns = new StringBuilder();
+        this.headerMeanRatios_PerSpot_RefMat = new StringBuilder();
+        this.refMatMeanRatios_PerSpot = new StringBuilder();
+        this.unknownMeanRatios_PerSpot = new StringBuilder();
+
+        this.doWriteReportFiles = true;
     }
 
     public void clearReports() {
@@ -162,7 +166,9 @@ public class CalamariReportsEngine implements Serializable {
                     + reportParameterValues
                     + File.separator;
             File reportsFolder = new File(folderToWriteCalamariReportsPath);
-            reportsFolder.mkdirs();
+            if (!reportsFolder.mkdirs()) {
+                throw new IOException("Failed to delete reports folder '" + folderToWriteCalamariReportsPath + "'");
+            }
         }
 
         prepSpeciesReportFiles(shrimpFractionUnknown);
@@ -170,7 +176,6 @@ public class CalamariReportsEngine implements Serializable {
 
         for (int f = 0; f < shrimpFractions.size(); f++) {
             ShrimpFraction shrimpFraction = (ShrimpFraction) shrimpFractions.get(f);
-            // sept 2017 what is this and why here??  when different subsets might come thru - not used anyway shrimpFraction.setSpotNumber(f + 1);
             if (summaryOnly) {
                 reportWithinSpotRatiosAtInterpolatedTimes(shrimpFraction);
                 reportMeanRatiosPerSpot(shrimpFraction);
@@ -464,31 +469,32 @@ public class CalamariReportsEngine implements Serializable {
                     }
                 }
             }
-
-            // Handle any task expressions
-            List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFraction.getTaskExpressionsForScansEvaluated();
-            for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
-                if (doWriteReportFiles) {
-                    if (nDodNum < taskExpressionEval.getRatEqTime().length) {
-                        dataLine.append(", ").append(String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum]));
-                        dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15));
-                        dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15));
+            if (!doWriteReportFiles) {
+                // Handle any task expressions
+                List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFraction.getTaskExpressionsForScansEvaluated();
+                for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
+                    if (doWriteReportFiles) {
+                        if (nDodNum < taskExpressionEval.getRatEqTime().length) {
+                            dataLine.append(", ").append(String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum]));
+                            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15));
+                            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15));
+                        } else {
+                            dataLine.append(", ").append("n/a");
+                            dataLine.append(", ").append("n/a");
+                            dataLine.append(", ").append("n/a");
+                        }
                     } else {
-                        dataLine.append(", ").append("n/a");
-                        dataLine.append(", ").append("n/a");
-                        dataLine.append(", ").append("n/a");
-                    }
-                } else {
-                    if (nDodNum < taskExpressionEval.getRatEqTime().length) {
-                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum])));
-                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15)));
-                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15)));
-                    } else {
-                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
-                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
-                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
-                    }
+                        if (nDodNum < taskExpressionEval.getRatEqTime().length) {
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum])));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15)));
+                        } else {
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
+                        }
 
+                    }
                 }
             }
 
@@ -548,25 +554,26 @@ public class CalamariReportsEngine implements Serializable {
             }
         }
 
-        // these expressions are spot-specific and INCLUDE those = Squid Switch "NU" calculated from ratios-of-interest
-        Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFraction.getTaskExpressionsEvaluationsPerSpot();
-        for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
-            double[] expressionResults = entry.getValue()[0];
-            if (doWriteReportFiles) {
-                dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
-                if (expressionResults.length > 1) {
-                    dataLine.append(", ").append(Utilities.roundedToSize(
-                            calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12));
-                }
-            } else {
-                dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
-                if (expressionResults.length > 1) {
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
-                            calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
+        if (!doWriteReportFiles) {
+            // these expressions are spot-specific and INCLUDE those = Squid Switch "NU" calculated from ratios-of-interest
+            Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFraction.getTaskExpressionsEvaluationsPerSpot();
+            for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
+                double[] expressionResults = entry.getValue()[0];
+                if (doWriteReportFiles) {
+                    dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
+                    if (expressionResults.length > 1) {
+                        dataLine.append(", ").append(Utilities.roundedToSize(
+                                calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12));
+                    }
+                } else {
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
+                    if (expressionResults.length > 1) {
+                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
+                                calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
+                    }
                 }
             }
         }
-
         dataLine.append("\n");
 
         if (shrimpFraction.isReferenceMaterial()) {
@@ -704,32 +711,33 @@ public class CalamariReportsEngine implements Serializable {
             }
         }
 
-        // prepare headers for any task expressions
-        List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFractionUnknown.getTaskExpressionsForScansEvaluated();
-        for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
-            String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20, taskExpressionEval.getExpression().getName().length()));
-            if (doWriteReportFiles) {
-                headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Time");
-                headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Value");
-                headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".1SigmaAbs");
-            } else {
-                headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Time"));
-                headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
-                headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaAbs"));
+        if (doWriteReportFiles) {
+            headerWithinSpotRatios_PerScanMinus1.append("\n");
+            Files.write(withinSpotRatios_PerScanMinus1.toPath(), headerWithinSpotRatios_PerScanMinus1.toString().getBytes(UTF_8));
+        } else {
+            // prepare headers for any task expressions
+            List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFractionUnknown.getTaskExpressionsForScansEvaluated();
+            for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
+                String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20, taskExpressionEval.getExpression().getName().length()));
+                if (doWriteReportFiles) {
+                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Time");
+                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Value");
+                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".1SigmaAbs");
+                } else {
+                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Time"));
+                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaAbs"));
+                }
             }
-        }
 
+        }
         headerWithinSpotRatios_PerScanMinus1.append("\n");
         headerWithinSpotRatios_PerScanMinus1_2.append("\n");
 
-        if (doWriteReportFiles) {
-            Files.write(withinSpotRatios_PerScanMinus1.toPath(), headerWithinSpotRatios_PerScanMinus1.toString().getBytes(UTF_8));
-        } else {
-            headerWithinSpotRatios_PerScanMinus1.append(headerWithinSpotRatios_PerScanMinus1_2);
-        }
+        headerWithinSpotRatios_PerScanMinus1.append(headerWithinSpotRatios_PerScanMinus1_2);
 
         refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
         unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
@@ -776,65 +784,66 @@ public class CalamariReportsEngine implements Serializable {
             }
         }
 
-        // these expressions are spot-specific with no ratios-of-interest
-        // we create two flavors of header - one for unknowns and one for reference materials when not writing file
-        // todo : more robust solution
-        // currently, this duplicates these outputs since they are stored in the per scan results too
-        headerMeanRatios_PerSpot_RefMat.append(headerMeanRatios_PerSpot_Unknowns.toString());
-        headerMeanRatios_PerSpot_RefMat2.append(headerMeanRatios_PerSpot_Unknowns2.toString());
-
-        // for unknowns
-        Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFractionUnknown.getTaskExpressionsEvaluationsPerSpot();
-        for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
-            String expressionName = entry.getKey().getName().substring(0, Math.min(20, entry.getKey().getName().length()));
-            if (doWriteReportFiles) {
-                headerMeanRatios_PerSpot_Unknowns.append(", ").append(expressionName).append(".Value");
-                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(expressionName).append(".1SigmaPct");
-                }
-            } else {
-                headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                }
-                headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
-                if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
-                }
-            }
-        }
-
-        headerMeanRatios_PerSpot_Unknowns.append("\n");
-        headerMeanRatios_PerSpot_Unknowns2.append("\n");
-
         if (doWriteReportFiles) {
+            headerMeanRatios_PerSpot_Unknowns.append("\n");
             Files.write(meanRatios_PerSpot.toPath(), headerMeanRatios_PerSpot_Unknowns.toString().getBytes(UTF_8));
         } else {
-            headerMeanRatios_PerSpot_Unknowns.append(headerMeanRatios_PerSpot_Unknowns2);
-        }
+            // these expressions are spot-specific with no ratios-of-interest
+            // we create two flavors of header - one for unknowns and one for reference materials when not writing file
+            // todo : more robust solution
+            // currently, this duplicates these outputs since they are stored in the per scan results too
+            headerMeanRatios_PerSpot_RefMat.append(headerMeanRatios_PerSpot_Unknowns.toString());
+            headerMeanRatios_PerSpot_RefMat2.append(headerMeanRatios_PerSpot_Unknowns2.toString());
 
-        // for reference materials ********************************************************************************
-        spotExpressions = shrimpFractionRefMat.getTaskExpressionsEvaluationsPerSpot();
-        for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
-            String expressionName = entry.getKey().getName().substring(0, Math.min(20, entry.getKey().getName().length()));
-            double[] expressionResults = entry.getValue()[0];
-            if (doWriteReportFiles) {
-                headerMeanRatios_PerSpot_RefMat.append(", ").append(expressionName).append(".Value");
-                if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    headerMeanRatios_PerSpot_RefMat.append(", ").append(expressionName).append(".1SigmaPct");
-                }
-            } else {
-                headerMeanRatios_PerSpot_RefMat.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    headerMeanRatios_PerSpot_RefMat.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                }
-                headerMeanRatios_PerSpot_RefMat2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
-                if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                    headerMeanRatios_PerSpot_RefMat2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
+            // for unknowns
+            Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFractionUnknown.getTaskExpressionsEvaluationsPerSpot();
+            for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
+                String expressionName = entry.getKey().getName().substring(0, Math.min(20, entry.getKey().getName().length()));
+                if (doWriteReportFiles) {
+                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(expressionName).append(".Value");
+                    if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        headerMeanRatios_PerSpot_Unknowns.append(", ").append(expressionName).append(".1SigmaPct");
+                    }
+                } else {
+                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    }
+                    headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
+                    }
                 }
             }
-        }
 
+            headerMeanRatios_PerSpot_Unknowns.append("\n");
+            headerMeanRatios_PerSpot_Unknowns2.append("\n");
+
+            headerMeanRatios_PerSpot_Unknowns.append(headerMeanRatios_PerSpot_Unknowns2);
+
+            // for reference materials ********************************************************************************
+            spotExpressions = shrimpFractionRefMat.getTaskExpressionsEvaluationsPerSpot();
+            for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
+                String expressionName = entry.getKey().getName().substring(0, Math.min(20, entry.getKey().getName().length()));
+                double[] expressionResults = entry.getValue()[0];
+                if (doWriteReportFiles) {
+                    headerMeanRatios_PerSpot_RefMat.append(", ").append(expressionName).append(".Value");
+                    if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        headerMeanRatios_PerSpot_RefMat.append(", ").append(expressionName).append(".1SigmaPct");
+                    }
+                } else {
+                    headerMeanRatios_PerSpot_RefMat.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        headerMeanRatios_PerSpot_RefMat.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    }
+                    headerMeanRatios_PerSpot_RefMat2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        headerMeanRatios_PerSpot_RefMat2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
+                    }
+                }
+            }
+
+        }
         headerMeanRatios_PerSpot_RefMat.append("\n");
         headerMeanRatios_PerSpot_RefMat2.append("\n");
 

@@ -28,7 +28,6 @@ import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -246,9 +245,19 @@ public interface TaskInterface {
     public List<ShrimpFractionExpressionInterface> getUnknownSpots();
 
     /**
+     * @return the concentrationReferenceMaterialSpots
+     */
+    public List<ShrimpFractionExpressionInterface> getConcentrationReferenceMaterialSpots();
+
+    /**
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
+
+    /**
+     * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
+     */
+    public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
 
     /**
      * @return the useSBM
@@ -296,14 +305,59 @@ public interface TaskInterface {
 
     public void updateAffectedExpressions(int repeats, Expression sourceExpression);
 
-    public void applyTaskIsotopeLabels();
+    public void applyTaskIsotopeLabelsToMassStations();
 
     public void populateTableOfSelectedRatiosFromRatiosList();
-    
+
     public void updateTableOfSelectedRatiosByRowOrCol(int row, int col, boolean selected);
-    
+
     /**
      * @return the namedConstantsMap
      */
-    public Map<String, ConstantNode> getNamedConstantsMap();
+    public Map<String, ExpressionTreeInterface> getNamedConstantsMap();
+
+    public void setIndexOfTaskBackgroundMass(int indexOfTask25BackgroundMass);
+
+    public void applyMassStationLabelsToTask();
+
+    /**
+     *
+     * @return
+     */
+    public String getParentNuclide();
+
+    /**
+     *
+     * @param parentNuclide
+     */
+    public void setParentNuclide(String parentNuclide);
+
+    /**
+     * @return the useCalculated_pdMeanParentEleA
+     */
+    public boolean isUseCalculated_pdMeanParentEleA();
+
+    /**
+     * @param useCalculated_pdMeanParentEleA the useCalculated_pdMeanParentEleA
+     * to set
+     */
+    public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA);
+
+    public Expression getExpressionByName(String name);
+
+    public void generateBuiltInExpressions();
+
+    public void produceSummaryReportsForGUI();
+
+    /**
+     *
+     * @return
+     */
+    public String getPrimaryParentElement();
+
+    /**
+     *
+     * @param primaryParentElement
+     */
+    public void setPrimaryParentElement(String primaryParentElement);
 }

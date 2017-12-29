@@ -15,7 +15,7 @@
  */
 package org.cirdles.squid.tasks.builtinTasks;
 
-import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SquidExpressionMinus1;
@@ -47,7 +47,7 @@ public class Squid3ExampleTask1 extends Task {
         this.provenance = "Builtin task.";
         this.dateRevised = 0l;
 
-        for (String rn : DEFAULT_RATIOS_LIST_FOR_10_SPECIES){
+        for (String rn : getDEFAULT_RATIOS_LIST_FOR_10_SPECIES()){
             this.ratioNames.add(rn);
         }
         

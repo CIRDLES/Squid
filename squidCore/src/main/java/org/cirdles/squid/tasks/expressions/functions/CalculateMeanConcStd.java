@@ -17,50 +17,48 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import org.cirdles.ludwig.squid25.SquidConstants;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
  *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class AgePb76 extends Function {
+public class CalculateMeanConcStd extends Function {
 
-    private static final long serialVersionUID = -6711265919551953531L;
+    private static final long serialVersionUID = -5093949907505008415L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
-     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
-     * values array produced by eval.
+     * Provides the functionality of Squid2.5's GetConcStdData, calculating the
+     * mean concentration of the parent isotope of the concentration reference
+     * standard, known as pdMeanParentEleA.
      *
      * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
      */
-    public AgePb76() {
-
-        name = "agePb76";
+    public CalculateMeanConcStd() {
+        name = "calculateMeanConcStd";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "AgeErr"}};
+        labelsForOutputValues = new String[][]{{SQUID_MEAN_PPM_PARENT_NAME}};
     }
 
     /**
      * Requires that child 0 is a VariableNode that evaluates to a double array
-     * with one column representing the 207/206 IsotopicRatio and a row for each
-     * member of shrimpFractions.
+     * with one column and a row for each member of shrimpFractions.
      *
      * @param childrenET list containing child 0
-     * @param shrimpFractions a list of shrimpFractions
+     * @param shrimpFractions a list of shrimpFractions from the concentration
+     * reference material
      * @param task
-     * @return the double[1][2] array of age, ageErr
+     * @return the double[1][1] array of pdMeanParentEleA
      * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
@@ -69,11 +67,24 @@ public class AgePb76 extends Function {
 
         Object[][] retVal;
         try {
-            double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
-            double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(pb207_206RatioAndUnct[0], pb207_206RatioAndUnct[1]);
-            retVal = new Object[][]{{agePb76[0], agePb76[1]}};
-        } catch (ArithmeticException | IndexOutOfBoundsException  | NullPointerException e) {
-            retVal = new Object[][]{{0.0, 0.0}};
+            double[] xValues = transposeColumnVector(childrenET.get(0).eval(shrimpFractions, task), 0);
+            int counter = 0;
+            double sumOfConcentrations = 0.0;
+            double pdMeanParentEleA = 0.0;
+            for (int i = 0; i < xValues.length; i++) {
+                double concentration = xValues[i];
+                if (concentration > SquidConstants.SQUID_TINY_VALUE) {
+                    sumOfConcentrations += concentration;
+                    counter++;
+                }
+            }
+            if (counter > 0) {
+                pdMeanParentEleA = sumOfConcentrations / counter;
+            }
+
+            retVal = new Object[][]{{pdMeanParentEleA}};
+        } catch (ArithmeticException | NullPointerException e) {
+            retVal = new Object[][]{{0}};
         }
 
         return retVal;
@@ -88,7 +99,7 @@ public class AgePb76 extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>AgePb76</mi>"
+                + "<mi>CalculateMeanConcStd</mi>"
                 + "<mfenced>";
 
         for (int i = 0; i < childrenET.size(); i++) {
@@ -99,5 +110,4 @@ public class AgePb76 extends Function {
 
         return retVal;
     }
-
 }

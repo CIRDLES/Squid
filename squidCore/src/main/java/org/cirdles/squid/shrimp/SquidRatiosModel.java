@@ -28,7 +28,7 @@ import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_UPPER_LIMIT_1_SIGM
  */
 public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosModel> {
 
-    private static long serialVersionUID = -2944080263487487243L;
+    private static final long serialVersionUID = -2944080263487487243L;
 
     private String ratioName;
     private SquidSpeciesModel numerator;

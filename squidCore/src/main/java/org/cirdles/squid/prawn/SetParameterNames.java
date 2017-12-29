@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  *
  */
-@XmlType(name = "SetParameterNames")
+//@XmlType(name = "SetParameterNames")
 @XmlEnum
 public enum SetParameterNames implements Serializable {
 

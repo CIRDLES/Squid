@@ -48,6 +48,9 @@ public class ConstantNode extends ExpressionTree {
      */
     public ConstantNode(String name, Object value) {
         this.name = name;
+        if (value instanceof Integer){
+            value = ((int)value) * 1.0;
+        }
         this.value = value;
     }
 
@@ -63,7 +66,9 @@ public class ConstantNode extends ExpressionTree {
             } else if (obj.getClass().equals(this.getClass())) {
                 retVal = (name.compareTo(((ConstantNode) obj).getName()) == 0);
                 if (retVal) {
-                    if (value instanceof Double) {
+                    if (value instanceof Integer) {
+                        retVal = (Integer.compare((int) value, (int) ((ConstantNode) obj).getValue()) == 0);
+                    } else if (value instanceof Double) {
                         retVal = (Double.compare((double) value, (double) ((ConstantNode) obj).getValue()) == 0);
                     } else if (value instanceof String) {
                         retVal = (((String) value).compareToIgnoreCase(((String) ((ConstantNode) obj).getValue())) == 0);
@@ -103,7 +108,6 @@ public class ConstantNode extends ExpressionTree {
         return false;
     }
 
-    
     /**
      *
      * @param xstream
@@ -120,7 +124,7 @@ public class ConstantNode extends ExpressionTree {
      * @return the double[][]
      */
     @Override
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface tast) {
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
         return new Object[][]{{value}};
     }
 
