@@ -254,7 +254,7 @@ public abstract class BuiltInExpressionsFactory {
 
         // TODO: FIX term1 = Simon
         String term1 = "[%\"UncorrPb/Uconst\"]^2 +  \n"
-                + "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] / [\"8-corr206Pb/238Ucalibr.const\"] )^2 * 999";
+                + "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] / [\"8-corr206Pb/238Ucalibr.const\"] )^2 ";
         String term3 = "( [\"208/206\"] * [%\"208/206\"] / \n"
                 + "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) )^2 ";
         String term4 = "1 / ( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) +  \n"
@@ -263,7 +263,7 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression8corr206Pb238Ucalibrconsterr = buildExpression(
                 "8-corr206Pb/238Ucalibr.const %err",
-                "sqrt( (" + term1 + ") + ((" + term3 + ") * (" + term6 + ")) )", true, true);
+                "sqrt( (" + term1 + ") * ((" + term3 + ") + (" + term6 + ")) )", true, true);
         correctionsOfCalibrationConstants.add(expression8corr206Pb238Ucalibrconsterr);
 
         // TODO: Logic needed to decide which of these goes into "calib.const. %err"
