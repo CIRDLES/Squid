@@ -192,7 +192,7 @@ public class PrawnFileRunFractionParser {
         
         qtlY = Integer.parseInt(runFraction.getSet().getPar().get(2).getValue());
         qtlZ = Integer.parseInt(runFraction.getSet().getPar().get(4).getValue());
-        primaryBeam = Math.abs(Double.parseDouble(runFraction.getSet().getPar().get(5).getValue().replace("nA", "")));
+        primaryBeam = Double.parseDouble(runFraction.getSet().getPar().get(5).getValue().replace("nA", ""));
 
         namesOfSpecies = new String[nSpecies];
         if (squidSessionSpecs.getSquidSpeciesModelList().isEmpty()) {
