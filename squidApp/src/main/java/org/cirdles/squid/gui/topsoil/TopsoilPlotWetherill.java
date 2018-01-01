@@ -28,8 +28,9 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
+import org.cirdles.squid.gui.topsoil.TopsoilDataFactory;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
-import org.cirdles.squid.gui.TopsoilPlotController;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.EXAMPLE_CM2_DATASET;
 import org.cirdles.topsoil.app.isotope.IsotopeType;
 import org.cirdles.topsoil.plot.base.BasePlotDefaultProperties;
@@ -72,10 +73,10 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
     @Override
     public Pane initializePlotPane() {
-        TopsoilPlotController.setTopsoilPlot(this);
+        org.cirdles.squid.gui.topsoil.TopsoilPlotController.topsoilPlot = this;
         Pane topsoilPlotUI = null;
         try {
-            topsoilPlotUI = FXMLLoader.load(getClass().getResource("../TopsoilPlot.fxml"));
+            topsoilPlotUI = FXMLLoader.load(getClass().getResource("TopsoilPlot.fxml"));
         } catch (IOException iOException) {
         }
 
