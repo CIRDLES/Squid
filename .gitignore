@@ -40,6 +40,7 @@ test_*
 *.zip
 *.squid
 *.xls
+EXPRESSION.HTML
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
