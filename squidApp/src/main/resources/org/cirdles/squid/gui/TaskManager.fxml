@@ -9,12 +9,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane fx:id="taskManagerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+<AnchorPane fx:id="taskManagerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
    <children>
       <Label layoutX="24.0" layoutY="15.0" text="Task Name:" />
-      <TextField fx:id="taskNameTextField" layoutX="127.0" layoutY="15.0" prefHeight="27.0" prefWidth="496.0" promptText="Task name" />
-      <Label layoutX="649.0" layoutY="15.0" text="Type:" />
-      <HBox layoutX="705.0" layoutY="20.0" prefHeight="21.0" prefWidth="181.0">
+      <TextField fx:id="taskNameTextField" layoutX="127.0" layoutY="15.0" prefHeight="27.0" prefWidth="608.0" promptText="Task name" />
+      <Label layoutX="742.0" layoutY="15.0" text="Type:" />
+      <HBox layoutX="798.0" layoutY="20.0" prefHeight="21.0" prefWidth="181.0">
          <children>
             <RadioButton fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" prefHeight="18.0" prefWidth="106.0" selected="true" text="Geochron">
                <toggleGroup>
@@ -25,13 +25,13 @@
          </children>
       </HBox>
       <Label layoutX="21.0" layoutY="55.0" text="Description:" />
-      <TextField fx:id="taskDescriptionTextField" layoutX="127.0" layoutY="56.0" prefHeight="27.0" prefWidth="757.0" promptText="Task Description" style="-fx-font-size: 12;" />
+      <TextField fx:id="taskDescriptionTextField" layoutX="127.0" layoutY="56.0" prefHeight="27.0" prefWidth="854.0" promptText="Task Description" style="-fx-font-size: 12;" />
       <Label layoutX="55.0" layoutY="95.0" text="Author:" />
-      <TextField fx:id="authorsNameTextField" layoutX="127.0" layoutY="96.0" prefHeight="27.0" prefWidth="306.0" promptText="Author's Name" />
-      <Label layoutX="481.0" layoutY="95.0" text="Lab Name:" />
-      <TextField fx:id="labNameTextField" layoutX="573.0" layoutY="96.0" prefHeight="27.0" prefWidth="313.0" promptText="Lab Name:" />
+      <TextField fx:id="authorsNameTextField" layoutX="127.0" layoutY="96.0" prefHeight="27.0" prefWidth="380.0" promptText="Author's Name" />
+      <Label layoutX="521.0" layoutY="95.0" text="Lab Name:" />
+      <TextField fx:id="labNameTextField" layoutX="613.0" layoutY="96.0" prefHeight="27.0" prefWidth="366.0" promptText="Lab Name:" />
       <Label layoutX="20.0" layoutY="135.0" text="Provenance:" />
-      <TextField fx:id="provenanceTextField" layoutX="127.0" layoutY="136.0" prefHeight="27.0" prefWidth="757.0" promptText="Provenance" />
+      <TextField fx:id="provenanceTextField" layoutX="127.0" layoutY="136.0" prefHeight="27.0" prefWidth="854.0" promptText="Provenance" />
       <Label layoutX="126.0" layoutY="175.0" prefHeight="28.0" prefWidth="249.0" text="Normalise Ion Counts for SBM?" />
       <HBox layoutX="380.0" layoutY="180.0">
          <children>
@@ -56,7 +56,7 @@
       </HBox>
       <Label layoutX="20.0" layoutY="175.0" text="Parameters:" />
       <Label layoutX="70.0" layoutY="302.0" text="Audit:" />
-      <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="307.0" prefHeight="300.0" prefWidth="757.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
+      <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="307.0" prefHeight="326.0" prefWidth="854.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
       <CheckBox fx:id="calcMeanConcetrationCheckBox" layoutX="337.0" layoutY="246.0" mnemonicParsing="false" onAction="#calcMeanConcetrationCheckBoxAction" opacity="0.95" text="Use calculated Mean Concentration of Parent from concentration reference materials" />
       <Label layoutX="127.0" layoutY="241.0" prefHeight="28.0" prefWidth="173.0" text="Parent Concentration:" />
    </children>
