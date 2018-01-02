@@ -1,7 +1,7 @@
 /*
  * SquidSerializer.java
  *
- * Copyright 2017 CIRDLES.org
+ * Copyright 2017 James F. Bowring and CIRDLES.org.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except inputStream compliance with the License.

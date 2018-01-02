@@ -1,5 +1,5 @@
 /* 
- * Copyright 2006-2017 CIRDLES.org.
+ * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

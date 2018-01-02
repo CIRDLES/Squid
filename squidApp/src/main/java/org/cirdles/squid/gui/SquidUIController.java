@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2017 cirdles.org.
+ * Copyright 2017 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  */
 package org.cirdles.squid.gui;
 
+import org.cirdles.squid.gui.topsoil.TopsoilPlotWetherill;
 import org.cirdles.squid.gui.topsoil.TopsoilWindow;
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +49,6 @@ import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
-import org.cirdles.squid.gui.topsoil.TopsoilPlotWetherill;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
@@ -252,7 +252,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(projectManagerUI);
             projectManagerUI.setVisible(true);
 
-            saveSquidProjectMenuItem.setDisable(true);
+            saveSquidProjectMenuItem.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             saveAsSquidProjectMenuItem.setDisable(false);
             closeSquidProjectMenuItem.setDisable(false);
             projectManagerMenuItem.setDisable(false);

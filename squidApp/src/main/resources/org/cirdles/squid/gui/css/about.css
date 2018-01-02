@@ -1,5 +1,5 @@
 /*
-* Copyright 2006-2017 CIRDLES.org
+* Copyright 2006 James F. Bowring and CIRDLES.org
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -52,9 +52,9 @@
 }
 
 *{
-  -main-bg-color: #999999;
-  -main-text-color: #ffffff;
+  -main-bg-color: #C0D6DF;/*#999999;*/
+  -main-text-color: black;/*#ffffff;*/
   -main-border-color: #ffffff;
   -main-accent-color: #ffffff;
-  -main-link-color: #00ffff;
+  -main-link-color: blue;/*#00ffff;*/
 }

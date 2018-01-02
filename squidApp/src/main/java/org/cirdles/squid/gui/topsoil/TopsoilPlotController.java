@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui;
+package org.cirdles.squid.gui.topsoil;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -36,7 +36,7 @@ import org.cirdles.topsoil.plot.JavaScriptPlot;
  */
 public class TopsoilPlotController implements Initializable {
     
-    private static AbstractTopsoilPlot topsoilPlot;
+    public static AbstractTopsoilPlot topsoilPlot;
 
     /**
      * Set this field with an AbstractTopsoilPlot instance in advance of loading
