@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
-import java.util.TreeSet;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -51,6 +50,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
@@ -75,6 +77,9 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterM
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * FXML Controller class
@@ -242,29 +247,32 @@ public class ExpressionManagerController implements Initializable {
         tooltip.setText("RI = Ratios of Interest; SC = Summary; RM = Reference Materials; UN = Unknowns; SQ = Special Squid UPbTh");
         expressionListHeaderLabel.setTooltip(tooltip);
 
-        expressionsListView.setCellFactory(param -> new ListCell<Expression>() {
-            private ImageView imageView = new ImageView();
+        expressionsListView.setCellFactory(param -> {
+            ListCell<Expression> cell = new ListCell<Expression>() {
+                private ImageView imageView = new ImageView();
 
-            @Override
-            public void updateItem(Expression expression, boolean empty) {
-                super.updateItem(expression, empty);
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    if (expression.amHealthy()) {
-                        imageView.setImage(HEALTHY);
+                @Override
+                public void updateItem(Expression expression, boolean empty) {
+                    super.updateItem(expression, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
                     } else {
-                        imageView.setImage(UNHEALTHY);
+                        if (expression.amHealthy()) {
+                            imageView.setImage(HEALTHY);
+                        } else {
+                            imageView.setImage(UNHEALTHY);
+                        }
+
+                        imageView.setFitHeight(12);
+                        imageView.setFitWidth(12);
+                        setText(expression.buildSignatureString());
+                        setGraphic(imageView);
                     }
-
-                    imageView.setFitHeight(12);
-                    imageView.setFitWidth(12);
-                    setText(expression.buildSignatureString());
-                    setGraphic(imageView);
                 }
-            }
+            };
 
+            return cell;
         });
 
         expressionsListView.setContextMenu(createExpressionsListViewContextMenu());
