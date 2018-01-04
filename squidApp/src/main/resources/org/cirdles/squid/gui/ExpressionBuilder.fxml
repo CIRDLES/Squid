@@ -8,29 +8,35 @@
 
 <AnchorPane fx:id="expressionBuilderAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionBuilderController">
    <children>
-      <Accordion layoutX="14.0" layoutY="14.0" prefHeight="252.0" prefWidth="349.0" style="-fx-border-color: red;">
+      <Accordion layoutX="14.0" layoutY="14.0" prefHeight="250.0" prefWidth="350.0" style="-fx-border-color: red;">
         <panes>
-          <TitledPane animated="false" text="Built-In Expressions">
+          <TitledPane animated="false" prefWidth="350.0" text="Built-In Expressions">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="350.0">
                      <children>
-                        <ListView fx:id="expressionsListView" prefHeight="200.0" prefWidth="487.0" />
+                        <ListView fx:id="builtInExpressionsListView" prefHeight="165.0" prefWidth="350.0" />
                      </children>
                   </AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Custom Expressions">
+          <TitledPane animated="false" prefWidth="350.0" text="Custom Expressions">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
+                     <children>
+                        <ListView fx:id="customExpressionsListView" prefHeight="165.0" prefWidth="350.0" />
+                     </children></AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Ratios">
+          <TitledPane animated="false" prefWidth="350.0" text="Ratios">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
+                     <children>
+                        <ListView fx:id="ratioExpressionsListView" prefHeight="165.0" prefWidth="350.0" />
+                     </children></AnchorPane>
             </content>
           </TitledPane>
         </panes>
       </Accordion>
-      <TextFlow fx:id="expressionTextFlow" layoutX="16.0" layoutY="301.0" prefHeight="39.0" prefWidth="973.0" style="-fx-border-color: black;" />
+      <TextFlow fx:id="expressionTextFlow" layoutX="16.0" layoutY="301.0" prefHeight="39.0" prefWidth="973.0" style="-fx-border-color: black; -fx-line-spacing: 8px;" />
    </children>
 </AnchorPane>

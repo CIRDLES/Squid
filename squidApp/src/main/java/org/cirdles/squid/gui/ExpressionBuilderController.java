@@ -24,12 +24,11 @@ import java.util.SortedSet;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.ClipboardContent;
@@ -40,9 +39,17 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
+import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
+import javafx.scene.paint.Color;
+import javafx.stage.WindowEvent;
+import javafx.util.Callback;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
  * FXML Controller class
@@ -53,13 +60,18 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private AnchorPane expressionBuilderAnchorPane;
-    @FXML
-    private ListView<Expression> expressionsListView;
+
     @FXML
     private TextFlow expressionTextFlow;
 
     private final ObjectProperty<ListCell<Expression>> dragExpressionSource = new SimpleObjectProperty<>();
     private final ObjectProperty<ExpressionTextNode> dragTextSource = new SimpleObjectProperty<>();
+    @FXML
+    private ListView<Expression> builtInExpressionsListView;
+    @FXML
+    private ListView<Expression> customExpressionsListView;
+    @FXML
+    private ListView<Expression> ratioExpressionsListView;
 
     /**
      * Initializes the controller class.
@@ -67,74 +79,21 @@ public class ExpressionBuilderController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        initializeExpressionsListView();
-
+        initializeExpressionListViews();
+        initializeExpressionTextFlow();
     }
 
-    private void initializeExpressionsListView() {
-        expressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+    private void initializeExpressionListViews() {
+        builtInExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        customExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
 
-        expressionsListView.setCellFactory(param -> {
-            ListCell<Expression> cell = new ListCell<Expression>() {
-                @Override
-                public void updateItem(Expression expression, boolean empty) {
-                    super.updateItem(expression, empty);
-                    if (empty) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        setText(expression.getName());
-                    }
-                }
-            };
+        builtInExpressionsListView.setCellFactory(new expressionCellFactory());
+        customExpressionsListView.setCellFactory(new expressionCellFactory());
 
-            // https://stackoverflow.com/questions/25390888/dragging-and-dropping-list-view-items-between-different-javafx-windows
-            cell.setOnDragDetected(event -> {
-                if (!cell.isEmpty()) {
-                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
-                    ClipboardContent cc = new ClipboardContent();
-                    cc.putString(cell.getItem().getName());
-                    db.setContent(cc);
-                    dragExpressionSource.set(cell);
-                    System.out.println(cell.getItem().getName());
-                }
-            });
+        populateExpressionListViews();
+    }
 
-//            cell.setOnDragOver(event -> {
-//                Dragboard db = event.getDragboard();
-//                if (db.hasString()) {
-//                    event.acceptTransferModes(TransferMode.COPY);
-//                }
-//            });
-//
-//            //cell.setOnDragDone(event -> listView.getItems().remove(cell.getItem()));
-//            cell.setOnDragDropped(event -> {
-//                Dragboard db = event.getDragboard();
-//                if (db.hasString() && dragExpressionSource.get() != null) {
-//                    // in this example you could just do
-//                    // listView.getItems().add(db.getString());
-//                    // but more generally:
-//
-//                    ListCell<Expression> dragSourceCell = dragExpressionSource.get();
-//                    expressionTextFlow.getChildren().add(new Text(dragSourceCell.getItem().getName()));
-//                    event.setDropCompleted(true);
-//                    dragExpressionSource.set(null);
-//                } else {
-//                    event.setDropCompleted(false);
-//                }
-//            });
-            return cell;
-        });
-
-        expressionsListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<Expression>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends Expression> exp) {
-                ObservableList<Expression> selected = expressionsListView.getSelectionModel().getSelectedItems();
-            }
-        });
-
-        populateExpressionsListView();
-
+    private void initializeExpressionTextFlow() {
         expressionTextFlow.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -167,7 +126,41 @@ public class ExpressionBuilderController implements Initializable {
         });
     }
 
-    public class ExpressionTextNode extends Text {
+    private class expressionCellFactory implements Callback<ListView<Expression>, ListCell<Expression>> {
+
+        @Override
+        public ListCell<Expression> call(ListView<Expression> param) {
+            ListCell<Expression> cell = new ListCell<Expression>() {
+                @Override
+                public void updateItem(Expression expression, boolean empty) {
+                    super.updateItem(expression, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(expression.getName());
+                    }
+                }
+            };
+
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
+                    db.setDragView(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png", 32, 32, true, true));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(cell.getItem().getName());
+                    db.setContent(cc);
+                    dragExpressionSource.set(cell);
+                }
+            });
+
+            cell.setCursor(Cursor.CLOSED_HAND);
+            return cell;
+        }
+
+    }
+
+    private class ExpressionTextNode extends Text {
 
         /**
          * @return the ordinalIndex
@@ -185,14 +178,37 @@ public class ExpressionBuilderController implements Initializable {
 
         private String text;
         private double ordinalIndex;
+        private boolean popupShowing;
 
         public ExpressionTextNode(String text) {
             super(text);
             this.text = text;
-            setOnMouseClicked(new EventHandler<Event>() {
+            this.popupShowing = false;
+
+            setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
+            setCursor(Cursor.CLOSED_HAND);
+
+            setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
-                public void handle(Event event) {
-                    System.out.println("clicked " + text);
+                public void handle(MouseEvent event) {
+                    if (event.getButton() == MouseButton.SECONDARY && event.getEventType() == MouseEvent.MOUSE_CLICKED && !popupShowing) {
+                        createExpressionTextNodeContextMenu((ExpressionTextNode) event.getSource()).show((ExpressionTextNode) event.getSource(), event.getScreenX(), event.getScreenY());
+                        popupShowing = true;
+                    }
+                }
+            });
+
+            setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    setFill(Color.RED);
+                }
+            });
+
+            setOnMouseReleased(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    setFill(Color.BLACK);
                 }
             });
 
@@ -204,7 +220,6 @@ public class ExpressionBuilderController implements Initializable {
                     cc.putString(text);
                     db.setContent(cc);
                     dragTextSource.set((ExpressionTextNode) event.getSource());
-                    System.out.println("dragging " + text);
                 }
             });
 
@@ -214,7 +229,6 @@ public class ExpressionBuilderController implements Initializable {
                     if (event.getGestureSource() != (ExpressionTextNode) event.getSource()) {
                         event.acceptTransferModes(TransferMode.COPY);
                     }
-
                     event.consume();
                 }
             });
@@ -242,52 +256,94 @@ public class ExpressionBuilderController implements Initializable {
                         event.setDropCompleted(true);
                         dragTextSource.set(null);
                         success = true;
-
-                        // extract and sort
-                        List<ExpressionTextNode> children = new ArrayList<>();                       
-                        for (Node etn : expressionTextFlow.getChildren()) {
-                            children.add((ExpressionTextNode) etn);
-                        }
-                        // sort
-                        children.sort(new Comparator<Node>() {
-                            @Override
-                            public int compare(Node o1, Node o2) {
-                                int retVal = 0;
-                                if (o1 instanceof ExpressionTextNode && o2 instanceof ExpressionTextNode) {
-                                    retVal = Double.compare(((ExpressionTextNode) o1).getOrdinalIndex(), ((ExpressionTextNode) o2).getOrdinalIndex());
-                                }
-                                return retVal;
-                            }
-                        });
-                        
-                        double ordIndex = 0;
-                        for (ExpressionTextNode etn : children) {
-                            etn.setOrdinalIndex(ordIndex);
-                            ordIndex++;
-                        }
-
-                        expressionTextFlow.getChildren().clear();
-                        expressionTextFlow.getChildren().addAll(children);
+                        updateExpressionTextFlowChildren();
                     }
                     event.setDropCompleted(success);
-
                     event.consume();
                 }
             });
         }
-
     }
 
-    private void populateExpressionsListView() {
+    private void updateExpressionTextFlowChildren() {
+
+        // extract and sort
+        List<ExpressionTextNode> children = new ArrayList<>();
+        for (Node etn : expressionTextFlow.getChildren()) {
+            children.add((ExpressionTextNode) etn);
+        }
+        // sort
+        children.sort(new Comparator<Node>() {
+            @Override
+            public int compare(Node o1, Node o2) {
+                int retVal = 0;
+                if (o1 instanceof ExpressionTextNode && o2 instanceof ExpressionTextNode) {
+                    retVal = Double.compare(((ExpressionTextNode) o1).getOrdinalIndex(), ((ExpressionTextNode) o2).getOrdinalIndex());
+                }
+                return retVal;
+            }
+        });
+
+        // reset ordinals to integer values
+        double ordIndex = 0;
+        for (ExpressionTextNode etn : children) {
+            etn.setOrdinalIndex(ordIndex);
+            etn.setFill(Color.BLACK);
+            ordIndex++;
+        }
+
+        expressionTextFlow.getChildren().clear();
+        expressionTextFlow.getChildren().addAll(children);
+    }
+
+    private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem menuItem = new MenuItem("Remove expression.");
+        menuItem.setOnAction((evt) -> {
+            expressionTextFlow.getChildren().remove(etn);
+        });
+        contextMenu.getItems().add(menuItem);
+
+        menuItem = new MenuItem("Move left.");
+        menuItem.setOnAction((evt) -> {
+            etn.setOrdinalIndex(etn.getOrdinalIndex() - 1.5);
+            updateExpressionTextFlowChildren();
+        });
+        contextMenu.getItems().add(menuItem);
+
+        menuItem = new MenuItem("Move right.");
+        menuItem.setOnAction((evt) -> {
+            etn.setOrdinalIndex(etn.getOrdinalIndex() + 1.5);
+            updateExpressionTextFlowChildren();
+        });
+        contextMenu.getItems().add(menuItem);
+
+        contextMenu.setOnHiding(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                etn.popupShowing = false;
+            }
+        });
+
+        return contextMenu;
+    }
+
+    private void populateExpressionListViews() {
         SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
-        List<Expression> sortedExpressionsList = new ArrayList<>();
+
+        List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
+        List<Expression> sortedCustomExpressionsList = new ArrayList<>();
+
         for (Expression exp : namedExpressions) {
             if (exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy()) {
-                sortedExpressionsList.add(exp);
+                sortedBuiltInExpressionsList.add(exp);
+            } else if (!exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy()) {
+                sortedCustomExpressionsList.add(exp);
             }
         }
 
-        sortedExpressionsList.sort(
+        sortedBuiltInExpressionsList.sort(
                 new Comparator<Expression>() {
             @Override
             public int compare(Expression exp1, Expression exp2) {
@@ -298,9 +354,22 @@ public class ExpressionBuilderController implements Initializable {
         }
         );
 
-        ObservableList<Expression> items
-                = FXCollections.observableArrayList(sortedExpressionsList);
-        expressionsListView.setItems(items);
+        ObservableList<Expression> items = FXCollections.observableArrayList(sortedBuiltInExpressionsList);
+        builtInExpressionsListView.setItems(items);
+
+        sortedCustomExpressionsList.sort(
+                new Comparator<Expression>() {
+            @Override
+            public int compare(Expression exp1, Expression exp2) {
+                int retVal = 0;
+                retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
+                return retVal;
+            }
+        }
+        );
+
+        items = FXCollections.observableArrayList(sortedCustomExpressionsList);
+        customExpressionsListView.setItems(items);
     }
 
 }
