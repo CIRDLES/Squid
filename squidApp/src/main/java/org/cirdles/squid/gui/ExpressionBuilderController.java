@@ -36,7 +36,6 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -49,7 +48,15 @@ import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
+import java.util.Map;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.TitledPane;
+import org.cirdles.squid.tasks.expressions.functions.Function;
+import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
 
 /**
  * FXML Controller class
@@ -58,20 +65,35 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
  */
 public class ExpressionBuilderController implements Initializable {
 
-    @FXML
-    private AnchorPane expressionBuilderAnchorPane;
+    private final ObjectProperty<ListCell<Expression>> dragExpressionSource = new SimpleObjectProperty<>();
+    private final ObjectProperty<SquidRatiosModel> dragSquidRatioModelSource = new SimpleObjectProperty<>();
+    private final ObjectProperty<String> dragOperationOrFunctionSource = new SimpleObjectProperty<>();
+    private final ObjectProperty<ExpressionTextNode> dragTextSource = new SimpleObjectProperty<>();
+
+    private final String operationOrFunctionNameDelimeter = " : ";
 
     @FXML
     private TextFlow expressionTextFlow;
-
-    private final ObjectProperty<ListCell<Expression>> dragExpressionSource = new SimpleObjectProperty<>();
-    private final ObjectProperty<ExpressionTextNode> dragTextSource = new SimpleObjectProperty<>();
     @FXML
     private ListView<Expression> builtInExpressionsListView;
     @FXML
     private ListView<Expression> customExpressionsListView;
     @FXML
-    private ListView<Expression> ratioExpressionsListView;
+    private ListView<SquidRatiosModel> ratioExpressionsListView;
+    @FXML
+    private ListView<String> operationsListView;
+    @FXML
+    private ListView<String> mathFunctionsListView;
+    @FXML
+    private ListView<String> squidFunctionsListView;
+    @FXML
+    private TitledPane builtInExpressionsTitledPane;
+    @FXML
+    private Accordion expressionsAccordian;
+    @FXML
+    private ListView<?> constantsListView;
+    @FXML
+    private ListView<?> referenceMaterialsListView;
 
     /**
      * Initializes the controller class.
@@ -80,17 +102,49 @@ public class ExpressionBuilderController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         initializeExpressionListViews();
+        initializeRatiosListView();
+        initializeOperationOrFunctionListViews();
+
         initializeExpressionTextFlow();
+
+        builtInExpressionsTitledPane.setExpanded(true);
+        expressionsAccordian.setExpandedPane(builtInExpressionsTitledPane);
     }
 
     private void initializeExpressionListViews() {
         builtInExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        customExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-
+        builtInExpressionsListView.setCursor(Cursor.CLOSED_HAND);
         builtInExpressionsListView.setCellFactory(new expressionCellFactory());
+
+        customExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        customExpressionsListView.setCursor(Cursor.CLOSED_HAND);
         customExpressionsListView.setCellFactory(new expressionCellFactory());
 
         populateExpressionListViews();
+    }
+
+    private void initializeRatiosListView() {
+        ratioExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        ratioExpressionsListView.setCursor(Cursor.CLOSED_HAND);
+        ratioExpressionsListView.setCellFactory(new expressionTreeCellFactory());
+
+        populateRatiosListView();
+    }
+
+    private void initializeOperationOrFunctionListViews() {
+        operationsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        operationsListView.setCursor(Cursor.CLOSED_HAND);
+        operationsListView.setCellFactory(new operationOrFunctionCellFactory());
+
+        mathFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        mathFunctionsListView.setCursor(Cursor.CLOSED_HAND);
+        mathFunctionsListView.setCellFactory(new operationOrFunctionCellFactory());
+
+        squidFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        squidFunctionsListView.setCursor(Cursor.CLOSED_HAND);
+        squidFunctionsListView.setCellFactory(new operationOrFunctionCellFactory());
+
+        populateOperationOrFunctionListViews();
     }
 
     private void initializeExpressionTextFlow() {
@@ -112,7 +166,7 @@ public class ExpressionBuilderController implements Initializable {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if (db.hasString()) {
-                    ExpressionTextNode expressionTextNode = new ExpressionTextNode(" [\"" + event.getDragboard().getString() + "\"] ");
+                    ExpressionTextNode expressionTextNode = new ExpressionTextNode(db.getString());
                     expressionTextNode.setOrdinalIndex(expressionTextFlow.getChildren().size());
                     expressionTextFlow.getChildren().add(expressionTextNode);
                     event.setDropCompleted(true);
@@ -146,11 +200,79 @@ public class ExpressionBuilderController implements Initializable {
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
                     Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
-                    db.setDragView(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png", 32, 32, true, true));
+                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
                     ClipboardContent cc = new ClipboardContent();
-                    cc.putString(cell.getItem().getName());
+                    cc.putString(" [\"" + cell.getItem().getName() + "\"] ");
                     db.setContent(cc);
                     dragExpressionSource.set(cell);
+                }
+            });
+
+            cell.setCursor(Cursor.CLOSED_HAND);
+            return cell;
+        }
+
+    }
+
+    private class expressionTreeCellFactory implements Callback<ListView<SquidRatiosModel>, ListCell<SquidRatiosModel>> {
+
+        @Override
+        public ListCell<SquidRatiosModel> call(ListView<SquidRatiosModel> param) {
+            ListCell<SquidRatiosModel> cell = new ListCell<SquidRatiosModel>() {
+                @Override
+                public void updateItem(SquidRatiosModel expression, boolean empty) {
+                    super.updateItem(expression, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(expression.getRatioName());
+                    }
+                }
+            };
+
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
+                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(" [\"" + cell.getItem().getRatioName() + "\"] ");
+                    db.setContent(cc);
+                    dragSquidRatioModelSource.set(cell.getItem());
+                }
+            });
+
+            cell.setCursor(Cursor.CLOSED_HAND);
+            return cell;
+        }
+
+    }
+
+    private class operationOrFunctionCellFactory implements Callback<ListView<String>, ListCell<String>> {
+
+        @Override
+        public ListCell<String> call(ListView<String> param) {
+            ListCell<String> cell = new ListCell<String>() {
+                @Override
+                public void updateItem(String expression, boolean empty) {
+                    super.updateItem(expression, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(expression);
+                    }
+                }
+            };
+
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
+                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(" " + cell.getItem().split(operationOrFunctionNameDelimeter)[0] + " ");
+                    db.setContent(cc);
+                    dragOperationOrFunctionSource.set(cell.getItem());
                 }
             });
 
@@ -239,7 +361,7 @@ public class ExpressionBuilderController implements Initializable {
                     boolean success = false;
                     if (db.hasString() && (dragExpressionSource.get() != null)) {
                         // we have the case of dropping an expression into the list
-                        ExpressionTextNode expressionTextNode = new ExpressionTextNode(" [\"" + db.getString() + "\"] ");
+                        ExpressionTextNode expressionTextNode = new ExpressionTextNode(db.getString());
                         // inserts after then swapped and reset below
                         expressionTextNode.setOrdinalIndex(((ExpressionTextNode) event.getSource()).getOrdinalIndex() + 0.5);
                         expressionTextFlow.getChildren().add(expressionTextNode);
@@ -370,6 +492,33 @@ public class ExpressionBuilderController implements Initializable {
 
         items = FXCollections.observableArrayList(sortedCustomExpressionsList);
         customExpressionsListView.setItems(items);
+    }
+
+    private void populateRatiosListView() {
+        List<SquidRatiosModel> ratiosList = squidProject.getTask().getSquidRatiosModelList();
+
+        ObservableList<SquidRatiosModel> items = FXCollections.observableArrayList(ratiosList);
+        ratioExpressionsListView.setItems(items);
+    }
+
+    private void populateOperationOrFunctionListViews() {
+        List<String> operationStrings = new ArrayList<>();
+        for (Map.Entry<String, String> op : OPERATIONS_MAP.entrySet()) {
+            operationStrings.add(op.getKey() + operationOrFunctionNameDelimeter + op.getValue());
+        }
+
+        ObservableList<String> items = FXCollections.observableArrayList(operationStrings);
+        operationsListView.setItems(items);
+
+        List<String> functionStrings = new ArrayList<>();
+        for (Map.Entry<String, String> op : FUNCTIONS_MAP.entrySet()) {
+            int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
+            String args = "ARGS(" + argumentCount + ")";
+            functionStrings.add(op.getKey() + operationOrFunctionNameDelimeter + args);
+        }
+
+        items = FXCollections.observableArrayList(functionStrings);
+        mathFunctionsListView.setItems(items);
     }
 
 }

@@ -37,6 +37,7 @@ public final class SquidUI extends Application {
     public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';-fx-fixed-cell-size: 20";
     public static final String PEEK_LIST_CSS_STYLE_SPECS = "-fx-font-size: 11px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
     public static final String COLORPICKER_CSS_STYLE_SPECS = "-fx-font-size: 8px; -fx-font-family: 'Courier New';";
+    public static final String SQUID_LOGO_SANS_TEXT_URL = "org/cirdles/squid/gui/images/SquidLogoSansText.png";
     
     public static final int PIXEL_OFFSET_FOR_MENU = 40;
     public static Window primaryStageWindow;
@@ -52,7 +53,7 @@ public final class SquidUI extends Application {
         Parent root = new AnchorPane();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image("org/cirdles/squid/gui/images/SquidLogoSansText.png"));
+        primaryStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
         primaryStage.setTitle("Squid 3.0 pre-release");
 
         // this produces non-null window after .show()

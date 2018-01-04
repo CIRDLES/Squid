@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;

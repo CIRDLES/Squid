@@ -6,11 +6,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane fx:id="expressionBuilderAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionBuilderController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionBuilderController">
    <children>
-      <Accordion layoutX="14.0" layoutY="14.0" prefHeight="250.0" prefWidth="350.0" style="-fx-border-color: red;">
+      <TextFlow fx:id="expressionTextFlow" layoutX="16.0" layoutY="411.0" prefHeight="39.0" prefWidth="973.0" style="-fx-border-color: black; -fx-line-spacing: 8px;" />
+      <Accordion fx:id="expressionsAccordian" layoutX="14.0" layoutY="14.0" prefHeight="383.0" prefWidth="350.0" style="-fx-border-color: red;">
         <panes>
-          <TitledPane animated="false" prefWidth="350.0" text="Built-In Expressions">
+          <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" prefWidth="350.0" text="Built-In Expressions">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="350.0">
                      <children>
@@ -19,7 +20,7 @@
                   </AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" prefWidth="350.0" text="Custom Expressions">
+          <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Custom Expressions">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
                      <children>
@@ -27,7 +28,7 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" prefWidth="350.0" text="Ratios">
+          <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Ratios">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
                      <children>
@@ -35,8 +36,52 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
+            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Operations">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
+                     <children>
+                        <ListView fx:id="operationsListView" prefHeight="165.0" prefWidth="350.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Math Functions">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
+                     <children>
+                        <ListView fx:id="mathFunctionsListView" prefHeight="165.0" prefWidth="350.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Squid Functions">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
+                     <children>
+                        <ListView fx:id="squidFunctionsListView" prefHeight="165.0" prefWidth="350.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Constants">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
+                     <children>
+                        <ListView fx:id="constantsListView" prefHeight="165.0" prefWidth="350.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Reference Materials">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
+                     <children>
+                        <ListView fx:id="referenceMaterialsListView" prefHeight="165.0" prefWidth="350.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
         </panes>
       </Accordion>
-      <TextFlow fx:id="expressionTextFlow" layoutX="16.0" layoutY="301.0" prefHeight="39.0" prefWidth="973.0" style="-fx-border-color: black; -fx-line-spacing: 8px;" />
    </children>
 </AnchorPane>
