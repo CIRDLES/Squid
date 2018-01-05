@@ -54,7 +54,10 @@ import org.cirdles.squid.shrimp.SquidRatiosModel;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import java.util.Map;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
+import static org.cirdles.squid.gui.SquidUI.OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
 
@@ -70,7 +73,8 @@ public class ExpressionBuilderController implements Initializable {
     private final ObjectProperty<String> dragOperationOrFunctionSource = new SimpleObjectProperty<>();
     private final ObjectProperty<ExpressionTextNode> dragTextSource = new SimpleObjectProperty<>();
 
-    private final String operationOrFunctionNameDelimeter = " : ";
+    private final String operationFlagDelimeter = " : ";
+    private final String placeholder = " ";// \u2588 ";
 
     @FXML
     private TextFlow expressionTextFlow;
@@ -94,6 +98,12 @@ public class ExpressionBuilderController implements Initializable {
     private ListView<?> constantsListView;
     @FXML
     private ListView<?> referenceMaterialsListView;
+    @FXML
+    private RadioButton insertLeftRB;
+    @FXML
+    private ToggleGroup InsertReplaceGroup;
+    @FXML
+    private RadioButton replaceRB;
 
     /**
      * Initializes the controller class.
@@ -166,18 +176,51 @@ public class ExpressionBuilderController implements Initializable {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if (db.hasString()) {
-                    ExpressionTextNode expressionTextNode = new ExpressionTextNode(db.getString());
-                    expressionTextNode.setOrdinalIndex(expressionTextFlow.getChildren().size());
-                    expressionTextFlow.getChildren().add(expressionTextNode);
+                    String content = placeholder + db.getString() + placeholder;
+                    if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
+                        // case of function, make a series of objects
+                        insertExpressionIntoExpressionTextFlow(content);
+                    } else {
+                        ExpressionTextNode expressionTextNode = new ExpressionTextNode(content);
+                        if (content.contains(operationFlagDelimeter)) {
+                            // case of operator, strip out description
+                            //content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
+                            content = db.getString().split(operationFlagDelimeter)[0];
+                            expressionTextNode = new OperationTextNode(content);
+                        }
+                        expressionTextNode.setOrdinalIndex(expressionTextFlow.getChildren().size());
+                        expressionTextFlow.getChildren().add(expressionTextNode);
+                    }
+
                     event.setDropCompleted(true);
-                    dragExpressionSource.set(null);
+
                     success = true;
                 }
                 event.setDropCompleted(success);
 
                 event.consume();
+                dragExpressionSource.set(null);
+                dragOperationOrFunctionSource.set(null);
+                dragSquidRatioModelSource.set(null);
+
+                updateExpressionTextFlowChildren();
             }
         });
+    }
+
+    private void insertExpressionIntoExpressionTextFlow(String content) {
+        String[] funcCall = content.split(" ");
+        for (int i = 0; i < funcCall.length; i++) {
+            if (funcCall[i].compareTo("") != 0) {
+                if ((funcCall[i].compareTo("\u2588") == 0) || (funcCall[i].compareTo(" \u2588") == 0) || (funcCall[i].compareTo("\u2588 ") == 0)) {
+                    funcCall[i] = placeholder;
+                }
+                funcCall[i] = funcCall[i].replaceAll("[(]", " ( ").replaceAll("[)]", " )").replaceAll(",", " , ");
+                ExpressionTextNode expressionTextNode = new ExpressionTextNode(funcCall[i]);
+                expressionTextNode.setOrdinalIndex(expressionTextFlow.getChildren().size());
+                expressionTextFlow.getChildren().add(expressionTextNode);
+            }
+        }
     }
 
     private class expressionCellFactory implements Callback<ListView<Expression>, ListCell<Expression>> {
@@ -202,7 +245,7 @@ public class ExpressionBuilderController implements Initializable {
                     Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
                     db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
                     ClipboardContent cc = new ClipboardContent();
-                    cc.putString(" [\"" + cell.getItem().getName() + "\"] ");
+                    cc.putString("[\"" + cell.getItem().getName() + "\"]");
                     db.setContent(cc);
                     dragExpressionSource.set(cell);
                 }
@@ -236,7 +279,7 @@ public class ExpressionBuilderController implements Initializable {
                     Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
                     db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
                     ClipboardContent cc = new ClipboardContent();
-                    cc.putString(" [\"" + cell.getItem().getRatioName() + "\"] ");
+                    cc.putString("[\"" + cell.getItem().getRatioName() + "\"]");
                     db.setContent(cc);
                     dragSquidRatioModelSource.set(cell.getItem());
                 }
@@ -270,7 +313,7 @@ public class ExpressionBuilderController implements Initializable {
                     Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
                     db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
                     ClipboardContent cc = new ClipboardContent();
-                    cc.putString(" " + cell.getItem().split(operationOrFunctionNameDelimeter)[0] + " ");
+                    cc.putString(cell.getItem());
                     db.setContent(cc);
                     dragOperationOrFunctionSource.set(cell.getItem());
                 }
@@ -278,6 +321,14 @@ public class ExpressionBuilderController implements Initializable {
 
             cell.setCursor(Cursor.CLOSED_HAND);
             return cell;
+        }
+    }
+
+    private class OperationTextNode extends ExpressionTextNode {
+
+        public OperationTextNode(String text) {
+            super(text);
+            setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
         }
 
     }
@@ -359,29 +410,37 @@ public class ExpressionBuilderController implements Initializable {
                 public void handle(DragEvent event) {
                     Dragboard db = event.getDragboard();
                     boolean success = false;
-                    if (db.hasString() && (dragExpressionSource.get() != null)) {
-                        // we have the case of dropping an expression into the list
+                    if (db.hasString()
+                            && ((dragExpressionSource.get() != null) || (dragOperationOrFunctionSource.get() != null) || (dragSquidRatioModelSource.get() != null))) {
+                        // we have the case of dropping a SOURCE INTO the list
                         ExpressionTextNode expressionTextNode = new ExpressionTextNode(db.getString());
-                        // inserts after then swapped and reset below
-                        expressionTextNode.setOrdinalIndex(((ExpressionTextNode) event.getSource()).getOrdinalIndex() + 0.5);
+                        if (dragOperationOrFunctionSource.get() != null) {
+                            expressionTextNode = new OperationTextNode(db.getString().split(operationFlagDelimeter)[0]);
+                        }
+                        // setup for logic below
                         expressionTextFlow.getChildren().add(expressionTextNode);
-                        dragExpressionSource.set(null);
                         dragTextSource.set(expressionTextNode);
                     }
+                    // within the list
                     if (db.hasString() && (dragTextSource.get() instanceof ExpressionTextNode)) {
-                        // swap locations
-                        double ordinalIndexOfSource = dragTextSource.get().getOrdinalIndex();
-                        double ordinalIndexOfTarget = ((ExpressionTextNode) event.getSource()).getOrdinalIndex();
-                        dragTextSource.get().setOrdinalIndex(ordinalIndexOfTarget);
-                        ((ExpressionTextNode) event.getSource()).setOrdinalIndex(ordinalIndexOfSource);
+                        // insert left
+                        dragTextSource.get().setOrdinalIndex(((ExpressionTextNode) event.getSource()).getOrdinalIndex() - 0.5);
+                        if (replaceRB.isSelected()) {
+                            // replace
+                            expressionTextFlow.getChildren().remove((ExpressionTextNode) event.getSource());
+                        }
 
                         event.setDropCompleted(true);
-                        dragTextSource.set(null);
+
                         success = true;
-                        updateExpressionTextFlowChildren();
+
                     }
                     event.setDropCompleted(success);
                     event.consume();
+                    dragExpressionSource.set(null);
+                    dragOperationOrFunctionSource.set(null);
+                    dragSquidRatioModelSource.set(null);
+                    updateExpressionTextFlowChildren();
                 }
             });
         }
@@ -391,8 +450,14 @@ public class ExpressionBuilderController implements Initializable {
 
         // extract and sort
         List<ExpressionTextNode> children = new ArrayList<>();
+        boolean fillerExistsFlag = false;
+        boolean fillerExistsFlagSaved = false;
         for (Node etn : expressionTextFlow.getChildren()) {
-            children.add((ExpressionTextNode) etn);
+            fillerExistsFlag = ((ExpressionTextNode) etn).getText().compareTo(placeholder) == 0;
+            if (!(fillerExistsFlag && fillerExistsFlagSaved)) {
+                children.add((ExpressionTextNode) etn);
+            }
+            fillerExistsFlagSaved = fillerExistsFlag;
         }
         // sort
         children.sort(new Comparator<Node>() {
@@ -424,6 +489,7 @@ public class ExpressionBuilderController implements Initializable {
         MenuItem menuItem = new MenuItem("Remove expression.");
         menuItem.setOnAction((evt) -> {
             expressionTextFlow.getChildren().remove(etn);
+            updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
 
@@ -504,17 +570,24 @@ public class ExpressionBuilderController implements Initializable {
     private void populateOperationOrFunctionListViews() {
         List<String> operationStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : OPERATIONS_MAP.entrySet()) {
-            operationStrings.add(op.getKey() + operationOrFunctionNameDelimeter + op.getValue());
+            operationStrings.add(op.getKey() + operationFlagDelimeter + op.getValue());
         }
 
         ObservableList<String> items = FXCollections.observableArrayList(operationStrings);
         operationsListView.setItems(items);
 
+        // Math Functions
         List<String> functionStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : FUNCTIONS_MAP.entrySet()) {
             int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
-            String args = "ARGS(" + argumentCount + ")";
-            functionStrings.add(op.getKey() + operationOrFunctionNameDelimeter + args);
+            // space-delimited
+            String args = op.getKey() + " ( ";
+            for (int i = 0; i < argumentCount; i++) {
+                args += "ARG-" + i + (i < (argumentCount - 1) ? " , " : "");
+            }
+            args += " )";
+
+            functionStrings.add(args);
         }
 
         items = FXCollections.observableArrayList(functionStrings);

@@ -2,7 +2,9 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.TextFlow?>
 
@@ -83,5 +85,11 @@
             </TitledPane>
         </panes>
       </Accordion>
+      <RadioButton fx:id="insertLeftRB" layoutX="44.0" layoutY="472.0" mnemonicParsing="false" selected="true" text="Insert left">
+         <toggleGroup>
+            <ToggleGroup fx:id="InsertReplaceGroup" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="replaceRB" layoutX="148.0" layoutY="472.0" mnemonicParsing="false" text="Replace" toggleGroup="$InsertReplaceGroup" />
    </children>
 </AnchorPane>
