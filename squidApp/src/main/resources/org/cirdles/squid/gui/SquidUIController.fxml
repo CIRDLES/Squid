@@ -72,7 +72,7 @@
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageExpressionsMenuItemAction" text="Manage Expressions" />
-                  <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Expression Builder" />
+                  <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Expression Builder - BETA" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
                   <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />

@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
 import javafx.beans.property.ObjectProperty;
@@ -53,8 +54,10 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import java.util.Map;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import static org.cirdles.squid.gui.SquidUI.OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS;
@@ -79,6 +82,8 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private TextFlow expressionTextFlow;
     @FXML
+    private ListView<Expression> nuSwitchedExpressionsListView;
+    @FXML
     private ListView<Expression> builtInExpressionsListView;
     @FXML
     private ListView<Expression> customExpressionsListView;
@@ -99,11 +104,11 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private ListView<?> referenceMaterialsListView;
     @FXML
-    private RadioButton insertLeftRB;
-    @FXML
     private ToggleGroup InsertReplaceGroup;
     @FXML
     private RadioButton replaceRB;
+    @FXML
+    private TextArea expressionAuditTextArea;
 
     /**
      * Initializes the controller class.
@@ -122,6 +127,10 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void initializeExpressionListViews() {
+        nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        nuSwitchedExpressionsListView.setCursor(Cursor.CLOSED_HAND);
+        nuSwitchedExpressionsListView.setCellFactory(new expressionCellFactory());
+
         builtInExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         builtInExpressionsListView.setCursor(Cursor.CLOSED_HAND);
         builtInExpressionsListView.setCellFactory(new expressionCellFactory());
@@ -179,7 +188,7 @@ public class ExpressionBuilderController implements Initializable {
                     String content = placeholder + db.getString() + placeholder;
                     if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
                         // case of function, make a series of objects
-                        insertExpressionIntoExpressionTextFlow(content);
+                        insertExpressionIntoExpressionTextFlow(content, expressionTextFlow.getChildren().size());
                     } else {
                         ExpressionTextNode expressionTextNode = new ExpressionTextNode(content);
                         if (content.contains(operationFlagDelimeter)) {
@@ -208,19 +217,26 @@ public class ExpressionBuilderController implements Initializable {
         });
     }
 
-    private void insertExpressionIntoExpressionTextFlow(String content) {
+    private void insertExpressionIntoExpressionTextFlow(String content, double ordinalOrder) {
         String[] funcCall = content.split(" ");
         for (int i = 0; i < funcCall.length; i++) {
             if (funcCall[i].compareTo("") != 0) {
-                if ((funcCall[i].compareTo("\u2588") == 0) || (funcCall[i].compareTo(" \u2588") == 0) || (funcCall[i].compareTo("\u2588 ") == 0)) {
-                    funcCall[i] = placeholder;
-                }
+//                if ((funcCall[i].compareTo("\u2588") == 0) || (funcCall[i].compareTo(" \u2588") == 0) || (funcCall[i].compareTo("\u2588 ") == 0)) {
+//                    funcCall[i] = placeholder;
+//                }
                 funcCall[i] = funcCall[i].replaceAll("[(]", " ( ").replaceAll("[)]", " )").replaceAll(",", " , ");
                 ExpressionTextNode expressionTextNode = new ExpressionTextNode(funcCall[i]);
-                expressionTextNode.setOrdinalIndex(expressionTextFlow.getChildren().size());
+                // max 8 terms
+                expressionTextNode.setOrdinalIndex(ordinalOrder - (9 - i) * 0.1);
                 expressionTextFlow.getChildren().add(expressionTextNode);
             }
         }
+    }
+
+    @FXML
+    private void clearExpressionAction(ActionEvent event) {
+        expressionTextFlow.getChildren().clear();
+        updateExpressionTextFlowChildren();
     }
 
     private class expressionCellFactory implements Callback<ListView<Expression>, ListCell<Expression>> {
@@ -413,13 +429,23 @@ public class ExpressionBuilderController implements Initializable {
                     if (db.hasString()
                             && ((dragExpressionSource.get() != null) || (dragOperationOrFunctionSource.get() != null) || (dragSquidRatioModelSource.get() != null))) {
                         // we have the case of dropping a SOURCE INTO the list
-                        ExpressionTextNode expressionTextNode = new ExpressionTextNode(db.getString());
-                        if (dragOperationOrFunctionSource.get() != null) {
-                            expressionTextNode = new OperationTextNode(db.getString().split(operationFlagDelimeter)[0]);
+                        String content = placeholder + db.getString() + placeholder;
+                        if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
+                            // case of function, make and insert a series of objects - dragTextSource remains empty to avoid next logic
+                            insertExpressionIntoExpressionTextFlow(content, ((ExpressionTextNode) event.getSource()).getOrdinalIndex());
+                            if (replaceRB.isSelected()) {
+                                // replace
+                                expressionTextFlow.getChildren().remove((ExpressionTextNode) event.getSource());
+                            }
+                        } else {
+                            ExpressionTextNode expressionTextNode = new ExpressionTextNode(db.getString());
+                            if (dragOperationOrFunctionSource.get() != null) {
+                                expressionTextNode = new OperationTextNode(db.getString().split(operationFlagDelimeter)[0]);
+                            }
+                            // setup for logic below
+                            expressionTextFlow.getChildren().add(expressionTextNode);
+                            dragTextSource.set(expressionTextNode);
                         }
-                        // setup for logic below
-                        expressionTextFlow.getChildren().add(expressionTextNode);
-                        dragTextSource.set(expressionTextNode);
                     }
                     // within the list
                     if (db.hasString() && (dragTextSource.get() instanceof ExpressionTextNode)) {
@@ -481,6 +507,26 @@ public class ExpressionBuilderController implements Initializable {
 
         expressionTextFlow.getChildren().clear();
         expressionTextFlow.getChildren().addAll(children);
+
+        // make and audit expression
+        StringBuilder sb = new StringBuilder();
+        for (Node node : expressionTextFlow.getChildren()) {
+            if (node instanceof Text) {
+                sb.append(((Text) node).getText());
+            }
+        }
+        String fullText = sb.toString();
+
+        if (fullText.trim().length() > 0) {
+            Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
+                    "Editing Expression",
+                    fullText.trim().replace("\n", ""),
+                    false);
+
+            expressionAuditTextArea.setText(exp.produceExpressionTreeAudit());
+        } else {
+            expressionAuditTextArea.setText("");
+        }
     }
 
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {
@@ -520,16 +566,33 @@ public class ExpressionBuilderController implements Initializable {
     private void populateExpressionListViews() {
         SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
 
+        List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
         List<Expression> sortedCustomExpressionsList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
-            if (exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy()) {
+            if (exp.amHealthy() && exp.isSquidSwitchNU()) {
+                sortedNUSwitchedExpressionsList.add(exp);
+            } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU()) {
                 sortedBuiltInExpressionsList.add(exp);
-            } else if (!exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy()) {
+            } else if (!exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU()) {
                 sortedCustomExpressionsList.add(exp);
             }
         }
+
+        sortedNUSwitchedExpressionsList.sort(
+                new Comparator<Expression>() {
+            @Override
+            public int compare(Expression exp1, Expression exp2) {
+                int retVal = 0;
+                retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
+                return retVal;
+            }
+        }
+        );
+
+        ObservableList<Expression> items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
+        nuSwitchedExpressionsListView.setItems(items);
 
         sortedBuiltInExpressionsList.sort(
                 new Comparator<Expression>() {
@@ -542,7 +605,7 @@ public class ExpressionBuilderController implements Initializable {
         }
         );
 
-        ObservableList<Expression> items = FXCollections.observableArrayList(sortedBuiltInExpressionsList);
+        items = FXCollections.observableArrayList(sortedBuiltInExpressionsList);
         builtInExpressionsListView.setItems(items);
 
         sortedCustomExpressionsList.sort(
@@ -570,7 +633,12 @@ public class ExpressionBuilderController implements Initializable {
     private void populateOperationOrFunctionListViews() {
         List<String> operationStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : OPERATIONS_MAP.entrySet()) {
-            operationStrings.add(op.getKey() + operationFlagDelimeter + op.getValue());
+            // special case to make fenced expression operation be treated like a function
+            if (op.getKey().startsWith("(")) {
+                operationStrings.add(op.getKey());
+            } else {
+                operationStrings.add(op.getKey() + operationFlagDelimeter + op.getValue());
+            }
         }
 
         ObservableList<String> items = FXCollections.observableArrayList(operationStrings);
@@ -581,7 +649,7 @@ public class ExpressionBuilderController implements Initializable {
         for (Map.Entry<String, String> op : FUNCTIONS_MAP.entrySet()) {
             int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
             // space-delimited
-            String args = op.getKey() + " ( ";
+            String args = op.getKey().toUpperCase(Locale.US) + " ( ";
             for (int i = 0; i < argumentCount; i++) {
                 args += "ARG-" + i + (i < (argumentCount - 1) ? " , " : "");
             }

@@ -32,7 +32,7 @@ public class Pexp extends Operation {
      *
      */
     public Pexp() {
-        name = "exp";
+        name = "fenced expression";
         argumentCount = 1;
         precedence = 4;//todo: rethink
         rowCount = 1;
