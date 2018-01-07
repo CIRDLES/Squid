@@ -621,14 +621,14 @@ public class ExpressionBuilderController implements Initializable {
 
         menuItem = new MenuItem("Move left.");
         menuItem.setOnAction((evt) -> {
-            etn.setOrdinalIndex(etn.getOrdinalIndex() - 1.5);
+            etn.setOrdinalIndex(etn.getOrdinalIndex() - 0.5);
             updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
 
         menuItem = new MenuItem("Move right.");
         menuItem.setOnAction((evt) -> {
-            etn.setOrdinalIndex(etn.getOrdinalIndex() + 1.5);
+            etn.setOrdinalIndex(etn.getOrdinalIndex() + 0.5);
             updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
@@ -636,9 +636,9 @@ public class ExpressionBuilderController implements Initializable {
         menuItem = new MenuItem("Wrap in parentheses.");
         menuItem.setOnAction((evt) -> {
             ExpressionTextNode leftP = new ExpressionTextNode(" ( ");
-            leftP.setOrdinalIndex(etn.getOrdinalIndex() - 1.5);
+            leftP.setOrdinalIndex(etn.getOrdinalIndex() - 0.5);
             ExpressionTextNode rightP = new ExpressionTextNode(" ) ");
-            rightP.setOrdinalIndex(etn.getOrdinalIndex() + 1.5);
+            rightP.setOrdinalIndex(etn.getOrdinalIndex() + 0.5);
             expressionTextFlow.getChildren().addAll(leftP, rightP);
             updateExpressionTextFlowChildren();
         });
