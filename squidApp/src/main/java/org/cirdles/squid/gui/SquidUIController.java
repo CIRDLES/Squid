@@ -561,7 +561,7 @@ public class SquidUIController implements Initializable {
     private void launchExpressionBuilder() {
 
         try {
-            expressionBuilderUI = FXMLLoader.load(getClass().getResource("ExpressionBuilder.fxml"));
+            expressionBuilderUI = FXMLLoader.load(getClass().getResource("expressions/ExpressionBuilder.fxml"));
             expressionBuilderUI.setId("ExpressionBuilder");
             VBox.setVgrow(expressionBuilderUI, Priority.ALWAYS);
             HBox.setHgrow(expressionBuilderUI, Priority.ALWAYS);
@@ -577,7 +577,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(expressionManagerUI);
 
         try {
-            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
+            expressionManagerUI = FXMLLoader.load(getClass().getResource("expressions/ExpressionManager.fxml"));
             expressionManagerUI.setId("ExpressionManager");
             VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
             HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);

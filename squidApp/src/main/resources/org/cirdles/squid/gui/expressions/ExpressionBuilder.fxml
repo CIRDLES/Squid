@@ -7,10 +7,11 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ExpressionBuilderController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1000.0" style="-fx-background-color: white;" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <children>
       <TextFlow fx:id="expressionTextFlow" layoutX="15.0" layoutY="451.0" prefHeight="39.0" prefWidth="976.0" style="-fx-border-color: black; -fx-line-spacing: 8px;" />
       <Accordion fx:id="expressionsAccordian" layoutX="15.0" layoutY="15.0" prefHeight="411.0" prefWidth="350.0" style="-fx-border-color: red;">
@@ -76,7 +77,7 @@
                   </AnchorPane>
                </content>
             </TitledPane>
-            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Constants">
+            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Constants and Numbers">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
                      <children>
@@ -102,7 +103,13 @@
          </toggleGroup>
       </RadioButton>
       <RadioButton fx:id="replaceRB" layoutX="148.0" layoutY="492.0" mnemonicParsing="false" text="Replace" toggleGroup="$InsertReplaceGroup" />
-      <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="365.0" layoutY="501.0" prefHeight="131.0" prefWidth="627.0" style="-fx-font-size: 12;" styleClass="label" text="Audit of parsing and expression building." wrapText="true" />
-      <Button layoutX="44.0" layoutY="520.0" mnemonicParsing="false" onAction="#clearExpressionAction" prefHeight="27.0" prefWidth="175.0" text="Clear Expression" />
+      <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="374.0" layoutY="498.0" prefHeight="140.0" prefWidth="618.0" style="-fx-font-size: 12;" styleClass="label" text="Audit of parsing and expression building." wrapText="true" />
+      <ToolBar layoutX="1.0" layoutY="595.0" prefHeight="43.0" prefWidth="372.0">
+        <items>
+            <Button mnemonicParsing="false" onAction="#undoButtonAction" prefHeight="31.0" prefWidth="90.0" text="Undo" />
+            <Button mnemonicParsing="false" onAction="#clearExpressionAction" prefHeight="31.0" prefWidth="90.0" text="Clear" />
+            <Button mnemonicParsing="false" onAction="#copyButtonAction" prefHeight="31.0" prefWidth="90.0" text="Copy" />
+        </items>
+      </ToolBar>
    </children>
 </AnchorPane>

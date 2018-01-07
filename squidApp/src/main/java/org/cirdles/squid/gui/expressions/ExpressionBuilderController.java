@@ -13,56 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui;
+package org.cirdles.squid.gui.expressions;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import org.cirdles.squid.tasks.expressions.Expression;
-import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
-import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import org.cirdles.squid.gui.SquidUI;
+import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
+import static org.cirdles.squid.gui.SquidUI.OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
-import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
-import java.util.Map;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleGroup;
-import static org.cirdles.squid.gui.SquidUI.OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS;
+import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
+import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 
 /**
  * FXML Controller class
@@ -74,10 +81,14 @@ public class ExpressionBuilderController implements Initializable {
     private final ObjectProperty<ListCell<Expression>> dragExpressionSource = new SimpleObjectProperty<>();
     private final ObjectProperty<SquidRatiosModel> dragSquidRatioModelSource = new SimpleObjectProperty<>();
     private final ObjectProperty<String> dragOperationOrFunctionSource = new SimpleObjectProperty<>();
+    private final ObjectProperty<String> dragNumberSource = new SimpleObjectProperty<>();
     private final ObjectProperty<ExpressionTextNode> dragTextSource = new SimpleObjectProperty<>();
 
     private final String operationFlagDelimeter = " : ";
+    private final String numberString = "NUMBER";
     private final String placeholder = " ";// \u2588 ";
+
+    private List<List<ExpressionTextNode>> redoListForExpressionTextFlow = new ArrayList<>();
 
     @FXML
     private TextFlow expressionTextFlow;
@@ -96,13 +107,13 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private ListView<String> squidFunctionsListView;
     @FXML
+    private ListView<String> constantsListView;
+    @FXML
+    private ListView<?> referenceMaterialsListView;
+    @FXML
     private TitledPane builtInExpressionsTitledPane;
     @FXML
     private Accordion expressionsAccordian;
-    @FXML
-    private ListView<?> constantsListView;
-    @FXML
-    private ListView<?> referenceMaterialsListView;
     @FXML
     private ToggleGroup InsertReplaceGroup;
     @FXML
@@ -119,6 +130,7 @@ public class ExpressionBuilderController implements Initializable {
         initializeExpressionListViews();
         initializeRatiosListView();
         initializeOperationOrFunctionListViews();
+        initializeNumberListViews();
 
         initializeExpressionTextFlow();
 
@@ -153,17 +165,36 @@ public class ExpressionBuilderController implements Initializable {
     private void initializeOperationOrFunctionListViews() {
         operationsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         operationsListView.setCursor(Cursor.CLOSED_HAND);
-        operationsListView.setCellFactory(new operationOrFunctionCellFactory());
+        operationsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
 
         mathFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         mathFunctionsListView.setCursor(Cursor.CLOSED_HAND);
-        mathFunctionsListView.setCellFactory(new operationOrFunctionCellFactory());
+        mathFunctionsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
 
         squidFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         squidFunctionsListView.setCursor(Cursor.CLOSED_HAND);
-        squidFunctionsListView.setCellFactory(new operationOrFunctionCellFactory());
+        squidFunctionsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
+
+        constantsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        constantsListView.setCursor(Cursor.CLOSED_HAND);
+        constantsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
 
         populateOperationOrFunctionListViews();
+    }
+
+    private void initializeNumberListViews() {
+        constantsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        constantsListView.setCursor(Cursor.CLOSED_HAND);
+        constantsListView.setCellFactory(new StringCellFactory(dragNumberSource));
+
+        populateNumberListViews();
+    }
+
+    private void resetDragSources() {
+        dragExpressionSource.set(null);
+        dragOperationOrFunctionSource.set(null);
+        dragSquidRatioModelSource.set(null);
+        dragNumberSource.set(null);
     }
 
     private void initializeExpressionTextFlow() {
@@ -185,18 +216,19 @@ public class ExpressionBuilderController implements Initializable {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if (db.hasString()) {
-                    String content = placeholder + db.getString() + placeholder;
+                    String content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
+                    ExpressionTextNode expressionTextNode = new ExpressionTextNode(content);
                     if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
                         // case of function, make a series of objects
                         insertExpressionIntoExpressionTextFlow(content, expressionTextFlow.getChildren().size());
                     } else {
-                        ExpressionTextNode expressionTextNode = new ExpressionTextNode(content);
-                        if (content.contains(operationFlagDelimeter)) {
-                            // case of operator, strip out description
-                            //content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
-                            content = db.getString().split(operationFlagDelimeter)[0];
-                            expressionTextNode = new OperationTextNode(content);
+                        if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(operationFlagDelimeter))) {
+                            expressionTextNode = new OperationTextNode(content.trim());
+                        } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
+                            // special case of "NUMBER"
+                            expressionTextNode = new NumberTextNode((placeholder + numberString + placeholder));
                         }
+
                         expressionTextNode.setOrdinalIndex(expressionTextFlow.getChildren().size());
                         expressionTextFlow.getChildren().add(expressionTextNode);
                     }
@@ -208,22 +240,18 @@ public class ExpressionBuilderController implements Initializable {
                 event.setDropCompleted(success);
 
                 event.consume();
-                dragExpressionSource.set(null);
-                dragOperationOrFunctionSource.set(null);
-                dragSquidRatioModelSource.set(null);
+                resetDragSources();
 
                 updateExpressionTextFlowChildren();
             }
         });
+
     }
 
     private void insertExpressionIntoExpressionTextFlow(String content, double ordinalOrder) {
         String[] funcCall = content.split(" ");
         for (int i = 0; i < funcCall.length; i++) {
             if (funcCall[i].compareTo("") != 0) {
-//                if ((funcCall[i].compareTo("\u2588") == 0) || (funcCall[i].compareTo(" \u2588") == 0) || (funcCall[i].compareTo("\u2588 ") == 0)) {
-//                    funcCall[i] = placeholder;
-//                }
                 funcCall[i] = funcCall[i].replaceAll("[(]", " ( ").replaceAll("[)]", " )").replaceAll(",", " , ");
                 ExpressionTextNode expressionTextNode = new ExpressionTextNode(funcCall[i]);
                 // max 8 terms
@@ -237,6 +265,31 @@ public class ExpressionBuilderController implements Initializable {
     private void clearExpressionAction(ActionEvent event) {
         expressionTextFlow.getChildren().clear();
         updateExpressionTextFlowChildren();
+    }
+
+    @FXML
+    private void copyButtonAction(ActionEvent event) {
+        String fullText = makeStringFromTextFlow();
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(fullText);
+        clipboard.setContent(content);
+    }
+
+    @FXML
+    private void undoButtonAction(ActionEvent event) {
+        expressionTextFlow.getChildren().clear();
+        List<ExpressionTextNode> lastList = null;
+        try {
+            lastList = redoListForExpressionTextFlow.get(redoListForExpressionTextFlow.size() - 1);
+            redoListForExpressionTextFlow.remove(lastList);
+            if (redoListForExpressionTextFlow.size() > 0) {
+                expressionTextFlow.getChildren().addAll(redoListForExpressionTextFlow.get(redoListForExpressionTextFlow.size() - 1));
+            }
+        } catch (Exception e) {
+        }
+        
+        makeAndAuditExpression();
     }
 
     private class expressionCellFactory implements Callback<ListView<Expression>, ListCell<Expression>> {
@@ -307,19 +360,25 @@ public class ExpressionBuilderController implements Initializable {
 
     }
 
-    private class operationOrFunctionCellFactory implements Callback<ListView<String>, ListCell<String>> {
+    private class StringCellFactory implements Callback<ListView<String>, ListCell<String>> {
+
+        private ObjectProperty<String> dragSource;
+
+        public StringCellFactory(ObjectProperty<String> dragSource) {
+            this.dragSource = dragSource;
+        }
 
         @Override
         public ListCell<String> call(ListView<String> param) {
             ListCell<String> cell = new ListCell<String>() {
                 @Override
-                public void updateItem(String expression, boolean empty) {
-                    super.updateItem(expression, empty);
+                public void updateItem(String operationOrFunction, boolean empty) {
+                    super.updateItem(operationOrFunction, empty);
                     if (empty) {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        setText(expression);
+                        setText(operationOrFunction);
                     }
                 }
             };
@@ -331,7 +390,7 @@ public class ExpressionBuilderController implements Initializable {
                     ClipboardContent cc = new ClipboardContent();
                     cc.putString(cell.getItem());
                     db.setContent(cc);
-                    dragOperationOrFunctionSource.set(cell.getItem());
+                    dragSource.set(cell.getItem());
                 }
             });
 
@@ -346,7 +405,14 @@ public class ExpressionBuilderController implements Initializable {
             super(text);
             setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
         }
+    }
 
+    // this node signals user can edit in context menu
+    private class NumberTextNode extends ExpressionTextNode {
+
+        public NumberTextNode(String text) {
+            super(text);
+        }
     }
 
     private class ExpressionTextNode extends Text {
@@ -427,45 +493,49 @@ public class ExpressionBuilderController implements Initializable {
                     Dragboard db = event.getDragboard();
                     boolean success = false;
                     if (db.hasString()
-                            && ((dragExpressionSource.get() != null) || (dragOperationOrFunctionSource.get() != null) || (dragSquidRatioModelSource.get() != null))) {
+                            && ((dragExpressionSource.get() != null) || (dragOperationOrFunctionSource.get() != null) || (dragSquidRatioModelSource.get() != null) || (dragNumberSource.get() != null))) {
                         // we have the case of dropping a SOURCE INTO the list
-                        String content = placeholder + db.getString() + placeholder;
+                        String content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
+                        // general case
+                        ExpressionTextNode expressionTextNode = new ExpressionTextNode(content);
+                        // check for special cases
                         if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
                             // case of function, make and insert a series of objects - dragTextSource remains empty to avoid next logic
                             insertExpressionIntoExpressionTextFlow(content, ((ExpressionTextNode) event.getSource()).getOrdinalIndex());
                             if (replaceRB.isSelected()) {
-                                // replace
                                 expressionTextFlow.getChildren().remove((ExpressionTextNode) event.getSource());
                             }
-                        } else {
-                            ExpressionTextNode expressionTextNode = new ExpressionTextNode(db.getString());
-                            if (dragOperationOrFunctionSource.get() != null) {
-                                expressionTextNode = new OperationTextNode(db.getString().split(operationFlagDelimeter)[0]);
-                            }
+                            expressionTextNode = null;
+                        } else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(operationFlagDelimeter))) {
+                            // operation
+                            expressionTextNode = new OperationTextNode(content.trim());
+                        } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
+                            // number
+                            expressionTextNode = new NumberTextNode(placeholder + numberString + placeholder);
+                        }
+
+                        if (expressionTextNode != null) {
                             // setup for logic below
                             expressionTextFlow.getChildren().add(expressionTextNode);
-                            dragTextSource.set(expressionTextNode);
                         }
+                        dragTextSource.set(expressionTextNode);
                     }
-                    // within the list
+
+                    // within the list of text objects
                     if (db.hasString() && (dragTextSource.get() instanceof ExpressionTextNode)) {
                         // insert left
                         dragTextSource.get().setOrdinalIndex(((ExpressionTextNode) event.getSource()).getOrdinalIndex() - 0.5);
                         if (replaceRB.isSelected()) {
-                            // replace
                             expressionTextFlow.getChildren().remove((ExpressionTextNode) event.getSource());
                         }
 
                         event.setDropCompleted(true);
 
                         success = true;
-
                     }
                     event.setDropCompleted(success);
                     event.consume();
-                    dragExpressionSource.set(null);
-                    dragOperationOrFunctionSource.set(null);
-                    dragSquidRatioModelSource.set(null);
+                    resetDragSources();
                     updateExpressionTextFlowChildren();
                 }
             });
@@ -473,17 +543,10 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void updateExpressionTextFlowChildren() {
-
         // extract and sort
         List<ExpressionTextNode> children = new ArrayList<>();
-        boolean fillerExistsFlag = false;
-        boolean fillerExistsFlagSaved = false;
         for (Node etn : expressionTextFlow.getChildren()) {
-            fillerExistsFlag = ((ExpressionTextNode) etn).getText().compareTo(placeholder) == 0;
-            if (!(fillerExistsFlag && fillerExistsFlagSaved)) {
-                children.add((ExpressionTextNode) etn);
-            }
-            fillerExistsFlagSaved = fillerExistsFlag;
+            children.add((ExpressionTextNode) etn);
         }
         // sort
         children.sort(new Comparator<Node>() {
@@ -508,6 +571,12 @@ public class ExpressionBuilderController implements Initializable {
         expressionTextFlow.getChildren().clear();
         expressionTextFlow.getChildren().addAll(children);
 
+        redoListForExpressionTextFlow.add(children);
+        
+        makeAndAuditExpression();
+    }
+
+    public void makeAndAuditExpression() {
         // make and audit expression
         StringBuilder sb = new StringBuilder();
         for (Node node : expressionTextFlow.getChildren()) {
@@ -515,7 +584,7 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append(((Text) node).getText());
             }
         }
-        String fullText = sb.toString();
+        String fullText = makeStringFromTextFlow();
 
         if (fullText.trim().length() > 0) {
             Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
@@ -527,6 +596,17 @@ public class ExpressionBuilderController implements Initializable {
         } else {
             expressionAuditTextArea.setText("");
         }
+    }
+
+    private String makeStringFromTextFlow() {
+        // make and audit expression
+        StringBuilder sb = new StringBuilder();
+        for (Node node : expressionTextFlow.getChildren()) {
+            if (node instanceof Text) {
+                sb.append(((Text) node).getText());
+            }
+        }
+        return sb.toString();
     }
 
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {
@@ -552,6 +632,40 @@ public class ExpressionBuilderController implements Initializable {
             updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
+
+        menuItem = new MenuItem("Wrap in parentheses.");
+        menuItem.setOnAction((evt) -> {
+            ExpressionTextNode leftP = new ExpressionTextNode(" ( ");
+            leftP.setOrdinalIndex(etn.getOrdinalIndex() - 1.5);
+            ExpressionTextNode rightP = new ExpressionTextNode(" ) ");
+            rightP.setOrdinalIndex(etn.getOrdinalIndex() + 1.5);
+            expressionTextFlow.getChildren().addAll(leftP, rightP);
+            updateExpressionTextFlowChildren();
+        });
+        contextMenu.getItems().add(menuItem);
+
+        // make editable node
+        if (etn instanceof NumberTextNode) {
+            TextField editText = new TextField(etn.getText());
+            editText.setPrefWidth((editText.getText().trim().length() + 2) * editText.getFont().getSize());
+            editText.textProperty().addListener(new ChangeListener<Object>() {
+                @Override
+                public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+                    editText.setPrefWidth((editText.getText().trim().length() + 2) * editText.getFont().getSize());
+                }
+            });
+            menuItem = new MenuItem("<< Edit value then click here to save.", editText);
+            menuItem.setOnAction((evt) -> {
+                //etn.setText(editText.getText());
+                // this allows for redo of content editing
+                NumberTextNode etn2 = new NumberTextNode(editText.getText());
+                etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                expressionTextFlow.getChildren().remove(etn);
+                expressionTextFlow.getChildren().add(etn2);
+                updateExpressionTextFlowChildren();
+            });
+            contextMenu.getItems().add(menuItem);
+        }
 
         contextMenu.setOnHiding(new EventHandler<WindowEvent>() {
             @Override
@@ -631,25 +745,21 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void populateOperationOrFunctionListViews() {
+        // operations ==========================================================
         List<String> operationStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : OPERATIONS_MAP.entrySet()) {
-            // special case to make fenced expression operation be treated like a function
-            if (op.getKey().startsWith("(")) {
-                operationStrings.add(op.getKey());
-            } else {
-                operationStrings.add(op.getKey() + operationFlagDelimeter + op.getValue());
-            }
+            operationStrings.add(op.getKey() + operationFlagDelimeter + op.getValue());
         }
 
         ObservableList<String> items = FXCollections.observableArrayList(operationStrings);
         operationsListView.setItems(items);
 
-        // Math Functions
+        // Math Functions ======================================================
         List<String> functionStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : FUNCTIONS_MAP.entrySet()) {
             int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
             // space-delimited
-            String args = op.getKey().toUpperCase(Locale.US) + " ( ";
+            String args = op.getKey() + " ( ";
             for (int i = 0; i < argumentCount; i++) {
                 args += "ARG-" + i + (i < (argumentCount - 1) ? " , " : "");
             }
@@ -660,6 +770,18 @@ public class ExpressionBuilderController implements Initializable {
 
         items = FXCollections.observableArrayList(functionStrings);
         mathFunctionsListView.setItems(items);
+
     }
 
+    private void populateNumberListViews() {
+        // constants and numbers ===============================================
+        List<String> constantStrings = new ArrayList<>();
+        constantStrings.add(numberString + operationFlagDelimeter + "placeholder for custom number");
+        for (Map.Entry<String, ExpressionTreeInterface> constant : squidProject.getTask().getNamedConstantsMap().entrySet()) {
+            constantStrings.add(constant.getKey() + operationFlagDelimeter + ((ConstantNode) constant.getValue()).getValue());
+        }
+
+        ObservableList<String> items = FXCollections.observableArrayList(constantStrings);
+        constantsListView.setItems(items);
+    }
 }
