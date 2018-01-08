@@ -671,14 +671,14 @@ public class ExpressionBuilderController implements Initializable {
 
         menuItem = new MenuItem("Move left.");
         menuItem.setOnAction((evt) -> {
-            etn.setOrdinalIndex(etn.getOrdinalIndex() - 0.5);
+            etn.setOrdinalIndex(etn.getOrdinalIndex() - 1.5);
             updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
 
         menuItem = new MenuItem("Move right.");
         menuItem.setOnAction((evt) -> {
-            etn.setOrdinalIndex(etn.getOrdinalIndex() + 0.5);
+            etn.setOrdinalIndex(etn.getOrdinalIndex() + 1.5);
             updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
