@@ -36,6 +36,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -88,7 +89,8 @@ public class ExpressionBuilderController implements Initializable {
     private final String numberString = "NUMBER";
     private final String placeholder = " ";// \u2588 ";
 
-    private List<List<ExpressionTextNode>> redoListForExpressionTextFlow = new ArrayList<>();
+    private final List<List<ExpressionTextNode>> undoListForExpressionTextFlow = new ArrayList<>();
+    private final List<List<ExpressionTextNode>> redoListForExpressionTextFlow = new ArrayList<>();
 
     @FXML
     private TextFlow expressionTextFlow;
@@ -120,6 +122,16 @@ public class ExpressionBuilderController implements Initializable {
     private RadioButton replaceRB;
     @FXML
     private TextArea expressionAuditTextArea;
+    @FXML
+    private Button clearButton;
+    @FXML
+    private Button copyButton;
+    @FXML
+    private Button undoButton;
+    @FXML
+    private Button redoButton;
+    @FXML
+    private Button resetButton;
 
     /**
      * Initializes the controller class.
@@ -133,6 +145,8 @@ public class ExpressionBuilderController implements Initializable {
         initializeNumberListViews();
 
         initializeExpressionTextFlow();
+        
+        updateButtons();
 
         builtInExpressionsTitledPane.setExpanded(true);
         expressionsAccordian.setExpandedPane(builtInExpressionsTitledPane);
@@ -281,15 +295,50 @@ public class ExpressionBuilderController implements Initializable {
         expressionTextFlow.getChildren().clear();
         List<ExpressionTextNode> lastList = null;
         try {
-            lastList = redoListForExpressionTextFlow.get(redoListForExpressionTextFlow.size() - 1);
-            redoListForExpressionTextFlow.remove(lastList);
-            if (redoListForExpressionTextFlow.size() > 0) {
-                expressionTextFlow.getChildren().addAll(redoListForExpressionTextFlow.get(redoListForExpressionTextFlow.size() - 1));
+            lastList = undoListForExpressionTextFlow.get(undoListForExpressionTextFlow.size() - 1);
+            undoListForExpressionTextFlow.remove(lastList);
+            redoListForExpressionTextFlow.add(lastList);
+            if (undoListForExpressionTextFlow.size() > 0) {
+                expressionTextFlow.getChildren().addAll(undoListForExpressionTextFlow.get(undoListForExpressionTextFlow.size() - 1));
             }
         } catch (Exception e) {
         }
-        
+
+        updateButtons();
         makeAndAuditExpression();
+    }
+
+    @FXML
+    private void redoButtonAction(ActionEvent event) {
+        List<ExpressionTextNode> lastList = null;
+        try {
+            lastList = redoListForExpressionTextFlow.get(redoListForExpressionTextFlow.size() - 1);
+            redoListForExpressionTextFlow.remove(lastList);           
+            undoListForExpressionTextFlow.add(lastList);
+            expressionTextFlow.getChildren().clear();
+            expressionTextFlow.getChildren().addAll(lastList);
+        } catch (Exception e) {
+        }
+
+        updateButtons();
+        makeAndAuditExpression();
+    }
+    
+    @FXML
+    private void resetButtonAction(ActionEvent event) {
+        redoListForExpressionTextFlow.clear();
+        undoListForExpressionTextFlow.clear();
+        expressionTextFlow.getChildren().clear();
+        updateButtons();
+        makeAndAuditExpression();
+    }
+
+    private void updateButtons() {
+        clearButton.setDisable(expressionTextFlow.getChildren().isEmpty());
+        copyButton.setDisable(expressionTextFlow.getChildren().isEmpty());
+        undoButton.setDisable(undoListForExpressionTextFlow.isEmpty());
+        redoButton.setDisable(redoListForExpressionTextFlow.isEmpty());
+        resetButton.setDisable(undoListForExpressionTextFlow.isEmpty() && redoListForExpressionTextFlow.isEmpty());
     }
 
     private class expressionCellFactory implements Callback<ListView<Expression>, ListCell<Expression>> {
@@ -571,8 +620,9 @@ public class ExpressionBuilderController implements Initializable {
         expressionTextFlow.getChildren().clear();
         expressionTextFlow.getChildren().addAll(children);
 
-        redoListForExpressionTextFlow.add(children);
-        
+        undoListForExpressionTextFlow.add(children);
+
+        updateButtons();
         makeAndAuditExpression();
     }
 
