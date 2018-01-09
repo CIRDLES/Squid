@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -108,6 +107,7 @@ public abstract class Operation
         OPERATIONS_MAP.put("<=", lessThanEqual().getName());
         OPERATIONS_MAP.put(">", greaterThan().getName());
         OPERATIONS_MAP.put(">=", greaterThanEqual().getName());
+        //OPERATIONS_MAP.put("( EXPR )", pExp().getName());
     }
 
     /**

@@ -45,7 +45,6 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
@@ -114,7 +113,7 @@ public class SquidUIController implements Initializable {
     private static Pane isotopesManagerUI;
     private static Pane ratiosManagerUI;
 
-    private static Pane expressionExplorerUI;
+    private static Pane expressionBuilderUI;
     private static Pane expressionManagerUI;
 
     private static Pane reductionManagerUI;
@@ -286,7 +285,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(isotopesManagerUI);
         mainPane.getChildren().remove(ratiosManagerUI);
 
-        mainPane.getChildren().remove(expressionExplorerUI);
+        mainPane.getChildren().remove(expressionBuilderUI);
         mainPane.getChildren().remove(expressionManagerUI);
 
         mainPane.getChildren().remove(reductionManagerUI);
@@ -559,18 +558,18 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchExpressionExplorer() {
+    private void launchExpressionBuilder() {
 
         try {
-            expressionExplorerUI = FXMLLoader.load(getClass().getResource("ExpressionExplorer.fxml"));
-            expressionExplorerUI.setId("ExpressionExplorer");
-            VBox.setVgrow(expressionExplorerUI, Priority.ALWAYS);
-            HBox.setHgrow(expressionExplorerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(expressionExplorerUI);
-            expressionExplorerUI.setVisible(false);
+            expressionBuilderUI = FXMLLoader.load(getClass().getResource("expressions/ExpressionBuilder.fxml"));
+            expressionBuilderUI.setId("ExpressionBuilder");
+            VBox.setVgrow(expressionBuilderUI, Priority.ALWAYS);
+            HBox.setHgrow(expressionBuilderUI, Priority.ALWAYS);
+            mainPane.getChildren().add(expressionBuilderUI);
+            expressionBuilderUI.setVisible(false);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("ExpressionExplorer >>>>   " + iOException.getMessage());
+            System.out.println("ExpressionBuilder >>>>   " + iOException.getMessage());
         }
     }
 
@@ -578,7 +577,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(expressionManagerUI);
 
         try {
-            expressionManagerUI = FXMLLoader.load(getClass().getResource("ExpressionManager.fxml"));
+            expressionManagerUI = FXMLLoader.load(getClass().getResource("expressions/ExpressionManager.fxml"));
             expressionManagerUI.setId("ExpressionManager");
             VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
             HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
@@ -636,12 +635,6 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().get(0).setVisible(true);
 
         myManager.setVisible(true);
-    }
-
-    private void exploreExpressionsMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(expressionExplorerUI);
-        launchExpressionExplorer();
-        showUI(expressionExplorerUI);
     }
 
     @FXML
@@ -848,8 +841,16 @@ public class SquidUIController implements Initializable {
             topsoilWindows[i] = new TopsoilWindow(topsoilPlot);
             topsoilWindows[i].loadTopsoilWindow(i * 40, 100);
         }
-        
+
         topsoilWindows[3].getTopsoilPlot().getPlot().getProperties().put(TITLE, "Testing Handle");
 
     }
+
+    @FXML
+    private void expressionBuilderMenuItemAction(ActionEvent event) {
+        mainPane.getChildren().remove(expressionBuilderUI);
+        launchExpressionBuilder();
+        showUI(expressionBuilderUI);
+    }
+
 }

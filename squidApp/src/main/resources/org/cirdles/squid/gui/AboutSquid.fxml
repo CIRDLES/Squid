@@ -34,24 +34,25 @@
             <String fx:value="main-Text-Color" />
          </styleClass>
       </Label>
-      <ImageView fitHeight="75.0" fitWidth="156.0" layoutX="262.0" layoutY="482.0" pickOnBounds="true" preserveRatio="true" scaleX="0.75" scaleY="0.75">
+      <ImageView fitHeight="75.0" fitWidth="156.0" layoutX="262.0" layoutY="492.0" pickOnBounds="true" preserveRatio="true" scaleX="0.75" scaleY="0.75">
          <image>
             <Image url="@images/cirdles-logov2.png" />
          </image>
       </ImageView>
       <Hyperlink layoutX="275.0" layoutY="558.0" onAction="#visitSquidOnCirdlesAction" styleClass="links" text="A CIRDLES Project" textAlignment="CENTER" />
       <Hyperlink layoutX="48.0" layoutY="558.0" onAction="#visitUsOnGithubAction" styleClass="links" text="Visit Us on GitHub!" textAlignment="CENTER" />
-      <ImageView fitHeight="91.0" fitWidth="62.0" layoutX="85.0" layoutY="485.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="91.0" fitWidth="62.0" layoutX="85.0" layoutY="495.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/githubBluesqueLogo.png" />
          </image>
       </ImageView>
-      <Label fx:id="aboutDetailsLabel" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="29.0" layoutY="320.0" prefHeight="158.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Developed by the CIRDLES team at the College of Charleston." textAlignment="CENTER" wrapText="true" />
+      <Label fx:id="aboutDetailsLabel" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="29.0" layoutY="320.0" prefHeight="121.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Developed by the CIRDLES team at the College of Charleston." textAlignment="JUSTIFY" wrapText="true" />
       <Label fx:id="buildDate" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="46.0" layoutY="292.0" prefHeight="17.0" prefWidth="358.0" styleClass="main-Text-Color" text="Build Date: mm/dd/yyyy" textAlignment="CENTER" />
       <ImageView fitHeight="300.0" fitWidth="400.0" layoutX="75.0" layoutY="-32.0" pickOnBounds="true" preserveRatio="true" styleClass="logo">
          <image>
             <Image url="@images/SquidLogo.png" />
          </image>
       </ImageView>
+      <Label fx:id="contributorsLabel" layoutX="31.0" layoutY="441.0" prefHeight="45.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Contributors" wrapText="true" />
    </children>
 </Pane>

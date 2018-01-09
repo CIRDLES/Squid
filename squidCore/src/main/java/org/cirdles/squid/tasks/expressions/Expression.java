@@ -171,10 +171,6 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
         expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
-//        if (!(expressionTree instanceof ConstantNode) && !(expressionTree instanceof SpotFieldNode) && !(expressionTree instanceof ShrimpSpeciesNode)) {
-//            // ConstantNode and SpotFieldNode has name already and plays role of toplevel expression here
-//            expressionTree.setName(name);
-//        }
     }
 
     public String produceExpressionTreeAudit() {
@@ -182,7 +178,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         String auditReport = "";
         if (!((ExpressionTreeInterface) expressionTree).isValid()) {
             auditReport
-                    += "Errors occurred in parsing:\n" + parsingStatusReport;
+                    += "Errors occurred in parsing:\n" + ((parsingStatusReport.trim().length()==0)? "expression not valid" : parsingStatusReport);
         } else {
             auditExpressionTreeDependencies();
             auditReport
