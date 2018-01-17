@@ -1496,6 +1496,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return namedConstantsMap;
     }
 
+    public Map<String, ExpressionTreeInterface> getNamedParametersMap() {
+        if (namedParametersMap == null) {
+            this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        }
+        return namedParametersMap;
+    }
+    
+    
+
     /**
      * @return the taskExpressionsOrdered
      */
