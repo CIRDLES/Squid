@@ -113,7 +113,6 @@ public abstract class BuiltInExpressionsFactory {
                 ppmOtherEqnName,
                 ppmOtherEqn, true, true);
         concentrationExpressionsOrdered.add(expressionPpmTh);
-
         // Ludwig Q3 - additional equations to calculate 232Th/238U
         /* NEED SIMON'S HELP
             Else --i.e. if piNumDauPar = 2
@@ -140,7 +139,44 @@ public abstract class BuiltInExpressionsFactory {
         
         
          */
+        // feb 2018
+        // logic for Squid 2.50 Sub: Tot68_82_FromA (see comment immediately above)
+        /*
+           similar user-specified control (which would live on the same screen as the controls
+           for SBM-normalisation and SpotAvg vs LinReg) called 'Preferred index isotope', with 
+           options 204Pb, 207Pb, 208Pb (strictly, the availability of 208Pb on this list should 
+           hinge on whether the selected Task is Perm1-type or not; 
+         */
+        // we need SHRIMP: Sub WtdMeanAcalc 
         return concentrationExpressionsOrdered;
+    }
+
+    /**
+     * This subroutine evaluates, for the Standard, the weighted mean (and
+     * associated parameters) of each relevant set of common-Pb corrected
+     * calibration constant values. This mean is the value to which all
+     * spot-by-spot calibration constants determined for the unknowns will be
+     * calibrated, and all spot-by-spot, 'directly-calculated daughter/parent
+     * dates' (i.e. 206Pb/238U and/or 208Pb/232Th as appropriate) are calculated
+     * from there, because SHRIMP (and secondary ion mass spectrometry in
+     * general) is an indirect dating technique. Thus this is a critical step.
+     */
+    public static void wtdMeanAcalc() {
+
+        // will do for both flavors of calibration contants, 8/32 and 6/38 but start with 208/232
+        // these are found here: UncorrPb/Uconst and UncorrPb/Thconst
+        /**
+         * If (pbU = TRUE AND NumDauPar = 1) OR (pbTh = TRUE AND NumDauPar = 2)
+         * --we are dealing specifically with a 206Pb/238U calib. constant:
+         * Lambda = pscLm8 --i.e. 238U decay constant in units of "Ma^-1" Ele =
+         * "U" Else --we are dealing specifically with a 208Pb/232Th calib.
+         * constant: Lambda = pscLm2 --i.e. 232Th decay constant in units of
+         * "Ma^-1" Ele = "Th" End If
+         */
+        
+        // first get fdNmad ofr uncertainty column for the calibration constant
+        
+        
     }
 
     /**
@@ -273,6 +309,8 @@ public abstract class BuiltInExpressionsFactory {
     /**
      * TODO: These should probably be segregated to the end of the expression
      * list and not be sorted each time?
+     *
+     * Squid2.5 Framework: Part 4
      *
      * @return
      */
