@@ -72,7 +72,7 @@ public class Count extends Function {
 
         Object[][] retVal;
         try {
-            double[] xValues = transposeColumnVector(childrenET.get(0).eval(shrimpFractions, task), 0);
+            double[] xValues = transposeColumnVectorOfDoubles(childrenET.get(0).eval(shrimpFractions, task), 0);
             retVal = new Object[][]{{xValues.length}};
         } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0}};

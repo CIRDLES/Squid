@@ -147,6 +147,11 @@ public interface ExpressionTreeInterface {
      * @param squidSwitchConcentrationReferenceMaterialCalculation the squidSwitchConcentrationReferenceMaterialCalculation to set
      */
     public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation);
+    
+    /**
+     * @param uncertaintyDirective the uncertaintyDirective to set
+     */
+    public void setUncertaintyDirective(String uncertaintyDirective);
 
     /**
      *
@@ -156,7 +161,7 @@ public interface ExpressionTreeInterface {
      */
     public static double[] convertObjectArrayToDoubles(Object[] objects) throws SquidException {
         if (objects == null) {
-            throw new SquidException("Failed to retrieve data.");
+            throw new SquidException("Failed to retrieve data at convertObjectArrayToDOubles.");
         }
         double[] retVal = new double[objects.length];
         for (int i = 0; i < objects.length; i++) {

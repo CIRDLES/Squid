@@ -563,9 +563,33 @@ public class ExpressionManagerController implements Initializable {
             sb.append("\t");
             sb.append(String.format("%1$-" + 13 + "s", labels[0][i]));
             sb.append(": ");
-            sb.append(Utilities.roundedToSize(spotSummary.getValues()[0][i], 12));
+            sb.append(Utilities.roundedToSize(spotSummary.getValues()[0][i], 15));
             sb.append("\n");
         }
+
+        // handle special cases
+        if (labels.length > 1) {
+            sb.append("\t");
+            sb.append(String.format("%1$-" + 13 + "s", labels[1][0]));
+            sb.append(": ");
+            // print list
+            for (int j = 0; j < spotSummary.getValues()[1].length; j++) {
+                sb.append((int) (spotSummary.getValues()[1][j]) + " ");
+            }
+            sb.append("\n");
+        }
+
+        if (labels.length > 2) {
+            sb.append("\t");
+            sb.append(String.format("%1$-" + 13 + "s", labels[2][0]));
+            sb.append(": ");
+            // print list
+            for (int j = 0; j < spotSummary.getValues()[2].length; j++) {
+                sb.append((int) (spotSummary.getValues()[2][j])).append(" ");
+            }
+            sb.append("\n");
+        }
+
         return sb.toString();
     }
 

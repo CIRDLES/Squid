@@ -74,7 +74,7 @@ public class Average extends Function {
 
         Object[][] retVal;
         try {
-            double[] xValues = transposeColumnVector(childrenET.get(0).eval(shrimpFractions, task), 0);
+            double[] xValues = transposeColumnVectorOfDoubles(childrenET.get(0).eval(shrimpFractions, task), 0);
             double sum = 0.0;
             double average = 0.0;
             if (xValues.length > 0) {

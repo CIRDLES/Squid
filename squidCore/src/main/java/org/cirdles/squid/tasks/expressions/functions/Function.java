@@ -97,6 +97,7 @@ public abstract class Function
         FUNCTIONS_MAP.put("abs", "abs");
         FUNCTIONS_MAP.put("average", "average");
         FUNCTIONS_MAP.put("count", "count");
+        FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
     }
 
     public Function() {
@@ -255,9 +256,13 @@ public abstract class Function
     public static OperationOrFunctionInterface count() {
         return new Count();
     }
-    
-    public static OperationOrFunctionInterface calculateMeanConcStd(){
+
+    public static OperationOrFunctionInterface calculateMeanConcStd() {
         return new CalculateMeanConcStd();
+    }
+
+    public static OperationOrFunctionInterface wtdMeanACalc() {
+        return new WtdMeanACalc();
     }
 
     /**
@@ -287,7 +292,7 @@ public abstract class Function
      * @param colIndex
      * @return
      */
-    protected double[] transposeColumnVector(Object[][] columnVector, int colIndex) {
+    protected double[] transposeColumnVectorOfDoubles(Object[][] columnVector, int colIndex) {
         double[] rowVector = new double[columnVector.length];
         for (int i = 0; i < rowVector.length; i++) {
             rowVector[i] = (double) columnVector[i][colIndex];

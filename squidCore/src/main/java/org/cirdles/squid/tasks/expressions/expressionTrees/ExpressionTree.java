@@ -31,6 +31,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
@@ -44,7 +45,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
  *
@@ -112,8 +113,10 @@ public class ExpressionTree
      *
      */
     protected boolean rootExpressionTree;
-    
+
     protected boolean squidSwitchConcentrationReferenceMaterialCalculation;
+
+    protected String uncertaintyDirective;
 
     /**
      *
@@ -171,6 +174,7 @@ public class ExpressionTree
         this.squidSpecialUPbThExpression = false;
         this.squidSwitchConcentrationReferenceMaterialCalculation = false;
         this.rootExpressionTree = false;
+        this.uncertaintyDirective = "";
     }
 
     public ExpressionTree copy() {
@@ -308,7 +312,7 @@ public class ExpressionTree
             }
             if (retVal == 0) {
                 // then compare is for concentration reference materials only
-                if (isSquidSwitchConcentrationReferenceMaterialCalculation()&& !exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                if (isSquidSwitchConcentrationReferenceMaterialCalculation() && !exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                     // this object comes before exp
                     retVal = -1;
                 } else if (!isSquidSwitchConcentrationReferenceMaterialCalculation() && exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
@@ -366,7 +370,7 @@ public class ExpressionTree
                     retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
                 }
                 if (retVal) {
-                    retVal = (isSquidSwitchConcentrationReferenceMaterialCalculation()== ((ExpressionTree) obj).isSquidSwitchConcentrationReferenceMaterialCalculation());
+                    retVal = (isSquidSwitchConcentrationReferenceMaterialCalculation() == ((ExpressionTree) obj).isSquidSwitchConcentrationReferenceMaterialCalculation());
                 }
                 if (retVal) {
                     retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
@@ -488,6 +492,11 @@ public class ExpressionTree
      */
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
+        // backwards compatable
+        if (uncertaintyDirective == null) {
+            uncertaintyDirective = "";
+        }
+
         return operation == null ? new Object[][]{{0.0, 0.0}} : operation.eval(childrenET, shrimpFractions, task);
     }
 
@@ -693,10 +702,12 @@ public class ExpressionTree
     }
 
     private List<String> getAllRatiosOfInterest(List<String> ratiosList) {
-        if (!(operation instanceof SpotNodeLookupFunction)) {
-            addOnlyNewRatios(ratiosList, ratiosOfInterest);
-            for (ExpressionTreeInterface child : childrenET) {
-                addOnlyNewRatios(ratiosList, ((ExpressionTree) child).getAllRatiosOfInterest(ratiosList));
+        if (operation != null) {
+            if (!(operation instanceof SpotNodeLookupFunction)) {
+                addOnlyNewRatios(ratiosList, ratiosOfInterest);
+                for (ExpressionTreeInterface child : childrenET) {
+                    addOnlyNewRatios(ratiosList, ((ExpressionTree) child).getAllRatiosOfInterest(ratiosList));
+                }
             }
         }
 
@@ -809,10 +820,19 @@ public class ExpressionTree
     }
 
     /**
-     * @param squidSwitchConcentrationReferenceMaterialCalculation the squidSwitchConcentrationReferenceMaterialCalculation to set
+     * @param squidSwitchConcentrationReferenceMaterialCalculation the
+     * squidSwitchConcentrationReferenceMaterialCalculation to set
      */
     @Override
     public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation) {
         this.squidSwitchConcentrationReferenceMaterialCalculation = squidSwitchConcentrationReferenceMaterialCalculation;
+    }
+
+    /**
+     * @param uncertaintyDirective the uncertaintyDirective to set
+     */
+    @Override
+    public void setUncertaintyDirective(String uncertaintyDirective) {
+        this.uncertaintyDirective = uncertaintyDirective;
     }
 }

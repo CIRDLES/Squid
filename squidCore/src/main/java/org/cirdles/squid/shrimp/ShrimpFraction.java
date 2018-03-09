@@ -367,23 +367,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     * Used by reflection in expression evaluations by VariableNode, for example
-     *
-     * @param name
-     * @return double [1][2] containing ratio value and 1-sigma abs uncertainty
-     */
-    @Override
-    public double[][] getIsotopicRatioValuesByStringName(String name) {
-        double[][] ratioAndUnct = new double[][]{{0.0, 0.0}};
-        SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
-        if (ratio != null) {
-            ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
-        }
-
-        return ratioAndUnct;
-    }
-
-    /**
      * @return the isotopicRatiosII
      */
     public SortedSet<SquidRatiosModel> getIsotopicRatiosII() {
@@ -678,7 +661,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName) {
-        double[][] values = new double[][]{{0.0}};
+        double[][] values = new double[][]{{0.0,0.0}};
 
         for (Map.Entry<ExpressionTreeInterface, double[][]> entry : taskExpressionsEvaluationsPerSpot.entrySet()) {
             if (entry.getKey().getName().compareTo(fieldName) == 0) {
@@ -688,6 +671,24 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         }
 
         return values;
+    }
+
+    /**
+     * Used by reflection in expression evaluations by VariableNode, for example
+     *
+     * @param name
+     * @return double [1][2] containing ratio value and 1-sigma abs uncertainty
+     */
+    @Override
+    public double[][] getIsotopicRatioValuesByStringName(String name) {
+        double[][] ratioAndUnct = new double[][]{{0.0, 0.0}};
+        
+        SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
+        if (ratio != null) {
+            ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
+        }
+
+        return ratioAndUnct;
     }
 
 }

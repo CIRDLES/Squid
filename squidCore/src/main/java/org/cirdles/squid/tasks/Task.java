@@ -322,7 +322,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\n Task Constants (imported with task or hard-coded): \n");
         if (namedConstantsMap.size() > 0) {
             for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
-                summary.append("\t").append(entry.getKey()).append(" = ").append((double) ((ConstantNode) entry.getValue()).getValue()).append("\n");
+                summary.append("\t").append(entry.getKey()).append(" = ").append( ((ConstantNode) entry.getValue()).getValue()).append("\n");
             }
         } else {
             summary.append(" No constants supplied.");
@@ -498,9 +498,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ExpressionTreeInterface original = listedExp.getExpressionTree();
         listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
-        if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
-            ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+        if (listedExp.isSquidSwitchNU()) {
+            if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
+                ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+            }
         }
+
         if (original != null) {
             listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
             listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
@@ -558,9 +561,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void buildExpressions() {
         // after map is built
-        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
-            if (exp instanceof BuiltInExpressionInterface) {
-                ((BuiltInExpressionInterface) exp).buildExpression(this);
+//        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
+//            if (exp instanceof BuiltInExpressionInterface) {
+//                ((BuiltInExpressionInterface) exp).buildExpression(this);
+//            }
+//        }
+
+        for (Expression exp : taskExpressionsOrdered) {
+            if (exp.isSquidSwitchNU()) {
+                if (exp.getExpressionTree() instanceof BuiltInExpressionInterface) {
+                    ((BuiltInExpressionInterface) exp.getExpressionTree()).buildExpression(this);
+                }
             }
         }
     }
@@ -961,7 +972,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 try {
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
-
+                    System.out.println("Out of bounds at evaluateTaskExpressions");
                 }
             }
         }
@@ -1011,12 +1022,22 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     = expressionEvaluator.evaluateTaskExpressionsPerSpotPerScan(this, expression, spot);
 
             // save scan-specific results
+            List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated = spot.getTaskExpressionsForScansEvaluated();
+            if (taskExpressionsForScansEvaluated.contains(taskExpressionEvaluatedPerSpotPerScanModel)) {
+                taskExpressionsForScansEvaluated.remove(taskExpressionEvaluatedPerSpotPerScanModel);
+            }
             spot.getTaskExpressionsForScansEvaluated().add(taskExpressionEvaluatedPerSpotPerScanModel);
 
             // save spot-specific results
             double[][] value = new double[][]{{taskExpressionEvaluatedPerSpotPerScanModel.getRatioVal(),
                 taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
+
+            Map<ExpressionTreeInterface, double[][]> taskExpressionsPerSpot = spot.getTaskExpressionsEvaluationsPerSpot();
+            if (taskExpressionsPerSpot.containsKey(expression)) {
+                taskExpressionsPerSpot.remove(expression);
+            }
             spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
+
         } else {
             List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
             singleSpot.add(spot);
@@ -1502,8 +1523,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         return namedParametersMap;
     }
-    
-    
 
     /**
      * @return the taskExpressionsOrdered
