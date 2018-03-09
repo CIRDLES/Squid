@@ -124,7 +124,9 @@ FUNCTION :
     A B S |
     A V E R A G E | 
     C O U N T |
-    C A L C U L A T E M E A N C O N C S T D;
+    C A L C U L A T E M E A N C O N C S T D |
+    W T D M E A N A C A L C
+;
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
 

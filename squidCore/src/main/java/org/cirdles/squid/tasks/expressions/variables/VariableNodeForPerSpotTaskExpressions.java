@@ -48,7 +48,16 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
      * @param name
      */
     public VariableNodeForPerSpotTaskExpressions(String name) {
+        this(name, "");
+    }
+    
+        /**
+     *
+     * @param name
+     */
+    public VariableNodeForPerSpotTaskExpressions(String name, String uncertaintyDirective) {
         this.name = name;
+        this.uncertaintyDirective = uncertaintyDirective;
         this.healthy = true;
     }
 
@@ -107,6 +116,15 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                         new Class[]{String.class});
                 for (int i = 0; i < shrimpFractions.size(); i++) {
                     double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0];
+                    if (values.length > 1) {
+                        // to return uncertainty, copy index 1 to index 0
+                        if (uncertaintyDirective.compareTo("%") == 0) {
+                            values[0] = values[1] / values[0] * 100;
+                        } else if (uncertaintyDirective.compareTo("±") == 0) {
+                            values[0] = values[1];
+                        }
+                    }
+
                     retVal[i] = convertArrayToObjects(values);
                 }
 

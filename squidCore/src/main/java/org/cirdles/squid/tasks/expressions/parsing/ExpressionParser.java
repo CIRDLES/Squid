@@ -242,6 +242,9 @@ public class ExpressionParser {
                 }
                 String expressionName = token.replace("[\"", "").replace("[±\"", "").replace("[%\"", "").replace("\"]", "");
                 ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(expressionName);
+                if (retExpTreeKnown instanceof ExpressionTree){
+                    retExpTreeKnown.setUncertaintyDirective(uncertaintyDirective);
+                }
                 if (retExpTreeKnown == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
                     // let's see if we have an array reference 
@@ -269,12 +272,12 @@ public class ExpressionParser {
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
                         && eqnSwitchNU) {
-                    // this is the NU switch case
+                    // this is the NU switch case for ratio where ratio is processed specially vs below qhere it is just looked up
                     retExpTree = retExpTreeKnown;
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
                         && !eqnSwitchNU) {
-                    // this is the non NU switch case 
+                    // this is the non NU switch case - ratiois just looked up - math is already done
                     retExpTree = new VariableNodeForIsotopicRatios(
                             retExpTreeKnown.getName(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
@@ -288,7 +291,7 @@ public class ExpressionParser {
                 } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
                     retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName());
                 } else {
-                    retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName());
+                    retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective);
                 }
                 break;
 
