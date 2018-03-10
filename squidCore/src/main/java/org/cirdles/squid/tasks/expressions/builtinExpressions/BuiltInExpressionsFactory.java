@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import org.cirdles.ludwig.squid25.SquidConstants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
@@ -45,10 +46,10 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface r238_235s = new ConstantNode("r238_235s", 137.88);
         constants.put(r238_235s.getName(), r238_235s);
-        
+
         ExpressionTreeInterface squidTrue = new ConstantNode("TRUE", true);
         constants.put(squidTrue.getName(), squidTrue);
-        
+
         ExpressionTreeInterface squidFalse = new ConstantNode("FALSE", false);
         constants.put(squidFalse.getName(), squidFalse);
 
@@ -87,6 +88,9 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", 37.5933995);
         parameters.put(sComm_84.getName(), sComm_84);
+
+        ExpressionTreeInterface lambda238 = new ConstantNode("lambda238", SquidConstants.lambda238);
+        parameters.put(lambda238.getName(), lambda238);
 
         return parameters;
     }
@@ -236,10 +240,26 @@ public abstract class BuiltInExpressionsFactory {
                 + "( sComm_64 / ( 1 / [\"204/206\"] - sComm_64 ) )^2 * [%\"204/206\"]^2 )", true, true, false);
         correctionsOfCalibrationConstants.add(expression4corr206Pb238Ucalibrconsterr);
 
-        // experiment with weighted mean
+        // weighted mean
         Expression expression4corr206Pb238UcalibrconstWM = buildExpression("4-corr206Pb/238Ucalibr.const WM",
                 "WtdMeanACalc( [\"4-corr206Pb/238Ucalibr.const\"], [\"4-corr206Pb/238Ucalibr.const %err\"], TRUE, FALSE, FALSE )", true, false, true);
         correctionsOfCalibrationConstants.add(expression4corr206Pb238UcalibrconstWM);
+
+        // age calc
+        Expression dummy = buildExpression("DUMMY", "5", true, true, false);
+        dummy.getExpressionTree().setSquidSpecialUPbThExpression(false);
+        correctionsOfCalibrationConstants.add(dummy);
+
+        
+        // note that [6] refers to the external weighted mean
+        Expression expression4corr206Pb238UAge = buildExpression("4-corr206Pb/238U Age",
+                "LN( 1.0 + [\"4-corr206Pb/238Ucalibr.const\"] / [\"4-corr206Pb/238Ucalibr.const WM\"][6] * StdUPbRatio ) / lambda238", true, false, false);
+        correctionsOfCalibrationConstants.add(expression4corr206Pb238UAge);
+
+        // note that [6] refers to the external weighted mean
+        Expression expression4corr206Pb238UAgeUnct = buildExpression("4-corr206Pb/238U Age 1sigma",
+                "[\"4-corr206Pb/238Ucalibr.const %err\"] / 100 * ( EXP(lambda238 * [\"4-corr206Pb/238U Age\"] ) - 1 ) / lambda238 / EXP(lambda238 * [\"4-corr206Pb/238U Age\"] )  ", true, false, false);
+        correctionsOfCalibrationConstants.add(expression4corr206Pb238UAgeUnct);
 
         Expression expression7corr208Pb232Thcalibrconsterr = buildExpression("7-corr208Pb/232Thcalibr.const %err",
                 "sqrt([%\"UncorrPb/Thconst\"]^2 +  \n"
@@ -361,7 +381,7 @@ public abstract class BuiltInExpressionsFactory {
         expressionTree.setSquidSwitchSTReferenceMaterialCalculation(isRefMatCalc);
         expressionTree.setSquidSwitchSAUnknownCalculation(isSampleCalc);
         expressionTree.setSquidSwitchSCSummaryCalculation(isSummaryCalc);
-        
+
         expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
         expressionTree.setSquidSpecialUPbThExpression(true);
         expressionTree.setRootExpressionTree(true);

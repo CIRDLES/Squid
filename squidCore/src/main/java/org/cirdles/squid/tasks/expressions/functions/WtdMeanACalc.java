@@ -96,13 +96,13 @@ public class WtdMeanACalc extends Function {
             double[] uncertaintyValues = transposeColumnVectorOfDoubles(uncertainties, 0);
 
             Object uncertaintiesInPercent0 = childrenET.get(2).eval(shrimpFractions, task)[0][0];
-            boolean uncertaintiesInPercent = (Boolean) uncertaintiesInPercent0;
+            boolean uncertaintiesInPercent = (boolean) uncertaintiesInPercent0;
 
             Object noUPbConstAutoRejectO = childrenET.get(3).eval(shrimpFractions, task)[0][0];
-            boolean noUPbConstAutoReject = (Boolean) noUPbConstAutoRejectO;
+            boolean noUPbConstAutoReject = (boolean) noUPbConstAutoRejectO;
 
             Object pbCanDriftCorrO = childrenET.get(4).eval(shrimpFractions, task)[0][0];
-            boolean pbCanDriftCorr = (Boolean) pbCanDriftCorrO;
+            boolean pbCanDriftCorr = (boolean) pbCanDriftCorrO;
 
             double[] absUnct = uncertaintyValues.clone();
             if (uncertaintiesInPercent) {

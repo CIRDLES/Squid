@@ -56,7 +56,7 @@ stat:   block
 
 expr:   FUNCTION '(' exprList+ ')'    // func call like f(), f(x), f(1,2) switched ? to + to require 1 arg min
     |   '(' expr ')'
-//    |   ID '[' expr ']'         // array index like a[i], a[i][j]
+    |   ID '[' INT ']'         // array index like a[i], a[i][j]
     |   '-' expr                // unary minus
     |   '!' expr                // boolean not
     |   expr ('*'|'/') expr
@@ -128,7 +128,7 @@ FUNCTION :
     W T D M E A N A C A L C
 ;
 
-ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT '][' INT ']');       // array index like a[i], a[i][j]
+ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT ']');       // array index like a[i]
 
 NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.')* PARENS* (' %err')* '"' ']' ;
 

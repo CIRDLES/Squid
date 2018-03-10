@@ -955,8 +955,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 //todo: do we still need taskexpressions ordered?
         for (Expression exp : taskExpressionsOrdered) {
             ExpressionTreeInterface expression = exp.getExpressionTree();
+            
+            if (exp.getName().compareToIgnoreCase("DUMMY")==0){
+                System.out.println("DUMMY");
+            }
 
-            if (expression.amHealthy() && expression.isRootExpressionTree()) {
+            if (expression.amHealthy()){// && expression.isRootExpressionTree()) {
                 // determine subset of spots to be evaluated - default = all
                 List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
 

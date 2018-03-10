@@ -27,7 +27,7 @@ import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_M
 public class ShuntingYard {
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
-    
+
     /**
      *
      * @param args
@@ -37,12 +37,18 @@ public class ShuntingYard {
         List<String> infixList = new ArrayList<>();
 
 //        // Input: 3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3
+        //1*["Hfsens"][0]
+        infixList.add("1");
+        infixList.add("*");
+        infixList.add("[");
+        infixList.add("\"");
+        infixList.add("Hfsens");
+        infixList.add("\"");;
+        infixList.add("]");
+        infixList.add("[");
+        infixList.add("0");
+        infixList.add("]");
 
-//        infixList.add("[");
-//        infixList.add("\"");
-        infixList.add("word233_33");
-//        infixList.add("\"");;
-//        infixList.add("]");
         System.out.println("Shunt " + infixToPostfix(infixList));
     }
 
@@ -118,12 +124,12 @@ public class ShuntingYard {
                     lastWasOperationOrFunction = true;
                     break;
                 case OPERATOR_E:
-                    /* while there is an operator token o2, at the top of the operator stack and either
+                /* while there is an operator token o2, at the top of the operator stack and either
                     o1 is left-associative and its precedence is less than or equal to that of o2, or
                     o1 is right associative, and has precedence less than that of o2,
                     pop o2 off the operator stack, onto the output queue;
                     at the end of iteration push o1 onto the operator stack.
-                     */
+                 */
 //                    operatorStack.push(token);
 //                    lastWasOperationOrFunction = true;
 //                    break;
@@ -151,17 +157,17 @@ public class ShuntingYard {
                                 try {
                                     String func;
 //                                    try {
-                                        peek = TokenTypes.getType(operatorStack.peek());
-                                        if (peek.compareTo(TokenTypes.FUNCTION) == 0) {
-                                            func = operatorStack.pop();
-                                            int a = argCount.pop();
-                                            boolean w = wereValues.pop();
-                                            if (w) {
-                                                a++;
+                                    peek = TokenTypes.getType(operatorStack.peek());
+                                    if (peek.compareTo(TokenTypes.FUNCTION) == 0) {
+                                        func = operatorStack.pop();
+                                        int a = argCount.pop();
+                                        boolean w = wereValues.pop();
+                                        if (w) {
+                                            a++;
 //                                                String funcWithArgCount = func + ":" + String.valueOf(a);
-                                                outputQueue.add(func);// temp simplify(funcWithArgCount);
-                                            }
+                                            outputQueue.add(func);// temp simplify(funcWithArgCount);
                                         }
+                                    }
 //                                    } catch (Exception e) {
 //                                    }
 //                                    outputQueue.add(func);// temp simplify(funcWithArgCount);
@@ -233,6 +239,7 @@ public class ShuntingYard {
                     lastWasOperationOrFunction = false;
                     break;
 
+                case NAMED_EXPRESSION_INDEXED:
                 case NAMED_EXPRESSION:
                     outputQueue.add(token);
                     if (!wereValues.empty()) {
@@ -297,6 +304,10 @@ public class ShuntingYard {
         /**
          *
          */
+        NAMED_EXPRESSION_INDEXED,
+        /**
+         *
+         */
         COMMA;
 
         private TokenTypes() {
@@ -324,11 +335,12 @@ public class ShuntingYard {
                 retVal = COMMA;
             } else if (FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
+            } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]\\[\\d\\]")) {
+                retVal = NAMED_EXPRESSION_INDEXED;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;
             } else if (isNumber(token)) {
                 retVal = NUMBER;
-
             }
 
             return retVal;
@@ -343,4 +355,4 @@ public class ShuntingYard {
     public static boolean isNumber(String string) {
         return string != null && NUMBER_PATTERN.matcher(string).matches();
     }
-    }
+}

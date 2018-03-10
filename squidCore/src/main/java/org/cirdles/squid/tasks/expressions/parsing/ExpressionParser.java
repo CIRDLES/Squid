@@ -40,6 +40,7 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
+import static org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes.NAMED_EXPRESSION_INDEXED;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -205,6 +206,7 @@ public class ExpressionParser {
     private ExpressionTreeInterface walkTree(String token, ExpressionTreeInterface myExp) {
         TokenTypes tokenType = TokenTypes.getType(token);
         ExpressionTreeInterface exp = myExp;
+        int index = 0;
 
         ExpressionTreeInterface retExpTree = null;
 
@@ -232,6 +234,13 @@ public class ExpressionParser {
                 }
                 break;
 
+            case NAMED_EXPRESSION_INDEXED:
+                // form is ["XXX"][n], remove indexing and capture value of index
+                // the single integer index is next to last character
+                String indexString = token.substring(token.length()-2, token.length()-1);
+                index = Integer.parseInt(indexString);
+                token = token.replaceFirst("\\[\\d\\]", "");
+                
             case NAMED_EXPRESSION:
                 // handle special cases of array index references and ± references to uncertainty
                 String uncertaintyDirective = "";
@@ -247,28 +256,6 @@ public class ExpressionParser {
                 }
                 if (retExpTreeKnown == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
-                    // let's see if we have an array reference 
-                    int index = 0;
-                    String lastTwo = expressionName.substring(expressionName.length() - 2);
-                    if (ShuntingYard.isNumber(lastTwo)) {
-                        // index = first digit - 1 (converting from vertical 1-based excel to horiz 0-based java
-                        index = Integer.parseInt(lastTwo.substring(0, 1)) - 1;
-                        String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
-                        if (index >= 0) {
-                            retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
-                            if (retExpTreeKnown != null) {
-                                // we have an array index reference to a known expression
-                                if (index == 0) {
-                                    //this is equivalent to calling the expression with no inices
-                                    retExpTree = retExpTreeKnown;
-                                } else {
-                                    retExpTree = new VariableNodeForSummary(baseExpressionName, index);
-                                    namedExpressionsMap.put(expressionName, retExpTree);
-                                }
-                            }
-                        }
-                    }
-
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
                         && eqnSwitchNU) {
@@ -289,7 +276,7 @@ public class ExpressionParser {
                         || (retExpTreeKnown instanceof VariableNodeForSummary)) {
                     retExpTree = retExpTreeKnown;
                 } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
-                    retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName());
+                    retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index);
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective);
                 }

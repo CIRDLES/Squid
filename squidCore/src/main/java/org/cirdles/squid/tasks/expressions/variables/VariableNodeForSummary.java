@@ -108,7 +108,7 @@ public class VariableNodeForSummary extends ExpressionTree {
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);
         double[][] valuesAll = detail.getValues();
-        double[][] values = valuesAll;
+        double[][] values = valuesAll.clone();
         if (index > 0) {
             // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
             values = new double[1][valuesAll[0].length - index];
@@ -179,5 +179,12 @@ public class VariableNodeForSummary extends ExpressionTree {
     public int hashCode() {
         int hash = 3;
         return hash;
+    }
+
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
