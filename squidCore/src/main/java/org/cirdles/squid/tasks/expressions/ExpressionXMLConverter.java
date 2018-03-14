@@ -90,7 +90,11 @@ public class ExpressionXMLConverter implements Converter {
         writer.startNode("excelExpressionString");
         writer.setValue(expression.getExcelExpressionString());
         writer.endNode();
-
+        
+        writer.startNode("squidSwitchNU");
+        writer.setValue(String.valueOf(expression.isSquidSwitchNU()));
+        writer.endNode();
+        
         writer.startNode("expressionTree");
         context.convertAnother(expression.getExpressionTree());
         writer.endNode();
