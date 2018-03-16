@@ -951,14 +951,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getTaskExpressionsForScansEvaluated().clear();
         });
 
-//        for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
 //todo: do we still need taskexpressions ordered?
+
         for (Expression exp : taskExpressionsOrdered) {
             ExpressionTreeInterface expression = exp.getExpressionTree();
-            
-            if (exp.getName().compareToIgnoreCase("DUMMY")==0){
-                System.out.println("DUMMY");
-            }
 
             if (expression.amHealthy()){// && expression.isRootExpressionTree()) {
                 // determine subset of spots to be evaluated - default = all
@@ -1004,6 +1000,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     values = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
                 }
 
+                if (taskExpressionsEvaluationsPerSpotSet.containsKey(expression.getName())){
+                    taskExpressionsEvaluationsPerSpotSet.remove(expression.getName());
+                }
                 taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
                         new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), values, spotsForExpression));
             } else {

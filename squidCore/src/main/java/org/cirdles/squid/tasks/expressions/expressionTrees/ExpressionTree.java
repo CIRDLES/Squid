@@ -118,6 +118,8 @@ public class ExpressionTree
 
     protected String uncertaintyDirective;
 
+    protected int index;
+
     /**
      *
      */
@@ -834,5 +836,12 @@ public class ExpressionTree
     @Override
     public void setUncertaintyDirective(String uncertaintyDirective) {
         this.uncertaintyDirective = uncertaintyDirective;
+    }
+
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

@@ -237,10 +237,11 @@ public class ExpressionParser {
             case NAMED_EXPRESSION_INDEXED:
                 // form is ["XXX"][n], remove indexing and capture value of index
                 // the single integer index is next to last character
-                String indexString = token.substring(token.length()-2, token.length()-1);
+                // we are not supporting for ratios for now as they are show as ratios in MathML
+                String indexString = token.substring(token.length() - 2, token.length() - 1);
                 index = Integer.parseInt(indexString);
                 token = token.replaceFirst("\\[\\d\\]", "");
-                
+
             case NAMED_EXPRESSION:
                 // handle special cases of array index references and ± references to uncertainty
                 String uncertaintyDirective = "";
@@ -251,34 +252,50 @@ public class ExpressionParser {
                 }
                 String expressionName = token.replace("[\"", "").replace("[±\"", "").replace("[%\"", "").replace("\"]", "");
                 ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(expressionName);
-                if (retExpTreeKnown instanceof ExpressionTree){
-                    retExpTreeKnown.setUncertaintyDirective(uncertaintyDirective);
-                }
+
                 if (retExpTreeKnown == null) {
                     retExpTree = new ConstantNode(MISSING_EXPRESSION_STRING, token);
+                    // let's see if we have an array reference in the form of SUMMARY named_expression00
+                    // this would be hard to catch with regex since ratios fit the pattern too
+                    index = 0;
+                    String lastTwo = expressionName.substring(expressionName.length() - 2);
+                    if (ShuntingYard.isNumber(lastTwo)) {
+                        // index = first digit - 1 (converting from vertical 1-based excel to horiz 0-based java
+                        index = Integer.parseInt(lastTwo.substring(0, 1)) - 1;
+                        String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
+                        if (index >= 0) {
+                            retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
+                            if (retExpTreeKnown != null) {
+                                retExpTree = new VariableNodeForSummary(baseExpressionName, index);
+                            }
+                        }
+                    }
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
                         && eqnSwitchNU) {
-                    // this is the NU switch case for ratio where ratio is processed specially vs below qhere it is just looked up
+                    // this is the NU switch case for ratio where ratio is processed specially vs below where it is just looked up
                     retExpTree = retExpTreeKnown;
+                    
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
                         && !eqnSwitchNU) {
-                    // this is the non NU switch case - ratiois just looked up - math is already done
+                    // this is the non NU switch case - ratios just looked up - math is already done
                     retExpTree = new VariableNodeForIsotopicRatios(
                             retExpTreeKnown.getName(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET(),
                             uncertaintyDirective);
+                    
                 } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
-                        || (retExpTreeKnown instanceof SpotFieldNode)
-                        || (retExpTreeKnown instanceof VariableNodeForIsotopicRatios)
-                        || (retExpTreeKnown instanceof VariableNodeForSummary)) {
+                        || (retExpTreeKnown instanceof SpotFieldNode)) {
                     retExpTree = retExpTreeKnown;
+                    retExpTree.setUncertaintyDirective(uncertaintyDirective);
+                    
                 } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
-                    retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index);
+                    retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index, uncertaintyDirective);
+                    
                 } else {
-                    retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective);
+                    retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective, index);
                 }
                 break;
 

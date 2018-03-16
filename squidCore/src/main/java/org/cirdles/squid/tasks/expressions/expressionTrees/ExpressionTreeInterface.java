@@ -137,21 +137,27 @@ public interface ExpressionTreeInterface {
      * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
      */
     public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression);
-    
+
     /**
      * @return the squidSwitchConcentrationReferenceMaterialCalculation
      */
     public boolean isSquidSwitchConcentrationReferenceMaterialCalculation();
 
     /**
-     * @param squidSwitchConcentrationReferenceMaterialCalculation the squidSwitchConcentrationReferenceMaterialCalculation to set
+     * @param squidSwitchConcentrationReferenceMaterialCalculation the
+     * squidSwitchConcentrationReferenceMaterialCalculation to set
      */
     public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation);
-    
+
     /**
      * @param uncertaintyDirective the uncertaintyDirective to set
      */
     public void setUncertaintyDirective(String uncertaintyDirective);
+
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(int index);
 
     /**
      *

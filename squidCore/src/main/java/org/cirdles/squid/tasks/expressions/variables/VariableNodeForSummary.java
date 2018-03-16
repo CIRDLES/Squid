@@ -34,8 +34,6 @@ public class VariableNodeForSummary extends ExpressionTree {
 
     private static final long serialVersionUID = -868256637199178058L;
 
-    private int index;
-
     /**
      *
      */
@@ -52,8 +50,16 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     public VariableNodeForSummary(String name, int index) {
+        this(name, index, "");
+    }
+
+    public VariableNodeForSummary(String name, int index, String uncertaintyDirective) {
         this.name = name;
         this.index = index;
+        this.uncertaintyDirective = uncertaintyDirective;
+        if (uncertaintyDirective.length() > 0){
+            this.index = 1;
+        }
     }
 
     @Override
@@ -107,8 +113,15 @@ public class VariableNodeForSummary extends ExpressionTree {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);
-        double[][] valuesAll = detail.getValues();
+        double[][] valuesAll = detail.getValues().clone();
+        
+        if (uncertaintyDirective.compareTo("%") == 0) {
+            // index should be 1 from constructor
+            valuesAll[0][1] = valuesAll[0][1] / valuesAll[0][0] * 100;
+        } 
+
         double[][] values = valuesAll.clone();
+
         if (index > 0) {
             // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
             values = new double[1][valuesAll[0].length - index];
@@ -116,6 +129,7 @@ public class VariableNodeForSummary extends ExpressionTree {
                 values[0][i - index] = valuesAll[0][i];
             }
         }
+        
         Object[][] retVal = convertArrayToObjects(values);
 
         return retVal;
@@ -179,12 +193,5 @@ public class VariableNodeForSummary extends ExpressionTree {
     public int hashCode() {
         int hash = 3;
         return hash;
-    }
-
-    /**
-     * @param index the index to set
-     */
-    public void setIndex(int index) {
-        this.index = index;
     }
 }

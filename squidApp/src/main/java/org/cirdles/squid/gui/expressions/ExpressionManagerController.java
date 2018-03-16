@@ -482,13 +482,13 @@ public class ExpressionManagerController implements Initializable {
                 unPeekTextArea.setText("Not used");
                 if (originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation()) {
                     try {
-                        rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 12));
+                        rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 15));
                     } catch (Exception e) {
                     }
                 }
                 if (originalExpressionTree.isSquidSwitchSAUnknownCalculation()) {
                     try {
-                        unPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 12));
+                        unPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) originalExpressionTree).getValue(), 15));
                     } catch (Exception e) {
                     }
                 }
@@ -573,8 +573,12 @@ public class ExpressionManagerController implements Initializable {
             sb.append(String.format("%1$-" + 13 + "s", labels[1][0]));
             sb.append(": ");
             // print list
-            for (int j = 0; j < spotSummary.getValues()[1].length; j++) {
-                sb.append((int) (spotSummary.getValues()[1][j]) + " ");
+            if (spotSummary.getValues()[1].length == 0) {
+                sb.append("None");
+            } else {
+                for (int j = 0; j < spotSummary.getValues()[1].length; j++) {
+                    sb.append((int) (spotSummary.getValues()[1][j]) + " ");
+                }
             }
             sb.append("\n");
         }
@@ -584,8 +588,12 @@ public class ExpressionManagerController implements Initializable {
             sb.append(String.format("%1$-" + 13 + "s", labels[2][0]));
             sb.append(": ");
             // print list
-            for (int j = 0; j < spotSummary.getValues()[2].length; j++) {
-                sb.append((int) (spotSummary.getValues()[2][j])).append(" ");
+            if (spotSummary.getValues()[2].length == 0) {
+                sb.append("None");
+            } else {
+                for (int j = 0; j < spotSummary.getValues()[2].length; j++) {
+                    sb.append((int) (spotSummary.getValues()[2][j])).append(" ");
+                }
             }
             sb.append("\n");
         }
@@ -611,7 +619,7 @@ public class ExpressionManagerController implements Initializable {
                         = spot.getIsotopicRatioValuesByStringName(editedExp.getName());
                 for (int i = 0; i < results[0].length; i++) {
                     try {
-                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
+                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
                     } catch (Exception e) {
                     }
                 }
@@ -633,7 +641,7 @@ public class ExpressionManagerController implements Initializable {
                     double[][] results = ExpressionTreeInterface.convertObjectArrayToDoubles(editedExp.eval(singleSpot, null));
                     for (int i = 0; i < results[0].length; i++) {
                         try {
-                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
+                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
                         } catch (Exception e) {
                         }
                     }
@@ -669,7 +677,7 @@ public class ExpressionManagerController implements Initializable {
                             = spot.getTaskExpressionsEvaluationsPerSpot().get(originalExpressionTree);
                     for (int i = 0; i < results[0].length; i++) {
                         try {
-                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 12)));
+                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
                         } catch (Exception e) {
                         }
                     }

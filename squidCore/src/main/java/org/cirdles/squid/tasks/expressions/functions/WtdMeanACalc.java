@@ -47,24 +47,23 @@ public class WtdMeanACalc extends Function {
      * indirect dating technique. Thus this is a critical step.
      *
      * We modify Ludwig's VBA version so that the input is any set of values and
-     * uncertainties but plan for it to be called for both flavors of
-     * calibration constants, 8/32 and 6/38 named here: UncorrPb/Uconst and
-     * UncorrPb/Thconst.
+     * oneSigmaPercentUncertainties but plan for it to be called for both
+     * flavors of calibration constants, 8/32 and 6/38 named here:
+     * UncorrPb/Uconst and UncorrPb/Thconst.
      *
-     * In keeping with Squid3 architecture, all uncertainties are input and
-     * output as one-sigma absolute.
+     * In keeping with Squid3 architecture, all oneSigmaPercentUncertainties are
+     * input and output as one-sigma absolute.
      *
      * @see https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-WtdMeanAcalc
      */
     public WtdMeanACalc() {
         name = "WtdMeanACalc";
-        argumentCount = 5;
+        argumentCount = 4;
         precedence = 4;
         rowCount = 3;
-        colCount = 11;
+        colCount = 6;
         labelsForOutputValues = new String[][]{
-            {"intMean", "intSigmaMean", "MSWD", "probability", "intErr68",
-                "intMeanErr95", "extMean", "extSigma", "extMeanErr68", "extMeanErr95", "WMrejects"},
+            {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability"},
             {"LargeRej Indices"},
             {"WmeanRej Indices"}};
     }
@@ -79,9 +78,10 @@ public class WtdMeanACalc extends Function {
      * child 4
      * @param shrimpFractions a list of shrimpFractions
      * @param task
-     * @return the double[1][11] array of intMean, intSigmaMean, MSWD,
-     * probability, intErr68, intMeanErr95, extMean, extSigma, extMeanErr68,
-     * extMeanErr95, rejectsCount}
+     * @return the double[3][n] where [0] is array of intMean, intSigmaMean,
+     * MSWD, probability, intErr68, intMeanErr95, extMean, extSigma,
+     * extMeanErr68, extMeanErr95}, [1] is array of large rejection indices, and
+     * [2] is array of weighted mean additional rejected indices.
      */
     @Override
     public Object[][] eval(
@@ -92,29 +92,20 @@ public class WtdMeanACalc extends Function {
             Object[][] values = childrenET.get(0).eval(shrimpFractions, task);
             double[] variableValues = transposeColumnVectorOfDoubles(values, 0);
 
-            Object[][] uncertainties = childrenET.get(1).eval(shrimpFractions, task);
-            double[] uncertaintyValues = transposeColumnVectorOfDoubles(uncertainties, 0);
+            // it is required that uncertainties supplied to this method are in percent
+            Object[][] oneSigmaPercentUncertainties = childrenET.get(1).eval(shrimpFractions, task);
+            double[] oneSigmaPercentUncertaintyValues = transposeColumnVectorOfDoubles(oneSigmaPercentUncertainties, 0);
 
-            Object uncertaintiesInPercent0 = childrenET.get(2).eval(shrimpFractions, task)[0][0];
-            boolean uncertaintiesInPercent = (boolean) uncertaintiesInPercent0;
-
-            Object noUPbConstAutoRejectO = childrenET.get(3).eval(shrimpFractions, task)[0][0];
+            Object noUPbConstAutoRejectO = childrenET.get(2).eval(shrimpFractions, task)[0][0];
             boolean noUPbConstAutoReject = (boolean) noUPbConstAutoRejectO;
 
-            Object pbCanDriftCorrO = childrenET.get(4).eval(shrimpFractions, task)[0][0];
+            Object pbCanDriftCorrO = childrenET.get(3).eval(shrimpFractions, task)[0][0];
             boolean pbCanDriftCorr = (boolean) pbCanDriftCorrO;
 
-            double[] absUnct = uncertaintyValues.clone();
-            if (uncertaintiesInPercent) {
-                for (int i = 0; i < values.length; i++) {
-                    absUnct[i] = (uncertaintyValues[i] * variableValues[i]) / 100.0;
-                }
-            }
-
-            double[][] weightedAverage = wtdMeanAcalc(variableValues, absUnct, noUPbConstAutoReject, pbCanDriftCorr);
+            double[][] weightedAverage = wtdMeanAcalc(variableValues, oneSigmaPercentUncertaintyValues, noUPbConstAutoReject, pbCanDriftCorr);
             retVal = new Object[][]{convertArrayToObjects(weightedAverage[0]), convertArrayToObjects(weightedAverage[1]), convertArrayToObjects(weightedAverage[2])};
         } catch (ArithmeticException | NullPointerException e) {
-            retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+            retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {}, {}};
         }
 
         return retVal;
@@ -152,15 +143,17 @@ public class WtdMeanACalc extends Function {
      * indirect dating technique. Thus this is a critical step.
      *
      * We modify Ludwig's VBA version so that the input is any set of values and
-     * uncertainties but plan for it to be called for both flavors of
-     * calibration constants, 8/32 and 6/38 named here: UncorrPb/Uconst and
-     * UncorrPb/Thconst.
+     * oneSigmaPercentUncertainties but plan for it to be called for both
+     * flavors of calibration constants, 8/32 and 6/38 named here:
+     * UncorrPb/Uconst and UncorrPb/Thconst.
      *
-     * In keeping with Squid3 architecture, all uncertainties are input and
-     * output as one-sigma absolute.
+     * In keeping with Squid3 architecture, noramlly all
+     * oneSigmaPercentUncertainties are input and output as one-sigma absolute;
+     * however, here we input oneSigmaPercentUncertainties as 1-sigma percents
+     * because of an assumption in the mean error calculations made by Ludwig.
      *
      * @param values
-     * @param oneSigmaAbsUnct
+     * @param oneSigmaPctUnct
      * @param noUPbConstAutoReject
      * @param pbCanDriftCorr
      * @return double[3][] where [0] contains results of
@@ -168,7 +161,7 @@ public class WtdMeanACalc extends Function {
      * rejection process and [2] contains indices of weightedAverage rejection
      * process.
      */
-    public static double[][] wtdMeanAcalc(double[] values, double[] oneSigmaAbsUnct, boolean noUPbConstAutoReject, boolean pbCanDriftCorr) {
+    public static double[][] wtdMeanAcalc(double[] values, double[] oneSigmaPctUnct, boolean noUPbConstAutoReject, boolean pbCanDriftCorr) {
         int countOfValues = values.length;
 
         boolean noReject = (noUPbConstAutoReject && !pbCanDriftCorr);
@@ -182,8 +175,8 @@ public class WtdMeanACalc extends Function {
         double[] wmErrRejIndexArray = new double[0];
 
         // first get fdNmad of uncertainty column 
-        double medianEr = median(oneSigmaAbsUnct);
-        double nMadd = fdNmad(oneSigmaAbsUnct)[0];
+        double medianEr = median(oneSigmaPctUnct);
+        double nMadd = fdNmad(oneSigmaPctUnct)[0];
 
         List<Double> largeErrRejIndexList = new ArrayList<>();
         int largeErRegN = 0;
@@ -191,7 +184,7 @@ public class WtdMeanACalc extends Function {
         // perform rejections if allowed
         if (!noReject) {
             for (int i = 0; i < countOfValues; i++) {
-                if ((Math.abs(oneSigmaAbsUnct[i] - medianEr) > 10.0 * nMadd) || (oneSigmaAbsUnct[i] == 0)) {
+                if ((Math.abs(oneSigmaPctUnct[i] - medianEr) > 10.0 * nMadd) || (oneSigmaPctUnct[i] == 0)) {
                     largeErRegN++;
                     largeErrRejIndexList.add((double) i);
                 }
@@ -204,10 +197,20 @@ public class WtdMeanACalc extends Function {
             /**
              * Here we implement the functionality of wtdAv. see
              * https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/isoplot3Basic/Pub.bas
-             * called as: WtdAv Adatrange, TRUE, TRUE , 1, (NOT NoReject), TRUE,
-             * 1 We elect to keep ConstExtErr true and report all calculated
-             * outputs of WeightedAverage.
+             * called in Ludwig as: WtdAv Adatrange, TRUE, TRUE , 1, (NOT
+             * NoReject), TRUE, 1; as values, percentOut, percentIn,
+             * sigmaLevelIn, canReject, constantExtError, sigmaLevelOut.
+             * However, we implement wtdAv assuming WtdAv Adarange, FALSE,
+             * TRUE, 1, (NOT noUPbConstAutoRejectWe), TRUE, 1. elect to keep
+             * ConstExtErr true and report all calculated outputs of
+             * WeightedAverage.
              */
+
+            // convert to abs oneSigmaPercentUncertainties
+            double[] oneSigmaAbsUnct = oneSigmaPctUnct.clone();
+            for (int i = 0; i < values.length; i++) {
+                oneSigmaAbsUnct[i] = (values[i] * oneSigmaPctUnct[i]) / 100.0;
+            }
 
             // first shrink data set by removing large rejections
             double[] valuesKeep = new double[countOfValues - largeErRegN];
