@@ -35,7 +35,6 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     private static final long serialVersionUID = -2296889996415038672L;
     private ShrimpSpeciesNode numerator;
     private ShrimpSpeciesNode denominator;
-    private String uncertaintyDirective;
 
     public final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION = "getIsotopicRatioValuesByStringName";
 
@@ -63,6 +62,10 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
         this.numerator = numerator;
         this.denominator = denominator;
         this.uncertaintyDirective = uncertaintyDirective;
+        this.index = 0;
+        if (uncertaintyDirective.length() > 0){
+            this.index = 1;
+        }
     }
 
     @Override
@@ -107,12 +110,14 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                     LOOKUP_METHODNAME_FOR_SHRIMPFRACTION,
                     new Class[]{String.class});
             for (int i = 0; i < shrimpFractions.size(); i++) {
-                double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0];
-                // to return uncertainty, copy undex 1 to index 0
-                if (uncertaintyDirective.compareTo("%") == 0) {
-                    values[0] = values[1] / values[0] * 100;
-                } else if (uncertaintyDirective.compareTo("±") == 0) {
-                    values[0] = values[1];
+                double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0].clone();
+                if (values.length > 1) {
+                    // to return uncertainty, copy index 1 to index 0
+                    if (uncertaintyDirective.compareTo("%") == 0) {
+                        values[0] = values[1] / values[0] * 100;
+                    } else if (uncertaintyDirective.compareTo("±") == 0) {
+                        values[0] = values[1];
+                    }
                 }
                 retVal[i] = convertArrayToObjects(values);
             }

@@ -155,6 +155,15 @@ public class TaskSquid25 implements Serializable {
                             false,
                             true,
                             true, false));
+                } else {
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3("(0.03446*[\"254/238\"] + 0.868) * [\"248/254\"]"),
+                            SQUID_TH_U_EQN_NAME,
+                            true,
+                            true,
+                            false,
+                            true,
+                            true, false));
                 }
 
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");

@@ -48,8 +48,26 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
      * @param name
      */
     public VariableNodeForPerSpotTaskExpressions(String name) {
+        this(name, "");
+    }
+
+    /**
+     *
+     * @param name
+     * @param uncertaintyDirective
+     */
+    public VariableNodeForPerSpotTaskExpressions(String name, String uncertaintyDirective) {
+        this(name, uncertaintyDirective, 0);
+    }
+
+    public VariableNodeForPerSpotTaskExpressions(String name, String uncertaintyDirective, int index) {
         this.name = name;
+        this.uncertaintyDirective = uncertaintyDirective;
         this.healthy = true;
+        this.index = index;
+        if (uncertaintyDirective.length() > 0) {
+            this.index = 1;
+        }
     }
 
     @Override
@@ -106,7 +124,22 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                         lookupMethodNameForShrimpFraction,
                         new Class[]{String.class});
                 for (int i = 0; i < shrimpFractions.size(); i++) {
-                    double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0];
+                    double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0].clone();
+                    if (values.length > 1) {
+
+                        if (uncertaintyDirective.compareTo("%") == 0) {
+                            // index should be 1 from constructor
+                            values[1] = values[1] / values[0] * 100;
+                        }
+
+                        if (index > 0) {
+                            // we have a call to retrieve into [0] another output of this expression, such as 1-sigma abs
+                            for (int j = index; j < values.length; j++) {
+                                values[j - index] = values[j];
+                            }
+                        }
+                    }
+
                     retVal[i] = convertArrayToObjects(values);
                 }
 
