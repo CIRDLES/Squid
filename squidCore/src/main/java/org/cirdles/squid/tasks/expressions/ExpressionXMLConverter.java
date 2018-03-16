@@ -125,7 +125,11 @@ public class ExpressionXMLConverter implements Converter {
         reader.moveDown();
         expression.setExcelExpressionString(reader.getValue());
         reader.moveUp();
-
+        
+        reader.moveDown();
+        expression.setSquidSwitchNU(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+        
         reader.moveDown();
         ExpressionTreeInterface expressionTree = new ExpressionTree();
         expressionTree = (ExpressionTreeInterface) context.convertAnother(expressionTree, ExpressionTree.class);
