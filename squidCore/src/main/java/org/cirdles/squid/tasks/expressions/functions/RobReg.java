@@ -67,8 +67,8 @@ public class RobReg extends Function {
 
         Object[][] retVal;
         try {
-            double[] xValues = transposeColumnVector(childrenET.get(0).eval(shrimpFractions, task), 0);
-            double[] yValues = transposeColumnVector(childrenET.get(1).eval(shrimpFractions, task), 0);
+            double[] xValues = transposeColumnVectorOfDoubles(childrenET.get(0).eval(shrimpFractions, task), 0);
+            double[] yValues = transposeColumnVectorOfDoubles(childrenET.get(1).eval(shrimpFractions, task), 0);
             double[] robustReg2 = org.cirdles.ludwig.isoplot3.Pub.robustReg2(xValues, yValues);
             double slopeErr = Math.abs(robustReg2[2] - robustReg2[1]) / 2.0;
             double yIntErr = Math.abs(robustReg2[6] - robustReg2[5]) / 2.0;

@@ -70,9 +70,9 @@ public class SqWtdAv extends Function {
         Object[][] retVal;
         try {
             Object[][] valuesAndUncertainties = childrenET.get(0).eval(shrimpFractions, task);
-            double[] variableValues = transposeColumnVector(valuesAndUncertainties, 0);
-            double[] uncertaintyValues = transposeColumnVector(valuesAndUncertainties, 1);
-            double[] weightedAverage = org.cirdles.ludwig.isoplot3.Means.weightedAverage(variableValues, uncertaintyValues);
+            double[] variableValues = transposeColumnVectorOfDoubles(valuesAndUncertainties, 0);
+            double[] uncertaintyValues = transposeColumnVectorOfDoubles(valuesAndUncertainties, 1);
+            double[] weightedAverage = org.cirdles.ludwig.isoplot3.Means.weightedAverage(variableValues, uncertaintyValues, false, false)[0];
             retVal = new Object[][]{convertArrayToObjects(weightedAverage)};
         } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};

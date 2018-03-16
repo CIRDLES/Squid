@@ -45,7 +45,7 @@ public class Pb46cor7 extends Function {
     public Pb46cor7() {
 
         name = "pb46cor7";
-        argumentCount = 2;
+        argumentCount = 4;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
@@ -55,9 +55,10 @@ public class Pb46cor7 extends Function {
     /**
      * Requires that child 0 is a VariableNode that evaluates to a double array
      * with one column representing the 207/206 IsotopicRatio and a row for each
-     * member of shrimpFractions. Requires that child 1 is a VariableNode that
+     * member of shrimpFractions. Requires that child 3 is a VariableNode that
      * evaluates to a double array with one column representing the
      * 207corr206Pb/238UAge and a row for each member of shrimpFractions.
+     * Child 1 is sComm_64 and child 2 is sComm_74.
      *
      * @param childrenET list containing child 0 and 1
      * @param shrimpFractions a list of shrimpFractions
@@ -72,8 +73,13 @@ public class Pb46cor7 extends Function {
         Object[][] retVal;
         try {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
-            double[] pb207corr206_238Age = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
-            double[] pb46cor7 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor7(pb207_206RatioAndUnct[0], pb207corr206_238Age[0]);
+            Object sComm_640 = childrenET.get(1).eval(shrimpFractions, task)[0][0];
+            double sComm_64 = (double) sComm_640;
+            Object sComm_740 = childrenET.get(2).eval(shrimpFractions, task)[0][0];
+            double sComm_74 = (double) sComm_740;            
+            double[] pb207corr206_238Age = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
+            
+            double[] pb46cor7 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor7(pb207_206RatioAndUnct[0], sComm_64, sComm_74, pb207corr206_238Age[0]);
             retVal = new Object[][]{{pb46cor7[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0}};
