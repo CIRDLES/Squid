@@ -315,6 +315,12 @@ public interface TaskInterface {
      * @return the namedConstantsMap
      */
     public Map<String, ExpressionTreeInterface> getNamedConstantsMap();
+    
+    /**
+     * 
+     * @return namedParametersMap
+     */
+    public Map<String, ExpressionTreeInterface> getNamedParametersMap();
 
     public void setIndexOfTaskBackgroundMass(int indexOfTask25BackgroundMass);
 

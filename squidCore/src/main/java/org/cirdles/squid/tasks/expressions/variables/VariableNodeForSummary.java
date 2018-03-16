@@ -33,8 +33,6 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 public class VariableNodeForSummary extends ExpressionTree {
 
     private static final long serialVersionUID = -868256637199178058L;
-    
-    private int index;
 
     /**
      *
@@ -52,11 +50,17 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     public VariableNodeForSummary(String name, int index) {
+        this(name, index, "");
+    }
+
+    public VariableNodeForSummary(String name, int index, String uncertaintyDirective) {
         this.name = name;
         this.index = index;
+        this.uncertaintyDirective = uncertaintyDirective;
+        if (uncertaintyDirective.length() > 0){
+            this.index = 1;
+        }
     }
-    
-    
 
     @Override
     public boolean equals(Object obj) {
@@ -109,15 +113,23 @@ public class VariableNodeForSummary extends ExpressionTree {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);
-        double[][] valuesAll = detail.getValues();
-        double[][] values = valuesAll;
-        if (index > 0){
-            // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigmaabs
+        double[][] valuesAll = detail.getValues().clone();
+        
+        if (uncertaintyDirective.compareTo("%") == 0) {
+            // index should be 1 from constructor
+            valuesAll[0][1] = valuesAll[0][1] / valuesAll[0][0] * 100;
+        } 
+
+        double[][] values = valuesAll.clone();
+
+        if (index > 0) {
+            // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
             values = new double[1][valuesAll[0].length - index];
-            for (int i = index; i < valuesAll[0].length; i ++){
+            for (int i = index; i < valuesAll[0].length; i++) {
                 values[0][i - index] = valuesAll[0][i];
             }
         }
+        
         Object[][] retVal = convertArrayToObjects(values);
 
         return retVal;
@@ -131,8 +143,16 @@ public class VariableNodeForSummary extends ExpressionTree {
     public String toStringMathML() {
         String retVal
                 = "<mtext>\n"
-                + name +  "[" + index + "]" 
+                + name + "[" + index + "]"
                 + "</mtext>\n";
+
+        if (uncertaintyDirective.length() > 0) {
+            retVal = "<mrow>\n<msup>\n<mfenced>\n"
+                    + retVal
+                    + "</mfenced>\n"
+                    + "<mtext>" + uncertaintyDirective + "</mtext>\n"
+                    + "</msup>\n</mrow>\n";
+        }
 
         return retVal;
     }

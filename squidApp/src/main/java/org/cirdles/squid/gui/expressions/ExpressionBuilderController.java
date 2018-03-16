@@ -189,10 +189,6 @@ public class ExpressionBuilderController implements Initializable {
         squidFunctionsListView.setCursor(Cursor.CLOSED_HAND);
         squidFunctionsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
 
-        constantsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        constantsListView.setCursor(Cursor.CLOSED_HAND);
-        constantsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
-
         populateOperationOrFunctionListViews();
     }
 
@@ -827,7 +823,12 @@ public class ExpressionBuilderController implements Initializable {
         // constants and numbers ===============================================
         List<String> constantStrings = new ArrayList<>();
         constantStrings.add(numberString + operationFlagDelimeter + "placeholder for custom number");
+        
         for (Map.Entry<String, ExpressionTreeInterface> constant : squidProject.getTask().getNamedConstantsMap().entrySet()) {
+            constantStrings.add(constant.getKey() + operationFlagDelimeter + ((ConstantNode) constant.getValue()).getValue());
+        }
+        
+        for (Map.Entry<String, ExpressionTreeInterface> constant : squidProject.getTask().getNamedParametersMap().entrySet()) {
             constantStrings.add(constant.getKey() + operationFlagDelimeter + ((ConstantNode) constant.getValue()).getValue());
         }
 

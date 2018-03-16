@@ -67,7 +67,7 @@ public class CalculateMeanConcStd extends Function {
 
         Object[][] retVal;
         try {
-            double[] xValues = transposeColumnVector(childrenET.get(0).eval(shrimpFractions, task), 0);
+            double[] xValues = transposeColumnVectorOfDoubles(childrenET.get(0).eval(shrimpFractions, task), 0);
             int counter = 0;
             double sumOfConcentrations = 0.0;
             double pdMeanParentEleA = 0.0;
