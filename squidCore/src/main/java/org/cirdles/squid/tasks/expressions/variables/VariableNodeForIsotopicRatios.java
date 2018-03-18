@@ -105,6 +105,9 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         Object[][] retVal = new Object[shrimpFractions.size()][];
 
+        if (name.compareTo("208/248") == 0){
+            System.out.println("BINGO");
+        }
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
                     LOOKUP_METHODNAME_FOR_SHRIMPFRACTION,
