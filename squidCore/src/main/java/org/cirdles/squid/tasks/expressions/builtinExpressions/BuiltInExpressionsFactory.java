@@ -253,16 +253,29 @@ public abstract class BuiltInExpressionsFactory {
                 + "( sComm_64 / (1 / [\"204/206 (fr. 207)\"] - sComm_64 ) )^2 * \n"
                 + "[\"204/206 (fr. 207) %err\"]^2)", true, true, false);
         correctionsOfCalibrationConstants.add(expression7corr206Pb238Ucalibrconsterr);
+
+        // weighted mean
+        Expression expression7corr206Pb238UcalibrconstWM = buildExpression("7-corr206Pb/238Ucalibr.const WM",
+                "WtdMeanACalc( [\"7-corr206Pb/238Ucalibr.const\"], [\"7-corr206Pb/238Ucalibr.const %err\"], FALSE, FALSE )", true, false, true);
+        correctionsOfCalibrationConstants.add(expression7corr206Pb238UcalibrconstWM);
+
+        // age calc
+        Expression expression7corr206Pb238UAge = buildExpression("7-corr206Pb/238U Age",
+                "LN( 1.0 + [\"7-corr206Pb/238Ucalibr.const\"] / [\"7-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio ) / lambda238", true, false, false);
+        correctionsOfCalibrationConstants.add(expression7corr206Pb238UAge);
+
+        Expression expression7corr206Pb238UAgeUnct = buildExpression("7-corr206Pb/238U Age 1sigma",
+                "[\"7-corr206Pb/238Ucalibr.const %err\"] / 100 * ( EXP(lambda238 * [\"7-corr206Pb/238U Age\"] ) - 1 ) / lambda238 / EXP(lambda238 * [\"7-corr206Pb/238U Age\"] )  ", true, false, false);
+        correctionsOfCalibrationConstants.add(expression7corr206Pb238UAgeUnct);
+
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr  206/238  *** End
         //
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 8-corr  206/238  *** Start
         Expression expression8corr206Pb238Ucalibrconst = buildExpression("8-corr206Pb/238Ucalibr.const",
-                "(1 - [\"204/206 (fr. 208)\"] * sComm_84) * [\"UncorrPb/Uconst\"]", true, true, false);
+                "(1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"]", true, true, false);
         correctionsOfCalibrationConstants.add(expression8corr206Pb238Ucalibrconst);
 
-        // TODO: FIX term1 = Simon
-        String term1 = "[%\"UncorrPb/Uconst\"]^2 +  \n"
-                + "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] / [\"8-corr206Pb/238Ucalibr.const\"] )^2 ";
+        String term2 = "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] / [\"8-corr206Pb/238Ucalibr.const\"] )^2 ";       
         String term3 = "( [\"208/206\"] * [%\"208/206\"] / \n"
                 + "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) )^2 ";
         String term4 = "1 / ( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) +  \n"
@@ -270,8 +283,23 @@ public abstract class BuiltInExpressionsFactory {
         String term6 = "((" + term4 + ")* StdRad86fact * [\"232Th/238U\"] * [%\"232Th/238U\"] )^2";
 
         Expression expression8corr206Pb238Ucalibrconsterr = buildExpression("8-corr206Pb/238Ucalibr.const %err",
-                "sqrt( (" + term1 + ") * ((" + term3 + ") + (" + term6 + ")) )", true, true, false);
+                "sqrt( [%\"UncorrPb/Uconst\"]^2 + ((" + term2 + ") * ((" + term3 + ") + (" + term6 + "))) )", true, true, false);
         correctionsOfCalibrationConstants.add(expression8corr206Pb238Ucalibrconsterr);
+
+        // weighted mean
+        Expression expression8corr206Pb238UcalibrconstWM = buildExpression("8-corr206Pb/238Ucalibr.const WM",
+                "WtdMeanACalc( [\"8-corr206Pb/238Ucalibr.const\"], [\"8-corr206Pb/238Ucalibr.const %err\"], FALSE, FALSE )", true, false, true);
+        correctionsOfCalibrationConstants.add(expression8corr206Pb238UcalibrconstWM);
+
+        // age calc
+        Expression expression8corr206Pb238UAge = buildExpression("8-corr206Pb/238U Age",
+                "LN( 1.0 + [\"8-corr206Pb/238Ucalibr.const\"] / [\"8-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio ) / lambda238", true, false, false);
+        correctionsOfCalibrationConstants.add(expression8corr206Pb238UAge);
+
+        Expression expression8corr206Pb238UAgeUnct = buildExpression("8-corr206Pb/238U Age 1sigma",
+                "[\"8-corr206Pb/238Ucalibr.const %err\"] / 100 * ( EXP(lambda238 * [\"8-corr206Pb/238U Age\"] ) - 1 ) / lambda238 / EXP(lambda238 * [\"8-corr206Pb/238U Age\"] )  ", true, false, false);
+        correctionsOfCalibrationConstants.add(expression8corr206Pb238UAgeUnct);
+
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 8-corr  206/238  *** End
         //
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 4-corr  208/232  *** Start
@@ -310,9 +338,23 @@ public abstract class BuiltInExpressionsFactory {
                 + "( sComm_84 / ( [\"208/206\"] / [\"204/206 (fr. 207)\"] - sComm_84 ) )^2 * \n"
                 + "( [%\"208/206\"]^2 + [\"204/206 (fr. 207) %err\"]^2 ))", true, true, false);
         correctionsOfCalibrationConstants.add(expression7corr208Pb232Thcalibrconsterr);
+
+        // weighted mean
+        Expression expression7corr208Pb232ThcalibrconstWM = buildExpression("7-corr208Pb/232Thcalibr.const WM",
+                "WtdMeanACalc( [\"7-corr208Pb/232Thcalibr.const\"], [\"7-corr208Pb/232Thcalibr.const %err\"], FALSE, FALSE )", true, false, true);
+        correctionsOfCalibrationConstants.add(expression7corr208Pb232ThcalibrconstWM);
+
+        // age calc
+        Expression expression7corr208Pb232ThAge = buildExpression("7-corr208Pb/232Th Age",
+                "LN( 1.0 + [\"7-corr208Pb/232Thcalibr.const\"] / [\"7-corr208Pb/232Thcalibr.const WM\"][0] * StdThPbRatio ) / lambda232", true, false, false);
+        correctionsOfCalibrationConstants.add(expression7corr208Pb232ThAge);
+
+        Expression expression7corr208Pb232ThAgeUnct = buildExpression("7-corr208Pb/232Th Age 1sigma",
+                "[\"7-corr208Pb/232Thcalibr.const %err\"] / 100 * ( EXP(lambda232 * [\"7-corr208Pb/232Th Age\"] ) - 1 ) / lambda232 / EXP(lambda232 * [\"7-corr208Pb/232Th Age\"] )  ", true, false, false);
+        correctionsOfCalibrationConstants.add(expression7corr208Pb232ThAgeUnct);
+
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr  208/232  *** End
         //
-
         // TODO: Logic needed to decide which of these goes into "calib.const. %err"
         return correctionsOfCalibrationConstants;
     }
