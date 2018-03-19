@@ -275,9 +275,7 @@ public abstract class BuiltInExpressionsFactory {
                 "(1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"]", true, true, false);
         correctionsOfCalibrationConstants.add(expression8corr206Pb238Ucalibrconst);
 
-        // TODO: FIX term1 = Simon
-        String term1 = "[%\"UncorrPb/Uconst\"]^2 +  \n"
-                + "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] / [\"8-corr206Pb/238Ucalibr.const\"] )^2 ";
+        String term2 = "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] / [\"8-corr206Pb/238Ucalibr.const\"] )^2 ";       
         String term3 = "( [\"208/206\"] * [%\"208/206\"] / \n"
                 + "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) )^2 ";
         String term4 = "1 / ( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) +  \n"
@@ -285,7 +283,7 @@ public abstract class BuiltInExpressionsFactory {
         String term6 = "((" + term4 + ")* StdRad86fact * [\"232Th/238U\"] * [%\"232Th/238U\"] )^2";
 
         Expression expression8corr206Pb238Ucalibrconsterr = buildExpression("8-corr206Pb/238Ucalibr.const %err",
-                "sqrt( (" + term1 + ") * ((" + term3 + ") + (" + term6 + ")) )", true, true, false);
+                "sqrt( [%\"UncorrPb/Uconst\"]^2 + ((" + term2 + ") * ((" + term3 + ") + (" + term6 + "))) )", true, true, false);
         correctionsOfCalibrationConstants.add(expression8corr206Pb238Ucalibrconsterr);
 
         // weighted mean
