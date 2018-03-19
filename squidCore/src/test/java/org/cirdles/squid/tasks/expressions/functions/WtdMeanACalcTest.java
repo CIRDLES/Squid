@@ -57,7 +57,7 @@ public class WtdMeanACalcTest {
      */
     @Test
     public void testWtdMeanAcalc() {
-        System.out.println("wtdMeanAcalc 238");
+        System.out.println("wtdMeanAcalc 4-corr 206Pb/238U calibr. const");
         double[] values = new double[]{
             0.00884012768001511,
             0.00884482434708822,
@@ -119,7 +119,136 @@ public class WtdMeanACalcTest {
         assertArrayEquals(expResult[1], result[1], SQUID_EPSILON);
         assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
 
-        System.out.println("wtdMeanAcalc 232");
+        // ========================================================================= wtdMeanAcalc 4-corr 206Pb/238U calibr. const END
+        System.out.println("wtdMeanAcalc 7-corr 206Pb/238U calibr. const");
+        values = new double[]{
+            0.00884371071978141,
+            0.00885316167050690,
+            0.00894632505129723,
+            0.00889911016198654,
+            0.00891119755467193,
+            0.00883694576255016,
+            0.00876683633158573,
+            0.00893657153920464,
+            0.00890116921721770,
+            0.00893234134799460,
+            0.00889688858132296,
+            0.00907417960245889,
+            0.00887097382824122,
+            0.00869867952489226,
+            0.00879314896315998,
+            0.00900066326288089,
+            0.00891353085745540,
+            0.00895465770918098,
+            0.00883307968574796,
+            0.00890583311993129,
+            0.00879979816640141
+        };
+
+        oneSigmaPctUnct = new double[]{
+            0.580380210861329,
+            0.319371068192510,
+            0.306818766504299,
+            0.502686926787316,
+            0.308452355754337,
+            0.319080284531204,
+            0.307780399737377,
+            0.563311013546169,
+            0.578917948510348,
+            0.350506739731244,
+            0.315662779881056,
+            0.563229808599906,
+            0.856400502961425,
+            0.321011977002084,
+            0.318654917363704,
+            0.315519302495536,
+            0.382941588047529,
+            0.315426956383149,
+            0.330029382972859,
+            0.320091435434974,
+            0.335469266072503
+        };
+
+        noUPbConstAutoReject = false;
+        pbCanDriftCorr = false;
+
+        result = WtdMeanACalc.wtdMeanAcalc(values, oneSigmaPctUnct, noUPbConstAutoReject, pbCanDriftCorr);
+
+        expResult = new double[][]{{0.008893685353067955, 6.560843287071051E-5, 1.7599984283069372E-5, 3.61518245547682E-5, 5.793168592492045, 7.968070647734748E-13},
+        {0.0, 8.0, 12.0},
+        {13.0}};
+
+        assertArrayEquals(expResult[0], result[0], SQUID_EPSILON);
+        assertArrayEquals(expResult[1], result[1], SQUID_EPSILON);
+        assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
+
+        // ========================================================================= wtdMeanAcalc 7-corr 206Pb/238U calibr. const END        
+        System.out.println("wtdMeanAcalc 8-corr 206Pb/238U calibr. const");
+        values = new double[]{
+            0.00883888952884310,
+            0.00884331196433504,
+            0.00893913688173332,
+            0.00889298439237256,
+            0.00890815777925246,
+            0.00881397477162038,
+            0.00874905677062329,
+            0.00892289948226974,
+            0.00889151893216212,
+            0.00892861692758308,
+            0.00887847016279618,
+            0.00906529495886181,
+            0.00886758015478957,
+            0.00870101673366823,
+            0.00879363602324261,
+            0.00897805461142732,
+            0.00891811919312604,
+            0.00894732572089242,
+            0.00884945758949287,
+            0.00891625316577103,
+            0.00879326136350812
+
+        };
+
+        oneSigmaPctUnct = new double[]{
+            0.615044457505017,
+            0.332902590395251,
+            0.319841627605018,
+            0.508491794174057,
+            0.321048685161464,
+            0.329283261389387,
+            0.322473028402750,
+            0.571111482976386,
+            0.613299846729331,
+            0.394434488023121,
+            0.330191770285568,
+            0.570779845213802,
+            0.861862798537272,
+            0.333906376161504,
+            0.332043877028965,
+            0.328514145941694,
+            0.396133841250727,
+            0.329703516232533,
+            0.343014645749324,
+            0.332867988819649,
+            0.349908126553537
+        };
+
+        noUPbConstAutoReject = false;
+        pbCanDriftCorr = false;
+
+        result = WtdMeanACalc.wtdMeanAcalc(values, oneSigmaPctUnct, noUPbConstAutoReject, pbCanDriftCorr);
+
+        expResult = new double[][]{{0.008886788273052799, 6.48021476077764E-5,
+            1.7553966494884863E-5, 3.605730020871834E-5, 5.353464528384578, 1.5670686970281622E-11},
+        {0.0, 8.0, 12.0},
+        {13.0}};
+
+        assertArrayEquals(expResult[0], result[0], SQUID_EPSILON);
+        assertArrayEquals(expResult[1], result[1], SQUID_EPSILON);
+        assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
+
+        // ========================================================================= wtdMeanAcalc 8-corr 206Pb/238U calibr. const END
+        System.out.println("wtdMeanAcalc 4-corr 208Pb/232Th calibr. const");
         values = new double[]{
             0.0131044345958688,
             0.0130045206497664,
@@ -183,71 +312,7 @@ public class WtdMeanACalcTest {
         assertArrayEquals(expResult[1], result[1], SQUID_EPSILON);
         assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
 
-        System.out.println("wtdMeanAcalc 8-corr  6/38");
-        values = new double[]{
-            0.00883888952884310,
-            0.00884331196433504,
-            0.00893913688173332,
-            0.00889298439237256,
-            0.00890815777925246,
-            0.00881397477162038,
-            0.00874905677062329,
-            0.00892289948226974,
-            0.00889151893216212,
-            0.00892861692758308,
-            0.00887847016279618,
-            0.00906529495886181,
-            0.00886758015478957,
-            0.00870101673366823,
-            0.00879363602324261,
-            0.00897805461142732,
-            0.00891811919312604,
-            0.00894732572089242,
-            0.00884945758949287,
-            0.00891625316577103,
-            0.00879326136350812
-
-        };
-
-        oneSigmaPctUnct = new double[]{
-            0.615044457505017,
-            0.332902590395251,
-            0.319841627605018,
-            0.508491794174057,
-            0.321048685161464,
-            0.329283261389387,
-            0.322473028402750,
-            0.571111482976386,
-            0.613299846729331,
-            0.394434488023121,
-            0.330191770285568,
-            0.570779845213802,
-            0.861862798537272,
-            0.333906376161504,
-            0.332043877028965,
-            0.328514145941694,
-            0.396133841250727,
-            0.329703516232533,
-            0.343014645749324,
-            0.332867988819649,
-            0.349908126553537
-        };
-
-        noUPbConstAutoReject = false;
-        pbCanDriftCorr = false;
-
-        result = WtdMeanACalc.wtdMeanAcalc(values, oneSigmaPctUnct, noUPbConstAutoReject, pbCanDriftCorr);
-
-        expResult = new double[][]{{0.008886788273052799, 6.48021476077764E-5,
-            1.7553966494884863E-5, 3.605730020871834E-5, 5.353464528384578, 1.5670686970281622E-11},
-        {0.0, 8.0, 12.0},
-        {13.0}};
-
-        assertArrayEquals(expResult[0], result[0], SQUID_EPSILON);
-        assertArrayEquals(expResult[1], result[1], SQUID_EPSILON);
-        assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
-        
-        System.out.println("wtdMeanAcalc 7-corr  8/32");
+        System.out.println("wtdMeanAcalc 7-corr 208Pb/232Th calibr. const");
         values = new double[]{
             0.0132714624131130,
             0.0133882946295659,
@@ -267,7 +332,7 @@ public class WtdMeanACalcTest {
             0.0139594429074334,
             0.0128858346030185,
             0.0133586331217752,
-//            0.0120800837543763, march 2018 s.b. rejected but Simon needs to solve min prob issue
+            0.0120800837543763,
             0.0127637281929925,
             0.0131185889389555
 
@@ -292,7 +357,7 @@ public class WtdMeanACalcTest {
             3.01846810945945,
             3.35791764620727,
             2.99608087486247,
-//            3.23872225562792, march 2018 s.b. rejected but Simon needs to solve min prob issue
+            3.23872225562792,
             3.14717175952029,
             3.24423803664043
         };
@@ -305,7 +370,7 @@ public class WtdMeanACalcTest {
         expResult = new double[][]{{0.013335780829052908, 9.73974592746924E-5,
             9.737797978283746E-5, 1.908990201783971E-4, 0.751084515119131, 0.7676939680263979},
         {},
-        {}}; //  march 2018 18.0 s.b. rejected but Simon needs to solve min prob issue
+        {18}};
 
         assertArrayEquals(expResult[0], result[0], SQUID_EPSILON);
         assertArrayEquals(expResult[1], result[1], SQUID_EPSILON);
