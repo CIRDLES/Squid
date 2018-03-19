@@ -70,8 +70,9 @@ expr:   FUNCTION '(' exprList+ ')'    // func call like f(), f(x), f(1,2) switch
     |   ARRAY_CALL
     |   NAMED_EXPRESSION
     |   ID                      // variable reference
-    |   INT
+//    |   INT
     |   FLOAT
+    |   INT
     
     ;
 exprList : expr (',' expr)* ;   // arg list
