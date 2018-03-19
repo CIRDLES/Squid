@@ -130,7 +130,7 @@ public class ExpressionParser {
 
             }
             // be sure top level expression is root
-            returnExpressionTree.setRootExpressionTree(true);
+            returnExpressionTree.setRootExpressionTree(!(((ExpressionTree) returnExpressionTree).getLeftET() instanceof ShrimpSpeciesNode));
 
         }
 

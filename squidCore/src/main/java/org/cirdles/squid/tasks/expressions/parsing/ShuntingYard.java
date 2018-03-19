@@ -27,6 +27,7 @@ import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_M
 public class ShuntingYard {
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
+    private static final Pattern NUMBER_SCIENTIFIC_PATTERN = Pattern.compile("([+-]?(?:0|[1-9]\\d*)(?:\\.\\d*)?(?:[eE][+\\-]?\\d+))");
 
     /**
      *
@@ -353,6 +354,6 @@ public class ShuntingYard {
      * @return
      */
     public static boolean isNumber(String string) {
-        return string != null && NUMBER_PATTERN.matcher(string).matches();
+        return (string != null) && (NUMBER_PATTERN.matcher(string).matches() || NUMBER_SCIENTIFIC_PATTERN.matcher(string).matches());
     }
 }
