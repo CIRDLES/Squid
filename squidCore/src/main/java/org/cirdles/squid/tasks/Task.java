@@ -99,7 +99,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     // comes from task
     protected int indexOfTaskBackgroundMass;
     protected String parentNuclide;
-    protected String primaryParentElement;
+    protected boolean directAltPD;
     protected String filterForRefMatSpotNames;
     protected String filterForConcRefMatSpotNames;
 
@@ -173,7 +173,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
         this.parentNuclide = "";
-        this.primaryParentElement = "";
+        this.directAltPD = false;
 
         this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
@@ -203,7 +203,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         generateConstants();
         generateParameters();
-        //generateBuiltInExpressions();
     }
 
     private void generateConstants() {
@@ -221,13 +220,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
 
-        SortedSet<Expression> correctionsOfCalibrationConstants = generateCorrectionsOfCalibrationConstants();
+        SortedSet<Expression> correctionsOfCalibrationConstants = generateCorrectionsOfCalibrationConstants(isPbU(), isDirectAltPD());
         taskExpressionsOrdered.addAll(correctionsOfCalibrationConstants);
 
         SortedSet<Expression> perSpotPbCorrections = generatePerSpotProportionsOfCommonPb();
         taskExpressionsOrdered.addAll(perSpotPbCorrections);
 
-        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(primaryParentElement);
+        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide);
         taskExpressionsOrdered.addAll(perSpotConcentrations);
     }
 
@@ -298,7 +297,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(" Concentration Reference Material Spots extracted by filter: ' ")
                 .append(filterForConcRefMatSpotNames)
                 .append(" '.\n\t\t  Mean Concentration of Primary Parent Element ")
-                .append(primaryParentElement)
+                .append(parentNuclide)
                 .append(" = ")
                 .append(meanConcValue);
 
@@ -1341,6 +1340,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @return
      */
+    @Override
     public String getParentNuclide() {
         return parentNuclide;
     }
@@ -1349,26 +1349,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @param parentNuclide
      */
+    @Override
     public void setParentNuclide(String parentNuclide) {
         this.parentNuclide = parentNuclide;
     }
 
     /**
-     *
-     * @return
+     * @return the directAltPD
      */
     @Override
-    public String getPrimaryParentElement() {
-        return primaryParentElement;
+    public boolean isDirectAltPD() {
+        return directAltPD;
     }
 
     /**
-     *
-     * @param primaryParentElement
+     * @param directAltPD the directAltPD to set
      */
     @Override
-    public void setPrimaryParentElement(String primaryParentElement) {
-        this.primaryParentElement = primaryParentElement;
+    public void setDirectAltPD(boolean directAltPD) {
+        this.directAltPD = directAltPD;
     }
 
     /**

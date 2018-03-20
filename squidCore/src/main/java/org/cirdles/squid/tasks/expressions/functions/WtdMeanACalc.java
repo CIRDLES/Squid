@@ -47,12 +47,30 @@ public class WtdMeanACalc extends Function {
      * indirect dating technique. Thus this is a critical step.
      *
      * We modify Ludwig's VBA version so that the input is any set of values and
-     * oneSigmaPercentUncertainties but plan for it to be called for both
-     * flavors of calibration constants, 8/32 and 6/38 named here:
-     * UncorrPb/Uconst and UncorrPb/Thconst.
+     * oneSigmaPercentUncertainties but plan for it to be called separately for
+     * each of the 5 flavors of calibration constants, named here:
+     * 4-corr206/238, 7-corr206/238, 8-corr206/238, 4-corr208/232,
+     * 7-corr208/232.
      *
-     * In keeping with Squid3 architecture, all oneSigmaPercentUncertainties are
-     * input and output as one-sigma absolute.
+     * In a break with Squid3 architecture, in order to preserve the results of
+     * Squid25, the uncertainties input to this function are 1-sigma percent.
+     * After the large rejection stage, the uncertainties are converted to
+     * absolute for the balance of the calculations and 1-sigma absolute values
+     * are returned per Squid3 architecture.
+     *
+     * Note: the following values displayed in Squid25 can be calculated from
+     * the outputs of this function.
+     *
+     * 1sigma%errorOfMean = err68 / mean * 100
+     *
+     * 95%-conf. err. of mean(%) = err95 / mean * 100
+     *
+     * if externalFlag = 1.0, otherwise zero
+     * 1s external spot-to-spot error = 1-sigmaAbs / mean * 100
+     * 
+     * 
+     * Returns double[3][], where the indices listed in [1] and [2] are
+     * zero-based rather than the Squid25 1-based values.
      *
      * @see https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-WtdMeanAcalc
      */
@@ -61,9 +79,9 @@ public class WtdMeanACalc extends Function {
         argumentCount = 4;
         precedence = 4;
         rowCount = 3;
-        colCount = 6;
+        colCount = 7;
         labelsForOutputValues = new String[][]{
-            {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability"},
+            {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability", "externalFlag"},
             {"LargeRej Indices"},
             {"WmeanRej Indices"}};
     }
@@ -200,8 +218,8 @@ public class WtdMeanACalc extends Function {
              * called in Ludwig as: WtdAv Adatrange, TRUE, TRUE , 1, (NOT
              * NoReject), TRUE, 1; as values, percentOut, percentIn,
              * sigmaLevelIn, canReject, constantExtError, sigmaLevelOut.
-             * However, we implement wtdAv assuming WtdAv Adarange, FALSE,
-             * TRUE, 1, (NOT noUPbConstAutoRejectWe), TRUE, 1. elect to keep
+             * However, we implement wtdAv assuming WtdAv Adarange, FALSE, TRUE,
+             * 1, (NOT noUPbConstAutoRejectWe), TRUE, 1. elect to keep
              * ConstExtErr true and report all calculated outputs of
              * WeightedAverage.
              */

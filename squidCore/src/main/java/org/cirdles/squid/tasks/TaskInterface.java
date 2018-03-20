@@ -315,9 +315,9 @@ public interface TaskInterface {
      * @return the namedConstantsMap
      */
     public Map<String, ExpressionTreeInterface> getNamedConstantsMap();
-    
+
     /**
-     * 
+     *
      * @return namedParametersMap
      */
     public Map<String, ExpressionTreeInterface> getNamedParametersMap();
@@ -338,6 +338,20 @@ public interface TaskInterface {
      */
     public void setParentNuclide(String parentNuclide);
 
+    public default boolean isPbU() {
+        return (getParentNuclide().contains("238"));
+    }
+
+    /**
+     * @return the directAltPD
+     */
+    public boolean isDirectAltPD();
+
+    /**
+     * @param directAltPD the directAltPD to set
+     */
+    public void setDirectAltPD(boolean directAltPD);
+
     /**
      * @return the useCalculated_pdMeanParentEleA
      */
@@ -355,15 +369,4 @@ public interface TaskInterface {
 
     public void produceSummaryReportsForGUI();
 
-    /**
-     *
-     * @return
-     */
-    public String getPrimaryParentElement();
-
-    /**
-     *
-     * @param primaryParentElement
-     */
-    public void setPrimaryParentElement(String primaryParentElement);
 }
