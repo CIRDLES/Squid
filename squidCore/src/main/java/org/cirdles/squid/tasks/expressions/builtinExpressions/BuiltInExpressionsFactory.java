@@ -421,19 +421,13 @@ public abstract class BuiltInExpressionsFactory {
                 "( [\"208/206\"] / [\"204/206\"] - sComm_84 ) / ( 1 / [\"204/206\"] - sComm_64)", true, true, false);
         perSpotPbCorrectionsOrdered.add(expression4corr208Pb206Pb);
 
-        // ref material version
+        // ref material and sample version
         Expression expression4corr208Pb206Pberr = buildExpression("4-corr208Pb*/206Pb* %err",
                 "100 * sqrt( ( ([%\"208/206\"] / 100 * [\"208/206\"])^2 +\n"
-                + "(StdRad86fact * sComm_64 - sComm_84)^2 * ([%\"204/206\"] / 100 * [\"204/206\"])^2 )  \n"
-                + " / (1 - sComm_64 * [\"204/206\"])   ) / abs( StdRad86fact ) ", true, false, false);
+                + "([\"4-corr208Pb*/206Pb*\"] * sComm_64 - sComm_84)^2 * ([%\"204/206\"] / 100 * [\"204/206\"])^2 )  \n"
+                + " / (1 - sComm_64 * [\"204/206\"]) ^2  ) / abs( [\"4-corr208Pb*/206Pb*\"] ) ", true, true, false);
         perSpotPbCorrectionsOrdered.add(expression4corr208Pb206Pberr);
 
-        // sample version
-        Expression expression4corr208Pb206PbSerr = buildExpression("4-corr208Pb*/206Pb*S %err",
-                "100 * sqrt( ( ([%\"208/206\"] / 100 * [\"208/206\"])^2 +\n"
-                + "([\"4-corr208Pb*/206Pb*\"] * sComm_64 - sComm_84)^2 * ([%\"204/206\"] / 100 * [\"204/206\"])^2 )  \n"
-                + " / (1 - sComm_64 * [\"204/206\"])  ) / abs( [\"4-corr208Pb*/206Pb*\"] )  ", false, true, false);
-        perSpotPbCorrectionsOrdered.add(expression4corr208Pb206PbSerr);
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 4-corr208Pb*/206Pb*  *** End
         //
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr208Pb*/206Pb*  *** Start

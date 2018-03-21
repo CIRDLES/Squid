@@ -131,15 +131,18 @@ FUNCTION :
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT ']');       // array index like a[i]
 
-NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.')* PARENS* (' %err')* '"' ']' ;
+//NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.')* PARENS* (' %err')* '"' ']' ;
+NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.' | '_' | '%' | '-')* PARENS* (' %err')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment
 PARENS : '(' (LETTER | NUMBER | '.' | ' ')* ')';
 
-LETTER : [a-zA-Z_%] ('-')? ;
+//LETTER : [a-zA-Z_%] ('-')? ;
+LETTER : [a-zA-Z_] ;
 
-NUMBER : [0-9_%]('.' [0-9])? ('-')? ;
+//NUMBER : [0-9_%]('.' [0-9])? ('-')? ;
+NUMBER : [0-9] ;
 
 INT :   [0-9]+ ;
 

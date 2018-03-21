@@ -76,6 +76,14 @@ public class TaskManagerController implements Initializable {
     private TextArea taskAuditTextArea;
     @FXML
     private CheckBox calcMeanConcetrationCheckBox;
+    @FXML
+    private RadioButton pb204RadioButton;
+    @FXML
+    private ToggleGroup toggleGroupIsotope;
+    @FXML
+    private RadioButton pb207RadioButton;
+    @FXML
+    private RadioButton pb208RadioButton;
 
     /**
      * Initializes the controller class.
@@ -211,6 +219,18 @@ public class TaskManagerController implements Initializable {
     @FXML
     private void calcMeanConcetrationCheckBoxAction(ActionEvent event) {
         task.setUseCalculated_pdMeanParentEleA(calcMeanConcetrationCheckBox.isSelected());
+    }
+
+    @FXML
+    private void pb204RadioButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void pb207RadioButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void pb208RadioButtonAction(ActionEvent event) {
     }
 
 }
