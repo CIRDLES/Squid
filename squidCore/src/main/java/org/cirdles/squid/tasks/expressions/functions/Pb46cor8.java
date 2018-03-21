@@ -17,6 +17,10 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import static org.cirdles.squid.constants.Squid3Constants.lambda232;
+import static org.cirdles.squid.constants.Squid3Constants.lambda238;
+import static org.cirdles.squid.constants.Squid3Constants.sComm0_64;
+import static org.cirdles.squid.constants.Squid3Constants.sComm0_84;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -48,7 +52,7 @@ public class Pb46cor8 extends Function {
         argumentCount = 3;
         precedence = 4;
         rowCount = 1;
-        colCount = 2;
+        colCount = 1;
         labelsForOutputValues = new String[][]{{"pb46cor8"}};
     }
 
@@ -77,7 +81,9 @@ public class Pb46cor8 extends Function {
             double[] pb208_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] thU = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] pb208corr206_238Age = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
-            double[] pb46cor8 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor8(pb208_206RatioAndUnct[0], thU[0], pb208corr206_238Age[0]);
+            
+            double[] pb46cor8 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor8(
+                    pb208_206RatioAndUnct[0], thU[0], sComm0_64, sComm0_84, pb208corr206_238Age[0], lambda232, lambda238);
             retVal = new Object[][]{{pb46cor8[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0}};

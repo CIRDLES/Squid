@@ -100,6 +100,7 @@ public class WtdMeanACalc extends Function {
      * MSWD, probability, intErr68, intMeanErr95, extMean, extSigma,
      * extMeanErr68, extMeanErr95}, [1] is array of large rejection indices, and
      * [2] is array of weighted mean additional rejected indices.
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
     public Object[][] eval(

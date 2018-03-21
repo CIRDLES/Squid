@@ -109,4 +109,16 @@ public final class Squid3Constants {
     public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
     
 
+    // holding spot until models are implemented
+    public static final double lambda238 = 1.55125E-10;
+    public static final double lambda235 = 9.8485E-10;
+    public static final double lambda232 = 4.9475E-11;
+    public static final double uRatio = 137.88;
+    public static final double badAge = -1.23456789;
+    public static final double sComm0_64 = 18.053;
+    public static final double sComm0_76 = 0.8637;
+    public static final double sComm0_86 = 2.0971;
+    public static final double sComm0_74 = 15.5923761;
+    public static final double sComm0_84 = 37.8589463;
+    public static final double PRESENT_238U235U = 137.88;
 }

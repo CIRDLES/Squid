@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import org.cirdles.ludwig.squid25.SquidConstants;
+import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
@@ -44,7 +44,7 @@ public abstract class BuiltInExpressionsFactory {
     public static Map<String, ExpressionTreeInterface> generateConstants() {
         Map<String, ExpressionTreeInterface> constants = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface r238_235s = new ConstantNode("r238_235s", 137.88);
+        ExpressionTreeInterface r238_235s = new ConstantNode("r238_235s", Squid3Constants.uRatio);//          137.88);
         constants.put(r238_235s.getName(), r238_235s);
 
         ExpressionTreeInterface squidTrue = new ConstantNode("TRUE", true);
@@ -80,19 +80,19 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface stdRad86fact = new ConstantNode("StdRad86fact", 0.309567309630921);
         parameters.put(stdRad86fact.getName(), stdRad86fact);
 
-        ExpressionTreeInterface sComm_74 = new ConstantNode("sComm_74", 15.5773361);
+        ExpressionTreeInterface sComm_74 = new ConstantNode("sComm_74", Squid3Constants.sComm0_74);//          15.5773361);
         parameters.put(sComm_74.getName(), sComm_74);
 
-        ExpressionTreeInterface sComm_64 = new ConstantNode("sComm_64", 17.821);
+        ExpressionTreeInterface sComm_64 = new ConstantNode("sComm_64", Squid3Constants.sComm0_64);//          17.821);
         parameters.put(sComm_64.getName(), sComm_64);
 
-        ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", 37.5933995);
+        ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", Squid3Constants.sComm0_84);//          37.5933995);
         parameters.put(sComm_84.getName(), sComm_84);
 
-        ExpressionTreeInterface lambda238 = new ConstantNode("lambda238", SquidConstants.lambda238);
+        ExpressionTreeInterface lambda238 = new ConstantNode("lambda238", Squid3Constants.lambda238);
         parameters.put(lambda238.getName(), lambda238);
 
-        ExpressionTreeInterface lambda232 = new ConstantNode("lambda232", SquidConstants.lambda232);
+        ExpressionTreeInterface lambda232 = new ConstantNode("lambda232", Squid3Constants.lambda232);
         parameters.put(lambda232.getName(), lambda232);
 
         return parameters;
@@ -377,11 +377,11 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> perSpotPbCorrectionsOrdered = new TreeSet<>();
 
         Expression expression7Corr46 = buildExpression("7-corr204Pb/206Pb",
-                "Pb46cor7( [\"207/206\"], sComm_64, sComm_74, [\"207corr206Pb/238UAge\"] )", false, true, false);
+                "Pb46cor7( [\"207/206\"], [\"207corr206Pb/238UAge\"] )", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression7Corr46);
 
         Expression expression8Corr46 = buildExpression("8-corr204Pb/206Pb",
-                "Pb46cor8( [\"208/206\"], [\"232Th/238U\"], sComm_64, sComm_84, [\"208corr206Pb/238UAge\"] )", false, true, false);
+                "Pb46cor8( [\"208/206\"], [\"232Th/238U\"], [\"208corr206Pb/238UAge\"] )", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression8Corr46);
 
         // for ref materials
