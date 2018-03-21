@@ -35,6 +35,7 @@
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
             <xs:element name="excelExpressionString" type="xs:string"></xs:element>
+            <xs:element name="squidSwitchNU" type="xs:string"></xs:element>
             <xs:element name="expressionTree" type="ExpressionTree"></xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -72,6 +73,7 @@
             <xs:element type="xs:string" name="squidSwitchSAUnknownCalculation"/>
             <xs:element type="xs:string" name="squidSpecialUPbThExpression"/>
             <xs:element type="xs:string" name="rootExpressionTree"/>
+             <xs:element type="xs:string" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
             
         </xs:sequence>
     </xs:complexType>
