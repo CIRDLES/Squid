@@ -80,7 +80,7 @@ public class ExpressionXMLConverterTest {
 
         if (firstList.size() == secondList.size()) {
             if (!firstList.isEmpty()) {
-                while (!firstList.isEmpty()) {
+                while (!firstList.isEmpty() && returnValue) {
                     Element firstChild = firstList.remove(0);
                     Element secondChild = secondList.remove(0);
                     if (compareElements(firstChild, secondChild) == false) {
