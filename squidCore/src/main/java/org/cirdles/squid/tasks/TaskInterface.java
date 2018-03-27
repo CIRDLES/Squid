@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
@@ -362,6 +363,16 @@ public interface TaskInterface {
      * to set
      */
     public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA);
+
+    /**
+     * @return the selectedIndexIsotope
+     */
+    public Squid3Constants.IndexIsoptopesEnum getSelectedIndexIsotope();
+
+    /**
+     * @param selectedIndexIsotope the selectedIndexIsotope to set
+     */
+    public void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope);
 
     public Expression getExpressionByName(String name);
 

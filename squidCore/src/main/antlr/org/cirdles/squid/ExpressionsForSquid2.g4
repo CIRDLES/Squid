@@ -110,6 +110,7 @@ FUNCTION :
     P B '46' C O R '7' | 
     P B '46' C O R '8' |  
     S T D P B '86' R A D C O R '7' P E R |  
+    P B '86' R A D C O R '7' P E R | 
     A N D |
     C O N C O R D I A T W |
     C O N C O R D I A |
