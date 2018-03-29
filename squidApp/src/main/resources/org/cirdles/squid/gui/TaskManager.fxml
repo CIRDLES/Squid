@@ -43,8 +43,8 @@
             <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" prefHeight="12.0" prefWidth="50.0" text="No" toggleGroup="$toggleGroupSMB" />
          </children>
       </HBox>
-      <Label layoutX="126.0" layoutY="210.0" prefHeight="28.0" prefWidth="202.0" text="Ratio Calculation Method:" />
-      <HBox layoutX="338.0" layoutY="215.0">
+      <Label layoutX="126.0" layoutY="200.0" prefHeight="28.0" prefWidth="202.0" text="Ratio Calculation Method:" />
+      <HBox layoutX="338.0" layoutY="205.0">
          <children>
             <RadioButton fx:id="linearRegressionRatioCalcRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#linearRegressionRatioCalcRadioButtonAction" opacity="0.98" prefHeight="18.0" prefWidth="249.0" text="Linear regression to burn mid-time">
                <toggleGroup>
@@ -57,7 +57,15 @@
       <Label layoutX="20.0" layoutY="175.0" text="Parameters:" />
       <Label layoutX="70.0" layoutY="302.0" text="Audit:" />
       <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="307.0" prefHeight="326.0" prefWidth="854.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
-      <CheckBox fx:id="calcMeanConcetrationCheckBox" layoutX="337.0" layoutY="246.0" mnemonicParsing="false" onAction="#calcMeanConcetrationCheckBoxAction" opacity="0.95" text="Use calculated Mean Concentration of Parent from concentration reference materials" />
-      <Label layoutX="127.0" layoutY="241.0" prefHeight="28.0" prefWidth="173.0" text="Parent Concentration:" />
+      <CheckBox fx:id="calcMeanConcetrationCheckBox" layoutX="337.0" layoutY="233.0" mnemonicParsing="false" onAction="#calcMeanConcetrationCheckBoxAction" opacity="0.95" text="Use calculated Mean Concentration of Parent from concentration reference materials" />
+      <Label layoutX="127.0" layoutY="228.0" prefHeight="28.0" prefWidth="173.0" text="Parent Concentration:" />
+      <Label layoutX="127.0" layoutY="256.0" prefHeight="28.0" prefWidth="195.0" text="Preferred index isotope:" />
+      <RadioButton fx:id="pb204RadioButton" layoutX="338.0" layoutY="262.0" mnemonicParsing="false" onAction="#pb204RadioButtonAction" prefHeight="18.0" prefWidth="68.0" selected="true" text="204Pb">
+         <toggleGroup>
+            <ToggleGroup fx:id="toggleGroupIsotope" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="pb207RadioButton" layoutX="423.0" layoutY="262.0" mnemonicParsing="false" onAction="#pb207RadioButtonAction" prefHeight="18.0" prefWidth="68.0" text="207Pb" toggleGroup="$toggleGroupIsotope" />
+      <RadioButton fx:id="pb208RadioButton" layoutX="510.0" layoutY="262.0" mnemonicParsing="false" onAction="#pb208RadioButtonAction" prefHeight="18.0" prefWidth="68.0" text="208Pb" toggleGroup="$toggleGroupIsotope" />
    </children>
 </AnchorPane>

@@ -80,6 +80,8 @@ public abstract class Function
         FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
         FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
         FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
+        FUNCTIONS_MAP.put("stdPb86radCor7per", "stdPb86radCor7per");
+        FUNCTIONS_MAP.put("pb86radCor7per", "pb86radCor7per");
 
         FUNCTIONS_MAP.put("and", "and");
         FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
@@ -175,6 +177,22 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface pb46cor8() {
         return new Pb46cor8();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface stdPb86radCor7per() {
+        return new StdPb86radCor7per();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface pb86radCor7per() {
+        return new Pb86radCor7per();
     }
 
     /**
