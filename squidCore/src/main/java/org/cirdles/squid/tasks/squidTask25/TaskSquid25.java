@@ -54,6 +54,7 @@ public class TaskSquid25 implements Serializable {
     private List<String> ratioNames;
     private String backgroundMass;
     private String parentNuclide;
+    private boolean directAltPD;
     private String primaryParentElement;
     private List<TaskSquid25Equation> task25Equations;
     private List<String> constantNames;
@@ -107,6 +108,9 @@ public class TaskSquid25 implements Serializable {
 
                 String[] parentNuclideStrings = lines[firstRow + 20].split("\t");
                 taskSquid25.parentNuclide = parentNuclideStrings[1];
+                
+                String[] directAltPDStrings = lines[firstRow + 21].split("\t");
+                taskSquid25.directAltPD = Boolean.valueOf(directAltPDStrings[1]);
 
                 taskSquid25.task25Equations = new ArrayList<>();
 
@@ -168,11 +172,6 @@ public class TaskSquid25 implements Serializable {
 
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
                 if (ppmParentEqn.length > 1) {
-                    if (ppmParentEqn[1].contains("238")) {
-                        taskSquid25.primaryParentElement = "238";
-                    } else {
-                        taskSquid25.primaryParentElement = "232";
-                    }
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
                             SQUID_PPM_PARENT_EQN_NAME,
@@ -432,6 +431,13 @@ public class TaskSquid25 implements Serializable {
      */
     public String getParentNuclide() {
         return parentNuclide;
+    }
+
+    /**
+     * @return the directAltPD
+     */
+    public boolean isDirectAltPD() {
+        return directAltPD;
     }
 
     /**
