@@ -132,6 +132,14 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.startNode("squidSwitchConcentrationReferenceMaterialCalculation");
         writer.setValue(String.valueOf(expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()));
         writer.endNode();
+        
+        writer.startNode("uncertaintyDirective");
+        writer.setValue(expressionTree.getUncertaintyDirective());
+        writer.endNode();
+        
+        writer.startNode("index");
+        writer.setValue(String.valueOf(expressionTree.getIndex()));
+        writer.endNode();
     }
 
     /**
@@ -247,6 +255,14 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         reader.moveDown();
         expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+        
+        reader.moveDown();
+        expressionTree.setUncertaintyDirective(reader.getValue());
+        reader.moveUp();
+        
+        reader.moveDown();
+        expressionTree.setIndex(Integer.parseInt(reader.getValue()));
         reader.moveUp();
         
         return expressionTree;
