@@ -71,12 +71,14 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
+import org.cirdles.squid.tasks.squidTask25.TaskXMLConverterVariables.MassStationDetailXMLConverter;
 
 /**
  *
  * @author James F. Bowring
  */
 public class Task implements TaskInterface, Serializable, XMLSerializerInterface {
+
 
     private static final long serialVersionUID = 6522574920235718028L;
 
@@ -86,26 +88,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      */
-    protected String name;
-    protected String type;
-    protected String description;
-    protected String authorName;
-    protected String labName;
-    protected String provenance;
-    protected long dateRevised;
-    protected boolean useSBM;
-    protected boolean userLinFits;
+    protected String name; //done
+    protected String type; //done
+    protected String description; //done
+    protected String authorName; //done
+    protected String labName; //done
+    protected String provenance; //done
+    protected long dateRevised; //done
+    protected boolean useSBM; //done
+    protected boolean userLinFits; //done
     // comes from prawn file mass station
-    protected int indexOfBackgroundSpecies;
+    protected int indexOfBackgroundSpecies; //done
     // comes from task
     protected int indexOfTaskBackgroundMass;
     protected String parentNuclide;
     protected boolean directAltPD;
+    protected String primaryParentElement; //done
     protected String filterForRefMatSpotNames;
     protected String filterForConcRefMatSpotNames;
 
-    protected List<String> nominalMasses;
-    protected List<String> ratioNames;
+    protected List<String> nominalMasses; //done
+    protected List<String> ratioNames; // done
     protected Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
     protected SquidSessionModel squidSessionModel;
     protected List<SquidSpeciesModel> squidSpeciesModelList;
@@ -116,7 +119,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      */
     protected SortedSet<ExpressionTree> taskExpressionTreesOrdered;
-    protected SortedSet<Expression> taskExpressionsOrdered;
+    protected SortedSet<Expression> taskExpressionsOrdered; //done
     protected SortedSet<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
     protected Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap;
@@ -128,6 +131,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<ShrimpFractionExpressionInterface> concentrationReferenceMaterialSpots;
     private List<ShrimpFractionExpressionInterface> unknownSpots;
 
+    
     /**
      *
      */
@@ -879,6 +883,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         xstream.registerConverter(new OperationXMLConverter());
         xstream.registerConverter(new FunctionXMLConverter());
+        xstream.registerConverter(new MassStationDetailXMLConverter());
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
@@ -1249,6 +1254,40 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return labName;
     }
 
+        @Override
+    public String getPrimaryParentElement() {
+        return primaryParentElement;
+    }
+    
+    @Override
+    public void setPrimaryParentElement(String primaryParentElement) {
+        this.primaryParentElement = primaryParentElement;
+    }
+
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
+        return mapOfIndexToMassStationDetails;
+    }
+
+    public void setMapOfIndexToMassStationDetails(Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails) {
+        this.mapOfIndexToMassStationDetails = mapOfIndexToMassStationDetails;
+    }
+
+    public SortedSet<Expression> getTaskExpressionsRemoved() {
+        return taskExpressionsRemoved;
+    }
+
+    public void setTaskExpressionsRemoved(SortedSet<Expression> taskExpressionsRemoved) {
+        this.taskExpressionsRemoved = taskExpressionsRemoved;
+    }
+
+    public Map<String, ExpressionTreeInterface> getNamedOvercountExpressionsMap() {
+        return namedOvercountExpressionsMap;
+    }
+
+    public void setNamedOvercountExpressionsMap(Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap) {
+        this.namedOvercountExpressionsMap = namedOvercountExpressionsMap;
+    }
+    
     /**
      * @param labName the labName to set
      */

@@ -167,6 +167,11 @@ public interface TaskInterface {
      */
     public void setName(String name);
 
+    public String getPrimaryParentElement();
+    
+    public void setPrimaryParentElement(String primaryParentElement);
+    
+    
     /**
      * @param provenance the provenance to set
      */

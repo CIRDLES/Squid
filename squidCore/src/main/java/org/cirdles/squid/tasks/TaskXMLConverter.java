@@ -20,6 +20,8 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -88,11 +90,74 @@ public class TaskXMLConverter implements Converter {
         writer.startNode("name");
         writer.setValue(task.getName());
         writer.endNode();
-
+        
+        writer.startNode("type");
+        writer.setValue(task.getType());
+        writer.endNode();
+        
+        writer.startNode("description");
+        writer.setValue(task.getDescription());
+        writer.endNode();
+        
+        writer.startNode("authorName");
+        writer.setValue(task.getAuthorName());
+        writer.endNode();
+        
+        writer.startNode("labName");
+        writer.setValue(task.getLabName());
+        writer.endNode();
+        
+        writer.startNode("provenance");
+        writer.setValue(task.getProvenance());
+        writer.endNode();
+        
+        writer.startNode("dateRevised");
+        writer.setValue(String.valueOf(task.getDateRevised()));
+        writer.endNode();
+        
+        writer.startNode("useSBM");
+        writer.setValue(String.valueOf(task.isUseSBM()));
+        writer.endNode();
+        
+        writer.startNode("userLinFits");
+        writer.setValue(String.valueOf(task.isUserLinFits()));
+        writer.endNode();
+        
+        writer.startNode("indexOfBackgroundSpecies");
+        writer.setValue(String.valueOf(task.getIndexOfBackgroundSpecies()));
+        writer.endNode();
+        
+        writer.startNode("parentNuclide");
+        writer.setValue(task.getParentNuclide());
+        writer.endNode();
+        
+        writer.startNode("primaryParentElement");
+        writer.setValue(task.getPrimaryParentElement());
+        writer.endNode();
+        
+        writer.startNode("nominalMasses");
+        List<String> nominalMasses = task.getNominalMasses();
+        for(int i = 0; i < nominalMasses.size(); i++) {
+            writer.startNode("nominalMass");
+            writer.setValue(nominalMasses.get(i));
+            writer.endNode();
+        }
+        writer.endNode();
+        
+        writer.startNode("ratioNames:");
+        List<String> ratioNames = task.getRatioNames();
+        for(int i = 0; i < ratioNames.size(); i++) {
+            writer.startNode("ratioName");
+            writer.setValue(ratioNames.get(i));
+            writer.endNode();
+        }
+        writer.endNode();
+        
         writer.startNode("taskExpressionsOrdered");
         context.convertAnother(task.getTaskExpressionTreesOrdered());
         writer.endNode();
 
+        
     }
 
     /**
@@ -113,10 +178,74 @@ public class TaskXMLConverter implements Converter {
             UnmarshallingContext context) {
 
         TaskInterface task = new Task();
-
+        
         reader.moveDown();
         task.setName(reader.getValue());
         reader.moveUp();
+        
+        reader.moveDown();
+        task.setType(reader.getValue());
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setDescription(reader.getValue());
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setAuthorName(reader.getValue());
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setLabName(reader.getValue());
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setProvenance(reader.getValue());
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setDateRevised(Long.getLong(reader.getValue()));
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setUseSBM(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setUserLinFits(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setIndexOfBackgroundSpecies(Integer.parseInt(reader.getValue()));
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setParentNuclide(reader.getValue());
+        reader.moveUp();
+        
+        reader.moveDown();
+        task.setPrimaryParentElement(reader.getValue());
+        reader.moveUp();
+        
+        List<String> nominalMasses = new ArrayList<>();
+        reader.moveDown();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            nominalMasses.add(reader.getValue());
+            reader.moveUp();
+        }
+        reader.moveUp();
+        task.setNominalMasses(nominalMasses);
+        
+        List<String> ratioNames = new ArrayList<>();
+        reader.moveDown();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            ratioNames.add(reader.getValue());
+            reader.moveUp();
+        }
+        reader.moveUp();
+        task.setRatioNames(ratioNames);
 
         SortedSet<ExpressionTree> taskExpressions = new TreeSet<>();
         reader.moveDown();
@@ -128,6 +257,7 @@ public class TaskXMLConverter implements Converter {
             reader.moveUp();
         }
         task.setTaskExpressionTreesOrdered(taskExpressions);
+        reader.moveUp();
 
         return task;
     }
