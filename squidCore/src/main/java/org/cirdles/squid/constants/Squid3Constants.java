@@ -89,8 +89,11 @@ public final class Squid3Constants {
             = "Schema/SquidTask_ExpressionXMLSchema.xsd";
 
     private static final String[] DEFAULT_RATIOS_LIST_FOR_10_SPECIES = new String[]{
-            "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};
-    public static String[] getDEFAULT_RATIOS_LIST_FOR_10_SPECIES(){return DEFAULT_RATIOS_LIST_FOR_10_SPECIES.clone();}
+        "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};
+
+    public static String[] getDEFAULT_RATIOS_LIST_FOR_10_SPECIES() {
+        return DEFAULT_RATIOS_LIST_FOR_10_SPECIES.clone();
+    }
 
     public static final String DUPLICATE_STRING = "-DUP-";
 
@@ -107,6 +110,25 @@ public final class Squid3Constants {
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
     public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
-    
 
+    // holding spot until models are implemented
+    public static final double lambda238 = 1.55125E-10;
+    public static final double lambda235 = 9.8485E-10;
+    public static final double lambda232 = 4.9475E-11;
+    public static final double uRatio = 137.88;
+    public static final double badAge = -1.23456789;
+    public static final double sComm0_64 = 17.821;
+    public static final double sComm0_76 = 0.8741;
+    public static final double sComm0_86 = 2.1095;
+    public static final double sComm0_74 = 15.5773361;
+    public static final double sComm0_84 = 37.5933995;
+    public static final double PRESENT_238U235U = 137.88;
+    public static final double stdRad86fact = 0.309567309630921;
+    public static final double std_76 = 0.0587838486664528;
+
+    public enum IndexIsoptopesEnum {
+        PB_204,
+        PB_207,
+        PB_208
+    }
 }

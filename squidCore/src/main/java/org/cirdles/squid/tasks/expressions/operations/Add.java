@@ -73,7 +73,7 @@ public class Add extends Operation {
         String retVal
                 = "<mrow>\n"
                 + toStringAnotherExpression(childrenET.get(0))
-                + "<mo>+</mo>\n"
+                + "<mo>&nbsp;+&nbsp;</mo>\n"
                 + toStringAnotherExpression(childrenET.get(1))
                 + "</mrow>\n";
 
