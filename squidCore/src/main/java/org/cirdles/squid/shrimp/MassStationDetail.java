@@ -18,6 +18,7 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
@@ -187,30 +188,6 @@ public class MassStationDetail implements Serializable {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
     }
 
-//        /**
-//     * @param indicesOfScansAtMeasurementTimes the
-//     * indicesOfScansAtMeasurementTimes to set
-//     */
-//    public void indicesOfScansAtMeasurementTimes(List<Integer> indicesOfScansAtMeasurementTimes) {
-//        this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
-//    }
-//    
-//            /**
-//     * @param timesOfMeasuredTrimMasses the
-//     * timesOfMeasuredTrimMasses to set
-//     */
-//    public void timesOfMeasuredTrimMasses(List<Double> timesOfMeasuredTrimMasses) {
-//        this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
-//    }
-//    
-//            /**
-//     * @param measuredTrimMasses the
-//     * measuredTrimMasses to set
-//     */
-//    public void measuredTrimMasses(List<Double> measuredTrimMasses) {
-//        this.measuredTrimMasses = measuredTrimMasses;
-//    }
-    
     /**
      * @return the uThBearingName
      */
