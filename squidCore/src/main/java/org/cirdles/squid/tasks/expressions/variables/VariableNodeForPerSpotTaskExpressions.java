@@ -91,6 +91,11 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     public boolean isValid() {
         return (name.length() > 0);
     }
+    
+        @Override
+    public boolean usesOtherExpression() {
+        return true;
+    }
 
     /**
      *

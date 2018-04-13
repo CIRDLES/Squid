@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.SortedSet;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -50,9 +49,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
@@ -78,8 +74,6 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import org.cirdles.squid.gui.SquidUI;
 
 /**
@@ -290,7 +284,7 @@ public class ExpressionManagerController implements Initializable {
     }
 
     private void populateExpressionsListView() {
-        SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
+        List<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
         List<Expression> sortedExpressionsList = new ArrayList<>();
 
         switch (expressionChoiceFilter) {
@@ -327,38 +321,42 @@ public class ExpressionManagerController implements Initializable {
                 break;
         }
 
-        sortedExpressionsList.sort(
-                new Comparator<Expression>() {
-            @Override
-            public int compare(Expression exp1, Expression exp2) {
-                int retVal = 0;
-                switch (expressionSortOrder) {
-                    case EVAL:
-                        retVal = exp1.compareTo(exp2);
-                        break;
-                    case NAME:
-                        retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
-                        break;
-                    case NU:
-                        // true first
-                        retVal = Boolean.compare(exp2.isSquidSwitchNU(), exp1.isSquidSwitchNU());
-                        if (retVal == 0) {
+        try {
+            sortedExpressionsList.sort(
+                    new Comparator<Expression>() {
+                @Override
+                public int compare(Expression exp1, Expression exp2) {
+                    int retVal = 0;
+                    switch (expressionSortOrder) {
+                        case EVAL:
+                            retVal = exp1.compareTo(exp2);
+                            break;
+                        case NAME:
                             retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
-                        }
-                        break;
-                    case BUILTIN:
-                        // true first
-                        retVal = Boolean.compare(exp2.getExpressionTree().isSquidSpecialUPbThExpression(), exp1.getExpressionTree().isSquidSpecialUPbThExpression());
-                        if (retVal == 0) {
-                            retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
-                        }
-                        break;
+                            break;
+                        case NU:
+                            // true first
+                            retVal = Boolean.compare(exp2.isSquidSwitchNU(), exp1.isSquidSwitchNU());
+                            if (retVal == 0) {
+                                retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
+                            }
+                            break;
+                        case BUILTIN:
+                            // true first
+                            retVal = Boolean.compare(exp2.getExpressionTree().isSquidSpecialUPbThExpression(), exp1.getExpressionTree().isSquidSpecialUPbThExpression());
+                            if (retVal == 0) {
+                                retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
+                            }
+                            break;
+                    }
+                    
+                    return retVal;
                 }
-
-                return retVal;
             }
+            );
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        );
 
         ObservableList<Expression> items
                 = FXCollections.observableArrayList(sortedExpressionsList);
