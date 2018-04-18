@@ -23,13 +23,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -70,6 +70,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateOverCountExpressions;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
 
 /**
  *
@@ -99,7 +100,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     // comes from task
     protected int indexOfTaskBackgroundMass;
     protected String parentNuclide;
-    protected String primaryParentElement;
+    protected boolean directAltPD;
     protected String filterForRefMatSpotNames;
     protected String filterForConcRefMatSpotNames;
 
@@ -138,6 +139,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean changed;
 
     protected boolean useCalculated_pdMeanParentEleA;
+    
+    protected IndexIsoptopesEnum selectedIndexIsotope;
 
     public Task() {
         this("New Task", null, null);
@@ -173,7 +176,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
         this.parentNuclide = "";
-        this.primaryParentElement = "";
+        this.directAltPD = false;
 
         this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
@@ -198,12 +201,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.prawnFile = prawnFile;
         this.reportsEngine = reportsEngine;
-
+        
         this.changed = true;
+        
+        this.useCalculated_pdMeanParentEleA = false;
+        this.selectedIndexIsotope = IndexIsoptopesEnum.PB_204;
+
 
         generateConstants();
         generateParameters();
-        //generateBuiltInExpressions();
     }
 
     private void generateConstants() {
@@ -221,13 +227,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
 
-        SortedSet<Expression> correctionsOfCalibrationConstants = generateCorrectionsOfCalibrationConstants();
+        SortedSet<Expression> correctionsOfCalibrationConstants = generateCorrectionsOfCalibrationConstants(isPbU(), isDirectAltPD());
         taskExpressionsOrdered.addAll(correctionsOfCalibrationConstants);
+
+        SortedSet<Expression> sampleDates = generateSampleDates();
+        taskExpressionsOrdered.addAll(sampleDates);
 
         SortedSet<Expression> perSpotPbCorrections = generatePerSpotProportionsOfCommonPb();
         taskExpressionsOrdered.addAll(perSpotPbCorrections);
 
-        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(primaryParentElement);
+        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide);
         taskExpressionsOrdered.addAll(perSpotConcentrations);
     }
 
@@ -298,7 +307,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(" Concentration Reference Material Spots extracted by filter: ' ")
                 .append(filterForConcRefMatSpotNames)
                 .append(" '.\n\t\t  Mean Concentration of Primary Parent Element ")
-                .append(primaryParentElement)
+                .append(parentNuclide)
                 .append(" = ")
                 .append(meanConcValue);
 
@@ -322,7 +331,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\n Task Constants (imported with task or hard-coded): \n");
         if (namedConstantsMap.size() > 0) {
             for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
-                summary.append("\t").append(entry.getKey()).append(" = ").append((double) ((ConstantNode) entry.getValue()).getValue()).append("\n");
+                summary.append("\t").append(entry.getKey()).append(" = ").append(((ConstantNode) entry.getValue()).getValue()).append("\n");
             }
         } else {
             summary.append(" No constants supplied.");
@@ -498,9 +507,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ExpressionTreeInterface original = listedExp.getExpressionTree();
         listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
-        if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
-            ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+        if (listedExp.isSquidSwitchNU()) {
+            if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
+                ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+            }
         }
+
         if (original != null) {
             listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
             listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
@@ -558,9 +570,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void buildExpressions() {
         // after map is built
-        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
-            if (exp instanceof BuiltInExpressionInterface) {
-                ((BuiltInExpressionInterface) exp).buildExpression(this);
+//        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
+//            if (exp instanceof BuiltInExpressionInterface) {
+//                ((BuiltInExpressionInterface) exp).buildExpression(this);
+//            }
+//        }
+
+        for (Expression exp : taskExpressionsOrdered) {
+            if (exp.isSquidSwitchNU()) {
+                if (exp.getExpressionTree() instanceof BuiltInExpressionInterface) {
+                    ((BuiltInExpressionInterface) exp.getExpressionTree()).buildExpression(this);
+                }
             }
         }
     }
@@ -940,12 +960,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getTaskExpressionsForScansEvaluated().clear();
         });
 
-//        for (ExpressionTreeInterface expression : taskExpressionTreesOrdered) {
 //todo: do we still need taskexpressions ordered?
         for (Expression exp : taskExpressionsOrdered) {
             ExpressionTreeInterface expression = exp.getExpressionTree();
 
-            if (expression.amHealthy() && expression.isRootExpressionTree()) {
+            if (expression.amHealthy()) {// && expression.isRootExpressionTree()) {
                 // determine subset of spots to be evaluated - default = all
                 List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
 
@@ -961,7 +980,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 try {
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
-
+                    System.out.println("Out of bounds at evaluateTaskExpressions");
                 }
             }
         }
@@ -989,6 +1008,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     values = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
                 }
 
+                if (taskExpressionsEvaluationsPerSpotSet.containsKey(expression.getName())) {
+                    taskExpressionsEvaluationsPerSpotSet.remove(expression.getName());
+                }
                 taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
                         new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), values, spotsForExpression));
             } else {
@@ -1011,12 +1033,22 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     = expressionEvaluator.evaluateTaskExpressionsPerSpotPerScan(this, expression, spot);
 
             // save scan-specific results
+            List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated = spot.getTaskExpressionsForScansEvaluated();
+            if (taskExpressionsForScansEvaluated.contains(taskExpressionEvaluatedPerSpotPerScanModel)) {
+                taskExpressionsForScansEvaluated.remove(taskExpressionEvaluatedPerSpotPerScanModel);
+            }
             spot.getTaskExpressionsForScansEvaluated().add(taskExpressionEvaluatedPerSpotPerScanModel);
 
             // save spot-specific results
             double[][] value = new double[][]{{taskExpressionEvaluatedPerSpotPerScanModel.getRatioVal(),
                 taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
+
+            Map<ExpressionTreeInterface, double[][]> taskExpressionsPerSpot = spot.getTaskExpressionsEvaluationsPerSpot();
+            if (taskExpressionsPerSpot.containsKey(expression)) {
+                taskExpressionsPerSpot.remove(expression);
+            }
             spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
+
         } else {
             List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
             singleSpot.add(spot);
@@ -1317,6 +1349,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @return
      */
+    @Override
     public String getParentNuclide() {
         return parentNuclide;
     }
@@ -1325,26 +1358,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @param parentNuclide
      */
+    @Override
     public void setParentNuclide(String parentNuclide) {
         this.parentNuclide = parentNuclide;
     }
 
     /**
-     *
-     * @return
+     * @return the directAltPD
      */
     @Override
-    public String getPrimaryParentElement() {
-        return primaryParentElement;
+    public boolean isDirectAltPD() {
+        return directAltPD;
     }
 
     /**
-     *
-     * @param primaryParentElement
+     * @param directAltPD the directAltPD to set
      */
     @Override
-    public void setPrimaryParentElement(String primaryParentElement) {
-        this.primaryParentElement = primaryParentElement;
+    public void setDirectAltPD(boolean directAltPD) {
+        this.directAltPD = directAltPD;
     }
 
     /**
@@ -1496,6 +1528,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return namedConstantsMap;
     }
 
+    public Map<String, ExpressionTreeInterface> getNamedParametersMap() {
+        if (namedParametersMap == null) {
+            this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        }
+        return namedParametersMap;
+    }
+
     /**
      * @return the taskExpressionsOrdered
      */
@@ -1567,5 +1606,21 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA) {
         this.useCalculated_pdMeanParentEleA = useCalculated_pdMeanParentEleA;
+    }
+
+    /**
+     * @return the selectedIndexIsotope
+     */
+    @Override
+    public IndexIsoptopesEnum getSelectedIndexIsotope() {
+        return selectedIndexIsotope;
+    }
+
+    /**
+     * @param selectedIndexIsotope the selectedIndexIsotope to set
+     */
+    @Override
+    public void setSelectedIndexIsotope(IndexIsoptopesEnum selectedIndexIsotope) {
+        this.selectedIndexIsotope = selectedIndexIsotope;
     }
 }
