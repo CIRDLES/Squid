@@ -23,14 +23,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
@@ -69,11 +67,11 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateCorrectionsOfCalibrationConstants;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateOverCountExpressions;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
 
 /**
  *
@@ -229,8 +227,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
 
-        SortedSet<Expression> correctionsOfCalibrationConstants = generateCorrectionsOfCalibrationConstants(isPbU(), isDirectAltPD());
-        taskExpressionsOrdered.addAll(correctionsOfCalibrationConstants);
+        SortedSet<Expression> experimentalExpressions = generateExperimentalExpressions();
+        taskExpressionsOrdered.addAll(experimentalExpressions);
 
         SortedSet<Expression> sampleDates = generateSampleDates();
         taskExpressionsOrdered.addAll(sampleDates);
@@ -411,7 +409,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
-        updateAllExpressions(2);
+        updateAllExpressions();
     }
 
     @Override
@@ -478,41 +476,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         }
 
-//        for (int i = 0; i < expArray.length - 1; i++) {
-//            for (int j = i + 1; j < expArray.length; j++) {
-//                if (expArray[i].getExpressionTree().usesAnotherExpression(expArray[j].getExpressionTree())) {
-//                    saved = expArray[j];
-//                    for (int n = j; n > i; n--) {
-//                        expArray[n] = expArray[n - 1];
-//                    }
-//                    expArray[i] = saved;
-//                }
-//            }
-//        }
-//
-//        for (int i = 0; i < expArray.length - 1; i++) {
-//            for (int j = i + 1; j < expArray.length; j++) {
-//                if (expArray[i].getExpressionTree().usesAnotherExpression(expArray[j].getExpressionTree())) {
-//                    saved = expArray[j];
-//                    for (int n = j; n > i; n--) {
-//                        expArray[n] = expArray[n - 1];
-//                    }
-//                    expArray[i] = saved;
-//                }
-//            }
-//        }
-//
-//        for (int i = 0; i < expArray.length - 1; i++) {
-//            for (int j = i + 1; j < expArray.length; j++) {
-//                if (expArray[i].getExpressionTree().usesAnotherExpression(expArray[j].getExpressionTree())) {
-//                    saved = expArray[j];
-//                    for (int n = j; n > i; n--) {
-//                        expArray[n] = expArray[n - 1];
-//                    }
-//                    expArray[i] = saved;
-//                }
-//            }
-//        }
         taskExpressionsOrdered.clear();
         taskExpressionTreesOrdered.clear();
         for (Expression listedExp : expArray) {
@@ -539,41 +502,29 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      */
-    public void updateAffectedExpressions(int repeats, Expression sourceExpression) {
-//        for (int i = 0; i < 1; i++) {
-//            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
+    public void updateAffectedExpressions(Expression sourceExpression) {
         for (Expression listedExp : taskExpressionsOrdered) {
             if (listedExp.getExpressionTree().usesAnotherExpression(sourceExpression.getExpressionTree())) {
                 updateSingleExpression(listedExp);
             }
         }
-//            processAndSortExpressions();
-//        }
 
-//        processAndSortExpressions();
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
     }
 
     @Override
     /**
-     * Updates expressions by parsing to detect new health or new sickness with
-     * 'repeats' passes to capture side effects
+     * Updates expressions by parsing to detect new health or new sickness
      *
      */
-    public void updateAllExpressions(int repeats) {
-//        for (int i = 0; i < 1; i++) {
-//            Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
+    public void updateAllExpressions() {
         for (Expression listedExp : taskExpressionsOrdered) {
             updateSingleExpression(listedExp);
         }
-//            processAndSortExpressions();
-        //       }
 
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
-
-//        processAndSortExpressions();
     }
 
     // reparses and restores flags
@@ -611,8 +562,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
             taskExpressionsOrdered = taskBasket;
             taskExpressionsRemoved.add(expression);
-//            processAndSortExpressions();
-            updateAffectedExpressions(2, expression);
+
+            updateAffectedExpressions(expression);
             setChanged(true);
             setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -629,8 +580,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void addExpression(Expression exp) {
         taskExpressionsOrdered.add(exp);
-//        processAndSortExpressions();
-//        updateAllExpressions(3);
+
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
     }
@@ -643,12 +593,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void buildExpressions() {
-        // after map is built
-//        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
-//            if (exp instanceof BuiltInExpressionInterface) {
-//                ((BuiltInExpressionInterface) exp).buildExpression(this);
-//            }
-//        }
 
         for (Expression exp : taskExpressionsOrdered) {
             if (exp.isSquidSwitchNU()) {
@@ -711,10 +655,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         changed = true;
-        updateAllExpressions(1);
+        updateAllExpressions();
         processAndSortExpressions();
-//        setupSquidSessionSpecsAndReduceAndReport();
-        updateAllExpressions(2);
+
+        updateAllExpressions();
         setupSquidSessionSpecsAndReduceAndReport();
     }
 
@@ -754,7 +698,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         changed = true;
         setupSquidSessionSpecsAndReduceAndReport();
-        updateAllExpressions(2);
+        updateAllExpressions();
     }
 
     private void buildSquidSpeciesModelListFromMassStationDetails() {
@@ -1187,7 +1131,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
-        updateAllExpressions(2);
+        updateAllExpressions();
     }
 
     @Override
@@ -1228,7 +1172,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
-        updateAllExpressions(2);
+        updateAllExpressions();
     }
 
     private void updateRatioNamesFromNominalMasses() {

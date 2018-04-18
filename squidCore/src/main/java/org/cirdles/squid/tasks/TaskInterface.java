@@ -291,7 +291,7 @@ public interface TaskInterface {
      */
     public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies);
 
-    public void updateAllExpressions(int repeats);
+    public void updateAllExpressions();
 
     /**
      * @param reportsEngine the reportsEngine to set
@@ -305,7 +305,7 @@ public interface TaskInterface {
 
     public void updateRatioNames(String[] ratioNames);
 
-    public void updateAffectedExpressions(int repeats, Expression sourceExpression);
+    public void updateAffectedExpressions(Expression sourceExpression);
 
     public void applyTaskIsotopeLabelsToMassStations();
 
