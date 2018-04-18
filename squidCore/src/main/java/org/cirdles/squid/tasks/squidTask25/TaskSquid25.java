@@ -123,6 +123,7 @@ public class TaskSquid25 implements Serializable {
 
                     if (taskSquid25.parentNuclide.contains("232")) {
                         primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
+                        primaryUThPbEqn[1] = "1 * " + primaryUThPbEqn[1];
                         primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
                     }
 

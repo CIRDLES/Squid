@@ -134,16 +134,15 @@ public abstract class BuiltInExpressionsFactory {
                     ppmOtherEqn, true, true, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
 
-            if (parentNuclide.contains("232")) {
-                concentrationExpressionsOrdered.addAll(generatePbIsotopeCorrectionsForTh());
-            } else {
-                concentrationExpressionsOrdered.addAll(generatePbIsotopeCorrectionsForU());
+            concentrationExpressionsOrdered.addAll(generatePbIsotope204207CorrectionsForU());
+            if (!parentNuclide.contains("232")) {
+                concentrationExpressionsOrdered.addAll(generatePbIsotope208CorrectionsForU());
             }
+            concentrationExpressionsOrdered.addAll(generatePbIsotopeCorrectionsForTh());
 
         } else {
-
             // directlAltPD is true
-            concentrationExpressionsOrdered.addAll(generatePbIsotopeCorrectionsForU());
+            concentrationExpressionsOrdered.addAll(generatePbIsotope204207CorrectionsForU());
             concentrationExpressionsOrdered.addAll(generatePbIsotopeCorrectionsForTh());
 
             // math for ThUfromA1A2 follows here
@@ -201,7 +200,7 @@ public abstract class BuiltInExpressionsFactory {
         return concentrationExpressionsOrdered;
     }
 
-    private static SortedSet<Expression> generatePbIsotopeCorrectionsForU() {
+    private static SortedSet<Expression> generatePbIsotope204207CorrectionsForU() {
         SortedSet<Expression> pbIsotopeCorrectionsForU = new TreeSet<>();
 
         // calculate 204 PbU flavor from Tot68_82_fromA
@@ -223,16 +222,6 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression7corrTotal206Pb238UpErr = buildExpression("7-corrTotal 206Pb/238U %err",
                 "SQRT( [%\"UncorrPb/Uconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
         pbIsotopeCorrectionsForU.add(expression7corrTotal206Pb238UpErr);
-
-        // calculate 208 PbU flavor from Tot68_82_fromA
-        Expression expression8corrTotal206Pb238U = buildExpression("8-corrTotal 206Pb/238U",
-                "[\"UncorrPb/Uconst\"] / [\"8-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
-        pbIsotopeCorrectionsForU.add(expression8corrTotal206Pb238U);
-
-        t2 = "[\"8-corr206Pb/238Ucalibr.const WM\"][2] / [\"8-corr206Pb/238Ucalibr.const WM\"][0] * 100";
-        Expression expression8corrTotal206Pb238UpErr = buildExpression("8-corrTotal 206Pb/238U %err",
-                "SQRT( [%\"UncorrPb/Uconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
-        pbIsotopeCorrectionsForU.add(expression8corrTotal206Pb238UpErr);
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 4-corr  206/238  *** Start
         Expression expression4corr206Pb238Ucalibrconst = buildExpression("4-corr206Pb/238Ucalibr.const",
@@ -287,6 +276,22 @@ public abstract class BuiltInExpressionsFactory {
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr  206/238  *** End
         //
+        return pbIsotopeCorrectionsForU;
+    }
+
+    private static SortedSet<Expression> generatePbIsotope208CorrectionsForU() {
+        SortedSet<Expression> pbIsotopeCorrectionsForU = new TreeSet<>();
+
+        // calculate 208 PbU flavor from Tot68_82_fromA
+        Expression expression8corrTotal206Pb238U = buildExpression("8-corrTotal 206Pb/238U",
+                "[\"UncorrPb/Uconst\"] / [\"8-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
+        pbIsotopeCorrectionsForU.add(expression8corrTotal206Pb238U);
+
+        String t2 = "[\"8-corr206Pb/238Ucalibr.const WM\"][2] / [\"8-corr206Pb/238Ucalibr.const WM\"][0] * 100";
+        Expression expression8corrTotal206Pb238UpErr = buildExpression("8-corrTotal 206Pb/238U %err",
+                "SQRT( [%\"UncorrPb/Uconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
+        pbIsotopeCorrectionsForU.add(expression8corrTotal206Pb238UpErr);
+
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 8-corr  206/238  *** Start
         Expression expression8corr206Pb238Ucalibrconst = buildExpression("8-corr206Pb/238Ucalibr.const",
                 "(1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"]", true, true, false);
@@ -447,7 +452,8 @@ public abstract class BuiltInExpressionsFactory {
      *
      * Ludwig Q4 - part 2
      *
-     * @return the java.util.SortedSet<org.cirdles.squid.tasks.expressions.Expression>
+     * @return the
+     * java.util.SortedSet<org.cirdles.squid.tasks.expressions.Expression>
      */
     public static SortedSet<Expression> generateExperimentalExpressions() {
         SortedSet<Expression> experimentalExpressions = new TreeSet<>();
