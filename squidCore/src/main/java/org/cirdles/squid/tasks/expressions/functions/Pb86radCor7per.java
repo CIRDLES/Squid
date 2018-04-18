@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.lambda235;
 import static org.cirdles.squid.constants.Squid3Constants.lambda238;
@@ -39,15 +36,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class Pb86radCor7per extends Function {
 
-    //private static final long serialVersionUID = 6770836871819373387L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Pb86radCor7per.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Pb86radCor7per " + theSUID);
-    }
+    private static final long serialVersionUID = -6404035232270915370L;
 
     /**
      * Provides the functionality of Squid's Pb86radCor7per and returning

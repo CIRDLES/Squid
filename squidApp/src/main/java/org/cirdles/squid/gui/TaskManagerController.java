@@ -140,6 +140,9 @@ public class TaskManagerController implements Initializable {
         calcMeanConcetrationCheckBox.setSelected((!hasZeroMeanConc) && task.isUseCalculated_pdMeanParentEleA());
 
         taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
+        
+        // set Pb208 Isotope selector visible or not
+        pb208RadioButton.setVisible(!task.isDirectAltPD()  && !task.getParentNuclide().contains("232"));
     }
 
     private void setupListeners() {

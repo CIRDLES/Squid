@@ -77,10 +77,10 @@ public class VariableNodeForSummary extends ExpressionTree {
         return (name.length() > 0);
     }
 
-    @Override
-    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
-        return false;
-    }
+//    @Override
+//    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
+//        return false;
+//    }
 
     @Override
     public boolean usesOtherExpression() {

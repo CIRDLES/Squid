@@ -127,8 +127,26 @@ public final class Squid3Constants {
     public static final double std_76 = 0.0587838486664528;
 
     public enum IndexIsoptopesEnum {
-        PB_204,
-        PB_207,
-        PB_208
+        PB_204("204"),
+        PB_207("207"),
+        PB_208("208");
+
+        private final String isotope;
+
+        private IndexIsoptopesEnum(String isotope) {
+            this.isotope = isotope;
+        }
+        
+                /**
+         * @return the isotope
+         */
+        public String getIsotope() {
+            return isotope;
+        }
+
+        public String getIsotopeCorrectionPrefixString(){
+            return isotope.substring(2, 3) + "-corr";
+        }
+
     }
 }

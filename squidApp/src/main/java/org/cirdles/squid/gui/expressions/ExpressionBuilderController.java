@@ -724,7 +724,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void populateExpressionListViews() {
-        SortedSet<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
+        List<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
 
         List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
