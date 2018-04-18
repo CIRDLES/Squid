@@ -75,14 +75,14 @@ public class SpotFieldNode extends ExpressionTree {
         return amHealthy();
     }
 
-    @Override
-    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
-        return false;
-    }
+//    @Override
+//    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
+//        return false;
+//    }
 
     @Override
     public boolean usesOtherExpression() {
-        return false;
+        return true;
     }
 
     /**

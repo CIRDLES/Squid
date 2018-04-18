@@ -96,7 +96,7 @@ public final class SquidProject implements Serializable {
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
-        this.task.updateAllExpressions(2);
+        this.task.updateAllExpressions();
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
     }
@@ -108,7 +108,7 @@ public final class SquidProject implements Serializable {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
             // four passes needed for percolating results
-            task.updateAllExpressions(4);
+            task.updateAllExpressions();
             task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport();
         }
