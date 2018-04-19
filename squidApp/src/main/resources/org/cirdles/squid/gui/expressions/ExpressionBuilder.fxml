@@ -111,115 +111,119 @@
                   </HBox>
                </items>
             </ToolBar>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <VBox fx:id="editorVBox" VBox.vgrow="ALWAYS">
                <children>
-                  <Label minWidth="140.0" text="Expression name:" />
-                  <TextField fx:id="textExpressionName" maxWidth="400.0" minWidth="120.0" HBox.hgrow="ALWAYS" />
-                  <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0" HBox.hgrow="ALWAYS">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <CheckBox fx:id="referenceMaterialCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" text="Reference Material" />
-                        <CheckBox fx:id="unknownSamplesCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" text="Unknown Samples" />
-                        <CheckBox fx:id="concRefMatCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" text="Conc RefMat" />
+                        <Label minWidth="140.0" text="Expression name:" />
+                        <TextField fx:id="textExpressionName" maxWidth="400.0" minWidth="120.0" HBox.hgrow="ALWAYS" />
+                        <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <CheckBox fx:id="referenceMaterialCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" text="Reference Material" />
+                              <CheckBox fx:id="unknownSamplesCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" text="Unknown Samples" />
+                              <CheckBox fx:id="concRefMatCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" text="Conc RefMat" />
+                           </children>
+                        </FlowPane>
                      </children>
-                  </FlowPane>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
-               </VBox.margin>
-            </HBox>
-            <TitledPane animated="false" collapsible="false" minHeight="70.0" prefHeight="70.0" text="Build expression">
-               <content>
-                  <TextFlow fx:id="expressionTextFlow" />
-               </content>
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </TitledPane>
-            <HBox>
-               <children>
-                  <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Button fx:id="expressionClearBtn" mnemonicParsing="false" onAction="#expressionClearAction" text="Clear" />
-                        <Button fx:id="expressionCopyBtn" mnemonicParsing="false" onAction="#expressionCopyAction" text="Copy" />
-                        <Button fx:id="expressionPasteBtn" mnemonicParsing="false" onAction="#expressionPasteAction" text="Paste" />
-                        <Button fx:id="expressionUndoBtn" mnemonicParsing="false" onAction="#expressionUndoAction" text="Undo" />
-                        <Button fx:id="expressionRedoBtn" mnemonicParsing="false" onAction="#expressionRedoAction" text="Redo" />
-                     </children>
+                     <VBox.margin>
+                        <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
+                     </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                  <TitledPane fx:id="expressionPane" animated="false" collapsible="false" minHeight="70.0" text="Build expression">
+                     <content>
+                        <TextFlow fx:id="expressionTextFlow" />
+                     </content>
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </TitledPane>
+                  <HBox>
                      <children>
-                        <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" text="Edit as text" />
+                        <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="expressionClearBtn" mnemonicParsing="false" onAction="#expressionClearAction" text="Clear" />
+                              <Button fx:id="expressionCopyBtn" mnemonicParsing="false" onAction="#expressionCopyAction" text="Copy" />
+                              <Button fx:id="expressionPasteBtn" mnemonicParsing="false" onAction="#expressionPasteAction" text="Paste" />
+                              <Button fx:id="expressionUndoBtn" mnemonicParsing="false" onAction="#expressionUndoAction" text="Undo" />
+                              <Button fx:id="expressionRedoBtn" mnemonicParsing="false" onAction="#expressionRedoAction" text="Redo" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" text="Edit as text" />
+                           </children>
+                        </HBox>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="3.0" right="3.0" />
+                     </VBox.margin>
                   </HBox>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="5.0" left="3.0" right="3.0" />
-               </VBox.margin>
-            </HBox>
-            <SplitPane fx:id="bigSplitPane" dividerPositions="0.5" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-               <items>
-                  <VBox fx:id="graphVBox">
-                     <children>
-                        <TitledPane fx:id="graphPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Graph" VBox.vgrow="ALWAYS">
-                           <content>
-                              <WebView fx:id="graphView" prefHeight="332.0" prefWidth="321.0">
-                                 <effect>
-                                    <InnerShadow height="10.0" radius="4.5" width="10.0" />
-                                 </effect>
-                              </WebView>
-                           </content>
-                        </TitledPane>
-                     </children>
-                  </VBox>
-                  <SplitPane fx:id="smallSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+                  <SplitPane fx:id="bigSplitPane" dividerPositions="0.5" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
                      <items>
-                        <VBox fx:id="auditVBox">
+                        <VBox fx:id="graphVBox">
                            <children>
-                              <TitledPane fx:id="auditPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Audit" VBox.vgrow="ALWAYS">
+                              <TitledPane fx:id="graphPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Graph" VBox.vgrow="ALWAYS">
                                  <content>
-                                    <TextArea fx:id="textAudit" editable="false" prefWidth="320.0" />
+                                    <WebView fx:id="graphView" prefHeight="332.0" prefWidth="321.0">
+                                       <effect>
+                                          <InnerShadow height="10.0" radius="4.5" width="10.0" />
+                                       </effect>
+                                    </WebView>
                                  </content>
                               </TitledPane>
                            </children>
                         </VBox>
-                        <VBox fx:id="peekVBox">
-                           <children>
-                              <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Peek" VBox.vgrow="ALWAYS">
-                                 <content>
-                                    <TabPane style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
-                                      <tabs>
-                                        <Tab text="Reference Materials">
-                                             <content>
-                                                <TextArea fx:id="textPeekRM" editable="false" prefWidth="318.0" />
-                                             </content>
-                                          </Tab>
-                                        <Tab text="Unknowns">
-                                             <content>
-                                                <TextArea fx:id="textPeekUnk" editable="false" prefWidth="0.0" />
-                                             </content>
-                                          </Tab>
-                                      </tabs>
-                                    </TabPane>
-                                 </content>
-                              </TitledPane>
-                           </children>
-                        </VBox>
+                        <SplitPane fx:id="smallSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+                           <items>
+                              <VBox fx:id="auditVBox">
+                                 <children>
+                                    <TitledPane fx:id="auditPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Audit" VBox.vgrow="ALWAYS">
+                                       <content>
+                                          <TextArea fx:id="textAudit" editable="false" prefWidth="320.0" />
+                                       </content>
+                                    </TitledPane>
+                                 </children>
+                              </VBox>
+                              <VBox fx:id="peekVBox">
+                                 <children>
+                                    <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Peek" VBox.vgrow="ALWAYS">
+                                       <content>
+                                          <TabPane style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
+                                            <tabs>
+                                              <Tab text="Reference Materials">
+                                                   <content>
+                                                      <TextArea fx:id="textPeekRM" editable="false" prefWidth="318.0" />
+                                                   </content>
+                                                </Tab>
+                                              <Tab text="Unknowns">
+                                                   <content>
+                                                      <TextArea fx:id="textPeekUnk" editable="false" prefWidth="0.0" />
+                                                   </content>
+                                                </Tab>
+                                            </tabs>
+                                          </TabPane>
+                                       </content>
+                                    </TitledPane>
+                                 </children>
+                              </VBox>
+                           </items>
+                        </SplitPane>
                      </items>
                   </SplitPane>
-               </items>
-            </SplitPane>
-            <HBox alignment="CENTER_RIGHT">
-               <children>
-                  <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
-                  <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+                  <HBox alignment="CENTER_RIGHT">
+                     <children>
+                        <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
+                        <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </HBox>
+            </VBox>
          </children>
       </VBox>
    </items>
