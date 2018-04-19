@@ -116,7 +116,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      */
-    protected SortedSet<ExpressionTree> taskExpressionTreesOrdered;
     protected List<Expression> taskExpressionsOrdered;
     protected SortedSet<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
@@ -186,7 +185,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.squidRatiosModelList = new ArrayList<>();
         this.tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
 
-        this.taskExpressionTreesOrdered = new TreeSet<>();
         this.taskExpressionsOrdered = new ArrayList<>();
         this.taskExpressionsRemoved = new TreeSet<>();
         this.namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -318,7 +316,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(" Unknown Spots.");
 
         int count = 0;
-        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
+        for (Expression exp : taskExpressionsOrdered) {
             if (exp.amHealthy()) {
                 count++;
             }
@@ -327,8 +325,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\t Healthy: ");
         summary.append((String) (count > 0 ? String.valueOf(count) : "None")).append(" included.");
         summary.append("\n\t UnHealthy: ");
-        summary.append((String) ((taskExpressionTreesOrdered.size() - count) > 0
-                ? String.valueOf(taskExpressionTreesOrdered.size() - count) : "None")).append(" excluded.");
+        summary.append((String) ((taskExpressionsOrdered.size() - count) > 0
+                ? String.valueOf(taskExpressionsOrdered.size() - count) : "None")).append(" excluded.");
 
         summary.append("\n\n Task Constants (imported with task or hard-coded): \n");
         if (namedConstantsMap.size() > 0) {
@@ -477,11 +475,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         taskExpressionsOrdered.clear();
-        taskExpressionTreesOrdered.clear();
         for (Expression listedExp : expArray) {
             System.out.println(listedExp.getName());
             taskExpressionsOrdered.add(listedExp);
-            taskExpressionTreesOrdered.add((ExpressionTree) listedExp.getExpressionTree());
         }
         System.out.println("<>><<><>>>>>>>>>>>>>>>>\n\n");
     }
@@ -534,7 +530,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         if (listedExp.isSquidSwitchNU()) {
             if (listedExp.getExpressionTree() instanceof BuiltInExpressionInterface) {
-                ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression(this);
+                ((BuiltInExpressionInterface) listedExp.getExpressionTree()).buildExpression();
             }
         }
 
@@ -597,7 +593,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (Expression exp : taskExpressionsOrdered) {
             if (exp.isSquidSwitchNU()) {
                 if (exp.getExpressionTree() instanceof BuiltInExpressionInterface) {
-                    ((BuiltInExpressionInterface) exp.getExpressionTree()).buildExpression(this);
+                    ((BuiltInExpressionInterface) exp.getExpressionTree()).buildExpression();
                 }
             }
         }
@@ -810,8 +806,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             namedExpressionsMap.put(srm.getRatioName(), buildRatioExpression(srm.getRatioName()));
         }
 
-        for (ExpressionTreeInterface exp : taskExpressionTreesOrdered) {
-            namedExpressionsMap.put(exp.getName(), exp);
+        for (Expression exp : taskExpressionsOrdered) {
+            namedExpressionsMap.put(exp.getName(), exp.getExpressionTree());
         }
     }
 
@@ -1401,19 +1397,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the taskExpressionTreesOrdered
+     * @param taskExpressionsOrdered the taskExpressionTreesOrdered to set
      */
     @Override
-    public SortedSet<ExpressionTree> getTaskExpressionTreesOrdered() {
-        return taskExpressionTreesOrdered;
-    }
-
-    /**
-     * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
-     */
-    @Override
-    public void setTaskExpressionTreesOrdered(SortedSet<ExpressionTree> taskExpressionTreesOrdered) {
-        this.taskExpressionTreesOrdered = taskExpressionTreesOrdered;
+    public void setTaskExpressionsOrdered(List<Expression> taskExpressionsOrdered) {
+        this.taskExpressionsOrdered = taskExpressionsOrdered;
     }
 
     /**
