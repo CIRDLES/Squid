@@ -231,8 +231,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> sampleDates = generateSampleDates();
         taskExpressionsOrdered.addAll(sampleDates);
 
-        SortedSet<Expression> perSpotPbCorrections = generatePerSpotProportionsOfCommonPb();
-        taskExpressionsOrdered.addAll(perSpotPbCorrections);
+        // Squid2.5 Framework: Part 4 up to means
+        SortedSet<Expression> perSpotProportionsOfCommonPb = generatePerSpotProportionsOfCommonPb();
+        taskExpressionsOrdered.addAll(perSpotProportionsOfCommonPb);
+        
+        //Squid2.5 Framework: Part 4 means
 
         SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(perSpotConcentrations);
