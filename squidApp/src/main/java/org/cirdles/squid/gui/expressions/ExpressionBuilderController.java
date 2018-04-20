@@ -319,7 +319,6 @@ public class ExpressionBuilderController implements Initializable {
                 double ord = expressionTextFlow.getChildren().size();
                 if(toggleGroup.getSelectedToggle() == dragndropLeftRadio){
                     ord = -1.0;
-                    System.out.println("coucou");
                 }
                 
                 // if moving a node
@@ -701,7 +700,6 @@ public class ExpressionBuilderController implements Initializable {
     }
     
     private void insertFunctionIntoExpressionTextFlow(String content, double ordinalIndex) {
-        System.out.println(content);
         String[] funcCall = content.split(" ");
         for (int i = 0; i < funcCall.length; i++) {
             if (funcCall[i].compareTo("") != 0) {
