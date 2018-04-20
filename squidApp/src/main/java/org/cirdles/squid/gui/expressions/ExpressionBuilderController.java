@@ -17,13 +17,11 @@ package org.cirdles.squid.gui.expressions;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -60,6 +58,9 @@ import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebView;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.Token;
+import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS;
@@ -227,6 +228,8 @@ public class ExpressionBuilderController implements Initializable {
         initExpressionTextFlow();
         
         initPropertyBindings();
+        
+        initExpressionEdition();
     }
     
     private void initPropertyBindings(){
@@ -253,7 +256,7 @@ public class ExpressionBuilderController implements Initializable {
         dragndropLeftRadio.setToggleGroup(toggleGroup);
         dragndropReplaceRadio.setToggleGroup(toggleGroup);
         dragndropRightRadio.setToggleGroup(toggleGroup);
-        toggleGroup.selectToggle(dragndropLeftRadio);
+        toggleGroup.selectToggle(dragndropRightRadio);
     }
     
     private void initListViews(){
@@ -300,7 +303,7 @@ public class ExpressionBuilderController implements Initializable {
             public void handle(DragEvent event) {
                 if (event.getDragboard().hasString()) {
                     if(event.getGestureSource() instanceof ExpressionTextNode){
-                        event.acceptTransferModes(TransferMode.COPY);
+                        event.acceptTransferModes(TransferMode.MOVE);
                     }else{
                         event.acceptTransferModes(TransferMode.COPY);
                     }
@@ -313,11 +316,15 @@ public class ExpressionBuilderController implements Initializable {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 
-                double ordinalIndex = expressionTextFlow.getChildren().size();
+                double ord = expressionTextFlow.getChildren().size();
+                if(toggleGroup.getSelectedToggle() == dragndropLeftRadio){
+                    ord = -1.0;
+                    System.out.println("coucou");
+                }
                 
-                //If moving a node
+                // if moving a node
                 if(event.getGestureSource() instanceof ExpressionTextNode){
-                    ((ExpressionTextNode)event.getGestureSource()).setOrdinalIndex(ordinalIndex);
+                    ((ExpressionTextNode)event.getGestureSource()).setOrdinalIndex(ord);
                     updateExpressionTextFlowChildren();
                     success = true;
                 }
@@ -326,16 +333,16 @@ public class ExpressionBuilderController implements Initializable {
                     String content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
                     if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
                         // case of function, make a series of objects
-                        insertFunctionIntoExpressionTextFlow(content, expressionTextFlow.getChildren().size());
+                        insertFunctionIntoExpressionTextFlow(content, ord);
                     }else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(operationFlagDelimeter))) {
                         // case of operation
-                        insertOperationIntoExpressionTextFlow(content, expressionTextFlow.getChildren().size());
+                        insertOperationIntoExpressionTextFlow(content, ord);
                     } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
                         // case of "NUMBER"
-                        insertNumberIntoExpressionTextFlow(numberString, expressionTextFlow.getChildren().size());
+                        insertNumberIntoExpressionTextFlow(numberString, ord);
                     }else{
                         // case of expression
-                        insertExpressionIntoExpressionTextFlow(content, expressionTextFlow.getChildren().size());
+                        insertExpressionIntoExpressionTextFlow(content, ord);
                     }
 
                     success = true;
@@ -349,12 +356,24 @@ public class ExpressionBuilderController implements Initializable {
         });
     }
     
+    private void initExpressionEdition(){
+        editedExpression.addListener((observable, oldValue, newValue) -> {
+            if(newValue != null){
+                textExpressionName.textProperty().set(newValue.getName());
+                buildTextFlowFromString(newValue.getExcelExpressionString());
+            }else{
+                textExpressionName.clear();
+                expressionTextFlow.getChildren().clear();
+            }
+        });
+    }
     
     
     //CREATE SAVE CANCEL ACTIONS
     
     @FXML
     void newCustomExpressionAction(ActionEvent event) {
+        editedExpression.set(null);
         editedExpression.set(new Expression("new_custom_expression", ""));
     }
     
@@ -452,46 +471,25 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
         
-        sortedNUSwitchedExpressionsList.sort(
-                new Comparator<Expression>() {
-                    @Override
-                    public int compare(Expression exp1, Expression exp2) {
-                        int retVal = 0;
-                        retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
-                        return retVal;
-                    }
-                }
-        );
         
         ObservableList<Expression> items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
+        items = items.sorted((Expression exp1, Expression exp2) -> {
+            return exp1.getName().compareToIgnoreCase(exp2.getName());
+        });
         nuSwitchedExpressionsListView.setItems(items);
         
-        sortedBuiltInExpressionsList.sort(
-                new Comparator<Expression>() {
-                    @Override
-                    public int compare(Expression exp1, Expression exp2) {
-                        int retVal = 0;
-                        retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
-                        return retVal;
-                    }
-                }
-        );
         
         items = FXCollections.observableArrayList(sortedBuiltInExpressionsList);
+        items = items.sorted((Expression exp1, Expression exp2) -> {
+            return exp1.getName().compareToIgnoreCase(exp2.getName());
+        });
         builtInExpressionsListView.setItems(items);
         
-        sortedCustomExpressionsList.sort(
-                new Comparator<Expression>() {
-                    @Override
-                    public int compare(Expression exp1, Expression exp2) {
-                        int retVal = 0;
-                        retVal = exp1.getName().compareToIgnoreCase(exp2.getName());
-                        return retVal;
-                    }
-                }
-        );
         
         items = FXCollections.observableArrayList(sortedCustomExpressionsList);
+        items = items.sorted((Expression exp1, Expression exp2) -> {
+            return exp1.getName().compareToIgnoreCase(exp2.getName());
+        });
         customExpressionsListView.setItems(items);
     }
     
@@ -499,6 +497,9 @@ public class ExpressionBuilderController implements Initializable {
         List<SquidRatiosModel> ratiosList = squidProject.getTask().getSquidRatiosModelList();
         
         ObservableList<SquidRatiosModel> items = FXCollections.observableArrayList(ratiosList);
+        items = items.sorted((ratio1, ratio2) -> {
+            return ratio1.getRatioName().compareToIgnoreCase(ratio2.getRatioName());
+        });
         ratioExpressionsListView.setItems(items);
     }
     
@@ -519,14 +520,14 @@ public class ExpressionBuilderController implements Initializable {
             // space-delimited
             String args = op.getKey() + " ( ";
             for (int i = 0; i < argumentCount; i++) {
-                args += "ARG-" + i + (i < (argumentCount - 1) ? " , " : "");
+                args += "ARG_" + i + (i < (argumentCount - 1) ? " , " : " )");
             }
-            args += " )";
             
             functionStrings.add(args);
         }
         
         items = FXCollections.observableArrayList(functionStrings);
+        items = items.sorted();
         mathFunctionsListView.setItems(items);
         
     }
@@ -585,12 +586,7 @@ public class ExpressionBuilderController implements Initializable {
         
         menuItem = new MenuItem("Wrap in parentheses.");
         menuItem.setOnAction((evt) -> {
-            ExpressionTextNode leftP = new ExpressionTextNode(" ( ");
-            leftP.setOrdinalIndex(etn.getOrdinalIndex() - 0.5);
-            ExpressionTextNode rightP = new ExpressionTextNode(" ) ");
-            rightP.setOrdinalIndex(etn.getOrdinalIndex() + 0.5);
-            expressionTextFlow.getChildren().addAll(leftP, rightP);
-            updateExpressionTextFlowChildren();
+            wrapInParentheses(etn.getOrdinalIndex(),etn.getOrdinalIndex());
         });
         contextMenu.getItems().add(menuItem);
         
@@ -598,11 +594,8 @@ public class ExpressionBuilderController implements Initializable {
         if (etn instanceof NumberTextNode) {
             TextField editText = new TextField(etn.getText());
             editText.setPrefWidth((editText.getText().trim().length() + 2) * editText.getFont().getSize());
-            editText.textProperty().addListener(new ChangeListener<Object>() {
-                @Override
-                public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
-                    editText.setPrefWidth((editText.getText().trim().length() + 2) * editText.getFont().getSize());
-                }
+            editText.textProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
+                editText.setPrefWidth((editText.getText().trim().length() + 2) * editText.getFont().getSize());
             });
             menuItem = new MenuItem("<< Edit value then click here to save.", editText);
             menuItem.setOnAction((evt) -> {
@@ -634,15 +627,12 @@ public class ExpressionBuilderController implements Initializable {
             children.add((ExpressionTextNode) etn);
         }
         // sort
-        children.sort(new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-                int retVal = 0;
-                if (o1 instanceof ExpressionTextNode && o2 instanceof ExpressionTextNode) {
-                    retVal = Double.compare(((ExpressionTextNode) o1).getOrdinalIndex(), ((ExpressionTextNode) o2).getOrdinalIndex());
-                }
-                return retVal;
+        children.sort((Node o1, Node o2) -> {
+            int retVal = 0;
+            if (o1 instanceof ExpressionTextNode && o2 instanceof ExpressionTextNode) {
+                retVal = Double.compare(((ExpressionTextNode) o1).getOrdinalIndex(), ((ExpressionTextNode) o2).getOrdinalIndex());
             }
+            return retVal;
         });
         
         // reset ordinals to integer values
@@ -663,7 +653,7 @@ public class ExpressionBuilderController implements Initializable {
     
     public void makeAndAuditExpression() {
         
-        String fullText = makeStringFromTextFlow(expressionTextFlow);
+        String fullText = makeStringFromTextFlow();
         
         if (fullText.trim().length() > 0) {
             Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
@@ -677,15 +667,37 @@ public class ExpressionBuilderController implements Initializable {
         }
     }
     
-    private String makeStringFromTextFlow(TextFlow textflow) {
+    private String makeStringFromTextFlow() {
         // make and audit expression
         StringBuilder sb = new StringBuilder();
-        for (Node node : textflow.getChildren()) {
+        for (Node node : expressionTextFlow.getChildren()) {
             if (node instanceof Text) {
                 sb.append(((Text) node).getText());
             }
         }
         return sb.toString();
+    }
+    
+    private void buildTextFlowFromString(String string){
+        
+        expressionTextFlow.getChildren().clear();
+        
+        ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(string));
+        
+        List<? extends Token> tokens = lexer.getAllTokens();
+        
+        for(int i = 0 ; i<tokens.size() ; i++){
+            Token token = tokens.get(i);
+            String nodeText = token.getText();
+            nodeText += " ";
+            
+            //TODO TYPES
+            
+            ExpressionTextNode etn = new ExpressionTextNode(nodeText);
+            expressionTextFlow.getChildren().add(etn);
+        }
+        
+        updateExpressionTextFlowChildren();
     }
     
     private void insertFunctionIntoExpressionTextFlow(String content, double ordinalIndex) {
@@ -694,12 +706,9 @@ public class ExpressionBuilderController implements Initializable {
         for (int i = 0; i < funcCall.length; i++) {
             if (funcCall[i].compareTo("") != 0) {
                 funcCall[i] = funcCall[i].replaceAll("([(,)])", " $1 ");
-                // remove of the "-" inside args because the parser takes them as minus operators
-                funcCall[i] = funcCall[i].replaceAll("ARG-([0-9]*)", "ARG$1");
                 ExpressionTextNode expressionTextNode = new ExpressionTextNode(funcCall[i]);
                 // max 8 terms
-                expressionTextNode.setOrdinalIndex(ordinalIndex - (9 - i) * 0.1);
-                System.out.println(expressionTextNode.getText()+" : "+expressionTextNode.getOrdinalIndex());
+                expressionTextNode.setOrdinalIndex(ordinalIndex - (9 - i) * 0.01);
                 expressionTextFlow.getChildren().add(expressionTextNode);
             }
         }
@@ -724,6 +733,15 @@ public class ExpressionBuilderController implements Initializable {
         ExpressionTextNode exp = new ExpressionTextNode(' '+content.trim()+' ');
         exp.setOrdinalIndex(ordinalIndex);
         expressionTextFlow.getChildren().add(exp);
+        updateExpressionTextFlowChildren();
+    }
+    
+    private void wrapInParentheses(double ordLeft, double ordRight){
+        ExpressionTextNode leftP = new ExpressionTextNode(" ( ");
+        leftP.setOrdinalIndex(ordLeft - 0.5);
+        ExpressionTextNode rightP = new ExpressionTextNode(" ) ");
+        rightP.setOrdinalIndex(ordRight + 0.5);
+        expressionTextFlow.getChildren().addAll(leftP, rightP);
         updateExpressionTextFlowChildren();
     }
     
@@ -790,39 +808,45 @@ public class ExpressionBuilderController implements Initializable {
             
             
             cell.setOnMouseClicked((MouseEvent event) -> {
-                if(event.getButton() == MouseButton.SECONDARY){
-                    
-                    //hide previous contextMenus
-                    for (ContextMenu contextMenu : contextMenus) {
-                        contextMenu.hide();
-                    }
-                    contextMenus.clear();
-                    
-                    ContextMenu contextMenu = new ContextMenu();
-                    
-                    if(customExpressionsListView.getItems().contains(cell.getItem())){
-                        MenuItem menuItemEdit = new MenuItem("Edit expression");
-                        menuItemEdit.setOnAction((evt) -> {
-                            editedExpression.set(cell.getItem());
+                if (!cell.isEmpty()) {
+                    if(event.getButton() == MouseButton.SECONDARY){
+                        
+                        //hide previous contextMenus
+                        for (ContextMenu contextMenu : contextMenus) {
+                            contextMenu.hide();
+                        }
+                        contextMenus.clear();
+                        
+                        ContextMenu contextMenu = new ContextMenu();
+                        
+                        if(customExpressionsListView.getItems().contains(cell.getItem())){
+                            MenuItem menuItemEdit = new MenuItem("Edit expression");
+                            menuItemEdit.setOnAction((evt) -> {
+                                editedExpression.set(null);
+                                editedExpression.set(cell.getItem());
+                            });
+                            contextMenu.getItems().add(menuItemEdit);
+                        }
+                        
+                        MenuItem menuItem = new MenuItem("Create new expression from this one");
+                        menuItem.setOnAction((evt) -> {
+                            Expression exp = new Expression("new_custom_expression", cell.getItem().getExcelExpressionString());
+                            editedExpression.set(null);
+                            editedExpression.set(exp);
                         });
-                        contextMenu.getItems().add(menuItemEdit);
+                        contextMenu.getItems().add(menuItem);
+                        
+                        contextMenu.show(cell, event.getScreenX(), event.getScreenY());
+                        
+                        contextMenus.add(contextMenu);
                     }
-                    
-                    MenuItem menuItem = new MenuItem("Create new expression from this one");
-                    menuItem.setOnAction((evt) -> {
-                        Expression exp = new Expression("new_custom_expression", cell.getItem().getExcelExpressionString());
-                        editedExpression.set(exp);
-                    });
-                    contextMenu.getItems().add(menuItem);
-                    
-                    contextMenu.show(cell, event.getScreenX(), event.getScreenY());
-                    
-                    contextMenus.add(contextMenu);
                 }
             });
             
             cell.setOnMousePressed((event) -> {
-                cell.setCursor(Cursor.CLOSED_HAND);
+                if (!cell.isEmpty()) {
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
             });
             
             cell.setOnMouseReleased((event) -> {
@@ -830,6 +854,7 @@ public class ExpressionBuilderController implements Initializable {
             });
             
             cell.setCursor(Cursor.OPEN_HAND);
+
             return cell;
         }
         
@@ -863,10 +888,26 @@ public class ExpressionBuilderController implements Initializable {
                     cc.putString("[\"" + cell.getItem().getRatioName() + "\"]");
                     db.setContent(cc);
                     dragSquidRatioModelSource.set(cell.getItem());
+                    cell.setCursor(Cursor.CLOSED_HAND);
                 }
             });
             
-            cell.setCursor(Cursor.CLOSED_HAND);
+            cell.setOnDragDone((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+            
+            cell.setOnMousePressed((event) -> {
+                if (!cell.isEmpty()) {
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+            
+            cell.setOnMouseReleased((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+            
+            cell.setCursor(Cursor.OPEN_HAND);
+            
             return cell;
         }
         
@@ -906,10 +947,26 @@ public class ExpressionBuilderController implements Initializable {
                     cc.putString(cell.getItem());
                     db.setContent(cc);
                     dragSource.set(cell.getItem());
+                    cell.setCursor(Cursor.CLOSED_HAND);
                 }
             });
             
-            cell.setCursor(Cursor.CLOSED_HAND);
+            cell.setOnDragDone((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+            
+            cell.setOnMousePressed((event) -> {
+                if (!cell.isEmpty()) {
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+            
+            cell.setOnMouseReleased((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+            
+            cell.setCursor(Cursor.OPEN_HAND);
+            
             return cell;
         }
     }
@@ -959,103 +1016,86 @@ public class ExpressionBuilderController implements Initializable {
             this.popupShowing = false;
             
             setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
-            setCursor(Cursor.CLOSED_HAND);
+            setCursor(Cursor.OPEN_HAND);
             
-            setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (event.getButton() == MouseButton.SECONDARY && event.getEventType() == MouseEvent.MOUSE_CLICKED && !popupShowing) {
-                        createExpressionTextNodeContextMenu((ExpressionTextNode) event.getSource()).show((ExpressionTextNode) event.getSource(), event.getScreenX(), event.getScreenY());
-                        popupShowing = true;
-                    }
+            setOnMouseClicked((MouseEvent event) -> {
+                if (event.getButton() == MouseButton.SECONDARY && event.getEventType() == MouseEvent.MOUSE_CLICKED && !popupShowing) {
+                    createExpressionTextNodeContextMenu((ExpressionTextNode) event.getSource()).show((ExpressionTextNode) event.getSource(), event.getScreenX(), event.getScreenY());
+                    popupShowing = true;
                 }
             });
             
-            setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    setFill(Color.RED);
-                }
+            setOnMousePressed((MouseEvent event) -> {
+                setFill(Color.RED);
+                setCursor(Cursor.CLOSED_HAND);
             });
             
-            setOnMouseReleased(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    setFill(Color.BLACK);
-                }
+            setOnMouseReleased((MouseEvent event) -> {
+                setFill(Color.BLACK);
+                setCursor(Cursor.OPEN_HAND);
             });
             
-            setOnDragDetected(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    Dragboard db = startDragAndDrop(TransferMode.COPY);
-                    ClipboardContent cc = new ClipboardContent();
-                    cc.putString(text);
-                    db.setContent(cc);
-                    dragTextSource.set((ExpressionTextNode) event.getSource());
-                }
+            setOnDragDetected((MouseEvent event) -> {
+                setCursor(Cursor.CLOSED_HAND);
+                Dragboard db = startDragAndDrop(TransferMode.MOVE);
+                db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                ClipboardContent cc = new ClipboardContent();
+                cc.putString(text);
+                db.setContent(cc);
+                dragTextSource.set((ExpressionTextNode) event.getSource());
             });
             
-            setOnDragOver(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    if (event.getGestureSource() != (ExpressionTextNode) event.getSource()) {
-                        event.acceptTransferModes(TransferMode.COPY);
-                    }
-                    event.consume();
-                }
+            setOnDragDone((event) -> {
+                setCursor(Cursor.OPEN_HAND);
             });
             
-            setOnDragDropped(new EventHandler<DragEvent>() {
-                public void handle(DragEvent event) {
-                    Dragboard db = event.getDragboard();
-                    boolean success = false;
-                    if (db.hasString()
-                            && ((dragExpressionSource.get() != null) || (dragOperationOrFunctionSource.get() != null) || (dragSquidRatioModelSource.get() != null) || (dragNumberSource.get() != null))) {
-                        // we have the case of dropping a SOURCE INTO the list
-                        String content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
-                        // general case
-                        ExpressionTextNode expressionTextNode = new ExpressionTextNode(content);
-                        // check for special cases
-                        if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
-                            // case of function, make and insert a series of objects - dragTextSource remains empty to avoid next logic
-                            insertFunctionIntoExpressionTextFlow(content, ((ExpressionTextNode) event.getSource()).getOrdinalIndex());
-//                            if (replaceRB.isSelected()) {
-//                                expressionTextFlow.getChildren().remove((ExpressionTextNode) event.getSource());
-//                            }
-                            expressionTextNode = null;
-                        } else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(operationFlagDelimeter))) {
-                            // operation
-                            expressionTextNode = new OperationTextNode(content.trim());
-                        } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
-                            // number
-                            expressionTextNode = new NumberTextNode(placeholder + numberString + placeholder);
-                        }
-                        
-                        if (expressionTextNode != null) {
-                            // setup for logic below
-                            expressionTextFlow.getChildren().add(expressionTextNode);
-                        }
-                        dragTextSource.set(expressionTextNode);
-                    }
-                    
-                    // within the list of text objects
-                    if (db.hasString() && (dragTextSource.get() instanceof ExpressionTextNode)) {
-                        // insert left
-                        dragTextSource.get().setOrdinalIndex(((ExpressionTextNode) event.getSource()).getOrdinalIndex() - 0.5);
-//                        if (replaceRB.isSelected()) {
-//                            expressionTextFlow.getChildren().remove((ExpressionTextNode) event.getSource());
-//                        }
-                        
-                        event.setDropCompleted(true);
-                        
-                        success = true;
-                    }
-                    event.setDropCompleted(success);
-                    event.consume();
-                    resetDragSources();
+            setOnDragOver((DragEvent event) -> {
+                if (event.getGestureSource() != (ExpressionTextNode) event.getSource()) {
+                    event.acceptTransferModes(TransferMode.COPY,TransferMode.MOVE);
+                }
+                event.consume();
+            });
+            
+            setOnDragDropped((DragEvent event) -> {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                double ord = 0.0;
+                if(toggleGroup.getSelectedToggle() == dragndropLeftRadio){
+                    ord = ordinalIndex - 0.5;
+                }else if(toggleGroup.getSelectedToggle() == dragndropReplaceRadio){
+                    ord = ordinalIndex;
+                    expressionTextFlow.getChildren().remove(this);
+                }else if(toggleGroup.getSelectedToggle() == dragndropRightRadio){
+                    ord = ordinalIndex + 0.5;
+                }
+                if(event.getGestureSource() instanceof ExpressionTextNode){
+                    ((ExpressionTextNode)event.getGestureSource()).setOrdinalIndex(ord);
                     updateExpressionTextFlowChildren();
+                    success = true;
                 }
+                else if(db.hasString()){
+                    String content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
+                    if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
+                        // case of function, make a series of objects
+                        insertFunctionIntoExpressionTextFlow(content, ord);
+                    }else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(operationFlagDelimeter))) {
+                        // case of operation
+                        insertOperationIntoExpressionTextFlow(content, ord);
+                    } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
+                        // case of "NUMBER"
+                        insertNumberIntoExpressionTextFlow(numberString, ord);
+                    }else{
+                        // case of expression
+                        insertExpressionIntoExpressionTextFlow(content, ord);
+                    }
+
+                    success = true;
+                }
+                
+                event.setDropCompleted(success);
+                
+                event.consume();
+                resetDragSources();
             });
         }
     }
