@@ -25,6 +25,9 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_N
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -99,8 +102,8 @@ public abstract class BuiltInExpressionsFactory {
     }
 
     /**
-     * Ludwig Q3 - additional equations to calculate 232Th/238U
-     * Includes Ludwig Q4 definitions calls
+     * Ludwig Q3 - additional equations to calculate 232Th/238U Includes Ludwig
+     * Q4 definitions calls
      *
      * @param parentNuclide
      * @param isDirectAltPD
@@ -134,14 +137,14 @@ public abstract class BuiltInExpressionsFactory {
             Expression expressionPpmTh = buildExpression(ppmOtherEqnName,
                     ppmOtherEqn, true, true, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
-            
+
             if (!parentNuclide.contains("232")) {
                 concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsU());
                 concentrationExpressionsOrdered.addAll(generate208MeansAndAgesForRefMaterialsU());
             } else {
                 concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsTh());
             }
-            
+
         } else {
             // directlAltPD is true
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsU());
@@ -178,28 +181,40 @@ public abstract class BuiltInExpressionsFactory {
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAMEpErr);
 
             // for samples
-            Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME + "S",
+            Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME_S,
                     "[\"208/206\"] * [\"4-corrTotal 206Pb/238U\"] / [\"4-corrTotal 208Pb/232Th\"]", false, true, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAMEs);
 
-            Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME + "S",
+            Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME_S,
                     "[\"208/206\"] * [\"7-corrTotal 206Pb/238U\"] / [\"7-corrTotal 208Pb/232Th\"]", false, true, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAMEs);
 
-            Expression expression4corrSQUID_TH_U_EQN_NAMEsPerr = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME + "S %err",
+            Expression expression4corrSQUID_TH_U_EQN_NAMEsPerr = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME_S + " %err",
                     "SQRT( [%\"208/206\"]^2 + [\"4-corrTotal 206Pb/238U %err\"]^2 + \n"
                     + "[\"4-corrTotal 208Pb/232Th %err\"]^2 )", false, true, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAMEsPerr);
 
-            Expression expression7corrSQUID_TH_U_EQN_NAMEsPerr = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME + "S %err",
+            Expression expression7corrSQUID_TH_U_EQN_NAMEsPerr = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME_S + " %err",
                     "SQRT( [%\"208/206\"]^2 + [\"7-corrTotal 206Pb/238U %err\"]^2 + \n"
                     + "[\"7-corrTotal 208Pb/232Th %err\"]^2 )", false, true, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAMEsPerr);
 
-            // placeholder expression
+            // placeholder expressions
             Expression expressionSQUID_TH_U_EQN_NAME = buildExpression(SQUID_TH_U_EQN_NAME,
                     "1", true, false, false);
             concentrationExpressionsOrdered.add(expressionSQUID_TH_U_EQN_NAME);
+
+            Expression expressionSQUID_TH_U_EQN_NAMEs = buildExpression(SQUID_TH_U_EQN_NAME_S,
+                    "1", false, true, false);
+            concentrationExpressionsOrdered.add(expressionSQUID_TH_U_EQN_NAMEs);
+
+            Expression expressionSQUID_TH_U_EQN_NAMEPerr = buildExpression(SQUID_TH_U_EQN_NAME + " %err",
+                    "1", true, false, false);
+            concentrationExpressionsOrdered.add(expressionSQUID_TH_U_EQN_NAMEPerr);
+
+            Expression expressionSQUID_TH_U_EQN_NAMEsPerr = buildExpression(SQUID_TH_U_EQN_NAME_S + " %err",
+                    "1", false, true, false);
+            concentrationExpressionsOrdered.add(expressionSQUID_TH_U_EQN_NAMEsPerr);
 
         } // end test of directAltD
         return concentrationExpressionsOrdered;
@@ -228,6 +243,15 @@ public abstract class BuiltInExpressionsFactory {
                 "SQRT( [%\"UncorrPb/Uconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
         pbIsotopeCorrectionsForU.add(expression7corrTotal206Pb238UpErr);
 
+        // placeholder expressions
+        Expression expressionSQUID_TOTAL_206_238_NAME = buildExpression(SQUID_TOTAL_206_238_NAME,
+                "1", false, true, false);
+        pbIsotopeCorrectionsForU.add(expressionSQUID_TOTAL_206_238_NAME);
+
+        Expression expressionSQUID_TOTAL_206_238_NAMEPerr = buildExpression(SQUID_TOTAL_206_238_NAME + " %err",
+                "1", false, true, false);
+        pbIsotopeCorrectionsForU.add(expressionSQUID_TOTAL_206_238_NAMEPerr);
+
         return pbIsotopeCorrectionsForU;
     }
 
@@ -246,7 +270,6 @@ public abstract class BuiltInExpressionsFactory {
 //
 //        return pbIsotopeCorrectionsForU;
 //    }
-
     private static SortedSet<Expression> generatePbIsotope204207CorrectionsForTh() {
         SortedSet<Expression> pbIsotopeCorrectionsForTh = new TreeSet<>();
 
@@ -269,6 +292,15 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression7corrTotal208Pb232ThpErr = buildExpression("7-corrTotal 208Pb/232Th %err",
                 "SQRT( [%\"UncorrPb/Thconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
         pbIsotopeCorrectionsForTh.add(expression7corrTotal208Pb232ThpErr);
+
+        // placeholder expressions
+        Expression expressionSQUID_TOTAL_208_232_NAME = buildExpression(SQUID_TOTAL_208_232_NAME,
+                "1", false, true, false);
+        pbIsotopeCorrectionsForTh.add(expressionSQUID_TOTAL_208_232_NAME);
+
+        Expression expressionSQUID_TOTAL_208_232_NAMEPerr = buildExpression(SQUID_TOTAL_208_232_NAME + " %err",
+                "1", false, true, false);
+        pbIsotopeCorrectionsForTh.add(expressionSQUID_TOTAL_208_232_NAMEPerr);
 
         return pbIsotopeCorrectionsForTh;
     }
