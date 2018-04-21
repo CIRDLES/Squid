@@ -50,7 +50,7 @@
       <Label fx:id="buildDate" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="46.0" layoutY="292.0" prefHeight="17.0" prefWidth="358.0" styleClass="main-Text-Color" text="Build Date: mm/dd/yyyy" textAlignment="CENTER" />
       <ImageView fitHeight="300.0" fitWidth="400.0" layoutX="75.0" layoutY="-32.0" pickOnBounds="true" preserveRatio="true" styleClass="logo">
          <image>
-            <Image url="@images/SquidLogo.png" />
+            <Image url="@images/SquidLogoSansBg.png" />
          </image>
       </ImageView>
       <Label fx:id="contributorsLabel" layoutX="31.0" layoutY="441.0" prefHeight="45.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Contributors" wrapText="true" />
