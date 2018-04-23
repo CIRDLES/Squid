@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.web.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.web.WebView?>
 
-<SplitPane dividerPositions="0.33" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
-      <TabPane maxWidth="500.0" minWidth="325.0" prefWidth="325.0" style="-fx-tab-min-width: 142;" tabClosingPolicy="UNAVAILABLE">
+      <TabPane maxWidth="500.0" minWidth="270.0" prefWidth="270.0" style="-fx-tab-min-width: 114;" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Sort by type">
                <content>
@@ -28,7 +32,7 @@
                      <children>
                         <Accordion fx:id="expressionsAccordion" VBox.vgrow="ALWAYS">
                            <panes>
-                              <TitledPane animated="false" text="NU-switched Expressions with Uncertainties">
+                              <TitledPane animated="false" text="NU-switched Expressions with Uncts">
                                  <content>
                                     <ListView fx:id="nuSwitchedExpressionsListView" />
                                  </content>
@@ -117,18 +121,21 @@
                      <children>
                         <Label minWidth="140.0" text="Expression name:" />
                         <TextField fx:id="textExpressionName" maxWidth="400.0" minWidth="120.0" HBox.hgrow="ALWAYS" />
-                        <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <CheckBox fx:id="referenceMaterialCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" text="Reference Material" />
-                              <CheckBox fx:id="unknownSamplesCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" text="Unknown Samples" />
-                              <CheckBox fx:id="concRefMatCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" text="Conc RefMat" />
-                           </children>
-                        </FlowPane>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
+                        <Insets bottom="5.0" left="7.0" right="7.0" top="10.0" />
                      </VBox.margin>
                   </HBox>
+                  <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0">
+                     <children>
+                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" text="Reference Material" />
+                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" text="Unknown Samples" />
+                        <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" text="Conc RefMat" />
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="7.0" right="7.0" />
+                     </VBox.margin>
+                  </FlowPane>
                   <TitledPane fx:id="expressionPane" animated="false" collapsible="false" minHeight="70.0" text="Build expression">
                      <content>
                         <TextFlow fx:id="expressionTextFlow" />
@@ -191,16 +198,16 @@
                                  <children>
                                     <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Peek" VBox.vgrow="ALWAYS">
                                        <content>
-                                          <TabPane style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
+                                          <TabPane fx:id="spotTabPane" style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
                                             <tabs>
-                                              <Tab text="Reference Materials">
+                                              <Tab fx:id="refMatTab" text="Reference Materials">
                                                    <content>
-                                                      <TextArea fx:id="textPeekRM" editable="false" prefWidth="318.0" />
+                                                      <TextArea fx:id="rmPeekTextArea" editable="false" prefWidth="318.0" />
                                                    </content>
                                                 </Tab>
-                                              <Tab text="Unknowns">
+                                              <Tab fx:id="unkTab" text="Unknowns">
                                                    <content>
-                                                      <TextArea fx:id="textPeekUnk" editable="false" prefWidth="0.0" />
+                                                      <TextArea fx:id="unPeekTextArea" editable="false" prefWidth="0.0" />
                                                    </content>
                                                 </Tab>
                                             </tabs>
