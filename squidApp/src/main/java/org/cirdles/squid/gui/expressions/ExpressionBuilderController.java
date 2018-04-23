@@ -1029,6 +1029,8 @@ public class ExpressionBuilderController implements Initializable {
             
             ExpressionTreeInterface expTree = exp.getExpressionTree();
             
+            copyTags(editedExpression.get().getExpressionTree(), expTree);
+            
             expTree.setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.isSelected());
             expTree.setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.isSelected());
             expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(concRefMatSwitchCheckBox.isSelected());
@@ -1182,7 +1184,13 @@ public class ExpressionBuilderController implements Initializable {
 
     }
     
-    
+    private void copyTags(ExpressionTreeInterface source, ExpressionTreeInterface dest){
+        dest.setSquidSpecialUPbThExpression(source.isSquidSpecialUPbThExpression());
+        dest.setSquidSwitchConcentrationReferenceMaterialCalculation(source.isSquidSwitchConcentrationReferenceMaterialCalculation());
+        dest.setSquidSwitchSAUnknownCalculation(source.isSquidSwitchSAUnknownCalculation());
+        dest.setSquidSwitchSCSummaryCalculation(source.isSquidSwitchSCSummaryCalculation());
+        dest.setSquidSwitchSTReferenceMaterialCalculation(source.isSquidSwitchSTReferenceMaterialCalculation());
+    }
     
     
     
@@ -1263,9 +1271,7 @@ public class ExpressionBuilderController implements Initializable {
                             ExpressionTree expTreeCopy = (ExpressionTree) exp.getExpressionTree();
                             ExpressionTree expTree = (ExpressionTree) cell.getItem().getExpressionTree();
                             
-                            expTreeCopy.setSquidSwitchSTReferenceMaterialCalculation(expTree.isSquidSwitchSTReferenceMaterialCalculation());
-                            expTreeCopy.setSquidSwitchSAUnknownCalculation(expTree.isSquidSwitchSAUnknownCalculation());
-                            expTreeCopy.setSquidSwitchConcentrationReferenceMaterialCalculation(expTree.isSquidSwitchConcentrationReferenceMaterialCalculation());
+                            copyTags(expTree, expTreeCopy);
             
                             editedExpression.set(null);
                             editedExpression.set(exp);

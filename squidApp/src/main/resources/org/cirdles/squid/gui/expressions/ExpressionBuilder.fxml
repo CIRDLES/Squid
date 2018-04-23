@@ -202,12 +202,12 @@
                                             <tabs>
                                               <Tab fx:id="refMatTab" text="Reference Materials">
                                                    <content>
-                                                      <TextArea fx:id="rmPeekTextArea" editable="false" prefWidth="318.0" />
+                                                      <TextArea fx:id="rmPeekTextArea" editable="false" prefWidth="318.0" style="-fx-font-family: Courier New; -fx-font-size: 11;" />
                                                    </content>
                                                 </Tab>
                                               <Tab fx:id="unkTab" text="Unknowns">
                                                    <content>
-                                                      <TextArea fx:id="unPeekTextArea" editable="false" prefWidth="0.0" />
+                                                      <TextArea fx:id="unPeekTextArea" editable="false" prefWidth="0.0" style="-fx-font-family: Courier New; -fx-font-size: 11;" />
                                                    </content>
                                                 </Tab>
                                             </tabs>
