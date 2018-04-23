@@ -19,10 +19,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.cirdles.commons.util.ResourceExtractor;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
  *
@@ -46,7 +46,7 @@ public final class Squid {
 
         // get version number and release date written by pom.xml
         Path resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("version.txt");
-        Charset charset = Charset.forName("US-ASCII");
+        Charset charset = StandardCharsets.UTF_8; //Charset.forName("US-ASCII");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
             String line = reader.readLine();
             if (line != null) {

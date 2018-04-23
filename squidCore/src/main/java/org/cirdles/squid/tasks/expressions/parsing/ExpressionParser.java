@@ -72,7 +72,7 @@ public class ExpressionParser {
     public ExpressionTreeInterface parseExpressionStringAndBuildExpressionTree(Expression expression) {
         eqnSwitchNU = expression.isSquidSwitchNU();
 
-        ExpressionTreeInterface returnExpressionTree = new ExpressionTreeParsedFromExcelString(expression.getName());
+        ExpressionTreeInterface returnExpressionTree = new ExpressionTree(expression.getName());
 
         // Get our lexer
         ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(expression.getExcelExpressionString()));
@@ -162,11 +162,7 @@ public class ExpressionParser {
 
         // so can re-parse later
         if (savedExp == null) {
-            savedExp = new ExpressionTreeParsedFromExcelString("PARSE_ERROR");
-        }
-
-        if (savedExp instanceof ExpressionTreeParsedFromExcelString) {
-            ((ExpressionTreeParsedFromExcelString) savedExp).setParsedRPNreversedExcelString(parsedRPNreversed);
+            savedExp = new ExpressionTree("PARSE_ERROR");
         }
 
         return savedExp;

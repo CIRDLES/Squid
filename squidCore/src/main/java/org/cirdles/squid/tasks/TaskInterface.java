@@ -125,11 +125,6 @@ public interface TaskInterface {
     Map<String, SpotSummaryDetails> getTaskExpressionsEvaluationsPerSpotSet();
 
     /**
-     * @return the taskExpressionsOrdered
-     */
-    SortedSet<ExpressionTree> getTaskExpressionTreesOrdered();
-
-    /**
      * @return the type
      */
     String getType();
@@ -189,11 +184,6 @@ public interface TaskInterface {
      */
     public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
 
-    /**
-     * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
-     */
-    public void setTaskExpressionTreesOrdered(SortedSet<ExpressionTree> taskExpressionTreesOrdered);
-
     public void removeExpression(Expression expression);
 
     public void restoreRemovedExpressions();
@@ -223,6 +213,11 @@ public interface TaskInterface {
      * @return the taskExpressionsOrdered
      */
     public List<Expression> getTaskExpressionsOrdered();
+
+    /**
+     * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
+     */
+    public void setTaskExpressionsOrdered(List<Expression> taskExpressionsOrdered);
 
     /**
      * @param changed the changed to set
