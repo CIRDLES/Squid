@@ -15,7 +15,10 @@
 */
 package org.cirdles.squid.gui.expressions;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +32,15 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -51,8 +57,11 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebView;
@@ -66,10 +75,12 @@ import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
@@ -132,6 +143,9 @@ public class ExpressionBuilderController implements Initializable {
     private CheckBox unknownSamplesCheckBox;
     @FXML
     private CheckBox concRefMatCheckBox;
+    private CheckBox checkShowGraph;
+    private CheckBox checkGraphBrowser;
+    
 
     //LISTVIEWS
     @FXML
@@ -226,6 +240,7 @@ public class ExpressionBuilderController implements Initializable {
         initRadios();
         initListViews();
         initExpressionTextFlow();
+        initGraph();
         
         initPropertyBindings();
         
@@ -237,7 +252,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void initPanes(){
-        graphPane.prefHeightProperty().bind(graphVBox.heightProperty().add(-3.0));
+        graphPane.maxHeightProperty().bind(graphVBox.heightProperty().add(-3.0));
         auditPane.prefHeightProperty().bind(auditVBox.heightProperty().add(-3.0));
         peekPane.prefHeightProperty().bind(peekVBox.heightProperty().add(-3.0));
         graphPane.prefWidthProperty().bind(graphVBox.widthProperty().add(-3.0));
@@ -298,60 +313,55 @@ public class ExpressionBuilderController implements Initializable {
     }
     
     private void initExpressionTextFlow(){
-        expressionTextFlow.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if (event.getDragboard().hasString()) {
-                    if(event.getGestureSource() instanceof ExpressionTextNode){
-                        event.acceptTransferModes(TransferMode.MOVE);
-                    }else{
-                        event.acceptTransferModes(TransferMode.COPY);
-                    }
-                }
-                event.consume();
-            }
-        });
-        expressionTextFlow.setOnDragDropped(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                
-                double ord = expressionTextFlow.getChildren().size();
-                if(toggleGroup.getSelectedToggle() == dragndropLeftRadio){
-                    ord = -1.0;
-                }
-                
-                // if moving a node
+        expressionTextFlow.setOnDragOver((DragEvent event) -> {
+            if (event.getDragboard().hasString()) {
                 if(event.getGestureSource() instanceof ExpressionTextNode){
-                    ((ExpressionTextNode)event.getGestureSource()).setOrdinalIndex(ord);
-                    updateExpressionTextFlowChildren();
-                    success = true;
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }else{
+                    event.acceptTransferModes(TransferMode.COPY);
                 }
-                // if copying a node
-                else if (db.hasString()) {
-                    String content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
-                    if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
-                        // case of function, make a series of objects
-                        insertFunctionIntoExpressionTextFlow(content, ord);
-                    }else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(operationFlagDelimeter))) {
-                        // case of operation
-                        insertOperationIntoExpressionTextFlow(content, ord);
-                    } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
-                        // case of "NUMBER"
-                        insertNumberIntoExpressionTextFlow(numberString, ord);
-                    }else{
-                        // case of expression
-                        insertExpressionIntoExpressionTextFlow(content, ord);
-                    }
-
-                    success = true;
-                }
-                
-                event.setDropCompleted(success);
-                
-                event.consume();
-                resetDragSources();
             }
+            event.consume();
+        });
+        expressionTextFlow.setOnDragDropped((DragEvent event) -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            
+            double ord = expressionTextFlow.getChildren().size();
+            if(toggleGroup.getSelectedToggle() == dragndropLeftRadio){
+                ord = -1.0;
+            }
+            
+            // if moving a node
+            if(event.getGestureSource() instanceof ExpressionTextNode){
+                ((ExpressionTextNode)event.getGestureSource()).setOrdinalIndex(ord);
+                updateExpressionTextFlowChildren();
+                success = true;
+            }
+            // if copying a node
+            else if (db.hasString()) {
+                String content = placeholder + db.getString().split(operationFlagDelimeter)[0] + placeholder;
+                if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(operationFlagDelimeter))) {
+                    // case of function, make a series of objects
+                    insertFunctionIntoExpressionTextFlow(content, ord);
+                }else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(operationFlagDelimeter))) {
+                    // case of operation
+                    insertOperationIntoExpressionTextFlow(content, ord);
+                } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
+                    // case of "NUMBER"
+                    insertNumberIntoExpressionTextFlow(numberString, ord);
+                }else{
+                    // case of expression
+                    insertExpressionIntoExpressionTextFlow(content, ord);
+                }
+                
+                success = true;
+            }
+            
+            event.setDropCompleted(success);
+            
+            event.consume();
+            resetDragSources();
         });
     }
     
@@ -367,6 +377,26 @@ public class ExpressionBuilderController implements Initializable {
         });
     }
     
+    private void initGraph(){
+        
+        graphPane.setText(null);
+        Text label = new Text("Graph");
+        checkShowGraph = new CheckBox("Show here");
+        checkShowGraph.setSelected(true);
+        checkGraphBrowser = new CheckBox("Show in browser");
+        checkGraphBrowser.setSelected(false);
+        HBox hbox = new HBox(label, checkShowGraph, checkGraphBrowser);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        hbox.setSpacing(10.0);
+        graphPane.setGraphic(hbox);
+        
+       checkShowGraph.setOnAction((event) -> {
+           makeAndAuditExpression();
+       });
+       checkGraphBrowser.setOnAction((event) -> {
+           makeAndAuditExpression();
+       });
+    }
     
     //CREATE SAVE CANCEL ACTIONS
     
@@ -661,9 +691,13 @@ public class ExpressionBuilderController implements Initializable {
                     false);
             
             textAudit.setText(exp.produceExpressionTreeAudit());
+            
+            graphExpressionTree(exp.getExpressionTree());
+            
         } else {
             textAudit.setText("Empty expression");
         }
+        
     }
     
     private String makeStringFromTextFlow() {
@@ -750,7 +784,26 @@ public class ExpressionBuilderController implements Initializable {
         dragNumberSource.set(null);
     }
 
-    
+    private void graphExpressionTree(ExpressionTreeInterface expTree) {
+        // decide where to graph expression
+        String graphContents = ExpressionTreeWriterMathML.toStringBuilderMathML(expTree).toString();
+        if (checkShowGraph.isSelected()) {
+            graphView.getEngine().loadContent(graphContents);
+        } else {
+            graphView.getEngine().loadContent("<html>\n"
+                    + "<h3> &nbsp; </h3>\n"
+                    + "<h3 style=\"text-align:center;\">Local graphing is off.</h3>\n"
+                    + "</html>");
+        }
+
+        if (checkGraphBrowser.isSelected()) {
+            try {
+                Files.write(Paths.get("EXPRESSION.HTML"), graphContents.getBytes());
+                BrowserControl.showURI("EXPRESSION.HTML");
+            } catch (IOException iOException) {
+            }
+        }
+    }
     
     
     

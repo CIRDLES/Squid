@@ -158,7 +158,7 @@
                         <Insets bottom="5.0" left="3.0" right="3.0" />
                      </VBox.margin>
                   </HBox>
-                  <SplitPane fx:id="bigSplitPane" dividerPositions="0.5" VBox.vgrow="ALWAYS">
+                  <SplitPane fx:id="bigSplitPane" dividerPositions="0.5" orientation="VERTICAL" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -167,7 +167,7 @@
                            <children>
                               <TitledPane fx:id="graphPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Graph" VBox.vgrow="ALWAYS">
                                  <content>
-                                    <WebView fx:id="graphView" prefHeight="332.0" prefWidth="321.0">
+                                    <WebView fx:id="graphView" prefHeight="1.0" prefWidth="321.0">
                                        <effect>
                                           <InnerShadow height="10.0" radius="4.5" width="10.0" />
                                        </effect>
@@ -176,7 +176,7 @@
                               </TitledPane>
                            </children>
                         </VBox>
-                        <SplitPane fx:id="smallSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+                        <SplitPane fx:id="smallSplitPane" dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0">
                            <items>
                               <VBox fx:id="auditVBox">
                                  <children>
