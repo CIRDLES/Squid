@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
@@ -125,7 +126,7 @@
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
                         <Label minWidth="140.0" text="Expression name:" />
-                        <TextField fx:id="textExpressionName" maxWidth="400.0" minWidth="120.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="expressionNameTextField" maxWidth="400.0" minWidth="120.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="5.0" left="7.0" right="7.0" top="10.0" />
@@ -178,7 +179,7 @@
                      <items>
                         <VBox fx:id="graphVBox">
                            <children>
-                              <TitledPane fx:id="graphPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Graph" VBox.vgrow="ALWAYS">
+                              <TitledPane fx:id="graphPane" alignment="TOP_LEFT" animated="false" collapsible="false" VBox.vgrow="ALWAYS">
                                  <content>
                                     <WebView fx:id="graphView" prefHeight="1.0" prefWidth="321.0">
                                        <effect>
@@ -186,6 +187,19 @@
                                        </effect>
                                     </WebView>
                                  </content>
+                                 <graphic>
+                                    <HBox fx:id="graphTitleHbox" alignment="CENTER_LEFT" spacing="10.0">
+                                       <children>
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Graph">
+                                             <HBox.margin>
+                                                <Insets right="25.0" />
+                                             </HBox.margin>
+                                          </Text>
+                                          <CheckBox fx:id="showGraphCheckBox" mnemonicParsing="false" selected="true" text="Show here" />
+                                          <CheckBox fx:id="graphBrowserCheckBox" mnemonicParsing="false" text="Show in browser" />
+                                       </children>
+                                    </HBox>
+                                 </graphic>
                               </TitledPane>
                            </children>
                         </VBox>
@@ -195,7 +209,7 @@
                                  <children>
                                     <TitledPane fx:id="auditPane" alignment="TOP_LEFT" animated="false" collapsible="false" text="Audit" VBox.vgrow="ALWAYS">
                                        <content>
-                                          <TextArea fx:id="textAudit" editable="false" prefWidth="320.0" />
+                                          <TextArea fx:id="auditTextArea" editable="false" prefWidth="320.0" />
                                        </content>
                                     </TitledPane>
                                  </children>
