@@ -24,7 +24,7 @@
 
 <SplitPane dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
-      <TabPane maxWidth="500.0" minWidth="270.0" prefWidth="270.0" style="-fx-tab-min-width: 114;" tabClosingPolicy="UNAVAILABLE">
+      <TabPane maxWidth="500.0" minWidth="275.0" prefWidth="275.0" style="-fx-tab-min-width: 114;" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="1000.0" tabMaxWidth="1000.0">
         <tabs>
           <Tab text="Sort by type">
                <content>
@@ -60,6 +60,11 @@
                               <TitledPane animated="false" text="Squid Functions">
                                  <content>
                                     <ListView fx:id="squidFunctionsListView" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" layoutX="10.0" layoutY="145.0" text="Logic Functions">
+                                 <content>
+                                    <ListView fx:id="logicFunctionsListView" />
                                  </content>
                               </TitledPane>
                               <TitledPane animated="false" text="Constants and Numbers">
@@ -131,6 +136,7 @@
                         <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" text="Reference Material" />
                         <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" text="Unknown Samples" />
                         <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" text="Conc RefMat" />
+                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" text="Summary Calculation" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" left="7.0" right="7.0" />
