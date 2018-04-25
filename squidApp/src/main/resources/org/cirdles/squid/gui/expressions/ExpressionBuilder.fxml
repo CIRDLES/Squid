@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
@@ -16,18 +17,21 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
       <TabPane maxWidth="500.0" minWidth="275.0" prefWidth="275.0" style="-fx-tab-min-width: 114;" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="1000.0" tabMaxWidth="1000.0">
         <tabs>
-          <Tab text="Sort by type">
+          <Tab text="Categories">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" styleClass="backgroundCalamari">
                      <children>
@@ -92,33 +96,74 @@
                   </VBox>
                </content>
             </Tab>
-          <Tab text="Other sorts" />
+          <Tab text="Filter">
+              <content>
+                  <VBox spacing="5.0" styleClass="backgroundCalamari">
+                     <children>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="84.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.0" minWidth="10.0" prefWidth="179.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="From: " />
+                              <ChoiceBox fx:id="fromChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" />
+                              <Label text="Order by:" GridPane.rowIndex="1" />
+                              <ChoiceBox fx:id="orderChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                        <ListView fx:id="globalListView" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding></VBox>
+              </content>
+          </Tab>
         </tabs>
       </TabPane>
       <VBox minWidth="665.0">
          <children>
             <ToolBar VBox.vgrow="NEVER">
                <items>
-                  <HBox alignment="CENTER_LEFT" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                  <VBox alignment="CENTER_LEFT">
                      <children>
-                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create new" HBox.hgrow="NEVER" />
-                        <Separator orientation="VERTICAL" />
+                        <HBox spacing="5.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="NEVER">
+                                 <children>
+                                    <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create" HBox.hgrow="NEVER" />
+                                    <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Copy" />
+                                    <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
+                                 </children>
+                                 <padding>
+                                    <Insets right="4.0" />
+                                 </padding>
+                              </HBox>
+                              <Separator orientation="VERTICAL" />
+                              <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="NEVER">
+                                 <children>
+                                    <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="How to use?" HBox.hgrow="NEVER" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="6.0">
+                           <children>
+                              <Label text="Drag &amp; drop mode:" />
+                              <RadioButton fx:id="dragndropLeftRadio" mnemonicParsing="false" text="Insert left" />
+                              <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" text="Replace" />
+                              <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" text="Insert right" />
+                              <Separator orientation="VERTICAL" />
+                              <Label text="Editor mode : " />
+                              <Label fx:id="modeLabel" text="View" />
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
-                  <HBox alignment="CENTER" spacing="6.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Drag&amp;drop:" />
-                        <RadioButton fx:id="dragndropLeftRadio" mnemonicParsing="false" text="Insert left" />
-                        <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" text="Replace" />
-                        <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" text="Insert right" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_RIGHT" maxWidth="145.0" minWidth="145.0" prefWidth="145.0" spacing="5.0">
-                     <children>
-                        <Separator orientation="VERTICAL" />
-                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="How to use?" HBox.hgrow="NEVER" />
-                     </children>
-                  </HBox>
+                  </VBox>
                </items>
             </ToolBar>
             <VBox fx:id="editorVBox" VBox.vgrow="ALWAYS">
@@ -137,7 +182,7 @@
                         <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" text="Reference Material" />
                         <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" text="Unknown Samples" />
                         <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" text="Conc RefMat" />
-                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" text="Summary Calculation" />
+                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" disable="true" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" text="Summary Calculation" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" left="7.0" right="7.0" />

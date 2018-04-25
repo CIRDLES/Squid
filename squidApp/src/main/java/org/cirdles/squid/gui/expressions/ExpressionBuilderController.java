@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -33,7 +35,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
@@ -41,7 +42,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -129,6 +132,12 @@ public class ExpressionBuilderController implements Initializable {
     private Button saveBtn;
     @FXML
     private Button cancelBtn;
+    @FXML
+    private Button createExpressionBtn;
+    @FXML
+    private Button editExpressionBtn;
+    @FXML
+    private Button copyExpressionIntoCustomBtn;
     
     //TEXTS
     @FXML
@@ -141,7 +150,9 @@ public class ExpressionBuilderController implements Initializable {
     private TextArea unPeekTextArea;
     @FXML
     private TextArea rmPeekTextArea;
-    private final TextArea expressionAsTextArea = new TextArea();;
+    @FXML
+    private Label modeLabel;
+    private final TextArea expressionAsTextArea = new TextArea();
 
     //RADIOS
     ToggleGroup toggleGroup;
@@ -166,6 +177,12 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private CheckBox graphBrowserCheckBox;
     
+    //CHOICEBOXES
+    @FXML
+    private ChoiceBox orderChoiceBox;
+    @FXML
+    private ChoiceBox fromChoiceBox;   
+    
 
     //LISTVIEWS
     @FXML
@@ -188,6 +205,8 @@ public class ExpressionBuilderController implements Initializable {
     private ListView<String> constantsListView;
     @FXML
     private ListView<?> referenceMaterialsListView;
+    @FXML
+    private ListView<Expression> globalListView;
 
     //MISC
     @FXML
@@ -252,13 +271,31 @@ public class ExpressionBuilderController implements Initializable {
     private final ListProperty<List<ExpressionTextNode>> undoListForExpressionTextFlow = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ListProperty<List<ExpressionTextNode>> redoListForExpressionTextFlow = new SimpleListProperty<>(FXCollections.observableArrayList());
     
-    private final ObjectProperty<Expression> editedExpression = new SimpleObjectProperty<>();
-    //Boolean to save wether the expression is a newly created one or an edition
-    private boolean editedExpressionIsNewExpression;
+    private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
+    private final BooleanProperty selectedExpressionIsCustom = new SimpleBooleanProperty(false);
     //Boolean to save wether or not the expression has been save since the last modification
-    private boolean editedExpressionIsSaved;
+    private final BooleanProperty expressionIsSaved = new SimpleBooleanProperty(true);
     //Boolean to save wether the expression is currently edited as a textArea or with dra and drop
-    private boolean editAsText = false;
+    private final BooleanProperty editAsText = new SimpleBooleanProperty(false);
+    
+    private final ObjectProperty<Mode> currentMode = new SimpleObjectProperty<>(Mode.EDIT);
+    private enum Mode{
+        
+        EDIT("Edit"),
+        CREATE("Create"),
+        VIEW("View");
+        
+        private final String printString;
+        
+        private Mode(String printString){
+            this.printString = printString;
+        }
+        
+        @Override
+        public String toString(){
+            return printString;
+        }
+    }
     
     //List of operator used to detect if a string should be an operator node or not
     private final List<String> listOperators = new ArrayList<>();
@@ -278,25 +315,56 @@ public class ExpressionBuilderController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        expressionsAccordion.setExpandedPane(builtInExpressionsTitledPane);
+        currentMode.addListener((observable, oldValue, newValue) -> {
+            System.out.println("Mode : "+newValue.name());
+        });
+        selectedExpression.addListener((observable, oldValue, newValue) -> {
+            System.out.println("Selected : "+(newValue==null ? "null" : newValue.getName()));
+        });
+        selectedExpressionIsCustom.addListener((observable, oldValue, newValue) -> {
+            System.out.println("Is custom : "+newValue);
+        });
+        expressionIsSaved.addListener((observable, oldValue, newValue) -> {
+            System.out.println("Is saved : "+newValue);
+        });
+        
+        currentMode.addListener((observable, oldValue, newValue) -> {
+            modeLabel.setText(newValue.toString());
+        });
         
         initPropertyBindings();
-
-        initRadios();
         initListViews();
-        initExpressionTextFlow();
+        initRadios();
+        initExpressionTextFlowAndTextArea();
         initGraph();
-
-        initExpressionEdition();
+        initExpressionSelection();
+        
+        currentMode.set(Mode.VIEW);
+        
+        expressionsAccordion.setExpandedPane(builtInExpressionsTitledPane);
+       
     }
     
     private void initPropertyBindings(){
         //Disable bindings
-        editorVBox.disableProperty().bind(editedExpression.isNull());
-        expressionUndoBtn.disableProperty().bind(undoListForExpressionTextFlow.emptyProperty());
-        expressionRedoBtn.disableProperty().bind(redoListForExpressionTextFlow.emptyProperty());
+        editorVBox.disableProperty().bind(selectedExpression.isNull());
+        expressionUndoBtn.disableProperty().bind(undoListForExpressionTextFlow.sizeProperty().lessThan(2).or(editAsText).or(currentMode.isEqualTo(Mode.VIEW)));
+        expressionRedoBtn.disableProperty().bind(redoListForExpressionTextFlow.sizeProperty().lessThan(1).or(editAsText).or(currentMode.isEqualTo(Mode.VIEW)));
+        editExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpressionIsCustom.not()));
+        copyExpressionIntoCustomBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpression.isNull()));
+        createExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        expressionClearBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        expressionPasteBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        saveBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        expressionAsTextBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        
+        
 
-        //Necessary bindings for autoresize
+        //Autoresize bindings
         graphPane.maxHeightProperty().bind(graphVBox.heightProperty().add(-3.0));
         auditPane.prefHeightProperty().bind(auditVBox.heightProperty().add(-3.0));
         peekPane.prefHeightProperty().bind(peekVBox.heightProperty().add(-3.0));
@@ -321,6 +389,8 @@ public class ExpressionBuilderController implements Initializable {
     
     private void initListViews(){
         //EXPRESSIONS
+        globalListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        globalListView.setCellFactory(new ExpressionCellFactory());
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
         builtInExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
@@ -351,8 +421,30 @@ public class ExpressionBuilderController implements Initializable {
         populateNumberListViews();
     }
     
-    private void initExpressionTextFlow(){
+    private void initExpressionTextFlowAndTextArea(){
         
+        //Init of the textarea
+        expressionAsTextArea.setFont(Font.font("Courier New"));
+        expressionAsTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            //Rebuild of the expression at each modification in order for the graph and audit to be updated
+            buildTextFlowFromString(newValue);
+        });
+        
+        //Init of the textflow following the mode
+        currentMode.addListener((observable, oldValue, newValue) -> {
+            switch(newValue){
+                case VIEW :
+                    disableExpressionTextFlowDragAndDrop();
+                    break;
+                case CREATE :
+                case EDIT :
+                    activeExpressionTextFlowDragAndDrop();
+            }
+        });
+        
+    }
+    
+    private void activeExpressionTextFlowDragAndDrop(){
         expressionTextFlow.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 if(event.getGestureSource() instanceof ExpressionTextNode){
@@ -411,23 +503,31 @@ public class ExpressionBuilderController implements Initializable {
         });
     }
     
-    private void initExpressionEdition(){
-        
-        //Init of the textarea
-        expressionAsTextArea.setFont(Font.font("Courier New"));
-        expressionAsTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            //Rebuild of the expression at each modification in order for the graph and audit to be updated
-            buildTextFlowFromString(newValue);
+    private void disableExpressionTextFlowDragAndDrop(){
+        expressionTextFlow.setOnDragOver((DragEvent event) -> {
+            //Nothing
         });
         
+        expressionTextFlow.setOnDragDropped((DragEvent event) -> {
+            //Nothing
+        });
+    }
+    
+    
+    private void initExpressionSelection(){
         //Listener that updates the whole builder when the expression to edit is changed
-        editedExpression.addListener((observable, oldValue, newValue) -> {
+        selectedExpression.addListener((observable, oldValue, newValue) -> {
             undoListForExpressionTextFlow.clear();
             redoListForExpressionTextFlow.clear();
-            if(editAsText){
+            if(editAsText.get()){
                 expressionAsTextAction(new ActionEvent());
             }
             if(newValue != null){
+                if(!currentMode.get().equals(Mode.CREATE) && customExpressionsListView.getItems().contains(newValue)){
+                    selectedExpressionIsCustom.set(true);
+                }else{
+                    selectedExpressionIsCustom.set(false);
+                }
                 expressionNameTextField.textProperty().set(newValue.getName());
                 refMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
                 unknownsSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
@@ -442,6 +542,7 @@ public class ExpressionBuilderController implements Initializable {
                 refMatSwitchCheckBox.setSelected(false);
                 unknownsSwitchCheckBox.setSelected(false);
                 concRefMatSwitchCheckBox.setSelected(false);
+                selectedExpressionIsCustom.set(false);
                 updateAuditGraphAndPeek();
             }
         });
@@ -467,19 +568,41 @@ public class ExpressionBuilderController implements Initializable {
     
     
     
-    //CREATE SAVE CANCEL ACTIONS
+    //CREATE EDIT SAVE CANCEL ACTIONS
     
     @FXML
     void newCustomExpressionAction(ActionEvent event) {
-        editedExpression.set(null);
-        editedExpression.set(new Expression("new_custom_expression", ""));
-        editedExpressionIsNewExpression = true;
-        editedExpressionIsSaved = false;
+        if(currentMode.get().equals(Mode.VIEW)){
+            selectedExpression.set(null);
+            selectedExpression.set(new Expression("new_custom_expression", ""));
+            currentMode.set(Mode.CREATE);
+            expressionIsSaved.set(false);
+            undoListForExpressionTextFlow.add(new ArrayList<>());
+        }
+    }
+    
+    @FXML
+    void copyIntoCustomExpressionAction(ActionEvent event) {
+        if(currentMode.get().equals(Mode.VIEW)){
+            Expression exp = copySelectedExpression();
+            selectedExpression.set(exp);
+            currentMode.set(Mode.CREATE);
+            expressionIsSaved.set(false);
+            exp.setName("copy of "+exp.getName());
+        }
+    }
+    
+    @FXML
+    void editCustomExpressionAction(ActionEvent event){
+        if(selectedExpressionIsCustom.get() && currentMode.get().equals(Mode.VIEW)){
+            currentMode.set(Mode.EDIT);
+        }
     }
     
     @FXML
     void cancelAction(ActionEvent event) {
-        editedExpression.set(null);
+        selectedExpression.set(null);
+        currentMode.set(Mode.VIEW);
     }
 
     @FXML
@@ -515,7 +638,7 @@ public class ExpressionBuilderController implements Initializable {
                     ButtonType.OK
             );
             alert.show();
-        }else if(nameExistsInCustom && !editedExpressionIsNewExpression && editedExpression.get().getName().equals(expressionNameTextField.getText())){
+        }else if(nameExistsInCustom && currentMode.get().equals(Mode.EDIT) && selectedExpression.get().getName().equals(expressionNameTextField.getText())){
             //Case edition and name unchanged -> replace without asking
             save();
         }else if(nameExistsInCustom){
@@ -543,11 +666,13 @@ public class ExpressionBuilderController implements Initializable {
     
     //EXPRESSION ACTIONS
     
-     @FXML
+    @FXML
     void expressionClearAction(ActionEvent event) {
         //Clear the textflow
-        expressionTextFlow.getChildren().clear();
+        if(!currentMode.get().equals(Mode.VIEW)){
+            expressionTextFlow.getChildren().clear();
         updateAuditGraphAndPeek();
+        }
     }
 
     @FXML
@@ -563,12 +688,14 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     void expressionPasteAction(ActionEvent event) {
         //Build textflow from clipboard
-        Clipboard clipboard = Clipboard.getSystemClipboard();
-        String content = clipboard.getString();
-        if(editAsText){
-            expressionAsTextArea.setText(content);
-        }else{
-            buildTextFlowFromString(content);
+        if(!currentMode.get().equals(Mode.VIEW)){
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            String content = clipboard.getString();
+            if(editAsText.get()){
+                expressionAsTextArea.setText(content);
+            }else{
+                buildTextFlowFromString(content);
+            }
         }
     }
 
@@ -605,31 +732,22 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     void expressionAsTextAction(ActionEvent event) {
-        if(editAsText == false){
+        if(editAsText.get() == false){
             //Case was editing with drag and drop -> switch to textArea
             
-            editAsText = true;
+            editAsText.set(true);
             
             expressionAsTextArea.setText(makeStringFromTextFlow());
             expressionPane.setContent(expressionAsTextArea);
             expressionAsTextBtn.setText("Edit with drag and drop");
-            
-            //No undo/redo while editing as textArea
-            expressionUndoBtn.disableProperty().unbind();
-            expressionRedoBtn.disableProperty().unbind();
-            expressionUndoBtn.setDisable(true);
-            expressionRedoBtn.setDisable(true);
-            
+                  
         }else{
             //Case was editing as textArea -> switch to drag and drop
             
-            editAsText = false;
+            editAsText.set(true);
             
             expressionPane.setContent(expressionTextFlow);
             expressionAsTextBtn.setText("Edit as text");
-            
-            expressionUndoBtn.disableProperty().bind(undoListForExpressionTextFlow.emptyProperty());
-            expressionRedoBtn.disableProperty().bind(redoListForExpressionTextFlow.emptyProperty());
             
             //Rebuild because of a CSS bug
             buildTextFlowFromString(makeStringFromTextFlow());
@@ -689,8 +807,13 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
         
+        ObservableList<Expression> items = FXCollections.observableArrayList(namedExpressions);
+        items = items.sorted((o1, o2) -> {
+            return o1.getName().compareTo(o2.getName());
+        });
+        globalListView.setItems(items);
         
-        ObservableList<Expression> items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
+        items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
             return exp1.getName().compareToIgnoreCase(exp2.getName());
         });
@@ -804,9 +927,9 @@ public class ExpressionBuilderController implements Initializable {
         if ((exp == null) || (!exp.amHealthy())) {
             rmPeekTextArea.setText("No expression.");
             unPeekTextArea.setText("No expression.");
-        }else if(!editedExpressionIsSaved){
-            rmPeekTextArea.setText("Save expression to get a peek.");
-            unPeekTextArea.setText("Save expression to get a peek.");
+        }else if(!expressionIsSaved.get()){
+            rmPeekTextArea.setText("You must save the expression to get a peek.");
+            unPeekTextArea.setText("You must save the expression to get a peek.");
         }else {
 
             TaskInterface task = squidProject.getTask();
@@ -1125,9 +1248,13 @@ public class ExpressionBuilderController implements Initializable {
     public void updateAuditGraphAndPeek() {
         
         //A modification has happend -> the expression is no longer saved
-        editedExpressionIsSaved = false;
+        if(currentMode.get().equals(Mode.VIEW)){
+            expressionIsSaved.set(true);
+        }else{
+            expressionIsSaved.set(false);
+        }
         
-        if (editedExpression.isNotNull().get()) {
+        if (selectedExpression.isNotNull().get()) {
 
             Expression exp = makeExpression();
             auditTextArea.setText(exp.produceExpressionTreeAudit());
@@ -1165,6 +1292,17 @@ public class ExpressionBuilderController implements Initializable {
         return exp;
     }
     
+    private Expression copySelectedExpression(){
+        Expression exp = new Expression(selectedExpression.get().getName(), selectedExpression.get().getExcelExpressionString());
+        
+        ExpressionTree expTreeCopy = (ExpressionTree) exp.getExpressionTree();
+        ExpressionTree expTree = (ExpressionTree) selectedExpression.get().getExpressionTree();
+        
+        copyTreeTags(expTree, expTreeCopy);
+        
+        return exp;
+    }
+    
     private void copyTreeTags(ExpressionTreeInterface source, ExpressionTreeInterface dest){
         dest.setSquidSwitchConcentrationReferenceMaterialCalculation(source.isSquidSwitchConcentrationReferenceMaterialCalculation());
         dest.setSquidSwitchSAUnknownCalculation(source.isSquidSwitchSAUnknownCalculation());
@@ -1183,10 +1321,10 @@ public class ExpressionBuilderController implements Initializable {
         //update lists
         populateExpressionListViews();
         //set the new expression as edited expression
-        editedExpression.set(null);
-        editedExpression.set(exp);
-        editedExpressionIsNewExpression = false;
-        editedExpressionIsSaved = true;
+        selectedExpression.set(null);
+        selectedExpression.set(exp);
+        currentMode.set(Mode.VIEW);
+        expressionIsSaved.set(true);
         //Calculate peeks
         populatePeeks(exp);
     }
@@ -1370,6 +1508,51 @@ public class ExpressionBuilderController implements Initializable {
                 }
             };
             
+            updateCellMode(currentMode.get(), cell);
+            
+            currentMode.addListener((observable, oldValue, newValue) -> {
+                updateCellMode(newValue, cell);
+            });
+            
+            expressionsAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
+                updateCellMode(currentMode.get(), cell);
+            });
+            
+            return cell;
+        }
+        
+        private void updateCellMode(Mode mode, ListCell<Expression> cell){
+            switch(mode){
+                case VIEW :
+                    setCellModeView(cell);
+                    break;
+                case CREATE :
+                case EDIT :
+                    setCellModeEditCreate(cell);
+            }
+        }
+        
+        private void setCellModeView(ListCell<Expression> cell){
+            cell.setOnDragDetected((event) -> {
+                //Nothing
+            });
+            cell.setOnDragDone((event) -> {
+                //Nothing
+            });
+            cell.setOnMouseClicked((event) -> {
+                currentMode.set(Mode.VIEW);
+                selectedExpression.set(cell.getItem());
+            });
+            cell.setOnMousePressed((event) -> {
+                //Nothing
+            });
+            cell.setOnMouseReleased((event) -> {
+                //Nothing
+            });
+            cell.setCursor(Cursor.HAND);
+        }
+        
+        private void setCellModeEditCreate(ListCell<Expression> cell){
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
                     Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
@@ -1388,61 +1571,7 @@ public class ExpressionBuilderController implements Initializable {
             
             
             cell.setOnMouseClicked((MouseEvent event) -> {
-                if (!cell.isEmpty()) {
-                    if(event.getButton() == MouseButton.SECONDARY){
-                        
-                        //hide previous contextMenus
-                        for (ContextMenu contextMenu : contextMenus) {
-                            contextMenu.hide();
-                        }
-                        contextMenus.clear();
-                        
-                        ContextMenu contextMenu = new ContextMenu();
-                        
-                        if(customExpressionsListView.getItems().contains(cell.getItem())){
-                            MenuItem menuItemEdit = new MenuItem("Edit expression");
-                            menuItemEdit.setOnAction((evt) -> {
-                                editedExpression.set(null);
-                                editedExpression.set(cell.getItem());
-                                editedExpressionIsNewExpression = false;
-                                editedExpressionIsSaved = true;
-                                populatePeeks(cell.getItem());
-                            });
-                            contextMenu.getItems().add(menuItemEdit);
-                            
-                            menuItemEdit = new MenuItem("Delete expression");
-                            menuItemEdit.setOnAction((evt) -> {
-                                squidProject.getTask().removeExpression(cell.getItem());
-                                if(cell.getItem().equals(editedExpression.get())){
-                                    editedExpression.set(null);
-                                }
-                                populateExpressionListViews();
-                            });
-                            contextMenu.getItems().add(menuItemEdit);
-                        }
-                        
-                        MenuItem menuItem = new MenuItem("Create new expression from this one");
-                        menuItem.setOnAction((evt) -> {
-                            Expression exp = new Expression("new_custom_expression", cell.getItem().getExcelExpressionString());
-                            
-                            ExpressionTree expTreeCopy = (ExpressionTree) exp.getExpressionTree();
-                            ExpressionTree expTree = (ExpressionTree) cell.getItem().getExpressionTree();
-                            
-                            copyTreeTags(expTree, expTreeCopy);
-            
-                            editedExpression.set(null);
-                            editedExpression.set(exp);
-                            
-                            editedExpressionIsNewExpression = true;
-                            editedExpressionIsSaved = false;
-                        });
-                        contextMenu.getItems().add(menuItem);
-                        
-                        contextMenu.show(cell, event.getScreenX(), event.getScreenY());
-                        
-                        contextMenus.add(contextMenu);
-                    }
-                }
+                //Nothing
             });
             
             cell.setOnMousePressed((event) -> {
@@ -1456,12 +1585,9 @@ public class ExpressionBuilderController implements Initializable {
             });
             
             cell.setCursor(Cursor.OPEN_HAND);
-
-            return cell;
         }
         
     }
-    
     
     
     
@@ -1482,6 +1608,51 @@ public class ExpressionBuilderController implements Initializable {
                 }
             };
             
+            updateCellMode(currentMode.get(), cell);
+            
+            currentMode.addListener((observable, oldValue, newValue) -> {
+                updateCellMode(newValue, cell);
+            });
+            
+            expressionsAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
+                updateCellMode(currentMode.get(), cell);
+            });
+            
+            return cell;
+        }
+        
+        private void updateCellMode(Mode mode, ListCell<SquidRatiosModel> cell){
+            switch(mode){
+                case VIEW :
+                    setCellModeView(cell);
+                    break;
+                case CREATE :
+                case EDIT :
+                    setCellModeEditCreate(cell);
+            }
+        }
+        
+        private void setCellModeView(ListCell<SquidRatiosModel> cell){
+            cell.setOnDragDetected(event -> {
+                //Nothing
+            });
+            
+            cell.setOnDragDone((event) -> {
+                //Nothing
+            });
+            
+            cell.setOnMousePressed((event) -> {
+                //Nothing
+            });
+            
+            cell.setOnMouseReleased((event) -> {
+                //Nothing
+            });
+            
+            cell.setCursor(Cursor.DEFAULT);
+        }
+        
+        private void setCellModeEditCreate(ListCell<SquidRatiosModel> cell){
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
                     Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
@@ -1509,8 +1680,6 @@ public class ExpressionBuilderController implements Initializable {
             });
             
             cell.setCursor(Cursor.OPEN_HAND);
-            
-            return cell;
         }
         
     }
@@ -1541,6 +1710,51 @@ public class ExpressionBuilderController implements Initializable {
                 }
             };
             
+            updateCellMode(currentMode.get(), cell);
+            
+            currentMode.addListener((observable, oldValue, newValue) -> {
+                updateCellMode(newValue, cell);
+            });
+            
+            expressionsAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
+                updateCellMode(currentMode.get(), cell);
+            });
+            
+            return cell;
+        }
+        
+        private void updateCellMode(Mode mode, ListCell<String> cell){
+            switch(mode){
+                case VIEW :
+                    setCellModeView(cell);
+                    break;
+                case CREATE :
+                case EDIT :
+                    setCellModeEditCreate(cell);
+            }
+        }
+        
+        private void setCellModeView(ListCell<String> cell){
+            cell.setOnDragDetected(event -> {
+                //Nothing
+            });
+            
+            cell.setOnDragDone((event) -> {
+                //Nothing
+            });
+            
+            cell.setOnMousePressed((event) -> {
+                //Nothing
+            });
+            
+            cell.setOnMouseReleased((event) -> {
+                //Nothing
+            });
+            
+            cell.setCursor(Cursor.DEFAULT);
+        }
+        
+        private void setCellModeEditCreate(ListCell<String> cell){
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
                     Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
@@ -1568,8 +1782,6 @@ public class ExpressionBuilderController implements Initializable {
             });
             
             cell.setCursor(Cursor.OPEN_HAND);
-            
-            return cell;
         }
     }
     
@@ -1590,9 +1802,39 @@ public class ExpressionBuilderController implements Initializable {
         public NumberTextNode(String text) {
             super(text);
         }
+        
     }
     
     private class ExpressionTextNode extends Text {
+        
+        private final String text;
+        private double ordinalIndex;
+        private boolean popupShowing;
+        
+        public ExpressionTextNode(String text) {
+            super(text);
+            this.text = text;
+            this.popupShowing = false;
+            
+            setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
+            
+            updateMode(currentMode.get());
+            
+            currentMode.addListener((observable, oldValue, newValue) -> {
+                updateMode(newValue);
+            });
+        }
+        
+        private void updateMode(Mode mode){
+            switch(mode){
+                case VIEW :
+                    setNodeModeView();
+                    break;
+                case CREATE :
+                case EDIT :
+                    setNodeModeEditCreate();
+            }
+        }
         
         /**
          * @return the ordinalIndex
@@ -1608,16 +1850,7 @@ public class ExpressionBuilderController implements Initializable {
             this.ordinalIndex = ordinalIndex;
         }
         
-        private final String text;
-        private double ordinalIndex;
-        private boolean popupShowing;
-        
-        public ExpressionTextNode(String text) {
-            super(text);
-            this.text = text;
-            this.popupShowing = false;
-            
-            setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
+        private void setNodeModeEditCreate(){
             setCursor(Cursor.OPEN_HAND);
             
             setOnMouseClicked((MouseEvent event) -> {
@@ -1705,6 +1938,38 @@ public class ExpressionBuilderController implements Initializable {
                 
                 event.consume();
                 resetDragSources();
+            });
+        }
+        
+        private void setNodeModeView(){
+            setCursor(Cursor.DEFAULT);
+            
+            setOnMouseClicked((MouseEvent event) -> {
+                //Nothing
+            });
+            
+            setOnMousePressed((MouseEvent event) -> {
+                //Nothing
+            });
+            
+            setOnMouseReleased((MouseEvent event) -> {
+                //Nothing
+            });
+            
+            setOnDragDetected((MouseEvent event) -> {
+                //Nothing
+            });
+            
+            setOnDragDone((event) -> {
+                //Nothing
+            });
+            
+            setOnDragOver((DragEvent event) -> {
+                //Nothing
+            });
+            
+            setOnDragDropped((DragEvent event) -> {
+                //Nothing
             });
         }
     }
