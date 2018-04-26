@@ -143,6 +143,8 @@
                                     <Insets right="4.0" />
                                  </padding>
                               </HBox>
+                              <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
+                              <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
                               <Separator orientation="VERTICAL" />
                               <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="NEVER">
                                  <children>
@@ -158,7 +160,7 @@
                               <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" text="Replace" />
                               <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" text="Insert right" />
                               <Separator orientation="VERTICAL" />
-                              <Label text="Editor mode : " />
+                              <Label text="Editor mode:" />
                               <Label fx:id="modeLabel" text="View" />
                            </children>
                         </HBox>
@@ -170,8 +172,8 @@
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <Label minWidth="140.0" text="Expression name:" />
-                        <TextField fx:id="expressionNameTextField" maxWidth="400.0" minWidth="120.0" HBox.hgrow="ALWAYS" />
+                        <Label minWidth="140.0" opacity="0.99" text="Expression name:" />
+                        <TextField fx:id="expressionNameTextField" maxWidth="400.0" minWidth="120.0" opacity="0.99" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="5.0" left="7.0" right="7.0" top="10.0" />
@@ -179,10 +181,10 @@
                   </HBox>
                   <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0">
                      <children>
-                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" text="Reference Material" />
-                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" text="Unknown Samples" />
-                        <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" text="Conc RefMat" />
-                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" disable="true" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" text="Summary Calculation" />
+                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" opacity="0.99" text="Reference Material" />
+                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" opacity="0.99" text="Unknown Samples" />
+                        <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" opacity="0.99" text="Conc RefMat" />
+                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" disable="true" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" left="7.0" right="7.0" />
@@ -285,15 +287,6 @@
                         </SplitPane>
                      </items>
                   </SplitPane>
-                  <HBox alignment="CENTER_RIGHT">
-                     <children>
-                        <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
-                        <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </HBox>
                </children>
             </VBox>
          </children>

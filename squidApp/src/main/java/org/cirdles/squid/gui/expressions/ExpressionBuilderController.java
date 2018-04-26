@@ -180,9 +180,44 @@ public class ExpressionBuilderController implements Initializable {
     //CHOICEBOXES
     @FXML
     private ChoiceBox orderChoiceBox;
+    private enum OrderChoiceEnum{
+        EVALUATION("Evaluation order"),
+        NAME("Name"),
+        NUSWITCH("NU Switch"),
+        BUILTINCUSTOM("BuiltIn/Custom");
+        
+        private final String printName;
+        
+        private OrderChoiceEnum(String printName){
+            this.printName = printName;
+        }
+
+        @Override
+        public String toString() {
+            return printName;
+        }
+    }
+    
     @FXML
     private ChoiceBox fromChoiceBox;   
-    
+    private enum FromChoiceEnum{
+        ALL("All"),
+        HEALTHY("Healthy"),
+        UNHEALTHY("Unhealthy"),
+        BUILTIN("BuiltIn"),
+        CUSTOM("Custom");
+        
+        private final String printName;
+        
+        private FromChoiceEnum(String printName){
+            this.printName = printName;
+        }
+
+        @Override
+        public String toString() {
+            return printName;
+        }
+    }
 
     //LISTVIEWS
     @FXML
@@ -299,6 +334,8 @@ public class ExpressionBuilderController implements Initializable {
     
     //List of operator used to detect if a string should be an operator node or not
     private final List<String> listOperators = new ArrayList<>();
+    //List of all the expressions
+    ObservableList<Expression> namedExpressions;
     
     
     
@@ -334,10 +371,12 @@ public class ExpressionBuilderController implements Initializable {
         
         initPropertyBindings();
         initListViews();
+        initFilterChoice();
         initRadios();
         initExpressionTextFlowAndTextArea();
         initGraph();
         initExpressionSelection();
+        
         
         currentMode.set(Mode.VIEW);
         
@@ -377,6 +416,91 @@ public class ExpressionBuilderController implements Initializable {
             }
         });
         expressionAsTextArea.prefHeightProperty().bind(expressionTextFlow.heightProperty());
+    }
+    
+    private void initFilterChoice(){
+        ObservableList<FromChoiceEnum> fromChoiceList = FXCollections.observableArrayList(FromChoiceEnum.values());
+        fromChoiceBox.setItems(fromChoiceList);
+        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
+        ObservableList<OrderChoiceEnum> orderChoiceList = FXCollections.observableArrayList(OrderChoiceEnum.values());
+        orderChoiceBox.setItems(orderChoiceList);
+        orderChoiceBox.getSelectionModel().select(OrderChoiceEnum.EVALUATION);
+        fromChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue instanceof FromChoiceEnum){
+                filterList((FromChoiceEnum) newValue);
+                orderList((OrderChoiceEnum) orderChoiceBox.getSelectionModel().getSelectedItem());
+            }
+        });
+        orderChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue instanceof OrderChoiceEnum){
+                orderList((OrderChoiceEnum) newValue);
+            }
+        });
+    }
+    
+    private void filterList(FromChoiceEnum from){
+        switch(from){
+            case BUILTIN :
+                globalListView.setItems(namedExpressions.filtered((exp) -> {
+                    return exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU();
+                }));
+                break;
+            case CUSTOM :
+                globalListView.setItems(namedExpressions.filtered((exp) -> {
+                    return !exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU();
+                }));
+                break;
+            case HEALTHY :
+                globalListView.setItems(namedExpressions.filtered((exp) -> {
+                    return exp.amHealthy();
+                }));
+                break;
+            case UNHEALTHY:
+                globalListView.setItems(namedExpressions.filtered((exp) -> {
+                    return !exp.amHealthy();
+                }));
+                break;
+            default:
+                globalListView.setItems(namedExpressions);
+        }
+    }
+    
+    private void orderList(OrderChoiceEnum order){
+        switch(order){
+            case NAME :
+                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                }));
+                break;
+            case BUILTINCUSTOM :
+                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                    boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && o1.amHealthy() && !o1.isSquidSwitchNU();
+                    boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && o2.amHealthy() && !o2.isSquidSwitchNU();
+                    if(o1IsCustom && o2IsCustom){
+                        return 0;
+                    }else if(o1IsCustom && !o2IsCustom){
+                        return 1;
+                    }else{
+                        return -1;
+                    }
+                }));
+                break;
+            case NUSWITCH :
+                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                    if(o1.isSquidSwitchNU() && o2.isSquidSwitchNU()){
+                        return 0;
+                    }else if(o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()){
+                        return -1;
+                    }else{
+                        return 1;
+                    }
+                }));
+                break;
+            default:
+                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                    return namedExpressions.indexOf(o1) - namedExpressions.indexOf(o2);
+                }));
+        }
     }
     
     private void initRadios(){
@@ -588,7 +712,7 @@ public class ExpressionBuilderController implements Initializable {
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
             expressionIsSaved.set(false);
-            exp.setName("copy of "+exp.getName());
+            expressionNameTextField.setText("copy of "+exp.getName());
         }
     }
     
@@ -791,7 +915,7 @@ public class ExpressionBuilderController implements Initializable {
     //POPULATE LISTS
     
     private void populateExpressionListViews() {
-        List<Expression> namedExpressions = squidProject.getTask().getTaskExpressionsOrdered();
+        namedExpressions = FXCollections.observableArrayList(squidProject.getTask().getTaskExpressionsOrdered());
         
         List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
@@ -807,13 +931,9 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
         
-        ObservableList<Expression> items = FXCollections.observableArrayList(namedExpressions);
-        items = items.sorted((o1, o2) -> {
-            return o1.getName().compareTo(o2.getName());
-        });
-        globalListView.setItems(items);
+        globalListView.setItems(namedExpressions);
         
-        items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
+        ObservableList<Expression> items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
             return exp1.getName().compareToIgnoreCase(exp2.getName());
         });
