@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.cirdles.commons.util.ResourceExtractor;
+import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
  *
@@ -39,8 +40,8 @@ public final class Squid {
 
     public static final ResourceExtractor SQUID_RESOURCE_EXTRACTOR
             = new ResourceExtractor(Squid.class);
-    
-   static {
+
+    static {
         String version = "version";
         String releaseDate = "date";
 
@@ -78,7 +79,7 @@ public final class Squid {
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
         }
-        
+
         resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/contributorsContent.txt");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
             String thisLine;
@@ -90,13 +91,12 @@ public final class Squid {
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
         }
-        
+
         DEFAULT_SQUID3_REPORTS_FOLDER = new File("Squid3_Reports_v" + VERSION);
         if (!DEFAULT_SQUID3_REPORTS_FOLDER.exists()) {
             if (!DEFAULT_SQUID3_REPORTS_FOLDER.mkdir()) {
                 System.out.println("Failed to make Squid3 Reports folder.");
             }
         }
-
     }
 }
