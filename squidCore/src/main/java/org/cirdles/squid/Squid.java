@@ -33,14 +33,15 @@ public final class Squid {
     public static final String VERSION;
     public static final String RELEASE_DATE;
     public static final File DEFAULT_SQUID3_REPORTS_FOLDER;
+    public static final File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
     public static final StringBuilder ABOUT_WINDOW_CONTENT = new StringBuilder();
     public static final StringBuilder CONTRIBUTORS_CONTENT = new StringBuilder();
 
     public static final ResourceExtractor SQUID_RESOURCE_EXTRACTOR
             = new ResourceExtractor(Squid.class);
-    
-   static {
+
+    static {
         String version = "version";
         String releaseDate = "date";
 
@@ -78,7 +79,7 @@ public final class Squid {
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
         }
-        
+
         resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/contributorsContent.txt");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
             String thisLine;
@@ -90,7 +91,7 @@ public final class Squid {
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
         }
-        
+
         DEFAULT_SQUID3_REPORTS_FOLDER = new File("Squid3_Reports_v" + VERSION);
         if (!DEFAULT_SQUID3_REPORTS_FOLDER.exists()) {
             if (!DEFAULT_SQUID3_REPORTS_FOLDER.mkdir()) {
@@ -98,5 +99,20 @@ public final class Squid {
             }
         }
 
+        DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER = new File("LudwigLibraryJavadoc");
+        if (!DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
+            if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.mkdir()) {
+                File ludwigLibraryJavadocResource = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsFile("javadoc/LudwigLibrary-1.0.7-javadoc.jar");
+                File ludwigLibraryJavadoc = new File(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath()+ File.separator + "LudwigLibraryJavadoc.jar");
+
+                if (ludwigLibraryJavadocResource.renameTo(ludwigLibraryJavadoc)) {
+                    System.out.println("LudwigLibraryJavadoc.jar added.");
+                } else {
+                    System.out.println("Failed to add LudwigLibraryJavadoc.jar.");
+                }
+            } else {
+                System.out.println("Failed to make LudwigLibraryJavadoc folder.");
+            }
+        }
     }
 }
