@@ -5,12 +5,20 @@
  */
 package org.cirdles.squid.utilities;
 
+import com.google.common.io.ByteStreams;
+import com.google.common.io.FileWriteMode;
+//import com.google.common.io.Files;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 /**
  *
@@ -43,5 +51,22 @@ public class FileUtilities {
                 return FileVisitResult.CONTINUE;
             }
         });
+    }
+
+    public static void unpackZipFile(final File archive, final File targetDirectory)
+            throws ZipException, IOException {
+        ZipFile zipFile = new ZipFile(archive);
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            final ZipEntry zipEntry = entries.nextElement();
+            if (zipEntry.isDirectory()) {
+                continue;
+            }
+            final File targetFile = new File(targetDirectory,
+                    zipEntry.getName());
+            com.google.common.io.Files.createParentDirs(targetFile);
+            ByteStreams.copy(zipFile.getInputStream(zipEntry), 
+                    com.google.common.io.Files.asByteSink(targetFile, FileWriteMode.APPEND ).openStream());
+        }
     }
 }

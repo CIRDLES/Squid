@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.cirdles.commons.util.ResourceExtractor;
+import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
  *
@@ -33,7 +34,6 @@ public final class Squid {
     public static final String VERSION;
     public static final String RELEASE_DATE;
     public static final File DEFAULT_SQUID3_REPORTS_FOLDER;
-    public static final File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
     public static final StringBuilder ABOUT_WINDOW_CONTENT = new StringBuilder();
     public static final StringBuilder CONTRIBUTORS_CONTENT = new StringBuilder();
@@ -96,22 +96,6 @@ public final class Squid {
         if (!DEFAULT_SQUID3_REPORTS_FOLDER.exists()) {
             if (!DEFAULT_SQUID3_REPORTS_FOLDER.mkdir()) {
                 System.out.println("Failed to make Squid3 Reports folder.");
-            }
-        }
-
-        DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER = new File("LudwigLibraryJavadoc");
-        if (!DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
-            if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.mkdir()) {
-                File ludwigLibraryJavadocResource = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsFile("javadoc/LudwigLibrary-1.0.7-javadoc.jar");
-                File ludwigLibraryJavadoc = new File(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath()+ File.separator + "LudwigLibraryJavadoc.jar");
-
-                if (ludwigLibraryJavadocResource.renameTo(ludwigLibraryJavadoc)) {
-                    System.out.println("LudwigLibraryJavadoc.jar added.");
-                } else {
-                    System.out.println("Failed to add LudwigLibraryJavadoc.jar.");
-                }
-            } else {
-                System.out.println("Failed to make LudwigLibraryJavadoc folder.");
             }
         }
     }

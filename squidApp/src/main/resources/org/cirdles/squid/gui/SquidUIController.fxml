@@ -125,6 +125,11 @@
                         <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Javadoc">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
+                    </items>
+                  </Menu>
             <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
           </items>
         </Menu>

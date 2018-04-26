@@ -54,6 +54,7 @@ import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
@@ -183,6 +184,7 @@ public class SquidUIController implements Initializable {
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
+        CalamariFileUtilities.loadJavadoc();
     }
 
     private void buildProjectMenuMRU() {
@@ -851,6 +853,11 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(expressionBuilderUI);
         launchExpressionBuilder();
         showUI(expressionBuilderUI);
+    }
+
+    @FXML
+    private void ludwigLibraryJavaDocAction(ActionEvent event) {
+        BrowserControl.showURI(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
     }
 
 }
