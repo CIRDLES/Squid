@@ -58,6 +58,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
@@ -181,10 +182,10 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private ChoiceBox orderChoiceBox;
     private enum OrderChoiceEnum{
-        EVALUATION("Evaluation order"),
-        NAME("Name"),
-        NUSWITCH("NU Switch"),
-        BUILTINCUSTOM("BuiltIn/Custom");
+        EVALUATION(" Evaluation order"),
+        NAME(" Name"),
+        NUSWITCH(" NU Switch"),
+        BUILTINCUSTOM(" BuiltIn/Custom");
         
         private final String printName;
         
@@ -201,11 +202,11 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private ChoiceBox fromChoiceBox;   
     private enum FromChoiceEnum{
-        ALL("All"),
-        HEALTHY("Healthy"),
-        UNHEALTHY("Unhealthy"),
-        BUILTIN("BuiltIn"),
-        CUSTOM("Custom");
+        ALL(" All"),
+        HEALTHY(" Healthy"),
+        UNHEALTHY(" Unhealthy"),
+        BUILTIN(" BuiltIn"),
+        CUSTOM(" Custom");
         
         private final String printName;
         
@@ -295,6 +296,8 @@ public class ExpressionBuilderController implements Initializable {
     private final String numberString = "NUMBER";
     private final String placeholder = " ";// \u2588 ";
     
+    private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
+    private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
     
     
     private final ObjectProperty<ListCell<Expression>> dragExpressionSource = new SimpleObjectProperty<>();
@@ -442,12 +445,12 @@ public class ExpressionBuilderController implements Initializable {
         switch(from){
             case BUILTIN :
                 globalListView.setItems(namedExpressions.filtered((exp) -> {
-                    return exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU();
+                    return exp.getExpressionTree().isSquidSpecialUPbThExpression() && !exp.isSquidSwitchNU();
                 }));
                 break;
             case CUSTOM :
                 globalListView.setItems(namedExpressions.filtered((exp) -> {
-                    return !exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU();
+                    return !exp.getExpressionTree().isSquidSpecialUPbThExpression() && !exp.isSquidSwitchNU();
                 }));
                 break;
             case HEALTHY :
@@ -474,8 +477,8 @@ public class ExpressionBuilderController implements Initializable {
                 break;
             case BUILTINCUSTOM :
                 globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                    boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && o1.amHealthy() && !o1.isSquidSwitchNU();
-                    boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && o2.amHealthy() && !o2.isSquidSwitchNU();
+                    boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
+                    boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
                     if(o1IsCustom && o2IsCustom){
                         return 0;
                     }else if(o1IsCustom && !o2IsCustom){
@@ -498,7 +501,7 @@ public class ExpressionBuilderController implements Initializable {
                 break;
             default:
                 globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                    return namedExpressions.indexOf(o1) - namedExpressions.indexOf(o2);
+                    return o1.compareTo(o2);
                 }));
         }
     }
@@ -514,7 +517,7 @@ public class ExpressionBuilderController implements Initializable {
     private void initListViews(){
         //EXPRESSIONS
         globalListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        globalListView.setCellFactory(new ExpressionCellFactory());
+        globalListView.setCellFactory(new ExpressionCellFactory(true));
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
         builtInExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
@@ -1611,6 +1614,15 @@ public class ExpressionBuilderController implements Initializable {
     
     private class ExpressionCellFactory implements Callback<ListView<Expression>, ListCell<Expression>> {
         
+        private final boolean showImage;
+        
+        public ExpressionCellFactory(){
+            showImage = false;
+        }
+        public ExpressionCellFactory(boolean showImage){
+            this.showImage = showImage;
+        }
+        
         private final List<ContextMenu> contextMenus = new ArrayList<>();
         
         @Override
@@ -1624,6 +1636,18 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(expression.getName());
+                        if(showImage){
+                            ImageView imageView;
+                            if(expression.amHealthy()){
+                                imageView = new ImageView(HEALTHY);
+                                
+                            }else{
+                                imageView = new ImageView(UNHEALTHY);
+                            }
+                            imageView.setFitHeight(12);
+                            imageView.setFitWidth(12);
+                            setGraphic(imageView);
+                        }
                     }
                 }
             };
