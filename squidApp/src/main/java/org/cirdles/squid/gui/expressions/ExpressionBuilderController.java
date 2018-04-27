@@ -392,18 +392,6 @@ public class ExpressionBuilderController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        currentMode.addListener((observable, oldValue, newValue) -> {
-            System.out.println("Mode : "+newValue.name());
-        });
-        selectedExpression.addListener((observable, oldValue, newValue) -> {
-            System.out.println("Selected : "+(newValue==null ? "null" : newValue.getName()));
-        });
-        selectedExpressionIsCustom.addListener((observable, oldValue, newValue) -> {
-            System.out.println("Is custom : "+newValue);
-        });
-        expressionIsSaved.addListener((observable, oldValue, newValue) -> {
-            System.out.println("Is saved : "+newValue);
-        });
         
         currentMode.addListener((observable, oldValue, newValue) -> {
             modeLabel.setText(newValue.toString());
@@ -465,12 +453,15 @@ public class ExpressionBuilderController implements Initializable {
         ObservableList<OrderChoiceEnum> orderChoiceList = FXCollections.observableArrayList(Arrays.asList(OrderChoiceEnum.values()));
         orderChoiceBox.setItems(orderChoiceList);
         orderChoiceBox.getSelectionModel().select(OrderChoiceEnum.EVALUATION);
+        
+        //Update the list on source change
         fromChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue instanceof FromChoiceEnum){
                 filterList((FromChoiceEnum) newValue);
                 orderList((OrderChoiceEnum) orderChoiceBox.getSelectionModel().getSelectedItem());
             }
         });
+        //Update the list on order change
         orderChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue instanceof OrderChoiceEnum){
                 orderList((OrderChoiceEnum) newValue);
@@ -556,21 +547,29 @@ public class ExpressionBuilderController implements Initializable {
         globalListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         globalListView.setCellFactory(new ExpressionCellFactory(true));
         globalListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        
+        //Selection listener to update the categories tab when a new value is selected on the filter tab
         globalListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 
                 if (currentMode.get().equals(Mode.VIEW)) {
+                    //The new value is selected to be shown in the editor 
                     selectedExpression.set(newValue);
                 }
                 
+                //If nothing is selected or the selected value is not the new one
                 if(brokenExpressionsListView.getSelectionModel().getSelectedItem() == null || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
+                    //Clear selection
                     brokenExpressionsListView.getSelectionModel().clearSelection();
+                    //If the new value is on this pane then select it
                     if (brokenExpressionsListView.getItems().contains(newValue)) {
                         brokenExpressionsListView.getSelectionModel().select(newValue);
                         brokenExpressionsListView.scrollTo(newValue);
                         brokenExpressionsTitledPane.setExpanded(true);
                     }
                 }
+                
+                //Same thing for the other panes
                 if(nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem() == null || !nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
                     nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
                     if (nuSwitchedExpressionsListView.getItems().contains(newValue)) {
@@ -601,18 +600,26 @@ public class ExpressionBuilderController implements Initializable {
         brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         brokenExpressionsListView.setCellFactory(new ExpressionCellFactory(true));
         brokenExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        //Listener to update the filter tab when a new value is selected in the broken expression category
         brokenExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
+                    //The new value is selected to be shown in the editor 
                     selectedExpression.set(newValue);
                 }
+                
+                //if the nothing is selected or the selected value is not the new value
                 if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
+                    //If the current filtered list does not contain the expression, reset the filter to show all the expressions
                     if (!globalListView.getItems().contains(newValue)) {
                         fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
                     }
+                    //And then select and show the new value
                     globalListView.getSelectionModel().select(newValue);
                     globalListView.scrollTo(newValue);
                 }
+                
+                //Clear selection in the others categories panes to prevent from multiple selection
                 nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
                 builtInExpressionsListView.getSelectionModel().clearSelection();
                 customExpressionsListView.getSelectionModel().clearSelection();
@@ -622,6 +629,7 @@ public class ExpressionBuilderController implements Initializable {
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
         nuSwitchedExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        //Same listener for each category
         nuSwitchedExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null){
                 if(currentMode.get().equals(Mode.VIEW)){
@@ -856,7 +864,7 @@ public class ExpressionBuilderController implements Initializable {
     //CREATE EDIT SAVE CANCEL ACTIONS
     
     @FXML
-    void newCustomExpressionAction(ActionEvent event) {
+    private void newCustomExpressionAction(ActionEvent event) {
         if(currentMode.get().equals(Mode.VIEW)){
             selectedExpression.set(null);
             selectedExpression.set(new Expression("new_custom_expression", ""));
@@ -867,7 +875,7 @@ public class ExpressionBuilderController implements Initializable {
     }
     
     @FXML
-    void copyIntoCustomExpressionAction(ActionEvent event) {
+    private void copyIntoCustomExpressionAction(ActionEvent event) {
         if(currentMode.get().equals(Mode.VIEW)){
             Expression exp = copySelectedExpression();
             selectedExpression.set(exp);
@@ -878,20 +886,20 @@ public class ExpressionBuilderController implements Initializable {
     }
     
     @FXML
-    void editCustomExpressionAction(ActionEvent event){
+    private void editCustomExpressionAction(ActionEvent event){
         if(selectedExpressionIsCustom.get() && currentMode.get().equals(Mode.VIEW)){
             currentMode.set(Mode.EDIT);
         }
     }
     
     @FXML
-    void cancelAction(ActionEvent event) {
+    private void cancelAction(ActionEvent event) {
         selectedExpression.set(null);
         currentMode.set(Mode.VIEW);
     }
 
     @FXML
-    void saveAction(ActionEvent event) {
+    private void saveAction(ActionEvent event) {
 
         boolean nameExists = false;
         boolean nameExistsInCustom = false;
@@ -952,7 +960,7 @@ public class ExpressionBuilderController implements Initializable {
     //EXPRESSION ACTIONS
     
     @FXML
-    void expressionClearAction(ActionEvent event) {
+    private void expressionClearAction(ActionEvent event) {
         //Clear the textflow
         if(!currentMode.get().equals(Mode.VIEW)){
             expressionTextFlow.getChildren().clear();
@@ -961,7 +969,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    void expressionCopyAction(ActionEvent event) {
+    private void expressionCopyAction(ActionEvent event) {
         //Copy in clipboard
         String fullText = makeStringFromTextFlow();
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -971,7 +979,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    void expressionPasteAction(ActionEvent event) {
+    private void expressionPasteAction(ActionEvent event) {
         //Build textflow from clipboard
         if(!currentMode.get().equals(Mode.VIEW)){
             Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -985,7 +993,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    void expressionUndoAction(ActionEvent event) {
+    private void expressionUndoAction(ActionEvent event) {
         //Try to restore the last saved state
         try {
             expressionTextFlow.getChildren().clear();
@@ -1002,7 +1010,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    void expressionRedoAction(ActionEvent event) {
+    private void expressionRedoAction(ActionEvent event) {
         try {
             List<ExpressionTextNode> lastList = redoListForExpressionTextFlow.get(redoListForExpressionTextFlow.size() - 1);
             redoListForExpressionTextFlow.remove(lastList);
@@ -1016,7 +1024,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    void expressionAsTextAction(ActionEvent event) {
+    private void expressionAsTextAction(ActionEvent event) {
         if(editAsText.get() == false){
             //Case was editing with drag and drop -> switch to textArea
             
@@ -1044,33 +1052,33 @@ public class ExpressionBuilderController implements Initializable {
     
     //CHECKBOX ACTIONS
     @FXML
-    void referenceMaterialCheckBoxAction(ActionEvent event) {
+    private void referenceMaterialCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
         updateAuditGraphAndPeek();
     }
 
     @FXML
-    void unknownSamplesCheckBoxAction(ActionEvent event) {
+    private void unknownSamplesCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
         updateAuditGraphAndPeek();
     }
 
     @FXML
-    void concRefMatCheckBoxAction(ActionEvent event) {
+    private void concRefMatCheckBoxAction(ActionEvent event) {
         unknownsSwitchCheckBox.setSelected(false);
         refMatSwitchCheckBox.setSelected(false);
         updateAuditGraphAndPeek();
     }
     
     @FXML
-    void summaryCalculationCheckBoxAction(ActionEvent event) {
+    private void summaryCalculationCheckBoxAction(ActionEvent event) {
         updateAuditGraphAndPeek();
     }
     
     
     
     @FXML
-    void howToUseAction(ActionEvent event) {
+    private void howToUseAction(ActionEvent event) {
 
     }
     
