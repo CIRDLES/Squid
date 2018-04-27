@@ -141,6 +141,8 @@ public class ExpressionBuilderController implements Initializable {
     private Button editExpressionBtn;
     @FXML
     private Button copyExpressionIntoCustomBtn;
+    @FXML
+    private Button deleteExpressionBtn;
     
     //TEXTS
     @FXML
@@ -409,6 +411,8 @@ public class ExpressionBuilderController implements Initializable {
         currentMode.set(Mode.VIEW);
         
         expressionsAccordion.setExpandedPane(builtInExpressionsTitledPane);
+        
+        expressionAsTextArea.setWrapText(true);
        
     }
     
@@ -418,6 +422,7 @@ public class ExpressionBuilderController implements Initializable {
         expressionUndoBtn.disableProperty().bind(undoListForExpressionTextFlow.sizeProperty().lessThan(2).or(editAsText).or(currentMode.isEqualTo(Mode.VIEW)));
         expressionRedoBtn.disableProperty().bind(redoListForExpressionTextFlow.sizeProperty().lessThan(1).or(editAsText).or(currentMode.isEqualTo(Mode.VIEW)));
         editExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpressionIsCustom.not()));
+        deleteExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpressionIsCustom.not()));
         copyExpressionIntoCustomBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpression.isNull()));
         createExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
@@ -861,7 +866,7 @@ public class ExpressionBuilderController implements Initializable {
     
     
     
-    //CREATE EDIT SAVE CANCEL ACTIONS
+    //CREATE EDIT DELETE SAVE CANCEL ACTIONS
     
     @FXML
     private void newCustomExpressionAction(ActionEvent event) {
@@ -889,6 +894,16 @@ public class ExpressionBuilderController implements Initializable {
     private void editCustomExpressionAction(ActionEvent event){
         if(selectedExpressionIsCustom.get() && currentMode.get().equals(Mode.VIEW)){
             currentMode.set(Mode.EDIT);
+        }
+    }
+    
+    @FXML
+    private void deleteExpressionAction(ActionEvent event){
+        if(selectedExpressionIsCustom.get() && currentMode.get().equals(Mode.VIEW)){
+            TaskInterface task = squidProject.getTask();
+            task.removeExpression(selectedExpression.get());
+            selectedExpression.set(null);
+            populateExpressionListViews();
         }
     }
     
@@ -1037,7 +1052,7 @@ public class ExpressionBuilderController implements Initializable {
         }else{
             //Case was editing as textArea -> switch to drag and drop
             
-            editAsText.set(true);
+            editAsText.set(false);
             
             expressionPane.setContent(expressionTextFlow);
             expressionAsTextBtn.setText("Edit as text");
@@ -1642,7 +1657,8 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append(((Text) node).getText());
             }
         }
-        return sb.toString();
+        //replace all groups of spaces by a single space
+        return sb.toString().replaceAll(" +", " ");
     }
     
     private void buildTextFlowFromString(String string){
