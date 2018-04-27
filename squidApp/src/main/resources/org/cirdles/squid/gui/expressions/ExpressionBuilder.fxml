@@ -35,9 +35,9 @@
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" styleClass="backgroundCalamari">
                      <children>
-                        <Accordion fx:id="expressionsAccordion" VBox.vgrow="ALWAYS">
+                        <Accordion fx:id="expressionsAccordion" VBox.vgrow="NEVER">
                            <panes>
-                              <TitledPane animated="false" text="NU-switched Expressions with Uncts">
+                              <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" text="NU-switched Expressions with Uncts">
                                  <content>
                                     <ListView fx:id="nuSwitchedExpressionsListView" />
                                  </content>
@@ -47,48 +47,58 @@
                                     <ListView fx:id="builtInExpressionsListView" />
                                  </content>
                               </TitledPane>
-                              <TitledPane animated="false" text="Ratios with Uncertainties">
+                              <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" text="Broken Expressions">
                                  <content>
-                                    <ListView fx:id="ratioExpressionsListView" />
+                                    <ListView fx:id="brokenExpressionsListView" />
                                  </content>
                               </TitledPane>
-                              <TitledPane animated="false" text="Operations">
+                              <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" text="Custom Expressions">
                                  <content>
-                                    <ListView fx:id="operationsListView" />
-                                 </content>
-                              </TitledPane>
-                              <TitledPane animated="false" text="Math Functions">
-                                 <content>
-                                    <ListView fx:id="mathFunctionsListView" />
-                                 </content>
-                              </TitledPane>
-                              <TitledPane animated="false" text="Squid Functions">
-                                 <content>
-                                    <ListView fx:id="squidFunctionsListView" />
-                                 </content>
-                              </TitledPane>
-                              <TitledPane animated="false" layoutX="10.0" layoutY="145.0" text="Logic Functions">
-                                 <content>
-                                    <ListView fx:id="logicFunctionsListView" />
-                                 </content>
-                              </TitledPane>
-                              <TitledPane animated="false" text="Constants and Numbers">
-                                 <content>
-                                    <ListView fx:id="constantsListView" />
-                                 </content>
-                              </TitledPane>
-                              <TitledPane animated="false" text="Reference Materials">
-                                 <content>
-                                    <ListView fx:id="referenceMaterialsListView" />
+                                    <ListView fx:id="customExpressionsListView" />
                                  </content>
                               </TitledPane>
                            </panes>
                         </Accordion>
-                        <TitledPane animated="false" collapsible="false" text="Custom Expressions" VBox.vgrow="ALWAYS">
-                           <content>
-                              <ListView fx:id="customExpressionsListView" />
-                           </content>
-                        </TitledPane>
+                        <Separator prefWidth="200.0" />
+                        <Accordion VBox.vgrow="NEVER">
+                           <panes>
+                              <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" text="Reference Materials">
+                                 <content>
+                                    <ListView fx:id="referenceMaterialsListView" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" text="Ratios with Uncertainties">
+                                 <content>
+                                    <ListView fx:id="ratioExpressionsListView" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="constantsTitledPane" animated="false" text="Constants and Numbers">
+                                 <content>
+                                    <ListView fx:id="constantsListView" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="operationsTitledPane" animated="false" text="Operations">
+                                 <content>
+                                    <ListView fx:id="operationsListView" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="mathFunctionsTitledPane" animated="false" text="Math Functions">
+                                 <content>
+                                    <ListView fx:id="mathFunctionsListView" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="squidFunctionsTitledPane" animated="false" expanded="false" text="Squid Functions">
+                                 <content>
+                                    <ListView fx:id="squidFunctionsListView" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="logicFunctionsTitledPane" animated="false" text="Logic Functions">
+                                 <content>
+                                    <ListView fx:id="logicFunctionsListView" />
+                                 </content>
+                              </TitledPane>
+                           </panes>
+                        </Accordion>
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

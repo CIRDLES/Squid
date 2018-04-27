@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -49,6 +50,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -224,29 +226,64 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private ListView<Expression> nuSwitchedExpressionsListView;
     @FXML
+    private TitledPane nuSwitchedExpressionsTitledPane;
+    
+    @FXML
     private ListView<Expression> builtInExpressionsListView;
+    @FXML
+    private TitledPane builtInExpressionsTitledPane;
+    
+    @FXML
+    private ListView<Expression> brokenExpressionsListView;
+    @FXML
+    private TitledPane brokenExpressionsTitledPane;
+    
     @FXML
     private ListView<Expression> customExpressionsListView;
     @FXML
+    private TitledPane customExpressionsTitledPane;
+    
+    @FXML
     private ListView<SquidRatiosModel> ratioExpressionsListView;
+    @FXML
+    private TitledPane ratioExpressionsTitledPane;
+    
     @FXML
     private ListView<String> operationsListView;
     @FXML
+    private TitledPane operationsTitledPane;
+    
+    @FXML
     private ListView<String> mathFunctionsListView;
+    @FXML
+    private TitledPane mathFunctionsTitledPane;
+    
     @FXML
     private ListView<String> squidFunctionsListView;
     @FXML
+    private TitledPane squidFunctionsTitledPane;
+    
+    @FXML
     private ListView<String> logicFunctionsListView;
+    @FXML
+    private TitledPane logicFunctionsTitledPane;
+    
     @FXML
     private ListView<String> constantsListView;
     @FXML
+    private TitledPane constantsTitledPane;
+    
+    @FXML
     private ListView<?> referenceMaterialsListView;
+    @FXML
+    private TitledPane referenceMaterialsTitledPane;
+    
     @FXML
     private ListView<Expression> globalListView;
 
     //MISC
-    @FXML
-    private TitledPane builtInExpressionsTitledPane;
+    
+    
     @FXML
     private TitledPane graphPane;
     @FXML
@@ -422,10 +459,10 @@ public class ExpressionBuilderController implements Initializable {
     }
     
     private void initFilterChoice(){
-        ObservableList<FromChoiceEnum> fromChoiceList = FXCollections.observableArrayList(FromChoiceEnum.values());
+        ObservableList<FromChoiceEnum> fromChoiceList = FXCollections.observableArrayList(Arrays.asList(FromChoiceEnum.values()));
         fromChoiceBox.setItems(fromChoiceList);
         fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
-        ObservableList<OrderChoiceEnum> orderChoiceList = FXCollections.observableArrayList(OrderChoiceEnum.values());
+        ObservableList<OrderChoiceEnum> orderChoiceList = FXCollections.observableArrayList(Arrays.asList(OrderChoiceEnum.values()));
         orderChoiceBox.setItems(orderChoiceList);
         orderChoiceBox.getSelectionModel().select(OrderChoiceEnum.EVALUATION);
         fromChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -518,12 +555,133 @@ public class ExpressionBuilderController implements Initializable {
         //EXPRESSIONS
         globalListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         globalListView.setCellFactory(new ExpressionCellFactory(true));
+        globalListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        globalListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                
+                if (currentMode.get().equals(Mode.VIEW)) {
+                    selectedExpression.set(newValue);
+                }
+                
+                if(brokenExpressionsListView.getSelectionModel().getSelectedItem() == null || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
+                    brokenExpressionsListView.getSelectionModel().clearSelection();
+                    if (brokenExpressionsListView.getItems().contains(newValue)) {
+                        brokenExpressionsListView.getSelectionModel().select(newValue);
+                        brokenExpressionsListView.scrollTo(newValue);
+                        brokenExpressionsTitledPane.setExpanded(true);
+                    }
+                }
+                if(nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem() == null || !nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
+                    nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
+                    if (nuSwitchedExpressionsListView.getItems().contains(newValue)) {
+                        nuSwitchedExpressionsListView.getSelectionModel().select(newValue);
+                        nuSwitchedExpressionsListView.scrollTo(newValue);
+                        nuSwitchedExpressionsTitledPane.setExpanded(true);
+                    }
+                }
+                if(builtInExpressionsListView.getSelectionModel().getSelectedItem() == null || !builtInExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
+                    builtInExpressionsListView.getSelectionModel().clearSelection();
+                    if (builtInExpressionsListView.getItems().contains(newValue)) {
+                        builtInExpressionsListView.getSelectionModel().select(newValue);
+                        builtInExpressionsListView.scrollTo(newValue);
+                        builtInExpressionsTitledPane.setExpanded(true);
+                    }
+                }
+                if(customExpressionsListView.getSelectionModel().getSelectedItem() == null || !customExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
+                    customExpressionsListView.getSelectionModel().clearSelection();
+                    if (customExpressionsListView.getItems().contains(newValue)) {
+                        customExpressionsListView.getSelectionModel().select(newValue);
+                        customExpressionsListView.scrollTo(newValue);
+                        customExpressionsTitledPane.setExpanded(true);
+                    }
+                }
+            }
+        });
+        
+        brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        brokenExpressionsListView.setCellFactory(new ExpressionCellFactory(true));
+        brokenExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        brokenExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (currentMode.get().equals(Mode.VIEW)) {
+                    selectedExpression.set(newValue);
+                }
+                if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
+                    if (!globalListView.getItems().contains(newValue)) {
+                        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
+                    }
+                    globalListView.getSelectionModel().select(newValue);
+                    globalListView.scrollTo(newValue);
+                }
+                nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
+                builtInExpressionsListView.getSelectionModel().clearSelection();
+                customExpressionsListView.getSelectionModel().clearSelection();
+            }
+        });
+        
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
+        nuSwitchedExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        nuSwitchedExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null){
+                if(currentMode.get().equals(Mode.VIEW)){
+                    selectedExpression.set(newValue);
+                }
+                if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
+                    if (!globalListView.getItems().contains(newValue)) {
+                        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
+                    }
+                    globalListView.getSelectionModel().select(newValue);
+                    globalListView.scrollTo(newValue);
+                }
+                brokenExpressionsListView.getSelectionModel().clearSelection();
+                builtInExpressionsListView.getSelectionModel().clearSelection();
+                customExpressionsListView.getSelectionModel().clearSelection();
+            }
+        });
+        
         builtInExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         builtInExpressionsListView.setCellFactory(new ExpressionCellFactory());
+        builtInExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        builtInExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null){
+                if(currentMode.get().equals(Mode.VIEW)){
+                    selectedExpression.set(newValue);
+                }
+                if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
+                    if (!globalListView.getItems().contains(newValue)) {
+                        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
+                    }
+                    globalListView.getSelectionModel().select(newValue);
+                    globalListView.scrollTo(newValue);
+                }
+                brokenExpressionsListView.getSelectionModel().clearSelection();
+                nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
+                customExpressionsListView.getSelectionModel().clearSelection();
+            }
+        });
+        
         customExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         customExpressionsListView.setCellFactory(new ExpressionCellFactory());
+        customExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        customExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null){
+                if(currentMode.get().equals(Mode.VIEW)){
+                    selectedExpression.set(newValue);
+                }
+                if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
+                    if (!globalListView.getItems().contains(newValue)) {
+                        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
+                    }
+                    globalListView.getSelectionModel().select(newValue);
+                    globalListView.scrollTo(newValue);
+                }
+                brokenExpressionsListView.getSelectionModel().clearSelection();
+                nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
+                builtInExpressionsListView.getSelectionModel().clearSelection();
+            }
+        });
+        
         populateExpressionListViews();
         
         //RATIOS
@@ -650,7 +808,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionAsTextAction(new ActionEvent());
             }
             if(newValue != null){
-                if(!currentMode.get().equals(Mode.CREATE) && customExpressionsListView.getItems().contains(newValue)){
+                if(!currentMode.get().equals(Mode.CREATE) && (!newValue.getExpressionTree().isSquidSpecialUPbThExpression() && !newValue.isSquidSwitchNU())){
                     selectedExpressionIsCustom.set(true);
                 }else{
                     selectedExpressionIsCustom.set(false);
@@ -739,20 +897,20 @@ public class ExpressionBuilderController implements Initializable {
         boolean nameExistsInCustom = false;
         
         for(Expression exLoop : builtInExpressionsListView.getItems()){
-            if(exLoop.getName().equals(expressionNameTextField.getText())){
+            if(exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())){
                 nameExists = true;
             }
         }
         if(!nameExists){
             for(Expression exLoop : nuSwitchedExpressionsListView.getItems()){
-                if(exLoop.getName().equals(expressionNameTextField.getText())){
+                if(exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())){
                     nameExists = true;
                 }
             }
         }
         if(!nameExists){
             for(Expression exLoop : customExpressionsListView.getItems()){
-                if(exLoop.getName().equals(expressionNameTextField.getText())){
+                if(exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())){
                     nameExistsInCustom = true;
                 }
             }
@@ -887,16 +1045,20 @@ public class ExpressionBuilderController implements Initializable {
     //CHECKBOX ACTIONS
     @FXML
     void referenceMaterialCheckBoxAction(ActionEvent event) {
+        concRefMatSwitchCheckBox.setSelected(false);
         updateAuditGraphAndPeek();
     }
 
     @FXML
     void unknownSamplesCheckBoxAction(ActionEvent event) {
+        concRefMatSwitchCheckBox.setSelected(false);
         updateAuditGraphAndPeek();
     }
 
     @FXML
     void concRefMatCheckBoxAction(ActionEvent event) {
+        unknownsSwitchCheckBox.setSelected(false);
+        refMatSwitchCheckBox.setSelected(false);
         updateAuditGraphAndPeek();
     }
     
@@ -923,6 +1085,7 @@ public class ExpressionBuilderController implements Initializable {
         List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
         List<Expression> sortedCustomExpressionsList = new ArrayList<>();
+        List<Expression> sortedBrokenExpressionsList = new ArrayList<>();
         
         for (Expression exp : namedExpressions) {
             if (exp.amHealthy() && exp.isSquidSwitchNU()) {
@@ -931,6 +1094,8 @@ public class ExpressionBuilderController implements Initializable {
                 sortedBuiltInExpressionsList.add(exp);
             } else if (!exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU()) {
                 sortedCustomExpressionsList.add(exp);
+            }else if (!exp.amHealthy()){
+                sortedBrokenExpressionsList.add(exp);
             }
         }
         
@@ -955,6 +1120,12 @@ public class ExpressionBuilderController implements Initializable {
             return exp1.getName().compareToIgnoreCase(exp2.getName());
         });
         customExpressionsListView.setItems(items);
+        
+        items = FXCollections.observableArrayList(sortedBrokenExpressionsList);
+        items = items.sorted((Expression exp1, Expression exp2) -> {
+            return exp1.getName().compareToIgnoreCase(exp2.getName());
+        });
+        brokenExpressionsListView.setItems(items);
     }
     
     private void populateRatiosListView() {
@@ -1444,9 +1615,9 @@ public class ExpressionBuilderController implements Initializable {
         //update lists
         populateExpressionListViews();
         //set the new expression as edited expression
+        currentMode.set(Mode.VIEW);
         selectedExpression.set(null);
         selectedExpression.set(exp);
-        currentMode.set(Mode.VIEW);
         expressionIsSaved.set(true);
         //Calculate peeks
         populatePeeks(exp);
@@ -1683,10 +1854,6 @@ public class ExpressionBuilderController implements Initializable {
             cell.setOnDragDone((event) -> {
                 //Nothing
             });
-            cell.setOnMouseClicked((event) -> {
-                currentMode.set(Mode.VIEW);
-                selectedExpression.set(cell.getItem());
-            });
             cell.setOnMousePressed((event) -> {
                 //Nothing
             });
@@ -1711,11 +1878,6 @@ public class ExpressionBuilderController implements Initializable {
             
             cell.setOnDragDone((event) -> {
                 cell.setCursor(Cursor.OPEN_HAND);
-            });
-            
-            
-            cell.setOnMouseClicked((MouseEvent event) -> {
-                //Nothing
             });
             
             cell.setOnMousePressed((event) -> {
