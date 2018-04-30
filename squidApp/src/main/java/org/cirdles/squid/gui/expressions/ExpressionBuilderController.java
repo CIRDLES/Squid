@@ -144,6 +144,8 @@ public class ExpressionBuilderController implements Initializable {
     private Button editExpressionBtn;
     @FXML
     private Button copyExpressionIntoCustomBtn;
+    @FXML
+    private Button showCurrentExpressionBtn;
     
     //TEXTS
     @FXML
@@ -435,6 +437,7 @@ public class ExpressionBuilderController implements Initializable {
         unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
         
         
 
@@ -564,7 +567,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpression.set(newValue);
                 }
                 
-                selectInAllPanes(newValue);
+                selectInAllPanes(newValue,false);
             }
         });
         
@@ -579,7 +582,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpression.set(newValue);
                 }
                 
-                selectInAllPanes(newValue);
+                selectInAllPanes(newValue,false);
             }
         });
         
@@ -593,7 +596,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpression.set(newValue);
                 }
                 
-                selectInAllPanes(newValue);
+                selectInAllPanes(newValue,false);
             }
         });
         
@@ -606,7 +609,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpression.set(newValue);
                 }
                 
-                selectInAllPanes(newValue);
+                selectInAllPanes(newValue,false);
             }
         });
         
@@ -619,7 +622,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpression.set(newValue);
                 }
                 
-                selectInAllPanes(newValue);
+                selectInAllPanes(newValue,false);
             }
         });
         
@@ -647,7 +650,7 @@ public class ExpressionBuilderController implements Initializable {
         populateNumberListViews();
     }
     
-    private void selectInAllPanes(Expression exp){
+    private void selectInAllPanes(Expression exp, boolean scrollIfAlreadySelected){
         //If nothing is selected or the selected value is not the new one
         if(brokenExpressionsListView.getSelectionModel().getSelectedItem() == null || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)){
             //Clear selection
@@ -658,6 +661,9 @@ public class ExpressionBuilderController implements Initializable {
                 brokenExpressionsListView.scrollTo(exp);
                 brokenExpressionsTitledPane.setExpanded(true);
             }
+        }else if(scrollIfAlreadySelected){
+            brokenExpressionsListView.scrollTo(exp);
+            brokenExpressionsTitledPane.setExpanded(true);
         }
         
         //Same thing for the other panes
@@ -668,7 +674,11 @@ public class ExpressionBuilderController implements Initializable {
                 nuSwitchedExpressionsListView.scrollTo(exp);
                 nuSwitchedExpressionsTitledPane.setExpanded(true);
             }
+        }else if(scrollIfAlreadySelected){
+            nuSwitchedExpressionsListView.scrollTo(exp);
+            nuSwitchedExpressionsTitledPane.setExpanded(true);
         }
+        
         if(builtInExpressionsListView.getSelectionModel().getSelectedItem() == null || !builtInExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)){
             builtInExpressionsListView.getSelectionModel().clearSelection();
             if (builtInExpressionsListView.getItems().contains(exp)) {
@@ -676,7 +686,11 @@ public class ExpressionBuilderController implements Initializable {
                 builtInExpressionsListView.scrollTo(exp);
                 builtInExpressionsTitledPane.setExpanded(true);
             }
+        }else if(scrollIfAlreadySelected){
+            builtInExpressionsListView.scrollTo(exp);
+            builtInExpressionsTitledPane.setExpanded(true);
         }
+        
         if(customExpressionsListView.getSelectionModel().getSelectedItem() == null || !customExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)){
             customExpressionsListView.getSelectionModel().clearSelection();
             if (customExpressionsListView.getItems().contains(exp)) {
@@ -684,6 +698,9 @@ public class ExpressionBuilderController implements Initializable {
                 customExpressionsListView.scrollTo(exp);
                 customExpressionsTitledPane.setExpanded(true);
             }
+        }else if(scrollIfAlreadySelected){
+            customExpressionsListView.scrollTo(exp);
+            customExpressionsTitledPane.setExpanded(true);
         }
         
         if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(exp)) {
@@ -1030,6 +1047,12 @@ public class ExpressionBuilderController implements Initializable {
         }
     }
     
+    @FXML
+    private void showCurrentExpressionAction(){
+        if(selectedExpression.isNotNull().get()){
+            selectInAllPanes(selectedExpression.get(),true);
+        }
+    }
     
     
     
@@ -1613,7 +1636,7 @@ public class ExpressionBuilderController implements Initializable {
         //Calculate peeks
         populatePeeks(exp);
         
-        selectInAllPanes(exp);
+        selectInAllPanes(exp, true);
     }
     
     private String makeStringFromTextFlow() {

@@ -33,8 +33,9 @@
         <tabs>
           <Tab text="Categories">
                <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" styleClass="backgroundCalamari">
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" styleClass="backgroundCalamari">
                      <children>
+                        <Button fx:id="showCurrentExpressionBtn" mnemonicParsing="false" onAction="#showCurrentExpressionAction" text="Show current expression" />
                         <Accordion fx:id="expressionsAccordion" VBox.vgrow="NEVER">
                            <panes>
                               <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" text="Custom Expressions">
