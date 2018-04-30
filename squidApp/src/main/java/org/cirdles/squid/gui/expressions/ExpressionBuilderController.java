@@ -720,7 +720,9 @@ public class ExpressionBuilderController implements Initializable {
         expressionAsTextArea.setFont(Font.font("Courier New"));
         expressionAsTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
             //Rebuild of the expression at each modification in order for the graph and audit to be updated
-            buildTextFlowFromString(newValue);
+            if(!makeStringFromTextFlow().trim().equals(newValue.replaceAll(" +", " ").trim())){
+                buildTextFlowFromString(newValue);
+            }
         });
         
         //Init of the textflow following the mode
@@ -1060,25 +1062,22 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void referenceMaterialCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
-        updateAuditGraphAndPeek();
     }
 
     @FXML
     private void unknownSamplesCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
-        updateAuditGraphAndPeek();
     }
 
     @FXML
     private void concRefMatCheckBoxAction(ActionEvent event) {
         unknownsSwitchCheckBox.setSelected(false);
         refMatSwitchCheckBox.setSelected(false);
-        updateAuditGraphAndPeek();
     }
     
     @FXML
     private void summaryCalculationCheckBoxAction(ActionEvent event) {
-        updateAuditGraphAndPeek();
+        
     }
     
     
