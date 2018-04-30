@@ -37,6 +37,11 @@
                      <children>
                         <Accordion fx:id="expressionsAccordion" VBox.vgrow="NEVER">
                            <panes>
+                              <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" text="Custom Expressions">
+                                 <content>
+                                    <ListView fx:id="customExpressionsListView" />
+                                 </content>
+                              </TitledPane>
                               <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" text="NU-switched Expressions with Uncts">
                                  <content>
                                     <ListView fx:id="nuSwitchedExpressionsListView" />
@@ -47,14 +52,9 @@
                                     <ListView fx:id="builtInExpressionsListView" />
                                  </content>
                               </TitledPane>
-                              <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" text="Broken Expressions">
+                              <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" text="Unhealthy Expressions">
                                  <content>
                                     <ListView fx:id="brokenExpressionsListView" />
-                                 </content>
-                              </TitledPane>
-                              <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" text="Custom Expressions">
-                                 <content>
-                                    <ListView fx:id="customExpressionsListView" />
                                  </content>
                               </TitledPane>
                            </panes>
@@ -62,14 +62,14 @@
                         <Separator prefWidth="200.0" />
                         <Accordion VBox.vgrow="NEVER">
                            <panes>
-                              <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" text="Reference Materials">
-                                 <content>
-                                    <ListView fx:id="referenceMaterialsListView" />
-                                 </content>
-                              </TitledPane>
                               <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" text="Ratios with Uncertainties">
                                  <content>
                                     <ListView fx:id="ratioExpressionsListView" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" text="Reference Materials">
+                                 <content>
+                                    <ListView fx:id="referenceMaterialsListView" />
                                  </content>
                               </TitledPane>
                               <TitledPane fx:id="constantsTitledPane" animated="false" text="Constants and Numbers">
