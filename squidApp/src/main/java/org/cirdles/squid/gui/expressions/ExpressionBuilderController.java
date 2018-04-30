@@ -184,7 +184,7 @@ public class ExpressionBuilderController implements Initializable {
     
     //CHOICEBOXES
     @FXML
-    private ChoiceBox orderChoiceBox;
+    private ChoiceBox<OrderChoiceEnum> orderChoiceBox;
     private enum OrderChoiceEnum{
         EVALUATION(" Evaluation order"),
         NAME(" Name"),
@@ -204,7 +204,7 @@ public class ExpressionBuilderController implements Initializable {
     }
     
     @FXML
-    private ChoiceBox fromChoiceBox;   
+    private ChoiceBox<FromChoiceEnum> fromChoiceBox;   
     private enum FromChoiceEnum{
         ALL(" All"),
         HEALTHY(" Healthy"),
@@ -562,43 +562,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpression.set(newValue);
                 }
                 
-                //If nothing is selected or the selected value is not the new one
-                if(brokenExpressionsListView.getSelectionModel().getSelectedItem() == null || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
-                    //Clear selection
-                    brokenExpressionsListView.getSelectionModel().clearSelection();
-                    //If the new value is on this pane then select it
-                    if (brokenExpressionsListView.getItems().contains(newValue)) {
-                        brokenExpressionsListView.getSelectionModel().select(newValue);
-                        brokenExpressionsListView.scrollTo(newValue);
-                        brokenExpressionsTitledPane.setExpanded(true);
-                    }
-                }
-                
-                //Same thing for the other panes
-                if(nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem() == null || !nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
-                    nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
-                    if (nuSwitchedExpressionsListView.getItems().contains(newValue)) {
-                        nuSwitchedExpressionsListView.getSelectionModel().select(newValue);
-                        nuSwitchedExpressionsListView.scrollTo(newValue);
-                        nuSwitchedExpressionsTitledPane.setExpanded(true);
-                    }
-                }
-                if(builtInExpressionsListView.getSelectionModel().getSelectedItem() == null || !builtInExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
-                    builtInExpressionsListView.getSelectionModel().clearSelection();
-                    if (builtInExpressionsListView.getItems().contains(newValue)) {
-                        builtInExpressionsListView.getSelectionModel().select(newValue);
-                        builtInExpressionsListView.scrollTo(newValue);
-                        builtInExpressionsTitledPane.setExpanded(true);
-                    }
-                }
-                if(customExpressionsListView.getSelectionModel().getSelectedItem() == null || !customExpressionsListView.getSelectionModel().getSelectedItem().equals(newValue)){
-                    customExpressionsListView.getSelectionModel().clearSelection();
-                    if (customExpressionsListView.getItems().contains(newValue)) {
-                        customExpressionsListView.getSelectionModel().select(newValue);
-                        customExpressionsListView.scrollTo(newValue);
-                        customExpressionsTitledPane.setExpanded(true);
-                    }
-                }
+                selectInAllPanes(newValue);
             }
         });
         
@@ -613,21 +577,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpression.set(newValue);
                 }
                 
-                //if the nothing is selected or the selected value is not the new value
-                if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
-                    //If the current filtered list does not contain the expression, reset the filter to show all the expressions
-                    if (!globalListView.getItems().contains(newValue)) {
-                        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
-                    }
-                    //And then select and show the new value
-                    globalListView.getSelectionModel().select(newValue);
-                    globalListView.scrollTo(newValue);
-                }
-                
-                //Clear selection in the others categories panes to prevent from multiple selection
-                nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
-                builtInExpressionsListView.getSelectionModel().clearSelection();
-                customExpressionsListView.getSelectionModel().clearSelection();
+                selectInAllPanes(newValue);
             }
         });
         
@@ -640,16 +590,8 @@ public class ExpressionBuilderController implements Initializable {
                 if(currentMode.get().equals(Mode.VIEW)){
                     selectedExpression.set(newValue);
                 }
-                if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
-                    if (!globalListView.getItems().contains(newValue)) {
-                        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
-                    }
-                    globalListView.getSelectionModel().select(newValue);
-                    globalListView.scrollTo(newValue);
-                }
-                brokenExpressionsListView.getSelectionModel().clearSelection();
-                builtInExpressionsListView.getSelectionModel().clearSelection();
-                customExpressionsListView.getSelectionModel().clearSelection();
+                
+                selectInAllPanes(newValue);
             }
         });
         
@@ -661,16 +603,8 @@ public class ExpressionBuilderController implements Initializable {
                 if(currentMode.get().equals(Mode.VIEW)){
                     selectedExpression.set(newValue);
                 }
-                if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
-                    if (!globalListView.getItems().contains(newValue)) {
-                        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
-                    }
-                    globalListView.getSelectionModel().select(newValue);
-                    globalListView.scrollTo(newValue);
-                }
-                brokenExpressionsListView.getSelectionModel().clearSelection();
-                nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
-                customExpressionsListView.getSelectionModel().clearSelection();
+                
+                selectInAllPanes(newValue);
             }
         });
         
@@ -682,16 +616,8 @@ public class ExpressionBuilderController implements Initializable {
                 if(currentMode.get().equals(Mode.VIEW)){
                     selectedExpression.set(newValue);
                 }
-                if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(newValue)) {
-                    if (!globalListView.getItems().contains(newValue)) {
-                        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
-                    }
-                    globalListView.getSelectionModel().select(newValue);
-                    globalListView.scrollTo(newValue);
-                }
-                brokenExpressionsListView.getSelectionModel().clearSelection();
-                nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
-                builtInExpressionsListView.getSelectionModel().clearSelection();
+                
+                selectInAllPanes(newValue);
             }
         });
         
@@ -717,6 +643,56 @@ public class ExpressionBuilderController implements Initializable {
         constantsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         constantsListView.setCellFactory(new StringCellFactory(dragNumberSource));
         populateNumberListViews();
+    }
+    
+    private void selectInAllPanes(Expression exp){
+        //If nothing is selected or the selected value is not the new one
+        if(brokenExpressionsListView.getSelectionModel().getSelectedItem() == null || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)){
+            //Clear selection
+            brokenExpressionsListView.getSelectionModel().clearSelection();
+            //If the new value is on this pane then select it
+            if (brokenExpressionsListView.getItems().contains(exp)) {
+                brokenExpressionsListView.getSelectionModel().select(exp);
+                brokenExpressionsListView.scrollTo(exp);
+                brokenExpressionsTitledPane.setExpanded(true);
+            }
+        }
+        
+        //Same thing for the other panes
+        if(nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem() == null || !nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)){
+            nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
+            if (nuSwitchedExpressionsListView.getItems().contains(exp)) {
+                nuSwitchedExpressionsListView.getSelectionModel().select(exp);
+                nuSwitchedExpressionsListView.scrollTo(exp);
+                nuSwitchedExpressionsTitledPane.setExpanded(true);
+            }
+        }
+        if(builtInExpressionsListView.getSelectionModel().getSelectedItem() == null || !builtInExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)){
+            builtInExpressionsListView.getSelectionModel().clearSelection();
+            if (builtInExpressionsListView.getItems().contains(exp)) {
+                builtInExpressionsListView.getSelectionModel().select(exp);
+                builtInExpressionsListView.scrollTo(exp);
+                builtInExpressionsTitledPane.setExpanded(true);
+            }
+        }
+        if(customExpressionsListView.getSelectionModel().getSelectedItem() == null || !customExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)){
+            customExpressionsListView.getSelectionModel().clearSelection();
+            if (customExpressionsListView.getItems().contains(exp)) {
+                customExpressionsListView.getSelectionModel().select(exp);
+                customExpressionsListView.scrollTo(exp);
+                customExpressionsTitledPane.setExpanded(true);
+            }
+        }
+        
+        if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(exp)) {
+            //If the current filtered list does not contain the expression, reset the filter to show all the expressions
+            if (!globalListView.getItems().contains(exp)) {
+                fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
+            }
+            //And then select and show the new value
+            globalListView.getSelectionModel().select(exp);
+            globalListView.scrollTo(exp);
+        }
     }
     
     private void initExpressionTextFlowAndTextArea(){
@@ -1644,6 +1620,8 @@ public class ExpressionBuilderController implements Initializable {
         expressionIsSaved.set(true);
         //Calculate peeks
         populatePeeks(exp);
+        
+        selectInAllPanes(exp);
     }
     
     private String makeStringFromTextFlow() {
