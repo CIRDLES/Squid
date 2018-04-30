@@ -15,6 +15,7 @@
 */
 package org.cirdles.squid.gui.expressions;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -51,6 +52,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -88,6 +90,7 @@ import static org.cirdles.squid.gui.SquidUI.OPERATOR_IN_EXPRESSION_LIST_CSS_STYL
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -141,8 +144,6 @@ public class ExpressionBuilderController implements Initializable {
     private Button editExpressionBtn;
     @FXML
     private Button copyExpressionIntoCustomBtn;
-    @FXML
-    private Button deleteExpressionBtn;
     
     //TEXTS
     @FXML
@@ -379,6 +380,8 @@ public class ExpressionBuilderController implements Initializable {
     //List of all the expressions
     ObservableList<Expression> namedExpressions;
     
+    ArrayList<Expression> removedExpressions = new ArrayList<>();
+    
     
     
     
@@ -422,7 +425,6 @@ public class ExpressionBuilderController implements Initializable {
         expressionUndoBtn.disableProperty().bind(undoListForExpressionTextFlow.sizeProperty().lessThan(2).or(editAsText).or(currentMode.isEqualTo(Mode.VIEW)));
         expressionRedoBtn.disableProperty().bind(redoListForExpressionTextFlow.sizeProperty().lessThan(1).or(editAsText).or(currentMode.isEqualTo(Mode.VIEW)));
         editExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpressionIsCustom.not()));
-        deleteExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpressionIsCustom.not()));
         copyExpressionIntoCustomBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpression.isNull()));
         createExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
@@ -870,16 +872,6 @@ public class ExpressionBuilderController implements Initializable {
     private void editCustomExpressionAction(ActionEvent event){
         if(selectedExpressionIsCustom.get() && currentMode.get().equals(Mode.VIEW)){
             currentMode.set(Mode.EDIT);
-        }
-    }
-    
-    @FXML
-    private void deleteExpressionAction(ActionEvent event){
-        if(selectedExpressionIsCustom.get() && currentMode.get().equals(Mode.VIEW)){
-            TaskInterface task = squidProject.getTask();
-            task.removeExpression(selectedExpression.get());
-            selectedExpression.set(null);
-            populateExpressionListViews();
         }
     }
     
@@ -1863,6 +1855,63 @@ public class ExpressionBuilderController implements Initializable {
                 //Nothing
             });
             cell.setCursor(Cursor.HAND);
+            
+            ContextMenu cm = new ContextMenu();
+            
+            cell.setOnMouseClicked((event) -> {
+                if(event.getButton().equals(MouseButton.SECONDARY)){
+                    cm.getItems().clear();
+                    //if custom
+                    if(!cell.getItem().getExpressionTree().isSquidSpecialUPbThExpression() && !cell.getItem().isSquidSwitchNU()){
+                        MenuItem remove = new MenuItem("Remove expression.");
+                        remove.setOnAction((t) -> {
+                            TaskInterface task = squidProject.getTask();
+                            removedExpressions.add(cell.getItem());
+                            task.removeExpression(cell.getItem());
+                            selectedExpression.set(null);
+                            populateExpressionListViews();
+                        });
+                        cm.getItems().add(remove);
+                        
+                        MenuItem restore = new MenuItem("Restore removed expressions.");
+                        restore.setOnAction((t) -> {
+                            for(Expression removedExp : removedExpressions){
+                                boolean nameExist;
+                                do{
+                                    nameExist = false;
+                                    for(Expression e : namedExpressions){
+                                        if(e.getName().equalsIgnoreCase(removedExp.getName())){
+                                            removedExp.setName(removedExp.getName()+" [restored]");
+                                            nameExist = true;
+                                        }
+                                    }
+                                }while(nameExist);
+                                
+                                TaskInterface task = squidProject.getTask();
+                                task.addExpression(removedExp);
+                            }
+                            removedExpressions.clear();
+                            populateExpressionListViews();
+                        });
+                        restore.setDisable(removedExpressions.isEmpty());
+                        cm.getItems().add(restore);
+                        
+                        cm.getItems().add(new SeparatorMenuItem());
+                    }
+                    
+                    MenuItem exportXML = new MenuItem("Export expression as XML document.");
+                    exportXML.setOnAction((t) -> {
+                        try {
+                            File expressionFileXML = FileHandler.saveExpressionFileXML(cell.getItem(), SquidUI.primaryStageWindow);
+                        } catch (IOException ex) {
+                        }
+                    });
+                    cm.getItems().add(exportXML);
+                    
+                    cm.show(cell, event.getScreenX(), event.getScreenY());
+                }
+            });
+            
         }
         
         private void setCellModeEditCreate(ListCell<Expression> cell){
@@ -1893,6 +1942,10 @@ public class ExpressionBuilderController implements Initializable {
             });
             
             cell.setCursor(Cursor.OPEN_HAND);
+            
+            cell.setOnMouseClicked((event) -> {
+                //Nothing
+            });
         }
         
     }

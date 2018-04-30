@@ -146,7 +146,6 @@
                               <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create" HBox.hgrow="NEVER" />
                               <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Copy" />
                               <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
-                              <Button fx:id="deleteExpressionBtn" mnemonicParsing="false" onAction="#deleteExpressionAction" text="Delete" />
                               <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
                               <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
                               <Separator orientation="VERTICAL" />
