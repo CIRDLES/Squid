@@ -15,7 +15,6 @@
 */
 package org.cirdles.squid.gui.expressions;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -25,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -49,6 +50,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
@@ -1955,14 +1957,27 @@ public class ExpressionBuilderController implements Initializable {
                         cm.getItems().add(new SeparatorMenuItem());
                     }
                     
-                    MenuItem exportXML = new MenuItem("Export expression as XML document.");
+                    Menu export = new Menu("Export as");
+                    
+                    MenuItem exportXML = new MenuItem("XML document.");
                     exportXML.setOnAction((t) -> {
                         try {
-                            File expressionFileXML = FileHandler.saveExpressionFileXML(cell.getItem(), SquidUI.primaryStageWindow);
+                            FileHandler.saveExpressionFileXML(cell.getItem(), SquidUI.primaryStageWindow);
                         } catch (IOException ex) {
                         }
                     });
-                    cm.getItems().add(exportXML);
+                    export.getItems().add(exportXML);
+                    
+                    MenuItem exportHTML = new MenuItem("HTML document.");
+                    exportHTML.setOnAction((t) -> {
+                        try {
+                            FileHandler.saveExpressionGraphHTML(cell.getItem(), SquidUI.primaryStageWindow);
+                        } catch (IOException ex) {
+                        }
+                    });
+                    export.getItems().add(exportHTML);
+                    
+                    cm.getItems().add(export);
                     
                     cm.show(cell, event.getScreenX(), event.getScreenY());
                 }

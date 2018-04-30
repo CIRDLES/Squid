@@ -17,6 +17,8 @@ package org.cirdles.squid.gui.utilities.fileUtilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +29,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.xml.sax.SAXException;
@@ -188,6 +191,28 @@ public class FileHandler {
                     .serializeXMLObject(expressionFileXML.getAbsolutePath());
         }
 
+        return retVal;
+    }
+    
+    public static File saveExpressionGraphHTML(Expression expression, Window ownerWindow)
+            throws IOException {
+        
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Expression graph '.html' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression graph '.html' files", "*.html"));
+        fileChooser.setInitialDirectory(null);
+        fileChooser.setInitialFileName(expression.getName() + ".html");
+        
+        File expressionGraphFileHTML = fileChooser.showSaveDialog(ownerWindow);
+        
+        if(expressionGraphFileHTML != null){
+            String content = ExpressionTreeWriterMathML.toStringBuilderMathML(expression.getExpressionTree()).toString();
+            retVal = expressionGraphFileHTML;
+            Files.write(Paths.get(expressionGraphFileHTML.getPath()), content.getBytes());
+        }
+        
         return retVal;
     }
 
