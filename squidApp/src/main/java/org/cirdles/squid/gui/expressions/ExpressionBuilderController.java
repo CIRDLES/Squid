@@ -384,7 +384,7 @@ public class ExpressionBuilderController implements Initializable {
     
     ArrayList<Expression> removedExpressions = new ArrayList<>();
     
-    
+    private Expression selectedBeforeCreateOrCopy;
     
     
     
@@ -415,7 +415,7 @@ public class ExpressionBuilderController implements Initializable {
         
         currentMode.set(Mode.VIEW);
         
-        expressionsAccordion.setExpandedPane(builtInExpressionsTitledPane);
+        expressionsAccordion.setExpandedPane(customExpressionsTitledPane);
         
         expressionAsTextArea.setWrapText(true);
        
@@ -868,6 +868,7 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void newCustomExpressionAction(ActionEvent event) {
         if(currentMode.get().equals(Mode.VIEW)){
+            selectedBeforeCreateOrCopy = selectedExpression.get();
             selectedExpression.set(null);
             selectedExpression.set(new Expression("new_custom_expression", ""));
             currentMode.set(Mode.CREATE);
@@ -879,6 +880,7 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void copyIntoCustomExpressionAction(ActionEvent event) {
         if(currentMode.get().equals(Mode.VIEW)){
+            selectedBeforeCreateOrCopy = selectedExpression.get();
             Expression exp = copySelectedExpression();
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
@@ -896,7 +898,16 @@ public class ExpressionBuilderController implements Initializable {
     
     @FXML
     private void cancelAction(ActionEvent event) {
-        selectedExpression.set(null);
+        if(!currentMode.get().equals(Mode.EDIT)){
+            selectedExpression.set(null);
+            selectedExpression.set(selectedBeforeCreateOrCopy);
+            selectInAllPanes(selectedBeforeCreateOrCopy, true);
+        }else{
+            Expression exp = selectedExpression.get();
+            selectedExpression.set(null);
+            selectedExpression.set(exp);
+            selectInAllPanes(exp, true);
+        }
         currentMode.set(Mode.VIEW);
     }
 
