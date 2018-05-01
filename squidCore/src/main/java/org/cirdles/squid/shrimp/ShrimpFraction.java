@@ -409,6 +409,10 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return totalCounts.clone();
     }
 
+    public void setIsotopicRatiosII(SortedSet<SquidRatiosModel> isotopicRatiosII) {
+        this.isotopicRatiosII = isotopicRatiosII;
+    }
+    
     /**
      * @param totalCounts the totalCounts to set
      */

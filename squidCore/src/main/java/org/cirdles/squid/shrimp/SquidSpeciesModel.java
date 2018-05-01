@@ -18,6 +18,7 @@ package org.cirdles.squid.shrimp;
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -133,6 +134,10 @@ public class SquidSpeciesModel implements
      */
     public String getPrawnFileIsotopeName() {
         return prawnFileIsotopeName;
+    }
+    
+    public void setPrawnFileIsotopeName(String prawnFileIsotopeName) {
+        this.prawnFileIsotopeName = prawnFileIsotopeName;
     }
 
     /**

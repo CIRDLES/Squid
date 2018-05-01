@@ -81,6 +81,8 @@ public interface TaskInterface {
      */
     public String getName();
 
+    public Map<String, ExpressionTreeInterface> getNamedOvercountExpressionsMap();
+
     /**
      * @return the provenance
      */
@@ -117,6 +119,10 @@ public interface TaskInterface {
      * @return the tableOfSelectedRatiosByMassStationIndex
      */
     boolean[][] getTableOfSelectedRatiosByMassStationIndex();
+
+    public void setMapOfIndexToMassStationDetails(Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails);
+
+    Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails();
 
     /**
      * @return the taskExpressionsEvaluationsPerSpotSet
@@ -161,17 +167,16 @@ public interface TaskInterface {
      * @param labName the labName to set
      */
     public void setLabName(String labName);
-
+    
     /**
      * @param name the name to set
      */
     public void setName(String name);
 
     public String getPrimaryParentElement();
-    
+
     public void setPrimaryParentElement(String primaryParentElement);
-    
-    
+
     /**
      * @param provenance the provenance to set
      */
@@ -202,12 +207,24 @@ public interface TaskInterface {
 
     public void restoreRemovedExpressions();
 
+    public void setSquidSessionModel(SquidSessionModel model);
+
+    public void setNamedExpressionsMap(Map<String, ExpressionTreeInterface> map);
+
+    public void setNamedOvercountExpressionsMap(Map<String, ExpressionTreeInterface> map);
+
+    public void setNamedConstantsMap(Map<String, ExpressionTreeInterface> map);
+
+    public void setNamedParametersMap(Map<String, ExpressionTreeInterface> map);
+
     public void addExpression(Expression exp);
 
     /**
      * @param type the type to set
      */
     public void setType(String type);
+    
+    public void setTableOfSelectedRatiosByMassStationIndex(boolean[][] tableOfSelectedRatiosByMassStationIndex);
 
     public void setupSquidSessionSpecsAndReduceAndReport();
 
@@ -227,6 +244,12 @@ public interface TaskInterface {
      * @return the taskExpressionsOrdered
      */
     public SortedSet<Expression> getTaskExpressionsOrdered();
+
+    public int getIndexOfTaskBackgroundMass();
+
+    public String getFilterForRefMatSpotNames();
+
+    public String getFilterForConcRefMatSpotNames();
 
     /**
      * @param changed the changed to set

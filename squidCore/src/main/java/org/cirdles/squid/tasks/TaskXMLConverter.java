@@ -21,9 +21,19 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.shrimp.MassStationDetail;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.shrimp.SquidSessionModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -90,74 +100,158 @@ public class TaskXMLConverter implements Converter {
         writer.startNode("name");
         writer.setValue(task.getName());
         writer.endNode();
-        
+
         writer.startNode("type");
         writer.setValue(task.getType());
         writer.endNode();
-        
+
         writer.startNode("description");
         writer.setValue(task.getDescription());
         writer.endNode();
-        
+
         writer.startNode("authorName");
         writer.setValue(task.getAuthorName());
         writer.endNode();
-        
+
         writer.startNode("labName");
         writer.setValue(task.getLabName());
         writer.endNode();
-        
+
         writer.startNode("provenance");
         writer.setValue(task.getProvenance());
         writer.endNode();
-        
+
         writer.startNode("dateRevised");
         writer.setValue(String.valueOf(task.getDateRevised()));
         writer.endNode();
-        
+
         writer.startNode("useSBM");
         writer.setValue(String.valueOf(task.isUseSBM()));
         writer.endNode();
-        
+
         writer.startNode("userLinFits");
         writer.setValue(String.valueOf(task.isUserLinFits()));
         writer.endNode();
-        
+
         writer.startNode("indexOfBackgroundSpecies");
-        writer.setValue(String.valueOf(task.getIndexOfBackgroundSpecies()));
+        writer.setValue(Integer.toString(task.getIndexOfBackgroundSpecies()));
         writer.endNode();
-        
+
+        writer.startNode("indexOfTaskBackgroundMass");
+        writer.setValue(Integer.toString(task.getIndexOfTaskBackgroundMass()));
+        writer.endNode();
+
         writer.startNode("parentNuclide");
         writer.setValue(task.getParentNuclide());
         writer.endNode();
-        
+
+        writer.startNode("directAltPD");
+        writer.setValue(String.valueOf(task.isDirectAltPD()));
+        writer.endNode();
+
         writer.startNode("primaryParentElement");
         writer.setValue(task.getPrimaryParentElement());
         writer.endNode();
-        
+
+        writer.startNode("filterForRefMatSpotNames");
+        writer.setValue(task.getFilterForRefMatSpotNames());
+        writer.endNode();
+
+        writer.startNode("filterForConcRefMatSpotNames");
+        writer.setValue(task.getFilterForConcRefMatSpotNames());
+        writer.endNode();
+
         writer.startNode("nominalMasses");
         List<String> nominalMasses = task.getNominalMasses();
-        for(int i = 0; i < nominalMasses.size(); i++) {
+        for (int i = 0; i < nominalMasses.size(); i++) {
             writer.startNode("nominalMass");
             writer.setValue(nominalMasses.get(i));
             writer.endNode();
         }
         writer.endNode();
-        
+
         writer.startNode("ratioNames:");
         List<String> ratioNames = task.getRatioNames();
-        for(int i = 0; i < ratioNames.size(); i++) {
+        for (int i = 0; i < ratioNames.size(); i++) {
             writer.startNode("ratioName");
             writer.setValue(ratioNames.get(i));
             writer.endNode();
         }
         writer.endNode();
-        
+
+        writer.startNode("mapOfIndexToMassStationDetails");
+        Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = task.getMapOfIndexToMassStationDetails();
+        context.convertAnother(mapOfIndexToMassStationDetails);
+        writer.endNode();
+
+        writer.startNode("squidSessionModel");
+        context.convertAnother(task.getSquidSessionModel());
+        writer.endNode();
+
+        writer.startNode("squidSpeciesModelList");
+        context.convertAnother(task.getSquidSpeciesModelList());
+        writer.endNode();
+
+        writer.startNode("squidRatiosModelList");
+        context.convertAnother(task.getSquidRatiosModelList());
+        writer.endNode();
+
+        boolean[][] tableOfSelectedRatiosByMassStationIndex = task.getTableOfSelectedRatiosByMassStationIndex();
+        writer.startNode("tableOfSelectedRatiosByMassStationIndex");
+        for (int i = 0; i < tableOfSelectedRatiosByMassStationIndex.length; i++) {
+            writer.startNode("tableOfSelectedRatiosByMassStationIndexRow");
+            for (int j = 0; j < tableOfSelectedRatiosByMassStationIndex[i].length; j++) {
+                writer.startNode("RatioByMassStationIndex");
+                writer.setValue(Boolean.toString(tableOfSelectedRatiosByMassStationIndex[i][j]));
+                writer.endNode();
+            }
+            writer.endNode();
+        }
+        writer.endNode();
+
         writer.startNode("taskExpressionsOrdered");
         context.convertAnother(task.getTaskExpressionTreesOrdered());
         writer.endNode();
 
+        Map<String, ExpressionTreeInterface> namedExpressionsMap = task.getNamedExpressionsMap();
+        writer.startNode("namedExpressionsMap");
+        context.convertAnother(namedExpressionsMap);
+        writer.endNode();
+
+        Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap = task.getNamedOvercountExpressionsMap();
+        writer.startNode("namedOvercountExpressionsMap");
+        context.convertAnother(namedOvercountExpressionsMap);
+        writer.endNode();
+
+        Map<String, ExpressionTreeInterface> namedConstantsMap = task.getNamedConstantsMap();
+        writer.startNode("namedConstantsMap");
+        context.convertAnother(namedConstantsMap);
+        writer.endNode();
+
+        Map<String, ExpressionTreeInterface> namedParametersMap = task.getNamedParametersMap();
+        writer.startNode("namedParametersMap");
+        context.convertAnother(namedParametersMap);
+        writer.endNode();
         
+        writer.startNode("shrimpFractions");
+        context.convertAnother(task.getShrimpFractions());
+        writer.endNode();
+        
+        writer.startNode("referenceMaterialSpots");
+        context.convertAnother(task.getReferenceMaterialSpots());
+        writer.endNode();
+        
+        writer.startNode("concenctrationReferenceMaterialSpots");
+       context.convertAnother(task.getConcentrationReferenceMaterialSpots());
+       writer.endNode();
+       
+       writer.startNode("unknownSpots");
+       context.convertAnother(task.getUnknownSpots());
+       writer.endNode();
+       
+       writer.startNode("selectedIndexIsotope");
+       context.convertAnother(task.getSelectedIndexIsotope());
+       writer.endNode();
     }
 
     /**
@@ -178,68 +272,84 @@ public class TaskXMLConverter implements Converter {
             UnmarshallingContext context) {
 
         TaskInterface task = new Task();
-        
+
         reader.moveDown();
         task.setName(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setType(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setDescription(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setAuthorName(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setLabName(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setProvenance(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setDateRevised(Long.getLong(reader.getValue()));
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setUseSBM(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setUserLinFits(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
-        
+
         reader.moveDown();
         task.setIndexOfBackgroundSpecies(Integer.parseInt(reader.getValue()));
         reader.moveUp();
-        
+
+        reader.moveDown();
+        task.setIndexOfTaskBackgroundMass(Integer.parseInt(reader.getValue()));
+        reader.moveUp();
+
         reader.moveDown();
         task.setParentNuclide(reader.getValue());
         reader.moveUp();
-        
+
+        reader.moveDown();
+        task.setDirectAltPD(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+
         reader.moveDown();
         task.setPrimaryParentElement(reader.getValue());
         reader.moveUp();
-        
+
+        reader.moveDown();
+        task.setFilterForRefMatSpotNames(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        task.setFilterForConcRefMatSpotNames(reader.getValue());
+        reader.moveUp();
+
         List<String> nominalMasses = new ArrayList<>();
         reader.moveDown();
-        while(reader.hasMoreChildren()) {
+        while (reader.hasMoreChildren()) {
             reader.moveDown();
             nominalMasses.add(reader.getValue());
             reader.moveUp();
         }
         reader.moveUp();
         task.setNominalMasses(nominalMasses);
-        
+
         List<String> ratioNames = new ArrayList<>();
         reader.moveDown();
-        while(reader.hasMoreChildren()) {
+        while (reader.hasMoreChildren()) {
             reader.moveDown();
             ratioNames.add(reader.getValue());
             reader.moveUp();
@@ -247,18 +357,148 @@ public class TaskXMLConverter implements Converter {
         reader.moveUp();
         task.setRatioNames(ratioNames);
 
+        reader.moveDown();
+        Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = new TreeMap<>();
+        mapOfIndexToMassStationDetails = (TreeMap) context.convertAnother(mapOfIndexToMassStationDetails, TreeMap.class);
+        task.setMapOfIndexToMassStationDetails(mapOfIndexToMassStationDetails);
+        reader.moveUp();
+
+        SquidSessionModel squidSessionModel = task.getSquidSessionModel();
+        reader.moveDown();
+        squidSessionModel = (SquidSessionModel) context.convertAnother(squidSessionModel, SquidSessionModel.class);
+        reader.moveUp();
+        task.setSquidSessionModel(squidSessionModel);
+
+        List<SquidSpeciesModel> squidSpeciesModelList = task.getSquidSpeciesModelList();
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            SquidSpeciesModel squidSpeciesModel = new SquidSpeciesModel();
+            reader.moveDown();
+            squidSpeciesModel = (SquidSpeciesModel) context.convertAnother(squidSpeciesModel, SquidSpeciesModel.class);
+            reader.moveUp();
+            squidSpeciesModelList.add(squidSpeciesModel);
+        }
+        reader.moveUp();
+
+        List<SquidRatiosModel> squidRatiosModelList = task.getSquidRatiosModelList();
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            Object squidRatiosModel = new Object();
+            reader.moveDown();
+            squidRatiosModel = (SquidRatiosModel) context.convertAnother(squidRatiosModel, SquidRatiosModel.class);
+            reader.moveUp();
+            squidRatiosModelList.add((SquidRatiosModel) squidRatiosModel);
+        }
+        reader.moveUp();
+
+        List<List<Boolean>> listOfSelectedRatiosByMassStationIndex = new LinkedList<>();
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            List<Boolean> selectedRatioList = new LinkedList<>();
+            reader.moveDown();
+            while (reader.hasMoreChildren()) {
+                reader.moveDown();
+                selectedRatioList.add(Boolean.parseBoolean(reader.getValue()));
+                reader.moveUp();
+            }
+            reader.moveUp();
+            listOfSelectedRatiosByMassStationIndex.add(selectedRatioList);
+        }
+        reader.moveUp();
+        boolean[][] tableOfSelectedRatiosByMassStationIndex = new boolean[listOfSelectedRatiosByMassStationIndex.size()][listOfSelectedRatiosByMassStationIndex.get(0).size()];
+        for(int i = 0; i < tableOfSelectedRatiosByMassStationIndex.length; i++) {
+            for(int j = 0; j < tableOfSelectedRatiosByMassStationIndex[0].length; j++) {
+                tableOfSelectedRatiosByMassStationIndex[i][j] = listOfSelectedRatiosByMassStationIndex.get(i).get(j);
+            }
+        }
+        task.setTableOfSelectedRatiosByMassStationIndex(tableOfSelectedRatiosByMassStationIndex);
+
         SortedSet<ExpressionTree> taskExpressions = new TreeSet<>();
         reader.moveDown();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             ExpressionTreeInterface exp = new ExpressionTree();
             exp = (ExpressionTreeInterface) context.convertAnother(exp, ExpressionTree.class);
-            taskExpressions.add((ExpressionTree)exp);
+            taskExpressions.add((ExpressionTree) exp);
             reader.moveUp();
         }
         task.setTaskExpressionTreesOrdered(taskExpressions);
         reader.moveUp();
 
+        Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>();
+        reader.moveDown();
+        namedExpressionsMap = (TreeMap) context.convertAnother(namedExpressionsMap, TreeMap.class);
+        reader.moveUp();
+        task.setNamedExpressionsMap(namedExpressionsMap);
+
+        Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap = new TreeMap<>();
+        reader.moveDown();
+        namedOvercountExpressionsMap = (TreeMap) context.convertAnother(namedOvercountExpressionsMap, TreeMap.class);
+        reader.moveUp();
+        task.setNamedOvercountExpressionsMap(namedOvercountExpressionsMap);
+
+        Map<String, ExpressionTreeInterface> namedConstantsMap = new TreeMap<>();
+        reader.moveDown();
+        namedConstantsMap = (TreeMap) context.convertAnother(namedConstantsMap, TreeMap.class);
+        reader.moveUp();
+        task.setNamedConstantsMap(namedConstantsMap);
+
+        Map<String, ExpressionTreeInterface> namedParametersMap = new TreeMap<>();
+        reader.moveDown();
+        namedParametersMap = (TreeMap) context.convertAnother(namedParametersMap, TreeMap.class);
+        reader.moveUp();
+        task.setNamedParametersMap(namedParametersMap);
+        
+        List<ShrimpFractionExpressionInterface> shrimpFractions = task.getShrimpFractions();
+        reader.moveDown();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            ShrimpFractionExpressionInterface fraction = new ShrimpFraction();
+            fraction = (ShrimpFractionExpressionInterface) context.convertAnother(fraction, ShrimpFraction.class);
+            shrimpFractions.add(fraction);
+            reader.moveUp();
+        }
+        reader.moveUp();
+        
+        List<ShrimpFractionExpressionInterface> referenceMaterialSpots = task.getReferenceMaterialSpots();
+        reader.moveDown();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            ShrimpFractionExpressionInterface fraction = new ShrimpFraction();
+            fraction = (ShrimpFractionExpressionInterface) context.convertAnother(fraction, ShrimpFraction.class);
+            referenceMaterialSpots.add(fraction);
+            reader.moveUp();
+        }
+        reader.moveUp();
+        
+        List<ShrimpFractionExpressionInterface> concentrationReferenceMaterialSpots = task.getConcentrationReferenceMaterialSpots();
+        reader.moveDown();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            ShrimpFractionExpressionInterface fraction = new ShrimpFraction();
+            fraction = (ShrimpFractionExpressionInterface) context.convertAnother(fraction, ShrimpFraction.class);
+            concentrationReferenceMaterialSpots.add(fraction);
+            reader.moveUp();
+        }
+        reader.moveUp();
+        
+        List<ShrimpFractionExpressionInterface> unknownSpots = task.getUnknownSpots();
+        reader.moveDown();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            ShrimpFractionExpressionInterface fraction = new ShrimpFraction();
+            fraction = (ShrimpFractionExpressionInterface) context.convertAnother(fraction, ShrimpFraction.class);
+            unknownSpots.add(fraction);
+            reader.moveUp();
+        }
+        reader.moveUp();
+        
+        reader.moveDown();
+        Enum selectedIndexIsotope = null;
+        context.convertAnother(selectedIndexIsotope, Enum.class);
+        task.setSelectedIndexIsotope((Squid3Constants.IndexIsoptopesEnum) selectedIndexIsotope);
+        reader.moveUp();
+        
         return task;
     }
 

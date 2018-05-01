@@ -187,30 +187,6 @@ public class MassStationDetail implements Serializable {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
     }
 
-//        /**
-//     * @param indicesOfScansAtMeasurementTimes the
-//     * indicesOfScansAtMeasurementTimes to set
-//     */
-//    public void indicesOfScansAtMeasurementTimes(List<Integer> indicesOfScansAtMeasurementTimes) {
-//        this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
-//    }
-//    
-//            /**
-//     * @param timesOfMeasuredTrimMasses the
-//     * timesOfMeasuredTrimMasses to set
-//     */
-//    public void timesOfMeasuredTrimMasses(List<Double> timesOfMeasuredTrimMasses) {
-//        this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
-//    }
-//    
-//            /**
-//     * @param measuredTrimMasses the
-//     * measuredTrimMasses to set
-//     */
-//    public void measuredTrimMasses(List<Double> measuredTrimMasses) {
-//        this.measuredTrimMasses = measuredTrimMasses;
-//    }
-    
     /**
      * @return the uThBearingName
      */
