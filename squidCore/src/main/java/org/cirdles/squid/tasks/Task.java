@@ -75,6 +75,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.MassStationDetailXMLConverter;
+import org.cirdles.squid.tasks.TaskXMLConverterVariables.ShrimpFractionXMLConverter;
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidRatiosModelXMLConverter;
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSessionModelXMLConverter;
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSpeciesModelXMLConverter;
@@ -908,6 +909,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.registerConverter(new SquidRatiosModelXMLConverter());
         xstream.registerConverter(new SquidSessionModelXMLConverter());
         xstream.registerConverter(new SquidSpeciesModelXMLConverter());
+        xstream.registerConverter(new ShrimpFractionXMLConverter());
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
