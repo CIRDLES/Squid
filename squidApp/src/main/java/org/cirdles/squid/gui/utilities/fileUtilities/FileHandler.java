@@ -186,7 +186,7 @@ public class FileHandler {
 
         if (expressionFileXML != null) {
             retVal = expressionFileXML;
-            squidPersistentState.setMRUExpressionFolderPath(expressionFileXML.getParent());
+            squidPersistentState.updateExpressionListMRU(expressionFileXML);
             ((XMLSerializerInterface) expression)
                     .serializeXMLObject(expressionFileXML.getAbsolutePath());
         }
@@ -202,14 +202,16 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Expression graph '.html' file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression graph '.html' files", "*.html"));
-        fileChooser.setInitialDirectory(null);
+        File mruFolder = new File(squidPersistentState.getMRUExpressionGraphFolderPath());
+        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
         fileChooser.setInitialFileName(expression.getName() + ".html");
         
         File expressionGraphFileHTML = fileChooser.showSaveDialog(ownerWindow);
         
         if(expressionGraphFileHTML != null){
-            String content = ExpressionTreeWriterMathML.toStringBuilderMathML(expression.getExpressionTree()).toString();
             retVal = expressionGraphFileHTML;
+            squidPersistentState.updateExpressionGraphListMRU(expressionGraphFileHTML);
+            String content = ExpressionTreeWriterMathML.toStringBuilderMathML(expression.getExpressionTree()).toString();
             Files.write(Paths.get(expressionGraphFileHTML.getPath()), content.getBytes());
         }
         
