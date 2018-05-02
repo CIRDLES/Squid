@@ -33,8 +33,10 @@ dependencies {
     compile 'com.github.cirdles:Commons:bc38781605'
     //compile "com.github.cirdles:Commons:-SNAPSHOT"
     compile "org.apache.commons:commons-math3:3.6.1"   
-    compile "com.google.guava:guava:20.0"    
+    compile group: 'com.google.guava', name: 'guava', version: '24.1-jre'
+    
     compile "com.github.cirdles:LudwigLibrary:-SNAPSHOT"
+//    compile "com.github.cirdles:LudwigLibrary:-SNAPSHOT:javadoc"
     compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.9'
     
     antlr "org.antlr:antlr4:4.6"

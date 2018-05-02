@@ -247,7 +247,7 @@ public class ExpressionTree
      */
     public int compareTo(ExpressionTree exp) {
         int retVal = 0;
-//        if ((this != exp) && (!this.equals(exp))) {
+
         if (!((this == exp) || (this.equals(exp)))) {
             if (!amHealthy() && exp.amHealthy()) {
                 // this object comes after exp
@@ -257,21 +257,12 @@ public class ExpressionTree
                 retVal = -1;
             }
             if (retVal == 0) {
-                if (usesAnotherExpression(exp)) {
-                    // this object comes after exp
-                    retVal = 1;
-                } else if (exp.usesAnotherExpression(this)) {
+                if ((this instanceof ConstantNode) && !(exp instanceof ConstantNode)) {
                     // this object comes before exp
                     retVal = -1;
-                }
-            }
-            if (retVal == 0) {
-                if (usesOtherExpression()) {
+                } else if (exp instanceof ConstantNode) {
                     // this object comes after exp
                     retVal = 1;
-                } else if (exp.usesOtherExpression()) {
-                    // this object comes before exp
-                    retVal = -1;
                 }
             }
             if (retVal == 0) {
@@ -284,56 +275,20 @@ public class ExpressionTree
                 }
             }
             if (retVal == 0) {
-                // then compare is special built-in UPbTh expression
-                if (isSquidSpecialUPbThExpression() && !exp.isSquidSpecialUPbThExpression()) {
+                if (exp.usesAnotherExpression(this) && !usesAnotherExpression(exp)) {
                     // this object comes before exp
                     retVal = -1;
-                } else if (!isSquidSpecialUPbThExpression() && exp.isSquidSpecialUPbThExpression()) {
+                } else if (usesAnotherExpression(exp)) {
+                    // this object comes after exp
                     retVal = 1;
                 }
             }
-            if (retVal == 0) {
-                // then compare is for ref materials only
-                if (isSquidSwitchSTReferenceMaterialCalculation() && !exp.isSquidSwitchSTReferenceMaterialCalculation()) {
-                    // this object comes before exp
-                    retVal = -1;
-                } else if (!isSquidSwitchSTReferenceMaterialCalculation() && exp.isSquidSwitchSTReferenceMaterialCalculation()) {
-                    retVal = 1;
-                }
-            }
-            if (retVal == 0) {
-                // then compare is for unknowns materials only
-                if (isSquidSwitchSAUnknownCalculation() && !exp.isSquidSwitchSAUnknownCalculation()) {
-                    // this object comes before exp
-                    retVal = -1;
-                } else if (!isSquidSwitchSAUnknownCalculation() && exp.isSquidSwitchSAUnknownCalculation()) {
-                    retVal = 1;
-                }
-            }
-            if (retVal == 0) {
-                // then compare is for concentration reference materials only
-                if (isSquidSwitchConcentrationReferenceMaterialCalculation() && !exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                    // this object comes before exp
-                    retVal = -1;
-                } else if (!isSquidSwitchConcentrationReferenceMaterialCalculation() && exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                    retVal = 1;
-                }
-            }
-            if (retVal == 0) {
-                // then compare is summary
-                if (isSquidSwitchSCSummaryCalculation() && !exp.isSquidSwitchSCSummaryCalculation()) {
-                    retVal = 1;
-                } else if (!isSquidSwitchSCSummaryCalculation() && exp.isSquidSwitchSCSummaryCalculation()) {
-                    // this object comes before exp
-                    retVal = -1;
-                }
-            }
+
             if (retVal == 0) {
                 // then compare on names so we have a complete ordering
-                retVal = name.compareTo(exp.getName());
+                retVal = 1;//getName().compareToIgnoreCase(exp.getName());
             }
         }
-
         return retVal;
     }
 
@@ -343,39 +298,7 @@ public class ExpressionTree
         if (this == obj) {
             retVal = true;
         } else if (obj instanceof ExpressionTree) {
-            retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
-
-            if (!retVal) {
-                retVal = !(usesAnotherExpression((ExpressionTree) obj)
-                        && !((ExpressionTree) obj).usesAnotherExpression(this));
-                if (retVal) {
-                    retVal = usesOtherExpression() && ((ExpressionTree) obj).usesOtherExpression();
-                }
-                if (retVal) {
-                    retVal = amHealthy() && ((ExpressionTree) obj).amHealthy();
-                }
-                if (retVal) {
-                    retVal = (hasRatiosOfInterest() == ((ExpressionTree) obj).hasRatiosOfInterest());
-                }
-                if (retVal) {
-                    retVal = (isSquidSpecialUPbThExpression() == ((ExpressionTree) obj).isSquidSpecialUPbThExpression());
-                }
-                if (retVal) {
-                    retVal = (isSquidSwitchSTReferenceMaterialCalculation() == ((ExpressionTree) obj).isSquidSwitchSTReferenceMaterialCalculation());
-                }
-                if (retVal) {
-                    retVal = (isSquidSwitchSAUnknownCalculation() == ((ExpressionTree) obj).isSquidSwitchSAUnknownCalculation());
-                }
-                if (retVal) {
-                    retVal = (isSquidSwitchSCSummaryCalculation() == ((ExpressionTree) obj).isSquidSwitchSCSummaryCalculation());
-                }
-                if (retVal) {
-                    retVal = (isSquidSwitchConcentrationReferenceMaterialCalculation() == ((ExpressionTree) obj).isSquidSwitchConcentrationReferenceMaterialCalculation());
-                }
-                if (retVal) {
-                    retVal = (name.compareTo(((ExpressionTree) obj).getName()) == 0);
-                }
-            }
+            retVal = (getName().compareToIgnoreCase(((ExpressionTree) obj).getName()) == 0);
         }
 
         return retVal;

@@ -24,9 +24,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -34,8 +32,9 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
 
 /**
  * A <code>TaskXMLConverter</code> is used to marshal and unmarshal data between
@@ -210,7 +209,7 @@ public class TaskXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("taskExpressionsOrdered");
-        context.convertAnother(task.getTaskExpressionTreesOrdered());
+        context.convertAnother(task.getTaskExpressionsOrdered());
         writer.endNode();
 
         Map<String, ExpressionTreeInterface> namedExpressionsMap = task.getNamedExpressionsMap();
@@ -413,17 +412,17 @@ public class TaskXMLConverter implements Converter {
         }
         task.setTableOfSelectedRatiosByMassStationIndex(tableOfSelectedRatiosByMassStationIndex);
 
-        SortedSet<ExpressionTree> taskExpressions = new TreeSet<>();
+
+        List<Expression> taskExpressions = new ArrayList<>();
         reader.moveDown();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            ExpressionTreeInterface exp = new ExpressionTree();
-            exp = (ExpressionTreeInterface) context.convertAnother(exp, ExpressionTree.class);
-            taskExpressions.add((ExpressionTree) exp);
+            Expression exp = new Expression();
+            exp = (Expression) context.convertAnother(exp, Expression.class);
+            taskExpressions.add((Expression)exp);
             reader.moveUp();
         }
-        task.setTaskExpressionTreesOrdered(taskExpressions);
-        reader.moveUp();
+        task.setTaskExpressionsOrdered(taskExpressions);
 
         Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>();
         reader.moveDown();
@@ -445,7 +444,7 @@ public class TaskXMLConverter implements Converter {
 
         Map<String, ExpressionTreeInterface> namedParametersMap = new TreeMap<>();
         reader.moveDown();
-        namedParametersMap = (TreeMap) context.convertAnother(namedParametersMap, TreeMap.class);
+        namedParametersMap = (TreeMap<String, ExpressionTreeInterface>) context.convertAnother(namedParametersMap, TreeMap.class);
         reader.moveUp();
         task.setNamedParametersMap(namedParametersMap);
         

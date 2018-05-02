@@ -33,10 +33,8 @@ import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
-import org.cirdles.squid.tasks.builtinTasks.Squid3ExampleTask1;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.xml.sax.SAXException;
@@ -81,9 +79,6 @@ public final class SquidProject implements Serializable {
     public Map< String, TaskInterface> getTaskLibrary() {
         Map< String, TaskInterface> builtInTasks = new HashMap<>();
 
-        TaskInterface builtInTask = new Squid3ExampleTask1();
-        builtInTasks.put(builtInTask.getName(), builtInTask);
-
         return builtInTasks;
     }
 
@@ -96,7 +91,7 @@ public final class SquidProject implements Serializable {
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
-        this.task.updateAllExpressions(2);
+        this.task.updateAllExpressions();
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
     }
@@ -108,7 +103,7 @@ public final class SquidProject implements Serializable {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
             // four passes needed for percolating results
-            task.updateAllExpressions(4);
+            task.updateAllExpressions();
             task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport();
         }

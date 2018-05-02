@@ -19,6 +19,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -130,11 +131,6 @@ public interface TaskInterface {
     Map<String, SpotSummaryDetails> getTaskExpressionsEvaluationsPerSpotSet();
 
     /**
-     * @return the taskExpressionsOrdered
-     */
-    SortedSet<ExpressionTree> getTaskExpressionTreesOrdered();
-
-    /**
      * @return the type
      */
     String getType();
@@ -198,11 +194,6 @@ public interface TaskInterface {
      */
     public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
 
-    /**
-     * @param taskExpressionsOrdered the taskExpressionsOrdered to set
-     */
-    public void setTaskExpressionTreesOrdered(SortedSet<ExpressionTree> taskExpressionsOrdered);
-
     public void removeExpression(Expression expression);
 
     public void restoreRemovedExpressions();
@@ -243,7 +234,12 @@ public interface TaskInterface {
     /**
      * @return the taskExpressionsOrdered
      */
-    public SortedSet<Expression> getTaskExpressionsOrdered();
+    public List<Expression> getTaskExpressionsOrdered();
+
+    /**
+     * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
+     */
+    public void setTaskExpressionsOrdered(List<Expression> taskExpressionsOrdered);
 
     public int getIndexOfTaskBackgroundMass();
 
@@ -318,7 +314,7 @@ public interface TaskInterface {
      */
     public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies);
 
-    public void updateAllExpressions(int repeats);
+    public void updateAllExpressions();
 
     /**
      * @param reportsEngine the reportsEngine to set
@@ -332,7 +328,7 @@ public interface TaskInterface {
 
     public void updateRatioNames(String[] ratioNames);
 
-    public void updateAffectedExpressions(int repeats, Expression sourceExpression);
+    public void updateAffectedExpressions(Expression sourceExpression);
 
     public void applyTaskIsotopeLabelsToMassStations();
 

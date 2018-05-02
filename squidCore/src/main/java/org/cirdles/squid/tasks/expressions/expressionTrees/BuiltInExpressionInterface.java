@@ -23,6 +23,6 @@ import org.cirdles.squid.tasks.TaskInterface;
  */
 public interface BuiltInExpressionInterface {
     
-    public void buildExpression(TaskInterface task);
+    public void buildExpression();
     
 }

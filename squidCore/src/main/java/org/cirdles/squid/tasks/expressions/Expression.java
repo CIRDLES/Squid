@@ -80,15 +80,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     @Override
     public int compareTo(Expression expression) {
         int retVal = 0;
-        if (!((this == expression) || this.equals(expression))) {
-            retVal = ((ExpressionTree) expressionTree).compareTo((ExpressionTree) expression.getExpressionTree());
+        if (!((this == expression) || this.equals(expression)) && expression.getExpressionTree() != null) {
+            retVal = ((ExpressionTree) getExpressionTree()).compareTo((ExpressionTree) expression.getExpressionTree());
         }
-        
-        // in case expressiontrees have same name but expressions do not
-        if (retVal == 0) {
-            retVal = name.compareToIgnoreCase(expression.getName());
-        }
-
         return retVal;
     }
 
@@ -97,16 +91,11 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         boolean retVal = false;
         if (this == obj) {
             retVal = true;
-        } else if (obj instanceof Expression && (expressionTree != null)) {
+        } else if (obj instanceof Expression && (getExpressionTree() != null)) {
             // note checking if expressionTree is null due to bad parsing
-            retVal = ((ExpressionTree) expressionTree).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
+            //retVal = ((ExpressionTree) getExpressionTree()).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
+            retVal = (getName().compareToIgnoreCase(((Expression) obj).getName()) == 0);
         }
-
-        // in case expressiontrees have same name but expressions do not
-        if (retVal) {
-            retVal = name.compareToIgnoreCase(((Expression) obj).getName()) == 0;
-        }
-
         return retVal;
     }
 
@@ -177,7 +166,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         String auditReport = "";
         if (!((ExpressionTreeInterface) expressionTree).isValid()) {
             auditReport
-                    += "Errors occurred in parsing:\n" + ((parsingStatusReport.trim().length()==0)? "expression not valid" : parsingStatusReport);
+                    += "Errors occurred in parsing:\n" + ((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
         } else {
             auditExpressionTreeDependencies();
             auditReport
