@@ -413,7 +413,7 @@ public class ExpressionManagerController implements Initializable {
         graphedExpressionTree = exp.getExpressionTree();
         // to detect ratios of interest
         if (graphedExpressionTree instanceof BuiltInExpressionInterface) {
-            ((BuiltInExpressionInterface) graphedExpressionTree).buildExpression(squidProject.getTask());
+            ((BuiltInExpressionInterface) graphedExpressionTree).buildExpression();
         }
 
         if (originalExpressionTree != null) {
