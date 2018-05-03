@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -51,6 +52,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SingleSelectionModel;
@@ -70,7 +72,9 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -291,9 +295,11 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private TitledPane peekPane;
     @FXML
-    private TitledPane expressionPane;
+    private AnchorPane expressionPane;
     @FXML
     private Accordion expressionsAccordion;
+    @FXML
+    private Accordion othersAccordion;
     @FXML
     private WebView graphView;
     @FXML
@@ -301,15 +307,15 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private SplitPane smallSplitPane;
     @FXML
-    private VBox graphVBox;
-    @FXML
-    private VBox auditVBox;
-    @FXML
-    private VBox peekVBox;
-    @FXML
     private VBox editorVBox;
     @FXML
     private HBox graphTitleHbox;
+    @FXML
+    private HBox toolBarHBox;
+    @FXML
+    private VBox toolBarVBox;
+    @FXML
+    private ScrollPane expressionScrollPane;
 
     //PEEK TABS
     @FXML
@@ -414,9 +420,42 @@ public class ExpressionBuilderController implements Initializable {
         concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
-
+        
+        toolBarHBox.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        expressionClearBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        expressionPasteBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        expressionAsTextBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        expressionUndoBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        expressionRedoBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        
+        currentMode.addListener((observable, oldValue, newValue) -> {
+            if(oldValue == Mode.VIEW){
+                toolBarVBox.getChildren().add(toolBarHBox);
+            }else if (newValue == Mode.VIEW){
+                toolBarVBox.getChildren().remove(toolBarHBox);
+            }
+        });
+        
+        othersAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue == null){
+                VBox.setVgrow(othersAccordion, null);
+            }else{
+                VBox.setVgrow(othersAccordion, Priority.ALWAYS);
+            }
+        });
+        
+        expressionsAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue == null){
+                VBox.setVgrow(expressionsAccordion, null);
+            }else{
+                VBox.setVgrow(expressionsAccordion, Priority.ALWAYS);
+            }
+        });
+        
+        expressionTextFlow.maxWidthProperty().bind(expressionPane.widthProperty());
+        
         //Autoresize bindings
-        graphPane.maxHeightProperty().bind(graphVBox.heightProperty().add(-3.0));
+        /*graphPane.maxHeightProperty().bind(graphVBox.heightProperty().add(-3.0));
         auditPane.prefHeightProperty().bind(auditVBox.heightProperty().add(-3.0));
         peekPane.prefHeightProperty().bind(peekVBox.heightProperty().add(-3.0));
         graphPane.prefWidthProperty().bind(graphVBox.widthProperty().add(-3.0));
@@ -426,7 +465,7 @@ public class ExpressionBuilderController implements Initializable {
             if (newValue.doubleValue() + 28.0 > expressionPane.heightProperty().get()) {
                 bigSplitPane.setPrefHeight(bigSplitPane.getHeight() - (newValue.doubleValue() + 28.0 - expressionPane.heightProperty().get()));
             }
-        });
+        });*/
     }
 
     private void initFilterChoice() {
@@ -701,13 +740,14 @@ public class ExpressionBuilderController implements Initializable {
             }
 
             //Calculate the height using Text
-            Text text = new Text();
+            /*Text text = new Text();
             text.setFont(Font.font("Courier New", 16));
             text.setWrappingWidth(expressionAsTextArea.getWidth());
             text.setText(newValue);
-            expressionAsTextArea.setPrefHeight(text.getLayoutBounds().getHeight() + 3);
+            expressionAsTextArea.setPrefHeight(text.getLayoutBounds().getHeight() + 3);*/
+            
         });
-
+        
         //Init of the textflow following the mode
         currentMode.addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
@@ -1020,16 +1060,25 @@ public class ExpressionBuilderController implements Initializable {
 
             editAsText.set(true);
 
-            expressionAsTextArea.setText(makeStringFromTextFlow());
-            expressionPane.setContent(expressionAsTextArea);
-            expressionAsTextBtn.setText("Edit with drag and drop");
-
+            expressionPane.getChildren().setAll(expressionAsTextArea);
+            AnchorPane.setBottomAnchor(expressionAsTextArea, 0.0);
+            AnchorPane.setTopAnchor(expressionAsTextArea, 0.0);
+            AnchorPane.setRightAnchor(expressionAsTextArea, 0.0);
+            AnchorPane.setLeftAnchor(expressionAsTextArea, 0.0);
+            String txt = makeStringFromTextFlow();
+            expressionAsTextArea.setText(txt);
+            expressionAsTextBtn.setText("Edit with d&d");
+                
         } else {
             //Case was editing as textArea -> switch to drag and drop
 
             editAsText.set(false);
-
-            expressionPane.setContent(expressionTextFlow);
+            
+            expressionPane.getChildren().setAll(expressionScrollPane);
+            AnchorPane.setBottomAnchor(expressionScrollPane, 0.0);
+            AnchorPane.setTopAnchor(expressionScrollPane, 0.0);
+            AnchorPane.setRightAnchor(expressionScrollPane, 0.0);
+            AnchorPane.setLeftAnchor(expressionScrollPane, 0.0);
             expressionAsTextBtn.setText("Edit as text");
 
             //Rebuild because of a CSS bug
