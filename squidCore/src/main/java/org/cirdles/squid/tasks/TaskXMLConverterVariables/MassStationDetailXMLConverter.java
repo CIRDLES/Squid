@@ -48,7 +48,7 @@ public class MassStationDetailXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("centeringTimeSec");
-        writer.setValue(String.valueOf(station.getCenteringTimeSec()));
+        writer.setValue(Double.toString(station.getCenteringTimeSec()));
         writer.endNode();
 
 
@@ -69,7 +69,7 @@ public class MassStationDetailXMLConverter implements Converter {
         List<Double> timesOfMeasuredTrimMasses = station.getTimesOfMeasuredTrimMasses();
         for (int i = 0; i < timesOfMeasuredTrimMasses.size(); i++) {
             writer.startNode("timeOfMeasuredTrimMass");
-            writer.setValue(String.valueOf(timesOfMeasuredTrimMasses.get(i)));
+            writer.setValue(Double.toString(timesOfMeasuredTrimMasses.get(i)));
             writer.endNode();
         }
         writer.endNode();

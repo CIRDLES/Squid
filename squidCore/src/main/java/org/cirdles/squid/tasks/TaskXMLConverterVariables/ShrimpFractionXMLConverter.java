@@ -27,7 +27,7 @@ public class ShrimpFractionXMLConverter implements Converter {
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
         ShrimpFraction fraction = (ShrimpFraction) o;
 
-        writer.startNode("fractioinID");
+        writer.startNode("fractionID");
         writer.setValue(fraction.getFractionID());
         writer.endNode();
 
@@ -89,7 +89,7 @@ public class ShrimpFractionXMLConverter implements Converter {
         writer.endNode();
 
         String[] nameOfSpecies = fraction.getNamesOfSpecies();
-        writer.startNode("namesofSpecies");
+        writer.startNode("namesOfSpecies");
         for (int i = 0; i < nameOfSpecies.length; i++) {
             writer.startNode("nameOfSpecie");
             writer.setValue(nameOfSpecies[i]);
@@ -208,7 +208,7 @@ public class ShrimpFractionXMLConverter implements Converter {
         writer.startNode("netPkCps");
         double[][] netPkCps = fraction.getNetPkCps();
         for (int i = 0; i < netPkCps.length; i++) {
-            writer.startNode("netPkCps");
+            writer.startNode("netPkCpsRow");
             for (int j = 0; j < netPkCps[0].length; j++) {
                 writer.startNode("netPkCpsValue");
                 writer.setValue(Double.toString(netPkCps[i][j]));
@@ -221,7 +221,7 @@ public class ShrimpFractionXMLConverter implements Converter {
         writer.startNode("pkFerr");
         double[][] pkFerr = fraction.getPkFerr();
         for (int i = 0; i < pkFerr.length; i++) {
-            writer.startNode("pkFerr");
+            writer.startNode("pkFerrRow");
             for (int j = 0; j < pkFerr[0].length; j++) {
                 writer.startNode("pkFerrValue");
                 writer.setValue(Double.toString(pkFerr[i][j]));

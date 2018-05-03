@@ -35,11 +35,11 @@ public class SquidSessionModelXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("useSBM");
-        writer.setValue(String.valueOf(model.isUseSBM()));
+        writer.setValue(Boolean.toString(model.isUseSBM()));
         writer.endNode();
 
         writer.startNode("userLinFits");
-        writer.setValue(String.valueOf(model.isUserLinFits()));
+        writer.setValue(Boolean.toString(model.isUserLinFits()));
         writer.endNode();
 
         writer.startNode("indexOfBackgroundSpecies");

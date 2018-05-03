@@ -40,7 +40,7 @@ public class SquidRatiosModelXMLConverter implements Converter{
         List<Double> ratEqTimes = model.getRatEqTime();
         for(int i = 0; i < ratEqTimes.size(); i++) {
             writer.startNode("ratEqTime");
-            writer.setValue(String.valueOf(ratEqTimes.get(i)));
+            writer.setValue(Double.toString(ratEqTimes.get(i)));
             writer.endNode();
         }
         writer.endNode();
@@ -49,7 +49,7 @@ public class SquidRatiosModelXMLConverter implements Converter{
         List<Double> ratEqVals = model.getRatEqVal();
         for(int i = 0; i < ratEqVals.size(); i++) {
             writer.startNode("ratEqVal");
-            writer.setValue(String.valueOf(ratEqVals.get(i)));
+            writer.setValue(Double.toString(ratEqVals.get(i)));
             writer.endNode();
         }
         writer.endNode();
@@ -58,17 +58,17 @@ public class SquidRatiosModelXMLConverter implements Converter{
         List<Double> ratEqErrs = model.getRatEqErr();
         for(int i =0; i < ratEqErrs.size(); i++) {
             writer.startNode("ratEqErr");
-            writer.setValue(String.valueOf(ratEqErrs.get(i)));
+            writer.setValue(Double.toString(ratEqErrs.get(i)));
             writer.endNode();
         }
         writer.endNode();
         
         writer.startNode("ratioVal");
-        writer.setValue(String.valueOf(model.getRatioVal()));
+        writer.setValue(Double.toString(model.getRatioVal()));
         writer.endNode();
         
         writer.startNode("ratioFractErr");
-        writer.setValue(String.valueOf(model.getRatioFractErr()));
+        writer.setValue(Double.toString(model.getRatioFractErr()));
         writer.endNode();
         
         writer.startNode("minIndex");
@@ -76,7 +76,7 @@ public class SquidRatiosModelXMLConverter implements Converter{
         writer.endNode();
         
         writer.startNode("active");
-        writer.setValue(String.valueOf(model.isActive()));
+        writer.setValue(Boolean.toString(model.isActive()));
         writer.endNode();
     }
 

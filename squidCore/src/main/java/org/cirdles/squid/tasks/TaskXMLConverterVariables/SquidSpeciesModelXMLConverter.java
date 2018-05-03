@@ -43,7 +43,7 @@ public class SquidSpeciesModelXMLConverter implements Converter{
         writer.endNode();
         
         writer.startNode("isBackground");
-        writer.setValue(String.valueOf(model.getIsBackground()));
+        writer.setValue(Boolean.toString(model.getIsBackground()));
         writer.endNode();
         
         writer.startNode("uThBearingName");
