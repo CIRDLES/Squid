@@ -444,7 +444,7 @@ public class TaskXMLConverter implements Converter {
 
         Map<String, ExpressionTreeInterface> namedParametersMap = new TreeMap<>();
         reader.moveDown();
-        namedParametersMap = (TreeMap<String, ExpressionTreeInterface>) context.convertAnother(namedParametersMap, TreeMap.class);
+        namedParametersMap = (TreeMap) context.convertAnother(namedParametersMap, TreeMap.class);
         reader.moveUp();
         task.setNamedParametersMap(namedParametersMap);
         

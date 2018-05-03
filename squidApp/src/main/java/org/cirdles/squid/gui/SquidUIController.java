@@ -16,9 +16,12 @@
  */
 package org.cirdles.squid.gui;
 
+import com.thoughtworks.xstream.XStream;
 import org.cirdles.squid.gui.topsoil.TopsoilPlotWetherill;
 import org.cirdles.squid.gui.topsoil.TopsoilWindow;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -38,6 +41,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
@@ -176,8 +181,8 @@ public class SquidUIController implements Initializable {
         newSquid3TaskMenuItem.setDisable(false);
         selectSquid3TaskFromLibraryMenu.setDisable(false);
         importSquid25TaskMenuItem.setDisable(false);
-        importSquid3TaskMenuItem.setDisable(true);
-        exportSquid3TaskMenuItem.setDisable(true);
+        importSquid3TaskMenuItem.setDisable(false);
+        exportSquid3TaskMenuItem.setDisable(false);
 
         // Expression menu
         buildExpressionMenuMRU();
@@ -718,10 +723,29 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void exportSquid3TaskMenuItemAction(ActionEvent event) {
+        try {
+            FileChooser fc = new FileChooser();
+            File squidTaskFile =  fc.showSaveDialog(primaryStageWindow);
+            if (squidTaskFile != null) {
+                TaskInterface task = squidProject.getTask();
+                XStream xstream = new XStream();
+                task.customizeXstream(xstream);
+                xstream.toXML(task, new FileOutputStream(squidTaskFile));
+            }
+        } catch (IOException exception) {
+        }
     }
 
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
+            FileChooser fc = new FileChooser();
+            File squidTaskFile =  fc.showOpenDialog(primaryStageWindow);
+            if (squidTaskFile != null) {
+                TaskInterface task = squidProject.getTask();
+                XStream xstream = new XStream();
+                task.customizeXstream(xstream);
+                squidProject.setTask((TaskInterface)xstream.fromXML(squidTaskFile));
+            }
     }
 
     @FXML
