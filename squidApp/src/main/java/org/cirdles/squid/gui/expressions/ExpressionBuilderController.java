@@ -420,6 +420,7 @@ public class ExpressionBuilderController implements Initializable {
         concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
+        cancelBtn.disableProperty().bind(selectedExpression.isNull());
         
         toolBarHBox.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
@@ -763,7 +764,8 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void activeExpressionTextFlowDragAndDrop() {
-        expressionTextFlow.setOnDragOver((DragEvent event) -> {
+        
+        expressionScrollPane.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 if (event.getGestureSource() instanceof ExpressionTextNode) {
                     //Move an other text node
@@ -776,7 +778,7 @@ public class ExpressionBuilderController implements Initializable {
             event.consume();
         });
 
-        expressionTextFlow.setOnDragDropped((DragEvent event) -> {
+        expressionScrollPane.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
 
@@ -821,11 +823,11 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void disableExpressionTextFlowDragAndDrop() {
-        expressionTextFlow.setOnDragOver((DragEvent event) -> {
+        expressionScrollPane.setOnDragOver((DragEvent event) -> {
             //Nothing
         });
 
-        expressionTextFlow.setOnDragDropped((DragEvent event) -> {
+        expressionScrollPane.setOnDragDropped((DragEvent event) -> {
             //Nothing
         });
     }
@@ -839,7 +841,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionAsTextAction(new ActionEvent());
             }
             if (newValue != null) {
-                if (!currentMode.get().equals(Mode.CREATE) && (!newValue.getExpressionTree().isSquidSpecialUPbThExpression() && !newValue.isSquidSwitchNU())) {
+                if (!newValue.getExpressionTree().isSquidSpecialUPbThExpression() && !newValue.isSquidSwitchNU()) {
                     selectedExpressionIsCustom.set(true);
                 } else {
                     selectedExpressionIsCustom.set(false);
@@ -892,10 +894,12 @@ public class ExpressionBuilderController implements Initializable {
         if (currentMode.get().equals(Mode.VIEW)) {
             selectedBeforeCreateOrCopy = selectedExpression.get();
             Expression exp = copySelectedExpression();
+            exp.setName("copy of " + exp.getName());
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
             expressionIsSaved.set(false);
-            expressionNameTextField.setText("copy of " + exp.getName());
+            exp.setName("copy of " + exp.getName());
+            expressionNameTextField.setText(exp.getName());
         }
     }
 
@@ -909,16 +913,19 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void cancelAction(ActionEvent event) {
         if (!currentMode.get().equals(Mode.EDIT)) {
+            currentMode.set(Mode.VIEW);
             selectedExpression.set(null);
             selectedExpression.set(selectedBeforeCreateOrCopy);
             selectInAllPanes(selectedBeforeCreateOrCopy, true);
+            selectedBeforeCreateOrCopy=null;
         } else {
+            currentMode.set(Mode.VIEW);
+            //Rebuild textflow from unmodified expression
             Expression exp = selectedExpression.get();
             selectedExpression.set(null);
             selectedExpression.set(exp);
             selectInAllPanes(exp, true);
         }
-        currentMode.set(Mode.VIEW);
     }
 
     @FXML
@@ -1379,7 +1386,7 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("None");
             } else {
                 for (int j = 0; j < spotSummary.getValues()[1].length; j++) {
-                    sb.append((int) (spotSummary.getValues()[1][j]) + " ");
+                    sb.append((int) (spotSummary.getValues()[1][j])).append(" ");
                 }
             }
             sb.append("\n");
@@ -1605,14 +1612,14 @@ public class ExpressionBuilderController implements Initializable {
     private Expression makeExpression() {
         //Creates a new expression from the modifications
 
-        String fullText = makeStringFromTextFlow();
+        String fullText = makeStringFromTextFlow()+"\n \n ";
 
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText(),
-                fullText.trim().replace("\n", ""),
+                fullText,
                 false
         );
-
+        
         ExpressionTreeInterface expTree = exp.getExpressionTree();
 
         expTree.setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.isSelected());
@@ -1660,6 +1667,8 @@ public class ExpressionBuilderController implements Initializable {
         populatePeeks(exp);
 
         selectInAllPanes(exp, true);
+        
+        selectedBeforeCreateOrCopy = null;
     }
 
     private String makeStringFromTextFlow() {
@@ -2102,7 +2111,7 @@ public class ExpressionBuilderController implements Initializable {
 
     private class StringCellFactory implements Callback<ListView<String>, ListCell<String>> {
 
-        private ObjectProperty<String> dragSource;
+        private final ObjectProperty<String> dragSource;
 
         public StringCellFactory(ObjectProperty<String> dragSource) {
             this.dragSource = dragSource;
@@ -2199,9 +2208,12 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private class OperationTextNode extends ExpressionTextNode {
+        
 
         public OperationTextNode(String text) {
             super(text);
+            this.regularColor = Color.GREEN;
+            setFill(regularColor);
             setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
         }
     }
@@ -2220,9 +2232,18 @@ public class ExpressionBuilderController implements Initializable {
         private final String text;
         private double ordinalIndex;
         private boolean popupShowing;
+        
+        protected Color regularColor;
+        protected Color selectedColor;
 
         public ExpressionTextNode(String text) {
             super(text);
+            
+            this.selectedColor = Color.RED;
+            this.regularColor = Color.BLACK;
+            
+            setFill(regularColor);
+            
             this.text = text;
             this.popupShowing = false;
 
@@ -2271,12 +2292,12 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             setOnMousePressed((MouseEvent event) -> {
-                setFill(Color.RED);
+                setFill(selectedColor);
                 setCursor(Cursor.CLOSED_HAND);
             });
 
             setOnMouseReleased((MouseEvent event) -> {
-                setFill(Color.BLACK);
+                setFill(regularColor);
                 setCursor(Cursor.OPEN_HAND);
             });
 
@@ -2300,8 +2321,18 @@ public class ExpressionBuilderController implements Initializable {
                 }
                 event.consume();
             });
+            
+            setOnDragEntered((event) -> {
+                setFill(selectedColor);
+            });
+            
+            setOnDragExited((event) -> {
+                setFill(regularColor);
+            });
 
             setOnDragDropped((DragEvent event) -> {
+                setFill(regularColor);
+                
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 double ord = 0.0;
