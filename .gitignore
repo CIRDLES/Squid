@@ -41,6 +41,7 @@ test_*
 *.squid
 *.xls
 EXPRESSION.HTML
+squidApp/LudwigLibraryJavadoc/
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
@@ -49,7 +50,10 @@ EXPRESSION.HTML
 !squidCore/src/main/resources/org/cirdles/squid/docs/*.txt
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.xml
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.txt
+!squidCore/src/main/resources/org/cirdles/squid/javadoc/*.jar
+
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
+
 
 # MACOS
 .DS_Store

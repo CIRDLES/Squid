@@ -16,13 +16,8 @@
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
-import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
 
 /**
  *
@@ -33,57 +28,19 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
 
     private static final long serialVersionUID = -1526502328130247004L;
 
-    @XStreamOmitField
-    private List<String> parsedRPNreversedExcelString;
-
-    public ExpressionTreeParsedFromExcelString(String name) {
-        super(name);
-        parsedRPNreversedExcelString = new ArrayList<>();
-    }
-
     /**
      *
      * @param operation
      */
     public ExpressionTreeParsedFromExcelString(OperationOrFunctionInterface operation) {
         super(operation);
-        parsedRPNreversedExcelString = new ArrayList<>();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.parsedRPNreversedExcelString);
-        return hash;
-    }
-
-    @Override
-    public void buildExpression(TaskInterface task) {
-
-//        ExpressionParser parser = new ExpressionParser(task.getNamedExpressionsMap());
-//        ExpressionTreeInterface parsedExp = parser.buildTree(parsedRPNreversedExcelString);
-
-        // copy to this children, operation, and calculate ratiosOfInterest
-//        this.childrenET = ((ExpressionTree) parsedExp).getChildrenET();
-//        this.operation = ((ExpressionTree) parsedExp).getOperation();
-//
+    public void buildExpression() {
         this.ratiosOfInterest = getAllRatiosOfInterest();
 
         //other switches set outside of this operation
         setRootExpressionTree(true);
     }
-
-    /**
-     * @param parsedRPNreversedExcelString the parsedRPNreversedExcelString to
-     * set
-     */
-    public void setParsedRPNreversedExcelString(List<String> parsedRPNreversedExcelString) {
-        this.parsedRPNreversedExcelString = parsedRPNreversedExcelString;
-    }
-
 }

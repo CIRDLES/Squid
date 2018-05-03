@@ -26,6 +26,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
+import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
  *
@@ -35,6 +36,7 @@ public class CalamariFileUtilities {
 
     private static File exampleFolder;
     private static File schemaFolder;
+    public static File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
     /**
      * Provides a clean copy of two example Prawn XML files every time Squid
@@ -74,7 +76,8 @@ public class CalamariFileUtilities {
     }
 
     /**
-     * Loads PrawnFIle schema locally for use when Internet connection not available.
+     * Loads PrawnFile schema locally for use when Internet connection not
+     * available.
      */
     public static void loadShrimpPrawnFileSchema() {
         ResourceExtractor prawnFileResourceExtractor
@@ -94,7 +97,7 @@ public class CalamariFileUtilities {
                 } else {
                     System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
                 }
-                
+
                 File shrimpExpressionSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidTask_ExpressionXMLSchema.xsd");
                 File shrimpExpressionSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd");
 
@@ -108,10 +111,36 @@ public class CalamariFileUtilities {
         }
     }
 
+    public static void loadJavadoc() {
+        ResourceExtractor prawnFileResourceExtractor
+                = new ResourceExtractor(Squid.class);
+
+        DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER = new File("LudwigLibraryJavadoc");
+        if (!DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
+            if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.mkdir()) {
+                File ludwigLibraryJavadocResource = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsFile("javadoc/LudwigLibrary-1.0.7-javadoc.jar");
+                File ludwigLibraryJavadoc = new File(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc.jar");
+
+                if (ludwigLibraryJavadocResource.renameTo(ludwigLibraryJavadoc)) {
+                    System.out.println("LudwigLibraryJavadoc.jar added.");
+                    try {
+                        unpackZipFile(ludwigLibraryJavadoc, DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER);
+                    } catch (IOException iOException) {
+                        System.out.println("HELP");
+                    }
+                } else {
+                    System.out.println("Failed to add LudwigLibraryJavadoc.jar.");
+                }
+            } else {
+                System.out.println("Failed to make LudwigLibraryJavadoc folder.");
+            }
+        }
+    }
+
     public static void initCalamariReportsFolder(PrawnFileHandler prawnFileHandler) {
         prawnFileHandler.getReportsEngine()
                 .setFolderToWriteCalamariReports(Squid.DEFAULT_SQUID3_REPORTS_FOLDER);
-        
+
         prawnFileHandler.initReportsEngineWithCurrentPrawnFileName();
     }
 }

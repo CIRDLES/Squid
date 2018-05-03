@@ -19,10 +19,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.cirdles.commons.util.ResourceExtractor;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
  *
@@ -39,14 +40,14 @@ public final class Squid {
 
     public static final ResourceExtractor SQUID_RESOURCE_EXTRACTOR
             = new ResourceExtractor(Squid.class);
-    
-   static {
+
+    static {
         String version = "version";
         String releaseDate = "date";
 
         // get version number and release date written by pom.xml
         Path resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("version.txt");
-        Charset charset = Charset.forName("US-ASCII");
+        Charset charset = StandardCharsets.UTF_8; //Charset.forName("US-ASCII");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
             String line = reader.readLine();
             if (line != null) {
@@ -78,7 +79,7 @@ public final class Squid {
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
         }
-        
+
         resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/contributorsContent.txt");
         try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
             String thisLine;
@@ -90,13 +91,12 @@ public final class Squid {
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
         }
-        
+
         DEFAULT_SQUID3_REPORTS_FOLDER = new File("Squid3_Reports_v" + VERSION);
         if (!DEFAULT_SQUID3_REPORTS_FOLDER.exists()) {
             if (!DEFAULT_SQUID3_REPORTS_FOLDER.mkdir()) {
                 System.out.println("Failed to make Squid3 Reports folder.");
             }
         }
-
     }
 }

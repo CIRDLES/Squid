@@ -28,6 +28,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -87,6 +88,7 @@ public class TaskManagerController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -130,7 +132,7 @@ public class TaskManagerController implements Initializable {
         } else {
             spotAverageRatioCalcRadioButton.setSelected(true);
         }
-        
+
         boolean hasZeroMeanConc = false;
         try {
             hasZeroMeanConc = (task.getTaskExpressionsEvaluationsPerSpotSet().get(SQUID_MEAN_PPM_PARENT_NAME).getValues()[0][0] == 0.0);
@@ -140,9 +142,21 @@ public class TaskManagerController implements Initializable {
         calcMeanConcetrationCheckBox.setSelected((!hasZeroMeanConc) && task.isUseCalculated_pdMeanParentEleA());
 
         taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
-        
+
         // set Pb208 Isotope selector visible or not
-        pb208RadioButton.setVisible(!task.isDirectAltPD()  && !task.getParentNuclide().contains("232"));
+        pb208RadioButton.setVisible(!task.isDirectAltPD() && !task.getParentNuclide().contains("232"));
+
+        switch (task.getSelectedIndexIsotope()) {
+            case PB_204:
+                pb204RadioButton.setSelected(true);
+                break;
+            case PB_207:
+                pb207RadioButton.setSelected(true);
+                break;
+            case PB_208:
+                pb208RadioButton.setSelected(true);
+                break;
+        }
     }
 
     private void setupListeners() {
@@ -226,14 +240,20 @@ public class TaskManagerController implements Initializable {
 
     @FXML
     private void pb204RadioButtonAction(ActionEvent event) {
+        task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        task.setChanged(true);
     }
 
     @FXML
     private void pb207RadioButtonAction(ActionEvent event) {
+        task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+        task.setChanged(true);
     }
 
     @FXML
     private void pb208RadioButtonAction(ActionEvent event) {
+        task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
+        task.setChanged(true);
     }
 
 }
