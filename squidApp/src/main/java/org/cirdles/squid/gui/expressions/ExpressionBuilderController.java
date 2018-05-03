@@ -378,7 +378,13 @@ public class ExpressionBuilderController implements Initializable {
     private Expression selectedBeforeCreateOrCopy;
 
     boolean changeFromUndoRedo = false;
-
+    
+    Text insertIndicator = new Text("|");
+    {
+        insertIndicator.setFill(Color.RED);
+        insertIndicator.setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
+    }
+    
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -421,40 +427,40 @@ public class ExpressionBuilderController implements Initializable {
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
-        
+
         toolBarHBox.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionPasteBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionAsTextBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionUndoBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionRedoBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
-        
+
         currentMode.addListener((observable, oldValue, newValue) -> {
-            if(oldValue == Mode.VIEW){
+            if (oldValue == Mode.VIEW) {
                 toolBarVBox.getChildren().add(toolBarHBox);
-            }else if (newValue == Mode.VIEW){
+            } else if (newValue == Mode.VIEW) {
                 toolBarVBox.getChildren().remove(toolBarHBox);
             }
         });
-        
+
         othersAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue == null){
+            if (newValue == null) {
                 VBox.setVgrow(othersAccordion, null);
-            }else{
+            } else {
                 VBox.setVgrow(othersAccordion, Priority.ALWAYS);
             }
         });
-        
+
         expressionsAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue == null){
+            if (newValue == null) {
                 VBox.setVgrow(expressionsAccordion, null);
-            }else{
+            } else {
                 VBox.setVgrow(expressionsAccordion, Priority.ALWAYS);
             }
         });
-        
+
         expressionTextFlow.maxWidthProperty().bind(expressionPane.widthProperty());
-        
+
         //Autoresize bindings
         /*graphPane.maxHeightProperty().bind(graphVBox.heightProperty().add(-3.0));
         auditPane.prefHeightProperty().bind(auditVBox.heightProperty().add(-3.0));
@@ -746,9 +752,12 @@ public class ExpressionBuilderController implements Initializable {
             text.setWrappingWidth(expressionAsTextArea.getWidth());
             text.setText(newValue);
             expressionAsTextArea.setPrefHeight(text.getLayoutBounds().getHeight() + 3);*/
-            
         });
         
+        editorVBox.setOnDragOver((event) -> {
+            expressionTextFlow.getChildren().remove(insertIndicator);
+        });
+
         //Init of the textflow following the mode
         currentMode.addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
@@ -764,7 +773,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void activeExpressionTextFlowDragAndDrop() {
-        
+
         expressionScrollPane.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 if (event.getGestureSource() instanceof ExpressionTextNode) {
@@ -778,7 +787,24 @@ public class ExpressionBuilderController implements Initializable {
             event.consume();
         });
 
+        expressionScrollPane.setOnDragEntered((event) -> {
+            expressionTextFlow.getChildren().remove(insertIndicator);
+            if(dragndropLeftRadio.isSelected()){
+                expressionTextFlow.getChildren().add(0,insertIndicator);
+            }else{
+                expressionTextFlow.getChildren().add(insertIndicator);
+            }
+            System.out.println("Insert drag entered pane");
+        });
+
+        expressionScrollPane.setOnDragExited((event) -> {
+            expressionTextFlow.getChildren().remove(insertIndicator);
+        });
+
         expressionScrollPane.setOnDragDropped((DragEvent event) -> {
+
+            expressionTextFlow.getChildren().remove(insertIndicator);
+
             Dragboard db = event.getDragboard();
             boolean success = false;
 
@@ -917,7 +943,7 @@ public class ExpressionBuilderController implements Initializable {
             selectedExpression.set(null);
             selectedExpression.set(selectedBeforeCreateOrCopy);
             selectInAllPanes(selectedBeforeCreateOrCopy, true);
-            selectedBeforeCreateOrCopy=null;
+            selectedBeforeCreateOrCopy = null;
         } else {
             currentMode.set(Mode.VIEW);
             //Rebuild textflow from unmodified expression
@@ -1075,12 +1101,12 @@ public class ExpressionBuilderController implements Initializable {
             String txt = makeStringFromTextFlow();
             expressionAsTextArea.setText(txt);
             expressionAsTextBtn.setText("Edit with d&d");
-                
+
         } else {
             //Case was editing as textArea -> switch to drag and drop
 
             editAsText.set(false);
-            
+
             expressionPane.getChildren().setAll(expressionScrollPane);
             AnchorPane.setBottomAnchor(expressionScrollPane, 0.0);
             AnchorPane.setTopAnchor(expressionScrollPane, 0.0);
@@ -1612,14 +1638,14 @@ public class ExpressionBuilderController implements Initializable {
     private Expression makeExpression() {
         //Creates a new expression from the modifications
 
-        String fullText = makeStringFromTextFlow()+"\n \n ";
+        String fullText = makeStringFromTextFlow() + "\n \n ";
 
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText(),
                 fullText,
                 false
         );
-        
+
         ExpressionTreeInterface expTree = exp.getExpressionTree();
 
         expTree.setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.isSelected());
@@ -1667,7 +1693,7 @@ public class ExpressionBuilderController implements Initializable {
         populatePeeks(exp);
 
         selectInAllPanes(exp, true);
-        
+
         selectedBeforeCreateOrCopy = null;
     }
 
@@ -2208,7 +2234,6 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private class OperationTextNode extends ExpressionTextNode {
-        
 
         public OperationTextNode(String text) {
             super(text);
@@ -2232,18 +2257,20 @@ public class ExpressionBuilderController implements Initializable {
         private final String text;
         private double ordinalIndex;
         private boolean popupShowing;
-        
+
         protected Color regularColor;
         protected Color selectedColor;
+        
+        int previousIndex = -1;
 
         public ExpressionTextNode(String text) {
             super(text);
-            
+
             this.selectedColor = Color.RED;
             this.regularColor = Color.BLACK;
-            
+
             setFill(regularColor);
-            
+
             this.text = text;
             this.popupShowing = false;
 
@@ -2321,18 +2348,45 @@ public class ExpressionBuilderController implements Initializable {
                 }
                 event.consume();
             });
-            
+
             setOnDragEntered((event) -> {
-                setFill(selectedColor);
+                if(expressionTextFlow.getChildren().contains(insertIndicator)){
+                    previousIndex = expressionTextFlow.getChildren().indexOf(insertIndicator);
+                    expressionTextFlow.getChildren().remove(insertIndicator);
+                }else{
+                    previousIndex = -1;
+                }
+                if (dragndropReplaceRadio.isSelected()) {
+                    setFill(selectedColor);
+                } else {
+                    int index = expressionTextFlow.getChildren().indexOf(this);
+                    if (dragndropRightRadio.isSelected()) {
+                        index++;
+                    }
+                    expressionTextFlow.getChildren().add(index, insertIndicator);
+                    System.out.println("Insert drag entered node");
+                }
             });
-            
+
             setOnDragExited((event) -> {
-                setFill(regularColor);
+                expressionTextFlow.getChildren().remove(insertIndicator);
+                if (dragndropReplaceRadio.isSelected()) {
+                    setFill(regularColor);
+                }
+                if(previousIndex!=-1){
+                    expressionTextFlow.getChildren().add(previousIndex, insertIndicator);
+                    System.out.println("Insert drag exited node");
+                }
             });
 
             setOnDragDropped((DragEvent event) -> {
-                setFill(regularColor);
+                if (dragndropReplaceRadio.isSelected()) {
+                    setFill(regularColor);
+                }
                 
+                expressionTextFlow.getChildren().remove(insertIndicator);
+                previousIndex = -1;
+
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 double ord = 0.0;
