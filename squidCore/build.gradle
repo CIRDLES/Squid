@@ -46,7 +46,7 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi', version: '3.16'
     // https://mvnrepository.com/artifact/org.apache.tika/tika-core
     //compile group: 'org.apache.tika', name: 'tika-core', version: '1.15'
-       compile group: 'org.jdom', name: 'jdom', version: '2.0.6'
+       compile group: 'org.jdom', name: 'jdom2', version: '2.0.6'
 
 }
 
