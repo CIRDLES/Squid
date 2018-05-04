@@ -48,6 +48,7 @@ public class ShuntingYard {
         infixList.add("]");
         infixList.add("[");
         infixList.add("0");
+        infixList.add("\n");
         infixList.add("]");
 
         System.out.println("Shunt " + infixToPostfix(infixList));
@@ -239,7 +240,14 @@ public class ShuntingYard {
                     wereValues.push(false);
                     lastWasOperationOrFunction = false;
                     break;
-
+                case FORMATTER:
+                    outputQueue.add(token);
+                    if (!wereValues.empty()) {
+                        wereValues.pop();
+                        wereValues.push(true);
+                    }
+                    lastWasOperationOrFunction = false;
+                    break;
                 case NAMED_EXPRESSION_INDEXED:
                 case NAMED_EXPRESSION:
                     outputQueue.add(token);
@@ -309,7 +317,8 @@ public class ShuntingYard {
         /**
          *
          */
-        COMMA;
+        COMMA, 
+        FORMATTER;
 
         private TokenTypes() {
         }
@@ -334,6 +343,8 @@ public class ShuntingYard {
                 retVal = RIGHT_PAREN;
             } else if (token.equals(",")) {
                 retVal = COMMA;
+            } else if ("|\t|\n|\r|".contains("|" + token + "|")) {
+                retVal = FORMATTER;
             } else if (FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]\\[\\d\\]")) {
