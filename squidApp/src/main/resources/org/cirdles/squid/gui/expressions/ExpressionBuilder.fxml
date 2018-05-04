@@ -18,7 +18,6 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
@@ -203,7 +202,7 @@
                                                   <Insets bottom="0" left="0" right="0" top="0" />                 
                                               </padding>
                                              <children>
-                                                <ScrollPane fx:id="expressionScrollPane" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <ScrollPane fx:id="expressionScrollPane" hbarPolicy="NEVER" style="-fx-background: #FFFFFF; -fx-border-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <content>
                                                       <TextFlow fx:id="expressionTextFlow" />
                                                    </content>
@@ -263,11 +262,7 @@
                                  <children>
                                     <TitledPane fx:id="graphPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <content>
-                                          <WebView fx:id="graphView" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
-                                             <effect>
-                                                <InnerShadow height="10.0" radius="4.5" width="10.0" />
-                                             </effect>
-                                          </WebView>
+                                          <WebView fx:id="graphView" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" />
                                        </content>
                                        <graphic>
                                           <HBox fx:id="graphTitleHbox" alignment="CENTER_LEFT" spacing="10.0">
