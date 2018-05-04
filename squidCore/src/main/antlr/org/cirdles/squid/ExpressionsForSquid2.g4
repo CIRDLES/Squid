@@ -141,7 +141,7 @@ fragment
 PARENS : '(' (LETTER | NUMBER | '.' | ' ')* ')';
 
 //LETTER : [a-zA-Z_%] ('-')? ;
-LETTER : [a-zA-Z_] ;
+LETTER : [a-zA-Z_\t\n\r] ;
 
 //NUMBER : [0-9_%]('.' [0-9])? ('-')? ;
 NUMBER : [0-9] ;

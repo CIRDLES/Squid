@@ -207,6 +207,8 @@ public class ExpressionParser {
         ExpressionTreeInterface retExpTree = null;
 
         switch (tokenType) {
+            case FORMATTER:
+                break;
             case OPERATOR_A:
             case OPERATOR_M:
             case OPERATOR_E:
