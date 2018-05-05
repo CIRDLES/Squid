@@ -7,7 +7,7 @@ package org.cirdles.squid.core;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -34,7 +34,7 @@ public class ExpressionXMLConverterTest {
         try {
             XStream xstream = new XStream();
             ExpressionTree LnUOU = new ExpressionTree("LnUO/U");
-            List<String> ratiosOfInterest = new LinkedList<>();
+            List<String> ratiosOfInterest = new ArrayList<>();
             ratiosOfInterest.add("254/238");
             LnUOU.setRatiosOfInterest(ratiosOfInterest);
             LnUOU.setOperation(Function.ln());
