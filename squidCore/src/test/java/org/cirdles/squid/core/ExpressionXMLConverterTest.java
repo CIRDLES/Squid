@@ -62,13 +62,14 @@ public class ExpressionXMLConverterTest {
             expTree.getChildrenET().clear();
             expTree.addChild(0, rm);
 
+            String folderPath = "src/test/java/org/cirdles/squid/core/ExpressionXMLFiles/";
             initialExpression.customizeXstream(xstream);
-            File initialFile = new File("InitialCreation.XML");
+            File initialFile = new File( folderPath + "InitialCreation.XML");
 
             initialExpression.serializeXMLObject(initialFile.getAbsolutePath());
 
             Expression convertedExpression = (Expression) (new Expression()).readXMLObject(initialFile.getAbsolutePath(), false);
-            File convertedFile = new File("ConvertedCreation.XML");
+            File convertedFile = new File(folderPath + "ConvertedCreation.XML");
             convertedExpression.serializeXMLObject(convertedFile.getAbsolutePath());
 
             SAXBuilder builder = new SAXBuilder();
