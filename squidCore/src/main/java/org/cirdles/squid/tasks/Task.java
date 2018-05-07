@@ -978,6 +978,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
         xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
         xstream.alias("VariableNodeForIsotopicRatios", VariableNodeForIsotopicRatios.class);
+        
+        xstream.alias("MassStationDetail", MassStationDetail.class);
+        xstream.alias("SquidSpeciesModel", SquidSpeciesModel.class);
+        xstream.alias("SquidRatiosModel", SquidRatiosModel.class);
+        xstream.alias("SquidSessionModel", SquidSessionModel.class);
+        xstream.alias("ShrimpFraction", ShrimpFraction.class);
 
         xstream.registerConverter(new OperationXMLConverter());
         xstream.registerConverter(new FunctionXMLConverter());
