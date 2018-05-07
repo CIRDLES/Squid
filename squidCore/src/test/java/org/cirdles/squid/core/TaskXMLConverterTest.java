@@ -24,7 +24,7 @@ public class TaskXMLConverterTest {
     @Test
     public void TaskXMLConverterTest() {
         try {
-            String folderPath = "src/test/java/org/cirdles/squid/core/TaskXMLFiles/";
+            String folderPath = "src/test/java/org/cirdles/squid/core/";
             Task originalTask = new Task();
             originalTask = (Task) originalTask.readXMLObject(folderPath + "SampleTask.XML", false);
             originalTask.serializeXMLObject(folderPath + "ConvertedOriginalTask.XML");
