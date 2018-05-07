@@ -5,9 +5,12 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 
-<xs:schema version="1.0"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           attributeFormDefault="unqualified" 
+           elementFormDefault="qualified" 
+           targetNamespace="https://raw.githubusercontent.com"
+           xmlns="https://raw.githubusercontent.com">
     
     <xs:element name ="MassStationDetail" type="MassStationDetail"/>
     <xs:complexType name="MassStationDetail" mixed="true">
