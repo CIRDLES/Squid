@@ -56,41 +56,41 @@ public class MassStationDetailXMLConverter implements Converter {
         writer.setValue(station.getuThBearingName());
         writer.endNode();
         
-        writer.startNode("measuredTrimMasses");
-        List<Double> measuredTrimMasses = station.getMeasuredTrimMasses();
-        for (int i = 0; i < measuredTrimMasses.size(); i++) {
-            writer.startNode("measuredTrimMass");
-            writer.setValue(String.valueOf(measuredTrimMasses.get(i)));
-            writer.endNode();
-        }
-        writer.endNode();
-
-        writer.startNode("timesOfMeasuredTrimMasses");
-        List<Double> timesOfMeasuredTrimMasses = station.getTimesOfMeasuredTrimMasses();
-        for (int i = 0; i < timesOfMeasuredTrimMasses.size(); i++) {
-            writer.startNode("timeOfMeasuredTrimMass");
-            writer.setValue(Double.toString(timesOfMeasuredTrimMasses.get(i)));
-            writer.endNode();
-        }
-        writer.endNode();
-
-        writer.startNode("indicesOfScansAtMeasurementTimes");
-        List<Integer> indicesOfScansAtMeasurementTimes = station.getIndicesOfScansAtMeasurementTimes();
-        for (int i = 0; i < indicesOfScansAtMeasurementTimes.size(); i++) {
-            writer.startNode("indexOfScanAtMeasurementTime");
-            writer.setValue(Integer.toString(indicesOfScansAtMeasurementTimes.get(i)));
-            writer.endNode();
-        }
-        writer.endNode();
-
-        writer.startNode("indicesOfRunsAtMeasurementTimes");
-        List<Integer> indicesOfRunsAtMeasurementTimes = station.getIndicesOfRunsAtMeasurementTimes();
-        for (int i = 0; i < indicesOfRunsAtMeasurementTimes.size(); i++) {
-            writer.startNode("indexOfRunAtMeasurementTime");
-            writer.setValue(Integer.toString(indicesOfRunsAtMeasurementTimes.get(i)));
-            writer.endNode();
-        }
-        writer.endNode();
+//        writer.startNode("measuredTrimMasses");
+//        List<Double> measuredTrimMasses = station.getMeasuredTrimMasses();
+//        for (int i = 0; i < measuredTrimMasses.size(); i++) {
+//            writer.startNode("measuredTrimMass");
+//            writer.setValue(String.valueOf(measuredTrimMasses.get(i)));
+//            writer.endNode();
+//        }
+//        writer.endNode();
+//
+//        writer.startNode("timesOfMeasuredTrimMasses");
+//        List<Double> timesOfMeasuredTrimMasses = station.getTimesOfMeasuredTrimMasses();
+//        for (int i = 0; i < timesOfMeasuredTrimMasses.size(); i++) {
+//            writer.startNode("timeOfMeasuredTrimMass");
+//            writer.setValue(Double.toString(timesOfMeasuredTrimMasses.get(i)));
+//            writer.endNode();
+//        }
+//        writer.endNode();
+//
+//        writer.startNode("indicesOfScansAtMeasurementTimes");
+//        List<Integer> indicesOfScansAtMeasurementTimes = station.getIndicesOfScansAtMeasurementTimes();
+//        for (int i = 0; i < indicesOfScansAtMeasurementTimes.size(); i++) {
+//            writer.startNode("indexOfScanAtMeasurementTime");
+//            writer.setValue(Integer.toString(indicesOfScansAtMeasurementTimes.get(i)));
+//            writer.endNode();
+//        }
+//        writer.endNode();
+//
+//        writer.startNode("indicesOfRunsAtMeasurementTimes");
+//        List<Integer> indicesOfRunsAtMeasurementTimes = station.getIndicesOfRunsAtMeasurementTimes();
+//        for (int i = 0; i < indicesOfRunsAtMeasurementTimes.size(); i++) {
+//            writer.startNode("indexOfRunAtMeasurementTime");
+//            writer.setValue(Integer.toString(indicesOfRunsAtMeasurementTimes.get(i)));
+//            writer.endNode();
+//        }
+//        writer.endNode();
     }
 
     @Override
@@ -141,41 +141,41 @@ public class MassStationDetailXMLConverter implements Converter {
                 isBackground, uThBearingName);
         station.setTaskIsotopeLabel(taskIsotopeLabel);
 
-        List<Double> measuredTrimMasses = station.getMeasuredTrimMasses();
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            measuredTrimMasses.add(Double.parseDouble(reader.getValue()));
-            reader.moveUp();
-        }
-        reader.moveUp();
-
-        List<Double> timesOfMeasuredTrimMasses = station.getTimesOfMeasuredTrimMasses();
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            timesOfMeasuredTrimMasses.add(Double.parseDouble(reader.getValue()));
-            reader.moveUp();
-        }
-        reader.moveUp();
-
-        List<Integer> indicesOfScansAtMeasurementTimes = station.getIndicesOfScansAtMeasurementTimes();
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            indicesOfScansAtMeasurementTimes.add(Integer.parseInt(reader.getValue()));
-            reader.moveUp();
-        }
-        reader.moveUp();
-
-        List<Integer> indicesOfRunsAtMeasurementTimes = station.getIndicesOfRunsAtMeasurementTimes();
-        reader.moveUp();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            indicesOfRunsAtMeasurementTimes.add(Integer.parseInt(reader.getValue()));
-            reader.moveUp();
-        }
-        reader.moveUp();
+//        List<Double> measuredTrimMasses = station.getMeasuredTrimMasses();
+//        reader.moveDown();
+//        while (reader.hasMoreChildren()) {
+//            reader.moveDown();
+//            measuredTrimMasses.add(Double.parseDouble(reader.getValue()));
+//            reader.moveUp();
+//        }
+//        reader.moveUp();
+//
+//        List<Double> timesOfMeasuredTrimMasses = station.getTimesOfMeasuredTrimMasses();
+//        reader.moveDown();
+//        while (reader.hasMoreChildren()) {
+//            reader.moveDown();
+//            timesOfMeasuredTrimMasses.add(Double.parseDouble(reader.getValue()));
+//            reader.moveUp();
+//        }
+//        reader.moveUp();
+//
+//        List<Integer> indicesOfScansAtMeasurementTimes = station.getIndicesOfScansAtMeasurementTimes();
+//        reader.moveDown();
+//        while (reader.hasMoreChildren()) {
+//            reader.moveDown();
+//            indicesOfScansAtMeasurementTimes.add(Integer.parseInt(reader.getValue()));
+//            reader.moveUp();
+//        }
+//        reader.moveUp();
+//
+//        List<Integer> indicesOfRunsAtMeasurementTimes = station.getIndicesOfRunsAtMeasurementTimes();
+//        reader.moveUp();
+//        while (reader.hasMoreChildren()) {
+//            reader.moveDown();
+//            indicesOfRunsAtMeasurementTimes.add(Integer.parseInt(reader.getValue()));
+//            reader.moveUp();
+//        }
+//        reader.moveUp();
         
         return station;
     }

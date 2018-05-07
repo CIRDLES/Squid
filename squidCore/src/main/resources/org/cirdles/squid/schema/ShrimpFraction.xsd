@@ -183,6 +183,47 @@ and open the template in the editor.
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            
+            <xs:element name="referenceMaterial" type="xs:boolean"/>
+            <xs:element name="concentrationReferenceMaterial" type="xs:boolean"/>
+            <xs:element name="useSBM" type="xs:boolean"/>
+            <xs:element name="userLinFits" type="xs:boolean"/>
+            
+            <xs:element name="reducedPkHt" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="reducedPkHtRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="reducedPkHtValue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="reducedPkHtFerr" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="reducedPkHtFerrRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="reducedPkHtFerrValue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="pkInterpScanArray" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="pkIntterpScanAarray" type="xs:double"/>      
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
                    
         </xs:sequence>
     </xs:complexType>
