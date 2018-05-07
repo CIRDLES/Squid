@@ -39,7 +39,7 @@ public class TaskXMLConverterTest {
             assertTrue(compareElements(originalElement, convertedElement));
         } catch (Exception e) {
             e.printStackTrace();
-            fail("something went wrong");
+            fail("something went wrong" + e.getMessage());
         }
     }
 
