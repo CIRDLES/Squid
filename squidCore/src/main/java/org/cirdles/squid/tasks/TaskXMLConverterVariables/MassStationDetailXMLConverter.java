@@ -39,7 +39,7 @@ public class MassStationDetailXMLConverter implements Converter {
         writer.setValue(station.getIsotopeLabel());
         writer.endNode();
 
-        writer.startNode("taskIsotopeLabel:");
+        writer.startNode("taskIsotopeLabel");
         writer.setValue(station.getTaskIsotopeLabel());
         writer.endNode();
 

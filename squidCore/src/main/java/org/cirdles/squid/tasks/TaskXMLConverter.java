@@ -164,7 +164,7 @@ public class TaskXMLConverter implements Converter {
         }
         writer.endNode();
 
-        writer.startNode("ratioNames:");
+        writer.startNode("ratioNames");
         List<String> ratioNames = task.getRatioNames();
         for (int i = 0; i < ratioNames.size(); i++) {
             writer.startNode("ratioName");
