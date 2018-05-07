@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -28,6 +29,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -279,6 +281,11 @@ public class ExpressionBuilderController implements Initializable {
     private ListView<String> constantsListView;
     @FXML
     private TitledPane constantsTitledPane;
+    
+     @FXML
+    private ListView<String> presentationListView;
+    @FXML
+    private TitledPane presentationTitledPane;
 
     @FXML
     private ListView<?> referenceMaterialsListView;
@@ -308,6 +315,8 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private SplitPane smallSplitPane;
     @FXML
+    private SplitPane leftSplitPane;
+    @FXML
     private VBox editorVBox;
     @FXML
     private HBox graphTitleHbox;
@@ -329,15 +338,20 @@ public class ExpressionBuilderController implements Initializable {
     private final String operationFlagDelimeter = " : ";
     private final String numberString = "NUMBER";
     private final String placeholder = " ";// \u2588 ";
+    private final String newLinePlaceHolder = "\u23CE\n";
+    private final String tabPlaceHolder = ". . .";
+    private final Map<String,String> presentationMap = new HashMap<>();
+    {
+        presentationMap.put("New line", newLinePlaceHolder);
+        presentationMap.put("Tab", tabPlaceHolder);
+    }
 
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
 
-    private final ObjectProperty<ListCell<Expression>> dragExpressionSource = new SimpleObjectProperty<>();
-    private final ObjectProperty<SquidRatiosModel> dragSquidRatioModelSource = new SimpleObjectProperty<>();
     private final ObjectProperty<String> dragOperationOrFunctionSource = new SimpleObjectProperty<>();
     private final ObjectProperty<String> dragNumberSource = new SimpleObjectProperty<>();
-    private final ObjectProperty<ExpressionTextNode> dragTextSource = new SimpleObjectProperty<>();
+    private final ObjectProperty<String> dragPresentationSource = new SimpleObjectProperty<>();
 
     private final ListProperty<String> undoListForExpression = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ListProperty<String> redoListForExpression = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -347,7 +361,7 @@ public class ExpressionBuilderController implements Initializable {
     private final BooleanProperty selectedExpressionIsCustom = new SimpleBooleanProperty(false);
     //Boolean to save wether or not the expression has been save since the last modification
     private final BooleanProperty expressionIsSaved = new SimpleBooleanProperty(true);
-    //Boolean to save wether the expression is currently edited as a textArea or with dra and drop
+    //Boolean to save wether the expression is currently edited as a textArea or with drag and drop
     private final BooleanProperty editAsText = new SimpleBooleanProperty(false);
 
     private final ObjectProperty<Mode> currentMode = new SimpleObjectProperty<>(Mode.EDIT);
@@ -393,6 +407,9 @@ public class ExpressionBuilderController implements Initializable {
 
         currentMode.addListener((observable, oldValue, newValue) -> {
             modeLabel.setText(newValue.toString());
+            if(expressionString.isNotNull().get()){
+                populatePeeks(makeExpression());
+            }
         });
 
         initPropertyBindings();
@@ -433,6 +450,7 @@ public class ExpressionBuilderController implements Initializable {
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
+        othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
 
         toolBarHBox.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
@@ -444,9 +462,17 @@ public class ExpressionBuilderController implements Initializable {
         currentMode.addListener((observable, oldValue, newValue) -> {
             if (oldValue == Mode.VIEW) {
                 toolBarVBox.getChildren().add(toolBarHBox);
+                othersAccordion.setExpandedPane(operationsTitledPane);
+                leftSplitPane.setDividerPositions(0.5);
             } else if (newValue == Mode.VIEW) {
                 toolBarVBox.getChildren().remove(toolBarHBox);
+                othersAccordion.setExpandedPane(null);
+                leftSplitPane.setDividerPositions(1.0);
             }
+        });
+        
+        leftSplitPane.getDividers().get(0).positionProperty().addListener((o, ol, n) -> {
+            if(currentMode.get().equals(Mode.VIEW)) leftSplitPane.setDividerPositions(1.0);
         });
 
         othersAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
@@ -644,6 +670,19 @@ public class ExpressionBuilderController implements Initializable {
         //RATIOS
         ratioExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         ratioExpressionsListView.setCellFactory(new expressionTreeCellFactory());
+        ratioExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        ratioExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (currentMode.get().equals(Mode.VIEW)) {
+                    Expression exp = new Expression(newValue.getRatioName(), "[\""+newValue.getRatioName()+"\"]");
+                    exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                    exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    selectedExpression.set(exp);
+                }
+                selectInAllPanes(null, false);
+            }
+        });
         populateRatiosListView();
 
         //OPERATIONS AND FUNCTIONS
@@ -661,22 +700,32 @@ public class ExpressionBuilderController implements Initializable {
         constantsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         constantsListView.setCellFactory(new StringCellFactory(dragNumberSource));
         populateNumberListViews();
+        
+        //PRESENTATION
+        presentationListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        presentationListView.setCellFactory(new StringCellFactory(dragPresentationSource));
+        presentationListView.getItems().addAll(presentationMap.keySet());
     }
 
     private void selectInAllPanes(Expression exp, boolean scrollIfAlreadySelected) {
+        Boolean found = false;
         //If nothing is selected or the selected value is not the new one
         if (brokenExpressionsListView.getSelectionModel().getSelectedItem() == null || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
             //Clear selection
             brokenExpressionsListView.getSelectionModel().clearSelection();
             //If the new value is on this pane then select it
             if (brokenExpressionsListView.getItems().contains(exp)) {
+                
                 brokenExpressionsListView.getSelectionModel().select(exp);
                 brokenExpressionsListView.scrollTo(exp);
                 brokenExpressionsTitledPane.setExpanded(true);
             }
-        } else if (scrollIfAlreadySelected) {
-            brokenExpressionsListView.scrollTo(exp);
-            brokenExpressionsTitledPane.setExpanded(true);
+        } else {
+            found = true;
+            if (scrollIfAlreadySelected) {
+                brokenExpressionsListView.scrollTo(exp);
+                brokenExpressionsTitledPane.setExpanded(true);
+            }
         }
 
         //Same thing for the other panes
@@ -687,9 +736,12 @@ public class ExpressionBuilderController implements Initializable {
                 nuSwitchedExpressionsListView.scrollTo(exp);
                 nuSwitchedExpressionsTitledPane.setExpanded(true);
             }
-        } else if (scrollIfAlreadySelected) {
-            nuSwitchedExpressionsListView.scrollTo(exp);
-            nuSwitchedExpressionsTitledPane.setExpanded(true);
+        } else {
+            found = true;
+            if (scrollIfAlreadySelected) {
+                nuSwitchedExpressionsListView.scrollTo(exp);
+                nuSwitchedExpressionsTitledPane.setExpanded(true);
+            }
         }
 
         if (builtInExpressionsListView.getSelectionModel().getSelectedItem() == null || !builtInExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
@@ -699,9 +751,12 @@ public class ExpressionBuilderController implements Initializable {
                 builtInExpressionsListView.scrollTo(exp);
                 builtInExpressionsTitledPane.setExpanded(true);
             }
-        } else if (scrollIfAlreadySelected) {
-            builtInExpressionsListView.scrollTo(exp);
-            builtInExpressionsTitledPane.setExpanded(true);
+        } else {
+            found = true;
+            if (scrollIfAlreadySelected) {
+                builtInExpressionsListView.scrollTo(exp);
+                builtInExpressionsTitledPane.setExpanded(true);
+            }
         }
 
         if (customExpressionsListView.getSelectionModel().getSelectedItem() == null || !customExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
@@ -711,9 +766,16 @@ public class ExpressionBuilderController implements Initializable {
                 customExpressionsListView.scrollTo(exp);
                 customExpressionsTitledPane.setExpanded(true);
             }
-        } else if (scrollIfAlreadySelected) {
-            customExpressionsListView.scrollTo(exp);
-            customExpressionsTitledPane.setExpanded(true);
+        } else {
+            found = true;
+            if (scrollIfAlreadySelected) {
+                customExpressionsListView.scrollTo(exp);
+                customExpressionsTitledPane.setExpanded(true);
+            }
+        }
+        
+        if(found){
+            ratioExpressionsListView.getSelectionModel().clearSelection();
         }
 
         if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(exp)) {
@@ -828,6 +890,9 @@ public class ExpressionBuilderController implements Initializable {
                 } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
                     // case of "NUMBER"
                     insertNumberIntoExpressionTextFlow(numberString, ord);
+                } else if(dragPresentationSource.get() != null && presentationMap.containsKey(dragPresentationSource.get())){
+                    // case of presentation (new line, tab)
+                      insertPresentationIntoExpressionTextFlow(presentationMap.get(dragPresentationSource.get()), ord);
                 } else {
                     // case of expression
                     insertExpressionIntoExpressionTextFlow(content, ord);
@@ -1673,16 +1738,25 @@ public class ExpressionBuilderController implements Initializable {
     private String makeStringFromTextList(List<Node> list) {
         StringBuilder sb = new StringBuilder();
         for (Node node : list) {
-            if (node instanceof Text) {
-                sb.append(((Text) node).getText().trim());
+            if (node instanceof ExpressionTextNode) {
+                switch (((ExpressionTextNode) node).getText()) {
+                    case newLinePlaceHolder:
+                        sb.append("\n");
+                        break;
+                    case tabPlaceHolder:
+                        sb.append("\t");
+                        break;
+                    default:
+                        sb.append(((ExpressionTextNode) node).getText().trim()).append(' ');
+                        break;
+                }
             }
         }
-        //replace all groups of spaces by a single space
-        return sb.toString().replaceAll(" +", " ");
+        return sb.toString();
     }
 
     private void buildTextFlowFromString(String string) {
-        if (!string.replaceAll(" +", " ").replaceAll("\n", "").trim().equals(makeStringFromTextFlow().trim())) {
+        if (!string.replaceAll(" +", " ").trim().equals(makeStringFromTextFlow().trim())) {
 
             String numberRegExp = "^\\d+(\\.\\d+)?$";
 
@@ -1691,17 +1765,17 @@ public class ExpressionBuilderController implements Initializable {
             //The lexer separates the expression into tokens
             ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(string));
             List<? extends Token> tokens = lexer.getAllTokens();
-//            System.out.println("-------------------------------");
-//            System.out.println(string);
-//            System.out.println("-------");
-//            for(Token t : tokens){
-//                System.out.println(t.getText());
-//            }
+            System.out.println("-------------------------------");
+            System.out.println("whole string: \""+string.replaceAll("\n","/n").replaceAll(" ", "_").replaceAll("\t", "/t").replaceAll("\r", "/r")+"\"");
+            System.out.println("-------");
+            for(Token t : tokens){
+                System.out.println("token: \""+t.getText().replaceAll("\n","/n").replaceAll(" ", "_").replaceAll("\t", "/t").replaceAll("\r", "/r")+"\"");
+            }
 
             //Creates the notes from tokens
             for (int i = 0; i < tokens.size(); i++) {
                 Token token = tokens.get(i);
-                String nodeText = token.getText().trim();
+                String nodeText = token.getText();
 
                 ExpressionTextNode etn;
 
@@ -1710,6 +1784,10 @@ public class ExpressionBuilderController implements Initializable {
                     etn = new NumberTextNode(' ' + nodeText + ' ');
                 } else if (listOperators.contains(nodeText)) {
                     etn = new OperationTextNode(' ' + nodeText + ' ');
+                } else if(nodeText.equals("\n") || nodeText.equals("\r")){
+                    etn = new ExpressionTextNode(newLinePlaceHolder);
+                } else if(nodeText.equals("\t")){
+                    etn = new ExpressionTextNode(tabPlaceHolder);
                 } else {
                     etn = new ExpressionTextNode(' ' + nodeText + ' ');
                 }
@@ -1762,6 +1840,13 @@ public class ExpressionBuilderController implements Initializable {
         expressionTextFlow.getChildren().add(exp);
         updateExpressionTextFlowChildren();
     }
+    
+    private void insertPresentationIntoExpressionTextFlow(String content, double ordinalIndex) {
+        ExpressionTextNode exp = new ExpressionTextNode(content);
+        exp.setOrdinalIndex(ordinalIndex);
+        expressionTextFlow.getChildren().add(exp);
+        updateExpressionTextFlowChildren();
+    }
 
     private void wrapInParentheses(double ordLeft, double ordRight) {
         //Insert parentheses before ordLeft and after ordRight
@@ -1779,9 +1864,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void resetDragSources() {
-        dragExpressionSource.set(null);
         dragOperationOrFunctionSource.set(null);
-        dragSquidRatioModelSource.set(null);
         dragNumberSource.set(null);
     }
 
@@ -1979,7 +2062,6 @@ public class ExpressionBuilderController implements Initializable {
                     ClipboardContent cc = new ClipboardContent();
                     cc.putString("[\"" + cell.getItem().getName() + "\"]");
                     db.setContent(cc);
-                    dragExpressionSource.set(cell);
                     cell.setCursor(Cursor.CLOSED_HAND);
                 }
             });
@@ -2076,7 +2158,6 @@ public class ExpressionBuilderController implements Initializable {
                     ClipboardContent cc = new ClipboardContent();
                     cc.putString("[\"" + cell.getItem().getRatioName() + "\"]");
                     db.setContent(cc);
-                    dragSquidRatioModelSource.set(cell.getItem());
                     cell.setCursor(Cursor.CLOSED_HAND);
                 }
             });
@@ -2182,6 +2263,7 @@ public class ExpressionBuilderController implements Initializable {
 
             cell.setOnDragDone((event) -> {
                 cell.setCursor(Cursor.OPEN_HAND);
+                resetDragSources();
             });
 
             cell.setOnMousePressed((event) -> {
@@ -2300,7 +2382,6 @@ public class ExpressionBuilderController implements Initializable {
                 ClipboardContent cc = new ClipboardContent();
                 cc.putString(text);
                 db.setContent(cc);
-                dragTextSource.set((ExpressionTextNode) event.getSource());
             });
 
             setOnDragDone((event) -> {
@@ -2384,6 +2465,9 @@ public class ExpressionBuilderController implements Initializable {
                     } else if ((dragNumberSource.get() != null) && content.contains(numberString)) {
                         // case of "NUMBER"
                         insertNumberIntoExpressionTextFlow(numberString, ord);
+                    } else if(dragPresentationSource.get() != null && presentationMap.containsKey(dragPresentationSource.get())){
+                        // case of presentation (new line, tab)
+                        insertPresentationIntoExpressionTextFlow(presentationMap.get(dragPresentationSource.get()), ord);
                     } else {
                         // case of expression
                         insertExpressionIntoExpressionTextFlow(content, ord);
