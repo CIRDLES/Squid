@@ -62,7 +62,7 @@ public class ExpressionXMLConverterTest {
             expTree.getChildrenET().clear();
             expTree.addChild(0, rm);
 
-            String folderPath = "src/test/java/org/cirdles/squid/core/ExpressionXMLFiles/";
+            String folderPath = "src/test/java/org/cirdles/squid/core/";
             initialExpression.customizeXstream(xstream);
             File initialFile = new File( folderPath + "InitialCreation.XML");
 
