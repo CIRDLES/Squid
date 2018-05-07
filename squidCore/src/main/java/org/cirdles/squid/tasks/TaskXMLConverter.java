@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
@@ -116,7 +117,7 @@ public class TaskXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("dateRevised");
-        writer.setValue(Double.toString(task.getDateRevised()));
+        writer.setValue(Long.toString(task.getDateRevised()));
         writer.endNode();
 
         writer.startNode("useSBM");
@@ -290,7 +291,7 @@ public class TaskXMLConverter implements Converter {
         reader.moveUp();
 
         reader.moveDown();
-        task.setDateRevised(Long.getLong(reader.getValue()));
+        task.setDateRevised(Long.parseLong(reader.getValue()));
         reader.moveUp();
 
         reader.moveDown();
@@ -350,7 +351,19 @@ public class TaskXMLConverter implements Converter {
 
         reader.moveDown();
         Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = new TreeMap<>();
-        mapOfIndexToMassStationDetails = (TreeMap) context.convertAnother(mapOfIndexToMassStationDetails, TreeMap.class);
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            int mapInt;
+            reader.moveDown();
+            mapInt = Integer.parseInt(reader.getValue());
+            reader.moveUp();
+            reader.moveDown();
+            Object massStation = new Object();
+            massStation = (MassStationDetail) context.convertAnother(massStation, MassStationDetail.class);
+            reader.moveUp();
+            reader.moveUp();
+            mapOfIndexToMassStationDetails.put(mapInt, (MassStationDetail) massStation);
+        }
         task.setMapOfIndexToMassStationDetails(mapOfIndexToMassStationDetails);
         reader.moveUp();
 
@@ -396,6 +409,7 @@ public class TaskXMLConverter implements Converter {
             listOfSelectedRatiosByMassStationIndex.add(selectedRatioList);
         }
         reader.moveUp();
+        if(listOfSelectedRatiosByMassStationIndex.size() > 0 && listOfSelectedRatiosByMassStationIndex.get(0).size() > 0){
         boolean[][] tableOfSelectedRatiosByMassStationIndex = new boolean[listOfSelectedRatiosByMassStationIndex.size()][listOfSelectedRatiosByMassStationIndex.get(0).size()];
         for (int i = 0; i < tableOfSelectedRatiosByMassStationIndex.length; i++) {
             for (int j = 0; j < tableOfSelectedRatiosByMassStationIndex[0].length; j++) {
@@ -403,6 +417,7 @@ public class TaskXMLConverter implements Converter {
             }
         }
         task.setTableOfSelectedRatiosByMassStationIndex(tableOfSelectedRatiosByMassStationIndex);
+        }
 
 //        List<Expression> taskExpressions = new ArrayList<>();
 //        reader.moveDown();
@@ -483,8 +498,8 @@ public class TaskXMLConverter implements Converter {
 //        }
 //        reader.moveUp();
         reader.moveDown();
-        Enum selectedIndexIsotope = null;
-        context.convertAnother(selectedIndexIsotope, Enum.class);
+        task.setSelectedIndexIsotope(IndexIsoptopesEnum.PB_204);
+        Object selectedIndexIsotope = context.convertAnother(task.getSelectedIndexIsotope(), Squid3Constants.IndexIsoptopesEnum.class);
         task.setSelectedIndexIsotope((Squid3Constants.IndexIsoptopesEnum) selectedIndexIsotope);
         reader.moveUp();
 
