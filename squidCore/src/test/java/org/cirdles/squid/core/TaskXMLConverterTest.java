@@ -24,7 +24,7 @@ public class TaskXMLConverterTest {
     @Test
     public void TaskXMLConverterTest() {
         try {
-            String folderPath = "src/test/java/org/cirdles/squid/core/";
+            String folderPath = "src/test/java/org/cirdles/squid/core/TaskXMLFiles/";
             Task originalTask = new Task();
             originalTask = (Task) originalTask.readXMLObject(folderPath + "SampleTask.XML", false);
             originalTask.serializeXMLObject(folderPath + "ConvertedOriginalTask.XML");
@@ -36,36 +36,10 @@ public class TaskXMLConverterTest {
             Document convertedFile = (Document) builder.build(new File(folderPath + "ConvertedConvertedTask.XML"));
             Element originalElement = originalFile.getRootElement();
             Element convertedElement = convertedFile.getRootElement();
-            assertTrue(compareElements(originalElement, convertedElement));
+            assertTrue(ElementComparer.compareElements(originalElement, convertedElement));
         } catch (Exception e) {
             e.printStackTrace();
             fail("something went wrong" + e.getMessage());
         }
-    }
-
-    private boolean compareElements(Element firstElement, Element secondElement) {
-        boolean returnValue = true;
-        List<Element> firstList = firstElement.getChildren();
-        List<Element> secondList = secondElement.getChildren();
-
-        if (firstList.size() == secondList.size()) {
-            if (!firstList.isEmpty()) {
-                while (!firstList.isEmpty() && returnValue) {
-                    Element firstChild = firstList.remove(0);
-                    Element secondChild = secondList.remove(0);
-                    if (compareElements(firstChild, secondChild) == false) {
-                        returnValue = false;
-                    }
-                }
-            } else {
-                if (!(firstElement.getText().equals(secondElement.getText()))) {
-                    returnValue = false;
-                }
-            }
-        } else {
-            returnValue = false;
-        }
-
-        return returnValue;
     }
 }

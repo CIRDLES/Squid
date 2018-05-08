@@ -42,9 +42,8 @@ public class ExpressionXMLConverterTest {
             LnUOU.setSquidSwitchSCSummaryCalculation(false);
             LnUOU.setSquidSwitchSTReferenceMaterialCalculation(true);
             LnUOU.setSquidSwitchSAUnknownCalculation(true);
-            
+
             Expression initialExpression = new Expression(LnUOU, "ln([\"254/238\"])", true);
-            
 
             SquidSpeciesModel sm1 = new SquidSpeciesModel(0, "254", "254", "Uranium", false, "");
             SquidSpeciesModel sm2 = new SquidSpeciesModel(0, "238", "238", "Uranium", false, "");
@@ -64,7 +63,7 @@ public class ExpressionXMLConverterTest {
 
             String folderPath = "src/test/java/org/cirdles/squid/core/";
             initialExpression.customizeXstream(xstream);
-            File initialFile = new File( folderPath + "InitialCreation.XML");
+            File initialFile = new File(folderPath + "InitialCreation.XML");
 
             initialExpression.serializeXMLObject(initialFile.getAbsolutePath());
 
@@ -78,37 +77,12 @@ public class ExpressionXMLConverterTest {
             Element initialRootElement = initialDocument.getRootElement();
             Element convertedRootElement = convertedDocument.getRootElement();
 
-            assertTrue(compareElements(initialRootElement, convertedRootElement));
+            initialFile.delete();
+            convertedFile.delete();
+            assertTrue(ElementComparer.compareElements(initialRootElement, convertedRootElement));
         } catch (Exception e) {
             e.printStackTrace();
             fail("Exception thrown: " + e.getMessage());
         }
-    }
-
-    private boolean compareElements(Element firstElement, Element secondElement) {
-        boolean returnValue = true;
-        List<Element> firstList = firstElement.getChildren();
-        List<Element> secondList = secondElement.getChildren();
-
-        if (firstList.size() == secondList.size()) {
-            if (!firstList.isEmpty()) {
-                while (!firstList.isEmpty() && returnValue) {
-                    Element firstChild = firstList.remove(0);
-                    Element secondChild = secondList.remove(0);
-                    if (compareElements(firstChild, secondChild) == false) {
-                        returnValue = false;
-                    }
-                }
-            } else {
-                if (!(firstElement.getText().equals(secondElement.getText()))) {
-                    returnValue = false;
-                }
-            }
-        } else {
-            returnValue = false;
-        }
-
-        
-        return returnValue;
     }
 }
