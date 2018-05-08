@@ -26,6 +26,7 @@
             Author: James F. Bowring[smtp:bowring@gmail.com]
             Created: December.2016
             Revised: September.2017
+            Revised: May.2018 by Ryan Barrett
             
         </xs:documentation>
     </xs:annotation> 
@@ -35,6 +36,7 @@
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
             <xs:element name="excelExpressionString" type="xs:string"></xs:element>
+            <xs:element name="squidSwitchNU" type="xs:string"></xs:element>
             <xs:element name="expressionTree" type="ExpressionTree"></xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -72,6 +74,9 @@
             <xs:element type="xs:string" name="squidSwitchSAUnknownCalculation"/>
             <xs:element type="xs:string" name="squidSpecialUPbThExpression"/>
             <xs:element type="xs:string" name="rootExpressionTree"/>
+            <xs:element type="xs:string" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
+            <xs:element type="xs:string" name="uncertaintyDirective"/>
+            <xs:element type="xs:integer" name="index"/>
             
         </xs:sequence>
     </xs:complexType>
