@@ -29,7 +29,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,6 +41,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -84,6 +84,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -148,7 +149,9 @@ public class ExpressionBuilderController implements Initializable {
     private Button copyExpressionIntoCustomBtn;
     @FXML
     private Button showCurrentExpressionBtn;
-
+    @FXML
+    private Button showCommentsBtn;
+    
     //TEXTS
     @FXML
     private TextFlow expressionTextFlow;
@@ -348,7 +351,27 @@ public class ExpressionBuilderController implements Initializable {
 
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
-
+    
+    private Stage commentsStage;
+    private TextArea commentTextArea;
+    {
+        AnchorPane pane = new AnchorPane();
+        commentTextArea = new TextArea();
+        pane.getChildren().setAll(commentTextArea);
+        AnchorPane.setBottomAnchor(commentTextArea, 0.0);
+        AnchorPane.setTopAnchor(commentTextArea, 0.0);
+        AnchorPane.setRightAnchor(commentTextArea, 0.0);
+        AnchorPane.setLeftAnchor(commentTextArea, 0.0);
+        
+        commentTextArea.setWrapText(true);
+        
+        commentsStage = new Stage();
+        commentsStage.setScene(new Scene(pane, 600, 150));
+        commentsStage.setAlwaysOnTop(true);
+    }
+    
+    
+    
     private final ObjectProperty<String> dragOperationOrFunctionSource = new SimpleObjectProperty<>();
     private final ObjectProperty<String> dragNumberSource = new SimpleObjectProperty<>();
     private final ObjectProperty<String> dragPresentationSource = new SimpleObjectProperty<>();
@@ -451,6 +474,12 @@ public class ExpressionBuilderController implements Initializable {
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
         othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        
+        commentTextArea.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        commentsStage.titleProperty().bind(new SimpleStringProperty("Comments on ").concat(expressionNameTextField.textProperty()));
+        commentsStage.setOnCloseRequest((event) -> {
+            showCommentsBtn.setText("Show comments");
+        });
 
         toolBarHBox.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
@@ -931,6 +960,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpressionIsCustom.set(false);
                 }
                 expressionNameTextField.textProperty().set(newValue.getName());
+                commentTextArea.setText(newValue.getComments());
                 refMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
                 unknownsSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
                 concRefMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchConcentrationReferenceMaterialCalculation());
@@ -1162,6 +1192,18 @@ public class ExpressionBuilderController implements Initializable {
     private void showCurrentExpressionAction() {
         if (selectedExpression.isNotNull().get()) {
             selectInAllPanes(selectedExpression.get(), true);
+        }
+    }
+    
+    @FXML
+    private void showCommentsAction(){
+        if(!commentsStage.isShowing()){
+            commentsStage.show();
+            commentsStage.toFront();
+            showCommentsBtn.setText("Hide comments");
+        }else{
+            commentsStage.hide();
+            showCommentsBtn.setText("Show comments");
         }
     }
 
@@ -1676,6 +1718,8 @@ public class ExpressionBuilderController implements Initializable {
                 fullText,
                 false
         );
+        
+        exp.setComments(commentTextArea.getText());
 
         ExpressionTreeInterface expTree = exp.getExpressionTree();
 

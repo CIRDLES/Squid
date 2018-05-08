@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -577,8 +579,8 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(expressionBuilderUI);
             expressionBuilderUI.setVisible(false);
 
-        } catch (IOException | RuntimeException iOException) {
-            System.out.println("ExpressionBuilder >>>>   " + iOException.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(SquidUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
