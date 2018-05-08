@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -135,7 +135,7 @@
         </Menu>
       </menus>
     </MenuBar>
-      <AnchorPane fx:id="mainPane" minHeight="640.0" minWidth="1000.0" style="-fx-background-color: #3a4c88;" stylesheets="@css/projectManager.css" VBox.vgrow="ALWAYS">
+      <AnchorPane fx:id="mainPane" style="-fx-background-color: #3a4c88;" stylesheets="@css/projectManager.css" VBox.vgrow="ALWAYS">
          <children>
             <ImageView fx:id="squidImageView" fitHeight="333.0" fitWidth="350.0" layoutX="338.0" layoutY="125.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                <image>
