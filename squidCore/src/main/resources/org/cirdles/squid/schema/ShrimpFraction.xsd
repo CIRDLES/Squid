@@ -10,8 +10,8 @@ and open the template in the editor.
            attributeFormDefault="unqualified" 
            elementFormDefault="qualified" 
            targetNamespace="https://raw.githubusercontent.com"
-           xmlns="https://raw.githubusercontent.com"
-           xmlns="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel.xsd">
+           xmlns="https://raw.githubusercontent.com">
+    <xs:include schemalocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel.xsd"/>
     
     <xs:element name="ShrimpFraction" type="ShrimpFraction"/>
     <xs:complexType name="ShrimpFractioin" mixed="true">
