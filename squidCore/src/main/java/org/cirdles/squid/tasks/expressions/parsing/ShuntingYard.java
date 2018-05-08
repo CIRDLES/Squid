@@ -181,13 +181,6 @@ public class ShuntingYard {
                     lastWasOperationOrFunction = false;
                     break;
                 case NUMBER:
-//                    outputQueue.add(token);
-//                    if (!wereValues.empty()) {
-//                        wereValues.pop();
-//                        wereValues.push(true);
-//                    }
-//                    lastWasOperationOrFunction = false;
-//                    break;
                 case NAMED_CONSTANT:
                     outputQueue.add(token);
                     if (!wereValues.empty()) {
@@ -241,13 +234,6 @@ public class ShuntingYard {
                     lastWasOperationOrFunction = false;
                     break;
                 case FORMATTER:
-                    outputQueue.add(token);
-                    if (!wereValues.empty()) {
-                        wereValues.pop();
-                        wereValues.push(true);
-                    }
-                    lastWasOperationOrFunction = false;
-                    break;
                 case NAMED_EXPRESSION_INDEXED:
                 case NAMED_EXPRESSION:
                     outputQueue.add(token);
@@ -343,14 +329,14 @@ public class ShuntingYard {
                 retVal = RIGHT_PAREN;
             } else if (token.equals(",")) {
                 retVal = COMMA;
-            } else if ("|\t|\n|\r|".contains("|" + token + "|")) {
-                retVal = FORMATTER;
             } else if (FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]\\[\\d\\]")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;
+            } else if ("| |\t|\n|\r|".contains("|" + token + "|")) {
+                retVal = FORMATTER;
             } else if (isNumber(token)) {
                 retVal = NUMBER;
             }
