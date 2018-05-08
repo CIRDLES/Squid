@@ -33,9 +33,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
-import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -54,7 +53,7 @@ public class SpotManagerController implements Initializable {
     private final RunsViewModel runsModel = new RunsViewModel();
 
     @FXML
-    private AnchorPane spotManagerPane;
+    private HBox spotManagerPane;
     @FXML
     private ListView<PrawnFile.Run> shrimpFractionList;
     @FXML
@@ -101,9 +100,6 @@ public class SpotManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        spotManagerPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        spotManagerPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
         setUpShrimpFractionListHeaders();
         saveSpotNameButton.setDisable(true);
         setFilteredSpotsAsRefMatButton.setDisable(true);
@@ -263,7 +259,7 @@ public class SpotManagerController implements Initializable {
 
         headerLabel.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabel.setText(
-                String.format("%1$-" + 20 + "s", "Spot Name")
+                String.format("%1$-" + 21 + "s", "Spot Name")
                 + String.format("%1$-" + 12 + "s", "Date")
                 + String.format("%1$-" + 12 + "s", "Time")
                 + String.format("%1$-" + 6 + "s", "Peaks")
@@ -271,7 +267,7 @@ public class SpotManagerController implements Initializable {
 
         headerLabelRefMat.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabelRefMat.setText(
-                String.format("%1$-" + 20 + "s", "Ref Mat Name")
+                String.format("%1$-" + 21 + "s", "Ref Mat Name")
                 + String.format("%1$-" + 12 + "s", "Date")
                 + String.format("%1$-" + 12 + "s", "Time")
                 + String.format("%1$-" + 6 + "s", "Peaks")
@@ -279,7 +275,7 @@ public class SpotManagerController implements Initializable {
         
         headerLabelConcRefMat.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabelConcRefMat.setText(
-                String.format("%1$-" + 20 + "s", "Ref Mat Name")
+                String.format("%1$-" + 21 + "s", "Ref Mat Name")
                 + String.format("%1$-" + 12 + "s", "Date")
                 + String.format("%1$-" + 12 + "s", "Time")
                 + String.format("%1$-" + 6 + "s", "Peaks")

@@ -22,8 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.gui.SquidUI;
-import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
@@ -43,11 +41,6 @@ public class reducedDataReportManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        reducedUnknownsReportAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        reducedUnknownsReportAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
-        reducedUnknownsReportTextArea.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        reducedUnknownsReportTextArea.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
       
         reducedUnknownsReportTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
          // todo: fix demeters law violation

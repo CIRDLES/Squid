@@ -1,71 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="taskManagerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+  <columnConstraints>
+    <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+    <ColumnConstraints hgrow="ALWAYS" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints valignment="CENTER" vgrow="NEVER" />
+    <RowConstraints valignment="CENTER" vgrow="NEVER" />
+    <RowConstraints valignment="TOP" vgrow="NEVER" />
+    <RowConstraints valignment="TOP" vgrow="SOMETIMES" />
+  </rowConstraints>
    <children>
-      <Label layoutX="24.0" layoutY="15.0" text="Task Name:" />
-      <TextField fx:id="taskNameTextField" layoutX="127.0" layoutY="15.0" prefHeight="27.0" prefWidth="608.0" promptText="Task name" />
-      <Label layoutX="742.0" layoutY="15.0" text="Type:" />
-      <HBox layoutX="798.0" layoutY="20.0" prefHeight="21.0" prefWidth="181.0">
+      <Label text="Task Name:" />
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1">
          <children>
-            <RadioButton fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" prefHeight="18.0" prefWidth="106.0" selected="true" text="Geochron">
+            <TextField fx:id="taskNameTextField" promptText="Task name" HBox.hgrow="ALWAYS" />
+            <Label text="Type:" />
+            <RadioButton fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
                <toggleGroup>
                   <ToggleGroup fx:id="taskTypeToggleGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" prefHeight="18.0" prefWidth="102.0" text="General" toggleGroup="$taskTypeToggleGroup" />
+            <RadioButton fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
          </children>
       </HBox>
-      <Label layoutX="21.0" layoutY="55.0" text="Description:" />
-      <TextField fx:id="taskDescriptionTextField" layoutX="127.0" layoutY="56.0" prefHeight="27.0" prefWidth="854.0" promptText="Task Description" style="-fx-font-size: 12;" />
-      <Label layoutX="55.0" layoutY="95.0" text="Author:" />
-      <TextField fx:id="authorsNameTextField" layoutX="127.0" layoutY="96.0" prefHeight="27.0" prefWidth="380.0" promptText="Author's Name" />
-      <Label layoutX="521.0" layoutY="95.0" text="Lab Name:" />
-      <TextField fx:id="labNameTextField" layoutX="613.0" layoutY="96.0" prefHeight="27.0" prefWidth="366.0" promptText="Lab Name:" />
-      <Label layoutX="20.0" layoutY="135.0" text="Provenance:" />
-      <TextField fx:id="provenanceTextField" layoutX="127.0" layoutY="136.0" prefHeight="27.0" prefWidth="854.0" promptText="Provenance" />
-      <Label layoutX="126.0" layoutY="175.0" prefHeight="28.0" prefWidth="249.0" text="Normalise Ion Counts for SBM?" />
-      <HBox layoutX="380.0" layoutY="180.0">
+      <Label text="Description:" GridPane.rowIndex="1" />
+      <TextField fx:id="taskDescriptionTextField" promptText="Task Description" style="-fx-font-size: 12;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label text="Author:" GridPane.rowIndex="2" />
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
-            <RadioButton fx:id="yesSBMRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#yesSBMRadioButtonAction" prefWidth="50.0" selected="true" text="Yes">
-               <toggleGroup>
-                  <ToggleGroup fx:id="toggleGroupSMB" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" prefHeight="12.0" prefWidth="50.0" text="No" toggleGroup="$toggleGroupSMB" />
+            <TextField fx:id="authorsNameTextField" promptText="Author's Name" HBox.hgrow="ALWAYS" />
+            <Label text="Lab Name:" />
+            <TextField fx:id="labNameTextField" promptText="Lab Name:" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <Label layoutX="126.0" layoutY="200.0" prefHeight="28.0" prefWidth="202.0" text="Ratio Calculation Method:" />
-      <HBox layoutX="338.0" layoutY="205.0">
+      <Label text="Provenance:" GridPane.rowIndex="3" />
+      <TextField fx:id="provenanceTextField" promptText="Provenance" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Label text="Parameters:" GridPane.rowIndex="4" />
+      <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <columnConstraints>
+          <ColumnConstraints hgrow="NEVER" />
+          <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="NEVER" />
+          <RowConstraints vgrow="NEVER" />
+          <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+        </rowConstraints>
          <children>
-            <RadioButton fx:id="linearRegressionRatioCalcRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#linearRegressionRatioCalcRadioButtonAction" opacity="0.98" prefHeight="18.0" prefWidth="249.0" text="Linear regression to burn mid-time">
-               <toggleGroup>
-                  <ToggleGroup fx:id="toggleGroupRatioCalcMethod" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false" onAction="#spotAverageRatioCalcRadioButtonAction" opacity="0.98" prefHeight="18.0" prefWidth="212.0" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
+            <Label text="Normalise Ion Counts for SBM?" />
+            <Label text="Ratio Calculation Method:" GridPane.rowIndex="1" />
+            <Label text="Parent Concentration:" GridPane.rowIndex="2" />
+            <Label text="Preferred index isotope:" GridPane.rowIndex="3" />
+            <HBox alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <RadioButton fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="toggleGroupIsotope" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="pb207RadioButton" mnemonicParsing="false" onAction="#pb207RadioButtonAction" text="207Pb" toggleGroup="$toggleGroupIsotope" />
+                  <RadioButton fx:id="pb208RadioButton" mnemonicParsing="false" onAction="#pb208RadioButtonAction" text="208Pb" toggleGroup="$toggleGroupIsotope" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1">
+               <children>
+                  <RadioButton fx:id="yesSBMRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#yesSBMRadioButtonAction" selected="true" text="Yes">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="toggleGroupSMB" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" text="No" toggleGroup="$toggleGroupSMB" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <RadioButton fx:id="linearRegressionRatioCalcRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#linearRegressionRatioCalcRadioButtonAction" opacity="0.98" text="Linear regression to burn mid-time">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="toggleGroupRatioCalcMethod" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false" onAction="#spotAverageRatioCalcRadioButtonAction" opacity="0.98" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
+               </children>
+            </HBox>
+            <CheckBox fx:id="calcMeanConcetrationCheckBox" mnemonicParsing="false" onAction="#calcMeanConcetrationCheckBoxAction" opacity="0.95" text="Use calculated Mean Concentration of Parent from concentration reference materials" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
-      </HBox>
-      <Label layoutX="20.0" layoutY="175.0" text="Parameters:" />
-      <Label layoutX="70.0" layoutY="302.0" text="Audit:" />
-      <TextArea fx:id="taskAuditTextArea" layoutX="127.0" layoutY="307.0" prefHeight="326.0" prefWidth="854.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" />
-      <CheckBox fx:id="calcMeanConcetrationCheckBox" layoutX="337.0" layoutY="233.0" mnemonicParsing="false" onAction="#calcMeanConcetrationCheckBoxAction" opacity="0.95" text="Use calculated Mean Concentration of Parent from concentration reference materials" />
-      <Label layoutX="127.0" layoutY="228.0" prefHeight="28.0" prefWidth="173.0" text="Parent Concentration:" />
-      <Label layoutX="127.0" layoutY="256.0" prefHeight="28.0" prefWidth="195.0" text="Preferred index isotope:" />
-      <RadioButton fx:id="pb204RadioButton" layoutX="338.0" layoutY="262.0" mnemonicParsing="false" onAction="#pb204RadioButtonAction" prefHeight="18.0" prefWidth="68.0" selected="true" text="204Pb">
-         <toggleGroup>
-            <ToggleGroup fx:id="toggleGroupIsotope" />
-         </toggleGroup>
-      </RadioButton>
-      <RadioButton fx:id="pb207RadioButton" layoutX="423.0" layoutY="262.0" mnemonicParsing="false" onAction="#pb207RadioButtonAction" prefHeight="18.0" prefWidth="68.0" text="207Pb" toggleGroup="$toggleGroupIsotope" />
-      <RadioButton fx:id="pb208RadioButton" layoutX="510.0" layoutY="262.0" mnemonicParsing="false" onAction="#pb208RadioButtonAction" prefHeight="18.0" prefWidth="68.0" text="208Pb" toggleGroup="$toggleGroupIsotope" />
+      </GridPane>
+      <Label text="Audit:" GridPane.rowIndex="5" />
+      <TextArea fx:id="taskAuditTextArea" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
    </children>
-</AnchorPane>
+   <padding>
+      <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+   </padding>
+</GridPane>

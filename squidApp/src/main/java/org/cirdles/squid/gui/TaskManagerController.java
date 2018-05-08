@@ -27,11 +27,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
-import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.TaskInterface;
 
@@ -44,7 +42,7 @@ public class TaskManagerController implements Initializable {
 
     private TaskInterface task;
     @FXML
-    private AnchorPane taskManagerAnchorPane;
+    private GridPane taskManagerGridPane;
     @FXML
     private TextField taskNameTextField;
     @FXML
@@ -94,10 +92,6 @@ public class TaskManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        taskManagerAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        taskManagerAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
         if (squidProject.getTask() != null) {
             task = squidProject.getTask();
             populateTaskFields();

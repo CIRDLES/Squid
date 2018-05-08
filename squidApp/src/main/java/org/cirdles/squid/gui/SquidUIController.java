@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -33,9 +35,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -105,16 +109,16 @@ public class SquidUIController implements Initializable {
     @FXML
     private ImageView squidImageView;
 
-    private static Pane projectManagerUI;
+    private static VBox projectManagerUI;
 
-    private static Pane sessionAuditUI;
-    private static Pane massesAuditUI;
-    private static Pane spotManagerUI;
+    private static VBox sessionAuditUI;
+    private static ScrollPane massesAuditUI;
+    private static HBox spotManagerUI;
 
-    private static Pane taskManagerUI;
+    private static GridPane taskManagerUI;
 
-    private static Pane isotopesManagerUI;
-    private static Pane ratiosManagerUI;
+    private static VBox isotopesManagerUI;
+    private static VBox ratiosManagerUI;
 
     private static SplitPane expressionBuilderUI;
     private static Pane expressionManagerUI;
@@ -251,8 +255,12 @@ public class SquidUIController implements Initializable {
 
             projectManagerUI = FXMLLoader.load(getClass().getResource("ProjectManager.fxml"));
             projectManagerUI.setId("ProjectManager");
-            VBox.setVgrow(projectManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(projectManagerUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(projectManagerUI, 0.0);
+            AnchorPane.setRightAnchor(projectManagerUI, 0.0);
+            AnchorPane.setTopAnchor(projectManagerUI, 0.0);
+            AnchorPane.setBottomAnchor(projectManagerUI, 0.0);
+            
             mainPane.getChildren().add(projectManagerUI);
             projectManagerUI.setVisible(true);
 
@@ -477,8 +485,12 @@ public class SquidUIController implements Initializable {
         try {
             sessionAuditUI = FXMLLoader.load(getClass().getResource("SessionAudit.fxml"));
             sessionAuditUI.setId("SessionAudit");
-            VBox.setVgrow(sessionAuditUI, Priority.ALWAYS);
-            HBox.setHgrow(sessionAuditUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(sessionAuditUI, 0.0);
+            AnchorPane.setRightAnchor(sessionAuditUI, 0.0);
+            AnchorPane.setTopAnchor(sessionAuditUI, 0.0);
+            AnchorPane.setBottomAnchor(sessionAuditUI, 0.0);
+            
             mainPane.getChildren().add(sessionAuditUI);
             sessionAuditUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
@@ -490,8 +502,12 @@ public class SquidUIController implements Initializable {
         try {
             massesAuditUI = FXMLLoader.load(getClass().getResource("MassesAudit.fxml"));
             massesAuditUI.setId("MassesAudit");
-            VBox.setVgrow(massesAuditUI, Priority.ALWAYS);
-            HBox.setHgrow(massesAuditUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(massesAuditUI, 0.0);
+            AnchorPane.setRightAnchor(massesAuditUI, 0.0);
+            AnchorPane.setTopAnchor(massesAuditUI, 0.0);
+            AnchorPane.setBottomAnchor(massesAuditUI, 0.0);
+            
             mainPane.getChildren().add(massesAuditUI);
             massesAuditUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
@@ -503,8 +519,12 @@ public class SquidUIController implements Initializable {
         try {
             spotManagerUI = FXMLLoader.load(getClass().getResource("SpotManager.fxml"));
             spotManagerUI.setId("SpotManager");
-            VBox.setVgrow(spotManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(spotManagerUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(spotManagerUI, 0.0);
+            AnchorPane.setRightAnchor(spotManagerUI, 0.0);
+            AnchorPane.setTopAnchor(spotManagerUI, 0.0);
+            AnchorPane.setBottomAnchor(spotManagerUI, 0.0);
+            
             mainPane.getChildren().add(spotManagerUI);
             spotManagerUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
@@ -517,8 +537,12 @@ public class SquidUIController implements Initializable {
         try {
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
             taskManagerUI.setId("TaskManager");
-            VBox.setVgrow(taskManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(taskManagerUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(taskManagerUI, 0.0);
+            AnchorPane.setRightAnchor(taskManagerUI, 0.0);
+            AnchorPane.setTopAnchor(taskManagerUI, 0.0);
+            AnchorPane.setBottomAnchor(taskManagerUI, 0.0);
+            
             mainPane.getChildren().add(taskManagerUI);
             showUI(taskManagerUI);
             manageRatiosMenu.setDisable(false);
@@ -526,7 +550,7 @@ public class SquidUIController implements Initializable {
             manageReportsMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("taskManagerUI >>>>   " + iOException.getMessage());
+            System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
         }
     }
 
@@ -534,8 +558,12 @@ public class SquidUIController implements Initializable {
         try {
             isotopesManagerUI = FXMLLoader.load(getClass().getResource("IsotopesManager.fxml"));
             isotopesManagerUI.setId("IsotopesManager");
-            VBox.setVgrow(isotopesManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(isotopesManagerUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(isotopesManagerUI, 0.0);
+            AnchorPane.setRightAnchor(isotopesManagerUI, 0.0);
+            AnchorPane.setTopAnchor(isotopesManagerUI, 0.0);
+            AnchorPane.setBottomAnchor(isotopesManagerUI, 0.0);
+            
             mainPane.getChildren().add(isotopesManagerUI);
             isotopesManagerUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
@@ -551,8 +579,12 @@ public class SquidUIController implements Initializable {
 
             ratiosManagerUI = FXMLLoader.load(getClass().getResource("RatiosManager.fxml"));
             ratiosManagerUI.setId("RatiosManager");
-            VBox.setVgrow(ratiosManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(ratiosManagerUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(ratiosManagerUI, 0.0);
+            AnchorPane.setRightAnchor(ratiosManagerUI, 0.0);
+            AnchorPane.setTopAnchor(ratiosManagerUI, 0.0);
+            AnchorPane.setBottomAnchor(ratiosManagerUI, 0.0);
+            
             mainPane.getChildren().add(ratiosManagerUI);
             ratiosManagerUI.setVisible(false);
 
@@ -604,8 +636,12 @@ public class SquidUIController implements Initializable {
         try {
             reductionManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/ReductionManager.fxml"));
             reductionManagerUI.setId("ReductionManager");
-            VBox.setVgrow(reductionManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(reductionManagerUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(reductionManagerUI, 0.0);
+            AnchorPane.setRightAnchor(reductionManagerUI, 0.0);
+            AnchorPane.setTopAnchor(reductionManagerUI, 0.0);
+            AnchorPane.setBottomAnchor(reductionManagerUI, 0.0);
+            
             mainPane.getChildren().add(reductionManagerUI);
             reductionManagerUI.setVisible(false);
 
@@ -618,8 +654,12 @@ public class SquidUIController implements Initializable {
         try {
             reducedDataReportManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/reducedDataReportManager.fxml"));
             reducedDataReportManagerUI.setId("reducedDataReportManagerUI");
-            VBox.setVgrow(reducedDataReportManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(reducedDataReportManagerUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(reducedDataReportManagerUI, 0.0);
+            AnchorPane.setRightAnchor(reducedDataReportManagerUI, 0.0);
+            AnchorPane.setTopAnchor(reducedDataReportManagerUI, 0.0);
+            AnchorPane.setBottomAnchor(reducedDataReportManagerUI, 0.0);
+            
             mainPane.getChildren().add(reducedDataReportManagerUI);
             reducedDataReportManagerUI.setVisible(false);
 
