@@ -51,6 +51,7 @@ squidApp/LudwigLibraryJavadoc/
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.xml
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.txt
 !squidCore/src/main/resources/org/cirdles/squid/javadoc/*.jar
+!squidCore/src/test/java/org/cirdles/squid/core/SampleTask.XML
 
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
 
