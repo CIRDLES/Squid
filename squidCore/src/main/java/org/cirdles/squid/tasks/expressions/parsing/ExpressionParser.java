@@ -148,15 +148,17 @@ public class ExpressionParser {
         while (parsedRPNreversedIterator.hasNext()) {
             String token = parsedRPNreversedIterator.next();
 
-            if (exp != null) {
-                // find next available empty left child
-                exp = walkUpTreeToEmptyLeftChild(exp);
-            }
+            if (TokenTypes.getType(token).compareTo(TokenTypes.FORMATTER) != 0) {
+                if (exp != null) {
+                    // find next available empty left child
+                    exp = walkUpTreeToEmptyLeftChild(exp);
+                }
 
-            exp = walkTree(token, exp);
-            if (firstPass) {
-                savedExp = exp;
-                firstPass = false;
+                exp = walkTree(token, exp);
+                if (firstPass) {
+                    savedExp = exp;
+                    firstPass = false;
+                }
             }
         }
 
@@ -207,8 +209,6 @@ public class ExpressionParser {
         ExpressionTreeInterface retExpTree = null;
 
         switch (tokenType) {
-            case FORMATTER:
-                break;
             case OPERATOR_A:
             case OPERATOR_M:
             case OPERATOR_E:
@@ -273,7 +273,7 @@ public class ExpressionParser {
                         && eqnSwitchNU) {
                     // this is the NU switch case for ratio where ratio is processed specially vs below where it is just looked up
                     retExpTree = retExpTreeKnown;
-                    
+
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
                         && !eqnSwitchNU) {
@@ -283,15 +283,15 @@ public class ExpressionParser {
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET(),
                             uncertaintyDirective);
-                    
+
                 } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
                         || (retExpTreeKnown instanceof SpotFieldNode)) {
                     retExpTree = retExpTreeKnown;
                     retExpTree.setUncertaintyDirective(uncertaintyDirective);
-                    
+
                 } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
                     retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index, uncertaintyDirective);
-                    
+
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective, index);
                 }
