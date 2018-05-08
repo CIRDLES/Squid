@@ -6,7 +6,6 @@
 package org.cirdles.squid.core;
 
 import java.io.File;
-import java.util.List;
 import org.cirdles.squid.tasks.Task;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -27,19 +26,23 @@ public class TaskXMLConverterTest {
             String folderPath = "src/test/java/org/cirdles/squid/core/TaskXMLFiles/";
             Task originalTask = new Task();
             originalTask = (Task) originalTask.readXMLObject(folderPath + "SampleTask.XML", false);
-            originalTask.serializeXMLObject(folderPath + "ConvertedOriginalTask.XML");
-            Task convertedTask = (Task) originalTask.readXMLObject(folderPath + "ConvertedOriginalTask.XML", false);
-            convertedTask.serializeXMLObject(folderPath + "ConvertedConvertedTask.XML");
+            File convertedOriginal = new File(folderPath + "ConvertedOriginalTask.XML");
+            originalTask.serializeXMLObject(convertedOriginal.getAbsolutePath());
+            Task convertedTask = (Task) originalTask.readXMLObject(convertedOriginal.getAbsolutePath(), false);          
+            File convertedConverted = new File(folderPath + "ConvertedConvertedTask.XML");
+            convertedTask.serializeXMLObject(convertedConverted.getAbsolutePath());
 
             SAXBuilder builder = new SAXBuilder();
             Document originalFile = (Document) builder.build(new File(folderPath + "ConvertedOriginalTask.XML"));
             Document convertedFile = (Document) builder.build(new File(folderPath + "ConvertedConvertedTask.XML"));
             Element originalElement = originalFile.getRootElement();
             Element convertedElement = convertedFile.getRootElement();
+            convertedOriginal.delete();
+            convertedConverted.delete();
             assertTrue(ElementComparer.compareElements(originalElement, convertedElement));
         } catch (Exception e) {
             e.printStackTrace();
-            fail("something went wrong" + e.getMessage());
+            fail("something went wrong: " + e.getMessage());
         }
     }
 }
