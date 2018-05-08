@@ -75,7 +75,7 @@
             <xs:element type="xs:string" name="rootExpressionTree"/>
             <xs:element type="xs:string" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
             <xs:element type="xs:string" name="uncertaintyDirective"/>
-            <xs:element type="xs:string" name="index"/>
+            <xs:element type="xs:integer" name="index"/>
             
         </xs:sequence>
     </xs:complexType>

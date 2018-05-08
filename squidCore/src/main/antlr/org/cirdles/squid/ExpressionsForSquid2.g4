@@ -67,13 +67,13 @@ expr:   FUNCTION '(' exprList+ ')'    // func call like f(), f(x), f(1,2) switch
     |   expr '<=' expr          // less than comparison (lowest priority op)
     |   expr '>' expr          // less than comparison (lowest priority op)
     |   expr '>=' expr          // less than comparison (lowest priority op)
+    |   WS expr
+    |   expr WS
     |   ARRAY_CALL
     |   NAMED_EXPRESSION
     |   ID                      // variable reference
-//    |   INT
     |   FLOAT
     |   INT
-    
     ;
 exprList : expr (',' expr)* ;   // arg list
 
@@ -156,7 +156,8 @@ fragment
 Exponent : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
 
 
-WS  :   [ \t\n\r]+ -> skip ;
+//WS  :   [ \t\n\r]+ -> skip ;
+WS  :   (' ' | '\t' | '\n' | '\r') ;
 
 SL_COMMENT
     :   '//' .*? '\n' -> skip

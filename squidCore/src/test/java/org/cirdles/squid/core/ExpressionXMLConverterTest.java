@@ -7,7 +7,7 @@ package org.cirdles.squid.core;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -34,7 +34,7 @@ public class ExpressionXMLConverterTest {
         try {
             XStream xstream = new XStream();
             ExpressionTree LnUOU = new ExpressionTree("LnUO/U");
-            List<String> ratiosOfInterest = new LinkedList<>();
+            List<String> ratiosOfInterest = new ArrayList<>();
             ratiosOfInterest.add("254/238");
             LnUOU.setRatiosOfInterest(ratiosOfInterest);
             LnUOU.setOperation(Function.ln());
@@ -42,8 +42,10 @@ public class ExpressionXMLConverterTest {
             LnUOU.setSquidSwitchSCSummaryCalculation(false);
             LnUOU.setSquidSwitchSTReferenceMaterialCalculation(true);
             LnUOU.setSquidSwitchSAUnknownCalculation(true);
-
+            
             Expression initialExpression = new Expression(LnUOU, "ln([\"254/238\"])", true);
+            
+
             SquidSpeciesModel sm1 = new SquidSpeciesModel(0, "254", "254", "Uranium", false, "");
             SquidSpeciesModel sm2 = new SquidSpeciesModel(0, "238", "238", "Uranium", false, "");
 
@@ -60,13 +62,14 @@ public class ExpressionXMLConverterTest {
             expTree.getChildrenET().clear();
             expTree.addChild(0, rm);
 
+            String folderPath = "src/test/java/org/cirdles/squid/core/";
             initialExpression.customizeXstream(xstream);
-            File initialFile = new File("InitialCreation.XML");
+            File initialFile = new File( folderPath + "InitialCreation.XML");
 
             initialExpression.serializeXMLObject(initialFile.getAbsolutePath());
 
             Expression convertedExpression = (Expression) (new Expression()).readXMLObject(initialFile.getAbsolutePath(), false);
-            File convertedFile = new File("ConvertedCreation.XML");
+            File convertedFile = new File(folderPath + "ConvertedCreation.XML");
             convertedExpression.serializeXMLObject(convertedFile.getAbsolutePath());
 
             SAXBuilder builder = new SAXBuilder();
@@ -104,6 +107,7 @@ public class ExpressionXMLConverterTest {
         } else {
             returnValue = false;
         }
+
         
         return returnValue;
     }

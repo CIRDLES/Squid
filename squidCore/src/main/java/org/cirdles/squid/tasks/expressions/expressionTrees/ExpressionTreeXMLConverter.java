@@ -138,7 +138,7 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
         
         writer.startNode("index");
-        writer.setValue(String.valueOf(expressionTree.getIndex()));
+        writer.setValue(Integer.toString(expressionTree.getIndex()));
         writer.endNode();
     }
 
