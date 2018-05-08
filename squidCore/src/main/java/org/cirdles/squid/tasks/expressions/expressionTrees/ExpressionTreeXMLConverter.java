@@ -128,7 +128,18 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.startNode("rootExpressionTree");
         writer.setValue(String.valueOf(expressionTree.isRootExpressionTree()));
         writer.endNode();
-
+        
+        writer.startNode("squidSwitchConcentrationReferenceMaterialCalculation");
+        writer.setValue(String.valueOf(expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()));
+        writer.endNode();
+        
+        writer.startNode("uncertaintyDirective");
+        writer.setValue(expressionTree.getUncertaintyDirective());
+        writer.endNode();
+        
+        writer.startNode("index");
+        writer.setValue(Integer.toString(expressionTree.getIndex()));
+        writer.endNode();
     }
 
     /**
@@ -242,6 +253,18 @@ public class ExpressionTreeXMLConverter implements Converter {
         expressionTree.setRootExpressionTree(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 
+        reader.moveDown();
+        expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+        
+        reader.moveDown();
+        expressionTree.setUncertaintyDirective(reader.getValue());
+        reader.moveUp();
+        
+        reader.moveDown();
+        expressionTree.setIndex(Integer.parseInt(reader.getValue()));
+        reader.moveUp();
+        
         return expressionTree;
     }
 

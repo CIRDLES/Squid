@@ -771,7 +771,7 @@ public class ExpressionManagerController implements Initializable {
 
             currentExpression.setName(expressionNameTextField.getText().trim());
             currentExpression.setExpressionTree(expTree);
-            currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim().replace("\n", ""));
+            currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim());//.replace("\n", ""));
 
             squidProject.getTask().updateAffectedExpressions(currentExpression);
             squidProject.getTask().updateAllExpressions();
