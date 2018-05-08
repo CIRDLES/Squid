@@ -806,9 +806,9 @@ public class ExpressionBuilderController implements Initializable {
                     changeFromUndoRedo=false;
                 }
                 //if significative change
-                if(oldValue == null || !oldValue.replaceAll(" +|\n|\t", " ").trim().equals(newValue.replaceAll(" +|\n|\t", " ").trim())){
+                //if(oldValue == null || !oldValue.replaceAll(" +|\n|\t", "").trim().equals(newValue.replaceAll(" +|\n|\t", "").trim())){
                     updateAuditGraphAndPeek();
-                }
+                //}
             }
         });
 
@@ -1752,10 +1752,11 @@ public class ExpressionBuilderController implements Initializable {
                 }
             }
         }
-        return sb.toString();
+        return sb.toString().replaceAll(" +\\(", "(");
     }
 
     private void buildTextFlowFromString(String string) {
+        string = string.replaceAll("    ", "\t");
         if (!string.replaceAll(" +", " ").trim().equals(makeStringFromTextFlow().trim())) {
 
             String numberRegExp = "^\\d+(\\.\\d+)?$";
@@ -1777,7 +1778,7 @@ public class ExpressionBuilderController implements Initializable {
                 Token token = tokens.get(i);
                 String nodeText = token.getText();
 
-                ExpressionTextNode etn;
+                ExpressionTextNode etn = null;
 
                 // Make a node of the corresponding type
                 if (nodeText.matches(numberRegExp)) {
@@ -1788,12 +1789,14 @@ public class ExpressionBuilderController implements Initializable {
                     etn = new ExpressionTextNode(newLinePlaceHolder);
                 } else if(nodeText.equals("\t")){
                     etn = new ExpressionTextNode(tabPlaceHolder);
-                } else {
+                } else if(!nodeText.equals(" ")){
                     etn = new ExpressionTextNode(' ' + nodeText + ' ');
                 }
-
-                etn.setOrdinalIndex(i);
-                children.add(etn);
+                
+                if(etn!=null){
+                    etn.setOrdinalIndex(i);
+                    children.add(etn);
+                }
             }
 
             expressionTextFlow.getChildren().setAll(children);
