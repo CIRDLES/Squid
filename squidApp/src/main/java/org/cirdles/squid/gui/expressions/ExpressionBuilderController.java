@@ -1018,8 +1018,6 @@ public class ExpressionBuilderController implements Initializable {
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
             expressionIsSaved.set(false);
-            exp.setName("copy of " + exp.getName());
-            expressionNameTextField.setText(exp.getName());
         }
     }
 
