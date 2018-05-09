@@ -10,7 +10,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
+<<<<<<< HEAD
 <VBox minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+=======
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.SquidUIController">
+>>>>>>> expression
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -71,8 +75,8 @@
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
+                  <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Expression Builder" />
                   <MenuItem mnemonicParsing="false" onAction="#manageExpressionsMenuItemAction" text="Manage Expressions" />
-                  <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Expression Builder - BETA" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
                   <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />

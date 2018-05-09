@@ -609,8 +609,8 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(expressionBuilderUI);
             expressionBuilderUI.setVisible(false);
 
-        } catch (IOException | RuntimeException iOException) {
-            System.out.println("ExpressionBuilder >>>>   " + iOException.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(SquidUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

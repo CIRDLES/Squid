@@ -28,7 +28,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
       <SplitPane fx:id="leftSplitPane" dividerPositions="1.0" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
          <items>
@@ -183,7 +183,6 @@
                               <RadioButton fx:id="dragndropLeftRadio" mnemonicParsing="false" text="Insert left" />
                               <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" text="Replace" />
                               <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" text="Insert right" />
-                              <Label text="Editor mode:" visible="false" />
                               <Label fx:id="modeLabel" text="View" visible="false" />
                            </children>
                         </HBox>
@@ -243,6 +242,7 @@
                                                    </HBox.margin>
                                                 </Text>
                                                 <Button fx:id="showCurrentExpressionBtn" mnemonicParsing="false" onAction="#showCurrentExpressionAction" scaleX="0.7" scaleY="0.7" text="Show in list" />
+                                                <Button fx:id="showCommentsBtn" mnemonicParsing="false" onAction="#showCommentsAction" scaleX="0.7" scaleY="0.7" text="Show comments" translateX="-39.0" />
                                              </children>
                                           </HBox>
                                        </graphic>

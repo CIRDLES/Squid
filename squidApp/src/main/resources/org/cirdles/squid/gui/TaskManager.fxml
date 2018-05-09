@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<<<<<<< HEAD
 
 <GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
   <columnConstraints>
@@ -26,6 +27,9 @@
     <RowConstraints valignment="TOP" vgrow="NEVER" />
     <RowConstraints valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
+=======
+<AnchorPane fx:id="taskManagerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+>>>>>>> expression
    <children>
       <Label text="Task Name:" />
       <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1">
