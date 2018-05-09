@@ -158,7 +158,6 @@ public class ExpressionTreeXMLConverter implements Converter {
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
-////TODO CONFIRM FIELDS
         ExpressionTree expressionTree = new ExpressionTree();
 
         reader.moveDown();

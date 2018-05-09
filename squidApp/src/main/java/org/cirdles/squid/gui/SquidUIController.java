@@ -724,28 +724,17 @@ public class SquidUIController implements Initializable {
     @FXML
     private void exportSquid3TaskMenuItemAction(ActionEvent event) {
         try {
-            FileChooser fc = new FileChooser();
-            File squidTaskFile =  fc.showSaveDialog(primaryStageWindow);
-            if (squidTaskFile != null) {
-                TaskInterface task = squidProject.getTask();
-                XStream xstream = new XStream();
-                task.customizeXstream(xstream);
-                xstream.toXML(task, new FileOutputStream(squidTaskFile));
-            }
-        } catch (IOException exception) {
+            FileHandler.exportSquid3TaskFile(squidProject, primaryStageWindow);
+        } catch (IOException e) {
         }
     }
 
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
-            FileChooser fc = new FileChooser();
-            File squidTaskFile =  fc.showOpenDialog(primaryStageWindow);
-            if (squidTaskFile != null) {
-                TaskInterface task = squidProject.getTask();
-                XStream xstream = new XStream();
-                task.customizeXstream(xstream);
-                squidProject.setTask((TaskInterface)xstream.fromXML(squidTaskFile));
-            }
+        try {
+            FileHandler.selectSquid3TaskFile(squidProject, primaryStageWindow);
+        } catch (IOException e) {
+        }
     }
 
     @FXML

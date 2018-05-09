@@ -31,6 +31,7 @@ import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.tasks.expressions.Expression;
 
 /**
  * A <code>TaskXMLConverter</code> is used to marshal and unmarshal data between
@@ -174,8 +175,7 @@ public class TaskXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("mapOfIndexToMassStationDetails");
-        Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = task.getMapOfIndexToMassStationDetails();
-        context.convertAnother(mapOfIndexToMassStationDetails);
+        context.convertAnother(task.getMapOfIndexToMassStationDetails());
         writer.endNode();
 
         writer.startNode("squidSessionModel");
@@ -203,9 +203,9 @@ public class TaskXMLConverter implements Converter {
         }
         writer.endNode();
 
-//        writer.startNode("taskExpressionsOrdered");
-//        context.convertAnother(task.getTaskExpressionsOrdered());
-//        writer.endNode();
+        writer.startNode("taskExpressionsOrdered");
+        context.convertAnother(task.getTaskExpressionsOrdered());
+        writer.endNode();
 //
 //        Map<String, ExpressionTreeInterface> namedExpressionsMap = task.getNamedExpressionsMap();
 //        writer.startNode("namedExpressionsMap");
@@ -351,7 +351,7 @@ public class TaskXMLConverter implements Converter {
 
         reader.moveDown();
         Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = new TreeMap<>();
-        while(reader.hasMoreChildren()) {
+        while (reader.hasMoreChildren()) {
             reader.moveDown();
             int mapInt;
             reader.moveDown();
@@ -409,26 +409,26 @@ public class TaskXMLConverter implements Converter {
             listOfSelectedRatiosByMassStationIndex.add(selectedRatioList);
         }
         reader.moveUp();
-        if(listOfSelectedRatiosByMassStationIndex.size() > 0 && listOfSelectedRatiosByMassStationIndex.get(0).size() > 0){
-        boolean[][] tableOfSelectedRatiosByMassStationIndex = new boolean[listOfSelectedRatiosByMassStationIndex.size()][listOfSelectedRatiosByMassStationIndex.get(0).size()];
-        for (int i = 0; i < tableOfSelectedRatiosByMassStationIndex.length; i++) {
-            for (int j = 0; j < tableOfSelectedRatiosByMassStationIndex[0].length; j++) {
-                tableOfSelectedRatiosByMassStationIndex[i][j] = listOfSelectedRatiosByMassStationIndex.get(i).get(j);
+        if (listOfSelectedRatiosByMassStationIndex.size() > 0 && listOfSelectedRatiosByMassStationIndex.get(0).size() > 0) {
+            boolean[][] tableOfSelectedRatiosByMassStationIndex = new boolean[listOfSelectedRatiosByMassStationIndex.size()][listOfSelectedRatiosByMassStationIndex.get(0).size()];
+            for (int i = 0; i < tableOfSelectedRatiosByMassStationIndex.length; i++) {
+                for (int j = 0; j < tableOfSelectedRatiosByMassStationIndex[0].length; j++) {
+                    tableOfSelectedRatiosByMassStationIndex[i][j] = listOfSelectedRatiosByMassStationIndex.get(i).get(j);
+                }
             }
-        }
-        task.setTableOfSelectedRatiosByMassStationIndex(tableOfSelectedRatiosByMassStationIndex);
+            task.setTableOfSelectedRatiosByMassStationIndex(tableOfSelectedRatiosByMassStationIndex);
         }
 
-//        List<Expression> taskExpressions = new ArrayList<>();
-//        reader.moveDown();
-//        while (reader.hasMoreChildren()) {
-//            reader.moveDown();
-//            Expression exp = new Expression();
-//            exp = (Expression) context.convertAnother(exp, Expression.class);
-//            taskExpressions.add((Expression)exp);
-//            reader.moveUp();
-//        }
-//        task.setTaskExpressionsOrdered(taskExpressions);
+        List<Expression> taskExpressions = new ArrayList<>();
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+            Expression exp = new Expression();
+            exp = (Expression) context.convertAnother(exp, Expression.class);
+            taskExpressions.add((Expression)exp);
+            reader.moveUp();
+        }
+        task.setTaskExpressionsOrdered(taskExpressions);
 //
 //        Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>();
 //        reader.moveDown();

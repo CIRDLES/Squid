@@ -78,6 +78,24 @@ public final class Squid3Constants {
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
             + "                                ../schema/SquidTask_ExpressionXMLSchema.xsd\">";
+    
+    public static final String XML_HEADER_FOR_SQUIDTASK_FILES_USING_REMOTE_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- SQUIDTASK_DATA_FILE -->\n"
+            + "<Task xmlns=\"https://raw.githubusercontent.com\"\n"
+            + " xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + " xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                no remote location yet\">";
+
+    public static final String XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- SQUIDTASK_DATA_FILE -->\n"
+            + "<Task xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                ../schema/SquidTaskXMLSchema.xsd\">";
 
     /**
      *

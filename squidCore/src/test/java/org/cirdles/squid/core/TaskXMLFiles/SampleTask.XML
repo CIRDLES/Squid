@@ -1,4 +1,10 @@
-<Task>
+<?xml version="1.0"?>
+<!-- SQUIDTASK_DATA_FILE -->
+<Task xmlns="https://raw.githubusercontent.com"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://raw.githubusercontent.com
+                                ../schema/SquidTaskXMLSchema.xsd">
   <name>Z6266 = 11pk Perm1</name>
   <type>Geochron</type>
   <description>11-peak zircon (189-254), primary 206/238, secondary (208/232) calibrated indirectly, via 232Th/238U</description>

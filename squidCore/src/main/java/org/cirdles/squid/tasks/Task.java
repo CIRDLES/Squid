@@ -19,8 +19,6 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -39,6 +37,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -84,6 +83,7 @@ import org.cirdles.squid.tasks.TaskXMLConverterVariables.ShrimpFractionXMLConver
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidRatiosModelXMLConverter;
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSessionModelXMLConverter;
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSpeciesModelXMLConverter;
+import org.cirdles.squid.tasks.expressions.ExpressionXMLConverter;
 
 /**
  *
@@ -962,6 +962,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return eqPkUndupeOrd;
     }
 
+    @Override
+    public String customizeXML(String xml) {
+        String xmlR = xml;
+
+        xmlR = xmlR.replaceFirst("<Task>",
+                XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
+
+        return xmlR;
+    }
+    
     /**
      *
      * @param xstream
@@ -984,6 +994,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.alias("SquidRatiosModel", SquidRatiosModel.class);
         xstream.alias("SquidSessionModel", SquidSessionModel.class);
         xstream.alias("ShrimpFraction", ShrimpFraction.class);
+        xstream.alias("Expression", Expression.class);
 
         xstream.registerConverter(new OperationXMLConverter());
         xstream.registerConverter(new FunctionXMLConverter());
@@ -992,7 +1003,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.registerConverter(new SquidSessionModelXMLConverter());
         xstream.registerConverter(new SquidSpeciesModelXMLConverter());
         xstream.registerConverter(new ShrimpFractionXMLConverter());
-
+        xstream.registerConverter(new ExpressionXMLConverter());
+        
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
 

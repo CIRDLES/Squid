@@ -11,90 +11,99 @@ and open the template in the editor.
            elementFormDefault="qualified" 
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
-    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd/>
-        <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel"/>
-        <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/MassStationDetail.xsd"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/MassStationDetail.xsd"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionXMLSchema.xsd"/>
 
 
-        <xs:element name="Task" type="Task"/>
-        <xs:complexType name="Task" mixed="true">
-            <xs:sequence>
+    <xs:element name="Task" type="Task"/>
+    <xs:complexType name="Task" mixed="true">
+        <xs:sequence>
                    
-                <xs:element name="name" type="xs:string"/>
-                <xs:element name="type" type="xs:string"/>
-                <xs:element name="authorName" type="xs:string"/>
-                <xs:element name="labName" type="xs:string"/>
-                <xs:element name="provenance" type="xs:string"/>
-                <xs:element name="dateRevised" type="xs:double"/>
-                <xs:element name="useSBM" type="xs:boolean"/>
-                <xs:element name="userLinFits" type="xs:boolean"/>
-                <xs:element name="indexOfBackgroundSpecies" type="xs:integer"/>
-                <xs:element name="indexOfTaskkBackgroundMass" type="xs:integer"/>
-                <xs:element name="parentNuclide" type="xs:string"/>
-                <xs:element name="directAltPD" type="xs:boolean"/>
-                <xs:element name="filterForRefMatSpotNames" type="xs:string"/>
-                <xs:element name="filterForConcRefMatSpotNames" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="authorName" type="xs:string"/>
+            <xs:element name="labName" type="xs:string"/>
+            <xs:element name="provenance" type="xs:string"/>
+            <xs:element name="dateRevised" type="xs:double"/>
+            <xs:element name="useSBM" type="xs:boolean"/>
+            <xs:element name="userLinFits" type="xs:boolean"/>
+            <xs:element name="indexOfBackgroundSpecies" type="xs:integer"/>
+            <xs:element name="indexOfTaskkBackgroundMass" type="xs:integer"/>
+            <xs:element name="parentNuclide" type="xs:string"/>
+            <xs:element name="directAltPD" type="xs:boolean"/>
+            <xs:element name="filterForRefMatSpotNames" type="xs:string"/>
+            <xs:element name="filterForConcRefMatSpotNames" type="xs:string"/>
 
-                <xs:element name="nominalMasses" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="nominalMass" type="xs:string"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+            <xs:element name="nominalMasses" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="nominalMass" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
 
-                <xs:element name="ratioNames" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="ratioName" type="xs:string"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+            <xs:element name="ratioNames" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="ratioName" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             
-                <xs:element name="mapOfIndexToMassSstationDetails" minOccurs="0">
-                    <xs:complexType>
-                        <xs:all minOccurs="0" maxOccurs="unbounded">
-                            <xs:element type="xs:integer"/>
-                            <xs:element type="MassStationDetail"/>
-                        </xs:all>
-                    </xs:complexType>
-                </xs:element>
+            <xs:element name="mapOfIndexToMassSstationDetails" minOccurs="0">
+                <xs:complexType>
+                    <xs:all minOccurs="0" maxOccurs="unbounded">
+                        <xs:element type="xs:integer"/>
+                        <xs:element type="MassStationDetail"/>
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
             
-                <xs:element name="SquidSessionModel" type="SquidSessionModel"/>
+            <xs:element name="SquidSessionModel" type="SquidSessionModel"/>
             
-                <xs:element name="squidSpeciesModelList" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="SquidSpeciesModel" type="SquidSpeciesModel"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+            <xs:element name="squidSpeciesModelList" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="SquidSpeciesModel" type="SquidSpeciesModel"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             
-                <xs:element name="squidRatiosModelList" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="SquidRatiosModel" type="SquidRatiosModel"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+            <xs:element name="squidRatiosModelList" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="SquidRatiosModel" type="SquidRatiosModel"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             
-                <xs:element name="tableOfSelectedRatiosByMassStationIndex" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="tableOfSelectedRatiosByMassStationIndexRow" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="ratioByMassStationIndex" type="xs:boolean"/>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>                    
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+            <xs:element name="tableOfSelectedRatiosByMassStationIndex" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="tableOfSelectedRatiosByMassStationIndexRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="ratioByMassStationIndex" type="xs:boolean"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+                
+            <xs:element name="taskexpressionsOrdered" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="taskExpressionOrdered" type="Expression"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             
-                <xs:element name="selectedIndexIsotope" type="xs:enum"/>
+            <xs:element name="selectedIndexIsotope" type="xs:enum"/>
             
             
-            </xs:sequence>
-        </xs:complexType>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

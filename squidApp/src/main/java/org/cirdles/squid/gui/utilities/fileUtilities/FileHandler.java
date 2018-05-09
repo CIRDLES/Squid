@@ -26,6 +26,7 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -162,6 +163,46 @@ public class FileHandler {
             } else {
                 throw new SquidException("Filename does not end with '.xls'");
             }
+        }
+
+        return retVal;
+    }
+
+    public static File exportSquid3TaskFile(SquidProject squidProject, Window ownerWindow)
+            throws IOException {
+
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Squid 3 Task");
+        fileChooser.setInitialFileName(((Task) squidProject.getTask()).getName().replaceAll(" ", "") + ".xml");
+
+        File squidTaskFile = fileChooser.showSaveDialog(ownerWindow);
+
+        if (squidTaskFile != null && squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xml")) {
+            retVal = squidTaskFile;        
+            Task task = (Task) squidProject.getTask();
+            task.serializeXMLObject(retVal.getAbsolutePath());
+        }
+        
+        return retVal;
+    }
+
+    public static File selectSquid3TaskFile(SquidProject squidProject, Window ownerWindow)
+            throws IOException {
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Squid 3 Task");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 3 Task File", "*.xml"));
+
+        File squidTaskFile = fileChooser.showOpenDialog(ownerWindow);
+
+        if (squidTaskFile != null && squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xml")) {
+            retVal = squidTaskFile;
+            Task task = (Task) squidProject.getTask();
+            task = (Task) task.readXMLObject(retVal.getAbsolutePath(), false);
+            squidProject.setTask(task);
         }
 
         return retVal;
