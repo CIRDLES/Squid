@@ -242,7 +242,7 @@
                                                    </HBox.margin>
                                                 </Text>
                                                 <Button fx:id="showCurrentExpressionBtn" mnemonicParsing="false" onAction="#showCurrentExpressionAction" scaleX="0.7" scaleY="0.7" text="Show in list" />
-                                                <Button fx:id="showCommentsBtn" mnemonicParsing="false" onAction="#showCommentsAction" scaleX="0.7" scaleY="0.7" text="Show comments" translateX="-39.0" />
+                                                <Button fx:id="showNotesBtn" mnemonicParsing="false" onAction="#showNotesAction" scaleX="0.7" scaleY="0.7" text="Show notes" translateX="-39.0" />
                                              </children>
                                           </HBox>
                                        </graphic>

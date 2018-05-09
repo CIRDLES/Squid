@@ -99,8 +99,8 @@ public class ExpressionXMLConverter implements Converter {
         context.convertAnother(expression.getExpressionTree());
         writer.endNode();
         
-        writer.startNode("comments");
-        writer.setValue(expression.getComments());
+        writer.startNode("notes");
+        writer.setValue(expression.getNotes());
         writer.endNode();
     }
 
@@ -141,7 +141,7 @@ public class ExpressionXMLConverter implements Converter {
         reader.moveUp();
         
         reader.moveDown();
-        expression.setComments(reader.getValue());
+        expression.setNotes(reader.getValue());
         reader.moveUp();
 
         return expression;
