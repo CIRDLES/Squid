@@ -4,119 +4,130 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="spotManagerPane" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SpotManagerController">
+<HBox fx:id="spotManagerPane" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SpotManagerController">
    <children>
-      <VBox HBox.hgrow="ALWAYS">
-         <children>
-            <Label text="All Spots:" />
-            <VBox VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.5" styleClass="backgroundCalamari" HBox.hgrow="ALWAYS">
+         <items>
+            <VBox minWidth="515.0" prefWidth="515.0">
                <children>
-                  <HBox alignment="CENTER_LEFT" spacing="5.0">
+                  <Label text="All Spots:" />
+                  <VBox VBox.vgrow="ALWAYS">
                      <children>
-                        <Label minWidth="213.0" text="Filter by typing spot prefix:" />
-                        <TextField fx:id="filterSpotNameText" onKeyReleased="#filterSpotNameKeyReleased" promptText="type here" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="spotsShownLabel" minWidth="121.0" style="-fx-font-size: 12;" text=" : 1000/1000 shown" />
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                           <children>
+                              <Label minWidth="213.0" text="Filter by typing spot prefix:" />
+                              <TextField fx:id="filterSpotNameText" onKeyReleased="#filterSpotNameKeyReleased" promptText="type here" HBox.hgrow="ALWAYS" />
+                              <Label fx:id="spotsShownLabel" minWidth="121.0" style="-fx-font-size: 12;" text=" : 1000/1000 shown" />
+                           </children>
+                        </HBox>
+                        <Label fx:id="headerLabel" style="-fx-font-size: 12;" text="Header label" />
+                        <ListView fx:id="shrimpFractionList" VBox.vgrow="ALWAYS">
+                           <tooltip>
+                              <Tooltip text="Right-click spot for removal menu." />
+                           </tooltip>
+                        </ListView>
+                        <Label style="-fx-font-size: 11;" text="Hint: To remove a spot or split session, right mouse-click on spot for menu." />
+                        <HBox spacing="5.0">
+                           <children>
+                              <Label text="Edit Spot Name:" />
+                              <TextField fx:id="selectedSpotNameText" promptText="no spot selected" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="saveSpotNameButton" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Name" />
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
-                  <Label fx:id="headerLabel" style="-fx-font-size: 12;" text="Header label" />
-                  <ListView fx:id="shrimpFractionList" VBox.vgrow="ALWAYS">
-                     <tooltip>
-                        <Tooltip text="Right-click spot for removal menu." />
-                     </tooltip>
-                  </ListView>
-                  <Label style="-fx-font-size: 11;" text="Hint: To remove a spot or split session, right mouse-click on spot for menu." />
-                  <HBox spacing="5.0">
-                     <children>
-                        <Label text="Edit Spot Name:" />
-                        <TextField fx:id="selectedSpotNameText" promptText="no spot selected" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="saveSpotNameButton" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Name" />
-                     </children>
-                  </HBox>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="20.0" right="10.0" />
+                     </padding>
+                  </VBox>
                </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
                <padding>
-                  <Insets left="20.0" right="10.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-         </children>
-      </VBox>
-      <VBox HBox.hgrow="ALWAYS">
-         <children>
-            <VBox style="-fx-border-color: black;" VBox.vgrow="ALWAYS">
+            <VBox minWidth="515.0" prefWidth="515.0">
                <children>
-                  <Label text="Reference Material (RM) Spots for this Project:" />
-                  <VBox VBox.vgrow="ALWAYS">
+                  <VBox style="-fx-border-color: black;" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox spacing="10.0">
+                        <Label text="Reference Material (RM) Spots for this Project:" />
+                        <VBox VBox.vgrow="ALWAYS">
                            <children>
-                              <Label fx:id="rmCountLabel" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
-                              <Label text="RM Spots selected using filter: " />
-                              <Label fx:id="rmFilterLabel" style="-fx-font-weight: bold;" text="filter" />
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Label fx:id="rmCountLabel" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
+                                    <Label text="RM Spots selected using filter: " />
+                                    <Label fx:id="rmFilterLabel" style="-fx-font-weight: bold;" text="filter" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="headerLabelRefMat" style="-fx-font-size: 12;" text="Header label" />
+                              <ListView fx:id="shrimpRefMatList" VBox.vgrow="ALWAYS" />
+                              <VBox alignment="TOP_CENTER">
+                                 <children>
+                                    <Label style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
+                                    <Button fx:id="setFilteredSpotsAsRefMatButton" minWidth="390.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" text="Copy Filtered Spots to Reference Material spots." textOverrun="CLIP" VBox.vgrow="ALWAYS">
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                    </Button>
+                                 </children>
+                              </VBox>
                            </children>
-                        </HBox>
-                        <Label fx:id="headerLabelRefMat" style="-fx-font-size: 12;" text="Header label" />
-                        <ListView fx:id="shrimpRefMatList" VBox.vgrow="ALWAYS" />
-                        <VBox alignment="TOP_CENTER">
-                           <children>
-                              <Label style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
-                              <Button fx:id="setFilteredSpotsAsRefMatButton" minWidth="390.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" text="Copy Filtered Spots to Reference Material spots." textOverrun="CLIP" VBox.vgrow="ALWAYS">
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </Button>
-                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="25.0" right="15.0" />
+                           </padding>
                         </VBox>
                      </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="25.0" right="15.0" />
-                     </padding>
                   </VBox>
-               </children>
-            </VBox>
-            <VBox style="-fx-border-color: yellow; -fx-border-width: 3px;" VBox.vgrow="ALWAYS">
-               <children>
-                  <Label text="Concentration Reference Material Spots for this Project:" />
-                  <VBox VBox.vgrow="ALWAYS">
+                  <VBox style="-fx-border-color: yellow; -fx-border-width: 3px;" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox spacing="10.0">
+                        <Label text="Concentration Reference Material Spots for this Project:" />
+                        <VBox VBox.vgrow="ALWAYS">
                            <children>
-                              <Label fx:id="concrmCountLabel" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
-                              <Label text="Conc RM Spots selected using filter: " />
-                              <Label fx:id="concrmFilterLabel" style="-fx-font-weight: bold;" text="filter" />
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Label fx:id="concrmCountLabel" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
+                                    <Label text="Conc RM Spots selected using filter: " />
+                                    <Label fx:id="concrmFilterLabel" style="-fx-font-weight: bold;" text="filter" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="headerLabelConcRefMat" style="-fx-font-size: 12;" text="Header label" />
+                              <ListView fx:id="shrimpConcentrationRefMatList" VBox.vgrow="ALWAYS" />
+                              <VBox alignment="TOP_CENTER">
+                                 <children>
+                                    <Label style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
+                                    <Button fx:id="setFilteredSpotsAsConcRefMatButton" minWidth="417.0" mnemonicParsing="false" onAction="#setFilteredSpotsToConcRefMatAction" text="Copy Filtered Spots to Concentration Ref Mat spots." VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
                            </children>
-                        </HBox>
-                        <Label fx:id="headerLabelConcRefMat" style="-fx-font-size: 12;" text="Header label" />
-                        <ListView fx:id="shrimpConcentrationRefMatList" VBox.vgrow="ALWAYS" />
-                        <VBox alignment="TOP_CENTER">
-                           <children>
-                              <Label style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
-                              <Button fx:id="setFilteredSpotsAsConcRefMatButton" minWidth="417.0" mnemonicParsing="false" onAction="#setFilteredSpotsToConcRefMatAction" text="Copy Filtered Spots to Concentration Ref Mat spots." VBox.vgrow="ALWAYS" />
-                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="25.0" right="15.0" />
+                           </padding>
                         </VBox>
                      </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="25.0" right="15.0" />
-                     </padding>
                   </VBox>
                </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
             </VBox>
-         </children>
-      </VBox>
+         </items>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </SplitPane>
    </children>
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-   </padding>
 </HBox>
