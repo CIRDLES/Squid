@@ -36,7 +36,6 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverte
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
-import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -51,6 +50,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     private static final long serialVersionUID = 2614344042503810733L;
 
+    private String notes;
     private String name;
     private String excelExpressionString;
     private boolean squidSwitchNU;
@@ -229,6 +229,17 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         this.name = name;
     }
 
+    public String getNotes() {
+        if(notes==null){
+            notes = "";
+        }
+        return notes;
+    }
+
+    public void setNotes(String comments) {
+        this.notes = comments;
+    }
+    
     /**
      * @return the excelExpressionString
      */

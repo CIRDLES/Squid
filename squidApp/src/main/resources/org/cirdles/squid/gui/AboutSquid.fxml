@@ -26,7 +26,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="450.0" styleClass="main-Pain" stylesheets="@css/about.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.AboutSquidController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="450.0" styleClass="main-Pain" stylesheets="@css/about.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.AboutSquidController">
    <children>
       <Label fx:id="versionText" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="96.0" layoutY="237.0" prefHeight="45.0" prefWidth="258.0" stylesheets="@css/about.css" text="Squid V 0.0.1" textAlignment="CENTER">
          <styleClass>

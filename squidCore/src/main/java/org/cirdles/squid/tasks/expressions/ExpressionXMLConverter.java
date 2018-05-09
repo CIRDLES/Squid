@@ -86,7 +86,7 @@ public class ExpressionXMLConverter implements Converter {
         writer.startNode("name");
         writer.setValue(expression.getName());
         writer.endNode();
-
+        
         writer.startNode("excelExpressionString");
         writer.setValue(expression.getExcelExpressionString());
         writer.endNode();
@@ -97,6 +97,10 @@ public class ExpressionXMLConverter implements Converter {
         
         writer.startNode("expressionTree");
         context.convertAnother(expression.getExpressionTree());
+        writer.endNode();
+        
+        writer.startNode("notes");
+        writer.setValue(expression.getNotes());
         writer.endNode();
     }
 
@@ -134,6 +138,10 @@ public class ExpressionXMLConverter implements Converter {
         ExpressionTreeInterface expressionTree = new ExpressionTree();
         expressionTree = (ExpressionTreeInterface) context.convertAnother(expressionTree, ExpressionTree.class);
         expression.setExpressionTree(expressionTree);
+        reader.moveUp();
+        
+        reader.moveDown();
+        expression.setNotes(reader.getValue());
         reader.moveUp();
 
         return expression;

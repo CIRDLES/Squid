@@ -73,33 +73,42 @@ public abstract class Function
      *
      */
     public static final Map<String, String> FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    
+    public static final Map<String, String> MATH_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public static final Map<String, String> SQUID_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public static final Map<String, String> LOGIC_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     static {
 
-        FUNCTIONS_MAP.put("agePb76", "agePb76");
-        FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
-        FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
-        FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
-        FUNCTIONS_MAP.put("stdPb86radCor7per", "stdPb86radCor7per");
-        FUNCTIONS_MAP.put("pb86radCor7per", "pb86radCor7per");
+        SQUID_FUNCTIONS_MAP.put("agePb76", "agePb76");
+        SQUID_FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
+        SQUID_FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
+        SQUID_FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
+        SQUID_FUNCTIONS_MAP.put("stdPb86radCor7per", "stdPb86radCor7per");
+        SQUID_FUNCTIONS_MAP.put("pb86radCor7per", "pb86radCor7per");
+        SQUID_FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
+        SQUID_FUNCTIONS_MAP.put("concordia", "concordia");
+        SQUID_FUNCTIONS_MAP.put("robReg", "robReg");
+        SQUID_FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
+        SQUID_FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
+        SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
+        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
+        SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
 
-        FUNCTIONS_MAP.put("and", "and");
-        FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
-        FUNCTIONS_MAP.put("concordia", "concordia");
-        FUNCTIONS_MAP.put("exp", "exp");
-        FUNCTIONS_MAP.put("if", "sqIf");
-        FUNCTIONS_MAP.put("ln", "ln");
-        FUNCTIONS_MAP.put("robReg", "robReg");
-        FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
-        FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
-        FUNCTIONS_MAP.put("sqrt", "sqrt");
-        FUNCTIONS_MAP.put("TotalCps", "totalCps");
-        FUNCTIONS_MAP.put("lookup", "lookup");
-        FUNCTIONS_MAP.put("max", "max");
-        FUNCTIONS_MAP.put("abs", "abs");
-        FUNCTIONS_MAP.put("average", "average");
-        FUNCTIONS_MAP.put("count", "count");
-        FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
+        LOGIC_FUNCTIONS_MAP.put("and", "and");
+        LOGIC_FUNCTIONS_MAP.put("if", "sqIf");
+        
+        MATH_FUNCTIONS_MAP.put("exp", "exp");
+        MATH_FUNCTIONS_MAP.put("sqrt", "sqrt");
+        MATH_FUNCTIONS_MAP.put("ln", "ln");
+        MATH_FUNCTIONS_MAP.put("max", "max");
+        MATH_FUNCTIONS_MAP.put("abs", "abs");
+        MATH_FUNCTIONS_MAP.put("average", "average");
+        MATH_FUNCTIONS_MAP.put("count", "count");
+
+        FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
+        FUNCTIONS_MAP.putAll(SQUID_FUNCTIONS_MAP);
+        FUNCTIONS_MAP.putAll(LOGIC_FUNCTIONS_MAP);
     }
 
     public Function() {

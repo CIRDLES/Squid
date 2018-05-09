@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -33,7 +35,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -86,7 +90,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private Menu manageRatiosMenu;
     @FXML
-    private Pane mainPane;
+    private AnchorPane mainPane;
     @FXML
     private Menu manageReportsMenu;
     @FXML
@@ -114,7 +118,7 @@ public class SquidUIController implements Initializable {
     private static Pane isotopesManagerUI;
     private static Pane ratiosManagerUI;
 
-    private static Pane expressionBuilderUI;
+    private static SplitPane expressionBuilderUI;
     private static Pane expressionManagerUI;
 
     private static Pane reductionManagerUI;
@@ -146,12 +150,13 @@ public class SquidUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         // center Logo
-        squidImageView.layoutXProperty().bind(primaryStageWindow.getScene().widthProperty()
-                .divide(2).subtract(squidImageView.getFitWidth() / 2));
-        squidImageView.layoutYProperty().bind(primaryStageWindow.getScene().heightProperty()
-                .divide(2).subtract(squidImageView.getFitHeight() / 2).subtract(60));
+        mainPane.heightProperty().addListener((ov, oldValue, newValue) -> {
+            AnchorPane.setTopAnchor(squidImageView, newValue.doubleValue()/2.0-squidImageView.getFitHeight()/2.0);
+        });
+        mainPane.widthProperty().addListener((ov, oldValue, newValue) -> {
+            AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue()/2.0-squidImageView.getFitWidth()/2.0);
+        });
 
         managePrawnFileMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
@@ -565,13 +570,17 @@ public class SquidUIController implements Initializable {
         try {
             expressionBuilderUI = FXMLLoader.load(getClass().getResource("expressions/ExpressionBuilder.fxml"));
             expressionBuilderUI.setId("ExpressionBuilder");
-            VBox.setVgrow(expressionBuilderUI, Priority.ALWAYS);
-            HBox.setHgrow(expressionBuilderUI, Priority.ALWAYS);
+            
+            AnchorPane.setLeftAnchor(expressionBuilderUI, 0.0);
+            AnchorPane.setRightAnchor(expressionBuilderUI, 0.0);
+            AnchorPane.setTopAnchor(expressionBuilderUI, 0.0);
+            AnchorPane.setBottomAnchor(expressionBuilderUI, 0.0);
+            
             mainPane.getChildren().add(expressionBuilderUI);
             expressionBuilderUI.setVisible(false);
 
-        } catch (IOException | RuntimeException iOException) {
-            System.out.println("ExpressionBuilder >>>>   " + iOException.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(SquidUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

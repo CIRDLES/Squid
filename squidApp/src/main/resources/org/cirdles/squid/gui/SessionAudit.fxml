@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="sessionAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="925.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
+<AnchorPane fx:id="sessionAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="925.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.SessionAuditController">
    <children>
       <Label layoutX="6.0" layoutY="4.0" prefHeight="26.0" prefWidth="523.0" style="-fx-font-size: 14;" text="Session Audit: note that spot name duplicates are suffixed with '-DUP-n'" />
       <TreeView fx:id="prawnAuditTree" layoutY="25.0" prefHeight="616.0" prefWidth="925.0" style="-fx-background-color: #f4f4f4;">
