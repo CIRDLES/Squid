@@ -1206,6 +1206,8 @@ public class ExpressionBuilderController implements Initializable {
         if (!notesStage.isShowing()) {
             notesStage.show();
             showNotesBtn.setText("Hide notes");
+            notesStage.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
+            notesStage.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight()- 150) / 2);
         } else {
             notesStage.hide();
             showNotesBtn.setText("Show notes");
