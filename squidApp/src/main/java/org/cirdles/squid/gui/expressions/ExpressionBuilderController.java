@@ -149,7 +149,7 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private Button showCurrentExpressionBtn;
     @FXML
-    private Button showCommentsBtn;
+    private Button showNotesBtn;
 
     //TEXTS
     @FXML
@@ -351,19 +351,19 @@ public class ExpressionBuilderController implements Initializable {
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
 
-    private final Stage commentsStage = new Stage();
-    private final TextArea commentTextArea = new TextArea();
+    private final Stage notesStage = new Stage();
+    private final TextArea notesTextArea = new TextArea();
 
     {
         AnchorPane pane = new AnchorPane();
-        pane.getChildren().setAll(commentTextArea);
-        AnchorPane.setBottomAnchor(commentTextArea, 0.0);
-        AnchorPane.setTopAnchor(commentTextArea, 0.0);
-        AnchorPane.setRightAnchor(commentTextArea, 0.0);
-        AnchorPane.setLeftAnchor(commentTextArea, 0.0);
-        commentTextArea.setWrapText(true);
-        commentsStage.setScene(new Scene(pane, 600, 150));
-        commentsStage.setAlwaysOnTop(true);
+        pane.getChildren().setAll(notesTextArea);
+        AnchorPane.setBottomAnchor(notesTextArea, 0.0);
+        AnchorPane.setTopAnchor(notesTextArea, 0.0);
+        AnchorPane.setRightAnchor(notesTextArea, 0.0);
+        AnchorPane.setLeftAnchor(notesTextArea, 0.0);
+        notesTextArea.setWrapText(true);
+        notesStage.setScene(new Scene(pane, 600, 150));
+        notesStage.setAlwaysOnTop(true);
     }
 
     private final ObjectProperty<String> dragOperationOrFunctionSource = new SimpleObjectProperty<>();
@@ -463,14 +463,14 @@ public class ExpressionBuilderController implements Initializable {
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
         othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
 
-        commentTextArea.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
-        commentsStage.titleProperty().bind(new SimpleStringProperty("Comments on ").concat(expressionNameTextField.textProperty()));
-        commentsStage.setOnCloseRequest((event) -> {
-            showCommentsBtn.setText("Show comments");
+        notesTextArea.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        notesStage.titleProperty().bind(new SimpleStringProperty("Notes on ").concat(expressionNameTextField.textProperty()));
+        notesStage.setOnCloseRequest((event) -> {
+            showNotesBtn.setText("Show notes");
         });
         mainPane.visibleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == false) {
-                commentsStage.hide();
+                notesStage.hide();
             }
         });
 
@@ -966,7 +966,7 @@ public class ExpressionBuilderController implements Initializable {
                     selectedExpressionIsCustom.set(false);
                 }
                 expressionNameTextField.textProperty().set(newValue.getName());
-                commentTextArea.setText(newValue.getComments());
+                notesTextArea.setText(newValue.getNotes());
                 refMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
                 unknownsSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
                 concRefMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchConcentrationReferenceMaterialCalculation());
@@ -1109,12 +1109,7 @@ public class ExpressionBuilderController implements Initializable {
     private void expressionClearAction(ActionEvent event) {
         //Clear the textflow
         if (!currentMode.get().equals(Mode.VIEW)) {
-            if (editAsText.get()) {
-                expressionAsTextArea.clear();
-            } else {
-                expressionTextFlow.getChildren().clear();
-                updateAuditGraphAndPeek();
-            }
+            expressionString.set("");
         }
     }
 
@@ -1207,13 +1202,13 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void showCommentsAction() {
-        if (!commentsStage.isShowing()) {
-            commentsStage.show();
-            showCommentsBtn.setText("Hide comments");
+    private void showNotesAction() {
+        if (!notesStage.isShowing()) {
+            notesStage.show();
+            showNotesBtn.setText("Hide notes");
         } else {
-            commentsStage.hide();
-            showCommentsBtn.setText("Show comments");
+            notesStage.hide();
+            showNotesBtn.setText("Show notes");
         }
     }
 
@@ -1733,7 +1728,7 @@ public class ExpressionBuilderController implements Initializable {
                 false
         );
 
-        exp.setComments(commentTextArea.getText());
+        exp.setNotes(notesTextArea.getText());
 
         ExpressionTreeInterface expTree = exp.getExpressionTree();
 
