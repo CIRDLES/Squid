@@ -9,11 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<<<<<<< HEAD
 <HBox fx:id="spotManagerPane" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SpotManagerController">
-=======
-<AnchorPane fx:id="spotManagerPane" prefHeight="625.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.SpotManagerController">
->>>>>>> expression
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>

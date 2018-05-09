@@ -4,7 +4,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-<<<<<<< HEAD
 <ScrollPane fx:id="massesAuditScrollPane" fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
   <content>
       <VBox fx:id="scrolledBox" styleClass="backgroundCalamari">
@@ -13,14 +12,3 @@
          </padding></VBox>
   </content>
 </ScrollPane>
-=======
-<AnchorPane fx:id="massesAnchorPane" prefHeight="616.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.MassesAuditController">
-   <children>
-      <ScrollPane fx:id="massesAuditScrollPane" prefHeight="616.0" prefWidth="1000.0" styleClass="backgroundCalamari">
-        <content>
-          <AnchorPane fx:id="scrolledAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="1000.0" styleClass="backgroundCalamari" />
-        </content>
-      </ScrollPane>
-   </children>
-</AnchorPane>
->>>>>>> expression
