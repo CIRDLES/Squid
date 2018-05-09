@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="manageRatiosVBox" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.RatiosManagerController">
+<VBox fx:id="manageRatiosVBox" minHeight="640.0" minWidth="1000.0" spacing="5.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.RatiosManagerController">
    <children>
-      <Label prefHeight="28.0" prefWidth="808.0" text="Manage Ratios (ROW / COL) - click on blue cell to toggle ratio, orange cell to toggle row or column:" translateX="15.0" />
-      <AnchorPane fx:id="manageRatiosAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
+      <Label text="Manage Ratios (ROW / COL) - click on blue cell to toggle ratio, orange cell to toggle row or column:" />
+      <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
          <children>
-            <GridPane fx:id="ratiosGridPane" gridLinesVisible="true" layoutX="126.0" layoutY="100.0" style="-fx-background-color: white;">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="10.0" prefWidth="101.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
+            <HBox alignment="CENTER">
+               <children>
+                  <GridPane fx:id="ratiosGridPane" gridLinesVisible="true" style="-fx-background-color: white;">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="10.0" prefWidth="101.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+               </children>
+            </HBox>
          </children>
-      </AnchorPane>
+      </VBox>
    </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
 </VBox>

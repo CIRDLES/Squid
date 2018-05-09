@@ -39,11 +39,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -59,7 +57,7 @@ public class IsotopesManagerController implements Initializable {
 
     private TaskInterface task;
     @FXML
-    private AnchorPane isotopesManagerAnchorPane;
+    private VBox isotopesManagerPane;
     @FXML
     private TableView<MassStationDetail> isotopesTableView;
     @FXML
@@ -81,9 +79,6 @@ public class IsotopesManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        isotopesManagerAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        isotopesManagerAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
         task = squidProject.getTask();
 
         setupIsotopeTable();
