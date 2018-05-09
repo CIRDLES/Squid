@@ -16,12 +16,9 @@
  */
 package org.cirdles.squid.gui;
 
-import com.thoughtworks.xstream.XStream;
 import org.cirdles.squid.gui.topsoil.TopsoilPlotWetherill;
 import org.cirdles.squid.gui.topsoil.TopsoilWindow;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -41,8 +38,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
@@ -725,7 +720,9 @@ public class SquidUIController implements Initializable {
     private void exportSquid3TaskMenuItemAction(ActionEvent event) {
         try {
             FileHandler.exportSquid3TaskFile(squidProject, primaryStageWindow);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            SquidMessageDialog.showWarningDialog("An Exception Occured: " + e.getMessage(), primaryStageWindow);
+            e.printStackTrace();
         }
     }
 
@@ -733,7 +730,9 @@ public class SquidUIController implements Initializable {
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
         try {
             FileHandler.selectSquid3TaskFile(squidProject, primaryStageWindow);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            SquidMessageDialog.showWarningDialog("An Exception Occured: " + e.getMessage(), primaryStageWindow);
+            e.printStackTrace();
         }
     }
 
