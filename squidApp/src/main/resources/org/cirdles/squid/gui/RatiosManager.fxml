@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="manageRatiosVBox" minHeight="640.0" minWidth="1000.0" spacing="5.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatiosManagerController">
+<VBox fx:id="manageRatiosVBox" minHeight="640.0" minWidth="1000.0" spacing="5.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.RatiosManagerController">
    <children>
       <Label text="Manage Ratios (ROW / COL) - click on blue cell to toggle ratio, orange cell to toggle row or column:" />
       <VBox alignment="CENTER" VBox.vgrow="ALWAYS">

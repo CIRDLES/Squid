@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="spotManagerPane" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SpotManagerController">
+<HBox fx:id="spotManagerPane" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.SpotManagerController">
    <children>
       <SplitPane dividerPositions="0.5" styleClass="backgroundCalamari" HBox.hgrow="ALWAYS">
          <items>

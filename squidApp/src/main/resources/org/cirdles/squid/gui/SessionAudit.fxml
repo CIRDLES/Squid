@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sessionVBox" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
+<VBox fx:id="sessionVBox" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.SessionAuditController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="20.0">
          <children>

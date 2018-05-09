@@ -24,7 +24,7 @@ limitations under the License.
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="isotopesManagerPane" minHeight="640.0" minWidth="1000.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.IsotopesManagerController">
+<VBox fx:id="isotopesManagerPane" minHeight="640.0" minWidth="1000.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.IsotopesManagerController">
    <children>
         <Label graphicTextGap="0.0" style="-fx-font-size: 14;" text="Edit Isotope Labels and align mass station and Task Isotope Labels (right-mouse click to (de)select Background):" wrapText="true">
          <VBox.margin>
