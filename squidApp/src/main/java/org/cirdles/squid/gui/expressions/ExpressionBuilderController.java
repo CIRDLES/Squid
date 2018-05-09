@@ -1616,30 +1616,36 @@ public class ExpressionBuilderController implements Initializable {
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {
         ContextMenu contextMenu = new ContextMenu();
 
-        MenuItem menuItem = new MenuItem("Remove expression.");
+        MenuItem menuItem = new MenuItem("Remove expression");
         menuItem.setOnAction((evt) -> {
             expressionTextFlow.getChildren().remove(etn);
             updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
 
-        menuItem = new MenuItem("Move left.");
+        menuItem = new MenuItem("Move left");
         menuItem.setOnAction((evt) -> {
             etn.setOrdinalIndex(etn.getOrdinalIndex() - 1.5);
             updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
 
-        menuItem = new MenuItem("Move right.");
+        menuItem = new MenuItem("Move right");
         menuItem.setOnAction((evt) -> {
             etn.setOrdinalIndex(etn.getOrdinalIndex() + 1.5);
             updateExpressionTextFlowChildren();
         });
         contextMenu.getItems().add(menuItem);
 
-        menuItem = new MenuItem("Wrap in parentheses.");
+        menuItem = new MenuItem("Wrap in parentheses");
         menuItem.setOnAction((evt) -> {
             wrapInParentheses(etn.getOrdinalIndex(), etn.getOrdinalIndex());
+        });
+        contextMenu.getItems().add(menuItem);
+        
+        menuItem = new MenuItem("Wrap in brackets");
+        menuItem.setOnAction((evt) -> {
+            wrapInBrackets(etn.getOrdinalIndex(), etn.getOrdinalIndex());
         });
         contextMenu.getItems().add(menuItem);
 
@@ -1650,7 +1656,7 @@ public class ExpressionBuilderController implements Initializable {
             editText.textProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
                 editText.setPrefWidth((editText.getText().trim().length() + 2) * editText.getFont().getSize());
             });
-            menuItem = new MenuItem("<< Edit value then click here to save.", editText);
+            menuItem = new MenuItem("<< Edit value then click here to save", editText);
             menuItem.setOnAction((evt) -> {
                 //etn.setText(editText.getText());
                 // this allows for redo of content editing
@@ -1900,12 +1906,20 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void wrapInParentheses(double ordLeft, double ordRight) {
-        //Insert parentheses before ordLeft and after ordRight
-        ExpressionTextNode leftP = new ExpressionTextNode(" ( ");
-        leftP.setOrdinalIndex(ordLeft - 0.5);
-        ExpressionTextNode rightP = new ExpressionTextNode(" ) ");
-        rightP.setOrdinalIndex(ordRight + 0.5);
-        expressionTextFlow.getChildren().addAll(leftP, rightP);
+        wrap(ordLeft,ordRight,"(",")");
+    }
+    
+    private void wrapInBrackets(double ordLeft, double ordRight) {
+        wrap(ordLeft,ordRight,"[","]");
+    }
+    
+    private void wrap(double ordLeft, double ordRight, String stringLeft, String stringRight){
+        //Insert strings before ordLeft and after ordRight
+        ExpressionTextNode left = new ExpressionTextNode(" "+stringLeft+" ");
+        left.setOrdinalIndex(ordLeft - 0.5);
+        ExpressionTextNode right = new ExpressionTextNode(" "+stringRight+" ");
+        right.setOrdinalIndex(ordRight + 0.5);
+        expressionTextFlow.getChildren().addAll(left, right);
         updateExpressionTextFlowChildren();
     }
 
@@ -2040,7 +2054,7 @@ public class ExpressionBuilderController implements Initializable {
                     cm.getItems().clear();
                     //Menu for custom expression only
                     if (!cell.getItem().getExpressionTree().isSquidSpecialUPbThExpression() && !cell.getItem().isSquidSwitchNU()) {
-                        MenuItem remove = new MenuItem("Remove expression.");
+                        MenuItem remove = new MenuItem("Remove expression");
                         remove.setOnAction((t) -> {
                             TaskInterface task = squidProject.getTask();
                             removedExpressions.add(cell.getItem());
@@ -2050,7 +2064,7 @@ public class ExpressionBuilderController implements Initializable {
                         });
                         cm.getItems().add(remove);
 
-                        MenuItem restore = new MenuItem("Restore removed expressions.");
+                        MenuItem restore = new MenuItem("Restore removed expressions");
                         restore.setOnAction((t) -> {
                             for (Expression removedExp : removedExpressions) {
                                 boolean nameExist;
@@ -2078,7 +2092,7 @@ public class ExpressionBuilderController implements Initializable {
 
                     Menu export = new Menu("Export as");
 
-                    MenuItem exportXML = new MenuItem("XML document.");
+                    MenuItem exportXML = new MenuItem("XML document");
                     exportXML.setOnAction((t) -> {
                         try {
                             FileHandler.saveExpressionFileXML(cell.getItem(), SquidUI.primaryStageWindow);
@@ -2087,7 +2101,7 @@ public class ExpressionBuilderController implements Initializable {
                     });
                     export.getItems().add(exportXML);
 
-                    MenuItem exportHTML = new MenuItem("HTML document.");
+                    MenuItem exportHTML = new MenuItem("HTML document");
                     exportHTML.setOnAction((t) -> {
                         try {
                             FileHandler.saveExpressionGraphHTML(cell.getItem(), SquidUI.primaryStageWindow);
