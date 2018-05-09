@@ -29,6 +29,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.xml.sax.SAXException;
 
@@ -176,15 +177,17 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Squid 3 Task");
         fileChooser.setInitialFileName(((Task) squidProject.getTask()).getName().replaceAll(" ", "") + ".xml");
+        fileChooser.setInitialDirectory(SquidPersistentState.getExistingPersistentState().getMRUTaskFile());
 
         File squidTaskFile = fileChooser.showSaveDialog(ownerWindow);
 
         if (squidTaskFile != null && squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xml")) {
-            retVal = squidTaskFile;        
+            retVal = squidTaskFile;
             Task task = (Task) squidProject.getTask();
             task.serializeXMLObject(retVal.getAbsolutePath());
+            SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile);
         }
-        
+
         return retVal;
     }
 
@@ -195,6 +198,7 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Squid 3 Task");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 3 Task File", "*.xml"));
+        fileChooser.setInitialDirectory(SquidPersistentState.getExistingPersistentState().getMRUTaskFile());
 
         File squidTaskFile = fileChooser.showOpenDialog(ownerWindow);
 
@@ -203,6 +207,7 @@ public class FileHandler {
             Task task = (Task) squidProject.getTask();
             task = (Task) task.readXMLObject(retVal.getAbsolutePath(), false);
             squidProject.setTask(task);
+            SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile);
         }
 
         return retVal;

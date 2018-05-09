@@ -76,7 +76,7 @@ public final class SquidProject implements Serializable {
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
     }
 
-    public Map< String, TaskInterface> getTaskLibrary() {
+    public Map<String, TaskInterface> getTaskLibrary() {
         Map< String, TaskInterface> builtInTasks = new HashMap<>();
 
         return builtInTasks;

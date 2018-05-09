@@ -425,7 +425,7 @@ public class TaskXMLConverter implements Converter {
             reader.moveDown();
             Expression exp = new Expression();
             exp = (Expression) context.convertAnother(exp, Expression.class);
-            taskExpressions.add((Expression)exp);
+            taskExpressions.add((Expression) exp);
             reader.moveUp();
         }
         task.setTaskExpressionsOrdered(taskExpressions);
