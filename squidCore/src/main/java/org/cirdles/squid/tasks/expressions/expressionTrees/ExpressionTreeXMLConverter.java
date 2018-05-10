@@ -110,27 +110,27 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("squidSwitchSCSummaryCalculation");
-        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSCSummaryCalculation()));
+        writer.setValue(Boolean.toString(expressionTree.isSquidSwitchSCSummaryCalculation()));
         writer.endNode();
 
         writer.startNode("squidSwitchSTReferenceMaterialCalculation");
-        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSTReferenceMaterialCalculation()));
+        writer.setValue(Boolean.toString(expressionTree.isSquidSwitchSTReferenceMaterialCalculation()));
         writer.endNode();
 
         writer.startNode("squidSwitchSAUnknownCalculation");
-        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSAUnknownCalculation()));
+        writer.setValue(Boolean.toString(expressionTree.isSquidSwitchSAUnknownCalculation()));
         writer.endNode();
 
         writer.startNode("squidSpecialUPbThExpression");
-        writer.setValue(String.valueOf(expressionTree.isSquidSpecialUPbThExpression()));
+        writer.setValue(Boolean.toString(expressionTree.isSquidSpecialUPbThExpression()));
         writer.endNode();
 
         writer.startNode("rootExpressionTree");
-        writer.setValue(String.valueOf(expressionTree.isRootExpressionTree()));
+        writer.setValue(Boolean.toString(expressionTree.isRootExpressionTree()));
         writer.endNode();
         
         writer.startNode("squidSwitchConcentrationReferenceMaterialCalculation");
-        writer.setValue(String.valueOf(expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()));
+        writer.setValue(Boolean.toString(expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()));
         writer.endNode();
         
         writer.startNode("uncertaintyDirective");

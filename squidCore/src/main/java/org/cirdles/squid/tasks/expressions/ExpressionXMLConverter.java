@@ -132,7 +132,7 @@ public class ExpressionXMLConverter implements Converter {
 
         reader.moveDown();
         ExpressionTreeInterface expressionTree = new ExpressionTree();
-        expressionTree = (ExpressionTree) context.convertAnother(expressionTree, ExpressionTree.class);
+        expressionTree = (ExpressionTreeInterface) context.convertAnother(expressionTree, ExpressionTree.class);
         expression.setExpressionTree(expressionTree);
         reader.moveUp();
 

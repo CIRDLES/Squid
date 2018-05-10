@@ -30,7 +30,7 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
 
     private static final long serialVersionUID = -2944080263487487243L;
 
-    private transient String ratioName;
+    private String ratioName;
     private SquidSpeciesModel numerator;
     private SquidSpeciesModel denominator;
     private int reportingOrderIndex;
