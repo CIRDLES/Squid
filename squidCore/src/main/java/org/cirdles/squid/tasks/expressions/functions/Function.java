@@ -69,6 +69,12 @@ public abstract class Function
      *
      */
     protected String[][] labelsForOutputValues = new String[][]{{}};
+    
+    /**
+     *
+     */
+    protected String[] labelsForInputValues = new String[]{};
+    
     /**
      *
      */
@@ -389,5 +395,10 @@ public abstract class Function
     @Override
     public String[][] getLabelsForOutputValues() {
         return labelsForOutputValues;
+    }
+
+    @Override
+    public String[] getLabelsForInputValues() {
+        return labelsForInputValues;
     }
 }

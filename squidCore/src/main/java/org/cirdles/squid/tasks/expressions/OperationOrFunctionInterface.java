@@ -64,6 +64,11 @@ public interface OperationOrFunctionInterface {
      * @return the labelsForOutputValues
      */
     public String[][] getLabelsForOutputValues();
+    
+    /**
+     * @return the labelsForOutputValues
+     */
+    public String[] getLabelsForInputValues();
 
     public default String printOutputValues() {
         String retVal = "None Specified";
@@ -73,6 +78,21 @@ public interface OperationOrFunctionInterface {
             retVal = " [";
             for (int i = 0; i < outputArray.length; i++) {
                 retVal += outputArray[i] + (String) (i < (outputArray.length - 1) ? ", " : "");
+            }
+            retVal += "]";
+        }
+
+        return retVal;
+    }
+    
+    public default String printInputValues() {
+        String retVal = "None Specified";
+        String[] inputArray = getLabelsForInputValues();
+
+        if (inputArray.length > 0) {
+            retVal = " [";
+            for (int i = 0; i < inputArray.length; i++) {
+                retVal += inputArray[i] + (String) (i < (inputArray.length - 1) ? ", " : "");
             }
             retVal += "]";
         }
