@@ -24,6 +24,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
@@ -209,13 +210,21 @@
                         <CheckBox fx:id="summaryCalculationSwitchCheckBox" disable="true" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
                      </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" left="7.0" right="7.0" />
+                        <Insets bottom="5.0" left="7.0" right="7.0" />
                      </VBox.margin>
                   </FlowPane>
                   <SplitPane dividerPositions="0.25" orientation="VERTICAL" styleClass="backgroundCalamari" VBox.vgrow="ALWAYS">
                      <items>
                         <VBox>
                            <children>
+                              <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: ctrl+hover a node to show detail">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="2.0" />
+                                 </VBox.margin>
+                              </Text>
                               <AnchorPane VBox.vgrow="ALWAYS">
                                  <children>
                                     <TitledPane animated="false" collapsible="false" layoutY="2.5" minHeight="70.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -277,7 +286,7 @@
                               </HBox>
                            </children>
                            <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" />
                            </padding>
                         </VBox>
                         <SplitPane fx:id="bigSplitPane" dividerPositions="0.5" orientation="VERTICAL" styleClass="backgroundCalamari">
