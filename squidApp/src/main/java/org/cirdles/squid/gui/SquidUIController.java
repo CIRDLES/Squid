@@ -721,8 +721,8 @@ public class SquidUIController implements Initializable {
         try {
             FileHandler.exportSquid3TaskFile(squidProject, primaryStageWindow);
         } catch (Exception e) {
-            SquidMessageDialog.showWarningDialog("An Exception Occured: " + e.getMessage(), primaryStageWindow);
             e.printStackTrace();
+            SquidMessageDialog.showWarningDialog("An Exception Occured: " + e.getMessage(), primaryStageWindow);
         }
     }
 
@@ -731,8 +731,8 @@ public class SquidUIController implements Initializable {
         try {
             FileHandler.selectSquid3TaskFile(squidProject, primaryStageWindow);
         } catch (Exception e) {
-            SquidMessageDialog.showWarningDialog("An Exception Occured: " + e.getMessage(), primaryStageWindow);
             e.printStackTrace();
+            SquidMessageDialog.showWarningDialog("An Exception Occured: " + e.getMessage(), primaryStageWindow);
         }
     }
 
