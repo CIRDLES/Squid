@@ -1933,6 +1933,7 @@ public class ExpressionBuilderController implements Initializable {
     private void resetDragSources() {
         dragOperationOrFunctionSource.set(null);
         dragNumberSource.set(null);
+        dragPresentationSource.set(null);
     }
 
     private void graphExpressionTree(ExpressionTreeInterface expTree) {
