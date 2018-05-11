@@ -2374,6 +2374,7 @@ public class ExpressionBuilderController implements Initializable {
 
         protected Color regularColor;
         protected Color selectedColor;
+        protected Color opositeColor;
 
         //Saves where was the indicator before moving it in order to be able to restore it when drag is exiting this node
         int previousIndicatorIndex = -1;
@@ -2424,7 +2425,7 @@ public class ExpressionBuilderController implements Initializable {
                             if (etn.getText().trim().equals(opposite)) {
                                 if (cpt == 0) {
                                     oppositeParenthese = etn;
-                                    etn.setFill(etn.selectedColor);
+                                    etn.setFill(etn.opositeColor);
                                     break;
                                 } else {
                                     cpt--;
@@ -2450,6 +2451,7 @@ public class ExpressionBuilderController implements Initializable {
 
             this.selectedColor = Color.RED;
             this.regularColor = Color.BLACK;
+            this.opositeColor = Color.LIME;
 
             setFill(regularColor);
 
