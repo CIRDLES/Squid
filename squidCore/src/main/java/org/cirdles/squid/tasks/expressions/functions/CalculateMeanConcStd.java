@@ -48,6 +48,7 @@ public class CalculateMeanConcStd extends Function {
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{SQUID_MEAN_PPM_PARENT_NAME}};
+        labelsForInputValues = new String[]{"values"};
     }
 
     /**

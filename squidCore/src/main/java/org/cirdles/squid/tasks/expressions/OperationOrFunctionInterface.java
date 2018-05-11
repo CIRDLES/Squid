@@ -66,7 +66,7 @@ public interface OperationOrFunctionInterface {
     public String[][] getLabelsForOutputValues();
     
     /**
-     * @return the labelsForOutputValues
+     * @return the labelsForInputValues
      */
     public String[] getLabelsForInputValues();
 
