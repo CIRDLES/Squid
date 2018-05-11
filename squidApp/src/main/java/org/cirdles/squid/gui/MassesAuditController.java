@@ -22,10 +22,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.MassStationAuditViewForShrimp;
@@ -40,11 +38,9 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 public class MassesAuditController implements Initializable {
 
     @FXML
-    private AnchorPane massesAnchorPane;
-    @FXML
     private ScrollPane massesAuditScrollPane;
     @FXML
-    private AnchorPane scrolledAnchorPane;
+    private VBox scrolledBox;
 
     /**
      * Initializes the controller class.
@@ -53,12 +49,6 @@ public class MassesAuditController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        massesAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        massesAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
-        massesAuditScrollPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        massesAuditScrollPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-
         displayMassStationsForReview();
 
     }
@@ -70,7 +60,6 @@ public class MassesAuditController implements Initializable {
         // plotting mass variations
         // only show those with auto-centering on with count_time_sec > 0 in the run table at the mas station
         int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 350;
-        scrolledAnchorPane.setPrefWidth(widthOfView + 150);
 
         int massCounter = 0;
         Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(squidProject.getPrawnFileRuns());
@@ -84,7 +73,7 @@ public class MassesAuditController implements Initializable {
                                 entry.getValue().getIndicesOfScansAtMeasurementTimes(),
                                 entry.getValue().getIndicesOfRunsAtMeasurementTimes());
 
-                scrolledAnchorPane.getChildren().add(canvas);
+                scrolledBox.getChildren().add(canvas);
                 GraphicsContext gc1 = canvas.getGraphicsContext2D();
                 canvas.preparePanel();
                 canvas.paint(gc1);
@@ -93,7 +82,6 @@ public class MassesAuditController implements Initializable {
 
             }
         }
-        scrolledAnchorPane.setPrefHeight((massCounter * heightOfMassPlot) + 50);
     }
 
 }

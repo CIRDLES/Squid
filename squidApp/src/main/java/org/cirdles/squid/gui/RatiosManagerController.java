@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +26,6 @@ import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -35,7 +33,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -47,8 +44,6 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
  */
 public class RatiosManagerController implements Initializable {
 
-    @FXML
-    private AnchorPane manageRatiosAnchorPane;
     @FXML
     private GridPane ratiosGridPane;
 
@@ -69,12 +64,6 @@ public class RatiosManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        manageRatiosVBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        manageRatiosVBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-        manageRatiosAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        manageRatiosAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU - 40));
-
         prepareRatioGrid();
     }
 

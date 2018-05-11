@@ -25,6 +25,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -44,7 +45,7 @@ public class SessionAuditController implements Initializable {
     @FXML
     private TreeView<String> prawnAuditTree;
     @FXML
-    private AnchorPane sessionAnchorPane;
+    private VBox sessionVBox;
     @FXML
     private CheckBox checkbox;
 
@@ -53,9 +54,6 @@ public class SessionAuditController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        sessionAnchorPane.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        sessionAnchorPane.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         
         prawnAuditTree.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTree.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
