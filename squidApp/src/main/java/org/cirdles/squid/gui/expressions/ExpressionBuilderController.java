@@ -1685,6 +1685,100 @@ public class ExpressionBuilderController implements Initializable {
 
         return contextMenu;
     }
+    
+    private Tooltip createExpressionNodeTooltip(String nodeText){
+        Tooltip res = null;
+        if(!(nodeText==null)){
+            String text = nodeText.trim();
+            if (text.matches("^\\[(%)?\".+\"\\]$")) {
+                String exname = text.replaceAll("(^\\[(%)?\")|(\"\\]$)", "");
+                Expression ex = squidProject.getTask().getExpressionByName(exname);
+                if (ex != null) {
+                    boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
+                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : "Unhealthy\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                    if(!ex.amHealthy()){
+                        ImageView imageView = new ImageView(UNHEALTHY);
+                        imageView.setFitHeight(12);
+                        imageView.setFitWidth(12);
+                        res.setGraphic(imageView);
+                    }
+                }
+                if (res == null) {
+                    for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
+                        if (exname.equalsIgnoreCase(r.getRatioName())) {
+                            res = new Tooltip("Ratio: " + r.getRatioName());
+                        }
+                    }
+                }
+                if (res == null && exname.length() > 2) {
+                    String lastTwo = exname.substring(exname.length() - 2);
+                    if (ShuntingYard.isNumber(lastTwo)) {
+                        String baseExpressionName = exname.substring(0, exname.length() - 2);
+                        ex = squidProject.getTask().getExpressionByName(baseExpressionName);
+                        if (ex != null) {
+                            boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
+                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : "Unhealthy\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                            if(!ex.amHealthy()){
+                                ImageView imageView = new ImageView(UNHEALTHY);
+                                imageView.setFitHeight(12);
+                                imageView.setFitWidth(12);
+                                res.setGraphic(imageView);
+                            }
+                        }
+                    }
+                }
+                if (res == null) {
+                    res = new Tooltip("Missing expression: " + exname);
+                    ImageView imageView = new ImageView(UNHEALTHY);
+                    imageView.setFitHeight(12);
+                    imageView.setFitWidth(12);
+                    res.setGraphic(imageView);
+                }
+            } else {
+                OperationOrFunctionInterface fn = Function.operationFactory(FUNCTIONS_MAP.get(text));
+                if (fn != null) {
+                    res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " arguments: " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
+                }
+                if (res == null && listOperators.contains(text)) {
+                    res = new Tooltip("Operation: " + text);
+                }
+                if (res == null && text.matches("^[()\\[\\]]$")) {
+                    res = new Tooltip("Parenthese: " + text);
+                }
+                if (res == null && text.equals(",")) {
+                    res = new Tooltip("Comma: " + text);
+                }
+                if (res == null) {
+                    ConstantNode constant;
+                    constant = (ConstantNode) squidProject.getTask().getNamedConstantsMap().get(text);
+                    if (constant == null) {
+                        constant = (ConstantNode) squidProject.getTask().getNamedParametersMap().get(text);
+                    }
+                    if (constant != null) {
+                        res = new Tooltip("Constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
+                    }
+                }
+                if (res == null && ShuntingYard.isNumber(text)) {
+                    res = new Tooltip("Number: " + text);
+                }
+                if (res == null && nodeText.equals(TABPLACEHOLDER)) {
+                    res = new Tooltip("Presentation node: Tab");
+                }
+                if (res == null && nodeText.equals(NEWLINEPLACEHOLDER)) {
+                    res = new Tooltip("Presentation node: New line");
+                }
+                if (res == null) {
+                    res = new Tooltip("Unreconized node: " + text);
+                    ImageView imageView = new ImageView(UNHEALTHY);
+                    imageView.setFitHeight(12);
+                    imageView.setFitWidth(12);
+                    res.setGraphic(imageView);
+                }
+            }
+            res.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+        }
+        return res;
+    }
 
     private void updateExpressionTextFlowChildren() {
         // extract and sort
@@ -2013,10 +2107,20 @@ public class ExpressionBuilderController implements Initializable {
                             imageView.setFitWidth(12);
                             setGraphic(imageView);
                         }
+                        Tooltip t = createExpressionNodeTooltip("[\""+getText()+"\"]");
+                        setOnMouseEntered((event) -> {
+                            showToolTip(event,this,t);
+                        });
+                        setOnMouseExited((event) -> {
+                            hideToolTip(t,this);
+                        });
+                        setOnMouseMoved((event) -> {
+                            showToolTip(event,this,t);
+                        });
                     }
                 }
             };
-
+            
             updateCellMode(currentMode.get(), cell);
 
             currentMode.addListener((observable, oldValue, newValue) -> {
@@ -2029,6 +2133,31 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             return cell;
+        }
+        
+
+        private void showToolTip(MouseEvent event, ListCell<Expression> cell, Tooltip t) {
+            if (t != null) {
+                if (event.isControlDown()) {
+                    t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
+                } else {
+                    hideToolTip(t,cell);
+                }
+            }
+        }
+
+        private void hideToolTip(Tooltip t, ListCell<Expression> cell) {
+            if (t != null) {
+                t.hide();
+            }
+            switch (currentMode.get()) {
+                case VIEW:
+                    cell.setCursor(Cursor.HAND);
+                    break;
+                case CREATE:
+                case EDIT:
+                    cell.setCursor(Cursor.OPEN_HAND);
+            }
         }
 
         private void updateCellMode(Mode mode, ListCell<Expression> cell) {
@@ -2176,6 +2305,16 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(expression.getRatioName());
+                        Tooltip t = createExpressionNodeTooltip("[\""+getText()+"\"]");
+                        setOnMouseEntered((event) -> {
+                            showToolTip(event,this,t);
+                        });
+                        setOnMouseExited((event) -> {
+                            hideToolTip(t,this);
+                        });
+                        setOnMouseMoved((event) -> {
+                            showToolTip(event,this,t);
+                        });
                     }
                 }
             };
@@ -2191,6 +2330,30 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             return cell;
+        }
+        
+        private void showToolTip(MouseEvent event, ListCell<SquidRatiosModel> cell, Tooltip t) {
+            if (t != null) {
+                if (event.isControlDown()) {
+                    t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
+                } else {
+                    hideToolTip(t,cell);
+                }
+            }
+        }
+
+        private void hideToolTip(Tooltip t, ListCell<SquidRatiosModel> cell) {
+            if (t != null) {
+                t.hide();
+            }
+            switch (currentMode.get()) {
+                case VIEW:
+                    cell.setCursor(Cursor.HAND);
+                    break;
+                case CREATE:
+                case EDIT:
+                    cell.setCursor(Cursor.OPEN_HAND);
+            }
         }
 
         private void updateCellMode(Mode mode, ListCell<SquidRatiosModel> cell) {
@@ -2274,6 +2437,16 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(operationOrFunction);
+                        Tooltip t = createExpressionNodeTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").replaceAll("Tab", TABPLACEHOLDER).replaceAll("New line", NEWLINEPLACEHOLDER));
+                        setOnMouseEntered((event) -> {
+                            showToolTip(event,this,t);
+                        });
+                        setOnMouseExited((event) -> {
+                            hideToolTip(t,this);
+                        });
+                        setOnMouseMoved((event) -> {
+                            showToolTip(event,this,t);
+                        });
                     }
                 }
             };
@@ -2289,6 +2462,30 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             return cell;
+        }
+        
+        private void showToolTip(MouseEvent event, ListCell<String> cell, Tooltip t) {
+            if (t != null) {
+                if (event.isControlDown()) {
+                    t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
+                } else {
+                    hideToolTip(t,cell);
+                }
+            }
+        }
+
+        private void hideToolTip(Tooltip t, ListCell<String> cell) {
+            if (t != null) {
+                t.hide();
+            }
+            switch (currentMode.get()) {
+                case VIEW:
+                    cell.setCursor(Cursor.HAND);
+                    break;
+                case CREATE:
+                case EDIT:
+                    cell.setCursor(Cursor.OPEN_HAND);
+            }
         }
 
         private void updateCellMode(Mode mode, ListCell<String> cell) {
@@ -2405,91 +2602,12 @@ public class ExpressionBuilderController implements Initializable {
             currentMode.addListener((observable, oldValue, newValue) -> {
                 updateMode(newValue);
             });
-            if (text.trim().matches("^\\[(%)?\".+\"\\]$")) {
-                String exname = text.trim().replaceAll("(^\\[(%)?\")|(\"\\]$)", "");
-                Expression ex = squidProject.getTask().getExpressionByName(exname);
-                if (ex != null) {
-                    boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                    createTooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\nNotes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
-                }
-                if (tooltip == null) {
-                    for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
-                        if (exname.equalsIgnoreCase(r.getRatioName())) {
-                            createTooltip("Ratio: " + r.getRatioName());
-                        }
-                    }
-                }
-                if (tooltip == null && exname.length() > 2) {
-                    String lastTwo = exname.substring(exname.length() - 2);
-                    if (ShuntingYard.isNumber(lastTwo)) {
-                        String baseExpressionName = exname.substring(0, exname.length() - 2);
-                        ex = squidProject.getTask().getExpressionByName(baseExpressionName);
-                        if (ex != null) {
-                            createTooltip("Expression: " + ex.getName() + "\n\nNotes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes().trim()));
-                        }
-                    }
-                }
-                if (tooltip == null) {
-                    createTooltip("Missing expression: " + exname);
-                    ImageView imageView = new ImageView(UNHEALTHY);
-                    imageView.setFitHeight(12);
-                    imageView.setFitWidth(12);
-                    tooltip.setGraphic(imageView);
-                }
-            } else {
-                OperationOrFunctionInterface fn = Function.operationFactory(FUNCTIONS_MAP.get(text.trim()));
-                if (fn != null) {
-                    createTooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " arguments: " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
-                }
-                if (tooltip == null && this instanceof OperationTextNode) {
-                    createTooltip("Operation: " + text.trim());
-                }
-                if (tooltip == null && text.trim().matches("^[()\\[\\]]$")) {
-                    createTooltip("Parenthese: " + text.trim());
-                }
-                if (tooltip == null && text.trim().equals(",")) {
-                    createTooltip("Comma: " + text.trim());
-                }
-                if (tooltip == null) {
-                    ConstantNode constant;
-                    constant = (ConstantNode) squidProject.getTask().getNamedConstantsMap().get(text.trim());
-                    if (constant == null) {
-                        constant = (ConstantNode) squidProject.getTask().getNamedParametersMap().get(text.trim());
-                    }
-                    if (constant != null) {
-                        createTooltip("Constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
-                    }
-                }
-                if (tooltip == null && this instanceof NumberTextNode) {
-                    createTooltip("Number: " + text.trim());
-                    currentMode.addListener((observable, oldValue, newValue) -> {
-                        if (newValue == Mode.VIEW) {
-                            tooltip.setText("Number: " + text.trim());
-                        } else {
-                            tooltip.setText("Number: " + text.trim() + (currentMode.get().equals(Mode.VIEW) ? "" : "\nRight click to edit value."));
-                        }
-                    });
-                }
-                if (tooltip == null && text.equals(TABPLACEHOLDER)) {
-                    createTooltip("Presentation node: Tab");
-                }
-                if (tooltip == null && text.equals(NEWLINEPLACEHOLDER)) {
-                    createTooltip("Presentation node: New line");
-                }
-                if (tooltip == null) {
-                    createTooltip("Unreconized node: " + text.trim());
-                    ImageView imageView = new ImageView(UNHEALTHY);
-                    imageView.setFitHeight(12);
-                    imageView.setFitWidth(12);
-                    tooltip.setGraphic(imageView);
-                }
-            }
-
+            
+            setTooltip(createExpressionNodeTooltip(text));
         }
 
-        private void createTooltip(String content) {
-            tooltip = new Tooltip(content);
-            tooltip.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+        private void setTooltip(Tooltip t) {
+            tooltip = t;
             setOnMouseEntered((event) -> {
                 showToolTip(event);
             });
