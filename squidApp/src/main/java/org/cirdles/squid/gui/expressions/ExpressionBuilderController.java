@@ -1746,7 +1746,7 @@ public class ExpressionBuilderController implements Initializable {
             } else {
                 OperationOrFunctionInterface fn = Function.operationFactory(FUNCTIONS_MAP.get(text));
                 if (fn != null) {
-                    res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " arguments: " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
+                    res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " argument(s): " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
                 }
                 if (res == null && listOperators.contains(text)) {
                     res = new Tooltip("Operation: " + text);
@@ -1775,6 +1775,32 @@ public class ExpressionBuilderController implements Initializable {
                 }
                 if (res == null && nodeText.equals(NEWLINEPLACEHOLDER)) {
                     res = new Tooltip("Presentation node: New line");
+                }
+                if(res == null){
+                    Expression ex = squidProject.getTask().getExpressionByName(text);
+                    if (ex != null) {
+                        boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
+                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit().trim()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                    }
+                    if (res == null && text.length() > 2) {
+                        String lastTwo = text.substring(text.length() - 2);
+                        if (ShuntingYard.isNumber(lastTwo)) {
+                            String baseExpressionName = text.substring(0, text.length() - 2);
+                            ex = squidProject.getTask().getExpressionByName(baseExpressionName);
+                            if (ex != null) {
+                                boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
+                                res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit().trim()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                            }
+                        }
+                    }
+                    if(ex!= null && res != null){
+                        if(!ex.amHealthy()){
+                            ImageView imageView = new ImageView(UNHEALTHY);
+                            imageView.setFitHeight(12);
+                            imageView.setFitWidth(12);
+                            res.setGraphic(imageView);
+                        }
+                    }
                 }
                 if (res == null) {
                     res = new Tooltip("Unreconized node: " + text);
@@ -2116,7 +2142,7 @@ public class ExpressionBuilderController implements Initializable {
                             imageView.setFitWidth(12);
                             setGraphic(imageView);
                         }
-                        Tooltip t = createExpressionNodeTooltip("[\""+getText()+"\"]");
+                        Tooltip t = createExpressionNodeTooltip(getText());
                         setOnMouseEntered((event) -> {
                             showToolTip(event,this,t);
                         });
@@ -2314,7 +2340,7 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(expression.getRatioName());
-                        Tooltip t = createExpressionNodeTooltip("[\""+getText()+"\"]");
+                        Tooltip t = createExpressionNodeTooltip(getText());
                         setOnMouseEntered((event) -> {
                             showToolTip(event,this,t);
                         });

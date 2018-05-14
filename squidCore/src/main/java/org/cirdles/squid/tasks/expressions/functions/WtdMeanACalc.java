@@ -84,13 +84,14 @@ public class WtdMeanACalc extends Function {
             {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability", "externalFlag"},
             {"LargeRej Indices"},
             {"WmeanRej Indices"}};
+        labelsForInputValues = new String[]{"values","oneSigmaPercentUncertainties","noUPbConstAutoReject","pbCanDriftCorr"};
     }
 
     /**
      * Requires that child 0 and 1 are VariableNodes that evaluate to double
      * arrays each with one column and a row for each member of shrimpFractions
-     * and that child 2, 3, 4 are ConstantNodes that evaluate to true or false
-     * denoting uncertaintiesInPercent, noUPbConstAutoReject, and pbCanDriftCorr
+     * and that child 2, 3 are ConstantNodes that evaluate to true or false
+     * denoting uncertaintiesInPercent, noUPbConstAutoReject.
      *
      * @param childrenET list containing child 0, child 1, child 2, child 3,
      * child 4
