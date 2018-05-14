@@ -1693,7 +1693,7 @@ public class ExpressionBuilderController implements Initializable {
                 Expression ex = squidProject.getTask().getExpressionByName(exname);
                 if (ex != null) {
                     boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit().trim()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                     if(!ex.amHealthy()){
                         ImageView imageView = new ImageView(UNHEALTHY);
                         imageView.setFitHeight(12);
@@ -1715,7 +1715,7 @@ public class ExpressionBuilderController implements Initializable {
                         ex = squidProject.getTask().getExpressionByName(baseExpressionName);
                         if (ex != null) {
                             boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit().trim()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                             if(!ex.amHealthy()){
                                 ImageView imageView = new ImageView(UNHEALTHY);
                                 imageView.setFitHeight(12);
