@@ -536,10 +536,9 @@ public class ExpressionBuilderController implements Initializable {
     private void initFilterChoice() {
         ObservableList<FromChoiceEnum> fromChoiceList = FXCollections.observableArrayList(Arrays.asList(FromChoiceEnum.values()));
         fromChoiceBox.setItems(fromChoiceList);
-        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
         ObservableList<OrderChoiceEnum> orderChoiceList = FXCollections.observableArrayList(Arrays.asList(OrderChoiceEnum.values()));
         orderChoiceBox.setItems(orderChoiceList);
-        orderChoiceBox.getSelectionModel().select(OrderChoiceEnum.EVALUATION);
+        
 
         //Update the list on source change
         fromChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -548,76 +547,88 @@ public class ExpressionBuilderController implements Initializable {
                 orderList((OrderChoiceEnum) orderChoiceBox.getSelectionModel().getSelectedItem());
             }
         });
+        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
         //Update the list on order change
         orderChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue instanceof OrderChoiceEnum) {
                 orderList((OrderChoiceEnum) newValue);
             }
         });
+        orderChoiceBox.getSelectionModel().select(OrderChoiceEnum.EVALUATION);
     }
 
     private void filterList(FromChoiceEnum from) {
-        switch (from) {
-            case BUILTIN:
-                globalListView.setItems(namedExpressions.filtered((exp) -> {
-                    return exp.getExpressionTree().isSquidSpecialUPbThExpression() && !exp.isSquidSwitchNU();
-                }));
-                break;
-            case CUSTOM:
-                globalListView.setItems(namedExpressions.filtered((exp) -> {
-                    return !exp.getExpressionTree().isSquidSpecialUPbThExpression() && !exp.isSquidSwitchNU();
-                }));
-                break;
-            case HEALTHY:
-                globalListView.setItems(namedExpressions.filtered((exp) -> {
-                    return exp.amHealthy();
-                }));
-                break;
-            case UNHEALTHY:
-                globalListView.setItems(namedExpressions.filtered((exp) -> {
-                    return !exp.amHealthy();
-                }));
-                break;
-            default:
-                globalListView.setItems(namedExpressions);
+        if(from != null){
+            switch (from) {
+                case BUILTIN:
+                    globalListView.setItems(namedExpressions.filtered((exp) -> {
+                        return exp.getExpressionTree().isSquidSpecialUPbThExpression() && !exp.isSquidSwitchNU();
+                    }));
+                    break;
+                case CUSTOM:
+                    globalListView.setItems(namedExpressions.filtered((exp) -> {
+                        return !exp.getExpressionTree().isSquidSpecialUPbThExpression() && !exp.isSquidSwitchNU();
+                    }));
+                    break;
+                case HEALTHY:
+                    globalListView.setItems(namedExpressions.filtered((exp) -> {
+                        return exp.amHealthy();
+                    }));
+                    break;
+                case UNHEALTHY:
+                    globalListView.setItems(namedExpressions.filtered((exp) -> {
+                        return !exp.amHealthy();
+                    }));
+                    break;
+                default:
+                    globalListView.setItems(namedExpressions);
+            }
         }
     }
 
     private void orderList(OrderChoiceEnum order) {
-        switch (order) {
-            case NAME:
-                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                }));
-                break;
-            case BUILTINCUSTOM:
-                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                    boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
-                    boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
-                    if (o1IsCustom && o2IsCustom) {
-                        return 0;
-                    } else if (o1IsCustom && !o2IsCustom) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                }));
-                break;
-            case NUSWITCH:
-                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                    if (o1.isSquidSwitchNU() && o2.isSquidSwitchNU()) {
-                        return 0;
-                    } else if (o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()) {
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                }));
-                break;
-            default:
-                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                    return o1.compareTo(o2);
-                }));
+        if(order != null){
+            switch (order) {
+                case NAME:
+                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                        return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                    }));
+                    break;
+                case BUILTINCUSTOM:
+                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                        boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
+                        boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
+                        if ((o1IsCustom && o2IsCustom) || (!o1IsCustom && !o2IsCustom)) {
+                            return 0;
+                        } else if (o1IsCustom && !o2IsCustom) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    }));
+                    break;
+                case NUSWITCH:
+                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                        if (o1.isSquidSwitchNU() && o2.isSquidSwitchNU()) {
+                            return 0;
+                        } else if (o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }));
+                    break;
+                default:
+                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                        if((o1.amHealthy() && o2.amHealthy())||(!o1.amHealthy() && !o2.amHealthy())){
+                            return namedExpressions.indexOf(o1)-namedExpressions.indexOf(o2);
+                        }else if(!o1.amHealthy() && o2.amHealthy()){
+                            return 1;
+                        }else{
+                            return -1;
+                        }
+                    }));
+            }
         }
     }
 
@@ -1210,10 +1221,10 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void showNotesAction() {
         if (!notesStage.isShowing()) {
-            notesStage.show();
             showNotesBtn.setText("Hide notes");
             notesStage.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
             notesStage.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+            notesStage.show();
         } else {
             notesStage.hide();
             showNotesBtn.setText("Show notes");
