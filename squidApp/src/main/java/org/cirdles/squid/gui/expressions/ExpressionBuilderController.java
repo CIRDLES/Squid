@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui.expressions;
 
-import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -26,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -1695,7 +1693,7 @@ public class ExpressionBuilderController implements Initializable {
                 Expression ex = squidProject.getTask().getExpressionByName(exname);
                 if (ex != null) {
                     boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : "Unhealthy\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                     if(!ex.amHealthy()){
                         ImageView imageView = new ImageView(UNHEALTHY);
                         imageView.setFitHeight(12);
@@ -1717,7 +1715,7 @@ public class ExpressionBuilderController implements Initializable {
                         ex = squidProject.getTask().getExpressionByName(baseExpressionName);
                         if (ex != null) {
                             boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : "Unhealthy\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                             if(!ex.amHealthy()){
                                 ImageView imageView = new ImageView(UNHEALTHY);
                                 imageView.setFitHeight(12);
