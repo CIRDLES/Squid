@@ -51,6 +51,10 @@ public class SquidPersistentState implements Serializable {
     private File MRUExpressionFile;
     private ArrayList<String> MRUExpressionList;
     private String MRUExpressionFolderPath;
+    
+    private File MRUExpressionGraphFile;
+    private ArrayList<String> MRUExpressionGraphList;
+    private String MRUExpressionGraphFolderPath;
 
     /**
      *
@@ -499,4 +503,118 @@ public class SquidPersistentState implements Serializable {
         this.MRUExpressionFolderPath = MRUExpressionFolderPath;
     }
 
+    // MRU Expression Graph Data ********************************************************
+    /**
+     *
+     * @param expressionFileMRU
+     */
+    public void updateExpressionGraphListMRU(File expressionGraphFileMRU) {
+
+        if (MRUExpressionGraphList == null) {
+            MRUExpressionGraphList = new ArrayList<>(MRU_COUNT);
+        }
+
+        if (expressionGraphFileMRU != null) {
+            try {
+                // remove if exists in MRU list
+                String MRUExpressionGraphFileName = expressionGraphFileMRU.getCanonicalPath();
+                MRUExpressionGraphList.remove(MRUExpressionGraphFileName);
+                MRUExpressionGraphList.add(0, MRUExpressionGraphFileName);
+
+                // trim list
+                if (MRUExpressionGraphList.size() > MRU_COUNT) {
+                    MRUExpressionGraphList.remove(MRU_COUNT);
+                }
+
+                // update MRU folder
+                MRUExpressionGraphFolderPath = expressionGraphFileMRU.getParent();
+
+                // update current file
+                MRUExpressionGraphFile = expressionGraphFileMRU;
+
+            } catch (IOException iOException) {
+            }
+        }
+
+        // save
+        try {
+            SquidSerializer.serializeObjectToFile(this, getMySerializedName());
+        } catch (SquidException squidException) {
+            System.out.println(squidException.getMessage());
+        }
+    }
+
+    public void removeFileNameFromExpressionGraphListMRU(String mruExpressionGraphFileName) {
+        MRUExpressionGraphList.remove(mruExpressionGraphFileName);
+    }
+
+    public void cleanExpressionGraphListMRU() {
+        ArrayList<String> missingFileNames = new ArrayList<>();
+        // test for missing files
+        for (String expressionGraphFileName : MRUExpressionGraphList) {
+            File expressionGraphFile = new File(expressionGraphFileName);
+            if (!expressionGraphFile.exists()) {
+                missingFileNames.add(expressionGraphFileName);
+            }
+        }
+
+        // remove missing fileNames
+        for (String expressionGraphFileName : missingFileNames) {
+            removeExpressionGraphFileNameFromMRU(expressionGraphFileName);
+        }
+
+        serializeSelf();
+    }
+
+    public void removeExpressionGraphFileNameFromMRU(String expressionGraphFileName) {
+        MRUExpressionGraphList.remove(expressionGraphFileName);
+    }
+
+    /**
+     * @return the MRUExpressionFile
+     */
+    public File getMRUExpressionGraphFile() {
+        return MRUExpressionGraphFile;
+    }
+
+    /**
+     * @param MRUExpressionGraphFile the MRUExpressionGraphFile to set
+     */
+    public void setMRUExpressionGraphFile(File MRUExpressionGraphFile) {
+        this.MRUExpressionGraphFile = MRUExpressionGraphFile;
+    }
+
+    /**
+     * @return the MRUExpressionList
+     */
+    public ArrayList<String> getMRUExpressionGraphList() {
+        if (MRUExpressionGraphList == null) {
+            MRUExpressionGraphList = null;
+        }
+        return MRUExpressionGraphList;
+    }
+
+    /**
+     * @param MRUExpressionGraphList the MRUExpressionList to set
+     */
+    public void setMRUExpressionGraphList(ArrayList<String> MRUExpressionGraphList) {
+        this.MRUExpressionGraphList = MRUExpressionGraphList;
+    }
+
+    /**
+     * @return the MRUExpressionFolderPath
+     */
+    public String getMRUExpressionGraphFolderPath() {
+        if (MRUExpressionGraphFolderPath == null) {
+            MRUExpressionGraphFolderPath = "";
+        }
+        return MRUExpressionGraphFolderPath;
+    }
+
+    /**
+     * @param MRUExpressionGraphFolderPath the MRUExpressionFolderPath to set
+     */
+    public void setMRUExpressionGraphFolderPath(String MRUExpressionGraphFolderPath) {
+        this.MRUExpressionGraphFolderPath = MRUExpressionGraphFolderPath;
+    }
 }

@@ -17,8 +17,9 @@ package org.cirdles.squid.gui.utilities.fileUtilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import javafx.stage.FileChooser;
@@ -29,7 +30,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -245,11 +246,35 @@ public class FileHandler {
 
         if (expressionFileXML != null) {
             retVal = expressionFileXML;
-            squidPersistentState.setMRUExpressionFolderPath(expressionFileXML.getParent());
+            squidPersistentState.updateExpressionListMRU(expressionFileXML);
             ((XMLSerializerInterface) expression)
                     .serializeXMLObject(expressionFileXML.getAbsolutePath());
         }
 
+        return retVal;
+    }
+    
+    public static File saveExpressionGraphHTML(Expression expression, Window ownerWindow)
+            throws IOException {
+        
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Expression graph '.html' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression graph '.html' files", "*.html"));
+        File mruFolder = new File(squidPersistentState.getMRUExpressionGraphFolderPath());
+        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
+        fileChooser.setInitialFileName(expression.getName() + ".html");
+        
+        File expressionGraphFileHTML = fileChooser.showSaveDialog(ownerWindow);
+        
+        if(expressionGraphFileHTML != null){
+            retVal = expressionGraphFileHTML;
+            squidPersistentState.updateExpressionGraphListMRU(expressionGraphFileHTML);
+            String content = ExpressionTreeWriterMathML.toStringBuilderMathML(expression.getExpressionTree()).toString();
+            Files.write(Paths.get(expressionGraphFileHTML.getPath()), content.getBytes());
+        }
+        
         return retVal;
     }
 

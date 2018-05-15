@@ -21,74 +21,57 @@ limitations under the License.
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="isotopesManagerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="616.0" prefWidth="925.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.IsotopesManagerController">
-    <children>
-      <VBox layoutX="5.0" layoutY="14.0" prefHeight="616.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<VBox fx:id="isotopesManagerPane" minHeight="640.0" minWidth="1000.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.IsotopesManagerController">
+   <children>
+        <Label graphicTextGap="0.0" style="-fx-font-size: 14;" text="Edit Isotope Labels and align mass station and Task Isotope Labels (right-mouse click to (de)select Background):" wrapText="true">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </Label>
+        <TableView fx:id="isotopesTableView" editable="true" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="massLabelColumn" editable="false" prefWidth="126.0" sortable="false" style="-fx-alignment: CENTER;" text="Mass Station Label" />
+                <TableColumn fx:id="elementLabelColumn" editable="false" prefWidth="228.0" sortable="false" style="-fx-alignment: CENTER;" text="Element Label" />
+            <TableColumn fx:id="uOrThBearingColumn" maxWidth="4500.0" prefWidth="75.0" sortable="false" text="U- or Th-Bearing (edit)" />
+                <TableColumn fx:id="isotopeLabelColumn" prefWidth="224.0" sortable="false" style="-fx-alignment: CENTER;" text="(M) Isotope Label (edit)" />
+            <TableColumn fx:id="taskIsotopeLabelColumn" editable="false" prefWidth="106.0" sortable="false" style="-fx-alignment: CENTER;" text="(T) Task Isotope Label" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+        </TableView>
+      <HBox>
          <children>
-              <Label graphicTextGap="0.0" prefHeight="3.0" prefWidth="903.0" style="-fx-font-size: 14;" text="Edit Isotope Labels and align mass station and Task Isotope Labels (right-mouse click to (de)select Background):" wrapText="true">
-               <VBox.margin>
-                  <Insets left="10.0" />
-               </VBox.margin>
-            </Label>
-              <TableView fx:id="isotopesTableView" editable="true" prefHeight="476.0" prefWidth="905.0" VBox.vgrow="ALWAYS">
-                  <columns>
-                      <TableColumn fx:id="massLabelColumn" editable="false" prefWidth="126.0" sortable="false" style="-fx-alignment: CENTER;" text="Mass Station Label" />
-                      <TableColumn fx:id="elementLabelColumn" editable="false" prefWidth="228.0" sortable="false" style="-fx-alignment: CENTER;" text="Element Label" />
-                  <TableColumn fx:id="uOrThBearingColumn" maxWidth="4500.0" prefWidth="75.0" sortable="false" text="U- or Th-Bearing (edit)" />
-                      <TableColumn fx:id="isotopeLabelColumn" prefWidth="224.0" sortable="false" style="-fx-alignment: CENTER;" text="(M) Isotope Label (edit)" />
-                  <TableColumn fx:id="taskIsotopeLabelColumn" editable="false" prefWidth="106.0" sortable="false" style="-fx-alignment: CENTER;" text="(T) Task Isotope Label" />
-                  </columns>
-                  <columnResizePolicy>
-                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                  </columnResizePolicy>
-               <VBox.margin>
-                  <Insets left="10.0" right="10.0" top="10.0" />
-               </VBox.margin>
+            <Label lineSpacing="2.0" prefWidth="440.0" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-background-color: white; -fx-border-color: black;" text="Note: Squid calculates Isotopic Ratios using column M’s Mass Station Isotope Labels.  However, the ratios in Task expressions use column T’s Task Isotope Labels. Columns M and T must be identical - use buttons to align them. " textAlignment="JUSTIFY" wrapText="true">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-              </TableView>
-            <HBox prefHeight="83.0" prefWidth="925.0">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
                <children>
-                  <Label lineSpacing="2.0" prefHeight="88.0" prefWidth="442.0" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-background-color: white; -fx-border-color: black;" text="   Note: Squid calculates Isotopic Ratios using column M’s Mass Station Isotope Labels.  However, the ratios in Task expressions use column T’s Task Isotope Labels. Columns M and T must be identical - use buttons to align them. " textAlignment="JUSTIFY" wrapText="true">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </Label>
-                  <VBox>
-                     <children>
-                        <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="42.0" prefWidth="531.0" style="-fx-background-color: white;">
-                          <items>
-                            <Button mnemonicParsing="false" onAction="#applyMassStationIsotopeLabelsAction" text="Apply Mass Station Isotope Labels to Task Isotope Labels &gt;&gt;" />
-                          </items>
-                           <VBox.margin>
-                              <Insets right="10.0" />
-                           </VBox.margin>
-                        </ToolBar>
-                        <ToolBar nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: white;">
-                           <items>
-                              <Button contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#applyTaskIsotopeLabelsAction" text="&lt;&lt; Apply Task Isotope Labels to Mass Station Isotope Labels" />
-                           </items>
-                           <VBox.margin>
-                              <Insets right="10.0" />
-                           </VBox.margin>
-                        </ToolBar>
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" />
-                     </padding>
-                  </VBox>
+                <Button mnemonicParsing="false" onAction="#applyMassStationIsotopeLabelsAction" text="Apply Mass Station Isotope Labels to Task Isotope Labels &gt;&gt;" />
+                  <Button contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#applyTaskIsotopeLabelsAction" text="&lt;&lt; Apply Task Isotope Labels to Mass Station Isotope Labels" />
                </children>
-            </HBox>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
+            </VBox>
          </children>
-      </VBox>
-    </children>
-</AnchorPane>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+</VBox>

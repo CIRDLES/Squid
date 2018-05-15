@@ -4,20 +4,29 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="sessionAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="925.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
+<VBox fx:id="sessionVBox" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.SessionAuditController">
    <children>
-      <Label layoutX="6.0" layoutY="4.0" prefHeight="26.0" prefWidth="523.0" style="-fx-font-size: 14;" text="Session Audit: note that spot name duplicates are suffixed with '-DUP-n'" />
-      <TreeView fx:id="prawnAuditTree" layoutY="25.0" prefHeight="616.0" prefWidth="925.0" style="-fx-background-color: #f4f4f4;">
+      <HBox alignment="CENTER_LEFT" spacing="20.0">
+         <children>
+            <Label style="-fx-font-size: 14;" text="Session Audit: note that spot name duplicates are suffixed with '-DUP-n'" />
+            <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#duplicatesChecked" text="Display Duplicates Only" textFill="#ee3704">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+            </CheckBox>
+         </children>
+         <padding>
+            <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
+         </padding>
+      </HBox>
+      <TreeView fx:id="prawnAuditTree" style="-fx-background-color: #f4f4f4;" VBox.vgrow="ALWAYS">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </TreeView>
-      <CheckBox fx:id="checkbox" layoutX="529.0" layoutY="5.0" mnemonicParsing="false" onAction="#duplicatesChecked" text="Display Duplicates Only" textFill="#ee3704">
-         <font>
-            <Font name="System Bold" size="13.0" />
-         </font></CheckBox>
    </children>
-</AnchorPane>
+</VBox>

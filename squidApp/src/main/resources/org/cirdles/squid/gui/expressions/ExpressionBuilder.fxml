@@ -1,117 +1,381 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.web.WebView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1000.0" style="-fx-background-color: white;" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
-   <children>
-      <TextFlow fx:id="expressionTextFlow" layoutX="15.0" layoutY="424.0" prefHeight="39.0" prefWidth="976.0" style="-fx-border-color: black; -fx-line-spacing: 8px;" />
-      <Accordion fx:id="expressionsAccordian" layoutX="15.0" layoutY="10.0" prefHeight="411.0" prefWidth="350.0" style="-fx-border-color: red;">
-        <panes>
-            <TitledPane animated="false" text="NU-switched Expressions with Uncertainties">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+   <items>
+      <SplitPane fx:id="leftSplitPane" dividerPositions="1.0" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
+         <items>
+            <TabPane minHeight="250.0" style="-fx-tab-min-width: 114;" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="1000.0" tabMaxWidth="1000.0">
+              <tabs>
+                <Tab text="Categories">
+                     <content>
+                        <VBox styleClass="backgroundCalamari">
+                           <children>
+                              <VBox alignment="TOP_CENTER" spacing="5.0" style="-fx-background-color: rgba(1,1,1,0.1);" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Accordion fx:id="expressionsAccordion" VBox.vgrow="NEVER">
+                                       <panes>
+                                          <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" text="Custom Expressions">
+                                             <content>
+                                                <ListView fx:id="customExpressionsListView" />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" text="NU-switched Expressions with Uncts">
+                                             <content>
+                                                <ListView fx:id="nuSwitchedExpressionsListView" />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" text="Built-In Expressions">
+                                             <content>
+                                                <ListView fx:id="builtInExpressionsListView" />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" expanded="false" layoutX="10.0" layoutY="37.0" text="Unhealthy Expressions">
+                                             <content>
+                                                <ListView fx:id="brokenExpressionsListView" />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" text="Ratios with Uncertainties">
+                                             <content>
+                                                <ListView fx:id="ratioExpressionsListView" />
+                                             </content>
+                                          </TitledPane>
+                                       </panes>
+                                    </Accordion>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </content>
+                  </Tab>
+                <Tab text="Filter">
+                    <content>
+                        <VBox styleClass="backgroundCalamari">
+                           <children>
+                              <VBox spacing="5.0" style="-fx-background-color: rgba(1,1,1,0.1);" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <GridPane minHeight="50.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="84.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.0" minWidth="10.0" prefWidth="179.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="From: " />
+                                          <ChoiceBox fx:id="fromChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" />
+                                          <Label text="Order by:" GridPane.rowIndex="1" />
+                                          <ChoiceBox fx:id="orderChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                    <ListView fx:id="globalListView" VBox.vgrow="ALWAYS" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </VBox>
+                    </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            <VBox>
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Entities" />
+                  <Accordion fx:id="othersAccordion">
+                     <panes>
+                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" text="Reference Materials">
+                           <content>
+                              <ListView fx:id="referenceMaterialsListView" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="constantsTitledPane" animated="false" text="Constants and Numbers">
+                           <content>
+                              <ListView fx:id="constantsListView" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="operationsTitledPane" animated="false" text="Operations">
+                           <content>
+                              <ListView fx:id="operationsListView" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="mathFunctionsTitledPane" animated="false" text="Math Functions">
+                           <content>
+                              <ListView fx:id="mathFunctionsListView" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="squidFunctionsTitledPane" animated="false" expanded="false" text="Squid Functions">
+                           <content>
+                              <ListView fx:id="squidFunctionsListView" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="logicFunctionsTitledPane" animated="false" text="Logic Functions">
+                           <content>
+                              <ListView fx:id="logicFunctionsListView" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="presentationTitledPane" animated="false" layoutX="10.0" layoutY="172.0" text="Presentation">
+                           <content>
+                              <ListView fx:id="presentationListView" />
+                           </content>
+                        </TitledPane>
+                     </panes>
+                  </Accordion>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </items>
+      </SplitPane>
+      <VBox minWidth="715.0">
+         <children>
+            <ToolBar VBox.vgrow="NEVER">
+               <items>
+                  <VBox fx:id="toolBarVBox" alignment="CENTER_LEFT">
                      <children>
-                        <ListView fx:id="nuSwitchedExpressionsListView" prefHeight="165.0" prefWidth="350.0" />
+                        <HBox spacing="5.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create blank" HBox.hgrow="NEVER" />
+                              <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Copy selected" />
+                              <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
+                              <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
+                              <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="How to use?" HBox.hgrow="NEVER" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="toolBarHBox" alignment="CENTER_LEFT" spacing="6.0">
+                           <children>
+                              <Label text="Drag &amp; drop mode:" />
+                              <RadioButton fx:id="dragndropLeftRadio" mnemonicParsing="false" text="Insert left" />
+                              <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" text="Replace" />
+                              <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" text="Insert right" />
+                              <Label fx:id="modeLabel" text="View" visible="false" />
+                           </children>
+                        </HBox>
                      </children>
-                  </AnchorPane>
-              </content>
-            </TitledPane>
-          <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" prefWidth="350.0" text="Built-In Expressions">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="350.0">
+                  </VBox>
+               </items>
+            </ToolBar>
+            <VBox fx:id="editorVBox" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <ListView fx:id="builtInExpressionsListView" prefHeight="165.0" prefWidth="350.0" />
+                        <Label minWidth="140.0" opacity="0.99" text="Expression name:" />
+                        <TextField fx:id="expressionNameTextField" maxWidth="400.0" minWidth="120.0" opacity="0.99" HBox.hgrow="ALWAYS" />
                      </children>
-                  </AnchorPane>
-            </content>
-          </TitledPane>
-          <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Custom Expressions">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="7.0" right="7.0" top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0">
                      <children>
-                        <ListView fx:id="customExpressionsListView" prefHeight="165.0" prefWidth="350.0" />
-                     </children></AnchorPane>
-            </content>
-          </TitledPane>
-          <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Ratios with Uncertainties">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
-                     <children>
-                        <ListView fx:id="ratioExpressionsListView" prefHeight="165.0" prefWidth="350.0" />
-                     </children></AnchorPane>
-            </content>
-          </TitledPane>
-            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Operations">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
-                     <children>
-                        <ListView fx:id="operationsListView" prefHeight="165.0" prefWidth="350.0" />
+                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" opacity="0.99" text="Reference Material" />
+                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" opacity="0.99" text="Unknown Samples" />
+                        <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" opacity="0.99" text="Conc RefMat" />
+                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" disable="true" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
                      </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Math Functions">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
-                     <children>
-                        <ListView fx:id="mathFunctionsListView" prefHeight="165.0" prefWidth="350.0" />
-                     </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Squid Functions">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
-                     <children>
-                        <ListView fx:id="squidFunctionsListView" prefHeight="165.0" prefWidth="350.0" />
-                     </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Constants and Numbers">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
-                     <children>
-                        <ListView fx:id="constantsListView" prefHeight="165.0" prefWidth="350.0" />
-                     </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" expanded="false" prefWidth="350.0" text="Reference Materials">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="350.0">
-                     <children>
-                        <ListView fx:id="referenceMaterialsListView" prefHeight="165.0" prefWidth="350.0" />
-                     </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
-        </panes>
-      </Accordion>
-      <RadioButton layoutX="44.0" layoutY="492.0" mnemonicParsing="false" selected="true" text="Insert left">
-         <toggleGroup>
-            <ToggleGroup fx:id="InsertReplaceGroup" />
-         </toggleGroup>
-      </RadioButton>
-      <RadioButton fx:id="replaceRB" layoutX="148.0" layoutY="492.0" mnemonicParsing="false" text="Replace" toggleGroup="$InsertReplaceGroup" />
-      <TextArea fx:id="expressionAuditTextArea" editable="false" layoutX="365.0" layoutY="467.0" prefHeight="128.0" prefWidth="627.0" style="-fx-font-size: 12;" styleClass="label" text="Audit of parsing and expression building." wrapText="true" />
-      <ToolBar layoutY="595.0" prefHeight="43.0" prefWidth="1000.0">
-        <items>
-            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearExpressionAction" prefHeight="31.0" prefWidth="90.0" text="Clear" />
-            <Button fx:id="copyButton" mnemonicParsing="false" onAction="#copyButtonAction" prefHeight="31.0" prefWidth="90.0" text="Copy" />
-            <Button fx:id="undoButton" mnemonicParsing="false" onAction="#undoButtonAction" prefHeight="31.0" prefWidth="90.0" text="Undo" />
-            <Button fx:id="redoButton" mnemonicParsing="false" onAction="#redoButtonAction" prefHeight="31.0" prefWidth="90.0" text="Redo" />
-            <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetButtonAction" prefHeight="31.0" prefWidth="90.0" text="Reset" />
-        </items>
-      </ToolBar>
-   </children>
-</AnchorPane>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="7.0" right="7.0" />
+                     </VBox.margin>
+                  </FlowPane>
+                  <SplitPane dividerPositions="0.25" orientation="VERTICAL" styleClass="backgroundCalamari" VBox.vgrow="ALWAYS">
+                     <items>
+                        <VBox>
+                           <children>
+                              <AnchorPane VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TitledPane animated="false" collapsible="false" layoutY="2.5" minHeight="70.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <content>
+                                          <AnchorPane fx:id="expressionPane">
+                                              <padding>
+                                                  <Insets bottom="0" left="0" right="0" top="0" />                 
+                                              </padding>
+                                             <children>
+                                                <ScrollPane fx:id="expressionScrollPane" hbarPolicy="NEVER" style="-fx-background: #FFFFFF; -fx-border-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <content>
+                                                      <TextFlow fx:id="expressionTextFlow" />
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                       <graphic>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="0.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Expression">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                </Text>
+                                                <Button fx:id="showCurrentExpressionBtn" mnemonicParsing="false" onAction="#showCurrentExpressionAction" scaleX="0.7" scaleY="0.7" text="Show in list" />
+                                                <Button fx:id="showNotesBtn" mnemonicParsing="false" onAction="#showNotesAction" scaleX="0.7" scaleY="0.7" text="Show notes" translateX="-39.0" />
+                                             </children>
+                                          </HBox>
+                                       </graphic>
+                                    </TitledPane>
+                                 </children>
+                              </AnchorPane>
+                              <HBox>
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Button fx:id="expressionCopyBtn" mnemonicParsing="false" onAction="#expressionCopyAction" text="Copy exp">
+                                             <tooltip>
+                                                <Tooltip text="Copy the whole expression to clipboard" />
+                                             </tooltip>
+                                          </Button>
+                                          <Button fx:id="expressionPasteBtn" mnemonicParsing="false" onAction="#expressionPasteAction" text="Paste exp">
+                                             <tooltip>
+                                                <Tooltip text="Replaces the expression by clipboard content" />
+                                             </tooltip>
+                                          </Button>
+                                          <Button fx:id="expressionClearBtn" mnemonicParsing="false" onAction="#expressionClearAction" text="Clear" />
+                                          <Button fx:id="expressionUndoBtn" mnemonicParsing="false" onAction="#expressionUndoAction" text="Undo" />
+                                          <Button fx:id="expressionRedoBtn" mnemonicParsing="false" onAction="#expressionRedoAction" text="Redo" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" text="Edit as text" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                        <SplitPane fx:id="bigSplitPane" dividerPositions="0.5" orientation="VERTICAL" styleClass="backgroundCalamari">
+                           <items>
+                              <AnchorPane>
+                                 <children>
+                                    <TitledPane fx:id="graphPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <content>
+                                          <WebView fx:id="graphView" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" />
+                                       </content>
+                                       <graphic>
+                                          <HBox fx:id="graphTitleHbox" alignment="CENTER_LEFT" spacing="10.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Graph">
+                                                   <HBox.margin>
+                                                      <Insets right="25.0" />
+                                                   </HBox.margin>
+                                                </Text>
+                                                <CheckBox fx:id="showGraphCheckBox" mnemonicParsing="false" selected="true" text="Show here" />
+                                                <CheckBox fx:id="graphBrowserCheckBox" mnemonicParsing="false" text="Show in browser" />
+                                             </children>
+                                          </HBox>
+                                       </graphic>
+                                    </TitledPane>
+                                 </children>
+                              </AnchorPane>
+                              <SplitPane fx:id="smallSplitPane" dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0">
+                                 <items>
+                                    <AnchorPane>
+                                       <children>
+                                          <TitledPane fx:id="auditPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" text="Audit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <content>
+                                                 <AnchorPane>
+                                                     <padding>
+                                                         <Insets bottom="0" left="0" right="0" top="0" />                 
+                                                     </padding>
+                                                     <children>
+                                                         <TextArea fx:id="auditTextArea" editable="false" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                     </children>
+                                                </AnchorPane>
+                                             </content>
+                                          </TitledPane>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane>
+                                       <children>
+                                          <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" text="Peek" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <content>
+                                                <TabPane fx:id="spotTabPane" style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
+                                                  <tabs>
+                                                    <Tab fx:id="refMatTab" text="Reference Materials">
+                                                         <content>
+                                                            <AnchorPane>
+                                                                <padding>
+                                                                    <Insets bottom="0" left="0" right="0" top="0" />                 
+                                                                </padding>
+                                                                <children>
+                                                                    <TextArea fx:id="rmPeekTextArea" editable="false" style="-fx-font-family: Courier New; -fx-font-size: 11;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                </children>
+                                                            </AnchorPane>
+                                                         </content>
+                                                      </Tab>
+                                                    <Tab fx:id="unkTab" text="Unknowns">
+                                                         <content>
+                                                            <AnchorPane>
+                                                                <padding>
+                                                                    <Insets bottom="0" left="0" right="0" top="0" />                 
+                                                                </padding>
+                                                                <children>
+                                                                    <TextArea fx:id="unPeekTextArea" editable="false" style="-fx-font-family: Courier New; -fx-font-size: 11;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                </children>
+                                                            </AnchorPane>
+                                                         </content>
+                                                      </Tab>
+                                                  </tabs>
+                                                </TabPane>
+                                             </content>
+                                          </TitledPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </items>
+                              </SplitPane>
+                           </items>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </SplitPane>
+                     </items>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </SplitPane>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </items>
+</SplitPane>

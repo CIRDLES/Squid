@@ -50,6 +50,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     private static final long serialVersionUID = 2614344042503810733L;
 
+    private String notes;
     private String name;
     private String excelExpressionString;
     private boolean squidSwitchNU;
@@ -228,6 +229,17 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         this.name = name;
     }
 
+    public String getNotes() {
+        if(notes==null){
+            notes = "";
+        }
+        return notes;
+    }
+
+    public void setNotes(String comments) {
+        this.notes = comments;
+    }
+    
     /**
      * @return the excelExpressionString
      */
