@@ -26,6 +26,7 @@ import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.operations.Add;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
@@ -93,6 +94,8 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         ExpressionTree expressionTree = (ExpressionTree) value;
 
+        System.out.print(">> " + expressionTree.getName() + "  :   ");
+
         writer.startNode("name");
         writer.setValue(expressionTree.getName());
         writer.endNode();
@@ -102,7 +105,12 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("operation");
-        context.convertAnother(expressionTree.getOperation());
+        if (expressionTree.getOperation() == null) {
+            writer.setValue("add");
+        } else {
+            context.convertAnother(expressionTree.getOperation());
+        }
+
         writer.endNode();
 
         writer.startNode("ratiosOfInterest");
@@ -128,18 +136,21 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.startNode("rootExpressionTree");
         writer.setValue(Boolean.toString(expressionTree.isRootExpressionTree()));
         writer.endNode();
-        
+
         writer.startNode("squidSwitchConcentrationReferenceMaterialCalculation");
         writer.setValue(Boolean.toString(expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()));
         writer.endNode();
-        
+
         writer.startNode("uncertaintyDirective");
         writer.setValue(expressionTree.getUncertaintyDirective());
         writer.endNode();
-        
+
         writer.startNode("index");
         writer.setValue(Integer.toString(expressionTree.getIndex()));
         writer.endNode();
+
+        System.out.println(expressionTree.getName());
+
     }
 
     /**
@@ -214,8 +225,8 @@ public class ExpressionTreeXMLConverter implements Converter {
         if (operation == null) {
             operation = Function.operationFactory(reader.getValue());
         }
-        if (operation ==null){
-            System.out.println("NULL OP  "+ expressionTree.getName() + "    " + reader.getValue());
+        if (operation == null) {
+            System.out.println("NULL OP  " + expressionTree.getName() + "    " + reader.getValue());
         }
         expressionTree.setOperation(operation);
         reader.moveUp();
@@ -255,15 +266,15 @@ public class ExpressionTreeXMLConverter implements Converter {
         reader.moveDown();
         expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
-        
+
         reader.moveDown();
         expressionTree.setUncertaintyDirective(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         expressionTree.setIndex(Integer.parseInt(reader.getValue()));
         reader.moveUp();
-        
+
         return expressionTree;
     }
 

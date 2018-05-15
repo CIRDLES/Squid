@@ -359,7 +359,7 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> generateExperimentalExpressions() {
         SortedSet<Expression> experimentalExpressions = new TreeSet<>();
 
-        Expression dummy = buildExpression("DUMMY", "5", true, true, false);
+        Expression dummy = buildExpression("DUMMY", "5*1", true, true, false);
         dummy.getExpressionTree().setSquidSpecialUPbThExpression(false);
         experimentalExpressions.add(dummy);
 

@@ -18,6 +18,7 @@ package org.cirdles.squid.gui.utilities.fileUtilities;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import javafx.stage.FileChooser;
@@ -28,6 +29,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -184,8 +186,22 @@ public class FileHandler {
         if (squidTaskFile != null && squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xml")) {
             retVal = squidTaskFile;
             Task task = (Task) squidProject.getTask();
+
+            List<Expression> taskExpressionsOrdered = task.getTaskExpressionsOrdered();
+            File expressionFolder = new File(retVal.getAbsolutePath().replaceAll(".xml", "") + "Folder");
+            expressionFolder.mkdirs();
+            int counter = 0;
+            for (Expression exp : taskExpressionsOrdered) {
+                try {
+                    counter++;
+                    exp.serializeXMLObject(expressionFolder.toString() + "/" + "Expression" + counter);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage() + ": " + exp.getName() + "didn't serialize");
+                }
+            }
+
             task.serializeXMLObject(retVal.getAbsolutePath());
-            SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile);
+            SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile.getParentFile());
         }
 
         return retVal;
