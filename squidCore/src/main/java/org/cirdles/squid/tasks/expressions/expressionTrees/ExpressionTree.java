@@ -114,9 +114,9 @@ public class ExpressionTree
 
     protected boolean squidSwitchConcentrationReferenceMaterialCalculation;
 
-    protected  String uncertaintyDirective;
+    protected String uncertaintyDirective;
 
-    protected  int index;
+    protected int index;
 
     /**
      *
@@ -438,7 +438,6 @@ public class ExpressionTree
         return retVal;
     }
 
-
     public String getUncertaintyDirective() {
         return uncertaintyDirective;
     }
@@ -446,6 +445,7 @@ public class ExpressionTree
     public int getIndex() {
         return index;
     }
+
     /**
      *
      * @return

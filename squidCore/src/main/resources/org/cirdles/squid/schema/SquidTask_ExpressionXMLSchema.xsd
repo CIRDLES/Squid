@@ -89,16 +89,6 @@
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="SquidSpeciesModel">
-        <xs:sequence>
-            <xs:element name="massStationIndex" type="xs:string"></xs:element>
-            <xs:element name="massStationSpeciesName" type="xs:string"></xs:element>
-            <xs:element name="isotopeName" type="xs:string"></xs:element>
-            <xs:element name="elementName" type="xs:string"></xs:element>
-            <xs:element name="isBackground" type="xs:string"></xs:element>
-        </xs:sequence>
-    </xs:complexType>
-    
     <xs:complexType name="SpotFieldNode">
         <xs:sequence>
             <xs:element name="fieldName" type="xs:string"></xs:element>

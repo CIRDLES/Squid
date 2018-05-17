@@ -26,7 +26,6 @@ import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
-import org.cirdles.squid.tasks.expressions.operations.Add;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
@@ -94,8 +93,8 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         ExpressionTree expressionTree = (ExpressionTree) value;
 
-        System.out.print(">> " + expressionTree.getName() + "  :   ");
-
+        System.out.print(" start tree " + expressionTree.getName());
+        
         writer.startNode("name");
         writer.setValue(expressionTree.getName());
         writer.endNode();
@@ -105,12 +104,13 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("operation");
-        if (expressionTree.getOperation() == null) {
-            writer.setValue("add");
+        if(expressionTree.getOperation() != null) {
+        context.convertAnother(expressionTree.getOperation());
         } else {
-            context.convertAnother(expressionTree.getOperation());
+            writer.startNode("name");
+            writer.setValue("no-op");
+            writer.endNode();
         }
-
         writer.endNode();
 
         writer.startNode("ratiosOfInterest");
@@ -148,9 +148,8 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.startNode("index");
         writer.setValue(Integer.toString(expressionTree.getIndex()));
         writer.endNode();
-
-        System.out.println(expressionTree.getName());
-
+        
+        System.out.print(" tree end ");
     }
 
     /**

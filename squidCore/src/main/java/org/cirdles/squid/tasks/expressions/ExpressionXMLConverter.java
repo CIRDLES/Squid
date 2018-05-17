@@ -80,8 +80,10 @@ public class ExpressionXMLConverter implements Converter {
     @Override
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
-
+        
         Expression expression = (Expression) value;
+        
+        System.out.print("Expression started: " + expression.getName());
 
         writer.startNode("name");
         writer.setValue(expression.getName());
@@ -102,6 +104,8 @@ public class ExpressionXMLConverter implements Converter {
         writer.startNode("notes");
         writer.setValue(expression.getNotes());
         writer.endNode();
+        
+        System.out.println(" | finished: " + expression.getName());
     }
 
     /**

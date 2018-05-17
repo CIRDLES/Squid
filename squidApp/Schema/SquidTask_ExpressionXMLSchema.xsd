@@ -69,12 +69,12 @@
                 </xs:complexType>
             </xs:element>
                           
-            <xs:element type="xs:boolean" name="squidSwitchSCSummaryCalculation"/>
-            <xs:element type="xs:boolean" name="squidSwitchSTReferenceMaterialCalculation"/>
-            <xs:element type="xs:boolean" name="squidSwitchSAUnknownCalculation"/>
-            <xs:element type="xs:boolean" name="squidSpecialUPbThExpression"/>
-            <xs:element type="xs:boolean" name="rootExpressionTree"/>
-            <xs:element type="xs:boolean" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
+            <xs:element type="xs:string" name="squidSwitchSCSummaryCalculation"/>
+            <xs:element type="xs:string" name="squidSwitchSTReferenceMaterialCalculation"/>
+            <xs:element type="xs:string" name="squidSwitchSAUnknownCalculation"/>
+            <xs:element type="xs:string" name="squidSpecialUPbThExpression"/>
+            <xs:element type="xs:string" name="rootExpressionTree"/>
+            <xs:element type="xs:string" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
             <xs:element type="xs:string" name="uncertaintyDirective"/>
             <xs:element type="xs:integer" name="index"/>
             
@@ -86,18 +86,6 @@
             <xs:element name="isotopeName" type="xs:string"></xs:element>
             <xs:element name="squidSpeciesModel" type="SquidSpeciesModel"></xs:element>
             <xs:element name="methodNameForShrimpFraction" type="xs:string"></xs:element>
-        </xs:sequence>
-    </xs:complexType>
-    
-    <xs:complexType name="SquidSpeciesModel">
-        <xs:sequence>
-            <xs:element name="massStationIndex" type="xs:integer"/>
-            <xs:element name="massStationSpeciesName" type="xs:string"/>
-            <xs:element name="isotopeName" type="xs:string"/>
-            <xs:element name="prawnFileIsotopeName" type="xs:string"/>
-            <xs:element name="elementName" type="xs:string"/>
-            <xs:element name="isBackground" type="xs:boolean"/>
-            <xs:element name="uThbearingName" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -172,4 +160,5 @@
             <xs:enumeration value="none" />
         </xs:restriction>
     </xs:simpleType>
+
 </xs:schema>

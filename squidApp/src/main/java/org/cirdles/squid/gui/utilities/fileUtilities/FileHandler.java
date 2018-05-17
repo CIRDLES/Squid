@@ -184,22 +184,22 @@ public class FileHandler {
 
         File squidTaskFile = fileChooser.showSaveDialog(ownerWindow);
 
-        if (squidTaskFile != null && squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xml")) {
+        if (squidTaskFile != null ) {
             retVal = squidTaskFile;
             Task task = (Task) squidProject.getTask();
 
-            List<Expression> taskExpressionsOrdered = task.getTaskExpressionsOrdered();
-            File expressionFolder = new File(retVal.getAbsolutePath().replaceAll(".xml", "") + "Folder");
-            expressionFolder.mkdirs();
-            int counter = 0;
-            for (Expression exp : taskExpressionsOrdered) {
-                try {
-                    counter++;
-                    exp.serializeXMLObject(expressionFolder.toString() + "/" + "Expression" + counter);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage() + ": " + exp.getName() + "didn't serialize");
-                }
-            }
+//            List<Expression> taskExpressionsOrdered = task.getTaskExpressionsOrdered();
+//            File expressionFolder = new File(retVal.getAbsolutePath().replaceAll(".xml", "") + "Folder");
+//            expressionFolder.mkdirs();
+//            int counter = 0;
+//            for (Expression exp : taskExpressionsOrdered) {
+//                try {
+//                    counter++;
+//                    exp.serializeXMLObject(expressionFolder.toString() + "/" + "Expression" + counter);
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage() + ": " + exp.getName() + " didn't serialize");
+//                }
+//            }
 
             task.serializeXMLObject(retVal.getAbsolutePath());
             SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile.getParentFile());

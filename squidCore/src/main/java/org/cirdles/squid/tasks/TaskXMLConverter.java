@@ -203,9 +203,9 @@ public class TaskXMLConverter implements Converter {
         }
         writer.endNode();
 
-//        writer.startNode("taskExpressionsOrdered");
-//        context.convertAnother(task.getTaskExpressionsOrdered());
-//        writer.endNode();
+        writer.startNode("taskExpressionsOrdered");
+        context.convertAnother(task.getTaskExpressionsOrdered());
+        writer.endNode();
 //
 //        Map<String, ExpressionTreeInterface> namedExpressionsMap = task.getNamedExpressionsMap();
 //        writer.startNode("namedExpressionsMap");
@@ -419,16 +419,16 @@ public class TaskXMLConverter implements Converter {
             task.setTableOfSelectedRatiosByMassStationIndex(tableOfSelectedRatiosByMassStationIndex);
         }
 
-//        List<Expression> taskExpressions = new ArrayList<>();
-//        reader.moveDown();
-//        while (reader.hasMoreChildren()) {
-//            reader.moveDown();
-//            Expression exp = new Expression();
-//            exp = (Expression) context.convertAnother(exp, Expression.class);
-//            taskExpressions.add((Expression) exp);
-//            reader.moveUp();
-//        }
-//        task.setTaskExpressionsOrdered(taskExpressions);
+        List<Expression> taskExpressions = new ArrayList<>();
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+            Expression exp = new Expression();
+            exp = (Expression) context.convertAnother(exp, Expression.class);
+            taskExpressions.add((Expression) exp);
+            reader.moveUp();
+        }
+        task.setTaskExpressionsOrdered(taskExpressions);
 //
 //        Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>();
 //        reader.moveDown();
