@@ -104,7 +104,7 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("operation");
-        if(expressionTree.getOperation() != null) {
+        if(expressionTree.getOperation() != null && !expressionTree.getOperation().getName().equals("")) {
         context.convertAnother(expressionTree.getOperation());
         } else {
             writer.startNode("name");
