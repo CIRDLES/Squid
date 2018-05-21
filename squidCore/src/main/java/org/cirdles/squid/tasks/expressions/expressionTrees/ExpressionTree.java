@@ -37,6 +37,7 @@ import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
+import org.cirdles.squid.tasks.expressions.operations.BlankOperation;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
@@ -139,7 +140,11 @@ public class ExpressionTree
      */
     public ExpressionTree(OperationOrFunctionInterface operation) {
         this();
-        this.operation = operation;
+        if (operation != null) {
+            this.operation = operation;
+        } else {
+            this.operation = new BlankOperation();
+        }
     }
 
     /**
@@ -166,7 +171,11 @@ public class ExpressionTree
         this.childrenET = new ArrayList<>();
         populateChildrenET(leftET, rightET);
         this.parentET = null;
-        this.operation = operation;
+        if (operation != null) {
+            this.operation = operation;
+        } else {
+            this.operation = new BlankOperation();
+        }
         this.ratiosOfInterest = ratiosOfInterest;
         this.squidSwitchSCSummaryCalculation = false;
         this.squidSwitchSTReferenceMaterialCalculation = false;
@@ -298,8 +307,82 @@ public class ExpressionTree
         if (this == obj) {
             retVal = true;
         } else if (obj instanceof ExpressionTree) {
-            retVal = (getName().compareToIgnoreCase(((ExpressionTree) obj).getName()) == 0);
+            retVal = name.equals(((ExpressionTree) obj).getName());
         }
+//            ExpressionTree expTree = (ExpressionTree) obj;
+//
+//            boolean childrenETIsSame = false;
+//            if (childrenET.equals(expTree.childrenET)) {
+//                childrenETIsSame = true;
+//            }
+//
+//            boolean indexIsSame = false;
+//            if (index == expTree.index) {
+//                indexIsSame = true;
+//            }
+//
+//            boolean nameIsSame = false;
+//            if (name.equals(expTree.getName())) {
+//                nameIsSame = true;
+//            }
+//
+//            boolean operationIsSame = false;
+//            if (operation.equals(expTree.operation)) {
+//                operationIsSame = true;
+//            }
+//
+//            boolean parentETIsSame = false;
+//            if (parentET.equals(expTree.parentET)) {
+//                parentETIsSame = true;
+//            }
+//
+//            boolean ratiosOfInterestIsSame = false;
+//            if (ratiosOfInterest.equals(expTree.ratiosOfInterest)) {
+//                ratiosOfInterestIsSame = true;
+//            }
+//
+//            boolean rootExpressionTreeIsSame = false;
+//            if (rootExpressionTree == expTree.rootExpressionTree) {
+//                rootExpressionTreeIsSame = true;
+//            }
+//
+//            boolean squidSpecialUPbThExpressionIsSame = false;
+//            if (squidSpecialUPbThExpression == expTree.squidSpecialUPbThExpression) {
+//                squidSpecialUPbThExpressionIsSame = true;
+//            }
+//
+//            boolean squidSwitchConcentrationReferenceMaterialCalculationIsSame = false;
+//            if (squidSwitchConcentrationReferenceMaterialCalculation == expTree.squidSwitchConcentrationReferenceMaterialCalculation) {
+//                squidSwitchConcentrationReferenceMaterialCalculationIsSame = true;
+//            }
+//
+//            boolean squidSwitchSAUnknownCalculationIsSame = false;
+//            if (squidSwitchSAUnknownCalculation == expTree.squidSwitchSAUnknownCalculation) {
+//                squidSwitchSAUnknownCalculationIsSame = true;
+//            }
+//
+//            boolean squidSwitchSCSummaryCalculationIsSame = false;
+//            if (squidSwitchSCSummaryCalculation == expTree.squidSwitchSCSummaryCalculation) {
+//                squidSwitchSCSummaryCalculationIsSame = true;
+//            }
+//
+//            boolean squidSwitchSTReferenceMaterialCalculationIsSame = false;
+//            if (squidSwitchSTReferenceMaterialCalculation == expTree.squidSwitchSTReferenceMaterialCalculation) {
+//                squidSwitchSTReferenceMaterialCalculationIsSame = true;
+//            }
+//
+//            boolean uncertaintyDirectiveIsSame = false;
+//            if (uncertaintyDirective.equals(expTree.uncertaintyDirective)) {
+//                uncertaintyDirectiveIsSame = true;
+//            }
+//
+//            if (childrenETIsSame && indexIsSame && nameIsSame && operationIsSame && parentETIsSame
+//                    && ratiosOfInterestIsSame && rootExpressionTreeIsSame && squidSpecialUPbThExpressionIsSame
+//                    && squidSwitchConcentrationReferenceMaterialCalculationIsSame && squidSwitchSAUnknownCalculationIsSame
+//                    && squidSwitchSCSummaryCalculationIsSame && squidSwitchSTReferenceMaterialCalculationIsSame && uncertaintyDirectiveIsSame) {
+//                retVal = true;
+//            }
+//        }
 
         return retVal;
     }

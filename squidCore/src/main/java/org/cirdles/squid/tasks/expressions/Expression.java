@@ -94,8 +94,48 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             retVal = true;
         } else if (obj instanceof Expression && (getExpressionTree() != null)) {
             // note checking if expressionTree is null due to bad parsing
-            //retVal = ((ExpressionTree) getExpressionTree()).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
-            retVal = (getName().compareToIgnoreCase(((Expression) obj).getName()) == 0);
+            retVal = ((ExpressionTree) getExpressionTree()).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
+//            Expression exp = (Expression) obj;
+//
+//            boolean argumentAuditIsSame = false;
+//            if (argumentAudit.equals(exp.argumentAudit)) {
+//                argumentAuditIsSame = false;
+//            }
+//
+//            boolean excelExpressionStringIsSame = false;
+//            if (excelExpressionString.equals(exp.excelExpressionString)) {
+//                excelExpressionStringIsSame = true;
+//            }
+//
+//            boolean expressionTreeIsSame = false;
+//            if (expressionTree.equals(exp.expressionTree)) {
+//                expressionTreeIsSame = true;
+//            }
+//
+//            boolean nameIsSame = false;
+//            if (name.equals(exp.name)) {
+//                nameIsSame = true;
+//            }
+//
+//            boolean notesIsSame = false;
+//            if (notes.equals(exp.notes)) {
+//                notesIsSame = true;
+//            }
+//
+//            boolean parsingStatusReportIsSame = false;
+//            if (parsingStatusReport.equals(exp.parsingStatusReport)) {
+//                parsingStatusReportIsSame = true;
+//            }
+//
+//            boolean squidSwitchNUIsSame = false;
+//            if (squidSwitchNU == exp.squidSwitchNU) {
+//                squidSwitchNUIsSame = true;
+//            }
+//
+//            if (argumentAuditIsSame && excelExpressionStringIsSame && expressionTreeIsSame && nameIsSame
+//                    && notesIsSame && parsingStatusReportIsSame && squidSwitchNUIsSame) {
+//                retVal = true;
+//            }
         }
         return retVal;
     }
@@ -230,7 +270,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String getNotes() {
-        if(notes==null){
+        if (notes == null) {
             notes = "";
         }
         return notes;
@@ -239,7 +279,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void setNotes(String comments) {
         this.notes = comments;
     }
-    
+
     /**
      * @return the excelExpressionString
      */

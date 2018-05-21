@@ -99,33 +99,33 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      */
-    protected String name; 
-    protected String type; 
-    protected String description; 
-    protected String authorName; 
-    protected String labName; 
-    protected String provenance; 
-    protected long dateRevised; 
-    protected boolean useSBM; 
-    protected boolean userLinFits; 
+    protected String name;
+    protected String type;
+    protected String description;
+    protected String authorName;
+    protected String labName;
+    protected String provenance;
+    protected long dateRevised;
+    protected boolean useSBM;
+    protected boolean userLinFits;
     // comes from prawn file mass station
-    protected int indexOfBackgroundSpecies; 
+    protected int indexOfBackgroundSpecies;
     // comes from task
-    protected int indexOfTaskBackgroundMass; 
+    protected int indexOfTaskBackgroundMass;
 
-    protected String parentNuclide; 
-    protected boolean directAltPD; 
-    protected String primaryParentElement; 
-    protected String filterForRefMatSpotNames; 
-    protected String filterForConcRefMatSpotNames; 
+    protected String parentNuclide;
+    protected boolean directAltPD;
+    protected String primaryParentElement;
+    protected String filterForRefMatSpotNames;
+    protected String filterForConcRefMatSpotNames;
 
-    protected List<String> nominalMasses; 
-    protected List<String> ratioNames; 
+    protected List<String> nominalMasses;
+    protected List<String> ratioNames;
     protected Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
-    protected SquidSessionModel squidSessionModel; 
-    protected List<SquidSpeciesModel> squidSpeciesModelList; 
-    protected List<SquidRatiosModel> squidRatiosModelList; 
-    protected boolean[][] tableOfSelectedRatiosByMassStationIndex; 
+    protected SquidSessionModel squidSessionModel;
+    protected List<SquidSpeciesModel> squidSpeciesModelList;
+    protected List<SquidRatiosModel> squidRatiosModelList;
+    protected boolean[][] tableOfSelectedRatiosByMassStationIndex;
 
     /**
      *
@@ -133,10 +133,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<Expression> taskExpressionsOrdered;
     protected SortedSet<Expression> taskExpressionsRemoved;
 
-    protected Map<String, ExpressionTreeInterface> namedExpressionsMap; 
-    protected Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap;    
-    protected Map<String, ExpressionTreeInterface> namedConstantsMap;   
-    protected Map<String, ExpressionTreeInterface> namedParametersMap;  
+    protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
+    protected Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap;
+    protected Map<String, ExpressionTreeInterface> namedConstantsMap;
+    protected Map<String, ExpressionTreeInterface> namedParametersMap;
 
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
@@ -200,7 +200,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.squidSessionModel = null;
         this.squidSpeciesModelList = new ArrayList<>();
         this.squidRatiosModelList = new ArrayList<>();
-        this.tableOfSelectedRatiosByMassStationIndex = new boolean[0][];        
+        this.tableOfSelectedRatiosByMassStationIndex = new boolean[0][];
 
         this.taskExpressionsOrdered = new ArrayList<>();
         this.taskExpressionsRemoved = new TreeSet<>();
@@ -226,9 +226,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         generateConstants();
         generateParameters();
     }
-    
-    public static void main(String[ ] args) {
-        
+
+    public static void main(String[] args) {
+
     }
 
     private void generateConstants() {
@@ -971,7 +971,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         return xmlR;
     }
-    
+
     /**
      *
      * @param xstream
@@ -988,7 +988,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
         xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
         xstream.alias("VariableNodeForIsotopicRatios", VariableNodeForIsotopicRatios.class);
-        
+
         xstream.alias("MassStationDetail", MassStationDetail.class);
         xstream.alias("SquidSpeciesModel", SquidSpeciesModel.class);
         xstream.alias("SquidRatiosModel", SquidRatiosModel.class);
@@ -1004,10 +1004,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.registerConverter(new SquidSpeciesModelXMLConverter());
         xstream.registerConverter(new ShrimpFractionXMLConverter());
         xstream.registerConverter(new ExpressionXMLConverter());
-        
+
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
-
+        
         xstream.registerConverter(new TaskXMLConverter());
         xstream.alias("Task", Task.class);
         xstream.alias("Task", this.getClass());
@@ -1556,12 +1556,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.directAltPD = directAltPD;
     }
 
-    
     @Override
     public void setTableOfSelectedRatiosByMassStationIndex(boolean[][] tableOfselectedRatiosByMassStationIndex) {
         this.tableOfSelectedRatiosByMassStationIndex = tableOfSelectedRatiosByMassStationIndex;
     }
-    
+
     /**
      * @param taskExpressionsOrdered the taskExpressionTreesOrdered to set
      */
