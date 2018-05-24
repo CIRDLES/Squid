@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui.expressions;
 
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -1205,7 +1207,7 @@ public class ExpressionBuilderController implements Initializable {
             notesStage.show();
             showNotesBtn.setText("Hide notes");
             notesStage.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
-            notesStage.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight()- 150) / 2);
+            notesStage.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
         } else {
             notesStage.hide();
             showNotesBtn.setText("Show notes");
@@ -1642,7 +1644,7 @@ public class ExpressionBuilderController implements Initializable {
             wrapInParentheses(etn.getOrdinalIndex(), etn.getOrdinalIndex());
         });
         contextMenu.getItems().add(menuItem);
-        
+
         menuItem = new MenuItem("Wrap in brackets");
         menuItem.setOnAction((evt) -> {
             wrapInBrackets(etn.getOrdinalIndex(), etn.getOrdinalIndex());
@@ -1906,18 +1908,18 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void wrapInParentheses(double ordLeft, double ordRight) {
-        wrap(ordLeft,ordRight,"(",")");
+        wrap(ordLeft, ordRight, "(", ")");
     }
-    
+
     private void wrapInBrackets(double ordLeft, double ordRight) {
-        wrap(ordLeft,ordRight,"[","]");
+        wrap(ordLeft, ordRight, "[", "]");
     }
-    
-    private void wrap(double ordLeft, double ordRight, String stringLeft, String stringRight){
+
+    private void wrap(double ordLeft, double ordRight, String stringLeft, String stringRight) {
         //Insert strings before ordLeft and after ordRight
-        ExpressionTextNode left = new ExpressionTextNode(" "+stringLeft+" ");
+        ExpressionTextNode left = new ExpressionTextNode(" " + stringLeft + " ");
         left.setOrdinalIndex(ordLeft - 0.5);
-        ExpressionTextNode right = new ExpressionTextNode(" "+stringRight+" ");
+        ExpressionTextNode right = new ExpressionTextNode(" " + stringRight + " ");
         right.setOrdinalIndex(ordRight + 0.5);
         expressionTextFlow.getChildren().addAll(left, right);
         updateExpressionTextFlowChildren();
@@ -1931,6 +1933,7 @@ public class ExpressionBuilderController implements Initializable {
     private void resetDragSources() {
         dragOperationOrFunctionSource.set(null);
         dragNumberSource.set(null);
+        dragPresentationSource.set(null);
     }
 
     private void graphExpressionTree(ExpressionTreeInterface expTree) {
@@ -2371,15 +2374,84 @@ public class ExpressionBuilderController implements Initializable {
 
         protected Color regularColor;
         protected Color selectedColor;
+        protected Color opositeColor;
 
         //Saves where was the indicator before moving it in order to be able to restore it when drag is exiting this node
         int previousIndicatorIndex = -1;
+
+        ExpressionTextNode oppositeParenthese = null;
+
+        private void selectOppositeParenthese() {
+            if (text.trim().matches("^[()\\[\\]]$")) {
+                String current = text.trim();
+                String opposite = "";
+                Predicate<Double> predicate = (Double t) -> {
+                    return false;
+                };
+                List<Node> nodes = expressionTextFlow.getChildren();
+                switch (current) {
+                    case "[":
+                        opposite = "]";
+                        predicate = (Double t) -> {
+                            return t > ordinalIndex;
+                        };
+                        break;
+                    case "]":
+                        opposite = "[";
+                        predicate = (Double t) -> {
+                            return t < ordinalIndex;
+                        };
+                        nodes = Lists.reverse(nodes);
+                        break;
+                    case "(":
+                        opposite = ")";
+                        predicate = (Double t) -> {
+                            return t > ordinalIndex;
+                        };
+                        break;
+                    case ")":
+                        opposite = "(";
+                        predicate = (Double t) -> {
+                            return t < ordinalIndex;
+                        };
+                        nodes = Lists.reverse(nodes);
+                        break;
+                }
+                int cpt = 0;
+                for (Node node : nodes) {
+                    if (node instanceof ExpressionTextNode) {
+                        ExpressionTextNode etn = (ExpressionTextNode) node;
+                        if (predicate.test(etn.getOrdinalIndex())) {
+                            if (etn.getText().trim().equals(opposite)) {
+                                if (cpt == 0) {
+                                    oppositeParenthese = etn;
+                                    etn.setFill(etn.opositeColor);
+                                    break;
+                                } else {
+                                    cpt--;
+                                }
+                            } else if (etn.getText().trim().equals(current)) {
+                                cpt++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void unselectOppositeParenthese() {
+            if (oppositeParenthese != null) {
+                oppositeParenthese.setFill(oppositeParenthese.regularColor);
+                oppositeParenthese = null;
+            }
+        }
 
         public ExpressionTextNode(String text) {
             super(text);
 
             this.selectedColor = Color.RED;
             this.regularColor = Color.BLACK;
+            this.opositeColor = Color.LIME;
 
             setFill(regularColor);
 
@@ -2431,16 +2503,19 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             setOnMousePressed((MouseEvent event) -> {
+                selectOppositeParenthese();
                 setFill(selectedColor);
                 setCursor(Cursor.CLOSED_HAND);
             });
 
             setOnMouseReleased((MouseEvent event) -> {
+                unselectOppositeParenthese();
                 setFill(regularColor);
                 setCursor(Cursor.OPEN_HAND);
             });
 
             setOnDragDetected((MouseEvent event) -> {
+                unselectOppositeParenthese();
                 setCursor(Cursor.CLOSED_HAND);
                 Dragboard db = startDragAndDrop(TransferMode.MOVE);
                 db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
@@ -2563,11 +2638,13 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             setOnMousePressed((MouseEvent event) -> {
-                //Nothing
+                selectOppositeParenthese();
+                setFill(selectedColor);
             });
 
             setOnMouseReleased((MouseEvent event) -> {
-                //Nothing
+                unselectOppositeParenthese();
+                setFill(regularColor);
             });
 
             setOnDragDetected((MouseEvent event) -> {
