@@ -93,8 +93,7 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         ExpressionTree expressionTree = (ExpressionTree) value;
 
-//        System.out.print(" start tree " + expressionTree.getName());
-        
+        System.out.print(" start tree " + expressionTree.getName());
         writer.startNode("name");
         writer.setValue(expressionTree.getName());
         writer.endNode();
@@ -104,7 +103,13 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("operation");
+//        if (expressionTree.getOperation() != null) {
         context.convertAnother(expressionTree.getOperation());
+//        } else {
+//            writer.startNode("name");
+//            writer.setValue("no-op");
+//            writer.endNode();
+//        }
         writer.endNode();
 
         writer.startNode("ratiosOfInterest");
@@ -142,8 +147,8 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.startNode("index");
         writer.setValue(Integer.toString(expressionTree.getIndex()));
         writer.endNode();
-        
-//        System.out.print(" tree end ");
+
+        System.out.print(" tree end ");
     }
 
     /**

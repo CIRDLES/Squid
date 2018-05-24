@@ -81,7 +81,7 @@ public class ExpressionTree
     /**
      *
      */
-    protected OperationOrFunctionInterface operation;
+    protected OperationOrFunctionInterface operation = new BlankOperation();
 
     /**
      *
@@ -677,7 +677,13 @@ public class ExpressionTree
      */
     @Override
     public OperationOrFunctionInterface getOperation() {
-        return operation;
+        OperationOrFunctionInterface retOp;
+        if (operation == null) {
+            retOp = new BlankOperation();
+        } else {
+            retOp = operation;
+        }
+        return retOp;
     }
 
     /**
@@ -685,7 +691,9 @@ public class ExpressionTree
      */
     @Override
     public void setOperation(OperationOrFunctionInterface operation) {
-        this.operation = operation;
+        if (operation != null) {
+            this.operation = operation;
+        }
     }
 
     /**

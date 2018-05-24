@@ -83,13 +83,13 @@ public class OperationXMLConverter implements Converter {
 
         OperationOrFunctionInterface operation = (Operation) value;
 
-//        System.out.print("start operation |");
+        System.out.print("start operation |");
         
         writer.startNode("name");
         writer.setValue(((Operation)operation).getName());
         writer.endNode();
         
-//        System.out.print(" operation end ");
+        System.out.print(" operation end ");
     }
 
     /**

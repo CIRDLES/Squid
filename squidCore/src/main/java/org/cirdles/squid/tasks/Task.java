@@ -84,6 +84,8 @@ import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidRatiosModelXMLConv
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSessionModelXMLConverter;
 import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.expressions.ExpressionXMLConverter;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import org.cirdles.squid.tasks.expressions.functions.Function;
 
 /**
  *
@@ -995,6 +997,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.alias("SquidSessionModel", SquidSessionModel.class);
         xstream.alias("ShrimpFraction", ShrimpFraction.class);
         xstream.alias("Expression", Expression.class);
+        xstream.alias("Operation", Operation.class);
+        xstream.alias("Operation", OperationOrFunctionInterface.class);
+        xstream.alias("Operation", Function.class);
 
         xstream.registerConverter(new OperationXMLConverter());
         xstream.registerConverter(new FunctionXMLConverter());
@@ -1007,10 +1012,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
-        
+        xstream.alias("ExpressionTree", ExpressionTreeInterface.class);
+
         xstream.registerConverter(new TaskXMLConverter());
         xstream.alias("Task", Task.class);
-        xstream.alias("Task", this.getClass());
+
+        xstream.autodetectAnnotations(true);
 
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);
