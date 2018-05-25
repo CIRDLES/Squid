@@ -1702,12 +1702,18 @@ public class ExpressionBuilderController implements Initializable {
         Tooltip res = null;
         if (!(nodeText == null)) {
             String text = nodeText.trim();
-            if (text.matches("^\\[(%)?\".+\"\\]$")) {
+            if (text.matches("^\\[(±?)(%?)\"(.*?)\"\\]$")) {
                 String exname = text.replaceAll("(^\\[(%)?\")|(\"\\]$)", "");
                 Expression ex = squidProject.getTask().getExpressionByName(exname);
                 if (ex != null) {
+                    String uncertainty = "";
+                    if(text.contains("[%\"")){
+                        uncertainty = "1 \u03C3 % uncertainty\n\n";
+                    }else if(text.contains("[±\"")){
+                        uncertainty = "1 \u03C3 ± uncertainty\n\n";
+                    }
                     boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                     if (!ex.amHealthy()) {
                         ImageView imageView = new ImageView(UNHEALTHY);
                         imageView.setFitHeight(12);
@@ -1718,7 +1724,13 @@ public class ExpressionBuilderController implements Initializable {
                 if (res == null) {
                     for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
                         if (exname.equalsIgnoreCase(r.getRatioName())) {
-                            res = new Tooltip("Ratio: " + r.getRatioName());
+                            String uncertainty = "";
+                            if(text.contains("[%\"")){
+                                uncertainty = "1 \u03C3 % uncertainty for ";
+                            }else if(text.contains("[±\"")){
+                                uncertainty = "1 \u03C3 ± uncertainty for ";
+                            }
+                            res = new Tooltip(uncertainty+"Ratio: " + r.getRatioName());
                         }
                     }
                 }
@@ -1728,8 +1740,14 @@ public class ExpressionBuilderController implements Initializable {
                         String baseExpressionName = exname.substring(0, exname.length() - 2);
                         ex = squidProject.getTask().getExpressionByName(baseExpressionName);
                         if (ex != null) {
+                            String uncertainty = "";
+                            if(text.contains("[%\"")){
+                                uncertainty = "1 \u03C3 % uncertainty\n\n";
+                            }else if(text.contains("[±\"")){
+                                uncertainty = "1 \u03C3 ± uncertainty\n\n";
+                            }
                             boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                             if (!ex.amHealthy()) {
                                 ImageView imageView = new ImageView(UNHEALTHY);
                                 imageView.setFitHeight(12);
