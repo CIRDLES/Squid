@@ -5,6 +5,8 @@
            elementFormDefault="qualified" 
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
+
     <xs:annotation>
         <xs:documentation xml:lang="en">
             This schema defines the contents of a Squid Expression.
