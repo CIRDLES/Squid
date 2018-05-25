@@ -54,7 +54,7 @@ stat:   block
 
 // http://meri-stuff.blogspot.com/2011/09/antlr-tutorial-expression-language.html
 
-expr:   FUNCTION '(' exprList+ ')'    // func call like f(), f(x), f(1,2) switched ? to + to require 1 arg min
+expr:   FUNCTION WS* '(' exprList+ WS* ')'    // func call like f(), f(x), f(1,2) switched ? to + to require 1 arg min
     |   '(' expr ')'
     |   ID '[' INT ']'         // array index like a[i], a[i][j]
     |   '-' expr                // unary minus
