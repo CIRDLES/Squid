@@ -1773,6 +1773,9 @@ public class ExpressionBuilderController implements Initializable {
                 if (res == null && ShuntingYard.isNumber(text)) {
                     res = new Tooltip("Number: " + text);
                 }
+                if (res == null && nodeText.equals(SPACEPLACEHOLDER)) {
+                    res = new Tooltip("Presentation node: Space");
+                }
                 if (res == null && nodeText.equals(TABPLACEHOLDER)) {
                     res = new Tooltip("Presentation node: Tab");
                 }
