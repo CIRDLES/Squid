@@ -178,7 +178,7 @@ public class TaskXMLConverter implements Converter {
         context.convertAnother(task.getMapOfIndexToMassStationDetails());
         writer.endNode();
         
-        writer.startNode("squidSessionModel");
+        writer.startNode("SquidSessionModel");
         context.convertAnother(task.getSquidSessionModel());
         writer.endNode();
         
@@ -435,6 +435,7 @@ public class TaskXMLConverter implements Converter {
             reader.moveUp();
         }
         task.setTaskExpressionsOrdered(taskExpressions);
+        reader.moveUp();
 //
 //        Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>();
 //        reader.moveDown();

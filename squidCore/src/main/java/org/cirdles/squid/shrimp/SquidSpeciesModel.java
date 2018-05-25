@@ -18,7 +18,6 @@ package org.cirdles.squid.shrimp;
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**

@@ -12,7 +12,6 @@ and open the template in the editor.
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
 
-    <xs:element name="SquidSpeciesModel" type="SquidSpeciesModel"/>
     <xs:complexType name="SquidSpeciesModel" mixed="true">
         <xs:sequence>
             <xs:element name="massStationIndex" type="xs:integer"/>
@@ -24,6 +23,5 @@ and open the template in the editor.
             <xs:element name="uThbearingName" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    
 </xs:schema>
  

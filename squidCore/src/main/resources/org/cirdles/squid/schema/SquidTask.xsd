@@ -13,11 +13,11 @@ and open the template in the editor.
            xmlns="https://raw.githubusercontent.com">
     <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
     <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSessionModel.xsd"/>
     <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/MassStationDetail.xsd"/>
     <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionXMLSchema.xsd"/>
 
-
-    <xs:element name="Task" type="Task"/>
+    <xs::element name="Task" type="task"/>
     <xs:complexType name="Task" mixed="true">
         <xs:sequence>
                    
@@ -52,12 +52,18 @@ and open the template in the editor.
                 </xs:complexType>
             </xs:element>
             
-            <xs:element name="mapOfIndexToMassSstationDetails" minOccurs="0">
+            <xs:element name="mapOfIndexToMassStationDetails">
                 <xs:complexType>
-                    <xs:all minOccurs="0" maxOccurs="unbounded">
-                        <xs:element type="xs:integer"/>
-                        <xs:element type="MassStationDetail"/>
-                    </xs:all>
+                    <xs:sequence>
+                        <xs:element name="entry" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="int" type="xs:int"/>
+                                    <xs:element name="MassStationDetail" type="MassStationDetail"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
                 </xs:complexType>
             </xs:element>
             
@@ -101,8 +107,15 @@ and open the template in the editor.
                 </xs:complexType>
             </xs:element>
             
-            <xs:element name="selectedIndexIsotope" type="xs:enum"/>
+            <xs:element name="selectedIndexIsotope" type="selectedIndexIsotope"/>
             
+            <xs:simpleType name="selectedIndexIsotope">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="PB_204" />
+                    <xs:enumeration value="PB_207" />
+                    <xs:enumeration value="PB_208" />
+                </xs:restriction>
+            </xs:simpleType>
             
         </xs:sequence>
     </xs:complexType>

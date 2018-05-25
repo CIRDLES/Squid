@@ -93,7 +93,7 @@ public class ExpressionTreeXMLConverter implements Converter {
 
         ExpressionTree expressionTree = (ExpressionTree) value;
 
-        System.out.print(" start tree " + expressionTree.getName());
+//        System.out.print(" start tree " + expressionTree.getName());
         writer.startNode("name");
         writer.setValue(expressionTree.getName());
         writer.endNode();
@@ -148,7 +148,7 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.setValue(Integer.toString(expressionTree.getIndex()));
         writer.endNode();
 
-        System.out.print(" tree end ");
+//        System.out.print(" tree end ");
     }
 
     /**

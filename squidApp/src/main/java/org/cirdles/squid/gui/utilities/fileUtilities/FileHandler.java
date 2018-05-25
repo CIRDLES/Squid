@@ -179,7 +179,8 @@ public class FileHandler {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Squid 3 Task");
-        fileChooser.setInitialFileName(((Task) squidProject.getTask()).getName().replaceAll(" ", "") + ".xml");
+        String initialFileName = FileNameFixer.fixFileName(((Task) squidProject.getTask()).getName()) + ".xml";
+        fileChooser.setInitialFileName(initialFileName);
         fileChooser.setInitialDirectory(SquidPersistentState.getExistingPersistentState().getMRUTaskFile());
 
         File squidTaskFile = fileChooser.showSaveDialog(ownerWindow);
@@ -187,20 +188,6 @@ public class FileHandler {
         if (squidTaskFile != null ) {
             retVal = squidTaskFile;
             Task task = (Task) squidProject.getTask();
-
-            List<Expression> taskExpressionsOrdered = task.getTaskExpressionsOrdered();
-            File expressionFolder = new File(retVal.getAbsolutePath().replaceAll(".xml", "") + "Folder");
-            expressionFolder.mkdirs();
-            int counter = 0;
-            for (Expression exp : taskExpressionsOrdered) {
-                try {
-                    counter++;
-                    exp.serializeXMLObject(expressionFolder.toString() + "/" + "Expression" + counter);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage() + ": " + exp.getName() + " didn't serialize");
-                }
-            }
-
             task.serializeXMLObject(retVal.getAbsolutePath());
             SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile.getParentFile());
         }
@@ -240,7 +227,8 @@ public class FileHandler {
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression '.xml' files", "*.xml"));
         File mruFolder = new File(squidPersistentState.getMRUExpressionFolderPath());
         fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
-        fileChooser.setInitialFileName(expression.getName() + ".xml");
+        String initialFileName = FileNameFixer.fixFileName(expression.getName()) + ".xml";
+        fileChooser.setInitialFileName(initialFileName);
 
         File expressionFileXML = fileChooser.showSaveDialog(ownerWindow);
 

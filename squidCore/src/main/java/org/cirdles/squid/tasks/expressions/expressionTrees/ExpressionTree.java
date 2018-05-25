@@ -27,7 +27,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSpeciesModelXMLConverter;
+import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
@@ -37,7 +37,6 @@ import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
-import org.cirdles.squid.tasks.expressions.operations.BlankOperation;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
@@ -81,7 +80,7 @@ public class ExpressionTree
     /**
      *
      */
-    protected OperationOrFunctionInterface operation = new BlankOperation();
+    protected OperationOrFunctionInterface operation;
 
     /**
      *
@@ -140,11 +139,7 @@ public class ExpressionTree
      */
     public ExpressionTree(OperationOrFunctionInterface operation) {
         this();
-        if (operation != null) {
-            this.operation = operation;
-        } else {
-            this.operation = new BlankOperation();
-        }
+        this.operation = operation;
     }
 
     /**
@@ -171,11 +166,7 @@ public class ExpressionTree
         this.childrenET = new ArrayList<>();
         populateChildrenET(leftET, rightET);
         this.parentET = null;
-        if (operation != null) {
-            this.operation = operation;
-        } else {
-            this.operation = new BlankOperation();
-        }
+        this.operation = operation;
         this.ratiosOfInterest = ratiosOfInterest;
         this.squidSwitchSCSummaryCalculation = false;
         this.squidSwitchSTReferenceMaterialCalculation = false;
@@ -677,13 +668,7 @@ public class ExpressionTree
      */
     @Override
     public OperationOrFunctionInterface getOperation() {
-        OperationOrFunctionInterface retOp;
-        if (operation == null) {
-            retOp = new BlankOperation();
-        } else {
-            retOp = operation;
-        }
-        return retOp;
+        return operation;
     }
 
     /**
@@ -691,9 +676,7 @@ public class ExpressionTree
      */
     @Override
     public void setOperation(OperationOrFunctionInterface operation) {
-        if (operation != null) {
-            this.operation = operation;
-        }
+        this.operation = operation;
     }
 
     /**

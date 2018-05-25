@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSpeciesModelXMLConverter;
+import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;

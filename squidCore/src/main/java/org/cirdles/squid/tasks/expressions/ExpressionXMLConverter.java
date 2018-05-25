@@ -83,7 +83,7 @@ public class ExpressionXMLConverter implements Converter {
         
         Expression expression = (Expression) value;
         
-        System.out.print("Expression started: " + expression.getName());
+//        System.out.print("Expression started: " + expression.getName());
 
         writer.startNode("name");
         writer.setValue(expression.getName());
@@ -105,7 +105,7 @@ public class ExpressionXMLConverter implements Converter {
         writer.setValue(expression.getNotes());
         writer.endNode();
         
-        System.out.println(" | finished: " + expression.getName());
+//        System.out.println(" | finished: " + expression.getName());
     }
 
     /**

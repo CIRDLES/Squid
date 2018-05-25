@@ -12,7 +12,6 @@ and open the template in the editor.
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
     
-    <xs:element name ="MassStationDetail" type="MassStationDetail"/>
     <xs:complexType name="MassStationDetail" mixed="true">
         <xs:sequence>
             <xs:element name="massSationIndex" type="xs:integer"/>
@@ -23,32 +22,6 @@ and open the template in the editor.
             <xs:element name="isBackground" type="xs:boolean"/>
             <xs:element name="centeringTimeSec" type="xs:double"/>
             <xs:element name="uThBearingName" type="xs:string"/>
-            
-            <xs:element name="measuredTrimMasses" minOccus="0">
-                <xs:complexType>
-                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                        <xs:element name="measuredTrimMass" type="xs:double"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            
-            <xs:element name="indicesOfScansAtMeasurementTimes" minOccus="0">
-                <xs:complexType>
-                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                        <xs:element name="indexOfScanAtMeasurementTime" type="xs:integer"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-        
-            <xs:element name="indicesOfRunsAtMeasurementTimes" minOccus="0">
-                <xs:complexType>
-                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                        <xs:element name="indexOfRunAtMeasurementTime" type="xs:integer"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            
         </xs:sequence>
     </xs:complexType>
-
 </xs:schema>

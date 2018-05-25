@@ -78,11 +78,11 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
 
-import org.cirdles.squid.tasks.TaskXMLConverterVariables.MassStationDetailXMLConverter;
-import org.cirdles.squid.tasks.TaskXMLConverterVariables.ShrimpFractionXMLConverter;
-import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidRatiosModelXMLConverter;
-import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSessionModelXMLConverter;
-import org.cirdles.squid.tasks.TaskXMLConverterVariables.SquidSpeciesModelXMLConverter;
+import org.cirdles.squid.shrimp.MassStationDetailXMLConverter;
+import org.cirdles.squid.shrimp.ShrimpFractionXMLConverter;
+import org.cirdles.squid.shrimp.SquidRatiosModelXMLConverter;
+import org.cirdles.squid.shrimp.SquidSessionModelXMLConverter;
+import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.expressions.ExpressionXMLConverter;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;

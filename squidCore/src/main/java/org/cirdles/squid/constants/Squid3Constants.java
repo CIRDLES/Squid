@@ -95,7 +95,7 @@ public final class Squid3Constants {
             + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
-            + "                                ../schema/SquidTaskXMLSchema.xsd\">";
+            + "                                ../schema/SquidTask.xsd\">";
 
     /**
      *

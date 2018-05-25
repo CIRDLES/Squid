@@ -13,7 +13,6 @@ and open the template in the editor.
            xmlns="https://raw.githubusercontent.com">
     <xs:include schemalocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel.xsd"/>
     
-    <xs:element name="ShrimpFraction" type="ShrimpFraction"/>
     <xs:complexType name="ShrimpFractioin" mixed="true">
         <xs:sequence>
                    

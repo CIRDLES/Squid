@@ -11,34 +11,33 @@ and open the template in the editor.
            elementFormDefault="qualified" 
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
-           <xs:include schemalocatioin="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
+           <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
 
-    <xs:element name="SquidRatiosModel" type="SquidRatiosModel"/>
     <xs:complexType name="SquidRatiosModel" mixed="true">
         <xs:sequence>
             <xs:element name="numerator" type="SquidSpeciesModel"/>
             <xs:element name="denominator" type="SquidSpeciesModel"/>
-            <xs:element name="reportingOrderIndex" type="xs:integer/>
+            <xs:element name="reportingOrderIndex" type="xs:integer"/>
             
-            <xs:element name="ratEqTimes" minOccurs="0"/>
+            <xs:element name="ratEqTimes" minOccurs="0">
             <xs:complexType>
-                <xs:sequence minOccurs="0" maxOccurs"unbounded">
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
                     <xs:element name="ratEqTime" type="xs:double"/>
                 </xs:sequence>
             </xs:complexType>
             </xs:element>
             
-            <xs:element name="ratEqVals" minOccurs="0"/>
+            <xs:element name="ratEqVals" minOccurs="0">
             <xs:complexType>
-                <xs:sequence minOccurs="0" maxOccurs"unbounded">
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
                     <xs:element name="ratEqVal" type="xs:double"/>
                 </xs:sequence>
             </xs:complexType>
             </xs:element>
             
-            <xs:element name="ratEqErrs" minOccurs="0"/>
+            <xs:element name="ratEqErrs" minOccurs="0">
             <xs:complexType>
-                <xs:sequence minOccurs="0" maxOccurs"unbounded">
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
                     <xs:element name="ratEqErr" type="xs:double"/>
                 </xs:sequence>
             </xs:complexType>

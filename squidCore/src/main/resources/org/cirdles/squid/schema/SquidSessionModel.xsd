@@ -11,10 +11,9 @@ and open the template in the editor.
            elementFormDefault="qualified" 
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
-    <xs:include schemalocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel.xsd"/>
-    <xs:include schemalocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel.xsd"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
 
-    <xs:element name="SquidSessionModel" type="SquidSessionModel"/>
     <xs:complexType name="SquidSessionModel" mixed="true">
         <xs:sequence>
             <xs:element name="squidSpeciesModelList" minOccurs="0">
@@ -38,5 +37,4 @@ and open the template in the editor.
             <xs:element name="concentrationReferenceMaterialnameFilter" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    
 </xs:schema>
