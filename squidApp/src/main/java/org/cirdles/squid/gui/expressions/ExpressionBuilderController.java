@@ -83,6 +83,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebView;
@@ -358,6 +359,8 @@ public class ExpressionBuilderController implements Initializable {
         presentationMap.put("Tab", TABPLACEHOLDER);
         presentationMap.put("Space", SPACEPLACEHOLDER);
     }
+
+    private int fontSizeModifier = 0;
 
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
@@ -1261,6 +1264,28 @@ public class ExpressionBuilderController implements Initializable {
 
     }
 
+    @FXML
+    private void fontMinusAction(ActionEvent event) {
+        this.fontSizeModifier += -1;
+        expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), 13 + fontSizeModifier));
+        for (Node n : expressionTextFlow.getChildren()) {
+            if (n instanceof ExpressionTextNode) {
+                ((ExpressionTextNode) n).updateFontSize();
+            }
+        }
+    }
+
+    @FXML
+    private void fontPlusAction(ActionEvent event) {
+        this.fontSizeModifier += 1;
+        expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), 13 + fontSizeModifier));
+        for (Node n : expressionTextFlow.getChildren()) {
+            if (n instanceof ExpressionTextNode) {
+                ((ExpressionTextNode) n).updateFontSize();
+            }
+        }
+    }
+
     //POPULATE LISTS
     private void populateExpressionListViews() {
         namedExpressions = FXCollections.observableArrayList(squidProject.getTask().getTaskExpressionsOrdered());
@@ -1707,9 +1732,9 @@ public class ExpressionBuilderController implements Initializable {
                 Expression ex = squidProject.getTask().getExpressionByName(exname);
                 if (ex != null) {
                     String uncertainty = "";
-                    if(text.contains("[%\"")){
+                    if (text.contains("[%\"")) {
                         uncertainty = "1 \u03C3 % uncertainty\n\n";
-                    }else if(text.contains("[±\"")){
+                    } else if (text.contains("[±\"")) {
                         uncertainty = "1 \u03C3 ± uncertainty\n\n";
                     }
                     boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
@@ -1725,12 +1750,12 @@ public class ExpressionBuilderController implements Initializable {
                     for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
                         if (exname.equalsIgnoreCase(r.getRatioName())) {
                             String uncertainty = "";
-                            if(text.contains("[%\"")){
+                            if (text.contains("[%\"")) {
                                 uncertainty = "1 \u03C3 % uncertainty for ";
-                            }else if(text.contains("[±\"")){
+                            } else if (text.contains("[±\"")) {
                                 uncertainty = "1 \u03C3 ± uncertainty for ";
                             }
-                            res = new Tooltip(uncertainty+"Ratio: " + r.getRatioName());
+                            res = new Tooltip(uncertainty + "Ratio: " + r.getRatioName());
                         }
                     }
                 }
@@ -1741,9 +1766,9 @@ public class ExpressionBuilderController implements Initializable {
                         ex = squidProject.getTask().getExpressionByName(baseExpressionName);
                         if (ex != null) {
                             String uncertainty = "";
-                            if(text.contains("[%\"")){
+                            if (text.contains("[%\"")) {
                                 uncertainty = "1 \u03C3 % uncertainty\n\n";
-                            }else if(text.contains("[±\"")){
+                            } else if (text.contains("[±\"")) {
                                 uncertainty = "1 \u03C3 ± uncertainty\n\n";
                             }
                             boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
@@ -2613,6 +2638,8 @@ public class ExpressionBuilderController implements Initializable {
         public PresentationTextNode(String text) {
             super(text);
             setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
+            this.fontSize = 16;
+            updateFontSize();
         }
     }
 
@@ -2623,6 +2650,8 @@ public class ExpressionBuilderController implements Initializable {
             this.regularColor = Color.GREEN;
             setFill(regularColor);
             setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
+            this.fontSize = 16;
+            updateFontSize();
         }
     }
 
@@ -2645,12 +2674,43 @@ public class ExpressionBuilderController implements Initializable {
         protected Color selectedColor;
         protected Color opositeColor;
 
+        protected int fontSize;
+
         //Saves where was the indicator before moving it in order to be able to restore it when drag is exiting this node
         int previousIndicatorIndex = -1;
 
         private Tooltip tooltip;
 
         ExpressionTextNode oppositeParenthese = null;
+
+        public ExpressionTextNode(String text) {
+            super(text);
+
+            this.selectedColor = Color.RED;
+            this.regularColor = Color.BLACK;
+            this.opositeColor = Color.LIME;
+
+            setFill(regularColor);
+
+            this.text = text;
+            this.popupShowing = false;
+
+            setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
+            this.fontSize = 12;
+            updateFontSize();
+
+            updateMode(currentMode.get());
+
+            currentMode.addListener((observable, oldValue, newValue) -> {
+                updateMode(newValue);
+            });
+
+            setTooltip(createExpressionNodeTooltip(text));
+        }
+
+        public final void updateFontSize() {
+            setFont(Font.font(getFont().getFamily(), FontWeight.BOLD, fontSize + fontSizeModifier));
+        }
 
         private void selectOppositeParenthese() {
             if (text.trim().matches("^[()\\[\\]]$")) {
@@ -2715,29 +2775,6 @@ public class ExpressionBuilderController implements Initializable {
                 oppositeParenthese.setFill(oppositeParenthese.regularColor);
                 oppositeParenthese = null;
             }
-        }
-
-        public ExpressionTextNode(String text) {
-            super(text);
-
-            this.selectedColor = Color.RED;
-            this.regularColor = Color.BLACK;
-            this.opositeColor = Color.LIME;
-
-            setFill(regularColor);
-
-            this.text = text;
-            this.popupShowing = false;
-
-            setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
-
-            updateMode(currentMode.get());
-
-            currentMode.addListener((observable, oldValue, newValue) -> {
-                updateMode(newValue);
-            });
-
-            setTooltip(createExpressionNodeTooltip(text));
         }
 
         private void setTooltip(Tooltip t) {
