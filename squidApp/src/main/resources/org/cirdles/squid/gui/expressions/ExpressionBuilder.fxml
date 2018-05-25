@@ -29,7 +29,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
       <SplitPane fx:id="leftSplitPane" dividerPositions="1.0" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
          <items>
@@ -254,6 +254,7 @@
                                                 <Button fx:id="showNotesBtn" mnemonicParsing="false" onAction="#showNotesAction" scaleX="0.7" scaleY="0.7" text="Show notes" translateX="-39.0" />
                                                 <Button mnemonicParsing="false" onAction="#fontMinusAction" scaleX="0.7" scaleY="0.7" text="Font -" translateX="-72.0" />
                                                 <Button mnemonicParsing="false" onAction="#fontPlusAction" scaleX="0.7" scaleY="0.7" text="Font +" translateX="-100.0" />
+                                                <Button fx:id="toggleWhiteSpacesBtn" mnemonicParsing="false" onAction="#toggleWhiteSpacesAction" scaleX="0.7" scaleY="0.7" text="Toggle white spaces visibility" translateX="-151.0" />
                                              </children>
                                           </HBox>
                                        </graphic>

@@ -158,6 +158,8 @@ public class ExpressionBuilderController implements Initializable {
     private Button showCurrentExpressionBtn;
     @FXML
     private Button showNotesBtn;
+    @FXML
+    private Button toggleWhiteSpacesBtn;
 
     //TEXTS
     @FXML
@@ -351,13 +353,24 @@ public class ExpressionBuilderController implements Initializable {
     private static final String NUMBERSTRING = "NUMBER";
     private static final String NEWLINEPLACEHOLDER = "\u23CE\n";
     private static final String TABPLACEHOLDER = " \u21E5";
-    private static final String SPACEPLACEHOLDER = "\u2423";
+    private final BooleanProperty whiteSpaceVisible = new SimpleBooleanProperty(true);
+    private static final String VISIBLEWHITESPACEPLACEHOLDER = "\u2423";
+    private static final String UNVISIBLEWHITESPACEPLACEHOLDER = " ";
     private final Map<String, String> presentationMap = new HashMap<>();
 
     {
         presentationMap.put("New line", NEWLINEPLACEHOLDER);
         presentationMap.put("Tab", TABPLACEHOLDER);
-        presentationMap.put("Space", SPACEPLACEHOLDER);
+        presentationMap.put("White space", VISIBLEWHITESPACEPLACEHOLDER);
+        whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
+            if(newValue != null ){
+                if(newValue){
+                    presentationMap.replace("White space", VISIBLEWHITESPACEPLACEHOLDER);
+                }else{
+                    presentationMap.replace("White space", UNVISIBLEWHITESPACEPLACEHOLDER);
+                }
+            }
+        });
     }
 
     private int fontSizeModifier = 0;
@@ -477,6 +490,7 @@ public class ExpressionBuilderController implements Initializable {
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
         othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         hintHoverText.visibleProperty().bind(editAsText.not());
+        toggleWhiteSpacesBtn.visibleProperty().bind(editAsText.not());
 
         notesTextArea.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         notesStage.titleProperty().bind(new SimpleStringProperty("Notes on ").concat(expressionNameTextField.textProperty()));
@@ -1285,6 +1299,16 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
     }
+    
+    @FXML
+    private void toggleWhiteSpacesAction(ActionEvent event){
+        whiteSpaceVisible.set(!whiteSpaceVisible.get());
+        for (Node n : expressionTextFlow.getChildren()) {
+            if (n instanceof ExpressionTextNode) {
+                ((ExpressionTextNode) n).updateFontSize();
+            }
+        }
+    }
 
     //POPULATE LISTS
     private void populateExpressionListViews() {
@@ -1816,7 +1840,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (res == null && ShuntingYard.isNumber(text)) {
                     res = new Tooltip("Number: " + text);
                 }
-                if (res == null && nodeText.equals(SPACEPLACEHOLDER)) {
+                if (res == null && nodeText.equals(VISIBLEWHITESPACEPLACEHOLDER)) {
                     res = new Tooltip("Presentation node: Space");
                 }
                 if (res == null && nodeText.equals(TABPLACEHOLDER)) {
@@ -1993,7 +2017,8 @@ public class ExpressionBuilderController implements Initializable {
                     case TABPLACEHOLDER:
                         sb.append("\t");
                         break;
-                    case SPACEPLACEHOLDER:
+                    case UNVISIBLEWHITESPACEPLACEHOLDER:
+                    case VISIBLEWHITESPACEPLACEHOLDER:
                         sb.append(" ");
                         break;
                     default:
@@ -2031,7 +2056,11 @@ public class ExpressionBuilderController implements Initializable {
             } else if (nodeText.equals("\t")) {
                 etn = new PresentationTextNode(TABPLACEHOLDER);
             } else if (nodeText.equals(" ")) {
-                etn = new PresentationTextNode(SPACEPLACEHOLDER);
+                if(whiteSpaceVisible.get()){
+                    etn = new PresentationTextNode(VISIBLEWHITESPACEPLACEHOLDER);
+                }else{
+                    etn = new PresentationTextNode(UNVISIBLEWHITESPACEPLACEHOLDER);
+                }
             } else {
                 etn = new ExpressionTextNode(' ' + nodeText + ' ');
             }
@@ -2640,6 +2669,17 @@ public class ExpressionBuilderController implements Initializable {
             setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
             this.fontSize = 16;
             updateFontSize();
+            if(text.equals(UNVISIBLEWHITESPACEPLACEHOLDER) || text.equals(VISIBLEWHITESPACEPLACEHOLDER)){
+                whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
+                    if(newValue!=null){
+                        if(newValue){
+                            setText(VISIBLEWHITESPACEPLACEHOLDER);
+                        }else{
+                            setText(UNVISIBLEWHITESPACEPLACEHOLDER);
+                        }
+                    }
+                });
+            }
         }
     }
 
