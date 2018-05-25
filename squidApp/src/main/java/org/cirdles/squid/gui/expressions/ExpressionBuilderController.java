@@ -356,7 +356,7 @@ public class ExpressionBuilderController implements Initializable {
     {
         presentationMap.put("New line", NEWLINEPLACEHOLDER);
         presentationMap.put("Tab", TABPLACEHOLDER);
-        presentationMap.put("Splace", SPACEPLACEHOLDER);
+        presentationMap.put("Space", SPACEPLACEHOLDER);
     }
 
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
@@ -542,7 +542,6 @@ public class ExpressionBuilderController implements Initializable {
         fromChoiceBox.setItems(fromChoiceList);
         ObservableList<OrderChoiceEnum> orderChoiceList = FXCollections.observableArrayList(Arrays.asList(OrderChoiceEnum.values()));
         orderChoiceBox.setItems(orderChoiceList);
-        
 
         //Update the list on source change
         fromChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -562,7 +561,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void filterList(FromChoiceEnum from) {
-        if(from != null){
+        if (from != null) {
             switch (from) {
                 case BUILTIN:
                     globalListView.setItems(namedExpressions.filtered((exp) -> {
@@ -591,7 +590,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void orderList(OrderChoiceEnum order) {
-        if(order != null){
+        if (order != null) {
             switch (order) {
                 case NAME:
                     globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
@@ -624,11 +623,11 @@ public class ExpressionBuilderController implements Initializable {
                     break;
                 default:
                     globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        if((o1.amHealthy() && o2.amHealthy())||(!o1.amHealthy() && !o2.amHealthy())){
-                            return namedExpressions.indexOf(o1)-namedExpressions.indexOf(o2);
-                        }else if(!o1.amHealthy() && o2.amHealthy()){
+                        if ((o1.amHealthy() && o2.amHealthy()) || (!o1.amHealthy() && !o2.amHealthy())) {
+                            return namedExpressions.indexOf(o1) - namedExpressions.indexOf(o2);
+                        } else if (!o1.amHealthy() && o2.amHealthy()) {
                             return 1;
-                        }else{
+                        } else {
                             return -1;
                         }
                     }));
@@ -1698,18 +1697,18 @@ public class ExpressionBuilderController implements Initializable {
 
         return contextMenu;
     }
-    
-    private Tooltip createExpressionNodeTooltip(String nodeText){
+
+    private Tooltip createExpressionNodeTooltip(String nodeText) {
         Tooltip res = null;
-        if(!(nodeText==null)){
+        if (!(nodeText == null)) {
             String text = nodeText.trim();
             if (text.matches("^\\[(%)?\".+\"\\]$")) {
                 String exname = text.replaceAll("(^\\[(%)?\")|(\"\\]$)", "");
                 Expression ex = squidProject.getTask().getExpressionByName(exname);
                 if (ex != null) {
                     boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit().trim()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
-                    if(!ex.amHealthy()){
+                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                    if (!ex.amHealthy()) {
                         ImageView imageView = new ImageView(UNHEALTHY);
                         imageView.setFitHeight(12);
                         imageView.setFitWidth(12);
@@ -1730,8 +1729,8 @@ public class ExpressionBuilderController implements Initializable {
                         ex = squidProject.getTask().getExpressionByName(baseExpressionName);
                         if (ex != null) {
                             boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit().trim()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
-                            if(!ex.amHealthy()){
+                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                            if (!ex.amHealthy()) {
                                 ImageView imageView = new ImageView(UNHEALTHY);
                                 imageView.setFitHeight(12);
                                 imageView.setFitWidth(12);
@@ -1780,11 +1779,11 @@ public class ExpressionBuilderController implements Initializable {
                 if (res == null && nodeText.equals(NEWLINEPLACEHOLDER)) {
                     res = new Tooltip("Presentation node: New line");
                 }
-                if(res == null){
+                if (res == null) {
                     Expression ex = squidProject.getTask().getExpressionByName(text);
                     if (ex != null) {
                         boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit().trim()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                     }
                     if (res == null && text.length() > 2) {
                         String lastTwo = text.substring(text.length() - 2);
@@ -1793,12 +1792,12 @@ public class ExpressionBuilderController implements Initializable {
                             ex = squidProject.getTask().getExpressionByName(baseExpressionName);
                             if (ex != null) {
                                 boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
-                                res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy()? "" : ex.produceExpressionTreeAudit().trim()+"\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                                res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                             }
                         }
                     }
-                    if(ex!= null && res != null){
-                        if(!ex.amHealthy()){
+                    if (ex != null && res != null) {
+                        if (!ex.amHealthy()) {
                             ImageView imageView = new ImageView(UNHEALTHY);
                             imageView.setFitHeight(12);
                             imageView.setFitWidth(12);
@@ -1957,25 +1956,25 @@ public class ExpressionBuilderController implements Initializable {
                 }
             }
         }
-        return sb.toString().replaceAll(" +\\(", "(");
+        return sb.toString();
     }
 
     private void buildTextFlowFromString(String string) {
         String numberRegExp = "^\\d+(\\.\\d+)?$";
-        
+
         List<Node> children = new ArrayList<>();
-        
+
         //The lexer separates the expression into tokens
         ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(string));
         List<? extends Token> tokens = lexer.getAllTokens();
-        
+
         //Creates the notes from tokens
         for (int i = 0; i < tokens.size(); i++) {
             Token token = tokens.get(i);
             String nodeText = token.getText();
-            
+
             ExpressionTextNode etn;
-            
+
             // Make a node of the corresponding type
             if (nodeText.matches(numberRegExp)) {
                 etn = new NumberTextNode(' ' + nodeText + ' ');
@@ -1990,11 +1989,11 @@ public class ExpressionBuilderController implements Initializable {
             } else {
                 etn = new ExpressionTextNode(' ' + nodeText + ' ');
             }
-            
+
             etn.setOrdinalIndex(i);
             children.add(etn);
         }
-        
+
         expressionTextFlow.getChildren().setAll(children);
     }
 
@@ -2147,18 +2146,18 @@ public class ExpressionBuilderController implements Initializable {
                         }
                         Tooltip t = createExpressionNodeTooltip(getText());
                         setOnMouseEntered((event) -> {
-                            showToolTip(event,this,t);
+                            showToolTip(event, this, t);
                         });
                         setOnMouseExited((event) -> {
-                            hideToolTip(t,this);
+                            hideToolTip(t, this);
                         });
                         setOnMouseMoved((event) -> {
-                            showToolTip(event,this,t);
+                            showToolTip(event, this, t);
                         });
                     }
                 }
             };
-            
+
             updateCellMode(currentMode.get(), cell);
 
             currentMode.addListener((observable, oldValue, newValue) -> {
@@ -2172,14 +2171,13 @@ public class ExpressionBuilderController implements Initializable {
 
             return cell;
         }
-        
 
         private void showToolTip(MouseEvent event, ListCell<Expression> cell, Tooltip t) {
             if (t != null) {
                 if (event.isControlDown()) {
                     t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
                 } else {
-                    hideToolTip(t,cell);
+                    hideToolTip(t, cell);
                 }
             }
         }
@@ -2345,13 +2343,13 @@ public class ExpressionBuilderController implements Initializable {
                         setText(expression.getRatioName());
                         Tooltip t = createExpressionNodeTooltip(getText());
                         setOnMouseEntered((event) -> {
-                            showToolTip(event,this,t);
+                            showToolTip(event, this, t);
                         });
                         setOnMouseExited((event) -> {
-                            hideToolTip(t,this);
+                            hideToolTip(t, this);
                         });
                         setOnMouseMoved((event) -> {
-                            showToolTip(event,this,t);
+                            showToolTip(event, this, t);
                         });
                     }
                 }
@@ -2369,13 +2367,13 @@ public class ExpressionBuilderController implements Initializable {
 
             return cell;
         }
-        
+
         private void showToolTip(MouseEvent event, ListCell<SquidRatiosModel> cell, Tooltip t) {
             if (t != null) {
                 if (event.isControlDown()) {
                     t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
                 } else {
-                    hideToolTip(t,cell);
+                    hideToolTip(t, cell);
                 }
             }
         }
@@ -2477,13 +2475,13 @@ public class ExpressionBuilderController implements Initializable {
                         setText(operationOrFunction);
                         Tooltip t = createExpressionNodeTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").replaceAll("Tab", TABPLACEHOLDER).replaceAll("New line", NEWLINEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
-                            showToolTip(event,this,t);
+                            showToolTip(event, this, t);
                         });
                         setOnMouseExited((event) -> {
-                            hideToolTip(t,this);
+                            hideToolTip(t, this);
                         });
                         setOnMouseMoved((event) -> {
-                            showToolTip(event,this,t);
+                            showToolTip(event, this, t);
                         });
                     }
                 }
@@ -2501,13 +2499,13 @@ public class ExpressionBuilderController implements Initializable {
 
             return cell;
         }
-        
+
         private void showToolTip(MouseEvent event, ListCell<String> cell, Tooltip t) {
             if (t != null) {
                 if (event.isControlDown()) {
                     t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
                 } else {
-                    hideToolTip(t,cell);
+                    hideToolTip(t, cell);
                 }
             }
         }
@@ -2588,7 +2586,7 @@ public class ExpressionBuilderController implements Initializable {
             cell.setCursor(Cursor.OPEN_HAND);
         }
     }
-    
+
     private class PresentationTextNode extends ExpressionTextNode {
 
         public PresentationTextNode(String text) {
@@ -2630,7 +2628,7 @@ public class ExpressionBuilderController implements Initializable {
         int previousIndicatorIndex = -1;
 
         private Tooltip tooltip;
-        
+
         ExpressionTextNode oppositeParenthese = null;
 
         private void selectOppositeParenthese() {
@@ -2717,7 +2715,7 @@ public class ExpressionBuilderController implements Initializable {
             currentMode.addListener((observable, oldValue, newValue) -> {
                 updateMode(newValue);
             });
-            
+
             setTooltip(createExpressionNodeTooltip(text));
         }
 
@@ -2774,7 +2772,7 @@ public class ExpressionBuilderController implements Initializable {
         public void setOrdinalIndex(double ordinalIndex) {
             this.ordinalIndex = ordinalIndex;
         }
-        
+
         private void setNodeModeEditCreate() {
             setCursor(Cursor.OPEN_HAND);
 
@@ -2791,7 +2789,7 @@ public class ExpressionBuilderController implements Initializable {
                 setFill(selectedColor);
                 setCursor(Cursor.CLOSED_HAND);
             });
-            
+
             setOnMouseReleased((MouseEvent event) -> {
                 showToolTip(event);
                 unselectOppositeParenthese();
