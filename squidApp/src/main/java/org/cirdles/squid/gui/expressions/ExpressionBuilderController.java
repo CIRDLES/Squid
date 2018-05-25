@@ -347,12 +347,14 @@ public class ExpressionBuilderController implements Initializable {
     private static final String OPERATIONFLAGDELIMITER = " : ";
     private static final String NUMBERSTRING = "NUMBER";
     private static final String NEWLINEPLACEHOLDER = "\u23CE\n";
-    private static final String TABPLACEHOLDER = ". . .";
+    private static final String TABPLACEHOLDER = " \u21E5";
+    private static final String SPACEPLACEHOLDER = "\u2423";
     private final Map<String, String> presentationMap = new HashMap<>();
 
     {
         presentationMap.put("New line", NEWLINEPLACEHOLDER);
         presentationMap.put("Tab", TABPLACEHOLDER);
+        presentationMap.put("Splace", SPACEPLACEHOLDER);
     }
 
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
@@ -1944,8 +1946,11 @@ public class ExpressionBuilderController implements Initializable {
                     case TABPLACEHOLDER:
                         sb.append("\t");
                         break;
+                    case SPACEPLACEHOLDER:
+                        sb.append(" ");
+                        break;
                     default:
-                        sb.append(((ExpressionTextNode) node).getText().trim()).append(' ');
+                        sb.append(((ExpressionTextNode) node).getText().trim());
                         break;
                 }
             }
@@ -1954,46 +1959,41 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void buildTextFlowFromString(String string) {
-        //Replace groups of 4 spaces by tabs
-        string = string.replaceAll("    ", "\t");
-        if (!string.replaceAll(" +", " ").trim().equals(makeStringFromTextFlow().trim())) {
-
-            String numberRegExp = "^\\d+(\\.\\d+)?$";
-
-            List<Node> children = new ArrayList<>();
-
-            //The lexer separates the expression into tokens
-            ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(string));
-            List<? extends Token> tokens = lexer.getAllTokens();
-
-            //Creates the notes from tokens
-            for (int i = 0; i < tokens.size(); i++) {
-                Token token = tokens.get(i);
-                String nodeText = token.getText();
-
-                ExpressionTextNode etn = null;
-
-                // Make a node of the corresponding type
-                if (nodeText.matches(numberRegExp)) {
-                    etn = new NumberTextNode(' ' + nodeText + ' ');
-                } else if (listOperators.contains(nodeText)) {
-                    etn = new OperationTextNode(' ' + nodeText + ' ');
-                } else if (nodeText.equals("\n") || nodeText.equals("\r")) {
-                    etn = new ExpressionTextNode(NEWLINEPLACEHOLDER);
-                } else if (nodeText.equals("\t")) {
-                    etn = new ExpressionTextNode(TABPLACEHOLDER);
-                } else if (!nodeText.equals(" ")/*Ignore spaces tokens*/) {
-                    etn = new ExpressionTextNode(' ' + nodeText + ' ');
-                }
-
-                if (etn != null) {
-                    etn.setOrdinalIndex(i);
-                    children.add(etn);
-                }
+        String numberRegExp = "^\\d+(\\.\\d+)?$";
+        
+        List<Node> children = new ArrayList<>();
+        
+        //The lexer separates the expression into tokens
+        ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(string));
+        List<? extends Token> tokens = lexer.getAllTokens();
+        
+        //Creates the notes from tokens
+        for (int i = 0; i < tokens.size(); i++) {
+            Token token = tokens.get(i);
+            String nodeText = token.getText();
+            
+            ExpressionTextNode etn;
+            
+            // Make a node of the corresponding type
+            if (nodeText.matches(numberRegExp)) {
+                etn = new NumberTextNode(' ' + nodeText + ' ');
+            } else if (listOperators.contains(nodeText)) {
+                etn = new OperationTextNode(' ' + nodeText + ' ');
+            } else if (nodeText.equals("\n") || nodeText.equals("\r")) {
+                etn = new PresentationTextNode(NEWLINEPLACEHOLDER);
+            } else if (nodeText.equals("\t")) {
+                etn = new PresentationTextNode(TABPLACEHOLDER);
+            } else if (nodeText.equals(" ")) {
+                etn = new PresentationTextNode(SPACEPLACEHOLDER);
+            } else {
+                etn = new ExpressionTextNode(' ' + nodeText + ' ');
             }
-
-            expressionTextFlow.getChildren().setAll(children);
+            
+            etn.setOrdinalIndex(i);
+            children.add(etn);
         }
+        
+        expressionTextFlow.getChildren().setAll(children);
     }
 
     private void insertFunctionIntoExpressionTextFlow(String content, double ordinalIndex) {
@@ -2038,7 +2038,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void insertPresentationIntoExpressionTextFlow(String content, double ordinalIndex) {
-        ExpressionTextNode exp = new ExpressionTextNode(content);
+        ExpressionTextNode exp = new PresentationTextNode(content);
         exp.setOrdinalIndex(ordinalIndex);
         expressionTextFlow.getChildren().add(exp);
         updateExpressionTextFlowChildren();
@@ -2583,6 +2583,14 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             cell.setCursor(Cursor.OPEN_HAND);
+        }
+    }
+    
+    private class PresentationTextNode extends ExpressionTextNode {
+
+        public PresentationTextNode(String text) {
+            super(text);
+            setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
         }
     }
 
