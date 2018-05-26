@@ -5,6 +5,8 @@
            elementFormDefault="qualified" 
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
+
     <xs:annotation>
         <xs:documentation xml:lang="en">
             This schema defines the contents of a Squid Expression.
@@ -26,6 +28,7 @@
             Author: James F. Bowring[smtp:bowring@gmail.com]
             Created: December.2016
             Revised: September.2017
+            Revised: May.2018 by Ryan Barrett
             
         </xs:documentation>
     </xs:annotation> 
@@ -37,6 +40,7 @@
             <xs:element name="excelExpressionString" type="xs:string"></xs:element>
             <xs:element name="squidSwitchNU" type="xs:string"></xs:element>
             <xs:element name="expressionTree" type="ExpressionTree"></xs:element>
+            <xs:element name="notes" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
               
@@ -73,7 +77,9 @@
             <xs:element type="xs:string" name="squidSwitchSAUnknownCalculation"/>
             <xs:element type="xs:string" name="squidSpecialUPbThExpression"/>
             <xs:element type="xs:string" name="rootExpressionTree"/>
-             <xs:element type="xs:string" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
+            <xs:element type="xs:string" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
+            <xs:element type="xs:string" name="uncertaintyDirective"/>
+            <xs:element type="xs:integer" name="index"/>
             
         </xs:sequence>
     </xs:complexType>
@@ -83,16 +89,6 @@
             <xs:element name="isotopeName" type="xs:string"></xs:element>
             <xs:element name="squidSpeciesModel" type="SquidSpeciesModel"></xs:element>
             <xs:element name="methodNameForShrimpFraction" type="xs:string"></xs:element>
-        </xs:sequence>
-    </xs:complexType>
-    
-    <xs:complexType name="SquidSpeciesModel">
-        <xs:sequence>
-            <xs:element name="massStationIndex" type="xs:string"></xs:element>
-            <xs:element name="massStationSpeciesName" type="xs:string"></xs:element>
-            <xs:element name="isotopeName" type="xs:string"></xs:element>
-            <xs:element name="elementName" type="xs:string"></xs:element>
-            <xs:element name="isBackground" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
     

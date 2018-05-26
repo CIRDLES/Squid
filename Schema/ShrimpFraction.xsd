@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           attributeFormDefault="unqualified" 
+           elementFormDefault="qualified" 
+           targetNamespace="https://raw.githubusercontent.com"
+           xmlns="https://raw.githubusercontent.com">
+    <xs:include schemalocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel.xsd"/>
+    
+    <xs:complexType name="ShrimpFractioin" mixed="true">
+        <xs:sequence>
+                   
+            <xs:element name="fractionID" type="xs:string"/>
+            <xs:element name="spotNumber" type ="xs:integer"/>
+            <xs:element name="nameOfMount" type ="xs:string"/>
+            <xs:element name="dateTimeMilliseconds" type ="xs:long"/>
+            <xs:element name="hours" type ="xs:double"/>
+            <xs:element name="deadTimeNanoseconds" type ="xs:integer"/>
+            <xs:element name="sbmZeroCps" type ="xs:integer"/>
+            <xs:element name="stageX" type ="xs:integer"/>
+            <xs:element name="stageY" type ="xs:integer"/>
+            <xs:element name="stageZ" type ="xs:integer"/>
+            <xs:element name="qtlY" type ="xs:integer"/>
+            <xs:element name="primaryBeam" type ="xs:double"/>
+
+            <xs:element name="countTimeSecs" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="countTimeSec" type ="xs:double"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="namesOfSpecies" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="nameOfSpecie" type ="xs:integer"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="peakMeasurementsCount" type ="xs:integer"/>
+            <xs:element name="isotopicRatiosII" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="isotopicRatio" type ="SquidRatiosModel"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="rawPeakData" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="rawPeakDataRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="rawPeakDataValue" type ="xs:integer"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="rawSBMData" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="rawSBMDataRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="rawSBMDataValue" type ="xs:integer"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="totalCounts" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="totalCountsRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="totalCountsVvalue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="totalCountsOneSigmaAbs" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="totalCountsOneSigmaAbsRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="totalCountsOneSigmaAbsValue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="totalCountsSBM" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="totalCountsSBMRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="totalCountsSBMValue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="timeStampSecs" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="timeStampSecsRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="timeStampSec" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="trimMasses" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="trimMassesRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="trimMass" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="totalCps" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="totalCpsValue" type="xs:double"/>                   
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="netPkCps" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="netPkCpsRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="netpkCpsValue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="pkFerr" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="pkFerrRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="pkFerrValue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="referenceMaterial" type="xs:boolean"/>
+            <xs:element name="concentrationReferenceMaterial" type="xs:boolean"/>
+            <xs:element name="useSBM" type="xs:boolean"/>
+            <xs:element name="userLinFits" type="xs:boolean"/>
+            
+            <xs:element name="reducedPkHt" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="reducedPkHtRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="reducedPkHtValue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="reducedPkHtFerr" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="reducedPkHtFerrRow" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:element name="reducedPkHtFerrValue" type ="xs:double"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>                    
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="pkInterpScanArray" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="pkIntterpScanAarray" type="xs:double"/>      
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+                   
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

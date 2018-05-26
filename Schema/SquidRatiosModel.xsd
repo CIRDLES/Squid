@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           attributeFormDefault="unqualified" 
+           elementFormDefault="qualified" 
+           targetNamespace="https://raw.githubusercontent.com"
+           xmlns="https://raw.githubusercontent.com">
+           <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
+
+    <xs:complexType name="SquidRatiosModel" mixed="true">
+        <xs:sequence>
+            <xs:element name="numerator" type="SquidSpeciesModel"/>
+            <xs:element name="denominator" type="SquidSpeciesModel"/>
+            <xs:element name="reportingOrderIndex" type="xs:integer"/>
+            
+            <xs:element name="ratEqTimes" minOccurs="0">
+            <xs:complexType>
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="ratEqTime" type="xs:double"/>
+                </xs:sequence>
+            </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="ratEqVals" minOccurs="0">
+            <xs:complexType>
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="ratEqVal" type="xs:double"/>
+                </xs:sequence>
+            </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="ratEqErrs" minOccurs="0">
+            <xs:complexType>
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="ratEqErr" type="xs:double"/>
+                </xs:sequence>
+            </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="ratioVal" type="xs:double"/>
+            <xs:element name="ratioFractErr" type="xs:double"/>
+            <xs:element name="minIndex" type="xs:integer"/>
+            <xs:element name="active" type="xs:boolean"/>
+            
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
