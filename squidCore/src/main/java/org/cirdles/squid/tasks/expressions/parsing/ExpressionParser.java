@@ -208,6 +208,17 @@ public class ExpressionParser {
 
         ExpressionTreeInterface retExpTree = null;
 
+        // check NAMED_CONSTANT choice to see if this is really a shortcut to an expression such as 
+        // Hfsens = ["Hfsens"]
+        if (tokenType.compareTo(tokenType.NAMED_CONSTANT) == 0) {
+            ExpressionTreeInterface retExpTreeTest = namedExpressionsMap.get(token);
+            if (retExpTreeTest != null) {
+                if (retExpTreeTest instanceof ExpressionTreeParsedFromExcelString) {
+                    tokenType = TokenTypes.NAMED_EXPRESSION;
+                }
+            }
+        }
+
         switch (tokenType) {
             case OPERATOR_A:
             case OPERATOR_M:
