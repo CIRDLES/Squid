@@ -43,6 +43,7 @@ public class FileNameFixer {
         name = name.replaceAll("\\\"", "");
         name = name.replaceAll("\\~", "");
         name = name.replaceAll("\\`", "");
+        name = name.replaceAll("=", "");
         while (name.contains("__")) {
             name = name.replaceAll("__", "_");
         }

@@ -40,6 +40,7 @@
             <xs:element name="excelExpressionString" type="xs:string"></xs:element>
             <xs:element name="squidSwitchNU" type="xs:string"></xs:element>
             <xs:element name="expressionTree" type="ExpressionTree"></xs:element>
+            <xs:element name="notes" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
               

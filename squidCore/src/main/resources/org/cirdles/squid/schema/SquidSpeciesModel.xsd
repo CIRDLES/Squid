@@ -20,7 +20,7 @@ and open the template in the editor.
             <xs:element name="prawnFileIsotopeName" type="xs:string"/>
             <xs:element name="elementName" type="xs:string"/>
             <xs:element name="isBackground" type="xs:boolean"/>
-            <xs:element name="uThbearingName" type="xs:string"/>
+            <xs:element name="uThBearingName" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

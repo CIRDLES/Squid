@@ -182,11 +182,11 @@ public class TaskXMLConverter implements Converter {
         context.convertAnother(task.getSquidSessionModel());
         writer.endNode();
         
-        writer.startNode("squidSpeciesModelList");
+        writer.startNode("SquidSpeciesModelList");
         context.convertAnother(task.getSquidSpeciesModelList());
         writer.endNode();
         
-        writer.startNode("squidRatiosModelList");
+        writer.startNode("SquidRatiosModelList");
         context.convertAnother(task.getSquidRatiosModelList());
         writer.endNode();
         
@@ -195,7 +195,7 @@ public class TaskXMLConverter implements Converter {
         for (int i = 0; i < tableOfSelectedRatiosByMassStationIndex.length; i++) {
             writer.startNode("tableOfSelectedRatiosByMassStationIndexRow");
             for (int j = 0; j < tableOfSelectedRatiosByMassStationIndex[i].length; j++) {
-                writer.startNode("RatioByMassStationIndex");
+                writer.startNode("ratioByMassStationIndex");
                 writer.setValue(Boolean.toString(tableOfSelectedRatiosByMassStationIndex[i][j]));
                 writer.endNode();
             }

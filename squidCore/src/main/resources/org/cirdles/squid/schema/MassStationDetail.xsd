@@ -14,7 +14,7 @@ and open the template in the editor.
     
     <xs:complexType name="MassStationDetail" mixed="true">
         <xs:sequence>
-            <xs:element name="massSationIndex" type="xs:integer"/>
+            <xs:element name="massStationIndex" type="xs:integer"/>
             <xs:element name="massStationLabel" type="xs:string"/>
             <xs:element name="elementLabel" type="xs:string"/>
             <xs:element name="isotopeLabel" type="xs:string"/>

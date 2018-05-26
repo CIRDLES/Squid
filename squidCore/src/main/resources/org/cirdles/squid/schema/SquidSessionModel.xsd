@@ -16,17 +16,17 @@ and open the template in the editor.
 
     <xs:complexType name="SquidSessionModel" mixed="true">
         <xs:sequence>
-            <xs:element name="squidSpeciesModelList" minOccurs="0">
+            <xs:element name="SquidSpeciesModelList" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                        <xs:element name="squidSpeciesModel" type="SquidSpeciesModel"/>
+                        <xs:element name="SquidSpeciesModel" type="SquidSpeciesModel"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="SquidRatiosModelList" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence minOccurs ="0" maxOccurs="unbounded">
-                        <xs:element name="squidRatiosModel" type="SquidRatiosModel"/>
+                        <xs:element name="SquidRatiosModel" type="SquidRatiosModel"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -34,7 +34,7 @@ and open the template in the editor.
             <xs:element name="userLinFits" type="xs:boolean"/>
             <xs:element name="indexOfBackgroundSpecies" type="xs:integer"/>
             <xs:element name="referenceMaterialNameFilter" type="xs:string"/>
-            <xs:element name="concentrationReferenceMaterialnameFilter" type="xs:string"/>
+            <xs:element name="concentrationReferenceMaterialNameFilter" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

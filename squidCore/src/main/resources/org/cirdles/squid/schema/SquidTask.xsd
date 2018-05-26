@@ -23,6 +23,7 @@ and open the template in the editor.
                    
             <xs:element name="name" type="xs:string"/>
             <xs:element name="type" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
             <xs:element name="authorName" type="xs:string"/>
             <xs:element name="labName" type="xs:string"/>
             <xs:element name="provenance" type="xs:string"/>
@@ -30,7 +31,7 @@ and open the template in the editor.
             <xs:element name="useSBM" type="xs:boolean"/>
             <xs:element name="userLinFits" type="xs:boolean"/>
             <xs:element name="indexOfBackgroundSpecies" type="xs:integer"/>
-            <xs:element name="indexOfTaskkBackgroundMass" type="xs:integer"/>
+            <xs:element name="indexOfTaskBackgroundMass" type="xs:integer"/>
             <xs:element name="parentNuclide" type="xs:string"/>
             <xs:element name="directAltPD" type="xs:boolean"/>
             <xs:element name="filterForRefMatSpotNames" type="xs:string"/>
@@ -52,10 +53,10 @@ and open the template in the editor.
                 </xs:complexType>
             </xs:element>
             
-            <xs:element name="mapOfIndexToMassStationDetails">
+            <xs:element name="mapOfIndexToMassStationDetails" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="entry" maxOccurs="unbounded">
+                        <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                                 <xs:sequence>
                                     <xs:element name="int" type="xs:int"/>
@@ -69,7 +70,7 @@ and open the template in the editor.
             
             <xs:element name="SquidSessionModel" type="SquidSessionModel"/>
             
-            <xs:element name="squidSpeciesModelList" minOccurs="0">
+            <xs:element name="SquidSpeciesModelList" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
                         <xs:element name="SquidSpeciesModel" type="SquidSpeciesModel"/>
@@ -77,7 +78,7 @@ and open the template in the editor.
                 </xs:complexType>
             </xs:element>
             
-            <xs:element name="squidRatiosModelList" minOccurs="0">
+            <xs:element name="SquidRatiosModelList" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
                         <xs:element name="SquidRatiosModel" type="SquidRatiosModel"/>
@@ -99,10 +100,10 @@ and open the template in the editor.
                 </xs:complexType>
             </xs:element>
                 
-            <xs:element name="taskexpressionsOrdered" minOccurs="0">
+            <xs:element name="taskExpressionsOrdered" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                        <xs:element name="taskExpressionOrdered" type="Expression"/>
+                        <xs:element name="Expression" type="Expression"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

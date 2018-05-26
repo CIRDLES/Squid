@@ -26,11 +26,11 @@ public class SquidSessionModelXMLConverter implements Converter {
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
         SquidSessionModel model = (SquidSessionModel) o;
 
-        writer.startNode("squidSpeciesModelList");
+        writer.startNode("SquidSpeciesModelList");
         context.convertAnother(model.getSquidSpeciesModelList());
         writer.endNode();
 
-        writer.startNode("squidRatiosModelList");
+        writer.startNode("SquidRatiosModelList");
         context.convertAnother(model.getSquidRatiosModelList());
         writer.endNode();
 
