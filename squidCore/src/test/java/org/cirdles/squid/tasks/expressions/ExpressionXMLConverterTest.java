@@ -1,16 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright 2018 James F. Bowring and CIRDLES.org.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package org.cirdles.squid.core;
+package org.cirdles.squid.tasks.expressions;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import org.cirdles.squid.ElementComparer;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.functions.Function;
@@ -61,14 +71,13 @@ public class ExpressionXMLConverterTest {
             expTree.getChildrenET().clear();
             expTree.addChild(0, rm);
 
-            String folderPath = "src/test/java/org/cirdles/squid/core/";
             initialExpression.customizeXstream(xstream);
-            File initialFile = new File(folderPath + "InitialCreation.XML");
+            File initialFile = new File("InitialCreation.XML");
 
             initialExpression.serializeXMLObject(initialFile.getAbsolutePath());
 
             Expression convertedExpression = (Expression) (new Expression()).readXMLObject(initialFile.getAbsolutePath(), false);
-            File convertedFile = new File(folderPath + "ConvertedCreation.XML");
+            File convertedFile = new File("ConvertedCreation.XML");
             convertedExpression.serializeXMLObject(convertedFile.getAbsolutePath());
 
             SAXBuilder builder = new SAXBuilder();

@@ -4,7 +4,7 @@
             xmlns:xs="http://www.w3.org/2001/XMLSchema"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="https://raw.githubusercontent.com
-                                ../schema/SquidTaskXMLSchema.xsd">
+                                SquidTask.xsd">
   <name>Z6266 = 11pk Perm1</name>
   <type>Geochron</type>
   <description>11-peak zircon (189-254), primary 206/238, secondary (208/232) calibrated indirectly, via 232Th/238U</description>
@@ -192,8 +192,8 @@
       </MassStationDetail>
     </entry>
   </mapOfIndexToMassStationDetails>
-  <squidSessionModel>
-    <squidSpeciesModelList>
+  <SquidSessionModel>
+    <SquidSpeciesModelList>
       <SquidSpeciesModel>
         <massStationIndex>0</massStationIndex>
         <massStationSpeciesName>YbO</massStationSpeciesName>
@@ -293,8 +293,8 @@
         <isBackground>false</isBackground>
         <uThBearingName>U</uThBearingName>
       </SquidSpeciesModel>
-    </squidSpeciesModelList>
-    <squidRatiosModelList>
+    </SquidSpeciesModelList>
+    <SquidRatiosModelList>
       <SquidRatiosModel>
         <numerator>
           <massStationIndex>0</massStationIndex>
@@ -631,14 +631,14 @@
         <minIndex>-2</minIndex>
         <active>false</active>
       </SquidRatiosModel>
-    </squidRatiosModelList>
+    </SquidRatiosModelList>
     <useSBM>true</useSBM>
     <userLinFits>false</userLinFits>
     <indexOfBackgroundSpecies>4</indexOfBackgroundSpecies>
     <referenceMaterialNameFilter>6</referenceMaterialNameFilter>
     <concentrationReferenceMaterialNameFilter>6</concentrationReferenceMaterialNameFilter>
-  </squidSessionModel>
-  <squidSpeciesModelList>
+  </SquidSessionModel>
+  <SquidSpeciesModelList>
     <SquidSpeciesModel>
       <massStationIndex>0</massStationIndex>
       <massStationSpeciesName>YbO</massStationSpeciesName>
@@ -738,8 +738,8 @@
       <isBackground>false</isBackground>
       <uThBearingName>U</uThBearingName>
     </SquidSpeciesModel>
-  </squidSpeciesModelList>
-  <squidRatiosModelList>
+  </SquidSpeciesModelList>
+  <SquidRatiosModelList>
     <SquidRatiosModel>
       <numerator>
         <massStationIndex>0</massStationIndex>
@@ -1076,150 +1076,150 @@
       <minIndex>-2</minIndex>
       <active>false</active>
     </SquidRatiosModel>
-  </squidRatiosModelList>
+  </SquidRatiosModelList>
   <tableOfSelectedRatiosByMassStationIndex>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
     <tableOfSelectedRatiosByMassStationIndexRow>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>true</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
-      <RatioByMassStationIndex>false</RatioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>true</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
+      <ratioByMassStationIndex>false</ratioByMassStationIndex>
     </tableOfSelectedRatiosByMassStationIndexRow>
   </tableOfSelectedRatiosByMassStationIndex>
   <taskExpressionsOrdered>

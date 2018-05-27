@@ -1,9 +1,4 @@
 <?xml version="1.0"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -11,7 +6,31 @@ and open the template in the editor.
            elementFormDefault="qualified" 
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
-           <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
+           
+    <xs:annotation>
+        <xs:documentation xml:lang="en">
+            This schema defines the contents of a Squid Ratios Model
+
+            Copyright 2018 CIRDLES.org
+
+            Licensed under the Apache License, Version 2.0 (the "License");
+            you may not use this file except in compliance with the License.
+            You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+            Unless required by applicable law or agreed to in writing, software
+            distributed under the License is distributed on an "AS IS" BASIS,
+            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            See the License for the specific language governing permissions and
+            limitations under the License.
+
+            Author:Ryan Barrett
+            Created: May 2018
+            
+        </xs:documentation>
+    </xs:annotation>
 
     <xs:complexType name="SquidRatiosModel" mixed="true">
         <xs:sequence>
@@ -20,27 +39,27 @@ and open the template in the editor.
             <xs:element name="reportingOrderIndex" type="xs:integer"/>
             
             <xs:element name="ratEqTimes" minOccurs="0">
-            <xs:complexType>
-                <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="ratEqTime" type="xs:double"/>
-                </xs:sequence>
-            </xs:complexType>
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="ratEqTime" type="xs:double"/>
+                    </xs:sequence>
+                </xs:complexType>
             </xs:element>
             
             <xs:element name="ratEqVals" minOccurs="0">
-            <xs:complexType>
-                <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="ratEqVal" type="xs:double"/>
-                </xs:sequence>
-            </xs:complexType>
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="ratEqVal" type="xs:double"/>
+                    </xs:sequence>
+                </xs:complexType>
             </xs:element>
             
             <xs:element name="ratEqErrs" minOccurs="0">
-            <xs:complexType>
-                <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="ratEqErr" type="xs:double"/>
-                </xs:sequence>
-            </xs:complexType>
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="ratEqErr" type="xs:double"/>
+                    </xs:sequence>
+                </xs:complexType>
             </xs:element>
             
             <xs:element name="ratioVal" type="xs:double"/>
