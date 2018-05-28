@@ -167,7 +167,7 @@ public interface ExpressionTreeInterface {
      */
     public static double[] convertObjectArrayToDoubles(Object[] objects) throws SquidException {
         if (objects == null) {
-            throw new SquidException("Failed to retrieve data at convertObjectArrayToDOubles.");
+            throw new SquidException("Failed to retrieve data at convertObjectArrayToDoubles.");
         }
         double[] retVal = new double[objects.length];
         for (int i = 0; i < objects.length; i++) {

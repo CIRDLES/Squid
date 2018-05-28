@@ -108,7 +108,7 @@ public class TaskSquid25 implements Serializable {
 
                 String[] parentNuclideStrings = lines[firstRow + 20].split("\t");
                 taskSquid25.parentNuclide = parentNuclideStrings[1];
-                
+
                 String[] directAltPDStrings = lines[firstRow + 21].split("\t");
                 taskSquid25.directAltPD = Boolean.valueOf(directAltPDStrings[1]);
 
@@ -123,7 +123,7 @@ public class TaskSquid25 implements Serializable {
 
                     if (taskSquid25.parentNuclide.contains("232")) {
                         primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
-                        primaryUThPbEqn[1] = "1 * " + primaryUThPbEqn[1];
+                        primaryUThPbEqn[1] = primaryUThPbEqn[1];
                         primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
                     }
 
@@ -141,7 +141,7 @@ public class TaskSquid25 implements Serializable {
                 if (secondaryUThPbEqn.length > 1) {
                     // this is the case of DirectAltPd = TRUE
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3("1 * " + secondaryUThPbEqn[1]),
+                            prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]),
                             primaryUThEqnOtherName,
                             true,
                             true,
@@ -160,7 +160,7 @@ public class TaskSquid25 implements Serializable {
                             false,
                             true,
                             true, false));
-                } 
+                }
                 // this logic is moved to Ludwig Q3 in BuiltInExpressionsFactory
 //                else {
 //                    taskSquid25.task25Equations.add(new TaskSquid25Equation(

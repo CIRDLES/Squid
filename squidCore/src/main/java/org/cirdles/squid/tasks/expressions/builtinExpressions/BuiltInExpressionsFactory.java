@@ -68,16 +68,16 @@ public abstract class BuiltInExpressionsFactory {
     public static Map<String, ExpressionTreeInterface> generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface stdUPbRatio = new ConstantNode("StdUPbRatio", 0.0906025999827849);
+        ExpressionTreeInterface stdUPbRatio = new ConstantNode("StdUPbRatio", 0.0906025999827849); // Ref Mat Model
         parameters.put(stdUPbRatio.getName(), stdUPbRatio);
 
-        ExpressionTreeInterface stdPpmU = new ConstantNode("Std_ppmU", 903);
+        ExpressionTreeInterface stdPpmU = new ConstantNode("Std_ppmU", 903); // Ref Mat Model
         parameters.put(stdPpmU.getName(), stdPpmU);
 
-        ExpressionTreeInterface std_76 = new ConstantNode("Std_76", Squid3Constants.std_76);//    0.0587838486664528);
+        ExpressionTreeInterface std_76 = new ConstantNode("Std_76", Squid3Constants.std_76);//    0.0587838486664528); // Ref Mat Model
         parameters.put(std_76.getName(), std_76);
 
-        ExpressionTreeInterface stdThPbRatio = new ConstantNode("StdThPbRatio", 0.0280476031222372);
+        ExpressionTreeInterface stdThPbRatio = new ConstantNode("StdThPbRatio", 0.0280476031222372);// Ref Mat Model
         parameters.put(stdThPbRatio.getName(), stdThPbRatio);
 
         ExpressionTreeInterface stdRad86fact = new ConstantNode("StdRad86fact", Squid3Constants.stdRad86fact);//   0.309567309630921);
@@ -362,6 +362,10 @@ public abstract class BuiltInExpressionsFactory {
         Expression dummy = buildExpression("DUMMY", "5", true, true, false);
         dummy.getExpressionTree().setSquidSpecialUPbThExpression(false);
         experimentalExpressions.add(dummy);
+
+        Expression dummyS = buildExpression("DUMMYsum", "5", true, true, true);
+        dummyS.getExpressionTree().setSquidSpecialUPbThExpression(false);
+        experimentalExpressions.add(dummyS);
 
         return experimentalExpressions;
     }

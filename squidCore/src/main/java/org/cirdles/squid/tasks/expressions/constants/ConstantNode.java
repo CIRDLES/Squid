@@ -48,8 +48,8 @@ public class ConstantNode extends ExpressionTree {
      */
     public ConstantNode(String name, Object value) {
         this.name = name;
-        if (value instanceof Integer){
-            value = ((int)value) * 1.0;
+        if (value instanceof Integer) {
+            value = ((int) value) * 1.0;
         }
         this.value = value;
     }

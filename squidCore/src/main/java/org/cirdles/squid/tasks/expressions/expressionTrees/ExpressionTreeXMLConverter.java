@@ -91,22 +91,22 @@ public class ExpressionTreeXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        ExpressionTree expressionTree = (ExpressionTree) value;
+        ExpressionTreeInterface expressionTree = (ExpressionTree) value;
 
         writer.startNode("name");
         writer.setValue(expressionTree.getName());
         writer.endNode();
 
         writer.startNode("childrenET");
-        context.convertAnother(expressionTree.getChildrenET());
+        context.convertAnother(((ExpressionTree) expressionTree).getChildrenET());
         writer.endNode();
 
         writer.startNode("operation");
-        context.convertAnother(expressionTree.getOperation());
+        context.convertAnother(((ExpressionTree) expressionTree).getOperation());
         writer.endNode();
 
         writer.startNode("ratiosOfInterest");
-        context.convertAnother(expressionTree.getRatiosOfInterest());
+        context.convertAnother(((ExpressionTree) expressionTree).getRatiosOfInterest());
         writer.endNode();
 
         writer.startNode("squidSwitchSCSummaryCalculation");
@@ -128,17 +128,17 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.startNode("rootExpressionTree");
         writer.setValue(String.valueOf(expressionTree.isRootExpressionTree()));
         writer.endNode();
-        
+
         writer.startNode("squidSwitchConcentrationReferenceMaterialCalculation");
         writer.setValue(String.valueOf(expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()));
         writer.endNode();
-        
+
         writer.startNode("uncertaintyDirective");
-        writer.setValue(expressionTree.getUncertaintyDirective());
+        writer.setValue(((ExpressionTree) expressionTree).getUncertaintyDirective());
         writer.endNode();
-        
+
         writer.startNode("index");
-        writer.setValue(Integer.toString(expressionTree.getIndex()));
+        writer.setValue(Integer.toString(((ExpressionTree) expressionTree).getIndex()));
         writer.endNode();
     }
 
@@ -158,8 +158,8 @@ public class ExpressionTreeXMLConverter implements Converter {
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
-////TODO CONFIRM FIELDS
-        ExpressionTree expressionTree = new ExpressionTree();
+
+        ExpressionTreeInterface expressionTree = new ExpressionTree();
 
         reader.moveDown();
         expressionTree.setName(reader.getValue());
@@ -205,7 +205,7 @@ public class ExpressionTreeXMLConverter implements Converter {
             childrenET.add(childExpressionTree);
             reader.moveUp();
         }
-        expressionTree.setChildrenET(childrenET);
+        ((ExpressionTree) expressionTree).setChildrenET(childrenET);
         reader.moveUp();
 
         // operation
@@ -213,12 +213,13 @@ public class ExpressionTreeXMLConverter implements Converter {
         reader.moveDown();
         OperationOrFunctionInterface operation = Operation.operationFactory(reader.getValue());
         if (operation == null) {
+            // try function list
             operation = Function.operationFactory(reader.getValue());
         }
         if (operation ==null){
             System.out.println("NULL OP  "+ expressionTree.getName() + "    " + reader.getValue());
         }
-        expressionTree.setOperation(operation);
+        ((ExpressionTree) expressionTree).setOperation(operation);
         reader.moveUp();
         reader.moveUp();
 
@@ -230,7 +231,7 @@ public class ExpressionTreeXMLConverter implements Converter {
             ratiosOfInterest.add(reader.getValue());
             reader.moveUp();
         }
-        expressionTree.setRatiosOfInterest(ratiosOfInterest);
+        ((ExpressionTree) expressionTree).setRatiosOfInterest(ratiosOfInterest);
         reader.moveUp();
 
         reader.moveDown();
@@ -256,15 +257,15 @@ public class ExpressionTreeXMLConverter implements Converter {
         reader.moveDown();
         expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
-        
+
         reader.moveDown();
         expressionTree.setUncertaintyDirective(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         expressionTree.setIndex(Integer.parseInt(reader.getValue()));
         reader.moveUp();
-        
+
         return expressionTree;
     }
 
