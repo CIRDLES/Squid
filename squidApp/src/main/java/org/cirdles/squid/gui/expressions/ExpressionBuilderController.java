@@ -1011,6 +1011,7 @@ public class ExpressionBuilderController implements Initializable {
                 unknownsSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
                 concRefMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchConcentrationReferenceMaterialCalculation());
                 summaryCalculationSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSCSummaryCalculation());
+                expressionString.set(null);
                 expressionString.set(newValue.getExcelExpressionString());
             } else {
                 expressionNameTextField.clear();
