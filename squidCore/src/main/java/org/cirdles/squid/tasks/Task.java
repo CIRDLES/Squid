@@ -448,66 +448,66 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void reorderExpressions() {
         // cannot depend on comparator to do deep compares
-        for (Expression listedExp : taskExpressionsOrdered) {
-            // handle selectedisotope-specific expressions
-            // TODO: Better logic
-            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME) == 0)) {
-                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
-                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + "\"]");
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-            }
-            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S) == 0)) {
-                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
-                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + "\"]");
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-            }
-            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME + " %err") == 0)) {
-                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
-                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + " %err" + "\"]");
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-            }
-            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S + " %err") == 0)) {
-                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
-                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + " %err" + "\"]");
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-            }
-            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_206_238_NAME) == 0)) {
-                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
-                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_206_238_NAME + "\"]");
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-            }
-            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_206_238_NAME + " %err") == 0)) {
-                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
-                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_206_238_NAME + " %err" + "\"]");
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-            }
-            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_208_232_NAME) == 0)) {
-                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
-                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_208_232_NAME + "\"]");
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-            }
-            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_208_232_NAME + " %err") == 0)) {
-                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
-                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_208_232_NAME + " %err" + "\"]");
-                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-            }
-        }
+//        for (Expression listedExp : taskExpressionsOrdered) {
+//            // handle selectedisotope-specific expressions
+//            // TODO: Better logic
+//            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME) == 0)) {
+//                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
+//                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + "\"]");
+//                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+//            }
+//            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S) == 0)) {
+//                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
+//                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + "\"]");
+//                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+//            }
+//            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME + " %err") == 0)) {
+//                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
+//                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + " %err" + "\"]");
+//                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+//            }
+//            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S + " %err") == 0)) {
+//                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
+//                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + " %err" + "\"]");
+//                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+//            }
+//            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_206_238_NAME) == 0)) {
+//                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
+//                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_206_238_NAME + "\"]");
+//                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+//            }
+//            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_206_238_NAME + " %err") == 0)) {
+//                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
+//                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_206_238_NAME + " %err" + "\"]");
+//                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+//            }
+//            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_208_232_NAME) == 0)) {
+//                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
+//                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_208_232_NAME + "\"]");
+//                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+//            }
+//            if (directAltPD && (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_208_232_NAME + " %err") == 0)) {
+//                // TODO: using 1 * is a temporary hack to make expression work correctly in the case of defining one expression as another
+//                listedExp.setExcelExpressionString("1 * [\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_208_232_NAME + " %err" + "\"]");
+//                listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+//            }
+//        }
 
         try {
             Collections.sort(taskExpressionsOrdered);

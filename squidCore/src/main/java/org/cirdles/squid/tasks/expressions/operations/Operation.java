@@ -107,7 +107,7 @@ public abstract class Operation
         OPERATIONS_MAP.put("<=", lessThanEqual().getName());
         OPERATIONS_MAP.put(">", greaterThan().getName());
         OPERATIONS_MAP.put(">=", greaterThanEqual().getName());
-        //OPERATIONS_MAP.put("( EXPR )", pExp().getName());
+        OPERATIONS_MAP.put("$$", value().getName());
     }
 
     /**
@@ -156,6 +156,14 @@ public abstract class Operation
      */
     public static OperationOrFunctionInterface pExp() {
         return new Pexp();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface value() {
+        return new Value();
     }
 
     /**

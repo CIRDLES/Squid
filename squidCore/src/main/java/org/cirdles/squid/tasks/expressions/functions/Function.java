@@ -347,6 +347,7 @@ public abstract class Function
     /**
      * @return the name
      */
+    @Override
     public String getName() {
         return name;
     }
