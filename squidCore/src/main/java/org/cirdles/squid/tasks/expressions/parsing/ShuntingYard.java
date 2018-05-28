@@ -303,7 +303,7 @@ public class ShuntingYard {
         /**
          *
          */
-        COMMA, 
+        COMMA,
         FORMATTER;
 
         private TokenTypes() {
@@ -321,7 +321,8 @@ public class ShuntingYard {
                 retVal = OPERATOR_A;
             } else if ("*/".contains(token)) {
                 retVal = OPERATOR_M;
-            } else if ("^".contains(token)) {
+            } else if ("|^|$$|".contains("|" + token + "|")) {
+                // '$$' is hidden Value operation for top level singleton expressions
                 retVal = OPERATOR_E;
             } else if ("(".contains(token)) {
                 retVal = LEFT_PAREN;
@@ -333,7 +334,11 @@ public class ShuntingYard {
                 retVal = FUNCTION;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]\\[\\d\\]")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
+            } else if (token.matches("\\w+\\[\\d\\]") && !token.matches("\\d+\\[\\d\\]") && !token.toUpperCase().matches("TRUE\\[\\d\\]") && !token.toUpperCase().matches("FALSE\\[\\d\\]")) {
+                retVal = NAMED_EXPRESSION_INDEXED;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]")) {
+                retVal = NAMED_EXPRESSION;
+            } else if (token.matches("\\w+") && !token.matches("\\d+") && !token.toUpperCase().matches("TRUE") && !token.toUpperCase().matches("FALSE")) {
                 retVal = NAMED_EXPRESSION;
             } else if ("| |\t|\n|\r|".contains("|" + token + "|")) {
                 retVal = FORMATTER;

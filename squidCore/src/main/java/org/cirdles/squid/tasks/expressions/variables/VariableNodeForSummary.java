@@ -23,7 +23,6 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 
 /**
@@ -57,7 +56,7 @@ public class VariableNodeForSummary extends ExpressionTree {
         this.name = name;
         this.index = index;
         this.uncertaintyDirective = uncertaintyDirective;
-        if (uncertaintyDirective.length() > 0){
+        if (uncertaintyDirective.length() > 0) {
             this.index = 1;
         }
     }
@@ -76,11 +75,6 @@ public class VariableNodeForSummary extends ExpressionTree {
     public boolean isValid() {
         return (name.length() > 0);
     }
-
-//    @Override
-//    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
-//        return false;
-//    }
 
     @Override
     public boolean usesOtherExpression() {
@@ -114,11 +108,11 @@ public class VariableNodeForSummary extends ExpressionTree {
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);
         double[][] valuesAll = detail.getValues().clone();
-        
+
         if (uncertaintyDirective.compareTo("%") == 0) {
             // index should be 1 from constructor
             valuesAll[0][1] = valuesAll[0][1] / valuesAll[0][0] * 100;
-        } 
+        }
 
         double[][] values = valuesAll.clone();
 
@@ -129,7 +123,7 @@ public class VariableNodeForSummary extends ExpressionTree {
                 values[0][i - index] = valuesAll[0][i];
             }
         }
-        
+
         Object[][] retVal = convertArrayToObjects(values);
 
         return retVal;

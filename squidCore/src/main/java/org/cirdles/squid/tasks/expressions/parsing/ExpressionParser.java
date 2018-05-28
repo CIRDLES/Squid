@@ -117,6 +117,11 @@ public class ExpressionParser {
 
             Collections.reverse(parsedRPN);
 
+            // detect if top-level singleton and if so, wrap in expression with hidden Value operation, '$$'
+            if (parsedRPN.size() == 1) {
+                parsedRPN.add(0, "$$");
+            }
+
             returnExpressionTree = buildTree(parsedRPN);
 
             // if single objects are the actual expression, don't change
@@ -129,6 +134,7 @@ public class ExpressionParser {
                 returnExpressionTree.setName(expression.getName());
 
             }
+
             // be sure top level expression is root
             returnExpressionTree.setRootExpressionTree(!(((ExpressionTree) returnExpressionTree).getLeftET() instanceof ShrimpSpeciesNode));
 
@@ -268,6 +274,8 @@ public class ExpressionParser {
                             }
                         }
                     }
+                } else if (retExpTreeKnown  instanceof ConstantNode){
+                    retExpTree = retExpTreeKnown;
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)
                         && eqnSwitchNU) {
