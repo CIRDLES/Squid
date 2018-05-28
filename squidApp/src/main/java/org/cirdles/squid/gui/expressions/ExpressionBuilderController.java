@@ -436,6 +436,7 @@ public class ExpressionBuilderController implements Initializable {
     ArrayList<Expression> removedExpressions = new ArrayList<>();
 
     private Expression selectedBeforeCreateOrCopy;
+    private boolean expressionIsCopied;
 
     boolean changeFromUndoRedo = false;
 
@@ -525,6 +526,9 @@ public class ExpressionBuilderController implements Initializable {
                 othersAccordion.setExpandedPane(null);
                 leftSplitPane.setDividerPositions(1.0);
             }
+            
+            //reset expressionIsCopied
+            expressionIsCopied = false;
         });
 
         leftSplitPane.getDividers().get(0).positionProperty().addListener((o, ol, n) -> {
@@ -1054,6 +1058,7 @@ public class ExpressionBuilderController implements Initializable {
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
             expressionIsSaved.set(false);
+            expressionIsCopied = true;
         }
     }
 
@@ -1944,7 +1949,7 @@ public class ExpressionBuilderController implements Initializable {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText(),
                 fullText,
-                false
+                (expressionIsCopied? selectedBeforeCreateOrCopy.isSquidSwitchNU() : false)
         );
 
         exp.setNotes(notesTextArea.getText());
