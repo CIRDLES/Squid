@@ -50,8 +50,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     private static final long serialVersionUID = 2614344042503810733L;
 
-    private String notes;
     private String name;
+    private String notes;
     private String excelExpressionString;
     private boolean squidSwitchNU;
     private ExpressionTreeInterface expressionTree;
@@ -70,12 +70,17 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU) {
+        this(expressionTree, excelExpressionString, squidSwitchNU, "");
+    }
+
+    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU, String notes) {
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
         this.squidSwitchNU = squidSwitchNU;
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
+        this.notes = notes;
     }
 
     @Override
@@ -94,7 +99,6 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             retVal = true;
         } else if (obj instanceof Expression && (getExpressionTree() != null)) {
             // note checking if expressionTree is null due to bad parsing
-            //retVal = ((ExpressionTree) getExpressionTree()).equals((ExpressionTree) ((Expression) obj).getExpressionTree());
             retVal = (getName().compareToIgnoreCase(((Expression) obj).getName()) == 0);
         }
         return retVal;
@@ -230,7 +234,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String getNotes() {
-        if(notes==null){
+        if (notes == null) {
             notes = "";
         }
         return notes;
@@ -239,7 +243,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public void setNotes(String comments) {
         this.notes = comments;
     }
-    
+
     /**
      * @return the excelExpressionString
      */
