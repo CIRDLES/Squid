@@ -286,6 +286,10 @@ public class SquidUIController implements Initializable {
     }
 
     private void removeAllManagers() {
+        for (Node manager : mainPane.getChildren()) {
+            manager.setVisible(false);
+        }
+        
         // prevent stacking of project panes
         mainPane.getChildren().remove(projectManagerUI);
 
