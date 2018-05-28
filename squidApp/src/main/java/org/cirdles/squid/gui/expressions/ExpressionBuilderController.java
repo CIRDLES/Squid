@@ -1093,27 +1093,17 @@ public class ExpressionBuilderController implements Initializable {
         boolean nameExists = false;
         boolean nameExistsInCustom = false;
 
-        //Search if the name exists
-        for (Expression exLoop : builtInExpressionsListView.getItems()) {
+        //Searchs if the name exists
+        for(Expression exLoop : squidProject.getTask().getTaskExpressionsOrdered()){
             if (exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())) {
-                nameExists = true;
-            }
-        }
-        if (!nameExists) {
-            for (Expression exLoop : nuSwitchedExpressionsListView.getItems()) {
-                if (exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())) {
+                if(!exLoop.getExpressionTree().isSquidSpecialUPbThExpression() && !exLoop.isSquidSwitchNU()){
+                    nameExistsInCustom=true;
+                }else{
                     nameExists = true;
                 }
             }
         }
-        if (!nameExists) {
-            for (Expression exLoop : customExpressionsListView.getItems()) {
-                if (exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())) {
-                    nameExistsInCustom = true;
-                }
-            }
-        }
-
+        
         if (nameExists) {
             //Case name already exists not in custom -> impossible to save
             Alert alert = new Alert(Alert.AlertType.ERROR,
