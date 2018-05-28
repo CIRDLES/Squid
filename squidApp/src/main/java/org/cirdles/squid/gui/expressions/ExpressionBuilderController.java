@@ -1118,6 +1118,8 @@ public class ExpressionBuilderController implements Initializable {
                     "An expression already exists with this name. Please change it before saving.",
                     ButtonType.OK
             );
+            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
+            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
             alert.show();
         } else if (nameExistsInCustom && currentMode.get().equals(Mode.EDIT) && selectedExpression.get().getName().equals(expressionNameTextField.getText())) {
             //Case edition and name unchanged -> replace without asking
@@ -1129,6 +1131,8 @@ public class ExpressionBuilderController implements Initializable {
                     ButtonType.YES,
                     ButtonType.NO
             );
+            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
+            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
             alert.showAndWait().ifPresent((t) -> {
                 if (t.equals(ButtonType.YES)) {
                     save();
@@ -2666,7 +2670,7 @@ public class ExpressionBuilderController implements Initializable {
 
         public PresentationTextNode(String text) {
             super(text);
-            setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
+            //setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
             this.fontSize = 16;
             updateFontSize();
             if(text.equals(UNVISIBLEWHITESPACEPLACEHOLDER) || text.equals(VISIBLEWHITESPACEPLACEHOLDER)){
@@ -2689,7 +2693,7 @@ public class ExpressionBuilderController implements Initializable {
             super(text);
             this.regularColor = Color.GREEN;
             setFill(regularColor);
-            setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
+            //setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
             this.fontSize = 16;
             updateFontSize();
         }
@@ -2735,7 +2739,7 @@ public class ExpressionBuilderController implements Initializable {
             this.text = text;
             this.popupShowing = false;
 
-            setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
+            //setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
             this.fontSize = 12;
             updateFontSize();
 
@@ -2749,7 +2753,7 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         public final void updateFontSize() {
-            setFont(Font.font(getFont().getFamily(), FontWeight.BOLD, fontSize + fontSizeModifier));
+            setFont(Font.font("Courier New", FontWeight.BOLD, fontSize + fontSizeModifier));
         }
 
         private void selectOppositeParenthese() {
