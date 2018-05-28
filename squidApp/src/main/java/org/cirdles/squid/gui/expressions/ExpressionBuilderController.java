@@ -877,10 +877,7 @@ public class ExpressionBuilderController implements Initializable {
                 } else {
                     changeFromUndoRedo = false;
                 }
-                //if significative change
-                if (oldValue == null || !oldValue.replaceAll(" +|\n|\t", "").trim().equals(newValue.replaceAll(" +|\n|\t", "").trim())) {
-                    updateAuditGraphAndPeek();
-                }
+                updateAuditGraphAndPeek();
             }
         });
 
