@@ -140,25 +140,35 @@
             <xs:enumeration value="pexp" />
             <xs:enumeration value="subtract" />
             <xs:enumeration value="pow" />
-            
-            <xs:enumeration value="abs" />
+            <xs:enumeration value="greaterThan" />
+            <xs:enumeration value="greaterThanEqual" />
+            <xs:enumeration value="lessThanEqual" />
+            <xs:enumeration value="pow" />
+
             <xs:enumeration value="agePb76" />
-            <xs:enumeration value="and" />
+            <xs:enumeration value="pb46cor7" />
+            <xs:enumeration value="pb46cor8" />
+            <xs:enumeration value="calculateMeanConcStd" />
+            <xs:enumeration value="stdPb86radCor7per" />
             <xs:enumeration value="concordiaTW" />
+            <xs:enumeration value="concordia" />
+            <xs:enumeration value="robReeg" />
+            <xs:enumeration value="sqBiweight" />
+            <xs:enumeration value="sqWtdAv" />
+            <xs:enumeration value="TotalCps "/>
+            <xs:enumeration value="lookup" />
+            <xs:enumeration value="WtdMeanACalc" />
+            
+            <xs:enumeration value="and" />
+            <xs:enumeration value="sqIf" />
             
             <xs:enumeration value="exp" />
-            <xs:enumeration value="sqIf" />
+            <xs:enumeration value="sqrt" />
             <xs:enumeration value="ln" />
             <xs:enumeration value="max" />
-            
-            <xs:enumeration value="robReg" />
-            <xs:enumeration value="lookup" />
-            <xs:enumeration value="totalCps" />
-            <xs:enumeration value="TotalCps" />
-            <xs:enumeration value="sqBiweight" />
-            
-            <xs:enumeration value="sqWtdAv" />
-            <xs:enumeration value="sqrt" />
+            <xs:enumeration value="abs" />
+            <xs:enumeration value="average" />
+            <xs:enumeration value="count" />
             
             <xs:enumeration value="none" />
         </xs:restriction>
