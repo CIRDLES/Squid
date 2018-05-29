@@ -363,10 +363,10 @@ public class ExpressionBuilderController implements Initializable {
         presentationMap.put("Tab", TABPLACEHOLDER);
         presentationMap.put("White space", VISIBLEWHITESPACEPLACEHOLDER);
         whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
-            if(newValue != null ){
-                if(newValue){
+            if (newValue != null) {
+                if (newValue) {
                     presentationMap.replace("White space", VISIBLEWHITESPACEPLACEHOLDER);
-                }else{
+                } else {
                     presentationMap.replace("White space", UNVISIBLEWHITESPACEPLACEHOLDER);
                 }
             }
@@ -526,7 +526,7 @@ public class ExpressionBuilderController implements Initializable {
                 othersAccordion.setExpandedPane(null);
                 leftSplitPane.setDividerPositions(1.0);
             }
-            
+
             //reset expressionIsCopied
             expressionIsCopied = false;
         });
@@ -1095,16 +1095,16 @@ public class ExpressionBuilderController implements Initializable {
         boolean nameExistsInCustom = false;
 
         //Searchs if the name exists
-        for(Expression exLoop : squidProject.getTask().getTaskExpressionsOrdered()){
+        for (Expression exLoop : squidProject.getTask().getTaskExpressionsOrdered()) {
             if (exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())) {
-                if(exLoop.isCustom()){
-                    nameExistsInCustom=true;
-                }else{
+                if (exLoop.isCustom()) {
+                    nameExistsInCustom = true;
+                } else {
                     nameExists = true;
                 }
             }
         }
-        
+
         if (nameExists) {
             //Case name already exists not in custom -> impossible to save
             Alert alert = new Alert(Alert.AlertType.ERROR,
@@ -1296,9 +1296,9 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
     }
-    
+
     @FXML
-    private void toggleWhiteSpacesAction(ActionEvent event){
+    private void toggleWhiteSpacesAction(ActionEvent event) {
         whiteSpaceVisible.set(!whiteSpaceVisible.get());
         for (Node n : expressionTextFlow.getChildren()) {
             if (n instanceof ExpressionTextNode) {
@@ -1374,8 +1374,11 @@ public class ExpressionBuilderController implements Initializable {
         // operations ==========================================================
         List<String> operationStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : OPERATIONS_MAP.entrySet()) {
-            operationStrings.add(op.getKey() + OPERATIONFLAGDELIMITER + op.getValue());
-            listOperators.add(op.getKey());
+            //Operator '$$' is not available to users
+            if (!op.getKey().equals("$$")) {
+                operationStrings.add(op.getKey() + OPERATIONFLAGDELIMITER + op.getValue());
+                listOperators.add(op.getKey());
+            }
         }
 
         ObservableList<String> items = FXCollections.observableArrayList(operationStrings);
@@ -1945,7 +1948,7 @@ public class ExpressionBuilderController implements Initializable {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText(),
                 fullText,
-                (expressionIsCopied? selectedBeforeCreateOrCopy.isSquidSwitchNU() : false)
+                (expressionIsCopied ? selectedBeforeCreateOrCopy.isSquidSwitchNU() : false)
         );
 
         exp.setNotes(notesTextArea.getText());
@@ -2058,9 +2061,9 @@ public class ExpressionBuilderController implements Initializable {
             } else if (nodeText.equals("\t")) {
                 etn = new PresentationTextNode(TABPLACEHOLDER);
             } else if (nodeText.equals(" ")) {
-                if(whiteSpaceVisible.get()){
+                if (whiteSpaceVisible.get()) {
                     etn = new PresentationTextNode(VISIBLEWHITESPACEPLACEHOLDER);
-                }else{
+                } else {
                     etn = new PresentationTextNode(UNVISIBLEWHITESPACEPLACEHOLDER);
                 }
             } else {
@@ -2671,12 +2674,12 @@ public class ExpressionBuilderController implements Initializable {
             //setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
             this.fontSize = 16;
             updateFontSize();
-            if(text.equals(UNVISIBLEWHITESPACEPLACEHOLDER) || text.equals(VISIBLEWHITESPACEPLACEHOLDER)){
+            if (text.equals(UNVISIBLEWHITESPACEPLACEHOLDER) || text.equals(VISIBLEWHITESPACEPLACEHOLDER)) {
                 whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
-                    if(newValue!=null){
-                        if(newValue){
+                    if (newValue != null) {
+                        if (newValue) {
                             setText(VISIBLEWHITESPACEPLACEHOLDER);
-                        }else{
+                        } else {
                             setText(UNVISIBLEWHITESPACEPLACEHOLDER);
                         }
                     }
