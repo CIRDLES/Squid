@@ -120,6 +120,12 @@ public final class SquidProject implements Serializable {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
+        // need to remove stored expression results on fractions to clear the decks
+        this.task.getShrimpFractions().forEach((spot) -> {
+            spot.getTaskExpressionsForScansEvaluated().clear();
+            spot.getTaskExpressionsEvaluationsPerSpot().clear();
+        });
+
         this.task = new Task(
                 taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
         this.task.setType(taskSquid25.getTaskType());
@@ -133,7 +139,7 @@ public final class SquidProject implements Serializable {
         this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         this.task.setParentNuclide(taskSquid25.getParentNuclide());
         this.task.setDirectAltPD(taskSquid25.isDirectAltPD());
-        
+
         this.task.generateBuiltInExpressions();
 
         // determine index of background mass as specified in task
@@ -158,7 +164,7 @@ public final class SquidProject implements Serializable {
             expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
             expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
             expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(task25Eqn.isEqnSwitchConcST());
-            
+
             expressionTree.setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
             expressionTree.setSquidSpecialUPbThExpression(task25Eqn.isEqnSwitchSpecialBuiltin());
 
@@ -466,7 +472,7 @@ public final class SquidProject implements Serializable {
      * @return the filterForRefMatSpotNames
      */
     public String getFilterForRefMatSpotNames() {
-        if (filterForConcRefMatSpotNames == null){
+        if (filterForConcRefMatSpotNames == null) {
             filterForConcRefMatSpotNames = "";
         }
         return filterForRefMatSpotNames;

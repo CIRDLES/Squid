@@ -149,13 +149,14 @@
             <xs:enumeration value="pb46cor7" />
             <xs:enumeration value="pb46cor8" />
             <xs:enumeration value="calculateMeanConcStd" />
+            <xs:enumeration value="pb86radCor7per"/>
             <xs:enumeration value="stdPb86radCor7per" />
             <xs:enumeration value="concordiaTW" />
             <xs:enumeration value="concordia" />
-            <xs:enumeration value="robReeg" />
+            <xs:enumeration value="robReg" />
             <xs:enumeration value="sqBiweight" />
             <xs:enumeration value="sqWtdAv" />
-            <xs:enumeration value="TotalCps "/>
+            <xs:enumeration value="TotalCps"/>
             <xs:enumeration value="lookup" />
             <xs:enumeration value="WtdMeanACalc" />
             
@@ -169,6 +170,7 @@
             <xs:enumeration value="abs" />
             <xs:enumeration value="average" />
             <xs:enumeration value="count" />
+            <xs:enumeration value="value"/>
             
             <xs:enumeration value="none" />
         </xs:restriction>

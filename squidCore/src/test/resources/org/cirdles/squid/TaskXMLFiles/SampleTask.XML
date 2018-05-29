@@ -4,7 +4,7 @@
             xmlns:xs="http://www.w3.org/2001/XMLSchema"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="https://raw.githubusercontent.com
-                                SquidTask.xsd">
+                                ../schema/SquidTask.xsd">
   <name>Z6266 = 11pk Perm1</name>
   <type>Geochron</type>
   <description>11-peak zircon (189-254), primary 206/238, secondary (208/232) calibrated indirectly, via 232Th/238U</description>
@@ -1224,46 +1224,6 @@
   </tableOfSelectedRatiosByMassStationIndex>
   <taskExpressionsOrdered>
     <Expression>
-      <name>204corr206Pb/238UAge</name>
-      <excelExpressionString>0</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>204corr206Pb/238UAge</name>
-        <value>0.0</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>207corr206Pb/238UAge</name>
-      <excelExpressionString>0</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>207corr206Pb/238UAge</name>
-        <value>0.0</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>208corr206Pb/238UAge</name>
-      <excelExpressionString>0</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>208corr206Pb/238UAge</name>
-        <value>0.0</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>Expo_Used</name>
-      <excelExpressionString>1.8</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Expo_Used</name>
-        <value>1.8</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
       <name>232Th/238U</name>
       <excelExpressionString>(0.03446*[&quot;254/238&quot;]+0.868)*[&quot;248/254&quot;]</excelExpressionString>
       <squidSwitchNU>true</squidSwitchNU>
@@ -1702,6 +1662,33 @@
       <notes></notes>
     </Expression>
     <Expression>
+      <name>Expo_Used</name>
+      <excelExpressionString>1.8</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>Expo_Used</name>
+        <childrenET>
+          <ConstantNode>
+            <name>1.8</name>
+            <value>1.8</value>
+          </ConstantNode>
+        </childrenET>
+        <operation>
+          <name>value</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
       <name>UncorrPb/Uconst</name>
       <excelExpressionString>[&quot;206/238&quot;]/[&quot;254/238&quot;]^Expo_Used</excelExpressionString>
       <squidSwitchNU>true</squidSwitchNU>
@@ -1801,10 +1788,9 @@
                 <uncertaintyDirective></uncertaintyDirective>
                 <index>0</index>
               </ExpressionTree>
-              <ConstantNode>
+              <VariableNodeForSummary>
                 <name>Expo_Used</name>
-                <value>1.8</value>
-              </ConstantNode>
+              </VariableNodeForSummary>
             </childrenET>
             <operation>
               <name>pow</name>
@@ -2531,6 +2517,114 @@
         <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
         <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
         <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>DUMMYsum</name>
+      <excelExpressionString>5</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>DUMMYsum</name>
+        <childrenET>
+          <ConstantNode>
+            <name>5</name>
+            <value>5.0</value>
+          </ConstantNode>
+        </childrenET>
+        <operation>
+          <name>value</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>204corr206Pb/238UAge</name>
+      <excelExpressionString>0</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>204corr206Pb/238UAge</name>
+        <childrenET>
+          <ConstantNode>
+            <name>0</name>
+            <value>0.0</value>
+          </ConstantNode>
+        </childrenET>
+        <operation>
+          <name>value</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>207corr206Pb/238UAge</name>
+      <excelExpressionString>0</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>207corr206Pb/238UAge</name>
+        <childrenET>
+          <ConstantNode>
+            <name>0</name>
+            <value>0.0</value>
+          </ConstantNode>
+        </childrenET>
+        <operation>
+          <name>value</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>208corr206Pb/238UAge</name>
+      <excelExpressionString>0</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>208corr206Pb/238UAge</name>
+        <childrenET>
+          <ConstantNode>
+            <name>0</name>
+            <value>0.0</value>
+          </ConstantNode>
+        </childrenET>
+        <operation>
+          <name>value</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
         <rootExpressionTree>true</rootExpressionTree>
         <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
         <uncertaintyDirective></uncertaintyDirective>
@@ -3636,7 +3730,24 @@
       <excelExpressionString>[&quot;204corr206Pb/238Uage&quot;]</excelExpressionString>
       <squidSwitchNU>false</squidSwitchNU>
       <expressionTree>
-        <name>204corr206Pb/238UAge</name>
+        <name>MF-corr.206*/238Age</name>
+        <childrenET>
+          <VariableNodeForPerSpotTaskExpressions>
+            <name>204corr206Pb/238UAge</name>
+          </VariableNodeForPerSpotTaskExpressions>
+        </childrenET>
+        <operation>
+          <name>value</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
       </expressionTree>
       <notes></notes>
     </Expression>
@@ -3645,7 +3756,24 @@
       <excelExpressionString>[%&quot;204corr206Pb/238Uage&quot;]</excelExpressionString>
       <squidSwitchNU>false</squidSwitchNU>
       <expressionTree>
-        <name>204corr206Pb/238UAge</name>
+        <name>MF-corr.206*/238Ageabs.err.</name>
+        <childrenET>
+          <VariableNodeForPerSpotTaskExpressions>
+            <name>204corr206Pb/238UAge</name>
+          </VariableNodeForPerSpotTaskExpressions>
+        </childrenET>
+        <operation>
+          <name>value</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
       </expressionTree>
       <notes></notes>
     </Expression>
@@ -3672,605 +3800,6 @@
         <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
         <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
         <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>7-corr206Pb/238Ucalibr.const</name>
-      <excelExpressionString>(1 - [&quot;204/206 (fr. 207)&quot;] * sComm_64) * [&quot;UncorrPb/Uconst&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>7-corr206Pb/238Ucalibr.const</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <ConstantNode>
-                <name>1</name>
-                <value>1.0</value>
-              </ConstantNode>
-              <ExpressionTree>
-                <name>Anonymous</name>
-                <childrenET>
-                  <VariableNodeForPerSpotTaskExpressions>
-                    <name>204/206 (fr. 207)</name>
-                  </VariableNodeForPerSpotTaskExpressions>
-                  <ConstantNode>
-                    <name>sComm_64</name>
-                    <value>17.821</value>
-                  </ConstantNode>
-                </childrenET>
-                <operation>
-                  <name>multiply</name>
-                </operation>
-                <ratiosOfInterest/>
-                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                <rootExpressionTree>false</rootExpressionTree>
-                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                <uncertaintyDirective></uncertaintyDirective>
-                <index>0</index>
-              </ExpressionTree>
-            </childrenET>
-            <operation>
-              <name>subtract</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-          <VariableNodeForPerSpotTaskExpressions>
-            <name>UncorrPb/Uconst</name>
-          </VariableNodeForPerSpotTaskExpressions>
-        </childrenET>
-        <operation>
-          <name>multiply</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>7-corr206Pb/238Ucalibr.const %err</name>
-      <excelExpressionString>sqrt([%&quot;UncorrPb/Uconst&quot;]^2 +
-( sComm_64 / (1 / [&quot;204/206 (fr. 207)&quot;] - sComm_64 ) )^2 * 
-[&quot;204/206 (fr. 207) %err&quot;]^2)</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>7-corr206Pb/238Ucalibr.const %err</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <ExpressionTree>
-                <name>Anonymous</name>
-                <childrenET>
-                  <VariableNodeForPerSpotTaskExpressions>
-                    <name>UncorrPb/Uconst</name>
-                  </VariableNodeForPerSpotTaskExpressions>
-                  <ConstantNode>
-                    <name>2</name>
-                    <value>2.0</value>
-                  </ConstantNode>
-                </childrenET>
-                <operation>
-                  <name>pow</name>
-                </operation>
-                <ratiosOfInterest/>
-                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                <rootExpressionTree>false</rootExpressionTree>
-                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                <uncertaintyDirective></uncertaintyDirective>
-                <index>0</index>
-              </ExpressionTree>
-              <ExpressionTree>
-                <name>Anonymous</name>
-                <childrenET>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <ExpressionTree>
-                        <name>Anonymous</name>
-                        <childrenET>
-                          <ConstantNode>
-                            <name>sComm_64</name>
-                            <value>17.821</value>
-                          </ConstantNode>
-                          <ExpressionTree>
-                            <name>Anonymous</name>
-                            <childrenET>
-                              <ExpressionTree>
-                                <name>Anonymous</name>
-                                <childrenET>
-                                  <ConstantNode>
-                                    <name>1</name>
-                                    <value>1.0</value>
-                                  </ConstantNode>
-                                  <VariableNodeForPerSpotTaskExpressions>
-                                    <name>204/206 (fr. 207)</name>
-                                  </VariableNodeForPerSpotTaskExpressions>
-                                </childrenET>
-                                <operation>
-                                  <name>divide</name>
-                                </operation>
-                                <ratiosOfInterest/>
-                                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                                <rootExpressionTree>false</rootExpressionTree>
-                                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                                <uncertaintyDirective></uncertaintyDirective>
-                                <index>0</index>
-                              </ExpressionTree>
-                              <ConstantNode>
-                                <name>sComm_64</name>
-                                <value>17.821</value>
-                              </ConstantNode>
-                            </childrenET>
-                            <operation>
-                              <name>subtract</name>
-                            </operation>
-                            <ratiosOfInterest/>
-                            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                            <rootExpressionTree>false</rootExpressionTree>
-                            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                            <uncertaintyDirective></uncertaintyDirective>
-                            <index>0</index>
-                          </ExpressionTree>
-                        </childrenET>
-                        <operation>
-                          <name>divide</name>
-                        </operation>
-                        <ratiosOfInterest/>
-                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                        <rootExpressionTree>false</rootExpressionTree>
-                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                        <uncertaintyDirective></uncertaintyDirective>
-                        <index>0</index>
-                      </ExpressionTree>
-                      <ConstantNode>
-                        <name>2</name>
-                        <value>2.0</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>pow</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <VariableNodeForPerSpotTaskExpressions>
-                        <name>204/206 (fr. 207) %err</name>
-                      </VariableNodeForPerSpotTaskExpressions>
-                      <ConstantNode>
-                        <name>2</name>
-                        <value>2.0</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>pow</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                </childrenET>
-                <operation>
-                  <name>multiply</name>
-                </operation>
-                <ratiosOfInterest/>
-                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                <rootExpressionTree>false</rootExpressionTree>
-                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                <uncertaintyDirective></uncertaintyDirective>
-                <index>0</index>
-              </ExpressionTree>
-            </childrenET>
-            <operation>
-              <name>add</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-        </childrenET>
-        <operation>
-          <name>sqrt</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>7-corr206Pb/238Ucalibr.const WM</name>
-      <excelExpressionString>WtdMeanACalc( [&quot;7-corr206Pb/238Ucalibr.const&quot;], [&quot;7-corr206Pb/238Ucalibr.const %err&quot;], FALSE, FALSE )</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>7-corr206Pb/238Ucalibr.const WM</name>
-        <childrenET>
-          <VariableNodeForPerSpotTaskExpressions>
-            <name>7-corr206Pb/238Ucalibr.const</name>
-          </VariableNodeForPerSpotTaskExpressions>
-          <VariableNodeForPerSpotTaskExpressions>
-            <name>7-corr206Pb/238Ucalibr.const %err</name>
-          </VariableNodeForPerSpotTaskExpressions>
-          <ConstantNode>
-            <name>FALSE</name>
-            <value>false</value>
-          </ConstantNode>
-          <ConstantNode>
-            <name>FALSE</name>
-            <value>false</value>
-          </ConstantNode>
-        </childrenET>
-        <operation>
-          <name>WtdMeanACalc</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>7-corr206Pb/238U Age</name>
-      <excelExpressionString>LN( 1.0 + [&quot;7-corr206Pb/238Ucalibr.const&quot;] / [&quot;7-corr206Pb/238Ucalibr.const WM&quot;][0] * StdUPbRatio ) / lambda238</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>7-corr206Pb/238U Age</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <ExpressionTree>
-                <name>Anonymous</name>
-                <childrenET>
-                  <ConstantNode>
-                    <name>1.0</name>
-                    <value>1.0</value>
-                  </ConstantNode>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <ExpressionTree>
-                        <name>Anonymous</name>
-                        <childrenET>
-                          <VariableNodeForPerSpotTaskExpressions>
-                            <name>7-corr206Pb/238Ucalibr.const</name>
-                          </VariableNodeForPerSpotTaskExpressions>
-                          <VariableNodeForSummary>
-                            <name>7-corr206Pb/238Ucalibr.const WM</name>
-                          </VariableNodeForSummary>
-                        </childrenET>
-                        <operation>
-                          <name>divide</name>
-                        </operation>
-                        <ratiosOfInterest/>
-                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                        <rootExpressionTree>false</rootExpressionTree>
-                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                        <uncertaintyDirective></uncertaintyDirective>
-                        <index>0</index>
-                      </ExpressionTree>
-                      <ConstantNode>
-                        <name>StdUPbRatio</name>
-                        <value>0.0906025999827849</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>multiply</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                </childrenET>
-                <operation>
-                  <name>add</name>
-                </operation>
-                <ratiosOfInterest/>
-                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                <rootExpressionTree>false</rootExpressionTree>
-                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                <uncertaintyDirective></uncertaintyDirective>
-                <index>0</index>
-              </ExpressionTree>
-            </childrenET>
-            <operation>
-              <name>ln</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-          <ConstantNode>
-            <name>lambda238</name>
-            <value>1.55125E-10</value>
-          </ConstantNode>
-        </childrenET>
-        <operation>
-          <name>divide</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>7-corr206Pb/238U Age 1sigma</name>
-      <excelExpressionString>[&quot;7-corr206Pb/238Ucalibr.const %err&quot;] / 100 * ( EXP(lambda238 * [&quot;7-corr206Pb/238U Age&quot;] ) - 1 ) / lambda238 / EXP(lambda238 * [&quot;7-corr206Pb/238U Age&quot;] )  </excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>7-corr206Pb/238U Age 1sigma</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <ExpressionTree>
-                <name>Anonymous</name>
-                <childrenET>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <VariableNodeForPerSpotTaskExpressions>
-                        <name>7-corr206Pb/238Ucalibr.const %err</name>
-                      </VariableNodeForPerSpotTaskExpressions>
-                      <ConstantNode>
-                        <name>100</name>
-                        <value>100.0</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>divide</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <ExpressionTree>
-                        <name>Anonymous</name>
-                        <childrenET>
-                          <ExpressionTree>
-                            <name>Anonymous</name>
-                            <childrenET>
-                              <ConstantNode>
-                                <name>lambda238</name>
-                                <value>1.55125E-10</value>
-                              </ConstantNode>
-                              <VariableNodeForPerSpotTaskExpressions>
-                                <name>7-corr206Pb/238U Age</name>
-                              </VariableNodeForPerSpotTaskExpressions>
-                            </childrenET>
-                            <operation>
-                              <name>multiply</name>
-                            </operation>
-                            <ratiosOfInterest/>
-                            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                            <rootExpressionTree>false</rootExpressionTree>
-                            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                            <uncertaintyDirective></uncertaintyDirective>
-                            <index>0</index>
-                          </ExpressionTree>
-                        </childrenET>
-                        <operation>
-                          <name>exp</name>
-                        </operation>
-                        <ratiosOfInterest/>
-                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                        <rootExpressionTree>false</rootExpressionTree>
-                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                        <uncertaintyDirective></uncertaintyDirective>
-                        <index>0</index>
-                      </ExpressionTree>
-                      <ConstantNode>
-                        <name>1</name>
-                        <value>1.0</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>subtract</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                </childrenET>
-                <operation>
-                  <name>multiply</name>
-                </operation>
-                <ratiosOfInterest/>
-                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                <rootExpressionTree>false</rootExpressionTree>
-                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                <uncertaintyDirective></uncertaintyDirective>
-                <index>0</index>
-              </ExpressionTree>
-              <ConstantNode>
-                <name>lambda238</name>
-                <value>1.55125E-10</value>
-              </ConstantNode>
-            </childrenET>
-            <operation>
-              <name>divide</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <ExpressionTree>
-                <name>Anonymous</name>
-                <childrenET>
-                  <ConstantNode>
-                    <name>lambda238</name>
-                    <value>1.55125E-10</value>
-                  </ConstantNode>
-                  <VariableNodeForPerSpotTaskExpressions>
-                    <name>7-corr206Pb/238U Age</name>
-                  </VariableNodeForPerSpotTaskExpressions>
-                </childrenET>
-                <operation>
-                  <name>multiply</name>
-                </operation>
-                <ratiosOfInterest/>
-                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                <rootExpressionTree>false</rootExpressionTree>
-                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                <uncertaintyDirective></uncertaintyDirective>
-                <index>0</index>
-              </ExpressionTree>
-            </childrenET>
-            <operation>
-              <name>exp</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-        </childrenET>
-        <operation>
-          <name>divide</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
         <rootExpressionTree>true</rootExpressionTree>
         <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
         <uncertaintyDirective></uncertaintyDirective>
@@ -4595,6 +4124,161 @@
         </childrenET>
         <operation>
           <name>subtract</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>8-corrPrimary calib const. delta%</name>
+      <excelExpressionString>100 * ( (1 - sComm_64 * [&quot;204/206&quot;]) / (1 - sComm_64 * [&quot;204/206 (fr. 208)&quot;]) - 1 ) </excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>8-corrPrimary calib const. delta%</name>
+        <childrenET>
+          <ConstantNode>
+            <name>100</name>
+            <value>100.0</value>
+          </ConstantNode>
+          <ExpressionTree>
+            <name>Anonymous</name>
+            <childrenET>
+              <ExpressionTree>
+                <name>Anonymous</name>
+                <childrenET>
+                  <ExpressionTree>
+                    <name>Anonymous</name>
+                    <childrenET>
+                      <ConstantNode>
+                        <name>1</name>
+                        <value>1.0</value>
+                      </ConstantNode>
+                      <ExpressionTree>
+                        <name>Anonymous</name>
+                        <childrenET>
+                          <ConstantNode>
+                            <name>sComm_64</name>
+                            <value>17.821</value>
+                          </ConstantNode>
+                          <VariableNodeForIsotopicRatios>
+                            <name>204/206</name>
+                          </VariableNodeForIsotopicRatios>
+                        </childrenET>
+                        <operation>
+                          <name>multiply</name>
+                        </operation>
+                        <ratiosOfInterest/>
+                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                        <rootExpressionTree>false</rootExpressionTree>
+                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                        <uncertaintyDirective></uncertaintyDirective>
+                        <index>0</index>
+                      </ExpressionTree>
+                    </childrenET>
+                    <operation>
+                      <name>subtract</name>
+                    </operation>
+                    <ratiosOfInterest/>
+                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                    <rootExpressionTree>false</rootExpressionTree>
+                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                    <uncertaintyDirective></uncertaintyDirective>
+                    <index>0</index>
+                  </ExpressionTree>
+                  <ExpressionTree>
+                    <name>Anonymous</name>
+                    <childrenET>
+                      <ConstantNode>
+                        <name>1</name>
+                        <value>1.0</value>
+                      </ConstantNode>
+                      <ExpressionTree>
+                        <name>Anonymous</name>
+                        <childrenET>
+                          <ConstantNode>
+                            <name>sComm_64</name>
+                            <value>17.821</value>
+                          </ConstantNode>
+                          <VariableNodeForPerSpotTaskExpressions>
+                            <name>204/206 (fr. 208)</name>
+                          </VariableNodeForPerSpotTaskExpressions>
+                        </childrenET>
+                        <operation>
+                          <name>multiply</name>
+                        </operation>
+                        <ratiosOfInterest/>
+                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                        <rootExpressionTree>false</rootExpressionTree>
+                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                        <uncertaintyDirective></uncertaintyDirective>
+                        <index>0</index>
+                      </ExpressionTree>
+                    </childrenET>
+                    <operation>
+                      <name>subtract</name>
+                    </operation>
+                    <ratiosOfInterest/>
+                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                    <rootExpressionTree>false</rootExpressionTree>
+                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                    <uncertaintyDirective></uncertaintyDirective>
+                    <index>0</index>
+                  </ExpressionTree>
+                </childrenET>
+                <operation>
+                  <name>divide</name>
+                </operation>
+                <ratiosOfInterest/>
+                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                <rootExpressionTree>false</rootExpressionTree>
+                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                <uncertaintyDirective></uncertaintyDirective>
+                <index>0</index>
+              </ExpressionTree>
+              <ConstantNode>
+                <name>1</name>
+                <value>1.0</value>
+              </ConstantNode>
+            </childrenET>
+            <operation>
+              <name>subtract</name>
+            </operation>
+            <ratiosOfInterest/>
+            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+            <rootExpressionTree>false</rootExpressionTree>
+            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+            <uncertaintyDirective></uncertaintyDirective>
+            <index>0</index>
+          </ExpressionTree>
+        </childrenET>
+        <operation>
+          <name>multiply</name>
         </operation>
         <ratiosOfInterest/>
         <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -5341,29 +5025,118 @@
       <notes></notes>
     </Expression>
     <Expression>
-      <name>8-corrPrimary calib const. delta%</name>
-      <excelExpressionString>100 * ( (1 - sComm_64 * [&quot;204/206&quot;]) / (1 - sComm_64 * [&quot;204/206 (fr. 208)&quot;]) - 1 ) </excelExpressionString>
+      <name>7-corr206Pb/238Ucalibr.const</name>
+      <excelExpressionString>(1 - [&quot;204/206 (fr. 207)&quot;] * sComm_64) * [&quot;UncorrPb/Uconst&quot;]</excelExpressionString>
       <squidSwitchNU>false</squidSwitchNU>
       <expressionTree>
-        <name>8-corrPrimary calib const. delta%</name>
+        <name>7-corr206Pb/238Ucalibr.const</name>
         <childrenET>
-          <ConstantNode>
-            <name>100</name>
-            <value>100.0</value>
-          </ConstantNode>
+          <ExpressionTree>
+            <name>Anonymous</name>
+            <childrenET>
+              <ConstantNode>
+                <name>1</name>
+                <value>1.0</value>
+              </ConstantNode>
+              <ExpressionTree>
+                <name>Anonymous</name>
+                <childrenET>
+                  <VariableNodeForPerSpotTaskExpressions>
+                    <name>204/206 (fr. 207)</name>
+                  </VariableNodeForPerSpotTaskExpressions>
+                  <ConstantNode>
+                    <name>sComm_64</name>
+                    <value>17.821</value>
+                  </ConstantNode>
+                </childrenET>
+                <operation>
+                  <name>multiply</name>
+                </operation>
+                <ratiosOfInterest/>
+                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                <rootExpressionTree>false</rootExpressionTree>
+                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                <uncertaintyDirective></uncertaintyDirective>
+                <index>0</index>
+              </ExpressionTree>
+            </childrenET>
+            <operation>
+              <name>subtract</name>
+            </operation>
+            <ratiosOfInterest/>
+            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+            <rootExpressionTree>false</rootExpressionTree>
+            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+            <uncertaintyDirective></uncertaintyDirective>
+            <index>0</index>
+          </ExpressionTree>
+          <VariableNodeForPerSpotTaskExpressions>
+            <name>UncorrPb/Uconst</name>
+          </VariableNodeForPerSpotTaskExpressions>
+        </childrenET>
+        <operation>
+          <name>multiply</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>7-corr206Pb/238Ucalibr.const %err</name>
+      <excelExpressionString>sqrt([%&quot;UncorrPb/Uconst&quot;]^2 +
+( sComm_64 / (1 / [&quot;204/206 (fr. 207)&quot;] - sComm_64 ) )^2 * 
+[&quot;204/206 (fr. 207) %err&quot;]^2)</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>7-corr206Pb/238Ucalibr.const %err</name>
+        <childrenET>
           <ExpressionTree>
             <name>Anonymous</name>
             <childrenET>
               <ExpressionTree>
                 <name>Anonymous</name>
                 <childrenET>
+                  <VariableNodeForPerSpotTaskExpressions>
+                    <name>UncorrPb/Uconst</name>
+                  </VariableNodeForPerSpotTaskExpressions>
+                  <ConstantNode>
+                    <name>2</name>
+                    <value>2.0</value>
+                  </ConstantNode>
+                </childrenET>
+                <operation>
+                  <name>pow</name>
+                </operation>
+                <ratiosOfInterest/>
+                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                <rootExpressionTree>false</rootExpressionTree>
+                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                <uncertaintyDirective></uncertaintyDirective>
+                <index>0</index>
+              </ExpressionTree>
+              <ExpressionTree>
+                <name>Anonymous</name>
+                <childrenET>
                   <ExpressionTree>
                     <name>Anonymous</name>
                     <childrenET>
-                      <ConstantNode>
-                        <name>1</name>
-                        <value>1.0</value>
-                      </ConstantNode>
                       <ExpressionTree>
                         <name>Anonymous</name>
                         <childrenET>
@@ -5371,12 +5144,54 @@
                             <name>sComm_64</name>
                             <value>17.821</value>
                           </ConstantNode>
-                          <VariableNodeForIsotopicRatios>
-                            <name>204/206</name>
-                          </VariableNodeForIsotopicRatios>
+                          <ExpressionTree>
+                            <name>Anonymous</name>
+                            <childrenET>
+                              <ExpressionTree>
+                                <name>Anonymous</name>
+                                <childrenET>
+                                  <ConstantNode>
+                                    <name>1</name>
+                                    <value>1.0</value>
+                                  </ConstantNode>
+                                  <VariableNodeForPerSpotTaskExpressions>
+                                    <name>204/206 (fr. 207)</name>
+                                  </VariableNodeForPerSpotTaskExpressions>
+                                </childrenET>
+                                <operation>
+                                  <name>divide</name>
+                                </operation>
+                                <ratiosOfInterest/>
+                                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                                <rootExpressionTree>false</rootExpressionTree>
+                                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                                <uncertaintyDirective></uncertaintyDirective>
+                                <index>0</index>
+                              </ExpressionTree>
+                              <ConstantNode>
+                                <name>sComm_64</name>
+                                <value>17.821</value>
+                              </ConstantNode>
+                            </childrenET>
+                            <operation>
+                              <name>subtract</name>
+                            </operation>
+                            <ratiosOfInterest/>
+                            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                            <rootExpressionTree>false</rootExpressionTree>
+                            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                            <uncertaintyDirective></uncertaintyDirective>
+                            <index>0</index>
+                          </ExpressionTree>
                         </childrenET>
                         <operation>
-                          <name>multiply</name>
+                          <name>divide</name>
                         </operation>
                         <ratiosOfInterest/>
                         <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -5388,9 +5203,13 @@
                         <uncertaintyDirective></uncertaintyDirective>
                         <index>0</index>
                       </ExpressionTree>
+                      <ConstantNode>
+                        <name>2</name>
+                        <value>2.0</value>
+                      </ConstantNode>
                     </childrenET>
                     <operation>
-                      <name>subtract</name>
+                      <name>pow</name>
                     </operation>
                     <ratiosOfInterest/>
                     <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -5405,23 +5224,140 @@
                   <ExpressionTree>
                     <name>Anonymous</name>
                     <childrenET>
+                      <VariableNodeForPerSpotTaskExpressions>
+                        <name>204/206 (fr. 207) %err</name>
+                      </VariableNodeForPerSpotTaskExpressions>
                       <ConstantNode>
-                        <name>1</name>
-                        <value>1.0</value>
+                        <name>2</name>
+                        <value>2.0</value>
                       </ConstantNode>
+                    </childrenET>
+                    <operation>
+                      <name>pow</name>
+                    </operation>
+                    <ratiosOfInterest/>
+                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                    <rootExpressionTree>false</rootExpressionTree>
+                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                    <uncertaintyDirective></uncertaintyDirective>
+                    <index>0</index>
+                  </ExpressionTree>
+                </childrenET>
+                <operation>
+                  <name>multiply</name>
+                </operation>
+                <ratiosOfInterest/>
+                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                <rootExpressionTree>false</rootExpressionTree>
+                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                <uncertaintyDirective></uncertaintyDirective>
+                <index>0</index>
+              </ExpressionTree>
+            </childrenET>
+            <operation>
+              <name>add</name>
+            </operation>
+            <ratiosOfInterest/>
+            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+            <rootExpressionTree>false</rootExpressionTree>
+            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+            <uncertaintyDirective></uncertaintyDirective>
+            <index>0</index>
+          </ExpressionTree>
+        </childrenET>
+        <operation>
+          <name>sqrt</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>7-corr206Pb/238Ucalibr.const WM</name>
+      <excelExpressionString>WtdMeanACalc( [&quot;7-corr206Pb/238Ucalibr.const&quot;], [&quot;7-corr206Pb/238Ucalibr.const %err&quot;], FALSE, FALSE )</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>7-corr206Pb/238Ucalibr.const WM</name>
+        <childrenET>
+          <VariableNodeForPerSpotTaskExpressions>
+            <name>7-corr206Pb/238Ucalibr.const</name>
+          </VariableNodeForPerSpotTaskExpressions>
+          <VariableNodeForPerSpotTaskExpressions>
+            <name>7-corr206Pb/238Ucalibr.const %err</name>
+          </VariableNodeForPerSpotTaskExpressions>
+          <ConstantNode>
+            <name>FALSE</name>
+            <value>false</value>
+          </ConstantNode>
+          <ConstantNode>
+            <name>FALSE</name>
+            <value>false</value>
+          </ConstantNode>
+        </childrenET>
+        <operation>
+          <name>WtdMeanACalc</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>7-corr206Pb/238U Age</name>
+      <excelExpressionString>LN( 1.0 + [&quot;7-corr206Pb/238Ucalibr.const&quot;] / [&quot;7-corr206Pb/238Ucalibr.const WM&quot;][0] * StdUPbRatio ) / lambda238</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>7-corr206Pb/238U Age</name>
+        <childrenET>
+          <ExpressionTree>
+            <name>Anonymous</name>
+            <childrenET>
+              <ExpressionTree>
+                <name>Anonymous</name>
+                <childrenET>
+                  <ConstantNode>
+                    <name>1.0</name>
+                    <value>1.0</value>
+                  </ConstantNode>
+                  <ExpressionTree>
+                    <name>Anonymous</name>
+                    <childrenET>
                       <ExpressionTree>
                         <name>Anonymous</name>
                         <childrenET>
-                          <ConstantNode>
-                            <name>sComm_64</name>
-                            <value>17.821</value>
-                          </ConstantNode>
                           <VariableNodeForPerSpotTaskExpressions>
-                            <name>204/206 (fr. 208)</name>
+                            <name>7-corr206Pb/238Ucalibr.const</name>
                           </VariableNodeForPerSpotTaskExpressions>
+                          <VariableNodeForSummary>
+                            <name>7-corr206Pb/238Ucalibr.const WM</name>
+                          </VariableNodeForSummary>
                         </childrenET>
                         <operation>
-                          <name>multiply</name>
+                          <name>divide</name>
                         </operation>
                         <ratiosOfInterest/>
                         <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -5433,6 +5369,157 @@
                         <uncertaintyDirective></uncertaintyDirective>
                         <index>0</index>
                       </ExpressionTree>
+                      <ConstantNode>
+                        <name>StdUPbRatio</name>
+                        <value>0.0906025999827849</value>
+                      </ConstantNode>
+                    </childrenET>
+                    <operation>
+                      <name>multiply</name>
+                    </operation>
+                    <ratiosOfInterest/>
+                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                    <rootExpressionTree>false</rootExpressionTree>
+                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                    <uncertaintyDirective></uncertaintyDirective>
+                    <index>0</index>
+                  </ExpressionTree>
+                </childrenET>
+                <operation>
+                  <name>add</name>
+                </operation>
+                <ratiosOfInterest/>
+                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                <rootExpressionTree>false</rootExpressionTree>
+                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                <uncertaintyDirective></uncertaintyDirective>
+                <index>0</index>
+              </ExpressionTree>
+            </childrenET>
+            <operation>
+              <name>ln</name>
+            </operation>
+            <ratiosOfInterest/>
+            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+            <rootExpressionTree>false</rootExpressionTree>
+            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+            <uncertaintyDirective></uncertaintyDirective>
+            <index>0</index>
+          </ExpressionTree>
+          <ConstantNode>
+            <name>lambda238</name>
+            <value>1.55125E-10</value>
+          </ConstantNode>
+        </childrenET>
+        <operation>
+          <name>divide</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>7-corr206Pb/238U Age 1sigma</name>
+      <excelExpressionString>[&quot;7-corr206Pb/238Ucalibr.const %err&quot;] / 100 * ( EXP(lambda238 * [&quot;7-corr206Pb/238U Age&quot;] ) - 1 ) / lambda238 / EXP(lambda238 * [&quot;7-corr206Pb/238U Age&quot;] )  </excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>7-corr206Pb/238U Age 1sigma</name>
+        <childrenET>
+          <ExpressionTree>
+            <name>Anonymous</name>
+            <childrenET>
+              <ExpressionTree>
+                <name>Anonymous</name>
+                <childrenET>
+                  <ExpressionTree>
+                    <name>Anonymous</name>
+                    <childrenET>
+                      <VariableNodeForPerSpotTaskExpressions>
+                        <name>7-corr206Pb/238Ucalibr.const %err</name>
+                      </VariableNodeForPerSpotTaskExpressions>
+                      <ConstantNode>
+                        <name>100</name>
+                        <value>100.0</value>
+                      </ConstantNode>
+                    </childrenET>
+                    <operation>
+                      <name>divide</name>
+                    </operation>
+                    <ratiosOfInterest/>
+                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                    <rootExpressionTree>false</rootExpressionTree>
+                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                    <uncertaintyDirective></uncertaintyDirective>
+                    <index>0</index>
+                  </ExpressionTree>
+                  <ExpressionTree>
+                    <name>Anonymous</name>
+                    <childrenET>
+                      <ExpressionTree>
+                        <name>Anonymous</name>
+                        <childrenET>
+                          <ExpressionTree>
+                            <name>Anonymous</name>
+                            <childrenET>
+                              <ConstantNode>
+                                <name>lambda238</name>
+                                <value>1.55125E-10</value>
+                              </ConstantNode>
+                              <VariableNodeForPerSpotTaskExpressions>
+                                <name>7-corr206Pb/238U Age</name>
+                              </VariableNodeForPerSpotTaskExpressions>
+                            </childrenET>
+                            <operation>
+                              <name>multiply</name>
+                            </operation>
+                            <ratiosOfInterest/>
+                            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                            <rootExpressionTree>false</rootExpressionTree>
+                            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                            <uncertaintyDirective></uncertaintyDirective>
+                            <index>0</index>
+                          </ExpressionTree>
+                        </childrenET>
+                        <operation>
+                          <name>exp</name>
+                        </operation>
+                        <ratiosOfInterest/>
+                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                        <rootExpressionTree>false</rootExpressionTree>
+                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                        <uncertaintyDirective></uncertaintyDirective>
+                        <index>0</index>
+                      </ExpressionTree>
+                      <ConstantNode>
+                        <name>1</name>
+                        <value>1.0</value>
+                      </ConstantNode>
                     </childrenET>
                     <operation>
                       <name>subtract</name>
@@ -5449,7 +5536,7 @@
                   </ExpressionTree>
                 </childrenET>
                 <operation>
-                  <name>divide</name>
+                  <name>multiply</name>
                 </operation>
                 <ratiosOfInterest/>
                 <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -5462,12 +5549,53 @@
                 <index>0</index>
               </ExpressionTree>
               <ConstantNode>
-                <name>1</name>
-                <value>1.0</value>
+                <name>lambda238</name>
+                <value>1.55125E-10</value>
               </ConstantNode>
             </childrenET>
             <operation>
-              <name>subtract</name>
+              <name>divide</name>
+            </operation>
+            <ratiosOfInterest/>
+            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+            <rootExpressionTree>false</rootExpressionTree>
+            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+            <uncertaintyDirective></uncertaintyDirective>
+            <index>0</index>
+          </ExpressionTree>
+          <ExpressionTree>
+            <name>Anonymous</name>
+            <childrenET>
+              <ExpressionTree>
+                <name>Anonymous</name>
+                <childrenET>
+                  <ConstantNode>
+                    <name>lambda238</name>
+                    <value>1.55125E-10</value>
+                  </ConstantNode>
+                  <VariableNodeForPerSpotTaskExpressions>
+                    <name>7-corr206Pb/238U Age</name>
+                  </VariableNodeForPerSpotTaskExpressions>
+                </childrenET>
+                <operation>
+                  <name>multiply</name>
+                </operation>
+                <ratiosOfInterest/>
+                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                <rootExpressionTree>false</rootExpressionTree>
+                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                <uncertaintyDirective></uncertaintyDirective>
+                <index>0</index>
+              </ExpressionTree>
+            </childrenET>
+            <operation>
+              <name>exp</name>
             </operation>
             <ratiosOfInterest/>
             <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -5481,7 +5609,7 @@
           </ExpressionTree>
         </childrenET>
         <operation>
-          <name>multiply</name>
+          <name>divide</name>
         </operation>
         <ratiosOfInterest/>
         <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -6610,6 +6738,32 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
       <notes></notes>
     </Expression>
     <Expression>
+      <name>pdMeanParentEleA</name>
+      <excelExpressionString>CalculateMeanConcStd([&quot;Ppm Parent Eqn&quot;])</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>pdMeanParentEleA</name>
+        <childrenET>
+          <VariableNodeForPerSpotTaskExpressions>
+            <name>Ppm Parent Eqn</name>
+          </VariableNodeForPerSpotTaskExpressions>
+        </childrenET>
+        <operation>
+          <name>calculateMeanConcStd</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>true</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
       <name>Hfsens</name>
       <excelExpressionString>8200/[&quot;Hf_bwt&quot;]</excelExpressionString>
       <squidSwitchNU>false</squidSwitchNU>
@@ -6640,20 +6794,68 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
       <notes></notes>
     </Expression>
     <Expression>
-      <name>MF_corr.4corr.7*/6*</name>
-      <excelExpressionString>[&quot;4corr207*/206*&quot;]*[&quot;MassFract.Factor&quot;]</excelExpressionString>
+      <name>ppmU</name>
+      <excelExpressionString>[&quot;Ppm Parent Eqn&quot;] / [&quot;pdMeanParentEleA&quot;] * Std_ppmU</excelExpressionString>
       <squidSwitchNU>false</squidSwitchNU>
       <expressionTree>
-        <name>MF_corr.4corr.7*/6*</name>
+        <name>ppmU</name>
         <childrenET>
+          <ExpressionTree>
+            <name>Anonymous</name>
+            <childrenET>
+              <VariableNodeForPerSpotTaskExpressions>
+                <name>Ppm Parent Eqn</name>
+              </VariableNodeForPerSpotTaskExpressions>
+              <VariableNodeForSummary>
+                <name>pdMeanParentEleA</name>
+              </VariableNodeForSummary>
+            </childrenET>
+            <operation>
+              <name>divide</name>
+            </operation>
+            <ratiosOfInterest/>
+            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+            <rootExpressionTree>false</rootExpressionTree>
+            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+            <uncertaintyDirective></uncertaintyDirective>
+            <index>0</index>
+          </ExpressionTree>
           <ConstantNode>
-            <name>Missing Expression</name>
-            <value>[&quot;4corr207*/206*&quot;]</value>
+            <name>Std_ppmU</name>
+            <value>903.0</value>
           </ConstantNode>
-          <ConstantNode>
-            <name>Missing Expression</name>
-            <value>[&quot;MassFract.Factor&quot;]</value>
-          </ConstantNode>
+        </childrenET>
+        <operation>
+          <name>multiply</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>Ybppm</name>
+      <excelExpressionString>[&quot;190/195.8&quot;]*Ybsen</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>Ybppm</name>
+        <childrenET>
+          <VariableNodeForIsotopicRatios>
+            <name>190/195.8</name>
+          </VariableNodeForIsotopicRatios>
+          <VariableNodeForSummary>
+            <name>Ybsen</name>
+          </VariableNodeForSummary>
         </childrenET>
         <operation>
           <name>multiply</name>
@@ -6671,18 +6873,170 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
       <notes></notes>
     </Expression>
     <Expression>
-      <name>MF_corr.4corr.7*/6*Age</name>
-      <excelExpressionString>AgePb76([&quot;MF_corr.4corr.7*/6*&quot;])</excelExpressionString>
+      <name>Yb1sabserr</name>
+      <excelExpressionString>sqrt((Ybsens1sigabserror/Ybsen)^2+([%&quot;190/195.8&quot;]/100)^2)*[&quot;Ybppm&quot;]</excelExpressionString>
       <squidSwitchNU>false</squidSwitchNU>
       <expressionTree>
-        <name>MF_corr.4corr.7*/6*Age</name>
+        <name>Yb1sabserr</name>
         <childrenET>
+          <ExpressionTree>
+            <name>Anonymous</name>
+            <childrenET>
+              <ExpressionTree>
+                <name>Anonymous</name>
+                <childrenET>
+                  <ExpressionTree>
+                    <name>Anonymous</name>
+                    <childrenET>
+                      <ExpressionTree>
+                        <name>Anonymous</name>
+                        <childrenET>
+                          <VariableNodeForSummary>
+                            <name>Ybsens1sigabserror</name>
+                          </VariableNodeForSummary>
+                          <VariableNodeForSummary>
+                            <name>Ybsen</name>
+                          </VariableNodeForSummary>
+                        </childrenET>
+                        <operation>
+                          <name>divide</name>
+                        </operation>
+                        <ratiosOfInterest/>
+                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                        <rootExpressionTree>false</rootExpressionTree>
+                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                        <uncertaintyDirective></uncertaintyDirective>
+                        <index>0</index>
+                      </ExpressionTree>
+                      <ConstantNode>
+                        <name>2</name>
+                        <value>2.0</value>
+                      </ConstantNode>
+                    </childrenET>
+                    <operation>
+                      <name>pow</name>
+                    </operation>
+                    <ratiosOfInterest/>
+                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                    <rootExpressionTree>false</rootExpressionTree>
+                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                    <uncertaintyDirective></uncertaintyDirective>
+                    <index>0</index>
+                  </ExpressionTree>
+                  <ExpressionTree>
+                    <name>Anonymous</name>
+                    <childrenET>
+                      <ExpressionTree>
+                        <name>Anonymous</name>
+                        <childrenET>
+                          <VariableNodeForIsotopicRatios>
+                            <name>190/195.8</name>
+                          </VariableNodeForIsotopicRatios>
+                          <ConstantNode>
+                            <name>100</name>
+                            <value>100.0</value>
+                          </ConstantNode>
+                        </childrenET>
+                        <operation>
+                          <name>divide</name>
+                        </operation>
+                        <ratiosOfInterest/>
+                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                        <rootExpressionTree>false</rootExpressionTree>
+                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                        <uncertaintyDirective></uncertaintyDirective>
+                        <index>0</index>
+                      </ExpressionTree>
+                      <ConstantNode>
+                        <name>2</name>
+                        <value>2.0</value>
+                      </ConstantNode>
+                    </childrenET>
+                    <operation>
+                      <name>pow</name>
+                    </operation>
+                    <ratiosOfInterest/>
+                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                    <rootExpressionTree>false</rootExpressionTree>
+                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                    <uncertaintyDirective></uncertaintyDirective>
+                    <index>0</index>
+                  </ExpressionTree>
+                </childrenET>
+                <operation>
+                  <name>add</name>
+                </operation>
+                <ratiosOfInterest/>
+                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                <rootExpressionTree>false</rootExpressionTree>
+                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                <uncertaintyDirective></uncertaintyDirective>
+                <index>0</index>
+              </ExpressionTree>
+            </childrenET>
+            <operation>
+              <name>sqrt</name>
+            </operation>
+            <ratiosOfInterest/>
+            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+            <rootExpressionTree>false</rootExpressionTree>
+            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+            <uncertaintyDirective></uncertaintyDirective>
+            <index>0</index>
+          </ExpressionTree>
           <VariableNodeForPerSpotTaskExpressions>
-            <name>MF_corr.4corr.7*/6*</name>
+            <name>Ybppm</name>
           </VariableNodeForPerSpotTaskExpressions>
         </childrenET>
         <operation>
-          <name>agePb76</name>
+          <name>multiply</name>
+        </operation>
+        <ratiosOfInterest/>
+        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+        <rootExpressionTree>true</rootExpressionTree>
+        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+        <uncertaintyDirective></uncertaintyDirective>
+        <index>0</index>
+      </expressionTree>
+      <notes></notes>
+    </Expression>
+    <Expression>
+      <name>Hfppm</name>
+      <excelExpressionString>Hfsens*[&quot;195.9/195.8&quot;]</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <expressionTree>
+        <name>Hfppm</name>
+        <childrenET>
+          <VariableNodeForSummary>
+            <name>Hfsens</name>
+          </VariableNodeForSummary>
+          <VariableNodeForIsotopicRatios>
+            <name>195.9/195.8</name>
+          </VariableNodeForIsotopicRatios>
+        </childrenET>
+        <operation>
+          <name>multiply</name>
         </operation>
         <ratiosOfInterest/>
         <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -6746,72 +7100,15 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
       <notes></notes>
     </Expression>
     <Expression>
-      <name>MF_corr.4corr.207*/235%err.</name>
-      <excelExpressionString>[%&quot;4corr207*/235&quot;]</excelExpressionString>
+      <name>Hf1sabserr</name>
+      <excelExpressionString>sqrt((Hfsens1sigabs/Hfsens)^2+([%&quot;195.9/195.8&quot;]/100)^2)*[&quot;Hfppm&quot;]</excelExpressionString>
       <squidSwitchNU>false</squidSwitchNU>
       <expressionTree>
-        <name>Missing Expression</name>
-        <value>[%&quot;4corr207*/235&quot;]</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>MF_corr.4corr.206*/238</name>
-      <excelExpressionString>[&quot;4corr206*/238&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Missing Expression</name>
-        <value>[&quot;4corr206*/238&quot;]</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>MF_corr.4corr.206*/238%err.</name>
-      <excelExpressionString>[%&quot;4corr206*/238&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Missing Expression</name>
-        <value>[%&quot;4corr206*/238&quot;]</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>ERRORCoefficient</name>
-      <excelExpressionString>[&quot;ErrCorr&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Missing Expression</name>
-        <value>[&quot;ErrCorr&quot;]</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>MF_corr.4corr.7*/6*%err.</name>
-      <excelExpressionString>[%&quot;4corr207*/206*&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Missing Expression</name>
-        <value>[%&quot;4corr207*/206*&quot;]</value>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>MF_corr.%Disc.</name>
-      <excelExpressionString>(1-[&quot;MF_corr.4corr.206*/238&quot;]/(EXP(0.000155125*[&quot;MF_corr.4corr.7*/6*Age&quot;])-1))</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>MF_corr.%Disc.</name>
+        <name>Hf1sabserr</name>
         <childrenET>
-          <ConstantNode>
-            <name>1</name>
-            <value>1.0</value>
-          </ConstantNode>
           <ExpressionTree>
             <name>Anonymous</name>
             <childrenET>
-              <VariableNodeForPerSpotTaskExpressions>
-                <name>Missing Expression</name>
-              </VariableNodeForPerSpotTaskExpressions>
               <ExpressionTree>
                 <name>Anonymous</name>
                 <childrenET>
@@ -6821,16 +7118,15 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
                       <ExpressionTree>
                         <name>Anonymous</name>
                         <childrenET>
-                          <ConstantNode>
-                            <name>0.000155125</name>
-                            <value>1.55125E-4</value>
-                          </ConstantNode>
-                          <VariableNodeForPerSpotTaskExpressions>
-                            <name>MF_corr.4corr.7*/6*Age</name>
-                          </VariableNodeForPerSpotTaskExpressions>
+                          <VariableNodeForSummary>
+                            <name>Hfsens1sigabs</name>
+                          </VariableNodeForSummary>
+                          <VariableNodeForSummary>
+                            <name>Hfsens</name>
+                          </VariableNodeForSummary>
                         </childrenET>
                         <operation>
-                          <name>multiply</name>
+                          <name>divide</name>
                         </operation>
                         <ratiosOfInterest/>
                         <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -6842,9 +7138,13 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
                         <uncertaintyDirective></uncertaintyDirective>
                         <index>0</index>
                       </ExpressionTree>
+                      <ConstantNode>
+                        <name>2</name>
+                        <value>2.0</value>
+                      </ConstantNode>
                     </childrenET>
                     <operation>
-                      <name>exp</name>
+                      <name>pow</name>
                     </operation>
                     <ratiosOfInterest/>
                     <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -6856,13 +7156,54 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
                     <uncertaintyDirective></uncertaintyDirective>
                     <index>0</index>
                   </ExpressionTree>
-                  <ConstantNode>
-                    <name>1</name>
-                    <value>1.0</value>
-                  </ConstantNode>
+                  <ExpressionTree>
+                    <name>Anonymous</name>
+                    <childrenET>
+                      <ExpressionTree>
+                        <name>Anonymous</name>
+                        <childrenET>
+                          <VariableNodeForIsotopicRatios>
+                            <name>195.9/195.8</name>
+                          </VariableNodeForIsotopicRatios>
+                          <ConstantNode>
+                            <name>100</name>
+                            <value>100.0</value>
+                          </ConstantNode>
+                        </childrenET>
+                        <operation>
+                          <name>divide</name>
+                        </operation>
+                        <ratiosOfInterest/>
+                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                        <rootExpressionTree>false</rootExpressionTree>
+                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                        <uncertaintyDirective></uncertaintyDirective>
+                        <index>0</index>
+                      </ExpressionTree>
+                      <ConstantNode>
+                        <name>2</name>
+                        <value>2.0</value>
+                      </ConstantNode>
+                    </childrenET>
+                    <operation>
+                      <name>pow</name>
+                    </operation>
+                    <ratiosOfInterest/>
+                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+                    <rootExpressionTree>false</rootExpressionTree>
+                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+                    <uncertaintyDirective></uncertaintyDirective>
+                    <index>0</index>
+                  </ExpressionTree>
                 </childrenET>
                 <operation>
-                  <name>subtract</name>
+                  <name>add</name>
                 </operation>
                 <ratiosOfInterest/>
                 <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -6876,7 +7217,7 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
               </ExpressionTree>
             </childrenET>
             <operation>
-              <name>divide</name>
+              <name>sqrt</name>
             </operation>
             <ratiosOfInterest/>
             <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
@@ -6888,91 +7229,18 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
             <uncertaintyDirective></uncertaintyDirective>
             <index>0</index>
           </ExpressionTree>
-        </childrenET>
-        <operation>
-          <name>subtract</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>pdMeanParentEleA</name>
-      <excelExpressionString>CalculateMeanConcStd([&quot;Ppm Parent Eqn&quot;])</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>pdMeanParentEleA</name>
-        <childrenET>
           <VariableNodeForPerSpotTaskExpressions>
-            <name>Ppm Parent Eqn</name>
+            <name>Hfppm</name>
           </VariableNodeForPerSpotTaskExpressions>
-        </childrenET>
-        <operation>
-          <name>calculateMeanConcStd</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>true</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>ppmU</name>
-      <excelExpressionString>[&quot;Ppm Parent Eqn&quot;] / [&quot;pdMeanParentEleA&quot;] * Std_ppmU</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>ppmU</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <VariableNodeForPerSpotTaskExpressions>
-                <name>Ppm Parent Eqn</name>
-              </VariableNodeForPerSpotTaskExpressions>
-              <VariableNodeForSummary>
-                <name>pdMeanParentEleA</name>
-              </VariableNodeForSummary>
-            </childrenET>
-            <operation>
-              <name>divide</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-          <ConstantNode>
-            <name>Std_ppmU</name>
-            <value>903.0</value>
-          </ConstantNode>
         </childrenET>
         <operation>
           <name>multiply</name>
         </operation>
         <ratiosOfInterest/>
         <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
         <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
+        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
         <rootExpressionTree>true</rootExpressionTree>
         <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
         <uncertaintyDirective></uncertaintyDirective>
@@ -7107,649 +7375,6 @@ sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [&quot;232Th/238U&quot;] ))* S
         <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
         <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
         <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>Ybppm</name>
-      <excelExpressionString>[&quot;190/195.8&quot;]*Ybsen</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Ybppm</name>
-        <childrenET>
-          <VariableNodeForIsotopicRatios>
-            <name>190/195.8</name>
-          </VariableNodeForIsotopicRatios>
-          <ExpressionTree>
-            <name>Ybsen</name>
-            <childrenET>
-              <ConstantNode>
-                <name>69.85</name>
-                <value>69.85</value>
-              </ConstantNode>
-              <VariableNodeForSummary>
-                <name>Yb_bwt</name>
-              </VariableNodeForSummary>
-            </childrenET>
-            <operation>
-              <name>divide</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>true</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-        </childrenET>
-        <operation>
-          <name>multiply</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>Yb1sabserr</name>
-      <excelExpressionString>sqrt((Ybsens1sigabserror/Ybsen)^2+([%&quot;190/195.8&quot;]/100)^2)*[&quot;Ybppm&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Yb1sabserr</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <ExpressionTree>
-                <name>Anonymous</name>
-                <childrenET>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <ExpressionTree>
-                        <name>Anonymous</name>
-                        <childrenET>
-                          <ExpressionTree>
-                            <name>Ybsens1sigabserror</name>
-                            <childrenET>
-                              <ExpressionTree>
-                                <name>Anonymous</name>
-                                <childrenET>
-                                  <VariableNodeForSummary>
-                                    <name>Yb_bwt</name>
-                                  </VariableNodeForSummary>
-                                  <VariableNodeForSummary>
-                                    <name>Yb_bwt</name>
-                                  </VariableNodeForSummary>
-                                </childrenET>
-                                <operation>
-                                  <name>divide</name>
-                                </operation>
-                                <ratiosOfInterest/>
-                                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                                <rootExpressionTree>false</rootExpressionTree>
-                                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                                <uncertaintyDirective></uncertaintyDirective>
-                                <index>0</index>
-                              </ExpressionTree>
-                              <VariableNodeForSummary>
-                                <name>Ybsen</name>
-                              </VariableNodeForSummary>
-                            </childrenET>
-                            <operation>
-                              <name>multiply</name>
-                            </operation>
-                            <ratiosOfInterest/>
-                            <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-                            <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-                            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                            <rootExpressionTree>true</rootExpressionTree>
-                            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                            <uncertaintyDirective></uncertaintyDirective>
-                            <index>0</index>
-                          </ExpressionTree>
-                          <ExpressionTree>
-                            <name>Ybsen</name>
-                            <childrenET>
-                              <ConstantNode>
-                                <name>69.85</name>
-                                <value>69.85</value>
-                              </ConstantNode>
-                              <VariableNodeForSummary>
-                                <name>Yb_bwt</name>
-                              </VariableNodeForSummary>
-                            </childrenET>
-                            <operation>
-                              <name>divide</name>
-                            </operation>
-                            <ratiosOfInterest/>
-                            <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-                            <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-                            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                            <rootExpressionTree>true</rootExpressionTree>
-                            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                            <uncertaintyDirective></uncertaintyDirective>
-                            <index>0</index>
-                          </ExpressionTree>
-                        </childrenET>
-                        <operation>
-                          <name>divide</name>
-                        </operation>
-                        <ratiosOfInterest/>
-                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                        <rootExpressionTree>false</rootExpressionTree>
-                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                        <uncertaintyDirective></uncertaintyDirective>
-                        <index>0</index>
-                      </ExpressionTree>
-                      <ConstantNode>
-                        <name>2</name>
-                        <value>2.0</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>pow</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <ExpressionTree>
-                        <name>Anonymous</name>
-                        <childrenET>
-                          <VariableNodeForIsotopicRatios>
-                            <name>190/195.8</name>
-                          </VariableNodeForIsotopicRatios>
-                          <ConstantNode>
-                            <name>100</name>
-                            <value>100.0</value>
-                          </ConstantNode>
-                        </childrenET>
-                        <operation>
-                          <name>divide</name>
-                        </operation>
-                        <ratiosOfInterest/>
-                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                        <rootExpressionTree>false</rootExpressionTree>
-                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                        <uncertaintyDirective></uncertaintyDirective>
-                        <index>0</index>
-                      </ExpressionTree>
-                      <ConstantNode>
-                        <name>2</name>
-                        <value>2.0</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>pow</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                </childrenET>
-                <operation>
-                  <name>add</name>
-                </operation>
-                <ratiosOfInterest/>
-                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                <rootExpressionTree>false</rootExpressionTree>
-                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                <uncertaintyDirective></uncertaintyDirective>
-                <index>0</index>
-              </ExpressionTree>
-            </childrenET>
-            <operation>
-              <name>sqrt</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-          <VariableNodeForPerSpotTaskExpressions>
-            <name>Ybppm</name>
-          </VariableNodeForPerSpotTaskExpressions>
-        </childrenET>
-        <operation>
-          <name>multiply</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>Hfppm</name>
-      <excelExpressionString>Hfsens*[&quot;195.9/195.8&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Hfppm</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Hfsens</name>
-            <childrenET>
-              <ConstantNode>
-                <name>8200</name>
-                <value>8200.0</value>
-              </ConstantNode>
-              <VariableNodeForSummary>
-                <name>Hf_bwt</name>
-              </VariableNodeForSummary>
-            </childrenET>
-            <operation>
-              <name>divide</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>true</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-          <VariableNodeForIsotopicRatios>
-            <name>195.9/195.8</name>
-          </VariableNodeForIsotopicRatios>
-        </childrenET>
-        <operation>
-          <name>multiply</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>Hf1sabserr</name>
-      <excelExpressionString>sqrt((Hfsens1sigabs/Hfsens)^2+([%&quot;195.9/195.8&quot;]/100)^2)*[&quot;Hfppm&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>Hf1sabserr</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <ExpressionTree>
-                <name>Anonymous</name>
-                <childrenET>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <ExpressionTree>
-                        <name>Anonymous</name>
-                        <childrenET>
-                          <ExpressionTree>
-                            <name>Hfsens1sigabs</name>
-                            <childrenET>
-                              <ExpressionTree>
-                                <name>Anonymous</name>
-                                <childrenET>
-                                  <VariableNodeForSummary>
-                                    <name>Hf_bwt</name>
-                                  </VariableNodeForSummary>
-                                  <VariableNodeForSummary>
-                                    <name>Hf_bwt</name>
-                                  </VariableNodeForSummary>
-                                </childrenET>
-                                <operation>
-                                  <name>divide</name>
-                                </operation>
-                                <ratiosOfInterest/>
-                                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                                <rootExpressionTree>false</rootExpressionTree>
-                                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                                <uncertaintyDirective></uncertaintyDirective>
-                                <index>0</index>
-                              </ExpressionTree>
-                              <VariableNodeForSummary>
-                                <name>Hfsens</name>
-                              </VariableNodeForSummary>
-                            </childrenET>
-                            <operation>
-                              <name>multiply</name>
-                            </operation>
-                            <ratiosOfInterest/>
-                            <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-                            <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-                            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                            <rootExpressionTree>true</rootExpressionTree>
-                            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                            <uncertaintyDirective></uncertaintyDirective>
-                            <index>0</index>
-                          </ExpressionTree>
-                          <ExpressionTree>
-                            <name>Hfsens</name>
-                            <childrenET>
-                              <ConstantNode>
-                                <name>8200</name>
-                                <value>8200.0</value>
-                              </ConstantNode>
-                              <VariableNodeForSummary>
-                                <name>Hf_bwt</name>
-                              </VariableNodeForSummary>
-                            </childrenET>
-                            <operation>
-                              <name>divide</name>
-                            </operation>
-                            <ratiosOfInterest/>
-                            <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-                            <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-                            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                            <rootExpressionTree>true</rootExpressionTree>
-                            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                            <uncertaintyDirective></uncertaintyDirective>
-                            <index>0</index>
-                          </ExpressionTree>
-                        </childrenET>
-                        <operation>
-                          <name>divide</name>
-                        </operation>
-                        <ratiosOfInterest/>
-                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                        <rootExpressionTree>false</rootExpressionTree>
-                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                        <uncertaintyDirective></uncertaintyDirective>
-                        <index>0</index>
-                      </ExpressionTree>
-                      <ConstantNode>
-                        <name>2</name>
-                        <value>2.0</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>pow</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                  <ExpressionTree>
-                    <name>Anonymous</name>
-                    <childrenET>
-                      <ExpressionTree>
-                        <name>Anonymous</name>
-                        <childrenET>
-                          <VariableNodeForIsotopicRatios>
-                            <name>195.9/195.8</name>
-                          </VariableNodeForIsotopicRatios>
-                          <ConstantNode>
-                            <name>100</name>
-                            <value>100.0</value>
-                          </ConstantNode>
-                        </childrenET>
-                        <operation>
-                          <name>divide</name>
-                        </operation>
-                        <ratiosOfInterest/>
-                        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                        <rootExpressionTree>false</rootExpressionTree>
-                        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                        <uncertaintyDirective></uncertaintyDirective>
-                        <index>0</index>
-                      </ExpressionTree>
-                      <ConstantNode>
-                        <name>2</name>
-                        <value>2.0</value>
-                      </ConstantNode>
-                    </childrenET>
-                    <operation>
-                      <name>pow</name>
-                    </operation>
-                    <ratiosOfInterest/>
-                    <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                    <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                    <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                    <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                    <rootExpressionTree>false</rootExpressionTree>
-                    <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                    <uncertaintyDirective></uncertaintyDirective>
-                    <index>0</index>
-                  </ExpressionTree>
-                </childrenET>
-                <operation>
-                  <name>add</name>
-                </operation>
-                <ratiosOfInterest/>
-                <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-                <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-                <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-                <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-                <rootExpressionTree>false</rootExpressionTree>
-                <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-                <uncertaintyDirective></uncertaintyDirective>
-                <index>0</index>
-              </ExpressionTree>
-            </childrenET>
-            <operation>
-              <name>sqrt</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-          <VariableNodeForPerSpotTaskExpressions>
-            <name>Hfppm</name>
-          </VariableNodeForPerSpotTaskExpressions>
-        </childrenET>
-        <operation>
-          <name>multiply</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>62667*/6*biwt</name>
-      <excelExpressionString>sqBiweight([&quot;4-corr207Pb/206Pb&quot;],9)</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>62667*/6*biwt</name>
-        <childrenET>
-          <ConstantNode>
-            <name>Missing Expression</name>
-            <value>[&quot;4-corr207Pb/206Pb&quot;]</value>
-          </ConstantNode>
-          <ConstantNode>
-            <name>9</name>
-            <value>9.0</value>
-          </ConstantNode>
-        </childrenET>
-        <operation>
-          <name>sqBiweight</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>7-corr208Pb*/206Pb*S %err</name>
-      <excelExpressionString>Pb86radCor7per([&quot;208/206&quot;], [&quot;207/206&quot;], [&quot;7-corrTotal 206Pb/238U&quot;], 
-[&quot;7-corrTotal 206Pb/238U %err&quot;],[&quot;207corr206Pb/238UAge&quot;])</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>7-corr208Pb*/206Pb*S %err</name>
-        <childrenET>
-          <VariableNodeForIsotopicRatios>
-            <name>208/206</name>
-          </VariableNodeForIsotopicRatios>
-          <VariableNodeForIsotopicRatios>
-            <name>207/206</name>
-          </VariableNodeForIsotopicRatios>
-          <ConstantNode>
-            <name>Missing Expression</name>
-            <value>[&quot;7-corrTotal 206Pb/238U&quot;]</value>
-          </ConstantNode>
-          <ConstantNode>
-            <name>Missing Expression</name>
-            <value>[&quot;7-corrTotal 206Pb/238U %err&quot;]</value>
-          </ConstantNode>
-          <VariableNodeForPerSpotTaskExpressions>
-            <name>207corr206Pb/238UAge</name>
-          </VariableNodeForPerSpotTaskExpressions>
-        </childrenET>
-        <operation>
-          <name>pb86radCor7per</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>true</squidSpecialUPbThExpression>
-        <rootExpressionTree>true</rootExpressionTree>
-        <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-        <uncertaintyDirective></uncertaintyDirective>
-        <index>0</index>
-      </expressionTree>
-      <notes></notes>
-    </Expression>
-    <Expression>
-      <name>MF_corr.4corr.207*/235</name>
-      <excelExpressionString>[&quot;4corr206*/238&quot;]*NatUrat*[&quot;MF_corr.4corr.7*/6*&quot;]</excelExpressionString>
-      <squidSwitchNU>false</squidSwitchNU>
-      <expressionTree>
-        <name>MF_corr.4corr.207*/235</name>
-        <childrenET>
-          <ExpressionTree>
-            <name>Anonymous</name>
-            <childrenET>
-              <ConstantNode>
-                <name>Missing Expression</name>
-                <value>[&quot;4corr206*/238&quot;]</value>
-              </ConstantNode>
-              <ConstantNode>
-                <name>NatUrat</name>
-                <value>137.88001</value>
-              </ConstantNode>
-            </childrenET>
-            <operation>
-              <name>multiply</name>
-            </operation>
-            <ratiosOfInterest/>
-            <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-            <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-            <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
-            <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
-            <rootExpressionTree>false</rootExpressionTree>
-            <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
-            <uncertaintyDirective></uncertaintyDirective>
-            <index>0</index>
-          </ExpressionTree>
-          <VariableNodeForPerSpotTaskExpressions>
-            <name>MF_corr.4corr.7*/6*</name>
-          </VariableNodeForPerSpotTaskExpressions>
-        </childrenET>
-        <operation>
-          <name>multiply</name>
-        </operation>
-        <ratiosOfInterest/>
-        <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
-        <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
-        <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
-        <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
         <rootExpressionTree>true</rootExpressionTree>
         <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
         <uncertaintyDirective></uncertaintyDirective>

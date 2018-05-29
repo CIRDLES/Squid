@@ -80,13 +80,13 @@ public class ConstantNodeXMLConverter implements Converter {
     @Override
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
-        
+
         ExpressionTreeInterface constantNode = (ConstantNode) value;
-        
+
         writer.startNode("name");
         writer.setValue(constantNode.getName());
         writer.endNode();
-        
+
         writer.startNode("value");
         Object myValue = ((ConstantNode) constantNode).getValue();
         if (myValue instanceof Double) {
@@ -99,7 +99,7 @@ public class ConstantNodeXMLConverter implements Converter {
             writer.setValue(Boolean.toString((Boolean) ((ConstantNode) constantNode).getValue()));
         }
         writer.endNode();
-        
+
     }
 
     /**
@@ -118,13 +118,13 @@ public class ConstantNodeXMLConverter implements Converter {
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
-        
+
         ExpressionTreeInterface constantNode = new ConstantNode();
-        
+
         reader.moveDown();
         ((ConstantNode) constantNode).setName(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         String constant = reader.getValue();
         if (constant.contains("e")) { // boolean
@@ -139,12 +139,11 @@ public class ConstantNodeXMLConverter implements Converter {
                 // String
                 ((ConstantNode) constantNode).setValue(reader.getValue());
             }
-        
         }
-        
+
         reader.moveUp();
-        
+
         return constantNode;
     }
-    
+
 }

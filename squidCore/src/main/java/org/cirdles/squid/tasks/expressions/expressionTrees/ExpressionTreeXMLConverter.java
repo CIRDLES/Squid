@@ -91,64 +91,55 @@ public class ExpressionTreeXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        ExpressionTree expressionTree = (ExpressionTree) value;
+        ExpressionTreeInterface expressionTree = (ExpressionTree) value;
 
-//        System.out.print(" start tree " + expressionTree.getName());
         writer.startNode("name");
         writer.setValue(expressionTree.getName());
         writer.endNode();
 
         writer.startNode("childrenET");
-        context.convertAnother(expressionTree.getChildrenET());
+        context.convertAnother(((ExpressionTree) expressionTree).getChildrenET());
         writer.endNode();
 
         writer.startNode("operation");
-//        if (expressionTree.getOperation() != null) {
-        context.convertAnother(expressionTree.getOperation());
-//        } else {
-//            writer.startNode("name");
-//            writer.setValue("no-op");
-//            writer.endNode();
-//        }
+        context.convertAnother(((ExpressionTree) expressionTree).getOperation());
         writer.endNode();
 
         writer.startNode("ratiosOfInterest");
-        context.convertAnother(expressionTree.getRatiosOfInterest());
+        context.convertAnother(((ExpressionTree) expressionTree).getRatiosOfInterest());
         writer.endNode();
 
         writer.startNode("squidSwitchSCSummaryCalculation");
-        writer.setValue(Boolean.toString(expressionTree.isSquidSwitchSCSummaryCalculation()));
+        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSCSummaryCalculation()));
         writer.endNode();
 
         writer.startNode("squidSwitchSTReferenceMaterialCalculation");
-        writer.setValue(Boolean.toString(expressionTree.isSquidSwitchSTReferenceMaterialCalculation()));
+        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSTReferenceMaterialCalculation()));
         writer.endNode();
 
         writer.startNode("squidSwitchSAUnknownCalculation");
-        writer.setValue(Boolean.toString(expressionTree.isSquidSwitchSAUnknownCalculation()));
+        writer.setValue(String.valueOf(expressionTree.isSquidSwitchSAUnknownCalculation()));
         writer.endNode();
 
         writer.startNode("squidSpecialUPbThExpression");
-        writer.setValue(Boolean.toString(expressionTree.isSquidSpecialUPbThExpression()));
+        writer.setValue(String.valueOf(expressionTree.isSquidSpecialUPbThExpression()));
         writer.endNode();
 
         writer.startNode("rootExpressionTree");
-        writer.setValue(Boolean.toString(expressionTree.isRootExpressionTree()));
+        writer.setValue(String.valueOf(expressionTree.isRootExpressionTree()));
         writer.endNode();
 
         writer.startNode("squidSwitchConcentrationReferenceMaterialCalculation");
-        writer.setValue(Boolean.toString(expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()));
+        writer.setValue(String.valueOf(expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()));
         writer.endNode();
 
         writer.startNode("uncertaintyDirective");
-        writer.setValue(expressionTree.getUncertaintyDirective());
+        writer.setValue(((ExpressionTree) expressionTree).getUncertaintyDirective());
         writer.endNode();
 
         writer.startNode("index");
-        writer.setValue(Integer.toString(expressionTree.getIndex()));
+        writer.setValue(Integer.toString(((ExpressionTree) expressionTree).getIndex()));
         writer.endNode();
-
-//        System.out.print(" tree end ");
     }
 
     /**
@@ -167,7 +158,8 @@ public class ExpressionTreeXMLConverter implements Converter {
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
             UnmarshallingContext context) {
-        ExpressionTree expressionTree = new ExpressionTree();
+
+        ExpressionTreeInterface expressionTree = new ExpressionTree();
 
         reader.moveDown();
         expressionTree.setName(reader.getValue());
@@ -213,7 +205,7 @@ public class ExpressionTreeXMLConverter implements Converter {
             childrenET.add(childExpressionTree);
             reader.moveUp();
         }
-        expressionTree.setChildrenET(childrenET);
+        ((ExpressionTree) expressionTree).setChildrenET(childrenET);
         reader.moveUp();
 
         // operation
@@ -221,12 +213,13 @@ public class ExpressionTreeXMLConverter implements Converter {
         reader.moveDown();
         OperationOrFunctionInterface operation = Operation.operationFactory(reader.getValue());
         if (operation == null) {
+            // try function list
             operation = Function.operationFactory(reader.getValue());
         }
-        if (operation == null) {
-            System.out.println("NULL OP  " + expressionTree.getName() + "    " + reader.getValue());
+        if (operation ==null){
+            System.out.println("NULL OP  "+ expressionTree.getName() + "    " + reader.getValue());
         }
-        expressionTree.setOperation(operation);
+        ((ExpressionTree) expressionTree).setOperation(operation);
         reader.moveUp();
         reader.moveUp();
 
@@ -238,7 +231,7 @@ public class ExpressionTreeXMLConverter implements Converter {
             ratiosOfInterest.add(reader.getValue());
             reader.moveUp();
         }
-        expressionTree.setRatiosOfInterest(ratiosOfInterest);
+        ((ExpressionTree) expressionTree).setRatiosOfInterest(ratiosOfInterest);
         reader.moveUp();
 
         reader.moveDown();

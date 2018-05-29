@@ -30,10 +30,10 @@ public interface ShrimpFractionExpressionInterface {
      * @return the referenceMaterial
      */
     public boolean isReferenceMaterial();
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isConcentrationReferenceMaterial();
 
@@ -98,11 +98,13 @@ public interface ShrimpFractionExpressionInterface {
      * @return the taskExpressionsEvaluationsPerSpot
      */
     public Map<ExpressionTreeInterface, double[][]> getTaskExpressionsEvaluationsPerSpot();
-    
-       /**
-     * Used by Reflection in org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions
+
+    /**
+     * Used by Reflection in
+     * org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions
+     *
      * @param fieldName
-     * @return 
+     * @return
      */
     public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName);
 
