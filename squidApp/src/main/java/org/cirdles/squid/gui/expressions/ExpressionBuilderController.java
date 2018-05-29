@@ -1564,7 +1564,7 @@ public class ExpressionBuilderController implements Initializable {
             } else if (unkTab.isSelected() && !unknownsSwitchCheckBox.isSelected()) {
                 selectionModel.select(refMatTab);
             }
-            
+
             rmPeekTextArea.setText(createPeekRM(exp));
             unPeekTextArea.setText(createPeekUN(exp));
         }
@@ -1708,7 +1708,7 @@ public class ExpressionBuilderController implements Initializable {
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {
         ContextMenu contextMenu = new ContextMenu();
 
-        MenuItem menuItem = new MenuItem("Remove expression");
+        MenuItem menuItem = new MenuItem("Remove from expression");
         menuItem.setOnAction((evt) -> {
             expressionTextFlow.getChildren().remove(etn);
             updateExpressionTextFlowChildren();
@@ -1772,7 +1772,7 @@ public class ExpressionBuilderController implements Initializable {
         String peek = "";
         if (ex.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
             if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                peek += "Reference material :\n" + createPeekRM(ex)+"\n";
+                peek += "Reference material :\n" + createPeekRM(ex) + "\n";
             }
             if (ex.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                 peek += "Unknowns :\n" + createPeekUN(ex);
@@ -1789,7 +1789,7 @@ public class ExpressionBuilderController implements Initializable {
                         }
                     }
                 }
-                peek += "Reference material :\n" + peekString+"\n";
+                peek += "Reference material :\n" + peekString + "\n";
             }
             if (ex.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                 String peekString = createPeekUN(ex);
@@ -2370,43 +2370,41 @@ public class ExpressionBuilderController implements Initializable {
             cell.setOnMouseClicked((event) -> {
                 if (event.getButton().equals(MouseButton.SECONDARY)) {
                     cm.getItems().clear();
-                    //Menu for custom expression only
-                    if (cell.getItem().isCustom()) {
-                        MenuItem remove = new MenuItem("Remove expression");
-                        remove.setOnAction((t) -> {
-                            TaskInterface task = squidProject.getTask();
-                            removedExpressions.add(cell.getItem());
-                            task.removeExpression(cell.getItem());
-                            selectedExpression.set(null);
-                            populateExpressionListViews();
-                        });
-                        cm.getItems().add(remove);
 
-                        MenuItem restore = new MenuItem("Restore removed expressions");
-                        restore.setOnAction((t) -> {
-                            for (Expression removedExp : removedExpressions) {
-                                boolean nameExist;
-                                do {
-                                    nameExist = false;
-                                    for (Expression e : namedExpressions) {
-                                        if (e.getName().equalsIgnoreCase(removedExp.getName())) {
-                                            removedExp.setName(removedExp.getName() + " [restored]");
-                                            nameExist = true;
-                                        }
+                    MenuItem remove = new MenuItem("Remove expression");
+                    remove.setOnAction((t) -> {
+                        TaskInterface task = squidProject.getTask();
+                        removedExpressions.add(cell.getItem());
+                        task.removeExpression(cell.getItem());
+                        selectedExpression.set(null);
+                        populateExpressionListViews();
+                    });
+                    cm.getItems().add(remove);
+
+                    MenuItem restore = new MenuItem("Restore removed expressions");
+                    restore.setOnAction((t) -> {
+                        for (Expression removedExp : removedExpressions) {
+                            boolean nameExist;
+                            do {
+                                nameExist = false;
+                                for (Expression e : namedExpressions) {
+                                    if (e.getName().equalsIgnoreCase(removedExp.getName())) {
+                                        removedExp.setName(removedExp.getName() + " [restored]");
+                                        nameExist = true;
                                     }
-                                } while (nameExist);
+                                }
+                            } while (nameExist);
 
-                                TaskInterface task = squidProject.getTask();
-                                task.addExpression(removedExp);
-                            }
-                            removedExpressions.clear();
-                            populateExpressionListViews();
-                        });
-                        restore.setDisable(removedExpressions.isEmpty());
-                        cm.getItems().add(restore);
+                            TaskInterface task = squidProject.getTask();
+                            task.addExpression(removedExp);
+                        }
+                        removedExpressions.clear();
+                        populateExpressionListViews();
+                    });
+                    restore.setDisable(removedExpressions.isEmpty());
+                    cm.getItems().add(restore);
 
-                        cm.getItems().add(new SeparatorMenuItem());
-                    }
+                    cm.getItems().add(new SeparatorMenuItem());
 
                     Menu export = new Menu("Export as");
 
