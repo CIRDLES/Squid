@@ -1449,6 +1449,105 @@ public class ExpressionBuilderController implements Initializable {
         constantsListView.setItems(items);
     }
 
+    private String createPeekRM(Expression exp) {
+        String res;
+        if ((exp == null) || (!exp.amHealthy())) {
+            res = "No expression.";
+        } else {
+            TaskInterface task = squidProject.getTask();
+            List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
+            List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
+            List<ShrimpFractionExpressionInterface> concRefMatSpots = task.getConcentrationReferenceMaterialSpots();
+            if (exp.getExpressionTree() instanceof ConstantNode) {
+                res = "Not used";
+                if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                    try {
+                        rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
+                    } catch (Exception e) {
+                    }
+                }
+            } else if (exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
+                SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
+                res = "No Summary";
+                if (spotSummary != null) {
+                    if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                        if (spotSummary.getSelectedSpots().size() > 0) {
+                            res = peekDetailsPerSummary(spotSummary);
+                        } else {
+                            res = "No Reference Materials";
+                        }
+                    }
+                    if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                        if (spotSummary.getSelectedSpots().size() > 0) {
+                            res = peekDetailsPerSummary(spotSummary);
+                        } else {
+                            res = "No Concentration Reference Materials";
+                        }
+                    }
+                }
+            } else {
+                res = "Reference Materials not processed.";
+                if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                    if (refMatSpots.size() > 0) {
+                        res = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree());
+                    } else {
+                        res = "No Reference Materials";
+                    }
+                } else if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                    if (concRefMatSpots.size() > 0) {
+                        res = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree());
+                    } else {
+                        res = "No Concentration Reference Materials";
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    private String createPeekUN(Expression exp) {
+        String res;
+        if ((exp == null) || (!exp.amHealthy())) {
+            res = "No expression.";
+        } else {
+            TaskInterface task = squidProject.getTask();
+            List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
+            List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
+            List<ShrimpFractionExpressionInterface> concRefMatSpots = task.getConcentrationReferenceMaterialSpots();
+            if (exp.getExpressionTree() instanceof ConstantNode) {
+                res = "Not used";
+                if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                    try {
+                        unPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
+                    } catch (Exception e) {
+                    }
+                }
+            } else if (exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
+                SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
+                res = "No Summary";
+                if (spotSummary != null) {
+                    if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                        if (spotSummary.getSelectedSpots().size() > 0) {
+                            res = peekDetailsPerSummary(spotSummary);
+                        } else {
+                            res = "No Unknowns";
+                        }
+                    }
+                }
+            } else {
+                res = "Unknowns not processed.";
+                if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                    if (unSpots.size() > 0) {
+                        res = peekDetailsPerSpot(unSpots, exp.getExpressionTree());
+                    } else {
+                        res = "No Unknowns";
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
     private void populatePeeks(Expression exp) {
         SingleSelectionModel<Tab> selectionModel = spotTabPane.getSelectionModel();
 
@@ -1459,95 +1558,15 @@ public class ExpressionBuilderController implements Initializable {
             rmPeekTextArea.setText("You must save the expression to get a peek.");
             unPeekTextArea.setText("You must save the expression to get a peek.");
         } else {
-
-            TaskInterface task = squidProject.getTask();
-
-            List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
-            List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
-            List<ShrimpFractionExpressionInterface> concRefMatSpots = task.getConcentrationReferenceMaterialSpots();
-
             // choose peek tab
             if (refMatTab.isSelected() && !refMatSwitchCheckBox.isSelected() && !concRefMatSwitchCheckBox.isSelected()) {
                 selectionModel.select(unkTab);
             } else if (unkTab.isSelected() && !unknownsSwitchCheckBox.isSelected()) {
                 selectionModel.select(refMatTab);
             }
-
-            if (exp.getExpressionTree() instanceof ConstantNode) {
-                rmPeekTextArea.setText("Not used");
-                unPeekTextArea.setText("Not used");
-                if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                    try {
-                        rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
-                    } catch (RuntimeException e) {
-                        throw e;
-                    } catch (Exception e) {
-                    }
-                }
-                if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                    try {
-                        unPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
-                    } catch (Exception e) {
-                    }
-                }
-
-            } else if (exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
-                SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
-
-                rmPeekTextArea.setText("No Summary");
-                unPeekTextArea.setText("No Summary");
-
-                if (spotSummary != null) {
-                    if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                        if (spotSummary.getSelectedSpots().size() > 0) {
-                            rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
-                        } else {
-                            rmPeekTextArea.setText("No Reference Materials");
-                        }
-                    }
-
-                    if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                        if (spotSummary.getSelectedSpots().size() > 0) {
-                            rmPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
-                        } else {
-                            rmPeekTextArea.setText("No Concentration Reference Materials");
-                        }
-                    }
-
-                    if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                        if (spotSummary.getSelectedSpots().size() > 0) {
-                            unPeekTextArea.setText(peekDetailsPerSummary(spotSummary));
-                        } else {
-                            unPeekTextArea.setText("No Unknowns");
-                        }
-                    }
-                }
-
-            } else {
-                rmPeekTextArea.setText("Reference Materials not processed.");
-                if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                    if (refMatSpots.size() > 0) {
-                        rmPeekTextArea.setText(peekDetailsPerSpot(refMatSpots, exp.getExpressionTree()));
-                    } else {
-                        rmPeekTextArea.setText("No Reference Materials");
-                    }
-                } else if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                    if (concRefMatSpots.size() > 0) {
-                        rmPeekTextArea.setText(peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree()));
-                    } else {
-                        rmPeekTextArea.setText("No Concentration Reference Materials");
-                    }
-                }
-
-                unPeekTextArea.setText("Unknowns not processed.");
-                if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                    if (unSpots.size() > 0) {
-                        unPeekTextArea.setText(peekDetailsPerSpot(unSpots, exp.getExpressionTree()));
-                    } else {
-                        rmPeekTextArea.setText("No Unknowns");
-                    }
-                }
-            }
+            
+            rmPeekTextArea.setText(createPeekRM(exp));
+            unPeekTextArea.setText(createPeekUN(exp));
         }
     }
 
@@ -1749,6 +1768,49 @@ public class ExpressionBuilderController implements Initializable {
         return contextMenu;
     }
 
+    private String createPeekForTooltip(Expression ex) {
+        String peek = "";
+        if (ex.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
+            if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                peek += "Reference material :\n" + createPeekRM(ex)+"\n";
+            }
+            if (ex.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                peek += "Unknowns :\n" + createPeekUN(ex);
+            }
+        } else {
+            if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                String peekString = createPeekRM(ex);
+                int lineNumber = 0;
+                for (int n = 0; n < peekString.length(); n++) {
+                    if (peekString.charAt(n) == '\n') {
+                        lineNumber++;
+                        if (lineNumber == 11) {
+                            peekString = peekString.substring(0, n);
+                        }
+                    }
+                }
+                peek += "Reference material :\n" + peekString+"\n";
+            }
+            if (ex.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                String peekString = createPeekUN(ex);
+                int lineNumber = 0;
+                for (int n = 0; n < peekString.length(); n++) {
+                    if (peekString.charAt(n) == '\n') {
+                        lineNumber++;
+                        if (lineNumber == 11) {
+                            peekString = peekString.substring(0, n);
+                        }
+                    }
+                }
+                peek += "Unknowns :\n" + peekString;
+            }
+        }
+        if (!peek.equals("")) {
+            peek = "Peek:\n\t" + peek.replaceAll("\n", "\n\t").trim() + "\n\n";
+        }
+        return peek;
+    }
+
     private Tooltip createExpressionNodeTooltip(String nodeText) {
         Tooltip res = null;
         if (!(nodeText == null)) {
@@ -1764,7 +1826,7 @@ public class ExpressionBuilderController implements Initializable {
                         uncertainty = "1 \u03C3 ± uncertainty\n\n";
                     }
                     boolean isCustom = ex.isCustom();
-                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + createPeekForTooltip(ex) + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                     if (!ex.amHealthy()) {
                         ImageView imageView = new ImageView(UNHEALTHY);
                         imageView.setFitHeight(12);
@@ -1798,7 +1860,7 @@ public class ExpressionBuilderController implements Initializable {
                                 uncertainty = "1 \u03C3 ± uncertainty\n\n";
                             }
                             boolean isCustom = ex.isCustom();
-                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + createPeekForTooltip(ex) + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                             if (!ex.amHealthy()) {
                                 ImageView imageView = new ImageView(UNHEALTHY);
                                 imageView.setFitHeight(12);
@@ -1855,7 +1917,7 @@ public class ExpressionBuilderController implements Initializable {
                     Expression ex = squidProject.getTask().getExpressionByName(text);
                     if (ex != null) {
                         boolean isCustom = ex.isCustom();
-                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + createPeekForTooltip(ex) + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                     }
                     if (res == null && text.length() > 2) {
                         String lastTwo = text.substring(text.length() - 2);
@@ -1864,7 +1926,7 @@ public class ExpressionBuilderController implements Initializable {
                             ex = squidProject.getTask().getExpressionByName(baseExpressionName);
                             if (ex != null) {
                                 boolean isCustom = ex.isCustom();
-                                res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                                res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + createPeekForTooltip(ex) + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                             }
                         }
                     }
