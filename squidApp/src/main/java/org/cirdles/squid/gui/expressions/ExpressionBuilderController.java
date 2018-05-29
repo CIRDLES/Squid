@@ -450,6 +450,8 @@ public class ExpressionBuilderController implements Initializable {
         insertIndicator.setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
     }
 
+    public static Expression expressionToHighlightOnInit = null;
+
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -468,7 +470,10 @@ public class ExpressionBuilderController implements Initializable {
 
         expressionAsTextArea.setWrapText(true);
 
-        if (!customExpressionsListView.getItems().isEmpty()) {
+        if (expressionToHighlightOnInit != null) {
+            selectInAllPanes(expressionToHighlightOnInit, true);
+            expressionToHighlightOnInit = null;
+        } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
 
@@ -1100,17 +1105,17 @@ public class ExpressionBuilderController implements Initializable {
     private void saveAction(ActionEvent event) {
 
         boolean nameExists = squidProject.getTask().expressionExists(expressionNameTextField.getText());
-        
-        if(currentMode.get().equals(Mode.EDIT) || !nameExists){
+
+        if (!nameExists || (currentMode.get().equals(Mode.EDIT) && selectedExpression.get().getName().equals(expressionNameTextField.getText()))) {
             save();
-        }else {
+        } else {
             //Case name already exists -> ask for replacing
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "An expression already exists with this name. Do you want to replace it?",
                     ButtonType.YES,
                     ButtonType.NO
             );
-            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
+            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
             alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
             alert.showAndWait().ifPresent((t) -> {
                 if (t.equals(ButtonType.YES)) {
@@ -1251,12 +1256,12 @@ public class ExpressionBuilderController implements Initializable {
     private void summaryCalculationCheckBoxAction(ActionEvent event) {
 
     }
-    
+
     @FXML
     private void specialUPbThCheckBoxAction(ActionEvent event) {
 
     }
-    
+
     @FXML
     private void NUSwitchCheckBoxAction(ActionEvent event) {
 
