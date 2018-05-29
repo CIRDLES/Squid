@@ -1328,30 +1328,35 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
 
+        globalListView.setItems(null);
         globalListView.setItems(namedExpressions);
 
         ObservableList<Expression> items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
             return exp1.getName().compareToIgnoreCase(exp2.getName());
         });
+        nuSwitchedExpressionsListView.setItems(null);
         nuSwitchedExpressionsListView.setItems(items);
 
         items = FXCollections.observableArrayList(sortedBuiltInExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
             return exp1.getName().compareToIgnoreCase(exp2.getName());
         });
+        builtInExpressionsListView.setItems(null);
         builtInExpressionsListView.setItems(items);
 
         items = FXCollections.observableArrayList(sortedCustomExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
             return exp1.getName().compareToIgnoreCase(exp2.getName());
         });
+        customExpressionsListView.setItems(null);
         customExpressionsListView.setItems(items);
 
         items = FXCollections.observableArrayList(sortedBrokenExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
             return exp1.getName().compareToIgnoreCase(exp2.getName());
         });
+        brokenExpressionsListView.setItems(null);
         brokenExpressionsListView.setItems(items);
     }
 
