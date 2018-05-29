@@ -466,8 +466,6 @@ public class ExpressionBuilderController implements Initializable {
 
         currentMode.set(Mode.VIEW);
 
-        expressionsAccordion.setExpandedPane(customExpressionsTitledPane);
-
         expressionAsTextArea.setWrapText(true);
 
         if (expressionToHighlightOnInit != null) {
@@ -476,7 +474,6 @@ public class ExpressionBuilderController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
-
     }
 
     private void initPropertyBindings() {
@@ -495,6 +492,7 @@ public class ExpressionBuilderController implements Initializable {
         unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
@@ -807,13 +805,13 @@ public class ExpressionBuilderController implements Initializable {
 
                 brokenExpressionsListView.getSelectionModel().select(exp);
                 brokenExpressionsListView.scrollTo(exp);
-                brokenExpressionsTitledPane.setExpanded(true);
+                expressionsAccordion.setExpandedPane(brokenExpressionsTitledPane);
             }
         } else {
             found = true;
             if (scrollIfAlreadySelected) {
                 brokenExpressionsListView.scrollTo(exp);
-                brokenExpressionsTitledPane.setExpanded(true);
+                expressionsAccordion.setExpandedPane(brokenExpressionsTitledPane);
             }
         }
 
@@ -823,13 +821,13 @@ public class ExpressionBuilderController implements Initializable {
             if (nuSwitchedExpressionsListView.getItems().contains(exp)) {
                 nuSwitchedExpressionsListView.getSelectionModel().select(exp);
                 nuSwitchedExpressionsListView.scrollTo(exp);
-                nuSwitchedExpressionsTitledPane.setExpanded(true);
+                expressionsAccordion.setExpandedPane(nuSwitchedExpressionsTitledPane);
             }
         } else {
             found = true;
             if (scrollIfAlreadySelected) {
                 nuSwitchedExpressionsListView.scrollTo(exp);
-                nuSwitchedExpressionsTitledPane.setExpanded(true);
+                expressionsAccordion.setExpandedPane(nuSwitchedExpressionsTitledPane);
             }
         }
 
@@ -838,13 +836,13 @@ public class ExpressionBuilderController implements Initializable {
             if (builtInExpressionsListView.getItems().contains(exp)) {
                 builtInExpressionsListView.getSelectionModel().select(exp);
                 builtInExpressionsListView.scrollTo(exp);
-                builtInExpressionsTitledPane.setExpanded(true);
+                expressionsAccordion.setExpandedPane(builtInExpressionsTitledPane);
             }
         } else {
             found = true;
             if (scrollIfAlreadySelected) {
                 builtInExpressionsListView.scrollTo(exp);
-                builtInExpressionsTitledPane.setExpanded(true);
+                expressionsAccordion.setExpandedPane(builtInExpressionsTitledPane);
             }
         }
 
@@ -853,13 +851,13 @@ public class ExpressionBuilderController implements Initializable {
             if (customExpressionsListView.getItems().contains(exp)) {
                 customExpressionsListView.getSelectionModel().select(exp);
                 customExpressionsListView.scrollTo(exp);
-                customExpressionsTitledPane.setExpanded(true);
+                expressionsAccordion.setExpandedPane(customExpressionsTitledPane);
             }
         } else {
             found = true;
             if (scrollIfAlreadySelected) {
                 customExpressionsListView.scrollTo(exp);
-                customExpressionsTitledPane.setExpanded(true);
+                expressionsAccordion.setExpandedPane(customExpressionsTitledPane);
             }
         }
 
