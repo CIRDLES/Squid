@@ -208,6 +208,8 @@
                         <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" opacity="0.99" text="Unknown Samples" />
                         <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" opacity="0.99" text="Conc RefMat" />
                         <CheckBox fx:id="summaryCalculationSwitchCheckBox" disable="true" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
+                        <CheckBox fx:id="specialUPbThSwitchCheckBox" layoutX="433.0" layoutY="10.0" mnemonicParsing="false" onAction="#specialUPbThCheckBoxAction" opacity="0.99" text="Special UPbTh" />
+                        <CheckBox fx:id="NUSwitchCheckBox" layoutX="601.0" layoutY="10.0" mnemonicParsing="false" onAction="#NUSwitchCheckBoxAction" opacity="0.99" text="NU Switch" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="5.0" left="7.0" right="7.0" />

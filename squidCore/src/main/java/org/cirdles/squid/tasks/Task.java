@@ -1693,4 +1693,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setSelectedIndexIsotope(IndexIsoptopesEnum selectedIndexIsotope) {
         this.selectedIndexIsotope = selectedIndexIsotope;
     }
+
+    @Override
+    public boolean expressionExists(String expression) {
+        for (Expression exLoop : getTaskExpressionsOrdered()) {
+            if (exLoop.getName().equalsIgnoreCase(expression)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

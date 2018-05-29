@@ -98,7 +98,6 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.SquidUI.OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
@@ -194,6 +193,10 @@ public class ExpressionBuilderController implements Initializable {
     private CheckBox concRefMatSwitchCheckBox;
     @FXML
     private CheckBox summaryCalculationSwitchCheckBox;
+    @FXML
+    private CheckBox specialUPbThSwitchCheckBox;
+    @FXML
+    private CheckBox NUSwitchCheckBox;
     @FXML
     private CheckBox showGraphCheckBox;
     @FXML
@@ -402,7 +405,7 @@ public class ExpressionBuilderController implements Initializable {
 
     private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
     private final StringProperty expressionString = new SimpleStringProperty();
-    private final BooleanProperty selectedExpressionIsCustom = new SimpleBooleanProperty(false);
+    private final BooleanProperty selectedExpressionIsEditable = new SimpleBooleanProperty(false);
     //Boolean to save wether or not the expression has been save since the last modification
     private final BooleanProperty expressionIsSaved = new SimpleBooleanProperty(true);
     //Boolean to save wether the expression is currently edited as a textArea or with drag and drop
@@ -476,7 +479,7 @@ public class ExpressionBuilderController implements Initializable {
         editorVBox.disableProperty().bind(selectedExpression.isNull());
         expressionUndoBtn.disableProperty().bind(undoListForExpression.sizeProperty().lessThan(1).or(currentMode.isEqualTo(Mode.VIEW)));
         expressionRedoBtn.disableProperty().bind(redoListForExpression.sizeProperty().lessThan(1).or(currentMode.isEqualTo(Mode.VIEW)));
-        editExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpressionIsCustom.not()));
+        editExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpressionIsEditable.not()));
         copyExpressionIntoCustomBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).or(selectedExpression.isNull()));
         createExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
@@ -486,6 +489,8 @@ public class ExpressionBuilderController implements Initializable {
         refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
@@ -677,6 +682,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (currentMode.get().equals(Mode.VIEW)) {
                     //The new value is selected to be shown in the editor
                     selectedExpression.set(newValue);
+                    selectedExpressionIsEditable.set(true);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -692,6 +698,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (currentMode.get().equals(Mode.VIEW)) {
                     //The new value is selected to be shown in the editor
                     selectedExpression.set(newValue);
+                    selectedExpressionIsEditable.set(true);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -706,6 +713,7 @@ public class ExpressionBuilderController implements Initializable {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
                     selectedExpression.set(newValue);
+                    selectedExpressionIsEditable.set(true);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -719,6 +727,7 @@ public class ExpressionBuilderController implements Initializable {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
                     selectedExpression.set(newValue);
+                    selectedExpressionIsEditable.set(true);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -732,6 +741,7 @@ public class ExpressionBuilderController implements Initializable {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
                     selectedExpression.set(newValue);
+                    selectedExpressionIsEditable.set(true);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -752,6 +762,7 @@ public class ExpressionBuilderController implements Initializable {
                     exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                     exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
                     selectedExpression.set(exp);
+                    selectedExpressionIsEditable.set(false);
                 }
                 selectInAllPanes(null, false);
             }
@@ -1000,17 +1011,14 @@ public class ExpressionBuilderController implements Initializable {
                 expressionAsTextAction(new ActionEvent());
             }
             if (newValue != null) {
-                if (!newValue.getExpressionTree().isSquidSpecialUPbThExpression() && !newValue.isSquidSwitchNU()) {
-                    selectedExpressionIsCustom.set(true);
-                } else {
-                    selectedExpressionIsCustom.set(false);
-                }
                 expressionNameTextField.textProperty().set(newValue.getName());
                 notesTextArea.setText(newValue.getNotes());
                 refMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
                 unknownsSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
                 concRefMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchConcentrationReferenceMaterialCalculation());
                 summaryCalculationSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSCSummaryCalculation());
+                specialUPbThSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSpecialUPbThExpression());
+                NUSwitchCheckBox.setSelected(newValue.isSquidSwitchNU());
                 expressionString.set(null);
                 expressionString.set(newValue.getExcelExpressionString());
             } else {
@@ -1019,7 +1027,7 @@ public class ExpressionBuilderController implements Initializable {
                 refMatSwitchCheckBox.setSelected(false);
                 unknownsSwitchCheckBox.setSelected(false);
                 concRefMatSwitchCheckBox.setSelected(false);
-                selectedExpressionIsCustom.set(false);
+                selectedExpressionIsEditable.set(false);
                 expressionString.set("");
             }
             undoListForExpression.clear();
@@ -1065,7 +1073,7 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void editCustomExpressionAction(ActionEvent event) {
-        if (selectedExpressionIsCustom.get() && currentMode.get().equals(Mode.VIEW)) {
+        if (selectedExpressionIsEditable.get() && currentMode.get().equals(Mode.VIEW)) {
             currentMode.set(Mode.EDIT);
         }
     }
@@ -1091,36 +1099,14 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void saveAction(ActionEvent event) {
 
-        boolean nameExists = false;
-        boolean nameExistsInCustom = false;
-
-        //Searchs if the name exists
-        for (Expression exLoop : squidProject.getTask().getTaskExpressionsOrdered()) {
-            if (exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())) {
-                if (exLoop.isCustom()) {
-                    nameExistsInCustom = true;
-                } else {
-                    nameExists = true;
-                }
-            }
-        }
-
-        if (nameExists) {
-            //Case name already exists not in custom -> impossible to save
-            Alert alert = new Alert(Alert.AlertType.ERROR,
-                    "An expression already exists with this name. Please change it before saving.",
-                    ButtonType.OK
-            );
-            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
-            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
-            alert.show();
-        } else if (nameExistsInCustom && currentMode.get().equals(Mode.EDIT) && selectedExpression.get().getName().equals(expressionNameTextField.getText())) {
-            //Case edition and name unchanged -> replace without asking
+        boolean nameExists = squidProject.getTask().expressionExists(expressionNameTextField.getText());
+        
+        if(currentMode.get().equals(Mode.EDIT) || !nameExists){
             save();
-        } else if (nameExistsInCustom) {
-            //Case name already exists in custom -> ask for replacing
+        }else {
+            //Case name already exists -> ask for replacing
             Alert alert = new Alert(Alert.AlertType.WARNING,
-                    "A custom expression already exists with this name. Do you want to replace it?",
+                    "An expression already exists with this name. Do you want to replace it?",
                     ButtonType.YES,
                     ButtonType.NO
             );
@@ -1131,11 +1117,7 @@ public class ExpressionBuilderController implements Initializable {
                     save();
                 }
             });
-        } else {
-            //Case name doesnt exist -> save
-            save();
         }
-
     }
 
     //EXPRESSION ACTIONS
@@ -1267,6 +1249,16 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void summaryCalculationCheckBoxAction(ActionEvent event) {
+
+    }
+    
+    @FXML
+    private void specialUPbThCheckBoxAction(ActionEvent event) {
+
+    }
+    
+    @FXML
+    private void NUSwitchCheckBoxAction(ActionEvent event) {
 
     }
 
@@ -1959,6 +1951,8 @@ public class ExpressionBuilderController implements Initializable {
         expTree.setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.isSelected());
         expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(concRefMatSwitchCheckBox.isSelected());
         expTree.setSquidSwitchSCSummaryCalculation(summaryCalculationSwitchCheckBox.isSelected());
+        expTree.setSquidSpecialUPbThExpression(specialUPbThSwitchCheckBox.isSelected());
+        exp.setSquidSwitchNU(NUSwitchCheckBox.isSelected());
 
         return exp;
     }
@@ -1969,6 +1963,7 @@ public class ExpressionBuilderController implements Initializable {
         ExpressionTree expTreeCopy = (ExpressionTree) exp.getExpressionTree();
         ExpressionTree expTree = (ExpressionTree) selectedExpression.get().getExpressionTree();
 
+        exp.setSquidSwitchNU(selectedExpression.get().isSquidSwitchNU());
         copyTreeTags(expTree, expTreeCopy);
 
         return exp;
@@ -1979,6 +1974,7 @@ public class ExpressionBuilderController implements Initializable {
         dest.setSquidSwitchSAUnknownCalculation(source.isSquidSwitchSAUnknownCalculation());
         dest.setSquidSwitchSCSummaryCalculation(source.isSquidSwitchSCSummaryCalculation());
         dest.setSquidSwitchSTReferenceMaterialCalculation(source.isSquidSwitchSTReferenceMaterialCalculation());
+        dest.setSquidSpecialUPbThExpression(source.isSquidSpecialUPbThExpression());
     }
 
     private void save() {
