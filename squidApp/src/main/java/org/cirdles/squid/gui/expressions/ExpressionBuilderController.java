@@ -591,7 +591,7 @@ public class ExpressionBuilderController implements Initializable {
                     break;
                 case CUSTOM:
                     globalListView.setItems(namedExpressions.filtered((exp) -> {
-                        return !exp.getExpressionTree().isSquidSpecialUPbThExpression() && !exp.isSquidSwitchNU();
+                        return exp.isCustom();
                     }));
                     break;
                 case HEALTHY:
@@ -1097,7 +1097,7 @@ public class ExpressionBuilderController implements Initializable {
         //Searchs if the name exists
         for(Expression exLoop : squidProject.getTask().getTaskExpressionsOrdered()){
             if (exLoop.getName().equalsIgnoreCase(expressionNameTextField.getText())) {
-                if(!exLoop.getExpressionTree().isSquidSpecialUPbThExpression() && !exLoop.isSquidSwitchNU()){
+                if(exLoop.isCustom()){
                     nameExistsInCustom=true;
                 }else{
                     nameExists = true;
@@ -1321,7 +1321,7 @@ public class ExpressionBuilderController implements Initializable {
                 sortedNUSwitchedExpressionsList.add(exp);
             } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU()) {
                 sortedBuiltInExpressionsList.add(exp);
-            } else if (!exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU()) {
+            } else if (exp.isCustom() && exp.amHealthy()) {
                 sortedCustomExpressionsList.add(exp);
             } else if (!exp.amHealthy()) {
                 sortedBrokenExpressionsList.add(exp);
@@ -1758,7 +1758,7 @@ public class ExpressionBuilderController implements Initializable {
                     } else if (text.contains("[±\"")) {
                         uncertainty = "1 \u03C3 ± uncertainty\n\n";
                     }
-                    boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
+                    boolean isCustom = ex.isCustom();
                     res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                     if (!ex.amHealthy()) {
                         ImageView imageView = new ImageView(UNHEALTHY);
@@ -1792,7 +1792,7 @@ public class ExpressionBuilderController implements Initializable {
                             } else if (text.contains("[±\"")) {
                                 uncertainty = "1 \u03C3 ± uncertainty\n\n";
                             }
-                            boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
+                            boolean isCustom = ex.isCustom();
                             res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                             if (!ex.amHealthy()) {
                                 ImageView imageView = new ImageView(UNHEALTHY);
@@ -1849,7 +1849,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (res == null) {
                     Expression ex = squidProject.getTask().getExpressionByName(text);
                     if (ex != null) {
-                        boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
+                        boolean isCustom = ex.isCustom();
                         res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                     }
                     if (res == null && text.length() > 2) {
@@ -1858,7 +1858,7 @@ public class ExpressionBuilderController implements Initializable {
                             String baseExpressionName = text.substring(0, text.length() - 2);
                             ex = squidProject.getTask().getExpressionByName(baseExpressionName);
                             if (ex != null) {
-                                boolean isCustom = !ex.getExpressionTree().isSquidSpecialUPbThExpression() && !ex.isSquidSwitchNU();
+                                boolean isCustom = ex.isCustom();
                                 res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                             }
                         }
@@ -2300,7 +2300,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (event.getButton().equals(MouseButton.SECONDARY)) {
                     cm.getItems().clear();
                     //Menu for custom expression only
-                    if (!cell.getItem().getExpressionTree().isSquidSpecialUPbThExpression() && !cell.getItem().isSquidSwitchNU()) {
+                    if (cell.getItem().isCustom()) {
                         MenuItem remove = new MenuItem("Remove expression");
                         remove.setOnAction((t) -> {
                             TaskInterface task = squidProject.getTask();
