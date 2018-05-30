@@ -19,7 +19,8 @@ import java.util.List;
 import org.jdom2.Element;
 
 /**
- *
+ * compares 2 elements, if there is any difference then it will return false (does not compare mixed text in complex types)
+ * 
  * @author ryanb
  */
 public class ElementComparer {

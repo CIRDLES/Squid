@@ -16,7 +16,10 @@
 package org.cirdles.squid.tasks;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.cirdles.squid.ElementComparer;
+import org.cirdles.squid.tasks.expressions.Expression;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -34,14 +37,19 @@ public class TaskXMLConverterTest {
     public void TaskXMLConverterTest() {
         try {
             String folderPath = "src/test/resources/org/cirdles/squid/TaskXMLFiles/";
+            
+            //create task from sample document
             Task originalTask = new Task();
             originalTask = (Task) originalTask.readXMLObject(folderPath + "SampleTask.XML", false);
+            
+            //write out original task to file and create another task using that file then write out that new task to another file
             File convertedOriginal = new File(folderPath + "ConvertedOriginalTask.XML");
             originalTask.serializeXMLObject(convertedOriginal.getAbsolutePath());
-            Task convertedTask = (Task) originalTask.readXMLObject(convertedOriginal.getAbsolutePath(), false);          
+            Task convertedTask = (Task) originalTask.readXMLObject(convertedOriginal.getAbsolutePath(), false);
             File convertedConverted = new File(folderPath + "ConvertedConvertedTask.XML");
             convertedTask.serializeXMLObject(convertedConverted.getAbsolutePath());
 
+            //compare files  using jdom
             SAXBuilder builder = new SAXBuilder();
             Document originalFile = (Document) builder.build(new File(folderPath + "ConvertedOriginalTask.XML"));
             Document convertedFile = (Document) builder.build(new File(folderPath + "ConvertedConvertedTask.XML"));
