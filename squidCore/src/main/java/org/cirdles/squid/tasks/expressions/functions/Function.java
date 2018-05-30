@@ -97,6 +97,7 @@ public abstract class Function
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
         LOGIC_FUNCTIONS_MAP.put("if", "sqIf");
+        LOGIC_FUNCTIONS_MAP.put("sqIf", "sqIf");
         
         MATH_FUNCTIONS_MAP.put("exp", "exp");
         MATH_FUNCTIONS_MAP.put("sqrt", "sqrt");
