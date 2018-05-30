@@ -26,6 +26,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.tasks.Task;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
@@ -80,7 +81,7 @@ public class CalamariFileUtilities {
      */
     public static void loadShrimpPrawnAndTaskFileSchema() {
         ResourceExtractor schemaFileResourceExtractor
-                = new ResourceExtractor(Squid.class);
+                = new ResourceExtractor(Task.class);
         Path pathToSchemas = schemaFileResourceExtractor.extractResourceAsPath("listOfTaskSchemas.txt");
         if (pathToSchemas != null) {
             schemaFolder = new File("Schema");
@@ -90,9 +91,10 @@ public class CalamariFileUtilities {
                 }
                 if (schemaFolder.mkdir()) {
                     List<String> fileNames = Files.readAllLines(pathToSchemas, ISO_8859_1);
+                    schemaFileResourceExtractor = new ResourceExtractor(Squid.class);
                     for (String schemaName : fileNames) {
                         if (schemaName.trim().length() > 0) {
-                            File fileSchemaResource = schemaFileResourceExtractor.extractResourceAsFile("schema" + File.separator + schemaName);
+                            File fileSchemaResource = schemaFileResourceExtractor.extractResourceAsFile("schema/"+ schemaName);
                             File schema = new File(schemaFolder.getCanonicalPath() + File.separator + schemaName);
                             
                             if (fileSchemaResource.renameTo(schema)) {
