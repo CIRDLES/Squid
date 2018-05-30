@@ -354,23 +354,29 @@ public class ExpressionBuilderController implements Initializable {
 
     private static final String OPERATIONFLAGDELIMITER = " : ";
     private static final String NUMBERSTRING = "NUMBER";
-    private static final String NEWLINEPLACEHOLDER = "\u23CE\n";
-    private static final String TABPLACEHOLDER = " \u21E5";
     private final BooleanProperty whiteSpaceVisible = new SimpleBooleanProperty(true);
+    private static final String UNVISIBLENEWLINEPLACEHOLDER = " \n";
+    private static final String VISIBLENEWLINEPLACEHOLDER = "\u23CE\n";
+    private static final String UNVISIBLETABPLACEHOLDER = "  ";
+    private static final String VISIBLETABPLACEHOLDER = " \u21E5";
     private static final String VISIBLEWHITESPACEPLACEHOLDER = "\u2423";
     private static final String UNVISIBLEWHITESPACEPLACEHOLDER = " ";
     private final Map<String, String> presentationMap = new HashMap<>();
 
     {
-        presentationMap.put("New line", NEWLINEPLACEHOLDER);
-        presentationMap.put("Tab", TABPLACEHOLDER);
+        presentationMap.put("New line", VISIBLENEWLINEPLACEHOLDER);
+        presentationMap.put("Tab", VISIBLETABPLACEHOLDER);
         presentationMap.put("White space", VISIBLEWHITESPACEPLACEHOLDER);
         whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue) {
                     presentationMap.replace("White space", VISIBLEWHITESPACEPLACEHOLDER);
+                    presentationMap.replace("Tab", VISIBLETABPLACEHOLDER);
+                    presentationMap.replace("New line", VISIBLENEWLINEPLACEHOLDER);
                 } else {
                     presentationMap.replace("White space", UNVISIBLEWHITESPACEPLACEHOLDER);
+                    presentationMap.replace("Tab", UNVISIBLETABPLACEHOLDER);
+                    presentationMap.replace("New line", UNVISIBLENEWLINEPLACEHOLDER);
                 }
             }
         });
@@ -1295,6 +1301,11 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void toggleWhiteSpacesAction(ActionEvent event) {
         whiteSpaceVisible.set(!whiteSpaceVisible.get());
+        if(whiteSpaceVisible.get()){
+            toggleWhiteSpacesBtn.setText("Hide white spaces");
+        }else{
+            toggleWhiteSpacesBtn.setText("Show white spaces");
+        }
         for (Node n : expressionTextFlow.getChildren()) {
             if (n instanceof ExpressionTextNode) {
                 ((ExpressionTextNode) n).updateFontSize();
@@ -1902,13 +1913,13 @@ public class ExpressionBuilderController implements Initializable {
                 if (res == null && ShuntingYard.isNumber(text)) {
                     res = new Tooltip("Number: " + text);
                 }
-                if (res == null && nodeText.equals(VISIBLEWHITESPACEPLACEHOLDER)) {
+                if (res == null && (nodeText.equals(VISIBLEWHITESPACEPLACEHOLDER) || nodeText.equals(UNVISIBLEWHITESPACEPLACEHOLDER))) {
                     res = new Tooltip("Presentation node: Space");
                 }
-                if (res == null && nodeText.equals(TABPLACEHOLDER)) {
+                if (res == null && (nodeText.equals(VISIBLETABPLACEHOLDER) || nodeText.equals(UNVISIBLETABPLACEHOLDER))) {
                     res = new Tooltip("Presentation node: Tab");
                 }
-                if (res == null && nodeText.equals(NEWLINEPLACEHOLDER)) {
+                if (res == null && (nodeText.equals(VISIBLENEWLINEPLACEHOLDER) || nodeText.equals(UNVISIBLENEWLINEPLACEHOLDER))) {
                     res = new Tooltip("Presentation node: New line");
                 }
                 if (res == null) {
@@ -2077,10 +2088,12 @@ public class ExpressionBuilderController implements Initializable {
         for (Node node : list) {
             if (node instanceof ExpressionTextNode) {
                 switch (((ExpressionTextNode) node).getText()) {
-                    case NEWLINEPLACEHOLDER:
+                    case VISIBLENEWLINEPLACEHOLDER:
+                    case UNVISIBLENEWLINEPLACEHOLDER:
                         sb.append("\n");
                         break;
-                    case TABPLACEHOLDER:
+                    case VISIBLETABPLACEHOLDER:
+                    case UNVISIBLETABPLACEHOLDER:
                         sb.append("\t");
                         break;
                     case UNVISIBLEWHITESPACEPLACEHOLDER:
@@ -2118,9 +2131,17 @@ public class ExpressionBuilderController implements Initializable {
             } else if (listOperators.contains(nodeText)) {
                 etn = new OperationTextNode(' ' + nodeText + ' ');
             } else if (nodeText.equals("\n") || nodeText.equals("\r")) {
-                etn = new PresentationTextNode(NEWLINEPLACEHOLDER);
+                if (whiteSpaceVisible.get()) {
+                    etn = new PresentationTextNode(VISIBLENEWLINEPLACEHOLDER);
+                } else {
+                    etn = new PresentationTextNode(UNVISIBLENEWLINEPLACEHOLDER);
+                }
             } else if (nodeText.equals("\t")) {
-                etn = new PresentationTextNode(TABPLACEHOLDER);
+                if (whiteSpaceVisible.get()) {
+                    etn = new PresentationTextNode(VISIBLETABPLACEHOLDER);
+                } else {
+                    etn = new PresentationTextNode(UNVISIBLETABPLACEHOLDER);
+                }
             } else if (nodeText.equals(" ")) {
                 if (whiteSpaceVisible.get()) {
                     etn = new PresentationTextNode(VISIBLEWHITESPACEPLACEHOLDER);
@@ -2612,7 +2633,7 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(operationOrFunction);
-                        Tooltip t = createExpressionNodeTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").replaceAll("Tab", TABPLACEHOLDER).replaceAll("New line", NEWLINEPLACEHOLDER));
+                        Tooltip t = createExpressionNodeTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });
@@ -2740,6 +2761,28 @@ public class ExpressionBuilderController implements Initializable {
                             setText(VISIBLEWHITESPACEPLACEHOLDER);
                         } else {
                             setText(UNVISIBLEWHITESPACEPLACEHOLDER);
+                        }
+                    }
+                });
+            }
+            if (text.equals(UNVISIBLENEWLINEPLACEHOLDER) || text.equals(VISIBLENEWLINEPLACEHOLDER)) {
+                whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        if (newValue) {
+                            setText(VISIBLENEWLINEPLACEHOLDER);
+                        } else {
+                            setText(UNVISIBLENEWLINEPLACEHOLDER);
+                        }
+                    }
+                });
+            }
+            if (text.equals(UNVISIBLETABPLACEHOLDER) || text.equals(VISIBLETABPLACEHOLDER)) {
+                whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        if (newValue) {
+                            setText(VISIBLETABPLACEHOLDER);
+                        } else {
+                            setText(UNVISIBLETABPLACEHOLDER);
                         }
                     }
                 });

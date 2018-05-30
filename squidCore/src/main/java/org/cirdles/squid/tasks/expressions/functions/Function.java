@@ -303,9 +303,9 @@ public abstract class Function
      * @param operationName
      * @return
      */
-    public static OperationOrFunctionInterface operationFactory(String myOperationName) {
+    public static OperationOrFunctionInterface operationFactory(String operationName) {
         Function retVal = null;
-        String operationName = FUNCTIONS_MAP.get(myOperationName);
+        //String operationName = FUNCTIONS_MAP.get(myOperationName);
         Method method;
         if (operationName != null) {
             try {
