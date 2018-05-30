@@ -76,38 +76,35 @@ public class CalamariFileUtilities {
     }
 
     /**
-     * Loads PrawnFile schema locally for use when Internet connection not
-     * available.
+     * Loads schemas locally for use when Internet connection not available.
      */
-    public static void loadShrimpPrawnFileSchema() {
-        ResourceExtractor prawnFileResourceExtractor
-                = new ResourceExtractor(Squid.class);
-
-        schemaFolder = new File("Schema");
-        try {
-            if (schemaFolder.exists()) {
-                FileUtilities.recursiveDelete(schemaFolder.toPath());
-            }
-            if (schemaFolder.mkdir()) {
-                File shrimpPrawnFileSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SHRIMP_PRAWN.xsd");
-                File shrimpPrawnFileSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SHRIMP_PRAWN.xsd");
-
-                if (shrimpPrawnFileSchemaResource.renameTo(shrimpPrawnFileSchema)) {
-                    System.out.println("SHRIMP_PRAWN.xsd added.");
-                } else {
-                    System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
+    public static void loadShrimpPrawnAndTaskFileSchema() {
+        ResourceExtractor schemaFileResourceExtractor
+                = new ResourceExtractor(Object.class);
+        Path pathToSchemas = schemaFileResourceExtractor.extractResourceAsPath("listOfTaskSchemas.txt");
+        if (pathToSchemas != null) {
+            schemaFolder = new File("Schema");
+            try {
+                if (schemaFolder.exists()) {
+                    FileUtilities.recursiveDelete(schemaFolder.toPath());
                 }
-
-                File shrimpExpressionSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidTask_ExpressionXMLSchema.xsd");
-                File shrimpExpressionSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd");
-
-                if (shrimpExpressionSchemaResource.renameTo(shrimpExpressionSchema)) {
-                    System.out.println("SquidTask_ExpressionXMLSchema.xsd added.");
-                } else {
-                    System.out.println("Failed to add SquidTask_ExpressionXMLSchema.xsd.");
+                if (schemaFolder.mkdir()) {
+                    List<String> fileNames = Files.readAllLines(pathToSchemas, ISO_8859_1);
+                    for (String schemaName : fileNames) {
+                        if (schemaName.trim().length() > 0) {
+                            File fileSchemaResource = schemaFileResourceExtractor.extractResourceAsFile("schema" + File.separator + schemaName);
+                            File schema = new File(schemaFolder.getCanonicalPath() + File.separator + schemaName);
+                            
+                            if (fileSchemaResource.renameTo(schema)) {
+                                System.out.println(schemaName + " added.");
+                            } else {
+                                System.out.println("Failed to add " + schemaName);
+                            }
+                        }
+                    }
                 }
+            } catch (IOException iOException) {
             }
-        } catch (IOException iOException) {
         }
     }
 

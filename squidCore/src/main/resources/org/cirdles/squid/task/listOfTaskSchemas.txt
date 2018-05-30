@@ -1,0 +1,8 @@
+MassStationDetail.xsd
+SquidRatiosModel.xsd
+SquidSessionModel.xsd
+SquidSpeciesModel.xsd
+SquidTask.xsd
+SquidTask_ExpressionXMLSchema.xsd
+SHRIMP_PRAWN.xsd
+ShrimpFraction.xsd
