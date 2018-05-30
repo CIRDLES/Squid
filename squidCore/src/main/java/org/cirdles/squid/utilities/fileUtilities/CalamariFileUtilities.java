@@ -80,7 +80,7 @@ public class CalamariFileUtilities {
      */
     public static void loadShrimpPrawnAndTaskFileSchema() {
         ResourceExtractor schemaFileResourceExtractor
-                = new ResourceExtractor(Object.class);
+                = new ResourceExtractor(Squid.class);
         Path pathToSchemas = schemaFileResourceExtractor.extractResourceAsPath("listOfTaskSchemas.txt");
         if (pathToSchemas != null) {
             schemaFolder = new File("Schema");
