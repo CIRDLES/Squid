@@ -301,12 +301,12 @@ public abstract class Function
 
     /**
      *
-     * @param operationName
+     * @param myOperationName
      * @return
      */
-    public static OperationOrFunctionInterface operationFactory(String operationName) {
+    public static OperationOrFunctionInterface operationFactory(String myOperationName) {
         Function retVal = null;
-        //String operationName = FUNCTIONS_MAP.get(myOperationName);
+        String operationName = FUNCTIONS_MAP.get(myOperationName);
         Method method;
         if (operationName != null) {
             try {

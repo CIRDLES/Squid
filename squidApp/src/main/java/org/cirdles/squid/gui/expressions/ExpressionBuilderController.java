@@ -1301,9 +1301,9 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void toggleWhiteSpacesAction(ActionEvent event) {
         whiteSpaceVisible.set(!whiteSpaceVisible.get());
-        if(whiteSpaceVisible.get()){
+        if (whiteSpaceVisible.get()) {
             toggleWhiteSpacesBtn.setText("Hide white spaces");
-        }else{
+        } else {
             toggleWhiteSpacesBtn.setText("Show white spaces");
         }
         for (Node n : expressionTextFlow.getChildren()) {
@@ -1427,13 +1427,15 @@ public class ExpressionBuilderController implements Initializable {
         // Logic Functions ======================================================
         List<String> logicFunctionStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : LOGIC_FUNCTIONS_MAP.entrySet()) {
-            int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
-            String args = op.getKey() + "(";
-            for (int i = 0; i < argumentCount; i++) {
-                args += "ARG" + i + (i < (argumentCount - 1) ? "," : ")");
-            }
+            if (!op.getKey().equalsIgnoreCase("sqIf")) {
+                int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
+                String args = op.getKey() + "(";
+                for (int i = 0; i < argumentCount; i++) {
+                    args += "ARG" + i + (i < (argumentCount - 1) ? "," : ")");
+                }
 
-            logicFunctionStrings.add(args);
+                logicFunctionStrings.add(args);
+            }
         }
 
         items = FXCollections.observableArrayList(logicFunctionStrings);
@@ -1887,9 +1889,12 @@ public class ExpressionBuilderController implements Initializable {
                     res.setGraphic(imageView);
                 }
             } else {
-                OperationOrFunctionInterface fn = Function.operationFactory(FUNCTIONS_MAP.get(text));
-                if (fn != null) {
-                    res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " argument(s): " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
+                String str = FUNCTIONS_MAP.get(text);
+                if(str!=null){
+                    OperationOrFunctionInterface fn = Function.operationFactory(str);
+                    if (fn != null) {
+                        res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " argument(s): " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
+                    }
                 }
                 if (res == null && listOperators.contains(text)) {
                     res = new Tooltip("Operation: " + text);
