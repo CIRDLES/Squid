@@ -83,13 +83,9 @@ public class OperationXMLConverter implements Converter {
 
         OperationOrFunctionInterface operation = (Operation) value;
 
-//        System.out.print("start operation |");
-        
         writer.startNode("name");
-        writer.setValue(((Operation)operation).getName());
+        writer.setValue(((Operation) operation).getName());
         writer.endNode();
-        
-//        System.out.print(" operation end ");
     }
 
     /**
@@ -111,7 +107,7 @@ public class OperationXMLConverter implements Converter {
         reader.moveDown();
         OperationOrFunctionInterface operation = Operation.operationFactory(reader.getValue());
         reader.moveUp();
-        
+
         return operation;
     }
 

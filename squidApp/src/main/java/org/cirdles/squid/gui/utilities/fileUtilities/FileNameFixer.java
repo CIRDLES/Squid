@@ -13,10 +13,6 @@ import java.io.File;
  */
 public class FileNameFixer {
     
-    public static void main(String[] args) {
-        System.out.println(fixFileName(" / \"\' `~  %  ><  ()*+\n^@!#&"));
-    }
-    
     public static String fixFileName(String name) {
         name = name.replaceAll(" ", "_");
         name = name.replaceAll("\\^", "");

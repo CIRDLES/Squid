@@ -80,15 +80,13 @@ public class ExpressionXMLConverter implements Converter {
     @Override
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
-        
+
         Expression expression = (Expression) value;
-        
-//        System.out.print("Expression started: " + expression.getName());
 
         writer.startNode("name");
         writer.setValue(expression.getName());
         writer.endNode();
-        
+
         writer.startNode("excelExpressionString");
         writer.setValue(expression.getExcelExpressionString());
         writer.endNode();
@@ -100,12 +98,10 @@ public class ExpressionXMLConverter implements Converter {
         writer.startNode("expressionTree");
         context.convertAnother(expression.getExpressionTree());
         writer.endNode();
-        
+
         writer.startNode("notes");
         writer.setValue(expression.getNotes());
         writer.endNode();
-        
-//        System.out.println(" | finished: " + expression.getName());
     }
 
     /**
@@ -143,7 +139,7 @@ public class ExpressionXMLConverter implements Converter {
         expressionTree = (ExpressionTreeInterface) context.convertAnother(expressionTree, ExpressionTree.class);
         expression.setExpressionTree(expressionTree);
         reader.moveUp();
-        
+
         reader.moveDown();
         expression.setNotes(reader.getValue());
         reader.moveUp();
