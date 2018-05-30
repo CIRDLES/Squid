@@ -55,6 +55,8 @@ squidApp/LudwigLibraryJavadoc/
 
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
 
+!Schema/
+
 
 # MACOS
 .DS_Store
