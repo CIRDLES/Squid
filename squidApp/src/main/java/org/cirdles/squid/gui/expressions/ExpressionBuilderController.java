@@ -429,6 +429,8 @@ public class ExpressionBuilderController implements Initializable {
     //Boolean to save wether the expression is currently edited as a textArea or with drag and drop
     private final BooleanProperty editAsText = new SimpleBooleanProperty(false);
 
+    private final BooleanProperty hasRatioOfInterest = new SimpleBooleanProperty(false);
+
     private final ObjectProperty<Mode> currentMode = new SimpleObjectProperty<>(Mode.EDIT);
 
     private enum Mode {
@@ -509,9 +511,9 @@ public class ExpressionBuilderController implements Initializable {
         refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        //specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
@@ -1042,6 +1044,7 @@ public class ExpressionBuilderController implements Initializable {
                 NUSwitchCheckBox.setSelected(newValue.isSquidSwitchNU());
                 expressionString.set(null);
                 expressionString.set(newValue.getExcelExpressionString());
+                hasRatioOfInterest.set(((ExpressionTree) newValue.getExpressionTree()).hasRatiosOfInterest());
             } else {
                 expressionNameTextField.clear();
                 expressionTextFlow.getChildren().clear();
@@ -1050,6 +1053,7 @@ public class ExpressionBuilderController implements Initializable {
                 concRefMatSwitchCheckBox.setSelected(false);
                 selectedExpressionIsEditable.set(false);
                 expressionString.set("");
+                hasRatioOfInterest.set(false);
             }
             undoListForExpression.clear();
             redoListForExpression.clear();
@@ -1113,6 +1117,7 @@ public class ExpressionBuilderController implements Initializable {
             Expression exp = selectedExpression.get();
             selectedExpression.set(null);
             selectedExpression.set(exp);
+            selectedExpressionIsEditable.set(true);
             selectInAllPanes(exp, true);
         }
     }
@@ -1270,7 +1275,7 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void summaryCalculationCheckBoxAction(ActionEvent event) {
-
+        NUSwitchCheckBox.setSelected(false);
     }
 
     @FXML
@@ -1280,7 +1285,7 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void NUSwitchCheckBoxAction(ActionEvent event) {
-
+        summaryCalculationSwitchCheckBox.setSelected(false);
     }
 
     @FXML
@@ -1290,7 +1295,7 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void fontMinusAction(ActionEvent event) {
-        if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier > EXPRESSIONBUILDERMINFONTSIZE) {
+        if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier > EXPRESSIONBUILDERMINFONTSIZE) {
             this.fontSizeModifier += -1;
             expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSIONBUILDERDEFAULTFONTSIZE + fontSizeModifier));
             for (Node n : expressionTextFlow.getChildren()) {
@@ -1298,10 +1303,10 @@ public class ExpressionBuilderController implements Initializable {
                     ((ExpressionTextNode) n).updateFontSize();
                 }
             }
-            if(EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier <= EXPRESSIONBUILDERMINFONTSIZE){
+            if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier <= EXPRESSIONBUILDERMINFONTSIZE) {
                 fontMinusBtn.setDisable(true);
             }
-            if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier < EXPRESSIONBUILDERMAXFONTSIZE) {
+            if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier < EXPRESSIONBUILDERMAXFONTSIZE) {
                 fontPlusBtn.setDisable(false);
             }
         }
@@ -1309,7 +1314,7 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void fontPlusAction(ActionEvent event) {
-        if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier < EXPRESSIONBUILDERMAXFONTSIZE) {
+        if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier < EXPRESSIONBUILDERMAXFONTSIZE) {
             this.fontSizeModifier += 1;
             expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSIONBUILDERDEFAULTFONTSIZE + fontSizeModifier));
             for (Node n : expressionTextFlow.getChildren()) {
@@ -1317,10 +1322,10 @@ public class ExpressionBuilderController implements Initializable {
                     ((ExpressionTextNode) n).updateFontSize();
                 }
             }
-            if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier >= EXPRESSIONBUILDERMAXFONTSIZE) {
+            if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier >= EXPRESSIONBUILDERMAXFONTSIZE) {
                 fontPlusBtn.setDisable(true);
             }
-            if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier > EXPRESSIONBUILDERMINFONTSIZE) {
+            if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier > EXPRESSIONBUILDERMINFONTSIZE) {
                 fontMinusBtn.setDisable(false);
             }
         }
@@ -2025,6 +2030,15 @@ public class ExpressionBuilderController implements Initializable {
         if (selectedExpression.isNotNull().get()) {
 
             Expression exp = makeExpression();
+
+            if (((ExpressionTree) exp.getExpressionTree()).hasRatiosOfInterest()) {
+                hasRatioOfInterest.set(true);
+            } else {
+                hasRatioOfInterest.set(false);
+                NUSwitchCheckBox.setSelected(false);
+                exp = makeExpression();
+            }
+
             auditTextArea.setText(exp.produceExpressionTreeAudit());
             graphExpressionTree(exp.getExpressionTree());
             populatePeeks(exp);

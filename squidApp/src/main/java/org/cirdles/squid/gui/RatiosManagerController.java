@@ -72,7 +72,7 @@ public class RatiosManagerController implements Initializable {
     @FXML
     private GridPane ratiosGridPane;
 
-    private final int BUTTON_WIDTH = 40;
+    private final int BUTTON_WIDTH = 45;
     private final int BUTTON_HEIGHT = 30;
 
     private List<SquidSpeciesModel> squidSpeciesList;
