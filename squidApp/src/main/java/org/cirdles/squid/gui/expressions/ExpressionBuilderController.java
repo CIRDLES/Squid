@@ -94,6 +94,9 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.Token;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
+import static org.cirdles.squid.constants.Squid3Constants.EXPRESSIONBUILDERDEFAULTFONTSIZE;
+import static org.cirdles.squid.constants.Squid3Constants.EXPRESSIONBUILDERMAXFONTSIZE;
+import static org.cirdles.squid.constants.Squid3Constants.EXPRESSIONBUILDERMINFONTSIZE;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
@@ -160,6 +163,10 @@ public class ExpressionBuilderController implements Initializable {
     private Button showNotesBtn;
     @FXML
     private Button toggleWhiteSpacesBtn;
+    @FXML
+    private Button fontMinusBtn;
+    @FXML
+    private Button fontPlusBtn;
 
     //TEXTS
     @FXML
@@ -175,6 +182,10 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private Text hintHoverText;
     private final TextArea expressionAsTextArea = new TextArea();
+
+    {
+        expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSIONBUILDERDEFAULTFONTSIZE));
+    }
 
     //RADIOS
     ToggleGroup toggleGroup;
@@ -1279,22 +1290,38 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void fontMinusAction(ActionEvent event) {
-        this.fontSizeModifier += -1;
-        expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), 13 + fontSizeModifier));
-        for (Node n : expressionTextFlow.getChildren()) {
-            if (n instanceof ExpressionTextNode) {
-                ((ExpressionTextNode) n).updateFontSize();
+        if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier > EXPRESSIONBUILDERMINFONTSIZE) {
+            this.fontSizeModifier += -1;
+            expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSIONBUILDERDEFAULTFONTSIZE + fontSizeModifier));
+            for (Node n : expressionTextFlow.getChildren()) {
+                if (n instanceof ExpressionTextNode) {
+                    ((ExpressionTextNode) n).updateFontSize();
+                }
+            }
+            if(EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier <= EXPRESSIONBUILDERMINFONTSIZE){
+                fontMinusBtn.setDisable(true);
+            }
+            if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier < EXPRESSIONBUILDERMAXFONTSIZE) {
+                fontPlusBtn.setDisable(false);
             }
         }
     }
 
     @FXML
     private void fontPlusAction(ActionEvent event) {
-        this.fontSizeModifier += 1;
-        expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), 13 + fontSizeModifier));
-        for (Node n : expressionTextFlow.getChildren()) {
-            if (n instanceof ExpressionTextNode) {
-                ((ExpressionTextNode) n).updateFontSize();
+        if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier < EXPRESSIONBUILDERMAXFONTSIZE) {
+            this.fontSizeModifier += 1;
+            expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSIONBUILDERDEFAULTFONTSIZE + fontSizeModifier));
+            for (Node n : expressionTextFlow.getChildren()) {
+                if (n instanceof ExpressionTextNode) {
+                    ((ExpressionTextNode) n).updateFontSize();
+                }
+            }
+            if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier >= EXPRESSIONBUILDERMAXFONTSIZE) {
+                fontPlusBtn.setDisable(true);
+            }
+            if (EXPRESSIONBUILDERDEFAULTFONTSIZE+this.fontSizeModifier > EXPRESSIONBUILDERMINFONTSIZE) {
+                fontMinusBtn.setDisable(false);
             }
         }
     }
@@ -2032,8 +2059,7 @@ public class ExpressionBuilderController implements Initializable {
         expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(concRefMatSwitchCheckBox.isSelected());
         expTree.setSquidSwitchSCSummaryCalculation(summaryCalculationSwitchCheckBox.isSelected());
         expTree.setSquidSpecialUPbThExpression(specialUPbThSwitchCheckBox.isSelected());
-        
-        
+
         // to detect ratios of interest
         if (expTree instanceof BuiltInExpressionInterface) {
             ((BuiltInExpressionInterface) expTree).buildExpression();
@@ -2761,7 +2787,7 @@ public class ExpressionBuilderController implements Initializable {
         public PresentationTextNode(String text) {
             super(text);
             //setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
-            this.fontSize = 16;
+            this.fontSize = EXPRESSIONBUILDERDEFAULTFONTSIZE + 3;
             updateFontSize();
             if (text.equals(UNVISIBLEWHITESPACEPLACEHOLDER) || text.equals(VISIBLEWHITESPACEPLACEHOLDER)) {
                 whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
@@ -2806,7 +2832,7 @@ public class ExpressionBuilderController implements Initializable {
             this.regularColor = Color.GREEN;
             setFill(regularColor);
             //setStyle(OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS);
-            this.fontSize = 16;
+            this.fontSize = EXPRESSIONBUILDERDEFAULTFONTSIZE + 3;
             updateFontSize();
         }
     }
@@ -2852,7 +2878,7 @@ public class ExpressionBuilderController implements Initializable {
             this.popupShowing = false;
 
             //setStyle(EXPRESSION_LIST_CSS_STYLE_SPECS);
-            this.fontSize = 12;
+            this.fontSize = EXPRESSIONBUILDERDEFAULTFONTSIZE;
             updateFontSize();
 
             updateMode(currentMode.get());
