@@ -93,8 +93,8 @@ public class CalamariFileUtilities {
                     List<String> fileNames = Files.readAllLines(pathToSchemas, ISO_8859_1);
                     schemaFileResourceExtractor = new ResourceExtractor(Squid.class);
                     for (String schemaName : fileNames) {
-                        if (schemaName.trim().length() > 0) {
-                            File fileSchemaResource = schemaFileResourceExtractor.extractResourceAsFile("schema/"+ schemaName);
+                        if (schemaName.trim().length() > 0) {                                                               
+                            File fileSchemaResource = schemaFileResourceExtractor.extractResourceAsFile("schema/" + schemaName); //platform independent
                             File schema = new File(schemaFolder.getCanonicalPath() + File.separator + schemaName);
                             
                             if (fileSchemaResource.renameTo(schema)) {
