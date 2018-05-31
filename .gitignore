@@ -42,6 +42,7 @@ test_*
 *.xls
 EXPRESSION.HTML
 squidApp/LudwigLibraryJavadoc/
+squidApp/Schema/
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
