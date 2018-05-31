@@ -108,6 +108,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
@@ -2019,7 +2020,7 @@ public class ExpressionBuilderController implements Initializable {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText(),
                 fullText,
-                (expressionIsCopied ? selectedBeforeCreateOrCopy.isSquidSwitchNU() : false)
+                NUSwitchCheckBox.isSelected()
         );
 
         exp.setNotes(notesTextArea.getText());
@@ -2031,7 +2032,12 @@ public class ExpressionBuilderController implements Initializable {
         expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(concRefMatSwitchCheckBox.isSelected());
         expTree.setSquidSwitchSCSummaryCalculation(summaryCalculationSwitchCheckBox.isSelected());
         expTree.setSquidSpecialUPbThExpression(specialUPbThSwitchCheckBox.isSelected());
-        exp.setSquidSwitchNU(NUSwitchCheckBox.isSelected());
+        
+        
+        // to detect ratios of interest
+        if (expTree instanceof BuiltInExpressionInterface) {
+            ((BuiltInExpressionInterface) expTree).buildExpression();
+        }
 
         return exp;
     }

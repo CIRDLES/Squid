@@ -41,7 +41,7 @@ public class And extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Conjuction"}};
-        labelsForInputValues = new String[]{"value1","value2"};
+        labelsForInputValues = new String[]{"condition1","condition2"};
     }
 
     /**
