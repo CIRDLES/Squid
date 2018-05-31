@@ -1108,7 +1108,7 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void saveAction(ActionEvent event) {
 
-        boolean nameExists = squidProject.getTask().expressionExists(expressionNameTextField.getText());
+        boolean nameExists = squidProject.getTask().expressionExists(new Expression(expressionNameTextField.getText(), ""));
 
         if (!nameExists || (currentMode.get().equals(Mode.EDIT) && selectedExpression.get().getName().equals(expressionNameTextField.getText()))) {
             save();
@@ -1429,12 +1429,13 @@ public class ExpressionBuilderController implements Initializable {
         for (Map.Entry<String, String> op : LOGIC_FUNCTIONS_MAP.entrySet()) {
             if (!op.getKey().equalsIgnoreCase("sqIf")) {
                 int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
-                String args = op.getKey() + "(";
+                StringBuilder args = new StringBuilder();
+                args.append(op.getKey()).append("(");
                 for (int i = 0; i < argumentCount; i++) {
-                    args += "ARG" + i + (i < (argumentCount - 1) ? "," : ")");
+                    args.append("ARG").append(i).append((i < (argumentCount - 1) ? "," : ")"));
                 }
 
-                logicFunctionStrings.add(args);
+                logicFunctionStrings.add(args.toString());
             }
         }
 
@@ -1467,7 +1468,6 @@ public class ExpressionBuilderController implements Initializable {
         } else {
             TaskInterface task = squidProject.getTask();
             List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
-            List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
             List<ShrimpFractionExpressionInterface> concRefMatSpots = task.getConcentrationReferenceMaterialSpots();
             if (exp.getExpressionTree() instanceof ConstantNode) {
                 res = "Not used";
@@ -1522,9 +1522,7 @@ public class ExpressionBuilderController implements Initializable {
             res = "No expression.";
         } else {
             TaskInterface task = squidProject.getTask();
-            List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
             List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
-            List<ShrimpFractionExpressionInterface> concRefMatSpots = task.getConcentrationReferenceMaterialSpots();
             if (exp.getExpressionTree() instanceof ConstantNode) {
                 res = "Not used";
                 if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
@@ -1890,7 +1888,7 @@ public class ExpressionBuilderController implements Initializable {
                 }
             } else {
                 String str = FUNCTIONS_MAP.get(text);
-                if(str!=null){
+                if (str != null) {
                     OperationOrFunctionInterface fn = Function.operationFactory(str);
                     if (fn != null) {
                         res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " argument(s): " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());

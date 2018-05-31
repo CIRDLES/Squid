@@ -1695,12 +1695,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public boolean expressionExists(String expression) {
-        for (Expression exLoop : getTaskExpressionsOrdered()) {
-            if (exLoop.getName().equalsIgnoreCase(expression)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean expressionExists(Expression expression) {
+        return taskExpressionsOrdered.contains(expression);
     }
 }

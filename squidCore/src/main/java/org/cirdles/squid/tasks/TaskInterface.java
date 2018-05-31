@@ -216,7 +216,7 @@ public interface TaskInterface {
      * @param expression Name of the expression to test
      * @return True if the expression exists, false if not
      */
-    public boolean expressionExists(String expression);
+    public boolean expressionExists(Expression expression);
 
     /**
      * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set

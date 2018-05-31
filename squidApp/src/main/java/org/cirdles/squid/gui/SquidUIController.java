@@ -804,7 +804,7 @@ public class SquidUIController implements Initializable {
             if (exp != null) {
                 squidPersistentState.updateExpressionListMRU(expressionFileXML);
                 retVal = true;
-                if (squidProject.getTask().expressionExists(exp.getName())) {
+                if (squidProject.getTask().expressionExists(exp)) {
                     ButtonType replace = new ButtonType("Replace");
                     ButtonType rename = new ButtonType("Rename");
                     Alert alert = new Alert(Alert.AlertType.WARNING,
@@ -832,7 +832,7 @@ public class SquidUIController implements Initializable {
                             }
                             if (okBtn != null && newName != null) {
                                 newName.textProperty().addListener((observable, oldValue, newValue) -> {
-                                    okBtn.setDisable(squidProject.getTask().expressionExists(exp.getName()));
+                                    okBtn.setDisable(squidProject.getTask().expressionExists(exp));
                                 });
                             }
                             dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);

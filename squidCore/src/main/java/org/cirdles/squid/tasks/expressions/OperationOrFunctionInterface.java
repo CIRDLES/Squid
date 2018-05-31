@@ -64,7 +64,7 @@ public interface OperationOrFunctionInterface {
      * @return the labelsForOutputValues
      */
     public String[][] getLabelsForOutputValues();
-    
+
     /**
      * @return the labelsForInputValues
      */
@@ -75,26 +75,32 @@ public interface OperationOrFunctionInterface {
         String[] outputArray = getLabelsForOutputValues()[0];
 
         if (outputArray.length > 0) {
-            retVal = " [";
+            StringBuilder builder = new StringBuilder();
+            builder.append(" [");
+
             for (int i = 0; i < outputArray.length; i++) {
-                retVal += outputArray[i] + (String) (i < (outputArray.length - 1) ? ", " : "");
+                builder.append(outputArray[i]).append((String) (i < (outputArray.length - 1) ? ", " : ""));
             }
-            retVal += "]";
+            builder.append("]");
+            retVal = builder.toString();
         }
 
         return retVal;
     }
-    
+
     public default String printInputValues() {
         String retVal = "None Specified";
         String[] inputArray = getLabelsForInputValues();
 
         if (inputArray.length > 0) {
-            retVal = " [";
+            StringBuilder builder = new StringBuilder();
+            builder.append(" [");
+
             for (int i = 0; i < inputArray.length; i++) {
-                retVal += inputArray[i] + (String) (i < (inputArray.length - 1) ? ", " : "");
+                builder.append(inputArray[i]).append((String) (i < (inputArray.length - 1) ? ", " : ""));
             }
-            retVal += "]";
+            builder.append("]");
+            retVal = builder.toString();
         }
 
         return retVal;
