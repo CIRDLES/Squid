@@ -1985,7 +1985,7 @@ public class ExpressionBuilderController implements Initializable {
                     }
                 }
                 if (res == null) {
-                    res = new Tooltip("Unreconized node: " + text);
+                    res = new Tooltip("Unrecognized node: " + text);
                     ImageView imageView = new ImageView(UNHEALTHY);
                     imageView.setFitHeight(12);
                     imageView.setFitWidth(12);
