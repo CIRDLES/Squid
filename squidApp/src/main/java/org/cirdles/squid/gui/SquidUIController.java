@@ -125,7 +125,7 @@ public class SquidUIController implements Initializable {
     private static GridPane taskManagerUI;
 
     private static VBox isotopesManagerUI;
-    private static VBox ratiosManagerUI;
+    private static ScrollPane ratiosManagerUI;
 
     private static SplitPane expressionBuilderUI;
     private static Pane expressionManagerUI;
