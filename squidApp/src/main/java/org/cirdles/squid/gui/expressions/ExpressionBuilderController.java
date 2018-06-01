@@ -507,7 +507,7 @@ public class ExpressionBuilderController implements Initializable {
         createExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionPasteBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        saveBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        saveBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(expressionNameTextField.textProperty().isEmpty()));
         expressionAsTextBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));

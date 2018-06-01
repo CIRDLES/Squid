@@ -832,7 +832,7 @@ public class SquidUIController implements Initializable {
                             }
                             if (okBtn != null && newName != null) {
                                 newName.textProperty().addListener((observable, oldValue, newValue) -> {
-                                    okBtn.setDisable(squidProject.getTask().expressionExists(exp));
+                                    okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
                                 });
                             }
                             dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
