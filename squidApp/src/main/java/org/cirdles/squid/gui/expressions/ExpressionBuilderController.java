@@ -123,6 +123,7 @@ import static org.cirdles.squid.tasks.expressions.functions.Function.SQUID_FUNCT
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
+import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
@@ -521,9 +522,9 @@ public class ExpressionBuilderController implements Initializable {
         hintHoverText.visibleProperty().bind(editAsText.not());
         BooleanProperty containsWhiteSpaces = new SimpleBooleanProperty(false);
         expressionString.addListener((observable, oldValue, newValue) -> {
-            if(newValue!=null && (newValue.contains(" ") || newValue.contains("\t") || newValue.contains("\r") || newValue.contains("\n"))){
+            if (newValue != null && (newValue.contains(" ") || newValue.contains("\t") || newValue.contains("\r") || newValue.contains("\n"))) {
                 containsWhiteSpaces.set(true);
-            }else{
+            } else {
                 containsWhiteSpaces.set(false);
             }
         });
@@ -1856,149 +1857,144 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
         if (!peek.equals("")) {
-            peek = "Peek:\n\t" + peek.replaceAll("\n", "\n\t").trim() + "\n\n";
+            peek = "Peek:\n\t" + peek.replaceAll("\n", "\n\t").trim();
         }
         return peek;
     }
 
-    private Tooltip createExpressionNodeTooltip(String nodeText) {
+    private Tooltip createFloatingTooltip(String nodeText) {
         Tooltip res = null;
-        if (!(nodeText == null)) {
+        if (nodeText != null) {
             String text = nodeText.trim();
-            if (text.matches("^\\[(±?)(%?)\"(.*?)\"\\]$")) {
-                String exname = text.replaceAll("(^\\[(%)?\")|(\"\\]$)", "");
-                Expression ex = squidProject.getTask().getExpressionByName(exname);
-                if (ex != null) {
-                    String uncertainty = "";
-                    if (text.contains("[%\"")) {
-                        uncertainty = "1 \u03C3 % uncertainty\n\n";
-                    } else if (text.contains("[±\"")) {
-                        uncertainty = "1 \u03C3 ± uncertainty\n\n";
-                    }
-                    boolean isCustom = ex.isCustom();
-                    res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + createPeekForTooltip(ex) + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
-                    if (!ex.amHealthy()) {
-                        ImageView imageView = new ImageView(UNHEALTHY);
-                        imageView.setFitHeight(12);
-                        imageView.setFitWidth(12);
-                        res.setGraphic(imageView);
-                    }
-                }
-                if (res == null) {
-                    for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
-                        if (exname.equalsIgnoreCase(r.getRatioName())) {
-                            String uncertainty = "";
-                            if (text.contains("[%\"")) {
-                                uncertainty = "1 \u03C3 % uncertainty for ";
-                            } else if (text.contains("[±\"")) {
-                                uncertainty = "1 \u03C3 ± uncertainty for ";
-                            }
-                            res = new Tooltip(uncertainty + "Ratio: " + r.getRatioName());
-                        }
-                    }
-                }
-                if (res == null && exname.length() > 2) {
-                    String lastTwo = exname.substring(exname.length() - 2);
-                    if (ShuntingYard.isNumber(lastTwo)) {
-                        String baseExpressionName = exname.substring(0, exname.length() - 2);
-                        ex = squidProject.getTask().getExpressionByName(baseExpressionName);
-                        if (ex != null) {
-                            String uncertainty = "";
-                            if (text.contains("[%\"")) {
-                                uncertainty = "1 \u03C3 % uncertainty\n\n";
-                            } else if (text.contains("[±\"")) {
-                                uncertainty = "1 \u03C3 ± uncertainty\n\n";
-                            }
-                            boolean isCustom = ex.isCustom();
-                            res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + uncertainty + createPeekForTooltip(ex) + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
-                            if (!ex.amHealthy()) {
-                                ImageView imageView = new ImageView(UNHEALTHY);
-                                imageView.setFitHeight(12);
-                                imageView.setFitWidth(12);
-                                res.setGraphic(imageView);
-                            }
-                        }
-                    }
-                }
-                if (res == null) {
-                    res = new Tooltip("Missing expression: " + exname);
-                    ImageView imageView = new ImageView(UNHEALTHY);
-                    imageView.setFitHeight(12);
-                    imageView.setFitWidth(12);
-                    res.setGraphic(imageView);
-                }
-            } else {
-                String str = FUNCTIONS_MAP.get(text);
-                if (str != null) {
-                    OperationOrFunctionInterface fn = Function.operationFactory(str);
-                    if (fn != null) {
-                        res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " argument(s): " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
-                    }
-                }
-                if (res == null && listOperators.contains(text)) {
+
+            text = text.replace(UNVISIBLENEWLINEPLACEHOLDER, "\n");
+            text = text.replace(VISIBLENEWLINEPLACEHOLDER, "\n");
+            text = text.replace(UNVISIBLETABPLACEHOLDER, "\t");
+            text = text.replace(VISIBLETABPLACEHOLDER, "\t");
+            text = text.replace(UNVISIBLEWHITESPACEPLACEHOLDER, " ");
+            text = text.replace(VISIBLEWHITESPACEPLACEHOLDER, " ");
+
+            ImageView imageView = new ImageView(UNHEALTHY);
+            imageView.setFitHeight(12);
+            imageView.setFitWidth(12);
+
+            TokenTypes type = ShuntingYard.TokenTypes.getType(text);
+            switch (type) {
+
+                case OPERATOR_A:
+                case OPERATOR_M:
+                case OPERATOR_E:
+
                     res = new Tooltip("Operation: " + text);
-                }
-                if (res == null && text.matches("^[()\\[\\]]$")) {
+                    break;
+
+                case LEFT_PAREN:
+                case RIGHT_PAREN:
+
                     res = new Tooltip("Parenthese: " + text);
-                }
-                if (res == null && text.equals(",")) {
-                    res = new Tooltip("Comma: " + text);
-                }
-                if (res == null) {
+                    break;
+
+                case NUMBER:
+
+                    res = new Tooltip("Number: " + text);
+                    break;
+
+                case NAMED_CONSTANT:
+
                     ConstantNode constant;
                     constant = (ConstantNode) squidProject.getTask().getNamedConstantsMap().get(text);
                     if (constant == null) {
                         constant = (ConstantNode) squidProject.getTask().getNamedParametersMap().get(text);
                     }
                     if (constant != null) {
-                        res = new Tooltip("Constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
+                        res = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
                     }
-                }
-                if (res == null && ShuntingYard.isNumber(text)) {
-                    res = new Tooltip("Number: " + text);
-                }
-                if (res == null && (nodeText.equals(VISIBLEWHITESPACEPLACEHOLDER) || nodeText.equals(UNVISIBLEWHITESPACEPLACEHOLDER))) {
-                    res = new Tooltip("Presentation node: Space");
-                }
-                if (res == null && (nodeText.equals(VISIBLETABPLACEHOLDER) || nodeText.equals(UNVISIBLETABPLACEHOLDER))) {
-                    res = new Tooltip("Presentation node: Tab");
-                }
-                if (res == null && (nodeText.equals(VISIBLENEWLINEPLACEHOLDER) || nodeText.equals(UNVISIBLENEWLINEPLACEHOLDER))) {
-                    res = new Tooltip("Presentation node: New line");
-                }
-                if (res == null) {
-                    Expression ex = squidProject.getTask().getExpressionByName(text);
-                    if (ex != null) {
-                        boolean isCustom = ex.isCustom();
-                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + createPeekForTooltip(ex) + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
-                    }
-                    if (res == null && text.length() > 2) {
-                        String lastTwo = text.substring(text.length() - 2);
-                        if (ShuntingYard.isNumber(lastTwo)) {
-                            String baseExpressionName = text.substring(0, text.length() - 2);
-                            ex = squidProject.getTask().getExpressionByName(baseExpressionName);
-                            if (ex != null) {
-                                boolean isCustom = ex.isCustom();
-                                res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + (ex.amHealthy() ? "" : ex.produceExpressionTreeAudit().trim() + "\n\n") + createPeekForTooltip(ex) + "Notes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
-                            }
+                    break;
+
+                case FUNCTION:
+
+                    String str = FUNCTIONS_MAP.get(text);
+                    if (str != null) {
+                        OperationOrFunctionInterface fn = Function.operationFactory(str);
+                        if (fn != null) {
+                            res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " argument(s): " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
                         }
                     }
-                    if (ex != null && res != null) {
+                    break;
+
+                case COMMA:
+
+                    res = new Tooltip("Comma: " + text);
+                    break;
+
+                case FORMATTER:
+
+                    String tooltipText = "Presentation node: ";
+                    switch (text) {
+                        case "\t":
+                            tooltipText += "tab";
+                            break;
+                        case "\n":
+                            tooltipText += "new line";
+                            break;
+                        case " ":
+                            tooltipText += "space";
+                            break;
+                        default:
+                            tooltipText += "unknown";
+                    }
+                    res = new Tooltip(tooltipText);
+                    break;
+
+                case NAMED_EXPRESSION_INDEXED:
+
+                    text = text.replaceAll("\\[\\d\\]$", "");
+
+                case NAMED_EXPRESSION:
+                    String exname = text;
+                    String uncertainty = "";
+                    if (text.matches("^\\[(±?)(%?)\"(.*?)\"\\]$")) {
+                        exname = text.replaceAll("(^\\[(%)?\")|(\"\\]$)", "");
+                        if (text.contains("[%\"")) {
+                            uncertainty = "1 \u03C3 % uncertainty\n\n";
+                        } else if (text.contains("[±\"")) {
+                            uncertainty = "1 \u03C3 ± uncertainty\n\n";
+                        }
+                    }
+                    Expression ex = squidProject.getTask().getExpressionByName(exname);
+                    if (ex == null && text.matches("^\\.*\\d\\d$")) {
+                        exname = text.replaceAll("\\d\\d$", "");
+                        ex = squidProject.getTask().getExpressionByName(exname);
+                    }
+                    if (ex != null) {
+                        boolean isCustom = ex.isCustom();
+                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + uncertainty + (ex.amHealthy() ? createPeekForTooltip(ex) : ex.produceExpressionTreeAudit().trim()) + "\n\nNotes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                         if (!ex.amHealthy()) {
-                            ImageView imageView = new ImageView(UNHEALTHY);
-                            imageView.setFitHeight(12);
-                            imageView.setFitWidth(12);
                             res.setGraphic(imageView);
                         }
                     }
-                }
-                if (res == null) {
-                    res = new Tooltip("Unrecognized node: " + text);
-                    ImageView imageView = new ImageView(UNHEALTHY);
-                    imageView.setFitHeight(12);
-                    imageView.setFitWidth(12);
-                    res.setGraphic(imageView);
-                }
+                    if (res == null) {
+                        for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
+                            if (exname.equalsIgnoreCase(r.getRatioName())) {
+                                Expression exp = new Expression(r.getRatioName(), "[\"" + r.getRatioName() + "\"]");
+                                exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                                exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                                exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                                res = new Tooltip(("Ratio: " + r.getRatioName() + "\n\n" + uncertainty) + createPeekForTooltip(exp));
+                                break;
+                            }
+                        }
+                    }
+                    if (res == null) {
+                        res = new Tooltip("Missing expression: " + exname);
+                        res.setGraphic(imageView);
+                    }
+                    break;
+
+            }
+            if (res == null) {
+                res = new Tooltip("Unrecognized node: " + text);
+                res.setGraphic(imageView);
             }
             res.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
         }
@@ -2363,7 +2359,7 @@ public class ExpressionBuilderController implements Initializable {
                             imageView.setFitWidth(12);
                             setGraphic(imageView);
                         }
-                        Tooltip t = createExpressionNodeTooltip(getText());
+                        Tooltip t = createFloatingTooltip("[\"" + getText() + "\"]");
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });
@@ -2558,7 +2554,7 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(expression.getRatioName());
-                        Tooltip t = createExpressionNodeTooltip(getText());
+                        Tooltip t = createFloatingTooltip("[\"" + getText() + "\"]");
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });
@@ -2690,7 +2686,7 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(operationOrFunction);
-                        Tooltip t = createExpressionNodeTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER));
+                        Tooltip t = createFloatingTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });
@@ -2874,7 +2870,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private class ExpressionTextNode extends Text {
-        
+
         protected boolean isWhiteSpace;
 
         private final String text;
@@ -2915,7 +2911,7 @@ public class ExpressionBuilderController implements Initializable {
                 updateMode(newValue);
             });
 
-            setTooltip(createExpressionNodeTooltip(text));
+            setTooltip(createFloatingTooltip(text));
         }
 
         public final void updateFontSize() {
@@ -3017,9 +3013,9 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         protected final void updateMode(Mode mode) {
-            if(isWhiteSpace && !whiteSpaceVisible.get()){
+            if (isWhiteSpace && !whiteSpaceVisible.get()) {
                 setNodeModeView();
-            }else{
+            } else {
                 switch (mode) {
                     case VIEW:
                         setNodeModeView();
