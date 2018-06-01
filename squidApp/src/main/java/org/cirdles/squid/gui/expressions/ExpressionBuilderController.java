@@ -1915,7 +1915,7 @@ public class ExpressionBuilderController implements Initializable {
                 case OPERATOR_M:
                 case OPERATOR_E:
 
-                    res = new Tooltip("Operation: " + text);
+                    res = new Tooltip("Operation: " + text+" ("+OPERATIONS_MAP.get(text)+")");
                     break;
 
                 case LEFT_PAREN:
