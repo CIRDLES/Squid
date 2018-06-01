@@ -2178,7 +2178,13 @@ public class ExpressionBuilderController implements Initializable {
                         sb.append(" ");
                         break;
                     default:
-                        sb.append(((ExpressionTextNode) node).getText().trim());
+                        String txt = ((ExpressionTextNode) node).getText().trim();
+                        String nonLetter = "\t\n\r [](),+-*/<>=^";
+                        if (sb.length() > 0 && (nonLetter.indexOf(sb.charAt(sb.length() - 1)) != -1 || nonLetter.indexOf(txt.charAt(0)) != -1)) {
+                            sb.append(txt);
+                        } else {
+                            sb.append(" ").append(txt);
+                        }
                         break;
                 }
             }
