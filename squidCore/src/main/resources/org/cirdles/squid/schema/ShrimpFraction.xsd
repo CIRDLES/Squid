@@ -32,7 +32,7 @@
         </xs:documentation>
     </xs:annotation>
     
-    <xs:complexType name="ShrimpFractioin" mixed="true">
+    <xs:complexType name="ShrimpFraction" mixed="true">
         <xs:sequence>
                    
             <xs:element name="fractionID" type="xs:string"/>
