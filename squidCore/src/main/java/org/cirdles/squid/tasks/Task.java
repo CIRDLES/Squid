@@ -1074,16 +1074,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         if (spotsForExpression.size() > 0) {
             // determine type of expressionTree
+            // Summary expression test
             if (((ExpressionTree) expressionTree).isSquidSwitchSCSummaryCalculation()) {
                 List<ShrimpFractionExpressionInterface> spotsUsedForCalculation = new ArrayList<>();
-                double[][] values = new double[0][0];
+                double[][] values;
 
-                // May 2018 new logic to support user rejecting some fractions
+                // May 2018 new logic to support user rejecting some fractions in summary calculations - Weighted Mean for now
                 SpotSummaryDetails spotSummaryDetails;
                 if (taskExpressionsEvaluationsPerSpotSet.containsKey(expressionTree.getName())) {
                     spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionTree.getName());
                 } else {
                     spotSummaryDetails = new SpotSummaryDetails(((ExpressionTree) expressionTree).getOperation());
+                    taskExpressionsEvaluationsPerSpotSet.put(expressionTree.getName(),spotSummaryDetails);
                 }
 
                 // if the spotsForExpression are the same, then preserve list of indices of rejected
@@ -1104,11 +1106,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 // update spotSummaryDetails
                 spotSummaryDetails.setOperation(((ExpressionTree) expressionTree).getOperation());
 
-                // special case for WieghtedMean in wich auto rejection is possible
+                // special case for WieghtedMean in which auto rejection is possible
                 boolean noReject = false;
                 if (((ExpressionTree) expressionTree).getOperation() instanceof WtdMeanACalc) {
-                    // discover what the flags say
+                    // discover what the flags say - repeats logic of WtdMeanACalc()
+                    // TODO: move logic to single location
                     List<ExpressionTreeInterface> childrenET = ((ExpressionTree) expressionTree).getChildrenET();
+                    
                     Object noUPbConstAutoRejectO = childrenET.get(2).eval(shrimpFractions, this)[0][0];
                     boolean noUPbConstAutoReject = (boolean) noUPbConstAutoRejectO;
 
@@ -1118,15 +1122,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     noReject = (noUPbConstAutoReject && !pbCanDriftCorr);
 
                     if (noReject) {
-                        // we use the user's stored rejections
+                        // we use the user's stored rejections and do not do autorejection
+                        // note on first pass after changing noreject, the rejected spots from auto reject are used 
+                        // because they are still logged in rejectedIndices
                         spotsUsedForCalculation = spotSummaryDetails.retrieveActiveSpots();
                     }
                 }
                 
                 values = convertObjectArrayToDoubles(expressionTree.eval(spotsUsedForCalculation, this));
                 
+                // in the case of auto-rejection, mark the rejected spots after the fact
                 if ((((ExpressionTree) expressionTree).getOperation() instanceof WtdMeanACalc) && !noReject){
-                    // we save off rejected spots for display purposes
+                    // we save off auto-rejected spots for display purposes
                     boolean [] rejectedIndices = new boolean[spotsUsedForCalculation.size()];
                     for (int i = 0; i < values[1].length; i ++){
                         rejectedIndices[(int)values[1][i]] = true;
