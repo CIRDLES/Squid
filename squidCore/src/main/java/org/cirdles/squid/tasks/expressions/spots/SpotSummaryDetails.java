@@ -18,8 +18,12 @@ package org.cirdles.squid.tasks.expressions.spots;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
  *
@@ -31,46 +35,43 @@ public class SpotSummaryDetails implements Serializable {
 
     private double[][] values;
     private List<ShrimpFractionExpressionInterface> selectedSpots;
-    private OperationOrFunctionInterface operation;
+    private ExpressionTreeInterface expressionTree;
     private boolean[] rejectedIndices;
 
     private SpotSummaryDetails() {
         this(null);
     }
-    
-    public SpotSummaryDetails(OperationOrFunctionInterface operation) {
-        this(operation, new double[0][0], new ArrayList<ShrimpFractionExpressionInterface>());
+
+    public SpotSummaryDetails(ExpressionTreeInterface expressionTree) {
+        this(expressionTree, new double[0][0], new ArrayList<ShrimpFractionExpressionInterface>());
     }
 
     /**
      *
-     * @param operation
+     * @param expressionTree
      * @param values
      * @param selectedSpots
      */
-    public SpotSummaryDetails(OperationOrFunctionInterface operation, double[][] values, List<ShrimpFractionExpressionInterface> selectedSpots) {
-        this.operation = operation;
+    public SpotSummaryDetails(ExpressionTreeInterface expressionTree, double[][] values, List<ShrimpFractionExpressionInterface> selectedSpots) {
+        this.expressionTree = expressionTree;
         this.values = values.clone();
         this.selectedSpots = selectedSpots;
         this.rejectedIndices = new boolean[selectedSpots.size()];
     }
-    
-    public List<ShrimpFractionExpressionInterface> retrieveActiveSpots(){
+
+    public double[][] eval(TaskInterface task) throws SquidException{
+        return convertObjectArrayToDoubles(expressionTree.eval(retrieveActiveSpots(), task));
+    }
+
+    public List<ShrimpFractionExpressionInterface> retrieveActiveSpots() {
         List<ShrimpFractionExpressionInterface> activeSpots = new ArrayList<>();
-        
+
         if (rejectedIndices == null) {
             rejectedIndices = new boolean[selectedSpots.size()];
         }
-        
-//        rejectedIndices[0] = true;
-//        rejectedIndices[7] = true;
-//        rejectedIndices[8] = true;
-//        rejectedIndices[11] = true;
-//        rejectedIndices[12] = true;
-//        rejectedIndices[13] = true;
-        
-        for (int i = 0; i < selectedSpots.size(); i ++){
-            if (! rejectedIndices[i]){
+
+        for (int i = 0; i < selectedSpots.size(); i++) {
+            if (!rejectedIndices[i]) {
                 activeSpots.add(selectedSpots.get(i));
             }
         }
@@ -108,18 +109,19 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     * @return the operation
+     *
+     * @param expressionTree
      */
-    public OperationOrFunctionInterface getOperation() {
-        return operation;
+    public void setExpressionTree(ExpressionTreeInterface expressionTree) {
+        this.expressionTree = expressionTree;
     }
 
     /**
      *
-     * @param operation
+     * @return
      */
-    public void setOperation(OperationOrFunctionInterface operation) {
-        this.operation = operation;
+    public ExpressionTreeInterface getExpressionTree() {
+        return expressionTree;
     }
 
     /**

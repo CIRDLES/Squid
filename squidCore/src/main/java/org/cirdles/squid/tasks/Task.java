@@ -1086,7 +1086,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 if (taskExpressionsEvaluationsPerSpotSet.containsKey(expression.getName())) {
                     spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expression.getName());
                 } else {
-                    spotSummaryDetails = new SpotSummaryDetails(((ExpressionTree) expressionTree).getOperation());
+                    spotSummaryDetails = new SpotSummaryDetails(expressionTree);
                     taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),spotSummaryDetails);
                 }
 
@@ -1106,7 +1106,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
 
                 // update spotSummaryDetails
-                spotSummaryDetails.setOperation(((ExpressionTree) expressionTree).getOperation());
+                spotSummaryDetails.setExpressionTree(expressionTree);
 
                 // special case for WieghtedMean in which auto rejection is possible
                 boolean noReject = false;
