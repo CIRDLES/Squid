@@ -1807,6 +1807,19 @@ public class ExpressionBuilderController implements Initializable {
         });
         contextMenu.getItems().add(menuItem);
 
+        //For expressions -> allow wrap in brackets and quotes
+        if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode) && !etn.getText().trim().matches("^[\\[\\](),]$") && !etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\](\\[\\d\\])?$")) {
+            menuItem = new MenuItem("Wrap in brackets and quotes");
+            menuItem.setOnAction((evt) -> {
+                ExpressionTextNode etn2 = new ExpressionTextNode(" [\"" + etn.getText().trim() + "\"] ");
+                etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                expressionTextFlow.getChildren().remove(etn);
+                expressionTextFlow.getChildren().add(etn2);
+                updateExpressionTextFlowChildren();
+            });
+            contextMenu.getItems().add(menuItem);
+        }
+
         // For numbers -> make an editable node
         if (etn instanceof NumberTextNode) {
             TextField editText = new TextField(etn.getText());
@@ -2013,7 +2026,7 @@ public class ExpressionBuilderController implements Initializable {
                         }
                     }
                     if (res == null && text.equals(NUMBERSTRING)) {
-                        res = new Tooltip("Placeholder for number: "+NUMBERSTRING);
+                        res = new Tooltip("Placeholder for number: " + NUMBERSTRING);
                     }
                     if (res == null) {
                         res = new Tooltip("Missing expression: " + exname);
@@ -2194,8 +2207,8 @@ public class ExpressionBuilderController implements Initializable {
                         break;
                     default:
                         String txt = ((ExpressionTextNode) node).getText().trim();
-                        String nonLetter = "\t\n\r [](),+-*/<>=^";
-                        if (sb.length() > 0 && (nonLetter.indexOf(sb.charAt(sb.length() - 1)) != -1 || nonLetter.indexOf(txt.charAt(0)) != -1)) {
+                        String nonLetter = "\t\n\r [](),+-*/<>=^\"";
+                        if (sb.length() == 0 || nonLetter.indexOf(sb.charAt(sb.length() - 1)) != -1 || nonLetter.indexOf(txt.charAt(0)) != -1) {
                             sb.append(txt);
                         } else {
                             sb.append(" ").append(txt);
@@ -2311,6 +2324,10 @@ public class ExpressionBuilderController implements Initializable {
 
     private void wrapInBrackets(double ordLeft, double ordRight) {
         wrap(ordLeft, ordRight, "[", "]");
+    }
+
+    private void wrapInBracketsAndQuotes(double ordLeft, double ordRight) {
+        wrap(ordLeft, ordRight, "[\"", "\"]");
     }
 
     private void wrap(double ordLeft, double ordRight, String stringLeft, String stringRight) {
