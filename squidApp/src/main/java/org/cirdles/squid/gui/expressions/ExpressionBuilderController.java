@@ -1893,14 +1893,16 @@ public class ExpressionBuilderController implements Initializable {
     private Tooltip createFloatingTooltip(String nodeText) {
         Tooltip res = null;
         if (nodeText != null) {
-            String text = nodeText.trim();
-
-            text = text.replace(UNVISIBLENEWLINEPLACEHOLDER, "\n");
+            String text = nodeText.replace(UNVISIBLENEWLINEPLACEHOLDER, "\n");
             text = text.replace(VISIBLENEWLINEPLACEHOLDER, "\n");
             text = text.replace(UNVISIBLETABPLACEHOLDER, "\t");
             text = text.replace(VISIBLETABPLACEHOLDER, "\t");
             text = text.replace(UNVISIBLEWHITESPACEPLACEHOLDER, " ");
             text = text.replace(VISIBLEWHITESPACEPLACEHOLDER, " ");
+
+            if (!text.matches("^[ \t\n\r]$")) {
+                text = nodeText.trim();
+            }
 
             ImageView imageView = new ImageView(UNHEALTHY);
             imageView.setFitHeight(12);
@@ -2747,7 +2749,8 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(operationOrFunction);
-                        Tooltip t = createFloatingTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER));
+                        System.out.println("\"" + getText().replaceAll("(:.*|\\(.*\\))$", "") + "\"");
+                        Tooltip t = createFloatingTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").trim().replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER).replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });
