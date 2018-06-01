@@ -368,7 +368,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setupSquidSessionSpecsAndReduceAndReport() {
 
         if (changed) {
-            reorderExpressions();
+//            reorderExpressions();
 
             buildSquidSpeciesModelList();
 
@@ -1032,7 +1032,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void evaluateTaskExpressions() {
 
-//        taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         // prep spots
         shrimpFractions.forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
@@ -1055,7 +1054,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
                 // now evaluate expressionTree
                 try {
-                    evaluateExpressionForSpotSet(expressionTree, spotsForExpression);
+                    evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
                     System.out.println("Out of bounds at evaluateTaskExpressions");
                 }
@@ -1070,8 +1069,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @throws SquidException
      */
     private void evaluateExpressionForSpotSet(
-            ExpressionTreeInterface expressionTree,
+            Expression expression,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
+        
+        ExpressionTreeInterface expressionTree = expression.getExpressionTree();
+        
         if (spotsForExpression.size() > 0) {
             // determine type of expressionTree
             // Summary expression test
@@ -1081,11 +1083,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
                 // May 2018 new logic to support user rejecting some fractions in summary calculations - Weighted Mean for now
                 SpotSummaryDetails spotSummaryDetails;
-                if (taskExpressionsEvaluationsPerSpotSet.containsKey(expressionTree.getName())) {
-                    spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionTree.getName());
+                if (taskExpressionsEvaluationsPerSpotSet.containsKey(expression.getName())) {
+                    spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expression.getName());
                 } else {
                     spotSummaryDetails = new SpotSummaryDetails(((ExpressionTree) expressionTree).getOperation());
-                    taskExpressionsEvaluationsPerSpotSet.put(expressionTree.getName(),spotSummaryDetails);
+                    taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),spotSummaryDetails);
                 }
 
                 // if the spotsForExpression are the same, then preserve list of indices of rejected
