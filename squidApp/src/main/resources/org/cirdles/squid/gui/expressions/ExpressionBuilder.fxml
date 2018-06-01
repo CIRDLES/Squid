@@ -305,7 +305,7 @@
                                        <graphic>
                                           <HBox fx:id="graphTitleHbox" alignment="CENTER_LEFT" spacing="10.0">
                                              <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Graph">
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Typeset image">
                                                    <HBox.margin>
                                                       <Insets right="25.0" />
                                                    </HBox.margin>
