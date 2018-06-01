@@ -712,9 +712,9 @@ public class ExpressionBuilderController implements Initializable {
             if (newValue != null) {
 
                 if (currentMode.get().equals(Mode.VIEW)) {
+                    selectedExpressionIsEditable.set(true);
                     //The new value is selected to be shown in the editor
                     selectedExpression.set(newValue);
-                    selectedExpressionIsEditable.set(true);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -728,9 +728,9 @@ public class ExpressionBuilderController implements Initializable {
         brokenExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
+                    selectedExpressionIsEditable.set(true);
                     //The new value is selected to be shown in the editor
                     selectedExpression.set(newValue);
-                    selectedExpressionIsEditable.set(true);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -744,8 +744,8 @@ public class ExpressionBuilderController implements Initializable {
         nuSwitchedExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
-                    selectedExpression.set(newValue);
                     selectedExpressionIsEditable.set(true);
+                    selectedExpression.set(newValue);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -758,8 +758,8 @@ public class ExpressionBuilderController implements Initializable {
         builtInExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
-                    selectedExpression.set(newValue);
                     selectedExpressionIsEditable.set(true);
+                    selectedExpression.set(newValue);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -772,8 +772,8 @@ public class ExpressionBuilderController implements Initializable {
         customExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
-                    selectedExpression.set(newValue);
                     selectedExpressionIsEditable.set(true);
+                    selectedExpression.set(newValue);
                 }
 
                 selectInAllPanes(newValue, false);
@@ -789,12 +789,13 @@ public class ExpressionBuilderController implements Initializable {
         ratioExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
-                    Expression exp = new Expression(newValue.getRatioName(), "[\"" + newValue.getRatioName() + "\"]");
+                    Expression exp = new Expression(squidProject.getTask().getNamedExpressionsMap().get(newValue.getRatioName()), "[\"" + newValue.getRatioName() + "\"]", false);
                     exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                     exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-                    selectedExpression.set(exp);
+
                     selectedExpressionIsEditable.set(false);
+                    selectedExpression.set(exp);
                 }
                 selectInAllPanes(null, false);
             }
@@ -1669,22 +1670,22 @@ public class ExpressionBuilderController implements Initializable {
         return sb.toString();
     }
 
-    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface editedExp) {
+    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface exp) {
         StringBuilder sb = new StringBuilder();
 
-        if (editedExp instanceof ShrimpSpeciesNode) {
+        if (exp instanceof ShrimpSpeciesNode) {
             sb.append("Please specify property of species such as totalCps.");
-        } else if (editedExp instanceof VariableNodeForIsotopicRatios) {
+        } else if (exp instanceof VariableNodeForIsotopicRatios) {
             // special case where the expressionTree is a ratio
             sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-            sb.append(String.format("%1$-" + 20 + "s", editedExp.getName()));
+            sb.append(String.format("%1$-" + 20 + "s", exp.getName()));
             sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS"));
             sb.append("\n");
 
             for (ShrimpFractionExpressionInterface spot : spots) {
                 sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
                 double[][] results
-                        = spot.getIsotopicRatioValuesByStringName(editedExp.getName());
+                        = spot.getIsotopicRatioValuesByStringName(exp.getName());
                 for (int i = 0; i < results[0].length; i++) {
                     try {
                         sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
@@ -1694,10 +1695,10 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("\n");
             }
 
-        } else if (editedExp instanceof SpotFieldNode) {
+        } else if (exp instanceof SpotFieldNode) {
             // special case where the expressionTree is a field in spot (non-ratio)
             sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-            sb.append(String.format("%1$-" + 20 + "s", editedExp.getName()));
+            sb.append(String.format("%1$-" + 20 + "s", exp.getName()));
             sb.append("\n");
 
             for (ShrimpFractionExpressionInterface spot : spots) {
@@ -1706,7 +1707,7 @@ public class ExpressionBuilderController implements Initializable {
                 singleSpot.add(spot);
 
                 try {
-                    double[][] results = ExpressionTreeInterface.convertObjectArrayToDoubles(editedExp.eval(singleSpot, null));
+                    double[][] results = ExpressionTreeInterface.convertObjectArrayToDoubles(exp.eval(singleSpot, null));
                     for (int i = 0; i < results[0].length; i++) {
                         try {
                             sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
@@ -1720,29 +1721,28 @@ public class ExpressionBuilderController implements Initializable {
             }
 
         } else {
-            if (concRefMatSwitchCheckBox.isSelected()) {
+            if (exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                 sb.append("Concentration Reference Materials Only\n\n");
             }
             sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-            if (((ExpressionTree) editedExp).getOperation() != null) {
-                String[][] resultLabels = ((ExpressionTree) editedExp).getOperation().getLabelsForOutputValues();
+            if (((ExpressionTree) exp).getOperation() != null) {
+                String[][] resultLabels = ((ExpressionTree) exp).getOperation().getLabelsForOutputValues();
                 for (int i = 0; i < resultLabels[0].length; i++) {
                     try {
                         sb.append(String.format("%1$-" + 20 + "s", resultLabels[0][i]));
                     } catch (Exception e) {
                     }
                 }
-                if (((ExpressionTree) editedExp).hasRatiosOfInterest()) {
+                if (((ExpressionTree) exp).hasRatiosOfInterest()) {
                     sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS"));
                 }
             }
             sb.append("\n");
 
-            for (ShrimpFractionExpressionInterface spot : spots) {
-                if (spot.getTaskExpressionsEvaluationsPerSpot().get(editedExp) != null) {
+            if (((ExpressionTree) exp).getLeftET() instanceof ShrimpSpeciesNode) {
+                for (ShrimpFractionExpressionInterface spot : spots) {
                     sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                    double[][] results
-                            = spot.getTaskExpressionsEvaluationsPerSpot().get(editedExp);
+                    double[][] results = spot.getIsotopicRatioValuesByStringName(exp.getName());
                     for (int i = 0; i < results[0].length; i++) {
                         try {
                             sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
@@ -1750,6 +1750,21 @@ public class ExpressionBuilderController implements Initializable {
                         }
                     }
                     sb.append("\n");
+                }
+            } else {
+                for (ShrimpFractionExpressionInterface spot : spots) {
+                    if (spot.getTaskExpressionsEvaluationsPerSpot().get(exp) != null) {
+                        sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+                        double[][] results
+                                = spot.getTaskExpressionsEvaluationsPerSpot().get(exp);
+                        for (int i = 0; i < results[0].length; i++) {
+                            try {
+                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
+                            } catch (Exception e) {
+                            }
+                        }
+                        sb.append("\n");
+                    }
                 }
             }
         }
@@ -1976,7 +1991,7 @@ public class ExpressionBuilderController implements Initializable {
                     if (res == null) {
                         for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
                             if (exname.equalsIgnoreCase(r.getRatioName())) {
-                                Expression exp = new Expression(r.getRatioName(), "[\"" + r.getRatioName() + "\"]");
+                                Expression exp = new Expression(squidProject.getTask().getNamedExpressionsMap().get(r.getRatioName()), "[\"" + r.getRatioName() + "\"]", false);
                                 exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                                 exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                                 exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
@@ -2032,8 +2047,12 @@ public class ExpressionBuilderController implements Initializable {
     public void updateAuditGraphAndPeek() {
 
         if (selectedExpression.isNotNull().get()) {
-
-            Expression exp = makeExpression();
+            Expression exp;
+            if (selectedExpressionIsEditable.get()) {
+                exp = makeExpression();
+            } else {
+                exp = selectedExpression.get();
+            }
 
             if (((ExpressionTree) exp.getExpressionTree()).hasRatiosOfInterest()) {
                 hasRatioOfInterest.set(true);
@@ -2087,7 +2106,12 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private Expression copySelectedExpression() {
-        Expression exp = new Expression(selectedExpression.get().getName(), selectedExpression.get().getExcelExpressionString());
+
+        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
+                selectedExpression.get().getName(),
+                selectedExpression.get().getExcelExpressionString(),
+                selectedExpression.get().isSquidSwitchNU()
+        );
 
         ExpressionTree expTreeCopy = (ExpressionTree) exp.getExpressionTree();
         ExpressionTree expTree = (ExpressionTree) selectedExpression.get().getExpressionTree();
