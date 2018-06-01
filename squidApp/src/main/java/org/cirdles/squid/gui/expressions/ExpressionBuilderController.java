@@ -1981,6 +1981,7 @@ public class ExpressionBuilderController implements Initializable {
                         exname = text.replaceAll("\\d\\d$", "");
                         ex = squidProject.getTask().getExpressionByName(exname);
                     }
+                    //case expression
                     if (ex != null) {
                         boolean isCustom = ex.isCustom();
                         res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + uncertainty + (ex.amHealthy() ? createPeekForTooltip(ex) : ex.produceExpressionTreeAudit().trim()) + "\n\nNotes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
@@ -1988,6 +1989,7 @@ public class ExpressionBuilderController implements Initializable {
                             res.setGraphic(imageView);
                         }
                     }
+                    //case ratio
                     if (res == null) {
                         for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
                             if (exname.equalsIgnoreCase(r.getRatioName())) {
@@ -1999,6 +2001,19 @@ public class ExpressionBuilderController implements Initializable {
                                 break;
                             }
                         }
+                    }
+                    //case constant
+                    if (res == null) {
+                        constant = (ConstantNode) squidProject.getTask().getNamedConstantsMap().get(text);
+                        if (constant == null) {
+                            constant = (ConstantNode) squidProject.getTask().getNamedParametersMap().get(text);
+                        }
+                        if (constant != null) {
+                            res = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
+                        }
+                    }
+                    if (res == null && text.equals(NUMBERSTRING)) {
+                        res = new Tooltip("Placeholder for number: "+NUMBERSTRING);
                     }
                     if (res == null) {
                         res = new Tooltip("Missing expression: " + exname);
