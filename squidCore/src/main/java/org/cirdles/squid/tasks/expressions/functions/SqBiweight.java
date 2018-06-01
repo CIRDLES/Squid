@@ -50,7 +50,7 @@ public class SqBiweight extends Function {
         rowCount = 1;
         colCount = 3;
         labelsForOutputValues = new String[][]{{"Biwt Mean", "Biwt Sigma", "\u00B195%conf"}};
-        labelsForInputValues = new String[]{"variableValues","tuningConstant"};
+        labelsForInputValues = new String[]{"variableNumbers","tuningConstant"};
     }
 
     /**

@@ -41,7 +41,7 @@ public class Exp extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Exponential"}};
-        labelsForInputValues = new String[]{"value"};
+        labelsForInputValues = new String[]{"number"};
     }
 
     /**

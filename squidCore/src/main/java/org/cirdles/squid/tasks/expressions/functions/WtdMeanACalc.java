@@ -84,7 +84,7 @@ public class WtdMeanACalc extends Function {
             {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability", "externalFlag"},
             {"LargeRej Indices"},
             {"WmeanRej Indices"}};
-        labelsForInputValues = new String[]{"values","oneSigmaPercentUncertainties","noUPbConstAutoReject","pbCanDriftCorr"};
+        labelsForInputValues = new String[]{"numbers","oneSigmaPercentUncertainties","noUPbConstAutoReject","pbCanDriftCorr"};
     }
 
     /**

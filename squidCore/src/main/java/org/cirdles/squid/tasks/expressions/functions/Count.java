@@ -54,7 +54,7 @@ public class Count extends Function {
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"count"}};
-        labelsForInputValues = new String[]{"values"};
+        labelsForInputValues = new String[]{"numbers"};
     }
 
     /**

@@ -41,7 +41,7 @@ public class Sqrt extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Sqrt"}};
-        labelsForInputValues = new String[]{"value"};
+        labelsForInputValues = new String[]{"number"};
     }
 
     /**

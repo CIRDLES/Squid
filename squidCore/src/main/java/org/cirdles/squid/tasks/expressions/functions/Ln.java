@@ -42,7 +42,7 @@ public class Ln extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"natLog"}};
-        labelsForInputValues = new String[]{"value"};
+        labelsForInputValues = new String[]{"number"};
     }
 
     /**
