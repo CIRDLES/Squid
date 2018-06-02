@@ -65,10 +65,10 @@ public class WtdMeanACalc extends Function {
      *
      * 95%-conf. err. of mean(%) = err95 / mean * 100
      *
-     * if externalFlag = 1.0, otherwise zero
-     * 1s external spot-to-spot error = 1-sigmaAbs / mean * 100
-     * 
-     * 
+     * if externalFlag = 1.0, otherwise zero 1s external spot-to-spot error =
+     * 1-sigmaAbs / mean * 100
+     *
+     *
      * Returns double[3][], where the indices listed in [1] and [2] are
      * zero-based rather than the Squid25 1-based values.
      *

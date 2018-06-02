@@ -16,9 +16,14 @@
 package org.cirdles.squid.tasks.expressions.spots;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
  *
@@ -30,21 +35,49 @@ public class SpotSummaryDetails implements Serializable {
 
     private double[][] values;
     private List<ShrimpFractionExpressionInterface> selectedSpots;
-    private OperationOrFunctionInterface operation;
+    private ExpressionTreeInterface expressionTree;
+    private boolean[] rejectedIndices;
+    private boolean manualRejectionEnabled;
 
     private SpotSummaryDetails() {
+        this(null);
+    }
+
+    public SpotSummaryDetails(ExpressionTreeInterface expressionTree) {
+        this(expressionTree, new double[0][0], new ArrayList<ShrimpFractionExpressionInterface>());
     }
 
     /**
      *
-     * @param operation
+     * @param expressionTree
      * @param values
      * @param selectedSpots
      */
-    public SpotSummaryDetails(OperationOrFunctionInterface operation, double[][] values, List<ShrimpFractionExpressionInterface> selectedSpots) {
-        this.operation = operation;
+    public SpotSummaryDetails(ExpressionTreeInterface expressionTree, double[][] values, List<ShrimpFractionExpressionInterface> selectedSpots) {
+        this.expressionTree = expressionTree;
         this.values = values.clone();
         this.selectedSpots = selectedSpots;
+        this.rejectedIndices = new boolean[selectedSpots.size()];
+        this.manualRejectionEnabled = false;
+    }
+
+    public double[][] eval(TaskInterface task) throws SquidException{
+        return convertObjectArrayToDoubles(expressionTree.eval(retrieveActiveSpots(), task));
+    }
+
+    public List<ShrimpFractionExpressionInterface> retrieveActiveSpots() {
+        List<ShrimpFractionExpressionInterface> activeSpots = new ArrayList<>();
+
+        if (rejectedIndices == null) {
+            rejectedIndices = new boolean[selectedSpots.size()];
+        }
+
+        for (int i = 0; i < selectedSpots.size(); i++) {
+            if (!rejectedIndices[i]) {
+                activeSpots.add(selectedSpots.get(i));
+            }
+        }
+        return activeSpots;
     }
 
     /**
@@ -55,6 +88,14 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
+     *
+     * @param values
+     */
+    public void setValues(double[][] values) {
+        this.values = values;
+    }
+
+    /**
      * @return the selectedSpots
      */
     public List<ShrimpFractionExpressionInterface> getSelectedSpots() {
@@ -62,10 +103,48 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     * @return the operation
+     *
+     * @param selectedSpots
      */
-    public OperationOrFunctionInterface getOperation() {
-        return operation;
+    public void setSelectedSpots(List<ShrimpFractionExpressionInterface> selectedSpots) {
+        this.selectedSpots = selectedSpots;
+    }
+
+    /**
+     *
+     * @param expressionTree
+     */
+    public void setExpressionTree(ExpressionTreeInterface expressionTree) {
+        this.expressionTree = expressionTree;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ExpressionTreeInterface getExpressionTree() {
+        return expressionTree;
+    }
+
+    /**
+     * @param rejectedIndices the rejectedIndices to set
+     */
+    public void setRejectedIndices(boolean[] rejectedIndices) {
+        this.rejectedIndices = rejectedIndices;
+    }
+
+    /**
+     * @return the manualRejectionEnabled
+     */
+    public boolean isManualRejectionEnabled() {
+        return manualRejectionEnabled;
+    }
+
+    /**
+     * @param manualRejectionEnabled the manualRejectionEnabled to set
+     */
+    public void setManualRejectionEnabled(boolean manualRejectionEnabled) {
+        this.manualRejectionEnabled = manualRejectionEnabled;
     }
 
 }

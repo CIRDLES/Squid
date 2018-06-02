@@ -1623,7 +1623,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private String peekDetailsPerSummary(SpotSummaryDetails spotSummary) {
-        String[][] labels = spotSummary.getOperation().getLabelsForOutputValues();
+        String[][] labels = ((ExpressionTree)spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues();
         StringBuilder sb = new StringBuilder();
         if (concRefMatSwitchCheckBox.isSelected()) {
             sb.append("Concentration Reference Materials Only\n\n");
