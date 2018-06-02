@@ -69,6 +69,11 @@ public abstract class Operation
      *
      */
     protected String[][] labelsForOutputValues = new String[][]{{}};
+    
+    /**
+     *
+     */
+    protected String[] labelsForInputValues = new String[]{};
 
     /**
      *
@@ -269,6 +274,7 @@ public abstract class Operation
     /**
      * @return the rowCount
      */
+    @Override
     public int getRowCount() {
         return rowCount;
     }
@@ -276,6 +282,7 @@ public abstract class Operation
     /**
      * @return the colCount
      */
+    @Override
     public int getColCount() {
         return colCount;
     }
@@ -283,7 +290,13 @@ public abstract class Operation
     /**
      * @return the labelsForOutputValues
      */
+    @Override
     public String[][] getLabelsForOutputValues() {
         return labelsForOutputValues;
+    }
+    
+    @Override
+    public String[] getLabelsForInputValues() {
+        return labelsForInputValues;
     }
 }

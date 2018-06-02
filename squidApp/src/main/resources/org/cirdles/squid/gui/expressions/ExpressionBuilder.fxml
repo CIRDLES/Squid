@@ -24,11 +24,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" prefWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
       <SplitPane fx:id="leftSplitPane" dividerPositions="1.0" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
          <items>
@@ -206,16 +207,26 @@
                         <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" opacity="0.99" text="Reference Material" />
                         <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" opacity="0.99" text="Unknown Samples" />
                         <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" opacity="0.99" text="Conc RefMat" />
-                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" disable="true" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
+                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
+                        <CheckBox fx:id="NUSwitchCheckBox" layoutX="601.0" layoutY="10.0" mnemonicParsing="false" onAction="#NUSwitchCheckBoxAction" opacity="0.99" text="NU Switch" />
+                        <CheckBox fx:id="specialUPbThSwitchCheckBox" disable="true" layoutX="433.0" layoutY="10.0" mnemonicParsing="false" onAction="#specialUPbThCheckBoxAction" opacity="0.99" text="Squid 3 Expression" />
                      </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" left="7.0" right="7.0" />
+                        <Insets bottom="5.0" left="7.0" right="7.0" />
                      </VBox.margin>
                   </FlowPane>
                   <SplitPane dividerPositions="0.25" orientation="VERTICAL" styleClass="backgroundCalamari" VBox.vgrow="ALWAYS">
                      <items>
                         <VBox>
                            <children>
+                              <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: ctrl+hover a node to show detail">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="2.0" />
+                                 </VBox.margin>
+                              </Text>
                               <AnchorPane VBox.vgrow="ALWAYS">
                                  <children>
                                     <TitledPane animated="false" collapsible="false" layoutY="2.5" minHeight="70.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -243,6 +254,9 @@
                                                 </Text>
                                                 <Button fx:id="showCurrentExpressionBtn" mnemonicParsing="false" onAction="#showCurrentExpressionAction" scaleX="0.7" scaleY="0.7" text="Show in list" />
                                                 <Button fx:id="showNotesBtn" mnemonicParsing="false" onAction="#showNotesAction" scaleX="0.7" scaleY="0.7" text="Show notes" translateX="-39.0" />
+                                                <Button fx:id="fontMinusBtn" mnemonicParsing="false" onAction="#fontMinusAction" scaleX="0.7" scaleY="0.7" text="Font -" translateX="-72.0" />
+                                                <Button fx:id="fontPlusBtn" mnemonicParsing="false" onAction="#fontPlusAction" scaleX="0.7" scaleY="0.7" text="Font +" translateX="-100.0" />
+                                                <Button fx:id="toggleWhiteSpacesBtn" mnemonicParsing="false" onAction="#toggleWhiteSpacesAction" scaleX="0.7" scaleY="0.7" text="Hide white spaces tokens" translateX="-148.0" />
                                              </children>
                                           </HBox>
                                        </graphic>
@@ -277,7 +291,7 @@
                               </HBox>
                            </children>
                            <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" />
                            </padding>
                         </VBox>
                         <SplitPane fx:id="bigSplitPane" dividerPositions="0.5" orientation="VERTICAL" styleClass="backgroundCalamari">
@@ -291,7 +305,7 @@
                                        <graphic>
                                           <HBox fx:id="graphTitleHbox" alignment="CENTER_LEFT" spacing="10.0">
                                              <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Graph">
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Typeset image">
                                                    <HBox.margin>
                                                       <Insets right="25.0" />
                                                    </HBox.margin>
