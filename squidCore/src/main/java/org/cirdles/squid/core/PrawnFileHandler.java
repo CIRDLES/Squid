@@ -100,21 +100,22 @@ public class PrawnFileHandler implements Serializable {
      */
     public PrawnFile unmarshallCurrentPrawnFileXML()
             throws IOException, MalformedURLException, JAXBException, SAXException, SquidException {
-        return unmarshallPrawnFileXML(currentPrawnFileLocation);
+        return unmarshallPrawnFileXML(currentPrawnFileLocation, false);
     }
 
     /**
      * Unmarshalls prawn file xml to object of class PrawnFile.
      *
      * @param prawnFileLocation String path to prawn file location
-     * @return object of class PrawnFile
+     * @param isTestMode the value of isTestMode
      * @throws IOException
      * @throws MalformedURLException
      * @throws JAXBException
      * @throws SAXException
+     * @return the org.cirdles.squid.prawn.PrawnFile
      */
-    public PrawnFile unmarshallPrawnFileXML(String prawnFileLocation)
-            throws IOException, MalformedURLException, JAXBException, SAXException, SquidException{
+    public PrawnFile unmarshallPrawnFileXML(String prawnFileLocation, boolean isTestMode)
+            throws IOException, MalformedURLException, JAXBException, SAXException, SquidException {
 
         String localPrawnXMLFile = prawnFileLocation;
         PrawnFile myPrawnFile;
@@ -122,17 +123,15 @@ public class PrawnFileHandler implements Serializable {
         JAXBContext jaxbContext = JAXBContext.newInstance(PrawnFile.class);
         jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
-        // force validation against schema
-        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        // JULY 2017 Team decided to make schema and validation local because of security concerns at Geoscience Australia
-        File schemaFile = new File(URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL);
-        // during testing
-        if (!schemaFile.isFile()) {
-            schemaFile = new File(schemaFile.getAbsolutePath().replace("Core", "App"));
+        if (!isTestMode) {
+            // force validation against schema
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            // JULY 2017 Team decided to make schema and validation local because of security concerns at Geoscience Australia
+            File schemaFile = new File(URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL);
+            Schema schema = sf.newSchema(schemaFile);
+            jaxbUnmarshaller.setSchema(schema);
         }
-        Schema schema = sf.newSchema(schemaFile);
-        jaxbUnmarshaller.setSchema(schema);
-
+        
         // test for URL such as "https://raw.githubusercontent.com/bowring/XSD/master/SHRIMP/EXAMPLE_100142_G6147_10111109.43_10.33.37%20AM.xml"
         boolean isURL = false;
         if (prawnFileLocation.toLowerCase(Locale.ENGLISH).startsWith("http")) {
@@ -211,7 +210,7 @@ public class PrawnFileHandler implements Serializable {
 
         myPrawnFile = readRawDataFile(prawnDataFile);
 
-        if (!prawnDataFile.delete()){
+        if (!prawnDataFile.delete()) {
             throw new SquidException("Unable to delete temporaty prawnfile.");
         }
 
