@@ -477,6 +477,9 @@ public class ExpressionBuilderController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        // update 
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+
         initPropertyBindings();
         initListViews();
         initFilterChoice();
@@ -1623,7 +1626,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private String peekDetailsPerSummary(SpotSummaryDetails spotSummary) {
-        String[][] labels = ((ExpressionTree)spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues();
+        String[][] labels = ((ExpressionTree) spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues();
         StringBuilder sb = new StringBuilder();
         if (concRefMatSwitchCheckBox.isSelected()) {
             sb.append("Concentration Reference Materials Only\n\n");
@@ -1915,7 +1918,7 @@ public class ExpressionBuilderController implements Initializable {
                 case OPERATOR_M:
                 case OPERATOR_E:
 
-                    res = new Tooltip("Operation: " + text+" ("+OPERATIONS_MAP.get(text)+")");
+                    res = new Tooltip("Operation: " + text + " (" + OPERATIONS_MAP.get(text) + ")");
                     break;
 
                 case LEFT_PAREN:

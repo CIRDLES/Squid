@@ -638,6 +638,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void addExpression(Expression exp) {
         taskExpressionsOrdered.add(exp);
 
+        updateAffectedExpressions(exp);
+        updateAllExpressions();
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
     }
