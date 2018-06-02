@@ -304,4 +304,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public String toString() {
         return name;
     }
+    
+    public boolean isCustom(){
+        return !getExpressionTree().isSquidSpecialUPbThExpression() && !isSquidSwitchNU();
+    }
 }

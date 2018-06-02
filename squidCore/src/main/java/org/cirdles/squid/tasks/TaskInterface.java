@@ -19,8 +19,6 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -30,7 +28,6 @@ import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
@@ -213,6 +210,13 @@ public interface TaskInterface {
      * @return the taskExpressionsOrdered
      */
     public List<Expression> getTaskExpressionsOrdered();
+    
+    /**
+     * 
+     * @param expression Name of the expression to test
+     * @return True if the expression exists, false if not
+     */
+    public boolean expressionExists(Expression expression);
 
     /**
      * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set

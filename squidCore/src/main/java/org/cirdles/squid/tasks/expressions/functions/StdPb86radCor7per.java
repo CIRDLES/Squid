@@ -52,6 +52,7 @@ public class StdPb86radCor7per extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"stdPb86radCor7per"}};
+        labelsForInputValues = new String[]{"208/206RatioAndUnct","207/206RatioAndUnct","radPb86cor7","pb46cor7"};
     }
 
     /**

@@ -52,6 +52,7 @@ public class Pb46cor7 extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb46cor7"}};
+        labelsForInputValues = new String[]{"207/206RatioAndUnct","207corr206Pb/238UAge"};
     }
 
     /**

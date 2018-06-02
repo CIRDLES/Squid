@@ -50,6 +50,7 @@ public class AgePb76 extends Function {
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"Age", "AgeErr"}};
+        labelsForInputValues = new String[]{"207/206RatioAndUnct"};
     }
 
     /**

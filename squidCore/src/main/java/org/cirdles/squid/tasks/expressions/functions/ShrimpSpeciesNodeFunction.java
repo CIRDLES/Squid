@@ -43,6 +43,7 @@ public class ShrimpSpeciesNodeFunction extends Function {
         colCount = 1;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
         labelsForOutputValues = new String[][]{{"Calculated Field: " + name}};
+        labelsForInputValues = new String[]{"shrimpSpeciesNode"};
     }
 
     /**

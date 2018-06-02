@@ -42,6 +42,7 @@ public class SpotNodeLookupFunction extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 1;
+        labelsForInputValues = new String[]{"spotFieldNode"};
 
         methodNameForShrimpFraction = "";
         spotNode = null;

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,11 +34,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -53,6 +59,7 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
@@ -118,7 +125,7 @@ public class SquidUIController implements Initializable {
     private static GridPane taskManagerUI;
 
     private static VBox isotopesManagerUI;
-    private static VBox ratiosManagerUI;
+    private static ScrollPane ratiosManagerUI;
 
     private static SplitPane expressionBuilderUI;
     private static Pane expressionManagerUI;
@@ -154,10 +161,10 @@ public class SquidUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // center Logo
         mainPane.heightProperty().addListener((ov, oldValue, newValue) -> {
-            AnchorPane.setTopAnchor(squidImageView, newValue.doubleValue()/2.0-squidImageView.getFitHeight()/2.0);
+            AnchorPane.setTopAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitHeight() / 2.0);
         });
         mainPane.widthProperty().addListener((ov, oldValue, newValue) -> {
-            AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue()/2.0-squidImageView.getFitWidth()/2.0);
+            AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitWidth() / 2.0);
         });
 
         managePrawnFileMenu.setDisable(true);
@@ -255,12 +262,12 @@ public class SquidUIController implements Initializable {
 
             projectManagerUI = FXMLLoader.load(getClass().getResource("ProjectManager.fxml"));
             projectManagerUI.setId("ProjectManager");
-            
+
             AnchorPane.setLeftAnchor(projectManagerUI, 0.0);
             AnchorPane.setRightAnchor(projectManagerUI, 0.0);
             AnchorPane.setTopAnchor(projectManagerUI, 0.0);
             AnchorPane.setBottomAnchor(projectManagerUI, 0.0);
-            
+
             mainPane.getChildren().add(projectManagerUI);
             projectManagerUI.setVisible(true);
 
@@ -286,6 +293,10 @@ public class SquidUIController implements Initializable {
     }
 
     private void removeAllManagers() {
+        for (Node manager : mainPane.getChildren()) {
+            manager.setVisible(false);
+        }
+
         // prevent stacking of project panes
         mainPane.getChildren().remove(projectManagerUI);
 
@@ -485,12 +496,12 @@ public class SquidUIController implements Initializable {
         try {
             sessionAuditUI = FXMLLoader.load(getClass().getResource("SessionAudit.fxml"));
             sessionAuditUI.setId("SessionAudit");
-            
+
             AnchorPane.setLeftAnchor(sessionAuditUI, 0.0);
             AnchorPane.setRightAnchor(sessionAuditUI, 0.0);
             AnchorPane.setTopAnchor(sessionAuditUI, 0.0);
             AnchorPane.setBottomAnchor(sessionAuditUI, 0.0);
-            
+
             mainPane.getChildren().add(sessionAuditUI);
             sessionAuditUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
@@ -502,12 +513,12 @@ public class SquidUIController implements Initializable {
         try {
             massesAuditUI = FXMLLoader.load(getClass().getResource("MassesAudit.fxml"));
             massesAuditUI.setId("MassesAudit");
-            
+
             AnchorPane.setLeftAnchor(massesAuditUI, 0.0);
             AnchorPane.setRightAnchor(massesAuditUI, 0.0);
             AnchorPane.setTopAnchor(massesAuditUI, 0.0);
             AnchorPane.setBottomAnchor(massesAuditUI, 0.0);
-            
+
             mainPane.getChildren().add(massesAuditUI);
             massesAuditUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
@@ -519,12 +530,12 @@ public class SquidUIController implements Initializable {
         try {
             spotManagerUI = FXMLLoader.load(getClass().getResource("SpotManager.fxml"));
             spotManagerUI.setId("SpotManager");
-            
+
             AnchorPane.setLeftAnchor(spotManagerUI, 0.0);
             AnchorPane.setRightAnchor(spotManagerUI, 0.0);
             AnchorPane.setTopAnchor(spotManagerUI, 0.0);
             AnchorPane.setBottomAnchor(spotManagerUI, 0.0);
-            
+
             mainPane.getChildren().add(spotManagerUI);
             spotManagerUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
@@ -537,12 +548,12 @@ public class SquidUIController implements Initializable {
         try {
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
             taskManagerUI.setId("TaskManager");
-            
+
             AnchorPane.setLeftAnchor(taskManagerUI, 0.0);
             AnchorPane.setRightAnchor(taskManagerUI, 0.0);
             AnchorPane.setTopAnchor(taskManagerUI, 0.0);
             AnchorPane.setBottomAnchor(taskManagerUI, 0.0);
-            
+
             mainPane.getChildren().add(taskManagerUI);
             showUI(taskManagerUI);
             manageRatiosMenu.setDisable(false);
@@ -558,12 +569,12 @@ public class SquidUIController implements Initializable {
         try {
             isotopesManagerUI = FXMLLoader.load(getClass().getResource("IsotopesManager.fxml"));
             isotopesManagerUI.setId("IsotopesManager");
-            
+
             AnchorPane.setLeftAnchor(isotopesManagerUI, 0.0);
             AnchorPane.setRightAnchor(isotopesManagerUI, 0.0);
             AnchorPane.setTopAnchor(isotopesManagerUI, 0.0);
             AnchorPane.setBottomAnchor(isotopesManagerUI, 0.0);
-            
+
             mainPane.getChildren().add(isotopesManagerUI);
             isotopesManagerUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
@@ -579,12 +590,12 @@ public class SquidUIController implements Initializable {
 
             ratiosManagerUI = FXMLLoader.load(getClass().getResource("RatiosManager.fxml"));
             ratiosManagerUI.setId("RatiosManager");
-            
+
             AnchorPane.setLeftAnchor(ratiosManagerUI, 0.0);
             AnchorPane.setRightAnchor(ratiosManagerUI, 0.0);
             AnchorPane.setTopAnchor(ratiosManagerUI, 0.0);
             AnchorPane.setBottomAnchor(ratiosManagerUI, 0.0);
-            
+
             mainPane.getChildren().add(ratiosManagerUI);
             ratiosManagerUI.setVisible(false);
 
@@ -600,12 +611,12 @@ public class SquidUIController implements Initializable {
         try {
             expressionBuilderUI = FXMLLoader.load(getClass().getResource("expressions/ExpressionBuilder.fxml"));
             expressionBuilderUI.setId("ExpressionBuilder");
-            
+
             AnchorPane.setLeftAnchor(expressionBuilderUI, 0.0);
             AnchorPane.setRightAnchor(expressionBuilderUI, 0.0);
             AnchorPane.setTopAnchor(expressionBuilderUI, 0.0);
             AnchorPane.setBottomAnchor(expressionBuilderUI, 0.0);
-            
+
             mainPane.getChildren().add(expressionBuilderUI);
             expressionBuilderUI.setVisible(false);
 
@@ -636,12 +647,12 @@ public class SquidUIController implements Initializable {
         try {
             reductionManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/ReductionManager.fxml"));
             reductionManagerUI.setId("ReductionManager");
-            
+
             AnchorPane.setLeftAnchor(reductionManagerUI, 0.0);
             AnchorPane.setRightAnchor(reductionManagerUI, 0.0);
             AnchorPane.setTopAnchor(reductionManagerUI, 0.0);
             AnchorPane.setBottomAnchor(reductionManagerUI, 0.0);
-            
+
             mainPane.getChildren().add(reductionManagerUI);
             reductionManagerUI.setVisible(false);
 
@@ -654,12 +665,12 @@ public class SquidUIController implements Initializable {
         try {
             reducedDataReportManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/reducedDataReportManager.fxml"));
             reducedDataReportManagerUI.setId("reducedDataReportManagerUI");
-            
+
             AnchorPane.setLeftAnchor(reducedDataReportManagerUI, 0.0);
             AnchorPane.setRightAnchor(reducedDataReportManagerUI, 0.0);
             AnchorPane.setTopAnchor(reducedDataReportManagerUI, 0.0);
             AnchorPane.setBottomAnchor(reducedDataReportManagerUI, 0.0);
-            
+
             mainPane.getChildren().add(reducedDataReportManagerUI);
             reducedDataReportManagerUI.setVisible(false);
 
@@ -791,14 +802,63 @@ public class SquidUIController implements Initializable {
         if (expressionFileXML != null) {
             Expression exp = (Expression) (new Expression()).readXMLObject(expressionFileXML.getAbsolutePath(), false);
             if (exp != null) {
-                retVal = true;
-                squidProject.getTask().addExpression(exp);
                 squidPersistentState.updateExpressionListMRU(expressionFileXML);
-                buildExpressionMenuMRU();
-                launchExpressionManager();
+                retVal = true;
+                if (squidProject.getTask().expressionExists(exp)) {
+                    ButtonType replace = new ButtonType("Replace");
+                    ButtonType rename = new ButtonType("Rename");
+                    Alert alert = new Alert(Alert.AlertType.WARNING,
+                            "An expression already exists with this name. What do you want to do?",
+                            replace,
+                            rename,
+                            ButtonType.CANCEL
+                    );
+                    alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                    alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                    alert.showAndWait().ifPresent((t) -> {
+                        if (t.equals(replace)) {
+                            addExpressionToTask(exp);
+                        } else if (t.equals(rename)) {
+                            TextInputDialog dialog = new TextInputDialog(exp.getName());
+                            dialog.setTitle("Rename");
+                            dialog.setHeaderText("Rename " + exp.getName());
+                            dialog.setContentText("Enter the new name:");
+                            Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                            TextField newName = null;
+                            for (Node n : dialog.getDialogPane().getChildren()) {
+                                if (n instanceof TextField) {
+                                    newName = (TextField) n;
+                                }
+                            }
+                            if (okBtn != null && newName != null) {
+                                newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
+                                });
+                            }
+                            dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                            dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                            Optional<String> result = dialog.showAndWait();
+                            if (result.isPresent()) {
+                                exp.setName(result.get());
+                                addExpressionToTask(exp);
+                            }
+                        }
+                    });
+                } else {
+                    addExpressionToTask(exp);
+                }
             }
         }
         return retVal;
+    }
+
+    private void addExpressionToTask(Expression exp) {
+        squidProject.getTask().removeExpression(exp);
+        squidProject.getTask().addExpression(exp);
+        ExpressionBuilderController.expressionToHighlightOnInit = exp;
+        buildExpressionMenuMRU();
+        launchExpressionBuilder();
+        showUI(expressionBuilderUI);
     }
 
     @FXML

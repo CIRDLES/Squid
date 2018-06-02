@@ -45,6 +45,7 @@ public class Abs extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"absolute"}};
+        labelsForInputValues = new String[]{"number"};
     }
 
     /**
