@@ -1147,6 +1147,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     spotSummaryDetails.setRejectedIndices(rejectedIndices);
                 }
                 
+                spotSummaryDetails.setManualRejectionEnabled(noReject);
                 spotSummaryDetails.setValues(values);
 
             } else {

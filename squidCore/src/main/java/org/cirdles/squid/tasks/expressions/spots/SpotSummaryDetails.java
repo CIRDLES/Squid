@@ -37,6 +37,7 @@ public class SpotSummaryDetails implements Serializable {
     private List<ShrimpFractionExpressionInterface> selectedSpots;
     private ExpressionTreeInterface expressionTree;
     private boolean[] rejectedIndices;
+    private boolean manualRejectionEnabled;
 
     private SpotSummaryDetails() {
         this(null);
@@ -57,6 +58,7 @@ public class SpotSummaryDetails implements Serializable {
         this.values = values.clone();
         this.selectedSpots = selectedSpots;
         this.rejectedIndices = new boolean[selectedSpots.size()];
+        this.manualRejectionEnabled = false;
     }
 
     public double[][] eval(TaskInterface task) throws SquidException{
@@ -129,6 +131,20 @@ public class SpotSummaryDetails implements Serializable {
      */
     public void setRejectedIndices(boolean[] rejectedIndices) {
         this.rejectedIndices = rejectedIndices;
+    }
+
+    /**
+     * @return the manualRejectionEnabled
+     */
+    public boolean isManualRejectionEnabled() {
+        return manualRejectionEnabled;
+    }
+
+    /**
+     * @param manualRejectionEnabled the manualRejectionEnabled to set
+     */
+    public void setManualRejectionEnabled(boolean manualRejectionEnabled) {
+        this.manualRejectionEnabled = manualRejectionEnabled;
     }
 
 }
