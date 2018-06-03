@@ -262,19 +262,21 @@ public class ExpressionParser {
                     // let's see if we have an array reference in the form of SUMMARY named_expression00
                     // this would be hard to catch with regex since ratios fit the pattern too
                     index = 0;
-                    String lastTwo = expressionName.substring(expressionName.length() - 2);
-                    if (ShuntingYard.isNumber(lastTwo)) {
-                        // index = first digit - 1 (converting from vertical 1-based excel to horiz 0-based java
-                        index = Integer.parseInt(lastTwo.substring(0, 1)) - 1;
-                        String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
-                        if (index >= 0) {
-                            retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
-                            if (retExpTreeKnown != null) {
-                                retExpTree = new VariableNodeForSummary(baseExpressionName, index);
+                    if (expressionName.length() > 2) {
+                        String lastTwo = expressionName.substring(expressionName.length() - 2);
+                        if (ShuntingYard.isNumber(lastTwo)) {
+                            // index = first digit - 1 (converting from vertical 1-based excel to horiz 0-based java
+                            index = Integer.parseInt(lastTwo.substring(0, 1)) - 1;
+                            String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
+                            if (index >= 0) {
+                                retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
+                                if (retExpTreeKnown != null) {
+                                    retExpTree = new VariableNodeForSummary(baseExpressionName, index);
+                                }
                             }
                         }
                     }
-                } else if (retExpTreeKnown  instanceof ConstantNode){
+                } else if (retExpTreeKnown instanceof ConstantNode) {
                     retExpTree = retExpTreeKnown;
                 } else if (((ExpressionTree) retExpTreeKnown).hasRatiosOfInterest()
                         && (((ExpressionTree) retExpTreeKnown).getLeftET() instanceof ShrimpSpeciesNode)

@@ -39,10 +39,11 @@ public class If extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Conditional"}};
+        labelsForInputValues = new String[]{"condition","expressionIfTrue","expressionIfFalse"};
     }
 
     /**
-     * If expects child 1 as boolean and child 1 and 2 as double
+     * If expects child 0 as boolean and child 1 and 2 as double
      * @param childrenET the value of childrenET
      * @param shrimpFractions the value of shrimpFraction
      * @param task

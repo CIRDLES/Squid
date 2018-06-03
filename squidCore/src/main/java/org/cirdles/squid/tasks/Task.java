@@ -84,6 +84,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
 import org.cirdles.squid.tasks.expressions.functions.Function;
+import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 
 /**
  *
@@ -376,7 +377,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setupSquidSessionSpecsAndReduceAndReport() {
 
         if (changed) {
-            reorderExpressions();
+//            reorderExpressions();
 
             buildSquidSpeciesModelList();
 
@@ -460,7 +461,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (directAltPD) {
             for (Expression listedExp : taskExpressionsOrdered) {
                 // handle selectedisotope-specific expressions
-                // TODO: Better logic - selfaware expression or polymorphism
+                // TODO: Better logic - selfaware expressionTree or polymorphism
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
@@ -667,6 +668,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void addExpression(Expression exp) {
         taskExpressionsOrdered.add(exp);
 
+        updateAffectedExpressions(exp);
+        updateAllExpressions();
         setChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
     }
@@ -1089,28 +1092,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void evaluateTaskExpressions() {
 
-        taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         // prep spots
         shrimpFractions.forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
         });
 
-        for (Expression exp : taskExpressionsOrdered) {
-            ExpressionTreeInterface expression = exp.getExpressionTree();
+        for (Expression expression : taskExpressionsOrdered) {
+            ExpressionTreeInterface expressionTree = expression.getExpressionTree();
 
-            if (expression.amHealthy()) {// && expression.isRootExpressionTree()) {
+            if (expressionTree.amHealthy()) {// && expressionTree.isRootExpressionTree()) {
                 // determine subset of spots to be evaluated - default = all
                 List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
 
-                if (((ExpressionTree) expression).isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                if (((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                     spotsForExpression = concentrationReferenceMaterialSpots;
-                } else if (!((ExpressionTree) expression).isSquidSwitchSTReferenceMaterialCalculation()) {
+                } else if (!((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation()) {
                     spotsForExpression = unknownSpots;
-                } else if (!((ExpressionTree) expression).isSquidSwitchSAUnknownCalculation()) {
+                } else if (!((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation()) {
                     spotsForExpression = referenceMaterialSpots;
                 }
 
-                // now evaluate expression
+                // now evaluate expressionTree
                 try {
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
@@ -1122,35 +1124,96 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     /**
      *
-     * @param expression
+     * @param expressionTree
      * @param spotsForExpression
      * @throws SquidException
      */
     private void evaluateExpressionForSpotSet(
-            ExpressionTreeInterface expression,
+            Expression expression,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
+        
+        ExpressionTreeInterface expressionTree = expression.getExpressionTree();
+        
         if (spotsForExpression.size() > 0) {
-            // determine type of expression
-            if (((ExpressionTree) expression).isSquidSwitchSCSummaryCalculation()) {
+            // determine type of expressionTree
+            // Summary expression test
+            if (((ExpressionTree) expressionTree).isSquidSwitchSCSummaryCalculation()) {
+                List<ShrimpFractionExpressionInterface> spotsUsedForCalculation = new ArrayList<>();
                 double[][] values;
-                if ((expression instanceof ConstantNode) || ((ExpressionTree) expression).getOperation().isScalarResult()) {
-                    // create list of one spot, since we only need to look up value once
-                    List<ShrimpFractionExpressionInterface> singleSpotForExpression = new ArrayList<>();
-                    singleSpotForExpression.add(spotsForExpression.get(0));
-                    values = convertObjectArrayToDoubles(expression.eval(singleSpotForExpression, this));
+
+                // May 2018 new logic to support user rejecting some fractions in summary calculations - Weighted Mean for now
+                SpotSummaryDetails spotSummaryDetails;
+                if (taskExpressionsEvaluationsPerSpotSet.containsKey(expression.getName())) {
+                    spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expression.getName());
                 } else {
-                    values = convertObjectArrayToDoubles(expression.eval(spotsForExpression, this));
+                    spotSummaryDetails = new SpotSummaryDetails(expressionTree);
+                    taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),spotSummaryDetails);
                 }
 
-                if (taskExpressionsEvaluationsPerSpotSet.containsKey(expression.getName())) {
-                    taskExpressionsEvaluationsPerSpotSet.remove(expression.getName());
+                // if the spotsForExpression are the same, then preserve list of indices of rejected
+                // otherwise reset the list of indices to empty
+                if (!spotSummaryDetails.getSelectedSpots().equals(spotsForExpression)) {
+                    spotSummaryDetails.setRejectedIndices(new boolean[spotsForExpression.size()]);
+                    spotSummaryDetails.setSelectedSpots(spotsForExpression);
                 }
-                taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),
-                        new SpotSummaryDetails(((ExpressionTree) expression).getOperation(), values, spotsForExpression));
+
+                if ((expressionTree instanceof ConstantNode) || ((ExpressionTree) expressionTree).getOperation().isScalarResult()) {
+                    // create list of one spot, since we only need to look up value once
+                    spotsUsedForCalculation.add(spotsForExpression.get(0));
+                } else {
+                    // default is all
+                    spotsUsedForCalculation.addAll(spotsForExpression);
+                }
+
+                // update spotSummaryDetails
+                spotSummaryDetails.setExpressionTree(expressionTree);
+
+                // special case for WieghtedMean in which auto rejection is possible
+                boolean noReject = false;
+                if (((ExpressionTree) expressionTree).getOperation() instanceof WtdMeanACalc) {
+                    // discover what the flags say - repeats logic of WtdMeanACalc()
+                    // TODO: move logic to single location
+                    List<ExpressionTreeInterface> childrenET = ((ExpressionTree) expressionTree).getChildrenET();
+                    
+                    Object noUPbConstAutoRejectO = childrenET.get(2).eval(shrimpFractions, this)[0][0];
+                    boolean noUPbConstAutoReject = (boolean) noUPbConstAutoRejectO;
+
+                    Object pbCanDriftCorrO = childrenET.get(3).eval(shrimpFractions, this)[0][0];
+                    boolean pbCanDriftCorr = (boolean) pbCanDriftCorrO;
+
+                    noReject = (noUPbConstAutoReject && !pbCanDriftCorr);
+
+                    if (noReject) {
+                        // we use the user's stored rejections and do not do autorejection
+                        // note on first pass after changing noreject, the rejected spots from auto reject are used 
+                        // because they are still logged in rejectedIndices
+                        spotsUsedForCalculation = spotSummaryDetails.retrieveActiveSpots();
+                    }
+                }
+                
+                values = convertObjectArrayToDoubles(expressionTree.eval(spotsUsedForCalculation, this));
+                
+                // in the case of auto-rejection, mark the rejected spots after the fact
+                if ((((ExpressionTree) expressionTree).getOperation() instanceof WtdMeanACalc) && !noReject){
+                    // we save off auto-rejected spots for display purposes
+                    boolean [] rejectedIndices = new boolean[spotsUsedForCalculation.size()];
+                    for (int i = 0; i < values[1].length; i ++){
+                        rejectedIndices[(int)values[1][i]] = true;
+                    }
+                    for (int i = 0; i < values[2].length; i ++){
+                        rejectedIndices[(int)values[2][i]] = true;
+                    }
+                    
+                    spotSummaryDetails.setRejectedIndices(rejectedIndices);
+                }
+                
+                spotSummaryDetails.setManualRejectionEnabled(noReject);
+                spotSummaryDetails.setValues(values);
+
             } else {
-                // perform expression on each spot
+                // perform expressionTree on each spot
                 for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
-                    evaluateExpressionForSpot(expression, spot);
+                    evaluateExpressionForSpot(expressionTree, spot);
                 }
             }
         }
@@ -1190,7 +1253,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
                 spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
             } catch (SquidException squidException) {
-//                System.out.println(squidException.getMessage() + " while processing " + expression.getName());
+//                System.out.println(squidException.getMessage() + " while processing " + expressionTree.getName());
             }
         }
     }
@@ -1781,5 +1844,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setTableOfSelectedRatiosByMassStationIndex(boolean[][] tableOfSelectedRatiosByMassStationIndex) {
         this.tableOfSelectedRatiosByMassStationIndex = tableOfSelectedRatiosByMassStationIndex;
+
+    public boolean expressionExists(Expression expression) {
+        return taskExpressionsOrdered.contains(expression);
     }
 }

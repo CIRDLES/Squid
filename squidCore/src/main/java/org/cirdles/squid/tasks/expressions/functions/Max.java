@@ -51,6 +51,7 @@ public class Max extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"maximum"}};
+        labelsForInputValues = new String[]{"number1","number2"};
     }
 
     /**
