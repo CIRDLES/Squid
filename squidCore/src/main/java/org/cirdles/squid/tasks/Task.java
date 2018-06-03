@@ -1844,7 +1844,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setTableOfSelectedRatiosByMassStationIndex(boolean[][] tableOfSelectedRatiosByMassStationIndex) {
         this.tableOfSelectedRatiosByMassStationIndex = tableOfSelectedRatiosByMassStationIndex;
+    }
 
+    @Override
     public boolean expressionExists(Expression expression) {
         return taskExpressionsOrdered.contains(expression);
     }
