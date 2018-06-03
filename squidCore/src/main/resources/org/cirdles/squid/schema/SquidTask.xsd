@@ -7,7 +7,7 @@
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
     <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSpeciesModel.xsd"/>
-    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel"/>
+    <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidRatiosModel.xsd"/>
     <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidSessionModel.xsd"/>
     <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/MassStationDetail.xsd"/>
     <xs:include schemaLocation="src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionXMLSchema.xsd"/>
@@ -36,7 +36,7 @@
         </xs:documentation>
     </xs:annotation>
 
-    <xs::element name="Task" type="task"/>
+    <xs:element name="Task" type="Task"/>
     <xs:complexType name="Task" mixed="true">
         <xs:sequence>
                    
@@ -128,15 +128,15 @@
             </xs:element>
             
             <xs:element name="selectedIndexIsotope" type="selectedIndexIsotope"/>
-            
-            <xs:simpleType name="selectedIndexIsotope">
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="PB_204" />
-                    <xs:enumeration value="PB_207" />
-                    <xs:enumeration value="PB_208" />
-                </xs:restriction>
-            </xs:simpleType>
-            
         </xs:sequence>
     </xs:complexType>
+    
+    <xs:simpleType name="selectedIndexIsotope">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="PB_204" />
+            <xs:enumeration value="PB_207" />
+            <xs:enumeration value="PB_208" />
+        </xs:restriction>
+    </xs:simpleType>
+        
 </xs:schema>
