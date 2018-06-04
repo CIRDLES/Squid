@@ -551,7 +551,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         buildExpressions();
 
-        evaluateTaskExpressions();
+//        evaluateTaskExpressions();
 
     }
 

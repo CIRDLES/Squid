@@ -84,7 +84,7 @@ public class WtdMeanACalc extends Function {
             {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability", "externalFlag"},
             {"LargeRej Indices"},
             {"WmeanRej Indices"}};
-        labelsForInputValues = new String[]{"numbers","oneSigmaPercentUncertainties","noUPbConstAutoReject","pbCanDriftCorr"};
+        labelsForInputValues = new String[]{"numbers", "oneSigmaPercentUncertainties", "noUPbConstAutoReject", "pbCanDriftCorr"};
     }
 
     /**
@@ -182,6 +182,8 @@ public class WtdMeanACalc extends Function {
      * process.
      */
     public static double[][] wtdMeanAcalc(double[] values, double[] oneSigmaPctUnct, boolean noUPbConstAutoReject, boolean pbCanDriftCorr) {
+        double[][] retVal;
+
         int countOfValues = values.length;
 
         boolean noReject = (noUPbConstAutoReject && !pbCanDriftCorr);
@@ -212,7 +214,8 @@ public class WtdMeanACalc extends Function {
         } // test noReject
 
         if (pbCanDriftCorr) {
-            // [out-of-scope stuff]  
+            // [out-of-scope stuff] 
+            retVal = new double[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {}, {}};
         } else {
             /**
              * Here we implement the functionality of wtdAv. see
@@ -274,10 +277,10 @@ public class WtdMeanACalc extends Function {
             // prepare return arrays of rejected indices
             largeErrRejIndexArray = largeErrRejIndexList.stream().mapToDouble(Double::doubleValue).toArray();
             wmErrRejIndexArray = wmErrRejIndexList.stream().mapToDouble(Double::doubleValue).toArray();
+
+            retVal = new double[][]{ww[0], largeErrRejIndexArray, wmErrRejIndexArray};
         }
-
-        double[][] retVal = new double[][]{ww[0], largeErrRejIndexArray, wmErrRejIndexArray};
-
+        
         return retVal;
 
     }
