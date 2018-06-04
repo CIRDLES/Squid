@@ -967,4 +967,9 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
     }
 
+    @FXML
+    private void videoTutorialsMenuItemAction(ActionEvent event) {
+        BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
+    }
+
 }
