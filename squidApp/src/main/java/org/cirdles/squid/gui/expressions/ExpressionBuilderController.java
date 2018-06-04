@@ -510,7 +510,7 @@ public class ExpressionBuilderController implements Initializable {
         createExpressionBtn.disableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionClearBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionPasteBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        saveBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(expressionNameTextField.textProperty().isEmpty()));
+        saveBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(expressionNameTextField.textProperty().isEmpty()).or(expressionIsSaved));
         expressionAsTextBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
@@ -920,6 +920,7 @@ public class ExpressionBuilderController implements Initializable {
         expressionAsTextArea.textProperty().bindBidirectional(expressionString);
         expressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                expressionIsSaved.set(false);
                 buildTextFlowFromString(newValue);
                 if (!changeFromUndoRedo) {
                     if (oldValue != null) {
@@ -929,6 +930,12 @@ public class ExpressionBuilderController implements Initializable {
                     changeFromUndoRedo = false;
                 }
                 updateEditor();
+            }
+        });
+        
+        expressionNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                expressionIsSaved.set(false);
             }
         });
 
@@ -1113,6 +1120,7 @@ public class ExpressionBuilderController implements Initializable {
     private void editCustomExpressionAction(ActionEvent event) {
         if (selectedExpressionIsEditable.get() && currentMode.get().equals(Mode.VIEW)) {
             currentMode.set(Mode.EDIT);
+            expressionIsSaved.set(true);
         }
     }
 
@@ -1273,32 +1281,37 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void referenceMaterialCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
+        expressionIsSaved.set(false);
     }
 
     @FXML
     private void unknownSamplesCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
+        expressionIsSaved.set(false);
     }
 
     @FXML
     private void concRefMatCheckBoxAction(ActionEvent event) {
         unknownsSwitchCheckBox.setSelected(false);
         refMatSwitchCheckBox.setSelected(false);
+        expressionIsSaved.set(false);
     }
 
     @FXML
     private void summaryCalculationCheckBoxAction(ActionEvent event) {
         NUSwitchCheckBox.setSelected(false);
+        expressionIsSaved.set(false);
     }
 
     @FXML
     private void specialUPbThCheckBoxAction(ActionEvent event) {
-
+        expressionIsSaved.set(false);
     }
 
     @FXML
     private void NUSwitchCheckBoxAction(ActionEvent event) {
         summaryCalculationSwitchCheckBox.setSelected(false);
+        expressionIsSaved.set(false);
     }
 
     @FXML
