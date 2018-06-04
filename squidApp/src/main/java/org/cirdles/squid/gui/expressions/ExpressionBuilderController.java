@@ -2169,7 +2169,8 @@ public class ExpressionBuilderController implements Initializable {
         TaskInterface task = squidProject.getTask();
         //Remove if an expression already exists with the same name
         task.removeExpression(exp);
-        if (currentMode.get().equals(Mode.EDIT)) {
+        //Removes the old expression if the name has been changed
+        if (currentMode.get().equals(Mode.EDIT) && !exp.getName().equalsIgnoreCase(selectedExpression.get().getName())) {
             task.removeExpression(selectedExpression.get());
         }
         task.addExpression(exp);
