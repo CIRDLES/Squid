@@ -921,7 +921,7 @@ public class ExpressionBuilderController implements Initializable {
         expressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 expressionIsSaved.set(false);
-                buildTextFlowFromString(newValue);
+                makeTextFlowFromString(newValue);
                 if (!changeFromUndoRedo) {
                     if (oldValue != null) {
                         saveUndo(oldValue);
@@ -1253,7 +1253,7 @@ public class ExpressionBuilderController implements Initializable {
 
             //Rebuild because CSS doesnt apply
             expressionTextFlow.getChildren().clear();
-            buildTextFlowFromString(expressionString.get());
+            makeTextFlowFromString(expressionString.get());
         }
     }
 
@@ -2238,8 +2238,7 @@ public class ExpressionBuilderController implements Initializable {
         return sb.toString();
     }
 
-    private void buildTextFlowFromString(String string) {
-        String numberRegExp = "^\\d+(\\.\\d+)?$";
+    private void makeTextFlowFromString(String string) {
 
         List<Node> children = new ArrayList<>();
 
@@ -2255,7 +2254,7 @@ public class ExpressionBuilderController implements Initializable {
             ExpressionTextNode etn;
 
             // Make a node of the corresponding type
-            if (nodeText.matches(numberRegExp)) {
+            if (ShuntingYard.isNumber(nodeText) || NUMBERSTRING.equals(nodeText)) {
                 etn = new NumberTextNode(' ' + nodeText + ' ');
             } else if (listOperators.contains(nodeText)) {
                 etn = new OperationTextNode(' ' + nodeText + ' ');
