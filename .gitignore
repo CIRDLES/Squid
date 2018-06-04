@@ -42,6 +42,9 @@ test_*
 *.xls
 EXPRESSION.HTML
 squidApp/LudwigLibraryJavadoc/
+
+#Schemas
+Schema/
 squidApp/Schema/
 
 # Resources
@@ -52,14 +55,14 @@ squidApp/Schema/
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.xml
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.txt
 !squidCore/src/main/resources/org/cirdles/squid/tasks/*.txt
+!squidCore/src/main/resources/org/cirdles/squid/prawn/*.xls
+!squidCore/src/main/resources/org/cirdles/squid/prawn/*.squid
 !squidCore/src/main/resources/org/cirdles/squid/javadoc/*.jar
 !squidCore/src/test/resources/org/cirdles/squid/TaskXMLFiles/SampleTask.XML
 
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
 
-#Schemas
-Schema/
-squidApp/Schema/
+
 
 
 # MACOS

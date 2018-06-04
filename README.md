@@ -19,7 +19,7 @@ initializes a new GitHub issue for you - please use freely.
 
 **Request** The current version is only tested on a few 9-, 10-, and 11-species Prawn xml files.  We would like to have more examples of Prawn files and Squid2.5 tasks in Excel for testing.
 
-The current versions - Squid3-**0.2.n.jar** - prototype the development of the
+The current versions - Squid3-**0.3.n.jar** - prototype the development of the
 workflow support including project, task, and expression management features
 of Squid.  Squid provides for creating and saving Squid Project files that have an
 extension of ".squid" and are intended to save the current state of work on a project.
@@ -53,4 +53,4 @@ if needed to help convince you to participate and contribute.
 Additional features will appear over time and may not be documented here concurrently.
 Please be patient and contribute your ideas via the issues tracker.
 
-Updated 2 Jan 2018
+Updated 4 June 2018
