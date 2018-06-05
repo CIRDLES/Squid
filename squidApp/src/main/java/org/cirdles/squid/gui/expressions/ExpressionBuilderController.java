@@ -473,6 +473,8 @@ public class ExpressionBuilderController implements Initializable {
 
     public static Expression expressionToHighlightOnInit = null;
 
+    private Map<String, Tooltip> tooltipsMap = new HashMap<>();
+
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -932,7 +934,7 @@ public class ExpressionBuilderController implements Initializable {
                 updateEditor();
             }
         });
-        
+
         expressionNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 expressionIsSaved.set(false);
@@ -1374,6 +1376,9 @@ public class ExpressionBuilderController implements Initializable {
 
     //POPULATE LISTS
     private void populateExpressionListViews() {
+
+        tooltipsMap.clear();
+
         namedExpressions = FXCollections.observableArrayList(squidProject.getTask().getTaskExpressionsOrdered());
 
         List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
@@ -1907,8 +1912,8 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private Tooltip createFloatingTooltip(String nodeText) {
-        Tooltip res = null;
-        if (nodeText != null) {
+        Tooltip res = tooltipsMap.get(nodeText);
+        if (nodeText != null && res == null) {
             String text = nodeText.replace(UNVISIBLENEWLINEPLACEHOLDER, "\n");
             text = text.replace(VISIBLENEWLINEPLACEHOLDER, "\n");
             text = text.replace(UNVISIBLETABPLACEHOLDER, "\t");
@@ -2058,6 +2063,7 @@ public class ExpressionBuilderController implements Initializable {
                 res.setGraphic(imageView);
             }
             res.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+            tooltipsMap.put(nodeText, res);
         }
         return res;
     }
@@ -2419,8 +2425,6 @@ public class ExpressionBuilderController implements Initializable {
         public ListCell<Expression> call(ListView<Expression> param) {
             ListCell<Expression> cell = new ListCell<Expression>() {
 
-                boolean updated = false;
-
                 @Override
                 public void updateItem(Expression expression, boolean empty) {
                     super.updateItem(expression, empty);
@@ -2428,32 +2432,29 @@ public class ExpressionBuilderController implements Initializable {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        if (!updated) {
-                            updated = true;
-                            setText(expression.getName());
-                            if (showImage) {
-                                ImageView imageView;
-                                if (expression.amHealthy()) {
-                                    imageView = new ImageView(HEALTHY);
+                        setText(expression.getName());
+                        if (showImage) {
+                            ImageView imageView;
+                            if (expression.amHealthy()) {
+                                imageView = new ImageView(HEALTHY);
 
-                                } else {
-                                    imageView = new ImageView(UNHEALTHY);
-                                }
-                                imageView.setFitHeight(12);
-                                imageView.setFitWidth(12);
-                                setGraphic(imageView);
+                            } else {
+                                imageView = new ImageView(UNHEALTHY);
                             }
-                            Tooltip t = createFloatingTooltip("[\"" + getText() + "\"]");
-                            setOnMouseEntered((event) -> {
-                                showToolTip(event, this, t);
-                            });
-                            setOnMouseExited((event) -> {
-                                hideToolTip(t, this);
-                            });
-                            setOnMouseMoved((event) -> {
-                                showToolTip(event, this, t);
-                            });
+                            imageView.setFitHeight(12);
+                            imageView.setFitWidth(12);
+                            setGraphic(imageView);
                         }
+                        Tooltip t = createFloatingTooltip("[\"" + getText() + "\"]");
+                        setOnMouseEntered((event) -> {
+                            showToolTip(event, this, t);
+                        });
+                        setOnMouseExited((event) -> {
+                            hideToolTip(t, this);
+                        });
+                        setOnMouseMoved((event) -> {
+                            showToolTip(event, this, t);
+                        });
                     }
                 }
             };
@@ -2634,27 +2635,22 @@ public class ExpressionBuilderController implements Initializable {
                 @Override
                 public void updateItem(SquidRatiosModel expression, boolean empty) {
 
-                    boolean updated = false;
-
                     super.updateItem(expression, empty);
                     if (empty) {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        if (!updated) {
-                            updated = true;
-                            setText(expression.getRatioName());
-                            Tooltip t = createFloatingTooltip("[\"" + getText() + "\"]");
-                            setOnMouseEntered((event) -> {
-                                showToolTip(event, this, t);
-                            });
-                            setOnMouseExited((event) -> {
-                                hideToolTip(t, this);
-                            });
-                            setOnMouseMoved((event) -> {
-                                showToolTip(event, this, t);
-                            });
-                        }
+                        setText(expression.getRatioName());
+                        Tooltip t = createFloatingTooltip("[\"" + getText() + "\"]");
+                        setOnMouseEntered((event) -> {
+                            showToolTip(event, this, t);
+                        });
+                        setOnMouseExited((event) -> {
+                            hideToolTip(t, this);
+                        });
+                        setOnMouseMoved((event) -> {
+                            showToolTip(event, this, t);
+                        });
                     }
                 }
             };
@@ -2770,8 +2766,6 @@ public class ExpressionBuilderController implements Initializable {
         public ListCell<String> call(ListView<String> param) {
             ListCell<String> cell = new ListCell<String>() {
 
-                boolean updated = false;
-
                 @Override
                 public void updateItem(String operationOrFunction, boolean empty) {
                     super.updateItem(operationOrFunction, empty);
@@ -2779,21 +2773,18 @@ public class ExpressionBuilderController implements Initializable {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        if (!updated) {
-                            updated = true;
-                            setText(operationOrFunction);
-                            System.out.println("\"" + getText().replaceAll("(:.*|\\(.*\\))$", "") + "\"");
-                            Tooltip t = createFloatingTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").trim().replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER).replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
-                            setOnMouseEntered((event) -> {
-                                showToolTip(event, this, t);
-                            });
-                            setOnMouseExited((event) -> {
-                                hideToolTip(t, this);
-                            });
-                            setOnMouseMoved((event) -> {
-                                showToolTip(event, this, t);
-                            });
-                        }
+                        setText(operationOrFunction);
+                        System.out.println("\"" + getText().replaceAll("(:.*|\\(.*\\))$", "") + "\"");
+                        Tooltip t = createFloatingTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").trim().replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER).replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
+                        setOnMouseEntered((event) -> {
+                            showToolTip(event, this, t);
+                        });
+                        setOnMouseExited((event) -> {
+                            hideToolTip(t, this);
+                        });
+                        setOnMouseMoved((event) -> {
+                            showToolTip(event, this, t);
+                        });
                     }
                 }
             };
