@@ -2531,11 +2531,26 @@ public class ExpressionBuilderController implements Initializable {
 
                     MenuItem remove = new MenuItem("Remove expression");
                     remove.setOnAction((t) -> {
+                        int index = cell.getIndex();
+                        ListView parent = cell.getListView();
                         TaskInterface task = squidProject.getTask();
                         removedExpressions.add(cell.getItem());
                         task.removeExpression(cell.getItem());
                         selectedExpression.set(null);
                         populateExpressionListViews();
+
+                        //Determines the new expression to select
+                        int size = parent.getItems().size();
+                        if (size <= index) {
+                            index = size - 1;
+                        }
+                        if (index >= 0) {
+                            selectInAllPanes((Expression) parent.getItems().get(index), false);
+                        } else {
+                            if (namedExpressions.size() > 0) {
+                                selectInAllPanes(namedExpressions.get(0), true);
+                            }
+                        }
                     });
                     cm.getItems().add(remove);
 
