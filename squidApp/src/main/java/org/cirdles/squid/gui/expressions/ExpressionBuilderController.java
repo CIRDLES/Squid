@@ -1841,6 +1841,30 @@ public class ExpressionBuilderController implements Initializable {
             contextMenu.getItems().add(menuItem);
         }
 
+        if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode) && etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\](\\[\\d\\])?$")) {
+            String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\](\\[\\d\\])?)", "");
+            Expression ex = squidProject.getTask().getExpressionByName(text);
+            if ((ex != null && ex.isSquidSwitchNU()) || squidProject.getTask().getRatioNames().contains(text)) {
+                MenuItem menuItem1 = new MenuItem("%");
+                menuItem1.setOnAction((evt) -> {
+                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[%\""));
+                    etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                    expressionTextFlow.getChildren().remove(etn);
+                    expressionTextFlow.getChildren().add(etn2);
+                    updateExpressionTextFlowChildren();
+                });
+                MenuItem menuItem2 = new MenuItem("±");
+                menuItem2.setOnAction((evt) -> {
+                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[±\""));
+                    etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                    expressionTextFlow.getChildren().remove(etn);
+                    expressionTextFlow.getChildren().add(etn2);
+                    updateExpressionTextFlowChildren();
+                });
+                contextMenu.getItems().add(new Menu("Set uncertainty...", null, menuItem1, menuItem2));
+            }
+        }
+
         // For numbers -> make an editable node
         if (etn instanceof NumberTextNode) {
             TextField editText = new TextField(etn.getText());
@@ -1928,15 +1952,19 @@ public class ExpressionBuilderController implements Initializable {
             text = text.replace(UNVISIBLEWHITESPACEPLACEHOLDER, " ");
             text = text.replace(VISIBLEWHITESPACEPLACEHOLDER, " ");
 
+            System.out.println(text);
             if (!text.matches("^[ \t\n\r]$")) {
                 text = nodeText.trim();
             }
+            
+            System.out.println(text);
 
             ImageView imageView = new ImageView(UNHEALTHY);
             imageView.setFitHeight(12);
             imageView.setFitWidth(12);
 
             TokenTypes type = ShuntingYard.TokenTypes.getType(text);
+            System.out.println(text);
             switch (type) {
 
                 case OPERATOR_A:
@@ -2012,7 +2040,7 @@ public class ExpressionBuilderController implements Initializable {
                     String exname = text;
                     String uncertainty = "";
                     if (text.matches("^\\[(±?)(%?)\"(.*?)\"\\]$")) {
-                        exname = text.replaceAll("(^\\[(%)?\")|(\"\\]$)", "");
+                        exname = text.replaceAll("(^\\[(%)?(±)?\")|(\"\\]$)", "");
                         if (text.contains("[%\"")) {
                             uncertainty = "1 \u03C3 % uncertainty\n\n";
                         } else if (text.contains("[±\"")) {
