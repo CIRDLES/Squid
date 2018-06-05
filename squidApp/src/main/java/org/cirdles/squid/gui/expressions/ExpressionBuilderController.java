@@ -1884,21 +1884,28 @@ public class ExpressionBuilderController implements Initializable {
                 for (int n = 0; n < peekString.length(); n++) {
                     if (peekString.charAt(n) == '\n') {
                         lineNumber++;
-                        if (lineNumber == 11) {
+                        if (lineNumber == 10) {
                             peekString = peekString.substring(0, n);
+                            peekString += "\n...";
+                            break;
                         }
                     }
                 }
                 peek += "Reference material :\n" + peekString + "\n";
             }
             if (ex.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                    peek += "\n";
+                }
                 String peekString = createPeekUN(ex);
                 int lineNumber = 0;
                 for (int n = 0; n < peekString.length(); n++) {
                     if (peekString.charAt(n) == '\n') {
                         lineNumber++;
-                        if (lineNumber == 11) {
+                        if (lineNumber == 10) {
                             peekString = peekString.substring(0, n);
+                            peekString += "\n...";
+                            break;
                         }
                     }
                 }
