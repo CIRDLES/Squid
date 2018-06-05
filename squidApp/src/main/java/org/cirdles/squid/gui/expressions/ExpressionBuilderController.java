@@ -2027,7 +2027,7 @@ public class ExpressionBuilderController implements Initializable {
                     //case expression
                     if (ex != null) {
                         boolean isCustom = ex.isCustom();
-                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + ex.getName() + "\n\n" + uncertainty + (ex.amHealthy() ? createPeekForTooltip(ex) : ex.produceExpressionTreeAudit().trim()) + "\n\nNotes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + "\n\n" + ex.getName() + "\n\nExpression string: " + ex.getExcelExpressionString() + "\n\n" + uncertainty + (ex.amHealthy() ? createPeekForTooltip(ex) : ex.produceExpressionTreeAudit().trim()) + "\n\nNotes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                         if (!ex.amHealthy()) {
                             res.setGraphic(imageView);
                         }
