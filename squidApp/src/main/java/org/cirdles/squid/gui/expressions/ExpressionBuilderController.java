@@ -1525,7 +1525,7 @@ public class ExpressionBuilderController implements Initializable {
         constantsListView.setItems(items);
     }
 
-    private String createPeekRM(Expression exp) {
+    private String createPeekRM(Expression exp, boolean forcePercentUn) {
         String res;
         if ((exp == null) || (!exp.amHealthy())) {
             res = "No expression.";
@@ -1564,13 +1564,13 @@ public class ExpressionBuilderController implements Initializable {
                 res = "Reference Materials not processed.";
                 if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     if (refMatSpots.size() > 0) {
-                        res = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree());
+                        res = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree(), forcePercentUn);
                     } else {
                         res = "No Reference Materials";
                     }
                 } else if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                     if (concRefMatSpots.size() > 0) {
-                        res = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree());
+                        res = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree(), forcePercentUn);
                     } else {
                         res = "No Concentration Reference Materials";
                     }
@@ -1580,7 +1580,7 @@ public class ExpressionBuilderController implements Initializable {
         return res;
     }
 
-    private String createPeekUN(Expression exp) {
+    private String createPeekUN(Expression exp, boolean forcePercentUn) {
         String res;
         if ((exp == null) || (!exp.amHealthy())) {
             res = "No expression.";
@@ -1611,7 +1611,7 @@ public class ExpressionBuilderController implements Initializable {
                 res = "Unknowns not processed.";
                 if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                     if (unSpots.size() > 0) {
-                        res = peekDetailsPerSpot(unSpots, exp.getExpressionTree());
+                        res = peekDetailsPerSpot(unSpots, exp.getExpressionTree(), forcePercentUn);
                     } else {
                         res = "No Unknowns";
                     }
@@ -1638,8 +1638,8 @@ public class ExpressionBuilderController implements Initializable {
                 selectionModel.select(refMatTab);
             }
 
-            rmPeekTextArea.setText(createPeekRM(exp));
-            unPeekTextArea.setText(createPeekUN(exp));
+            rmPeekTextArea.setText(createPeekRM(exp, false));
+            unPeekTextArea.setText(createPeekUN(exp, false));
         }
     }
 
@@ -1691,7 +1691,7 @@ public class ExpressionBuilderController implements Initializable {
         return sb.toString();
     }
 
-    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface exp) {
+    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface exp, boolean forcePercentUn) {
         StringBuilder sb = new StringBuilder();
 
         if (exp instanceof ShrimpSpeciesNode) {
@@ -1755,7 +1755,7 @@ public class ExpressionBuilderController implements Initializable {
                     }
                 }
                 if (((ExpressionTree) exp).hasRatiosOfInterest()) {
-                    sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS"));
+                    sb.append(String.format("%1$-" + 20 + "s", (forcePercentUn ? "1-sigma %" : "1-sigma ABS")));
                 }
             }
             sb.append("\n");
@@ -1764,6 +1764,9 @@ public class ExpressionBuilderController implements Initializable {
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
                     double[][] results = spot.getIsotopicRatioValuesByStringName(exp.getName());
+                    if (results[0].length == 2 && forcePercentUn) {
+                        results[0][1] = (results[0][1] / results[0][0]) * 100;
+                    }
                     for (int i = 0; i < results[0].length; i++) {
                         try {
                             sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
@@ -1778,6 +1781,9 @@ public class ExpressionBuilderController implements Initializable {
                         sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
                         double[][] results
                                 = spot.getTaskExpressionsEvaluationsPerSpot().get(exp);
+                        if (results[0].length == 2 && forcePercentUn) {
+                            results[0][1] = (results[0][1] / results[0][0]) * 100;
+                        }
                         for (int i = 0; i < results[0].length; i++) {
                             try {
                                 sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
@@ -1892,18 +1898,18 @@ public class ExpressionBuilderController implements Initializable {
         return contextMenu;
     }
 
-    private String createPeekForTooltip(Expression ex) {
+    private String createPeekForTooltip(Expression ex, boolean forcePercentUn) {
         String peek = "";
         if (ex.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
             if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                peek += "Reference material :\n" + createPeekRM(ex) + "\n";
+                peek += "Reference material :\n" + createPeekRM(ex, forcePercentUn) + "\n";
             }
             if (ex.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                peek += "Unknowns :\n" + createPeekUN(ex);
+                peek += "Unknowns :\n" + createPeekUN(ex, forcePercentUn);
             }
         } else {
             if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                String peekString = createPeekRM(ex);
+                String peekString = createPeekRM(ex, forcePercentUn);
                 int lineNumber = 0;
                 for (int n = 0; n < peekString.length(); n++) {
                     if (peekString.charAt(n) == '\n') {
@@ -1921,7 +1927,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     peek += "\n";
                 }
-                String peekString = createPeekUN(ex);
+                String peekString = createPeekUN(ex, forcePercentUn);
                 int lineNumber = 0;
                 for (int n = 0; n < peekString.length(); n++) {
                     if (peekString.charAt(n) == '\n') {
@@ -1952,19 +1958,16 @@ public class ExpressionBuilderController implements Initializable {
             text = text.replace(UNVISIBLEWHITESPACEPLACEHOLDER, " ");
             text = text.replace(VISIBLEWHITESPACEPLACEHOLDER, " ");
 
-            System.out.println(text);
             if (!text.matches("^[ \t\n\r]$")) {
                 text = nodeText.trim();
             }
-            
-            System.out.println(text);
 
             ImageView imageView = new ImageView(UNHEALTHY);
             imageView.setFitHeight(12);
             imageView.setFitWidth(12);
 
             TokenTypes type = ShuntingYard.TokenTypes.getType(text);
-            System.out.println(text);
+
             switch (type) {
 
                 case OPERATOR_A:
@@ -2039,10 +2042,12 @@ public class ExpressionBuilderController implements Initializable {
                 case NAMED_EXPRESSION:
                     String exname = text;
                     String uncertainty = "";
+                    boolean forcePercentUn = false;
                     if (text.matches("^\\[(±?)(%?)\"(.*?)\"\\]$")) {
                         exname = text.replaceAll("(^\\[(%)?(±)?\")|(\"\\]$)", "");
                         if (text.contains("[%\"")) {
                             uncertainty = "1 \u03C3 % uncertainty\n\n";
+                            forcePercentUn = true;
                         } else if (text.contains("[±\"")) {
                             uncertainty = "1 \u03C3 ± uncertainty\n\n";
                         }
@@ -2055,7 +2060,7 @@ public class ExpressionBuilderController implements Initializable {
                     //case expression
                     if (ex != null) {
                         boolean isCustom = ex.isCustom();
-                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + "\n\n" + ex.getName() + "\n\nExpression string: " + ex.getExcelExpressionString() + "\n\n" + uncertainty + (ex.amHealthy() ? createPeekForTooltip(ex) : ex.produceExpressionTreeAudit().trim()) + "\n\nNotes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                        res = new Tooltip((isCustom ? "Custom expression: " : "Expression: ") + "\n\n" + ex.getName() + "\n\nExpression string: " + ex.getExcelExpressionString() + "\n\n" + uncertainty + (ex.amHealthy() ? createPeekForTooltip(ex, forcePercentUn) : ex.produceExpressionTreeAudit().trim()) + "\n\nNotes:\n" + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                         if (!ex.amHealthy()) {
                             res.setGraphic(imageView);
                         }
@@ -2068,7 +2073,7 @@ public class ExpressionBuilderController implements Initializable {
                                 exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                                 exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                                 exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-                                res = new Tooltip(("Ratio: " + r.getRatioName() + "\n\n" + uncertainty) + createPeekForTooltip(exp));
+                                res = new Tooltip(("Ratio: " + r.getRatioName() + "\n\n" + uncertainty) + createPeekForTooltip(exp, forcePercentUn));
                                 break;
                             }
                         }
@@ -2824,7 +2829,6 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(operationOrFunction);
-                        System.out.println("\"" + getText().replaceAll("(:.*|\\(.*\\))$", "") + "\"");
                         Tooltip t = createFloatingTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").trim().replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER).replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
