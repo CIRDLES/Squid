@@ -175,7 +175,7 @@
                               <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
                               <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
                               <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="How to use?" HBox.hgrow="NEVER" />
+                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="HowTo Videos" HBox.hgrow="NEVER" />
                            </children>
                         </HBox>
                         <HBox fx:id="toolBarHBox" alignment="CENTER_LEFT" spacing="6.0">

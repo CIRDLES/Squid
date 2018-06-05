@@ -1318,7 +1318,7 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void howToUseAction(ActionEvent event) {
-
+        BrowserControl.showURI("https://www.youtube.com/playlist?list=PLfF8bcNRe2WTWx2IuDaHW_XpLh36bWkUc");
     }
 
     @FXML
