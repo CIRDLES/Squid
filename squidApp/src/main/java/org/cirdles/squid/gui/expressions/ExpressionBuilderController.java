@@ -74,6 +74,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -475,6 +476,8 @@ public class ExpressionBuilderController implements Initializable {
 
     private Map<String, Tooltip> tooltipsMap = new HashMap<>();
 
+    private Map<KeyCode, Boolean> keyMap = new HashMap<>();
+
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -489,6 +492,7 @@ public class ExpressionBuilderController implements Initializable {
         initExpressionTextFlowAndTextArea();
         initGraph();
         initExpressionSelection();
+        initKey();
 
         currentMode.set(Mode.VIEW);
 
@@ -1090,6 +1094,18 @@ public class ExpressionBuilderController implements Initializable {
         });
         graphBrowserCheckBox.setOnAction((event) -> {
             graphExpressionTree(makeExpression().getExpressionTree());
+        });
+    }
+
+    private void initKey() {
+        for (KeyCode key : KeyCode.values()) {
+            keyMap.put(key, false);
+        }
+        mainPane.setOnKeyPressed((event) -> {
+            keyMap.put(event.getCode(), true);
+        });
+        mainPane.setOnKeyReleased((event) -> {
+            keyMap.put(event.getCode(), false);
         });
     }
 
@@ -2515,7 +2531,7 @@ public class ExpressionBuilderController implements Initializable {
 
         private void showToolTip(MouseEvent event, ListCell<Expression> cell, Tooltip t) {
             if (t != null) {
-                if (event.isControlDown()) {
+                if (keyMap.get(KeyCode.T)) {
                     t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
                 } else {
                     hideToolTip(t, cell);
@@ -2725,7 +2741,7 @@ public class ExpressionBuilderController implements Initializable {
 
         private void showToolTip(MouseEvent event, ListCell<SquidRatiosModel> cell, Tooltip t) {
             if (t != null) {
-                if (event.isControlDown()) {
+                if (keyMap.get(KeyCode.T)) {
                     t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
                 } else {
                     hideToolTip(t, cell);
@@ -2858,7 +2874,7 @@ public class ExpressionBuilderController implements Initializable {
 
         private void showToolTip(MouseEvent event, ListCell<String> cell, Tooltip t) {
             if (t != null) {
-                if (event.isControlDown()) {
+                if (keyMap.get(KeyCode.T)) {
                     t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
                 } else {
                     hideToolTip(t, cell);
@@ -3141,7 +3157,7 @@ public class ExpressionBuilderController implements Initializable {
 
         private void showToolTip(MouseEvent event) {
             if (tooltip != null) {
-                if (event.isControlDown()) {
+                if (keyMap.get(KeyCode.T)) {
                     tooltip.show(this, event.getScreenX() + 10, event.getScreenY() + 10);
                 } else {
                     hideToolTip();
