@@ -37,6 +37,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -183,6 +185,8 @@ public class ExpressionBuilderController implements Initializable {
     private TextArea rmPeekTextArea;
     @FXML
     private Text hintHoverText;
+    @FXML
+    private Text hintSelectText;
     private final TextArea expressionAsTextArea = new TextArea();
 
     {
@@ -458,7 +462,7 @@ public class ExpressionBuilderController implements Initializable {
     //List of all the expressions
     ObservableList<Expression> namedExpressions;
 
-    ArrayList<Expression> removedExpressions = new ArrayList<>();
+    List<Expression> removedExpressions = new ArrayList<>();
 
     private Expression selectedBeforeCreateOrCopy;
     private boolean expressionIsCopied;
@@ -478,6 +482,8 @@ public class ExpressionBuilderController implements Initializable {
 
     private Map<KeyCode, Boolean> keyMap = new HashMap<>();
 
+    private ObservableList<ExpressionTextNode> selectedNodes = FXCollections.observableArrayList();
+
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -492,6 +498,7 @@ public class ExpressionBuilderController implements Initializable {
         initExpressionTextFlowAndTextArea();
         initGraph();
         initExpressionSelection();
+        initNodeSelection();
         initKey();
 
         currentMode.set(Mode.VIEW);
@@ -529,6 +536,7 @@ public class ExpressionBuilderController implements Initializable {
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
         othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         hintHoverText.visibleProperty().bind(editAsText.not());
+        hintSelectText.visibleProperty().bind(editAsText.not().and(currentMode.isNotEqualTo(Mode.VIEW)));
         BooleanProperty containsWhiteSpaces = new SimpleBooleanProperty(false);
         expressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null && (newValue.contains(" ") || newValue.contains("\t") || newValue.contains("\r") || newValue.contains("\n"))) {
@@ -927,7 +935,9 @@ public class ExpressionBuilderController implements Initializable {
         expressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 expressionIsSaved.set(false);
-                makeTextFlowFromString(newValue);
+                if (!makeStringFromTextFlow().equals(newValue)) {
+                    makeTextFlowFromString(newValue);
+                }
                 if (!changeFromUndoRedo) {
                     if (oldValue != null) {
                         saveUndo(oldValue);
@@ -1009,8 +1019,15 @@ public class ExpressionBuilderController implements Initializable {
 
             // if moving a node
             if (event.getGestureSource() instanceof ExpressionTextNode) {
-                //Just change the index and then update
-                ((ExpressionTextNode) event.getGestureSource()).setOrdinalIndex(ord);
+                if (selectedNodes.size() > 1) {
+                    //If multiple nodes update all indexes
+                    for (ExpressionTextNode etn : selectedNodes) {
+                        etn.setOrdinalIndex(ord + 0.001 * etn.getOrdinalIndex());
+                    }
+                } else {
+                    //Just change the index and then update
+                    ((ExpressionTextNode) event.getGestureSource()).setOrdinalIndex(ord);
+                }
                 updateExpressionTextFlowChildren();
                 success = true;
             } // if copying a node from the lists, insert depending of the type of node
@@ -1815,44 +1832,47 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {
-        ContextMenu contextMenu = new ContextMenu();
+        List<MenuItem> itemsForThisNode = new ArrayList<>();
 
         MenuItem menuItem = new MenuItem("Remove from expression");
         menuItem.setOnAction((evt) -> {
             expressionTextFlow.getChildren().remove(etn);
             updateExpressionTextFlowChildren();
         });
-        contextMenu.getItems().add(menuItem);
+        itemsForThisNode.add(menuItem);
 
         menuItem = new MenuItem("Move left");
         menuItem.setOnAction((evt) -> {
             etn.setOrdinalIndex(etn.getOrdinalIndex() - 1.5);
             updateExpressionTextFlowChildren();
         });
-        contextMenu.getItems().add(menuItem);
+        itemsForThisNode.add(menuItem);
 
         menuItem = new MenuItem("Move right");
         menuItem.setOnAction((evt) -> {
             etn.setOrdinalIndex(etn.getOrdinalIndex() + 1.5);
             updateExpressionTextFlowChildren();
         });
-        contextMenu.getItems().add(menuItem);
+        itemsForThisNode.add(menuItem);
 
-        menuItem = new MenuItem("Wrap in parentheses");
+        Menu wrap = new Menu("Wrap in");
+        itemsForThisNode.add(wrap);
+
+        menuItem = new MenuItem("parentheses");
         menuItem.setOnAction((evt) -> {
             wrapInParentheses(etn.getOrdinalIndex(), etn.getOrdinalIndex());
         });
-        contextMenu.getItems().add(menuItem);
+        wrap.getItems().add(menuItem);
 
-        menuItem = new MenuItem("Wrap in brackets");
+        menuItem = new MenuItem("brackets");
         menuItem.setOnAction((evt) -> {
             wrapInBrackets(etn.getOrdinalIndex(), etn.getOrdinalIndex());
         });
-        contextMenu.getItems().add(menuItem);
+        wrap.getItems().add(menuItem);
 
         //For expressions -> allow wrap in brackets and quotes
         if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode) && !etn.getText().trim().matches("^[\\[\\](),]$") && !etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\](\\[\\d\\])?$")) {
-            menuItem = new MenuItem("Wrap in brackets and quotes");
+            menuItem = new MenuItem("brackets and quotes");
             menuItem.setOnAction((evt) -> {
                 ExpressionTextNode etn2 = new ExpressionTextNode(" [\"" + etn.getText().trim() + "\"] ");
                 etn2.setOrdinalIndex(etn.getOrdinalIndex());
@@ -1860,7 +1880,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionTextFlow.getChildren().add(etn2);
                 updateExpressionTextFlowChildren();
             });
-            contextMenu.getItems().add(menuItem);
+            wrap.getItems().add(menuItem);
         }
 
         if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode) && etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\](\\[\\d\\])?$")) {
@@ -1883,7 +1903,7 @@ public class ExpressionBuilderController implements Initializable {
                     expressionTextFlow.getChildren().add(etn2);
                     updateExpressionTextFlowChildren();
                 });
-                contextMenu.getItems().add(new Menu("Set uncertainty...", null, menuItem1, menuItem2));
+                itemsForThisNode.add(new Menu("Set uncertainty...", null, menuItem1, menuItem2));
             }
         }
 
@@ -1904,7 +1924,120 @@ public class ExpressionBuilderController implements Initializable {
                 expressionTextFlow.getChildren().add(etn2);
                 updateExpressionTextFlowChildren();
             });
-            contextMenu.getItems().add(menuItem);
+            itemsForThisNode.add(menuItem);
+        }
+
+        List<MenuItem> itemsForSelection = new ArrayList<>();
+
+        //Menu items for multi-selection nodes
+        if (selectedNodes.size() > 1) {
+            menuItem = new MenuItem("Remove from expression");
+            menuItem.setOnAction((evt) -> {
+                for (ExpressionTextNode selected : selectedNodes) {
+                    expressionTextFlow.getChildren().remove(selected);
+                }
+                updateExpressionTextFlowChildren();
+            });
+            itemsForSelection.add(menuItem);
+
+            wrap = new Menu("Wrap in");
+            itemsForSelection.add(wrap);
+
+            menuItem = new MenuItem("parentheses");
+            menuItem.setOnAction((evt) -> {
+                List<ExpressionTextNode> nodesToAdd = new ArrayList<>();
+                double begin = -1.0;
+                double lastIndex = -1.0;
+                for (Node node : expressionTextFlow.getChildren()) {
+                    if (node instanceof ExpressionTextNode) {
+                        if (selectedNodes.contains((ExpressionTextNode) node)) {
+                            if (begin == -1.0) {
+                                begin = ((ExpressionTextNode) node).getOrdinalIndex();
+                            }
+                            lastIndex = ((ExpressionTextNode) node).getOrdinalIndex();
+                        } else {
+                            if (begin != -1.0 && lastIndex != -1.0) {
+                                ExpressionTextNode left = new ExpressionTextNode(" ( ");
+                                left.setOrdinalIndex(begin - 0.5);
+                                ExpressionTextNode right = new ExpressionTextNode(" ) ");
+                                right.setOrdinalIndex(lastIndex + 0.5);
+                                nodesToAdd.add(left);
+                                nodesToAdd.add(right);
+                                begin = -1.0;
+                                lastIndex = -1.0;
+                            }
+                        }
+                    }
+                }
+                if (begin != -1.0 && lastIndex != -1.0) {
+                    ExpressionTextNode left = new ExpressionTextNode(" ( ");
+                    left.setOrdinalIndex(begin - 0.5);
+                    ExpressionTextNode right = new ExpressionTextNode(" ) ");
+                    right.setOrdinalIndex(lastIndex + 0.5);
+                    nodesToAdd.add(left);
+                    nodesToAdd.add(right);
+                }
+                expressionTextFlow.getChildren().addAll(nodesToAdd);
+                updateExpressionTextFlowChildren();
+            });
+            wrap.getItems().add(menuItem);
+
+            menuItem = new MenuItem("brackets");
+            menuItem.setOnAction((evt) -> {
+                List<ExpressionTextNode> nodesToAdd = new ArrayList<>();
+                double begin = -1.0;
+                double lastIndex = -1.0;
+                for (Node node : expressionTextFlow.getChildren()) {
+                    if (node instanceof ExpressionTextNode) {
+                        if (selectedNodes.contains((ExpressionTextNode) node)) {
+                            if (begin == -1.0) {
+                                begin = ((ExpressionTextNode) node).getOrdinalIndex();
+                            }
+                            lastIndex = ((ExpressionTextNode) node).getOrdinalIndex();
+                        } else {
+                            if (begin != -1.0 && lastIndex != -1.0) {
+                                ExpressionTextNode left = new ExpressionTextNode(" [ ");
+                                left.setOrdinalIndex(begin - 0.5);
+                                ExpressionTextNode right = new ExpressionTextNode(" ] ");
+                                right.setOrdinalIndex(lastIndex + 0.5);
+                                nodesToAdd.add(left);
+                                nodesToAdd.add(right);
+                                begin = -1.0;
+                                lastIndex = -1.0;
+                            }
+                        }
+                    }
+                }
+                if (begin != -1.0 && lastIndex != -1.0) {
+                    ExpressionTextNode left = new ExpressionTextNode(" [ ");
+                    left.setOrdinalIndex(begin - 0.5);
+                    ExpressionTextNode right = new ExpressionTextNode(" ] ");
+                    right.setOrdinalIndex(lastIndex + 0.5);
+                    nodesToAdd.add(left);
+                    nodesToAdd.add(right);
+                }
+                expressionTextFlow.getChildren().addAll(nodesToAdd);
+                updateExpressionTextFlowChildren();
+            });
+            wrap.getItems().add(menuItem);
+        }
+
+        ContextMenu contextMenu = new ContextMenu();
+
+        if (!itemsForSelection.isEmpty()) {
+            Menu menuNode = new Menu("Entity \"" + etn.getText().trim() + "\"");
+            for (MenuItem mi : itemsForThisNode) {
+                menuNode.getItems().add(mi);
+            }
+            contextMenu.getItems().add(menuNode);
+
+            Menu menuSelection = new Menu("Selection");
+            for (MenuItem mi : itemsForSelection) {
+                menuSelection.getItems().add(mi);
+            }
+            contextMenu.getItems().add(menuSelection);
+        } else {
+            contextMenu.getItems().setAll(itemsForThisNode);
         }
 
         contextMenu.setOnHiding((WindowEvent event) -> {
@@ -3028,7 +3161,22 @@ public class ExpressionBuilderController implements Initializable {
 
     }
 
+    private void initNodeSelection() {
+        selectedNodes.addListener((Change<? extends ExpressionTextNode> c) -> {
+            while (c.next()) {
+                for (ExpressionTextNode ex : c.getAddedSubList()) {
+                    ex.setSelected(true);
+                }
+                for (ExpressionTextNode ex : c.getRemoved()) {
+                    ex.setSelected(false);
+                }
+            }
+        });
+    }
+
     private class ExpressionTextNode extends Text {
+
+        private boolean selected = false;
 
         protected boolean isWhiteSpace;
 
@@ -3071,6 +3219,45 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             setTooltip(createFloatingTooltip(text));
+        }
+
+        private void setSelected(boolean selected) {
+            if (this.selected != selected) {
+                this.selected = selected;
+                if (selected) {
+                    if (!keyMap.get(KeyCode.CONTROL)) {
+                        selectedNodes.clear();
+                    } else if (keyMap.get(KeyCode.SHIFT)) {
+                        boolean hasSelectedNodeBefore = false;
+                        ExpressionTextNode precNode = null;
+                        for (int i = 0; i < expressionTextFlow.getChildren().size(); i++) {
+                            if (expressionTextFlow.getChildren().get(i) instanceof ExpressionTextNode) {
+                                ExpressionTextNode nodeLoop = (ExpressionTextNode) expressionTextFlow.getChildren().get(i);
+                                if (selectedNodes.contains(nodeLoop)) {
+                                    hasSelectedNodeBefore = true;
+                                    precNode = null;
+                                } else if (nodeLoop.equals(this)) {
+                                    break;
+                                } else {
+                                    precNode = nodeLoop;
+                                }
+                            }
+                        }
+                        if (hasSelectedNodeBefore && precNode != null) {
+                            precNode.setSelected(true);
+                        }
+                    }
+                    if (!selectedNodes.contains(this)) {
+                        selectedNodes.add(this);
+                    }
+                    setFill(selectedColor);
+                } else {
+                    if (selectedNodes.contains(this)) {
+                        selectedNodes.remove(this);
+                    }
+                    setFill(regularColor);
+                }
+            }
         }
 
         public final void updateFontSize() {
@@ -3135,9 +3322,17 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
 
+        public void resetColor() {
+            if (selected) {
+                setFill(selectedColor);
+            } else {
+                setFill(regularColor);
+            }
+        }
+
         private void unselectOppositeParenthese() {
             if (oppositeParenthese != null) {
-                oppositeParenthese.setFill(oppositeParenthese.regularColor);
+                oppositeParenthese.resetColor();
                 oppositeParenthese = null;
             }
         }
@@ -3205,22 +3400,26 @@ public class ExpressionBuilderController implements Initializable {
 
             setOnMouseClicked((MouseEvent event) -> {
                 if (event.getButton() == MouseButton.SECONDARY && event.getEventType() == MouseEvent.MOUSE_CLICKED && !popupShowing) {
+                    if (!selected) {
+                        setSelected(true);
+                    }
                     createExpressionTextNodeContextMenu((ExpressionTextNode) event.getSource()).show((ExpressionTextNode) event.getSource(), event.getScreenX(), event.getScreenY());
                     popupShowing = true;
+                } else if (event.getButton() == MouseButton.PRIMARY && event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                    setSelected(!selected);
                 }
             });
 
             setOnMousePressed((MouseEvent event) -> {
                 hideToolTip();
                 selectOppositeParenthese();
-                setFill(selectedColor);
                 setCursor(Cursor.CLOSED_HAND);
+                expressionTextFlow.requestLayout();//fixes a javafx bug where the etn are sometimes not updated
             });
 
             setOnMouseReleased((MouseEvent event) -> {
                 showToolTip(event);
                 unselectOppositeParenthese();
-                setFill(regularColor);
                 setCursor(Cursor.OPEN_HAND);
             });
 
@@ -3305,8 +3504,15 @@ public class ExpressionBuilderController implements Initializable {
 
                 //If moving an existing node
                 if (event.getGestureSource() instanceof ExpressionTextNode) {
-                    //Just update the index
-                    ((ExpressionTextNode) event.getGestureSource()).setOrdinalIndex(ord);
+                    if (selectedNodes.size() > 1) {
+                        //If multiple nodes update all indexes
+                        for (ExpressionTextNode etn : selectedNodes) {
+                            etn.setOrdinalIndex(ord + 0.001 * etn.getOrdinalIndex());
+                        }
+                    } else {
+                        //Else just update the index
+                        ((ExpressionTextNode) event.getGestureSource()).setOrdinalIndex(ord);
+                    }
                     updateExpressionTextFlowChildren();
                     success = true;
                 } //If copying a node from the lists
@@ -3348,12 +3554,17 @@ public class ExpressionBuilderController implements Initializable {
             });
 
             setOnMousePressed((MouseEvent event) -> {
+                hideToolTip();
                 selectOppositeParenthese();
+                setCursor(Cursor.CLOSED_HAND);
                 setFill(selectedColor);
+                expressionTextFlow.requestLayout();//fixes a javafx bug where the etn are sometimes not updated
             });
 
             setOnMouseReleased((MouseEvent event) -> {
+                showToolTip(event);
                 unselectOppositeParenthese();
+                setCursor(Cursor.OPEN_HAND);
                 setFill(regularColor);
             });
 
