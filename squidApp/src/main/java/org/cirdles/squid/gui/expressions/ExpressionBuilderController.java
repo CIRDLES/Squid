@@ -355,6 +355,8 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private VBox toolBarVBox;
     @FXML
+    private VBox selectSpotsVBox;
+    @FXML
     private ScrollPane expressionScrollPane;
 
     //PEEK TABS
@@ -362,6 +364,8 @@ public class ExpressionBuilderController implements Initializable {
     private Tab unkTab;
     @FXML
     private Tab refMatTab;
+    @FXML
+    private Tab selectSpotsTab;
     @FXML
     private TabPane spotTabPane;
 
@@ -1058,6 +1062,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionString.set(null);
                 expressionString.set(newValue.getExcelExpressionString());
                 hasRatioOfInterest.set(((ExpressionTree) newValue.getExpressionTree()).hasRatiosOfInterest());
+                populateSpotsSelection(newValue);
             } else {
                 expressionNameTextField.clear();
                 expressionTextFlow.getChildren().clear();
@@ -1603,6 +1608,35 @@ public class ExpressionBuilderController implements Initializable {
         return res;
     }
 
+    private void populateSpotsSelection(Expression exp) {
+        selectSpotsVBox.getChildren().clear();
+        if (exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
+            selectSpotsTab.setDisable(false);
+            SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
+            List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
+            for (int i = 0; i < selectedSpots.size(); i++) {
+                int index = i;
+                ShrimpFractionExpressionInterface spot = selectedSpots.get(i);
+                CheckBox cb = new CheckBox(i + ": " + spot.getFractionID());
+                if (spotSummaryDetail.getRejectedIndices().length > i) {
+                    cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
+                } else {
+                    cb.setSelected(true);
+                }
+                cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    boolean[] reji = spotSummaryDetail.getRejectedIndices();
+                    reji[index] = !newValue;
+                    spotSummaryDetail.setRejectedIndices(reji);
+                });
+                cb.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(new SimpleBooleanProperty(!spotSummaryDetail.isManualRejectionEnabled())));
+                cb.setOpacity(0.99);
+                selectSpotsVBox.getChildren().add(cb);
+            }
+        } else {
+            selectSpotsTab.setDisable(true);
+        }
+    }
+
     private void populatePeeks(Expression exp) {
         SingleSelectionModel<Tab> selectionModel = spotTabPane.getSelectionModel();
 
@@ -1618,6 +1652,12 @@ public class ExpressionBuilderController implements Initializable {
                 selectionModel.select(unkTab);
             } else if (unkTab.isSelected() && !unknownsSwitchCheckBox.isSelected()) {
                 selectionModel.select(refMatTab);
+            } else if (selectSpotsTab.isSelected() && !summaryCalculationSwitchCheckBox.isSelected()) {
+                if (unknownsSwitchCheckBox.isSelected()) {
+                    selectionModel.select(unkTab);
+                } else {
+                    selectionModel.select(refMatTab);
+                }
             }
 
             rmPeekTextArea.setText(createPeekRM(exp));
