@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -1627,11 +1629,17 @@ public class ExpressionBuilderController implements Initializable {
                     cb.setSelected(true);
                 }
                 cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                    boolean[] reji = spotSummaryDetail.getRejectedIndices();
-                    reji[index] = !newValue;
-                    spotSummaryDetail.setRejectedIndices(reji);
+                    try {
+                        boolean[] reji = spotSummaryDetail.getRejectedIndices();
+                        reji[index] = !newValue;
+                        spotSummaryDetail.setRejectedIndices(reji);
+                        spotSummaryDetail.setValues(spotSummaryDetail.eval(squidProject.getTask()));
+                        populatePeeks(exp);
+                    } catch (SquidException ex) {
+                        Logger.getLogger(ExpressionBuilderController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 });
-                cb.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(new SimpleBooleanProperty(!spotSummaryDetail.isManualRejectionEnabled())));
+                cb.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
                 cb.setOpacity(0.99);
                 selectSpotsVBox.getChildren().add(cb);
             }
