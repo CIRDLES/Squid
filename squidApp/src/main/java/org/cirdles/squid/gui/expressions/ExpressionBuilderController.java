@@ -1611,6 +1611,9 @@ public class ExpressionBuilderController implements Initializable {
     private void populateSpotsSelection(Expression exp) {
         selectSpotsVBox.getChildren().clear();
         if (exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
+            if (!spotTabPane.getTabs().contains(selectSpotsTab)) {
+                spotTabPane.getTabs().add(selectSpotsTab);
+            }
             selectSpotsTab.setDisable(false);
             SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
             List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
@@ -1634,6 +1637,7 @@ public class ExpressionBuilderController implements Initializable {
             }
         } else {
             selectSpotsTab.setDisable(true);
+            spotTabPane.getTabs().remove(selectSpotsTab);
         }
     }
 
