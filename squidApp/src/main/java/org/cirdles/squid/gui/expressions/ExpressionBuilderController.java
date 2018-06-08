@@ -30,6 +30,7 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -1711,58 +1712,140 @@ public class ExpressionBuilderController implements Initializable {
             }
             selectSpotsTab.setDisable(false);
             SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
-            List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
-            ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
-            ExpressionTreeInterface etWMChild1 = null;
-            ExpressionTreeInterface etWMChild2 = null;
-            if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size() >= 2) {
-                etWMChild1 = expTree.getChildrenET().get(0);
-                etWMChild2 = expTree.getChildrenET().get(1);
-            }
-            for (int i = 0; i < selectedSpots.size(); i++) {
-                int index = i;
-                ShrimpFractionExpressionInterface spot = selectedSpots.get(i);
-                String value = "";
-                String err = "";
-                if (etWMChild1 != null && etWMChild2 != null) {
-                    Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
-                    for (Entry<ExpressionTreeInterface, double[][]> entry : map.entrySet()) {
-                        if (entry.getKey().getName().equals(etWMChild1.getName())) {
-                            value = " value: " + Utilities.roundedToSize(entry.getValue()[0][0], 15);
-                        }
-                        if (entry.getKey().getName().equals(etWMChild2.getName())) {
-                            err = " %err: " + Utilities.roundedToSize(entry.getValue()[0][0], 8);
-                        }
-                    }
-                }
-                CheckBox cb;
-                if (value.isEmpty() || err.isEmpty()) {
-                    cb = new CheckBox(i + ": " + spot.getFractionID());
-                } else {
-                    cb = new CheckBox(String.format("%-15s %-27s %s", i + ": " + spot.getFractionID(), value, err));
+            if (spotSummaryDetail != null) {
+
+                String columnsFormat1 = "%-10s   %-10s   %-19s   %-10s";
+                String columnsFormat2 = "%-10s   %-10s";
+
+                List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
+                ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
+                ExpressionTreeInterface etWMChild1 = null;
+                ExpressionTreeInterface etWMChild2 = null;
+                if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size() >= 2) {
+                    etWMChild1 = expTree.getChildrenET().get(0);
+                    etWMChild2 = expTree.getChildrenET().get(1);
                 }
 
-                cb.setFont(Font.font("Courier New", 11));
-                if (spotSummaryDetail.getRejectedIndices().length > i) {
-                    cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
+                CheckBox mainCB;
+                List<CheckBox> cbs = new ArrayList<>();
+
+                if (etWMChild1 == null || etWMChild2 == null) {
+                    mainCB = new CheckBox(String.format(columnsFormat2, "Select all", "Spot name"));
                 } else {
-                    cb.setSelected(true);
+                    mainCB = new CheckBox(String.format(columnsFormat1, "Select all", "Spot name", "Value", "%err"));
                 }
-                cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        boolean[] reji = spotSummaryDetail.getRejectedIndices();
-                        reji[index] = !newValue;
-                        spotSummaryDetail.setRejectedIndices(reji);
-                        spotSummaryDetail.setValues(spotSummaryDetail.eval(squidProject.getTask()));
-                        populatePeeks(exp);
-                        needUpdateExpressions = true;
-                    } catch (SquidException ex) {
-                        Logger.getLogger(ExpressionBuilderController.class.getName()).log(Level.SEVERE, null, ex);
+                mainCB.setOnAction((event) -> {
+                    if (mainCB.isSelected()) {
+                        cbs.forEach((t) -> {
+                            t.setSelected(true);
+                        });
+                    } else {
+                        cbs.forEach((t) -> {
+                            t.setSelected(false);
+                        });
                     }
                 });
-                cb.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
-                cb.setOpacity(0.99);
-                selectSpotsVBox.getChildren().add(cb);
+                selectSpotsVBox.getChildren().add(mainCB);
+                mainCB.setFont(Font.font("Courier New", 11));
+                mainCB.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
+                mainCB.setOpacity(0.99);
+
+                for (int i = 0; i < selectedSpots.size(); i++) {
+                    int index = i;
+                    ShrimpFractionExpressionInterface spot = selectedSpots.get(i);
+                    String value = "";
+                    String err = "";
+
+                    CheckBox cb;
+
+                    if (etWMChild1 == null || etWMChild2 == null) {
+                        cb = new CheckBox(String.format(columnsFormat2, "#" + i, spot.getFractionID()));
+                    } else {
+                        Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
+                        for (Entry<ExpressionTreeInterface, double[][]> entry : map.entrySet()) {
+                            if (entry.getKey().getName().equals(etWMChild1.getName())) {
+                                value = "" + Utilities.roundedToSize(entry.getValue()[0][0], 15);
+                            }
+                            if (entry.getKey().getName().equals(etWMChild2.getName())) {
+                                err = "" + Utilities.roundedToSize(entry.getValue()[0][0], 8);
+                            }
+                        }
+                        cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, err));
+                    }
+                    cbs.add(cb);
+
+                    cb.setFont(Font.font("Courier New", 11));
+                    if (spotSummaryDetail.getRejectedIndices().length > i) {
+                        cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
+                    } else {
+                        cb.setSelected(true);
+                    }
+                    cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                        try {
+                            boolean[] reji = spotSummaryDetail.getRejectedIndices();
+                            reji[index] = !newValue;
+                            spotSummaryDetail.setRejectedIndices(reji);
+                            spotSummaryDetail.setValues(spotSummaryDetail.eval(squidProject.getTask()));
+                            populatePeeks(exp);
+                            needUpdateExpressions = true;
+                        } catch (SquidException ex) {
+                            Logger.getLogger(ExpressionBuilderController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        boolean allSelected = true;
+                        boolean anySelected = false;
+                        for (CheckBox c : cbs) {
+                            if (c.isSelected()) {
+                                anySelected = true;
+                            } else {
+                                allSelected = false;
+                            }
+                            if (anySelected == true && allSelected == false) {
+                                break;
+                            }
+                        }
+                        if (allSelected) {
+                            mainCB.setIndeterminate(false);
+                            mainCB.setSelected(true);
+                        } else if (anySelected) {
+                            mainCB.setSelected(false);
+                            mainCB.setIndeterminate(true);
+                        } else {
+                            mainCB.setIndeterminate(false);
+                            mainCB.setSelected(false);
+                        }
+                    });
+                    cb.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
+                    cb.setOpacity(0.99);
+                    selectSpotsVBox.getChildren().add(cb);
+
+                }
+                boolean allSelected = true;
+                boolean anySelected = false;
+                for (CheckBox c : cbs) {
+                    if (c.isSelected()) {
+                        anySelected = true;
+                    } else {
+                        allSelected = false;
+                    }
+                    if (anySelected == true && allSelected == false) {
+                        break;
+                    }
+                }
+                if (allSelected) {
+                    mainCB.setIndeterminate(false);
+                    mainCB.setSelected(true);
+                } else if (anySelected) {
+                    mainCB.setSelected(false);
+                    mainCB.setIndeterminate(true);
+                } else {
+                    mainCB.setIndeterminate(false);
+                    mainCB.setSelected(false);
+                }
+
+            } else {
+                selectSpotsTab.setDisable(true);
+                spotTabPane.getTabs().remove(selectSpotsTab);
             }
         } else {
             selectSpotsTab.setDisable(true);
