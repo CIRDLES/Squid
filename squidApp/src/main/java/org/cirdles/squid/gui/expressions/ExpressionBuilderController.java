@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -122,6 +123,7 @@ import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_M
 import static org.cirdles.squid.tasks.expressions.functions.Function.LOGIC_FUNCTIONS_MAP;
 import static org.cirdles.squid.tasks.expressions.functions.Function.MATH_FUNCTIONS_MAP;
 import static org.cirdles.squid.tasks.expressions.functions.Function.SQUID_FUNCTIONS_MAP;
+import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
@@ -1625,10 +1627,26 @@ public class ExpressionBuilderController implements Initializable {
             selectSpotsTab.setDisable(false);
             SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
             List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
+            ExpressionTree expTree = (ExpressionTree)exp.getExpressionTree();
+            ExpressionTreeInterface etWMChild = null;
+            if(expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy()){
+                etWMChild = expTree.getChildrenET().get(0);
+            }
             for (int i = 0; i < selectedSpots.size(); i++) {
                 int index = i;
                 ShrimpFractionExpressionInterface spot = selectedSpots.get(i);
-                CheckBox cb = new CheckBox(i + ": " + spot.getFractionID());
+                String value = "";
+                if(etWMChild != null){
+                    Map<ExpressionTreeInterface,double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
+                    for(Entry<ExpressionTreeInterface,double[][]> entry : map.entrySet()){
+                        if(entry.getKey().getName().equals(etWMChild.getName())){
+                            value = " value: "+Utilities.roundedToSize(entry.getValue()[0][0],15);
+                            break;
+                        }
+                    }
+                }
+                CheckBox cb = new CheckBox(String.format("%-17s %-16s",i + ": " + spot.getFractionID(),value));
+                cb.setFont(Font.font("Courier New", 12));
                 if (spotSummaryDetail.getRejectedIndices().length > i) {
                     cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
                 } else {
