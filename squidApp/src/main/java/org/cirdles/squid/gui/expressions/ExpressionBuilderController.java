@@ -2811,7 +2811,6 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(operationOrFunction);
-                        System.out.println("\"" + getText().replaceAll("(:.*|\\(.*\\))$", "") + "\"");
                         Tooltip t = createFloatingTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").trim().replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER).replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
