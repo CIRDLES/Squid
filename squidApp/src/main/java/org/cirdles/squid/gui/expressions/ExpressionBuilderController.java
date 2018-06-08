@@ -469,6 +469,8 @@ public class ExpressionBuilderController implements Initializable {
     private boolean expressionIsCopied;
 
     boolean changeFromUndoRedo = false;
+    
+    boolean needUpdateExpressions = false;
 
     Text insertIndicator = new Text("|");
 
@@ -1049,6 +1051,10 @@ public class ExpressionBuilderController implements Initializable {
     private void initExpressionSelection() {
         //Listener that updates the whole builder when the expression to edit is changed
         selectedExpression.addListener((observable, oldValue, newValue) -> {
+            if(needUpdateExpressions){
+                squidProject.getTask().updateAllExpressions();
+                needUpdateExpressions = false;
+            }
             if (editAsText.get()) {
                 expressionAsTextAction(new ActionEvent());
             }
@@ -1635,6 +1641,7 @@ public class ExpressionBuilderController implements Initializable {
                         spotSummaryDetail.setRejectedIndices(reji);
                         spotSummaryDetail.setValues(spotSummaryDetail.eval(squidProject.getTask()));
                         populatePeeks(exp);
+                        needUpdateExpressions = true;
                     } catch (SquidException ex) {
                         Logger.getLogger(ExpressionBuilderController.class.getName()).log(Level.SEVERE, null, ex);
                     }
