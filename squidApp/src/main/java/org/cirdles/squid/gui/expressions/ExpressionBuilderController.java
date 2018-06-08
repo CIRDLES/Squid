@@ -469,7 +469,7 @@ public class ExpressionBuilderController implements Initializable {
     private boolean expressionIsCopied;
 
     boolean changeFromUndoRedo = false;
-    
+
     boolean needUpdateExpressions = false;
 
     Text insertIndicator = new Text("|");
@@ -1051,7 +1051,7 @@ public class ExpressionBuilderController implements Initializable {
     private void initExpressionSelection() {
         //Listener that updates the whole builder when the expression to edit is changed
         selectedExpression.addListener((observable, oldValue, newValue) -> {
-            if(needUpdateExpressions){
+            if (needUpdateExpressions) {
                 squidProject.getTask().updateAllExpressions();
                 needUpdateExpressions = false;
             }
@@ -1728,17 +1728,17 @@ public class ExpressionBuilderController implements Initializable {
             }
             sb.append("\n");
         }
-        
-        if(spotSummary.isManualRejectionEnabled()){
-            sb.append("Manually rejected: ");
+
+        if (spotSummary.isManualRejectionEnabled()) {
+            sb.append("\tManually rejected: ");
             boolean rejected = false;
-            for(int i = 0 ; i<spotSummary.getRejectedIndices().length ; i++){
-                if(spotSummary.getRejectedIndices()[i]){
+            for (int i = 0; i < spotSummary.getRejectedIndices().length; i++) {
+                if (spotSummary.getRejectedIndices()[i]) {
                     sb.append(i).append(" ");
                     rejected = true;
                 }
             }
-            if(!rejected){
+            if (!rejected) {
                 sb.append("none");
             }
             sb.append("\n");
@@ -1889,6 +1889,25 @@ public class ExpressionBuilderController implements Initializable {
             menuItem = new MenuItem("Wrap in brackets and quotes");
             menuItem.setOnAction((evt) -> {
                 ExpressionTextNode etn2 = new ExpressionTextNode(" [\"" + etn.getText().trim() + "\"] ");
+                etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                expressionTextFlow.getChildren().remove(etn);
+                expressionTextFlow.getChildren().add(etn2);
+                updateExpressionTextFlowChildren();
+            });
+            contextMenu.getItems().add(menuItem);
+        }
+
+        //for true/false : allow to invert value
+        if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode) && (etn.getText().trim().equalsIgnoreCase("true") || etn.getText().trim().equalsIgnoreCase("false"))) {
+            menuItem = new MenuItem("Invert value");
+            menuItem.setOnAction((evt) -> {
+                String text;
+                if(etn.getText().trim().equalsIgnoreCase("true")){
+                    text = " FALSE ";
+                }else{
+                    text = " TRUE ";
+                }
+                ExpressionTextNode etn2 = new ExpressionTextNode(text);
                 etn2.setOrdinalIndex(etn.getOrdinalIndex());
                 expressionTextFlow.getChildren().remove(etn);
                 expressionTextFlow.getChildren().add(etn2);
