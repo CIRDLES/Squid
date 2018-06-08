@@ -1713,25 +1713,30 @@ public class ExpressionBuilderController implements Initializable {
             SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
             List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
             ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
-            ExpressionTreeInterface etWMChild = null;
-            if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy()) {
-                etWMChild = expTree.getChildrenET().get(0);
+            ExpressionTreeInterface etWMChild1 = null;
+            ExpressionTreeInterface etWMChild2 = null;
+            if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size()>=2) {
+                etWMChild1 = expTree.getChildrenET().get(0);
+                etWMChild2 = expTree.getChildrenET().get(1);
             }
             for (int i = 0; i < selectedSpots.size(); i++) {
                 int index = i;
                 ShrimpFractionExpressionInterface spot = selectedSpots.get(i);
                 String value = "";
-                if (etWMChild != null) {
+                String err = "";
+                if (etWMChild1 != null && etWMChild2 != null) {
                     Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
                     for (Entry<ExpressionTreeInterface, double[][]> entry : map.entrySet()) {
-                        if (entry.getKey().getName().equals(etWMChild.getName())) {
+                        if (entry.getKey().getName().equals(etWMChild1.getName())) {
                             value = " value: " + Utilities.roundedToSize(entry.getValue()[0][0], 15);
-                            break;
+                        }
+                        if (entry.getKey().getName().equals(etWMChild2.getName())) {
+                            err = " %err: " + Utilities.roundedToSize(entry.getValue()[0][0], 8);
                         }
                     }
                 }
-                CheckBox cb = new CheckBox(String.format("%-17s %-16s", i + ": " + spot.getFractionID(), value));
-                cb.setFont(Font.font("Courier New", 12));
+                CheckBox cb = new CheckBox(String.format("%-15s %-27s %s", i + ": " + spot.getFractionID(), value, err));
+                cb.setFont(Font.font("Courier New", 11));
                 if (spotSummaryDetail.getRejectedIndices().length > i) {
                     cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
                 } else {
