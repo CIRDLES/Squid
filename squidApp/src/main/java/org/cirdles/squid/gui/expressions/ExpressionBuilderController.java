@@ -968,7 +968,7 @@ public class ExpressionBuilderController implements Initializable {
         expressionAsTextArea.textProperty().bindBidirectional(expressionString);
         expressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                expressionIsSaved.set(false);
+                refreshSaved();
                 if (!makeStringFromTextFlow().equals(newValue)) {
                     makeTextFlowFromString(newValue);
                 }
@@ -985,7 +985,7 @@ public class ExpressionBuilderController implements Initializable {
 
         expressionNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                expressionIsSaved.set(false);
+                refreshSaved();
             }
         });
 
@@ -1168,7 +1168,7 @@ public class ExpressionBuilderController implements Initializable {
             selectedExpression.set(null);
             selectedExpression.set(new Expression("new_custom_expression", ""));
             currentMode.set(Mode.CREATE);
-            expressionIsSaved.set(false);
+            refreshSaved();
         }
     }
 
@@ -1180,7 +1180,7 @@ public class ExpressionBuilderController implements Initializable {
             exp.setName("copy of " + exp.getName());
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
-            expressionIsSaved.set(false);
+            refreshSaved();
             expressionIsCopied = true;
         }
     }
@@ -1189,7 +1189,7 @@ public class ExpressionBuilderController implements Initializable {
     private void editCustomExpressionAction(ActionEvent event) {
         if (selectedExpressionIsEditable.get() && currentMode.get().equals(Mode.VIEW)) {
             currentMode.set(Mode.EDIT);
-            expressionIsSaved.set(true);
+            refreshSaved();
         }
     }
 
@@ -1207,8 +1207,8 @@ public class ExpressionBuilderController implements Initializable {
             Expression exp = selectedExpression.get();
             selectedExpression.set(null);
             selectedExpression.set(exp);
-            selectedExpressionIsEditable.set(true);
             selectInAllPanes(exp, true);
+            selectedExpressionIsEditable.set(true);
         }
     }
 
@@ -1350,37 +1350,37 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void referenceMaterialCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
-        expressionIsSaved.set(false);
+        refreshSaved();
     }
 
     @FXML
     private void unknownSamplesCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
-        expressionIsSaved.set(false);
+        refreshSaved();
     }
 
     @FXML
     private void concRefMatCheckBoxAction(ActionEvent event) {
         unknownsSwitchCheckBox.setSelected(false);
         refMatSwitchCheckBox.setSelected(false);
-        expressionIsSaved.set(false);
+        refreshSaved();
     }
 
     @FXML
     private void summaryCalculationCheckBoxAction(ActionEvent event) {
         NUSwitchCheckBox.setSelected(false);
-        expressionIsSaved.set(false);
+        refreshSaved();
     }
 
     @FXML
     private void specialUPbThCheckBoxAction(ActionEvent event) {
-        expressionIsSaved.set(false);
+        refreshSaved();
     }
 
     @FXML
     private void NUSwitchCheckBoxAction(ActionEvent event) {
         summaryCalculationSwitchCheckBox.setSelected(false);
-        expressionIsSaved.set(false);
+        refreshSaved();
     }
 
     @FXML
@@ -2422,13 +2422,46 @@ public class ExpressionBuilderController implements Initializable {
         currentMode.set(Mode.VIEW);
         selectedExpression.set(null);
         selectedExpression.set(exp);
-        expressionIsSaved.set(true);
+        refreshSaved();
         //Calculate peeks
         populatePeeks(exp);
 
         selectInAllPanes(exp, true);
 
         selectedBeforeCreateOrCopy = null;
+    }
+
+    public void refreshSaved() {
+        boolean saved = true;
+        if (currentMode.get().equals(Mode.EDIT)) {
+            if (!selectedExpression.get().getName().equals(expressionNameTextField.getText())) {
+                saved = false;
+            }
+            if (!selectedExpression.get().getExcelExpressionString().equals(expressionString.get())) {
+                saved = false;
+            }
+            if (selectedExpression.get().isSquidSwitchNU() != NUSwitchCheckBox.isSelected()) {
+                saved = false;
+            }
+            if (selectedExpression.get().getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() != refMatSwitchCheckBox.isSelected()) {
+                saved = false;
+            }
+            if (selectedExpression.get().getExpressionTree().isSquidSwitchSAUnknownCalculation() != unknownsSwitchCheckBox.isSelected()) {
+                saved = false;
+            }
+            if (selectedExpression.get().getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() != concRefMatSwitchCheckBox.isSelected()) {
+                saved = false;
+            }
+            if (selectedExpression.get().getExpressionTree().isSquidSwitchSCSummaryCalculation() != summaryCalculationSwitchCheckBox.isSelected()) {
+                saved = false;
+            }
+            if (selectedExpression.get().getExpressionTree().isSquidSpecialUPbThExpression() != specialUPbThSwitchCheckBox.isSelected()) {
+                saved = false;
+            }
+        }else if(currentMode.get().equals(Mode.CREATE)){
+            saved = false;
+        }
+        expressionIsSaved.set(saved);
     }
 
     private String makeStringFromTextFlow() {
@@ -2651,7 +2684,6 @@ public class ExpressionBuilderController implements Initializable {
                 @Override
                 public void updateItem(Expression expression, boolean empty) {
                     super.updateItem(expression, empty);
-                    System.out.println("updateItem");
                     if (empty) {
                         setText(null);
                         setGraphic(null);
