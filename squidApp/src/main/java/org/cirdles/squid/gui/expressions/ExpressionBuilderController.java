@@ -1715,7 +1715,7 @@ public class ExpressionBuilderController implements Initializable {
             ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
             ExpressionTreeInterface etWMChild1 = null;
             ExpressionTreeInterface etWMChild2 = null;
-            if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size()>=2) {
+            if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size() >= 2) {
                 etWMChild1 = expTree.getChildrenET().get(0);
                 etWMChild2 = expTree.getChildrenET().get(1);
             }
@@ -1735,7 +1735,13 @@ public class ExpressionBuilderController implements Initializable {
                         }
                     }
                 }
-                CheckBox cb = new CheckBox(String.format("%-15s %-27s %s", i + ": " + spot.getFractionID(), value, err));
+                CheckBox cb;
+                if (value.isEmpty() || err.isEmpty()) {
+                    cb = new CheckBox(i + ": " + spot.getFractionID());
+                } else {
+                    cb = new CheckBox(String.format("%-15s %-27s %s", i + ": " + spot.getFractionID(), value, err));
+                }
+
                 cb.setFont(Font.font("Courier New", 11));
                 if (spotSummaryDetail.getRejectedIndices().length > i) {
                     cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
