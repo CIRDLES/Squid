@@ -175,7 +175,7 @@
                               <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
                               <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
                               <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="How to use?" HBox.hgrow="NEVER" />
+                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="HowTo Videos" HBox.hgrow="NEVER" />
                            </children>
                         </HBox>
                         <HBox fx:id="toolBarHBox" alignment="CENTER_LEFT" spacing="6.0">
@@ -219,14 +219,23 @@
                      <items>
                         <VBox>
                            <children>
-                              <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: ctrl+hover a node to show detail">
-                                 <font>
-                                    <Font size="11.0" />
-                                 </font>
+                              <HBox>
                                  <VBox.margin>
                                     <Insets left="2.0" />
                                  </VBox.margin>
-                              </Text>
+                                 <children>
+                                    <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: hold t + hover a node to show detail">
+                                       <font>
+                                          <Font size="11.0" />
+                                       </font>
+                                    </Text>
+                                    <Text fx:id="hintSelectText" layoutX="10.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" - hold ctrl for multi-selection">
+                                       <font>
+                                          <Font size="11.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </HBox>
                               <AnchorPane VBox.vgrow="ALWAYS">
                                  <children>
                                     <TitledPane animated="false" collapsible="false" layoutY="2.5" minHeight="70.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
