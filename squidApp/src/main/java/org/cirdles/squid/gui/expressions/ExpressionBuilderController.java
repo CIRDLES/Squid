@@ -1712,25 +1712,25 @@ public class ExpressionBuilderController implements Initializable {
             selectSpotsTab.setDisable(false);
             SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
             List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
-            ExpressionTree expTree = (ExpressionTree)exp.getExpressionTree();
+            ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
             ExpressionTreeInterface etWMChild = null;
-            if(expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy()){
+            if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy()) {
                 etWMChild = expTree.getChildrenET().get(0);
             }
             for (int i = 0; i < selectedSpots.size(); i++) {
                 int index = i;
                 ShrimpFractionExpressionInterface spot = selectedSpots.get(i);
                 String value = "";
-                if(etWMChild != null){
-                    Map<ExpressionTreeInterface,double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
-                    for(Entry<ExpressionTreeInterface,double[][]> entry : map.entrySet()){
-                        if(entry.getKey().getName().equals(etWMChild.getName())){
-                            value = " value: "+Utilities.roundedToSize(entry.getValue()[0][0],15);
+                if (etWMChild != null) {
+                    Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
+                    for (Entry<ExpressionTreeInterface, double[][]> entry : map.entrySet()) {
+                        if (entry.getKey().getName().equals(etWMChild.getName())) {
+                            value = " value: " + Utilities.roundedToSize(entry.getValue()[0][0], 15);
                             break;
                         }
                     }
                 }
-                CheckBox cb = new CheckBox(String.format("%-17s %-16s",i + ": " + spot.getFractionID(),value));
+                CheckBox cb = new CheckBox(String.format("%-17s %-16s", i + ": " + spot.getFractionID(), value));
                 cb.setFont(Font.font("Courier New", 12));
                 if (spotSummaryDetail.getRejectedIndices().length > i) {
                     cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
@@ -2038,9 +2038,9 @@ public class ExpressionBuilderController implements Initializable {
             menuItem = new MenuItem("Invert value");
             menuItem.setOnAction((evt) -> {
                 String text;
-                if(etn.getText().trim().equalsIgnoreCase("true")){
+                if (etn.getText().trim().equalsIgnoreCase("true")) {
                     text = " FALSE ";
-                }else{
+                } else {
                     text = " TRUE ";
                 }
                 ExpressionTextNode etn2 = new ExpressionTextNode(text);
@@ -2049,7 +2049,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionTextFlow.getChildren().add(etn2);
                 updateExpressionTextFlowChildren();
             });
-            contextMenu.getItems().add(menuItem);
+            itemsForThisNode.add(menuItem);
         }
 
         // For numbers -> make an editable node
@@ -2569,7 +2569,7 @@ public class ExpressionBuilderController implements Initializable {
             if (selectedExpression.get().getExpressionTree().isSquidSpecialUPbThExpression() != specialUPbThSwitchCheckBox.isSelected()) {
                 saved = false;
             }
-        }else if(currentMode.get().equals(Mode.CREATE)){
+        } else if (currentMode.get().equals(Mode.CREATE)) {
             saved = false;
         }
         expressionIsSaved.set(saved);
