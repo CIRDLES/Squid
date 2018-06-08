@@ -1728,6 +1728,21 @@ public class ExpressionBuilderController implements Initializable {
             }
             sb.append("\n");
         }
+        
+        if(spotSummary.isManualRejectionEnabled()){
+            sb.append("Manually rejected: ");
+            boolean rejected = false;
+            for(int i = 0 ; i<spotSummary.getRejectedIndices().length ; i++){
+                if(spotSummary.getRejectedIndices()[i]){
+                    sb.append(i).append(" ");
+                    rejected = true;
+                }
+            }
+            if(!rejected){
+                sb.append("none");
+            }
+            sb.append("\n");
+        }
 
         return sb.toString();
     }
