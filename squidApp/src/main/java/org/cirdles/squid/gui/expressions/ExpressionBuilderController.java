@@ -542,7 +542,7 @@ public class ExpressionBuilderController implements Initializable {
         summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         NUSwitchCheckBox.setDisable(true);//NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
-        showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
+        showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull().or(currentMode.isEqualTo(Mode.CREATE)));
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
         othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         hintHoverText.visibleProperty().bind(editAsText.not());
@@ -3745,7 +3745,6 @@ public class ExpressionBuilderController implements Initializable {
             setOnMousePressed((MouseEvent event) -> {
                 hideToolTip();
                 selectOppositeParenthese();
-                setCursor(Cursor.CLOSED_HAND);
                 setFill(selectedColor);
                 expressionTextFlow.requestLayout();//fixes a javafx bug where the etn are sometimes not updated
             });
@@ -3753,7 +3752,6 @@ public class ExpressionBuilderController implements Initializable {
             setOnMouseReleased((MouseEvent event) -> {
                 showToolTip(event);
                 unselectOppositeParenthese();
-                setCursor(Cursor.OPEN_HAND);
                 setFill(regularColor);
             });
 
