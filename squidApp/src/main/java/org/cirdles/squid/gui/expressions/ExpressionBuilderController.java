@@ -1714,8 +1714,8 @@ public class ExpressionBuilderController implements Initializable {
             SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
             if (spotSummaryDetail != null) {
 
-                String columnsFormat1 = "%-10s   %-10s   %-19s   %-10s";
-                String columnsFormat2 = "%-10s   %-10s";
+                String columnsFormat1 = "%-4s   %-10s   %-19s   %-17s";
+                String columnsFormat2 = "%-4s   %-10s";
 
                 List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
                 ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
@@ -1730,9 +1730,9 @@ public class ExpressionBuilderController implements Initializable {
                 List<CheckBox> cbs = new ArrayList<>();
 
                 if (etWMChild1 == null || etWMChild2 == null) {
-                    mainCB = new CheckBox(String.format(columnsFormat2, "Select all", "Spot name"));
+                    mainCB = new CheckBox(String.format(columnsFormat2, "All", "Spot name"));
                 } else {
-                    mainCB = new CheckBox(String.format(columnsFormat1, "Select all", "Spot name", "Value", "%err"));
+                    mainCB = new CheckBox(String.format(columnsFormat1, "All", "Spot name", "Value", "%err"));
                 }
                 mainCB.setOnAction((event) -> {
                     if (mainCB.isSelected()) {
@@ -1767,7 +1767,7 @@ public class ExpressionBuilderController implements Initializable {
                                 value = "" + Utilities.roundedToSize(entry.getValue()[0][0], 15);
                             }
                             if (entry.getKey().getName().equals(etWMChild2.getName())) {
-                                err = "" + Utilities.roundedToSize(entry.getValue()[0][0], 8);
+                                err = "" + Utilities.roundedToSize(entry.getValue()[0][0], 15);
                             }
                         }
                         cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, err));
@@ -1936,7 +1936,7 @@ public class ExpressionBuilderController implements Initializable {
                 }
             }
             if (!rejected) {
-                sb.append("none");
+                sb.append("None");
             }
             sb.append("\n");
         }
