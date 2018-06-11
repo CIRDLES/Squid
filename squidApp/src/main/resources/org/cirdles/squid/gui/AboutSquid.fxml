@@ -26,9 +26,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="450.0" styleClass="main-Pain" stylesheets="@css/about.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.AboutSquidController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="450.0" styleClass="main-Pain" stylesheets="@css/about.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.AboutSquidController">
    <children>
-      <Label fx:id="versionText" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="96.0" layoutY="237.0" prefHeight="45.0" prefWidth="258.0" stylesheets="@css/about.css" text="Squid V 0.0.1" textAlignment="CENTER">
+      <Label fx:id="versionText" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="96.0" layoutY="217.0" prefHeight="45.0" prefWidth="258.0" stylesheets="@css/about.css" text="Squid V 0.0.1" textAlignment="CENTER">
          <styleClass>
             <String fx:value="project-Title" />
             <String fx:value="main-Text-Color" />
@@ -46,13 +46,13 @@
             <Image url="@images/githubBluesqueLogo.png" />
          </image>
       </ImageView>
-      <Label fx:id="aboutDetailsLabel" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="29.0" layoutY="320.0" prefHeight="121.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Developed by the CIRDLES team at the College of Charleston." textAlignment="JUSTIFY" wrapText="true" />
-      <Label fx:id="buildDate" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="46.0" layoutY="292.0" prefHeight="17.0" prefWidth="358.0" styleClass="main-Text-Color" text="Build Date: mm/dd/yyyy" textAlignment="CENTER" />
-      <ImageView fitHeight="300.0" fitWidth="400.0" layoutX="75.0" layoutY="-32.0" pickOnBounds="true" preserveRatio="true" styleClass="logo">
+      <Label fx:id="aboutDetailsLabel" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="29.0" layoutY="287.0" prefHeight="121.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Developed by the CIRDLES team at the College of Charleston." textAlignment="JUSTIFY" wrapText="true" />
+      <Label fx:id="buildDate" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="46.0" layoutY="262.0" prefHeight="17.0" prefWidth="358.0" styleClass="main-Text-Color" text="Build Date: mm/dd/yyyy" textAlignment="CENTER" />
+      <ImageView fitHeight="300.0" fitWidth="400.0" layoutX="75.0" layoutY="-41.0" pickOnBounds="true" preserveRatio="true" styleClass="logo">
          <image>
             <Image url="@images/SquidLogoSansBg.png" />
          </image>
       </ImageView>
-      <Label fx:id="contributorsLabel" layoutX="31.0" layoutY="441.0" prefHeight="45.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Contributors" wrapText="true" />
+      <Label fx:id="contributorsLabel" layoutX="31.0" layoutY="411.0" prefHeight="75.0" prefWidth="392.0" styleClass="description-Text" stylesheets="@css/about.css" text="Contributors" wrapText="true" />
    </children>
 </Pane>
