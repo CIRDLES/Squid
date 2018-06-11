@@ -39,6 +39,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -736,104 +737,84 @@ public class ExpressionBuilderController implements Initializable {
         globalListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         //Selection listener to update the categories tab when a new value is selected on the filter tab
-        globalListView.getSelectionModel().getSelectedItems().addListener((new ListChangeListener<Expression>() {
+        globalListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends Expression> exp) {
-
-                ObservableList<Expression> selected = globalListView.getSelectionModel().getSelectedItems();
-                if (selected.size() > 0) {
-                    if (currentMode.get().equals(Mode.VIEW)) {
+            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
+                if(newValue!=null){
+                    if(currentMode.get().equals(Mode.VIEW)){
                         selectedExpressionIsEditable.set(true);
-                        //The new value is selected to be shown in the editor
-                        selectedExpression.set(selected.get(0));
+                        selectedExpression.set(newValue);
                     }
-
-                    selectInAllPanes(selectedExpression.get(), false);
+                    selectInAllPanes(newValue, false);
                 }
             }
-        }));
+        });
 
         brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         brokenExpressionsListView.setCellFactory(new ExpressionCellFactory(true));
         brokenExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         //Listener to update the filter tab when a new value is selected in the broken expression category
-        brokenExpressionsListView.getSelectionModel().getSelectedItems().addListener((new ListChangeListener<Expression>() {
+        brokenExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends Expression> exp) {
-
-                ObservableList<Expression> selected = brokenExpressionsListView.getSelectionModel().getSelectedItems();
-                if (selected.size() > 0) {
-                    if (currentMode.get().equals(Mode.VIEW)) {
+            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
+                if(newValue!=null){
+                    if(currentMode.get().equals(Mode.VIEW)){
                         selectedExpressionIsEditable.set(true);
-                        //The new value is selected to be shown in the editor
-                        selectedExpression.set(selected.get(0));
+                        selectedExpression.set(newValue);
                     }
-
-                    selectInAllPanes(selectedExpression.get(), false);
+                    selectInAllPanes(newValue, false);
                 }
             }
-        }));
+        });
 
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
         nuSwitchedExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         //Same listener for each category
-        nuSwitchedExpressionsListView.getSelectionModel().getSelectedItems().addListener((new ListChangeListener<Expression>() {
+        nuSwitchedExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends Expression> exp) {
-
-                ObservableList<Expression> selected = nuSwitchedExpressionsListView.getSelectionModel().getSelectedItems();
-                if (selected.size() > 0) {
-                    if (currentMode.get().equals(Mode.VIEW)) {
+            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
+                if(newValue!=null){
+                    if(currentMode.get().equals(Mode.VIEW)){
                         selectedExpressionIsEditable.set(true);
-                        //The new value is selected to be shown in the editor
-                        selectedExpression.set(selected.get(0));
+                        selectedExpression.set(newValue);
                     }
-
-                    selectInAllPanes(selectedExpression.get(), false);
+                    selectInAllPanes(newValue, false);
                 }
             }
-        }));
+        });
 
         builtInExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         builtInExpressionsListView.setCellFactory(new ExpressionCellFactory());
         builtInExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        builtInExpressionsListView.getSelectionModel().getSelectedItems().addListener((new ListChangeListener<Expression>() {
+        builtInExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends Expression> exp) {
-
-                ObservableList<Expression> selected = builtInExpressionsListView.getSelectionModel().getSelectedItems();
-                if (selected.size() > 0) {
-                    if (currentMode.get().equals(Mode.VIEW)) {
+            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
+                if(newValue!=null){
+                    if(currentMode.get().equals(Mode.VIEW)){
                         selectedExpressionIsEditable.set(true);
-                        //The new value is selected to be shown in the editor
-                        selectedExpression.set(selected.get(0));
+                        selectedExpression.set(newValue);
                     }
-
-                    selectInAllPanes(selectedExpression.get(), false);
+                    selectInAllPanes(newValue, false);
                 }
             }
-        }));
+        });
 
         customExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         customExpressionsListView.setCellFactory(new ExpressionCellFactory());
         customExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        customExpressionsListView.getSelectionModel().getSelectedItems().addListener((new ListChangeListener<Expression>() {
+        customExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends Expression> exp) {
-
-                ObservableList<Expression> selected = customExpressionsListView.getSelectionModel().getSelectedItems();
-                if (selected.size() > 0) {
-                    if (currentMode.get().equals(Mode.VIEW)) {
+            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
+                if(newValue!=null){
+                    if(currentMode.get().equals(Mode.VIEW)){
                         selectedExpressionIsEditable.set(true);
-                        //The new value is selected to be shown in the editor
-                        selectedExpression.set(selected.get(0));
+                        selectedExpression.set(newValue);
                     }
-
-                    selectInAllPanes(selectedExpression.get(), false);
+                    selectInAllPanes(newValue, false);
                 }
             }
-        }));
+        });
 
         populateExpressionListViews();
 
@@ -841,26 +822,22 @@ public class ExpressionBuilderController implements Initializable {
         ratioExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         ratioExpressionsListView.setCellFactory(new ExpressionTreeCellFactory());
         ratioExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        ratioExpressionsListView.getSelectionModel().getSelectedItems().addListener((new ListChangeListener<SquidRatiosModel>() {
+        ratioExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidRatiosModel>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends SquidRatiosModel> exp) {
-
-                ObservableList<SquidRatiosModel> selected = ratioExpressionsListView.getSelectionModel().getSelectedItems();
-                if (selected.size() > 0) {
-                    if (currentMode.get().equals(Mode.VIEW)) {
-                        Expression expr = new Expression(squidProject.getTask().getNamedExpressionsMap().get(selected.get(0).getRatioName()), "[\"" + selected.get(0).getRatioName() + "\"]", false);
+            public void changed(ObservableValue<? extends SquidRatiosModel> observable, SquidRatiosModel oldValue, SquidRatiosModel newValue) {
+                if(newValue!=null){
+                    if(currentMode.get().equals(Mode.VIEW)){
+                        Expression expr = new Expression(squidProject.getTask().getNamedExpressionsMap().get(newValue.getRatioName()), "[\"" + newValue.getRatioName() + "\"]", false);
                         expr.getExpressionTree().setSquidSpecialUPbThExpression(true);
                         expr.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                         expr.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-                        //The new value is selected to be shown in the editor
                         selectedExpressionIsEditable.set(false);
                         selectedExpression.set(expr);
                     }
-
                     selectInAllPanes(null, false);
                 }
             }
-        }));
+        });
 
         populateRatiosListView();
 
@@ -1714,8 +1691,8 @@ public class ExpressionBuilderController implements Initializable {
             SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
             if (spotSummaryDetail != null) {
 
-                String columnsFormat1 = "%-10s   %-10s   %-19s   %-10s";
-                String columnsFormat2 = "%-10s   %-10s";
+                String columnsFormat1 = "%-4s   %-10s   %-19s   %-17s";
+                String columnsFormat2 = "%-4s   %-10s";
 
                 List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
                 ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
@@ -1730,9 +1707,9 @@ public class ExpressionBuilderController implements Initializable {
                 List<CheckBox> cbs = new ArrayList<>();
 
                 if (etWMChild1 == null || etWMChild2 == null) {
-                    mainCB = new CheckBox(String.format(columnsFormat2, "Select all", "Spot name"));
+                    mainCB = new CheckBox(String.format(columnsFormat2, "All", "Spot name"));
                 } else {
-                    mainCB = new CheckBox(String.format(columnsFormat1, "Select all", "Spot name", "Value", "%err"));
+                    mainCB = new CheckBox(String.format(columnsFormat1, "All", "Spot name", "Value", "%err"));
                 }
                 mainCB.setOnAction((event) -> {
                     if (mainCB.isSelected()) {
@@ -1767,7 +1744,7 @@ public class ExpressionBuilderController implements Initializable {
                                 value = "" + Utilities.roundedToSize(entry.getValue()[0][0], 15);
                             }
                             if (entry.getKey().getName().equals(etWMChild2.getName())) {
-                                err = "" + Utilities.roundedToSize(entry.getValue()[0][0], 8);
+                                err = "" + Utilities.roundedToSize(entry.getValue()[0][0], 15);
                             }
                         }
                         cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, err));
@@ -1936,7 +1913,7 @@ public class ExpressionBuilderController implements Initializable {
                 }
             }
             if (!rejected) {
-                sb.append("none");
+                sb.append("None");
             }
             sb.append("\n");
         }
@@ -2107,7 +2084,7 @@ public class ExpressionBuilderController implements Initializable {
             String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\](\\[\\d\\])?)", "");
             Expression ex = squidProject.getTask().getExpressionByName(text);
             if ((ex != null && ex.isSquidSwitchNU()) || squidProject.getTask().getRatioNames().contains(text)) {
-                MenuItem menuItem1 = new MenuItem("%");
+                MenuItem menuItem1 = new MenuItem("1 \u03C3 (%)");
                 menuItem1.setOnAction((evt) -> {
                     ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[%\""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
@@ -2115,7 +2092,7 @@ public class ExpressionBuilderController implements Initializable {
                     expressionTextFlow.getChildren().add(etn2);
                     updateExpressionTextFlowChildren();
                 });
-                MenuItem menuItem2 = new MenuItem("±");
+                MenuItem menuItem2 = new MenuItem("1 \u03C3 abs (±)");
                 menuItem2.setOnAction((evt) -> {
                     ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[±\""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
@@ -2123,7 +2100,15 @@ public class ExpressionBuilderController implements Initializable {
                     expressionTextFlow.getChildren().add(etn2);
                     updateExpressionTextFlowChildren();
                 });
-                itemsForThisNode.add(new Menu("Set uncertainty...", null, menuItem1, menuItem2));
+                MenuItem menuItem3 = new MenuItem("none");
+                menuItem3.setOnAction((evt) -> {
+                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[\""));
+                    etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                    expressionTextFlow.getChildren().remove(etn);
+                    expressionTextFlow.getChildren().add(etn2);
+                    updateExpressionTextFlowChildren();
+                });
+                itemsForThisNode.add(new Menu("Set uncertainty...", null, menuItem1, menuItem2, menuItem3));
             }
         }
 
