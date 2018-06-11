@@ -2107,7 +2107,7 @@ public class ExpressionBuilderController implements Initializable {
             String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\](\\[\\d\\])?)", "");
             Expression ex = squidProject.getTask().getExpressionByName(text);
             if ((ex != null && ex.isSquidSwitchNU()) || squidProject.getTask().getRatioNames().contains(text)) {
-                MenuItem menuItem1 = new MenuItem("%");
+                MenuItem menuItem1 = new MenuItem("1 \u03C3 (%)");
                 menuItem1.setOnAction((evt) -> {
                     ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[%\""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
@@ -2115,7 +2115,7 @@ public class ExpressionBuilderController implements Initializable {
                     expressionTextFlow.getChildren().add(etn2);
                     updateExpressionTextFlowChildren();
                 });
-                MenuItem menuItem2 = new MenuItem("±");
+                MenuItem menuItem2 = new MenuItem("1 \u03C3 abs (±)");
                 menuItem2.setOnAction((evt) -> {
                     ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[±\""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
@@ -2123,7 +2123,15 @@ public class ExpressionBuilderController implements Initializable {
                     expressionTextFlow.getChildren().add(etn2);
                     updateExpressionTextFlowChildren();
                 });
-                itemsForThisNode.add(new Menu("Set uncertainty...", null, menuItem1, menuItem2));
+                MenuItem menuItem3 = new MenuItem("none");
+                menuItem3.setOnAction((evt) -> {
+                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[\""));
+                    etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                    expressionTextFlow.getChildren().remove(etn);
+                    expressionTextFlow.getChildren().add(etn2);
+                    updateExpressionTextFlowChildren();
+                });
+                itemsForThisNode.add(new Menu("Set uncertainty...", null, menuItem1, menuItem2, menuItem3));
             }
         }
 
