@@ -375,6 +375,25 @@
                                                             </AnchorPane>
                                                          </content>
                                                       </Tab>
+                                                      <Tab fx:id="selectSpotsTab" text="Spots">
+                                                         <content>
+                                                            <AnchorPane>
+                                                               <padding>
+                                                                  <Insets bottom="0" left="0" right="0" top="0" />
+                                                               </padding>
+                                                               <children>
+                                                                  <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                     <content>
+                                                                        <VBox fx:id="selectSpotsVBox" spacing="2.0" style="-fx-background-color: white;">
+                                                                           <padding>
+                                                                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                                                           </padding></VBox>
+                                                                     </content>
+                                                                  </ScrollPane>
+                                                               </children>
+                                                            </AnchorPane>
+                                                         </content>
+                                                      </Tab>
                                                   </tabs>
                                                 </TabPane>
                                              </content>

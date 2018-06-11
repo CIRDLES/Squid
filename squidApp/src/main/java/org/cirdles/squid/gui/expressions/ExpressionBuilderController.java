@@ -25,8 +25,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -123,6 +127,7 @@ import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_M
 import static org.cirdles.squid.tasks.expressions.functions.Function.LOGIC_FUNCTIONS_MAP;
 import static org.cirdles.squid.tasks.expressions.functions.Function.MATH_FUNCTIONS_MAP;
 import static org.cirdles.squid.tasks.expressions.functions.Function.SQUID_FUNCTIONS_MAP;
+import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
@@ -360,6 +365,8 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private VBox toolBarVBox;
     @FXML
+    private VBox selectSpotsVBox;
+    @FXML
     private ScrollPane expressionScrollPane;
 
     //PEEK TABS
@@ -367,6 +374,8 @@ public class ExpressionBuilderController implements Initializable {
     private Tab unkTab;
     @FXML
     private Tab refMatTab;
+    @FXML
+    private Tab selectSpotsTab;
     @FXML
     private TabPane spotTabPane;
 
@@ -469,6 +478,8 @@ public class ExpressionBuilderController implements Initializable {
 
     boolean changeFromUndoRedo = false;
 
+    boolean needUpdateExpressions = false;
+
     Text insertIndicator = new Text("|");
 
     {
@@ -532,7 +543,7 @@ public class ExpressionBuilderController implements Initializable {
         summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         NUSwitchCheckBox.setDisable(true);//NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
-        showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull());
+        showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull().or(currentMode.isEqualTo(Mode.CREATE)));
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
         othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         hintHoverText.visibleProperty().bind(editAsText.not());
@@ -1107,6 +1118,10 @@ public class ExpressionBuilderController implements Initializable {
     private void initExpressionSelection() {
         //Listener that updates the whole builder when the expression to edit is changed
         selectedExpression.addListener((observable, oldValue, newValue) -> {
+            if (needUpdateExpressions) {
+                squidProject.getTask().updateAllExpressions();
+                needUpdateExpressions = false;
+            }
             if (editAsText.get()) {
                 expressionAsTextAction(new ActionEvent());
             }
@@ -1122,6 +1137,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionString.set(null);
                 expressionString.set(newValue.getExcelExpressionString());
                 hasRatioOfInterest.set(((ExpressionTree) newValue.getExpressionTree()).hasRatiosOfInterest());
+                populateSpotsSelection(newValue);
             } else {
                 expressionNameTextField.clear();
                 expressionTextFlow.getChildren().clear();
@@ -1688,6 +1704,155 @@ public class ExpressionBuilderController implements Initializable {
         return res;
     }
 
+    private void populateSpotsSelection(Expression exp) {
+        selectSpotsVBox.getChildren().clear();
+        if (exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
+            if (!spotTabPane.getTabs().contains(selectSpotsTab)) {
+                spotTabPane.getTabs().add(selectSpotsTab);
+            }
+            selectSpotsTab.setDisable(false);
+            SpotSummaryDetails spotSummaryDetail = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
+            if (spotSummaryDetail != null) {
+
+                String columnsFormat1 = "%-10s   %-10s   %-19s   %-10s";
+                String columnsFormat2 = "%-10s   %-10s";
+
+                List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
+                ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
+                ExpressionTreeInterface etWMChild1 = null;
+                ExpressionTreeInterface etWMChild2 = null;
+                if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size() >= 2) {
+                    etWMChild1 = expTree.getChildrenET().get(0);
+                    etWMChild2 = expTree.getChildrenET().get(1);
+                }
+
+                CheckBox mainCB;
+                List<CheckBox> cbs = new ArrayList<>();
+
+                if (etWMChild1 == null || etWMChild2 == null) {
+                    mainCB = new CheckBox(String.format(columnsFormat2, "Select all", "Spot name"));
+                } else {
+                    mainCB = new CheckBox(String.format(columnsFormat1, "Select all", "Spot name", "Value", "%err"));
+                }
+                mainCB.setOnAction((event) -> {
+                    if (mainCB.isSelected()) {
+                        cbs.forEach((t) -> {
+                            t.setSelected(true);
+                        });
+                    } else {
+                        cbs.forEach((t) -> {
+                            t.setSelected(false);
+                        });
+                    }
+                });
+                selectSpotsVBox.getChildren().add(mainCB);
+                mainCB.setFont(Font.font("Courier New", 11));
+                mainCB.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
+                mainCB.setOpacity(0.99);
+
+                for (int i = 0; i < selectedSpots.size(); i++) {
+                    int index = i;
+                    ShrimpFractionExpressionInterface spot = selectedSpots.get(i);
+                    String value = "";
+                    String err = "";
+
+                    CheckBox cb;
+
+                    if (etWMChild1 == null || etWMChild2 == null) {
+                        cb = new CheckBox(String.format(columnsFormat2, "#" + i, spot.getFractionID()));
+                    } else {
+                        Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
+                        for (Entry<ExpressionTreeInterface, double[][]> entry : map.entrySet()) {
+                            if (entry.getKey().getName().equals(etWMChild1.getName())) {
+                                value = "" + Utilities.roundedToSize(entry.getValue()[0][0], 15);
+                            }
+                            if (entry.getKey().getName().equals(etWMChild2.getName())) {
+                                err = "" + Utilities.roundedToSize(entry.getValue()[0][0], 8);
+                            }
+                        }
+                        cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, err));
+                    }
+                    cbs.add(cb);
+
+                    cb.setFont(Font.font("Courier New", 11));
+                    if (spotSummaryDetail.getRejectedIndices().length > i) {
+                        cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
+                    } else {
+                        cb.setSelected(true);
+                    }
+                    cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                        try {
+                            boolean[] reji = spotSummaryDetail.getRejectedIndices();
+                            reji[index] = !newValue;
+                            spotSummaryDetail.setRejectedIndices(reji);
+                            spotSummaryDetail.setValues(spotSummaryDetail.eval(squidProject.getTask()));
+                            populatePeeks(exp);
+                            needUpdateExpressions = true;
+                        } catch (SquidException ex) {
+                            Logger.getLogger(ExpressionBuilderController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        boolean allSelected = true;
+                        boolean anySelected = false;
+                        for (CheckBox c : cbs) {
+                            if (c.isSelected()) {
+                                anySelected = true;
+                            } else {
+                                allSelected = false;
+                            }
+                            if (anySelected == true && allSelected == false) {
+                                break;
+                            }
+                        }
+                        if (allSelected) {
+                            mainCB.setIndeterminate(false);
+                            mainCB.setSelected(true);
+                        } else if (anySelected) {
+                            mainCB.setSelected(false);
+                            mainCB.setIndeterminate(true);
+                        } else {
+                            mainCB.setIndeterminate(false);
+                            mainCB.setSelected(false);
+                        }
+                    });
+                    cb.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
+                    cb.setOpacity(0.99);
+                    selectSpotsVBox.getChildren().add(cb);
+
+                }
+                boolean allSelected = true;
+                boolean anySelected = false;
+                for (CheckBox c : cbs) {
+                    if (c.isSelected()) {
+                        anySelected = true;
+                    } else {
+                        allSelected = false;
+                    }
+                    if (anySelected == true && allSelected == false) {
+                        break;
+                    }
+                }
+                if (allSelected) {
+                    mainCB.setIndeterminate(false);
+                    mainCB.setSelected(true);
+                } else if (anySelected) {
+                    mainCB.setSelected(false);
+                    mainCB.setIndeterminate(true);
+                } else {
+                    mainCB.setIndeterminate(false);
+                    mainCB.setSelected(false);
+                }
+
+            } else {
+                selectSpotsTab.setDisable(true);
+                spotTabPane.getTabs().remove(selectSpotsTab);
+            }
+        } else {
+            selectSpotsTab.setDisable(true);
+            spotTabPane.getTabs().remove(selectSpotsTab);
+        }
+    }
+
     private void populatePeeks(Expression exp) {
         SingleSelectionModel<Tab> selectionModel = spotTabPane.getSelectionModel();
 
@@ -1703,6 +1868,12 @@ public class ExpressionBuilderController implements Initializable {
                 selectionModel.select(unkTab);
             } else if (unkTab.isSelected() && !unknownsSwitchCheckBox.isSelected()) {
                 selectionModel.select(refMatTab);
+            } else if (selectSpotsTab.isSelected() && !summaryCalculationSwitchCheckBox.isSelected()) {
+                if (unknownsSwitchCheckBox.isSelected()) {
+                    selectionModel.select(unkTab);
+                } else {
+                    selectionModel.select(refMatTab);
+                }
             }
 
             rmPeekTextArea.setText(createPeekRM(exp, false));
@@ -1751,6 +1922,21 @@ public class ExpressionBuilderController implements Initializable {
                 for (int j = 0; j < spotSummary.getValues()[2].length; j++) {
                     sb.append((int) (spotSummary.getValues()[2][j])).append(" ");
                 }
+            }
+            sb.append("\n");
+        }
+
+        if (spotSummary.isManualRejectionEnabled()) {
+            sb.append("\tManually rejected: ");
+            boolean rejected = false;
+            for (int i = 0; i < spotSummary.getRejectedIndices().length; i++) {
+                if (spotSummary.getRejectedIndices()[i]) {
+                    sb.append(i).append(" ");
+                    rejected = true;
+                }
+            }
+            if (!rejected) {
+                sb.append("none");
             }
             sb.append("\n");
         }
@@ -1939,6 +2125,25 @@ public class ExpressionBuilderController implements Initializable {
                 });
                 itemsForThisNode.add(new Menu("Set uncertainty...", null, menuItem1, menuItem2));
             }
+        }
+
+        //for true/false : allow to invert value
+        if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode) && (etn.getText().trim().equalsIgnoreCase("true") || etn.getText().trim().equalsIgnoreCase("false"))) {
+            menuItem = new MenuItem("Invert value");
+            menuItem.setOnAction((evt) -> {
+                String text;
+                if (etn.getText().trim().equalsIgnoreCase("true")) {
+                    text = " FALSE ";
+                } else {
+                    text = " TRUE ";
+                }
+                ExpressionTextNode etn2 = new ExpressionTextNode(text);
+                etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                expressionTextFlow.getChildren().remove(etn);
+                expressionTextFlow.getChildren().add(etn2);
+                updateExpressionTextFlowChildren();
+            });
+            itemsForThisNode.add(menuItem);
         }
 
         // For numbers -> make an editable node
@@ -2458,7 +2663,7 @@ public class ExpressionBuilderController implements Initializable {
             if (selectedExpression.get().getExpressionTree().isSquidSpecialUPbThExpression() != specialUPbThSwitchCheckBox.isSelected()) {
                 saved = false;
             }
-        }else if(currentMode.get().equals(Mode.CREATE)){
+        } else if (currentMode.get().equals(Mode.CREATE)) {
             saved = false;
         }
         expressionIsSaved.set(saved);
@@ -3623,7 +3828,6 @@ public class ExpressionBuilderController implements Initializable {
             setOnMousePressed((MouseEvent event) -> {
                 hideToolTip();
                 selectOppositeParenthese();
-                setCursor(Cursor.CLOSED_HAND);
                 setFill(selectedColor);
                 expressionTextFlow.requestLayout();//fixes a javafx bug where the etn are sometimes not updated
             });
@@ -3631,7 +3835,6 @@ public class ExpressionBuilderController implements Initializable {
             setOnMouseReleased((MouseEvent event) -> {
                 showToolTip(event);
                 unselectOppositeParenthese();
-                setCursor(Cursor.OPEN_HAND);
                 setFill(regularColor);
             });
 

@@ -21,7 +21,6 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
@@ -131,6 +130,10 @@ public class SpotSummaryDetails implements Serializable {
      */
     public void setRejectedIndices(boolean[] rejectedIndices) {
         this.rejectedIndices = rejectedIndices;
+    }
+    
+    public boolean[] getRejectedIndices(){
+        return this.rejectedIndices.clone();
     }
 
     /**
