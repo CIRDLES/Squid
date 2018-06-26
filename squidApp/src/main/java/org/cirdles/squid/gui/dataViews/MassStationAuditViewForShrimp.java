@@ -45,6 +45,8 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     private double minMassAMU;
     private double[] peakTukeysMeanAndUnct;
 
+    private boolean showTimeNormalized;
+
     /**
      *
      * @param bounds
@@ -53,7 +55,6 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * @param timesOfMeasuredTrimMasses
      * @param indicesOfScansAtMeasurementTimes
      * @param indicesOfRunsAtMeasurementTimes
-     * @param massData
      */
     public MassStationAuditViewForShrimp(///
             Rectangle bounds,
@@ -61,15 +62,18 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             List<Double> measuredTrimMasses,
             List<Double> timesOfMeasuredTrimMasses,
             List<Integer> indicesOfScansAtMeasurementTimes,
-            List<Integer> indicesOfRunsAtMeasurementTimes) {
+            List<Integer> indicesOfRunsAtMeasurementTimes,
+            boolean showTimeNormalized) {
 
-        super(bounds, 200, 0);
+        super(bounds, 250, 0);
         this.massKey = massKey;
         this.measuredTrimMasses = measuredTrimMasses;
         this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
         this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
-        
+
+        this.showTimeNormalized = showTimeNormalized;
+
         setOpacity(1.0);
     }
 
@@ -169,6 +173,12 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         myOnPeakNormalizedAquireTimes = timesOfMeasuredTrimMasses.stream().mapToDouble(Double::doubleValue).toArray();
 
+        if (showTimeNormalized) {
+            for (int i = 0; i < myOnPeakNormalizedAquireTimes.length; i++) {
+                myOnPeakNormalizedAquireTimes[i] = i;
+            }
+        }
+
         // add dummy placeholder
         indicesOfScansAtMeasurementTimes.add(1);
         scanIndices = indicesOfScansAtMeasurementTimes.stream().mapToInt(Integer::intValue).toArray();
@@ -177,7 +187,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         setDisplayOffsetY(0.0);
 
-        setDisplayOffsetX(100.0);
+        setDisplayOffsetX(0.0);
 
         // X-axis lays out time evenly spaced
         minX = myOnPeakNormalizedAquireTimes[0];
@@ -198,8 +208,8 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         peakTukeysMeanAndUnct = SquidMathUtils.tukeysBiweight(myOnPeakData, 9.0);
 
         // force plot max and min
-        minY = Math.min(minMassAMU, peakTukeysMeanAndUnct[0] - 0.01);
-        maxY = Math.max(maxMassAMU, peakTukeysMeanAndUnct[0] + 0.01);
+        minY = Math.min(minMassAMU, peakTukeysMeanAndUnct[0]) - 0.0002;
+        maxY = Math.max(maxMassAMU, peakTukeysMeanAndUnct[0]) + 0.0002;
 
         // adjust margins
         double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);

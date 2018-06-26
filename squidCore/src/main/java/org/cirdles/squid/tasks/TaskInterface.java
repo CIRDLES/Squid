@@ -90,6 +90,11 @@ public interface TaskInterface {
     public List<String> getRatioNames();
 
     /**
+     * @return the mapOfIndexToMassStationDetails
+     */
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails();
+
+    /**
      * @return the nominalMasses
      */
     public List<String> getNominalMasses();
@@ -210,9 +215,9 @@ public interface TaskInterface {
      * @return the taskExpressionsOrdered
      */
     public List<Expression> getTaskExpressionsOrdered();
-    
+
     /**
-     * 
+     *
      * @param expression Name of the expression to test
      * @return True if the expression exists, false if not
      */

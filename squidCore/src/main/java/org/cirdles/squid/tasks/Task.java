@@ -127,10 +127,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected Map<String, ExpressionTreeInterface> namedConstantsMap;
     protected Map<String, ExpressionTreeInterface> namedParametersMap;
 
-    private List<ShrimpFractionExpressionInterface> shrimpFractions;
-    private List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
+    protected List<ShrimpFractionExpressionInterface> shrimpFractions;
+    protected List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
     protected List<ShrimpFractionExpressionInterface> concentrationReferenceMaterialSpots;
-    private List<ShrimpFractionExpressionInterface> unknownSpots;
+    protected List<ShrimpFractionExpressionInterface> unknownSpots;
 
     /**
      *
@@ -451,7 +451,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // cannot depend on comparator to do deep compares
         if (directAltPD) {
             for (Expression listedExp : taskExpressionsOrdered) {
-                // handle selectedisotope-specific expressions
+                // handle selected isotope-specific expressions
                 // TODO: Better logic - selfaware expressionTree or polymorphism
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + "\"]");
@@ -552,7 +552,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         buildExpressions();
 
 //        evaluateTaskExpressions();
-
     }
 
     @Override
@@ -645,7 +644,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void createMapOfIndexToMassStationDetails() {
-        // this is transient so needs re-creating if does not exist
         if (prawnFile != null) {
             mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
         }
@@ -671,7 +669,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 int index = 0;
                 for (SquidSpeciesModel ssm : squidSpeciesModelList) {
                     MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
-                    // only these three fields change
+                    // only these fields change
                     massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
                     if (nominalMasses.size() > 0) {
                         if (indexOfTaskBackgroundMass == index) {
@@ -688,6 +686,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     }
 
                     massStationDetail.setuThBearingName(ssm.getuThBearingName());
+                    
+                    massStationDetail.setViewedAsGraph(ssm.isViewedAsGraph());
                 }
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
@@ -764,7 +764,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         squidSpeciesModelList = new ArrayList<>();
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
             SquidSpeciesModel spm = new SquidSpeciesModel(
-                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(), entry.getValue().getElementLabel(), entry.getValue().getIsBackground(), entry.getValue().getuThBearingName());
+                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(), 
+                    entry.getValue().getElementLabel(), entry.getValue().getIsBackground(), entry.getValue().getuThBearingName(),
+                    entry.getValue().isViewedAsGraph());
 
             squidSpeciesModelList.add(spm);
         }
@@ -775,7 +777,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void alignTaskMassStationsWithPrawnFile() {
         List<String> matchedNominalMasses = new ArrayList<>();
-        List<String> unMatchedNominalMasses = new ArrayList<>();
         boolean[] recordedMatches = new boolean[mapOfIndexToMassStationDetails.size()];
         if (mapOfIndexToMassStationDetails.size() < nominalMasses.size()) {
 
@@ -794,7 +795,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     }
                 }
                 if (!matched) {
-                    unMatchedNominalMasses.add(taskIsotopeLabel);
                     if (i < indexOfTaskBackgroundMass) {
                         indexOfTaskBackgroundMass--;
                     }
@@ -1073,9 +1073,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void evaluateExpressionForSpotSet(
             Expression expression,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
-        
+
         ExpressionTreeInterface expressionTree = expression.getExpressionTree();
-        
+
         if (spotsForExpression.size() > 0) {
             // determine type of expressionTree
             // Summary expression test
@@ -1089,7 +1089,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expression.getName());
                 } else {
                     spotSummaryDetails = new SpotSummaryDetails(expressionTree);
-                    taskExpressionsEvaluationsPerSpotSet.put(expression.getName(),spotSummaryDetails);
+                    taskExpressionsEvaluationsPerSpotSet.put(expression.getName(), spotSummaryDetails);
                 }
 
                 // if the spotsForExpression are the same, then preserve list of indices of rejected
@@ -1116,7 +1116,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     // discover what the flags say - repeats logic of WtdMeanACalc()
                     // TODO: move logic to single location
                     List<ExpressionTreeInterface> childrenET = ((ExpressionTree) expressionTree).getChildrenET();
-                    
+
                     Object noUPbConstAutoRejectO = childrenET.get(2).eval(shrimpFractions, this)[0][0];
                     boolean noUPbConstAutoReject = (boolean) noUPbConstAutoRejectO;
 
@@ -1132,23 +1132,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         spotsUsedForCalculation = spotSummaryDetails.retrieveActiveSpots();
                     }
                 }
-                
+
                 values = convertObjectArrayToDoubles(expressionTree.eval(spotsUsedForCalculation, this));
-                
+
                 // in the case of auto-rejection, mark the rejected spots after the fact
-                if ((((ExpressionTree) expressionTree).getOperation() instanceof WtdMeanACalc) && !noReject){
+                if ((((ExpressionTree) expressionTree).getOperation() instanceof WtdMeanACalc) && !noReject) {
                     // we save off auto-rejected spots for display purposes
-                    boolean [] rejectedIndices = new boolean[spotsUsedForCalculation.size()];
-                    for (int i = 0; i < values[1].length; i ++){
-                        rejectedIndices[(int)values[1][i]] = true;
+                    boolean[] rejectedIndices = new boolean[spotsUsedForCalculation.size()];
+                    for (int i = 0; i < values[1].length; i++) {
+                        rejectedIndices[(int) values[1][i]] = true;
                     }
-                    for (int i = 0; i < values[2].length; i ++){
-                        rejectedIndices[(int)values[2][i]] = true;
+                    for (int i = 0; i < values[2].length; i++) {
+                        rejectedIndices[(int) values[2][i]] = true;
                     }
-                    
+
                     spotSummaryDetails.setRejectedIndices(rejectedIndices);
                 }
-                
+
                 spotSummaryDetails.setManualRejectionEnabled(noReject);
                 spotSummaryDetails.setValues(values);
 
@@ -1589,6 +1589,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setRatioNames(List<String> ratioNames) {
         this.ratioNames = ratioNames;
+    }
+
+    /**
+     * @return the mapOfIndexToMassStationDetails
+     */
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
+        if (mapOfIndexToMassStationDetails == null) {
+            createMapOfIndexToMassStationDetails();
+        }
+        return mapOfIndexToMassStationDetails;
     }
 
     /**

@@ -1,14 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.Double?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<ScrollPane fx:id="massesAuditScrollPane" fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.MassesAuditController">
+<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1100.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
   <content>
       <VBox fx:id="scrolledBox" styleClass="backgroundCalamari">
          <padding>
-            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-         </padding></VBox>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <children>
+            <Accordion>
+              <panes>
+                <TitledPane fx:id="massChooserAccordion" animated="false" expanded="false" prefHeight="292.0" prefWidth="978.0" text="Mass Chooser">
+                  <content>
+                    <AnchorPane prefWidth="976.0">
+                           <children>
+                              <ListView fx:id="availableMassesListView" layoutX="14.0" layoutY="54.0" prefHeight="204.0" prefWidth="225.0" />
+                              <ListView fx:id="viewedAsGraphMassesListView" layoutX="280.0" layoutY="54.0" prefHeight="204.0" prefWidth="225.0" />
+                              <Polygon fill="DODGERBLUE" layoutX="272.0" layoutY="158.0" rotate="90.0" scaleX="0.15" scaleY="0.15" stroke="BLACK" strokeType="INSIDE">
+                                <points>
+                                  <Double fx:value="-50.0" />
+                                  <Double fx:value="40.0" />
+                                  <Double fx:value="50.0" />
+                                  <Double fx:value="40.0" />
+                                  <Double fx:value="0.0" />
+                                  <Double fx:value="-60.0" />
+                                </points>
+                              </Polygon>
+                              <Polygon fill="DODGERBLUE" layoutX="248.0" layoutY="158.0" rotate="-90.0" scaleX="0.15" scaleY="0.15" stroke="BLACK" strokeType="INSIDE">
+                                 <points>
+                                    <Double fx:value="-50.0" />
+                                    <Double fx:value="40.0" />
+                                    <Double fx:value="50.0" />
+                                    <Double fx:value="40.0" />
+                                    <Double fx:value="0.0" />
+                                    <Double fx:value="-60.0" />
+                                 </points>
+                              </Polygon>
+                              <Label layoutX="16.0" layoutY="27.0" text="Available Masses" />
+                              <Label layoutX="282.0" layoutY="26.0" text="Displayed Masses" />
+                              <CheckBox fx:id="normalizeTimeAxisCheckBox" layoutX="31.0" layoutY="273.0" mnemonicParsing="false" onAction="#normalizeTimeAxisCheckBoxAction" text="Display normalized time axis" />
+                              <Text layoutX="8.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: use drag-and-drop to populate lists.">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </Text>
+                              <Line endX="100.0" layoutX="480.0" layoutY="100.0" rotate="90.0" scaleX="2.0" scaleY="2.0" translateY="55.0" />
+                              <Label layoutX="640.0" text="Displayed Mass Deltas (paired by row)" />
+                              <Label layoutX="592.0" layoutY="26.0" text="Mass A (minuend)" />
+                              <Label layoutX="842.0" layoutY="26.0" text="Mass B (subtrahend)" />
+                              <Line endX="20.0" layoutX="786.0" layoutY="148.0" stroke="#eb0b3f" strokeWidth="5.0" />
+                              <ComboBox fx:id="massMinuendComboBox" layoutX="570.0" layoutY="55.0" prefHeight="27.0" prefWidth="184.0" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </children>
+      </VBox>
   </content>
 </ScrollPane>
