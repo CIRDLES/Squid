@@ -385,4 +385,34 @@ public interface TaskInterface {
 
     public void produceSummaryReportsForGUI();
 
+    /**
+     * @return the massMinuends
+     */
+    public List<MassStationDetail> getMassMinuends();
+
+    /**
+     * @param massMinuends the massMinuends to set
+     */
+    public void setMassMinuends(List<MassStationDetail> massMinuends);
+
+    /**
+     * @return the massSubtrahends
+     */
+    public List<MassStationDetail> getMassSubtrahends();
+
+    /**
+     * @param massSubtrahends the massSubtrahends to set
+     */
+    public void setMassSubtrahends(List<MassStationDetail> massSubtrahends);
+
+    /**
+     * @return the showTimeNormalized
+     */
+    public boolean isShowTimeNormalized();
+
+    /**
+     * @param showTimeNormalized the showTimeNormalized to set
+     */
+    public void setShowTimeNormalized(boolean showTimeNormalized);
+
 }

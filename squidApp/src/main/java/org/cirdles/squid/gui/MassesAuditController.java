@@ -28,7 +28,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -41,10 +45,12 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
+import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
@@ -59,6 +65,14 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
  */
 public class MassesAuditController implements Initializable {
 
+    private final int BUTTON_WIDTH = 60;
+    private final int COMBO_WIDTH = 210;
+    private final int ROW_HEIGHT = 30;
+
+    private static final String STYLE_BUTTON_LABEL = "-fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+            + "    -fx-font-weight: bold;\n"
+            + "    -fx-font-size: 12pt;\n";
+
     @FXML
     private VBox scrolledBox;
     @FXML
@@ -67,18 +81,20 @@ public class MassesAuditController implements Initializable {
     private ListView<MassStationDetail> availableMassesListView;
     @FXML
     private ListView<MassStationDetail> viewedAsGraphMassesListView;
-
     @FXML
     private CheckBox normalizeTimeAxisCheckBox;
+    @FXML
+    private GridPane massDeltasGridPane;
 
     private static ObservableList<MassStationDetail> allMassStations;
     private static ObservableList<MassStationDetail> availableMassStations;
     private static ObservableList<MassStationDetail> viewedAsGraphMassStations;
-    private static DataFormat massDetailFormat = new DataFormat("Mass station detail");
+    private static final DataFormat MASS_DETAIL_FORMAT = new DataFormat("Mass station detail");
+
+    private static List<MassStationDetail> massMinuends;
+    private static List<MassStationDetail> massSubtrahends;
 
     private static boolean showTimeNormalized;
-    @FXML
-    private ComboBox<MassStationDetail> massMinuendComboBox;
 
     /**
      * Initializes the controller class.
@@ -90,6 +106,10 @@ public class MassesAuditController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         setupMassStationDetailsListViews();
+        setupMassDeltas();
+        
+        showTimeNormalized = squidProject.getTask().isShowTimeNormalized();
+        normalizeTimeAxisCheckBox.setSelected(showTimeNormalized);
         displayMassStationsForReview();
 
     }
@@ -140,19 +160,14 @@ public class MassesAuditController implements Initializable {
 
         viewedAsGraphMassesListView.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
 
+        // used in paired differences
         allMassStations = FXCollections.observableArrayList(allMassStationDetails);
-        massMinuendComboBox.setItems(allMassStations);
-        massMinuendComboBox.setCellFactory(
-                (parameter)
-                -> new MassStationDetailListCell()
-        );
-        massMinuendComboBox.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
-
-
     }
 
     @FXML
-    private void normalizeTimeAxisCheckBoxAction(ActionEvent event) {
+    private void normalizeTimeAxisCheckBoxAction(ActionEvent event) {       
+        showTimeNormalized = normalizeTimeAxisCheckBox.isSelected();
+        squidProject.getTask().setShowTimeNormalized(showTimeNormalized);
         displayMassStationsForReview();
     }
 
@@ -164,13 +179,27 @@ public class MassesAuditController implements Initializable {
             if (msd == null || empty) {
                 setText(null);
             } else {
-                setText(
-                        String.format("%1$-" + 8 + "s", msd.getMassStationLabel())
-                        + String.format("%1$-" + 7 + "s", msd.getIsotopeLabel())
-                        + String.format("%1$-" + 13 + "s", (msd.autoCentered() ? "auto-centered" : "")));
+                setText(msd.toPrettyString());
             }
         }
     };
+
+    static class MassStationDetailStringConverter extends StringConverter<MassStationDetail> {
+
+        @Override
+        public String toString(MassStationDetail msd) {
+            if (msd == null) {
+                return null;
+            } else {
+                return msd.toPrettyString();
+            }
+        }
+
+        @Override
+        public MassStationDetail fromString(String massStationDetailString) {
+            return null; // No conversion fromString needed.
+        }
+    }
 
     class onDragDetectedEventHandler implements EventHandler<MouseEvent> {
 
@@ -179,7 +208,7 @@ public class MassesAuditController implements Initializable {
             /* drag was detected, start a drag-and-drop gesture */
             Dragboard db = ((ListView) event.getSource()).startDragAndDrop(TransferMode.COPY_OR_MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.put(massDetailFormat, ((ListView) event.getSource()).getSelectionModel().getSelectedItem());
+            content.put(MASS_DETAIL_FORMAT, ((ListView) event.getSource()).getSelectionModel().getSelectedItem());
             db.setContent(content);
             db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
             event.consume();
@@ -193,12 +222,11 @@ public class MassesAuditController implements Initializable {
             /* data is dragged over the target 
                 * accept it only if it is not dragged from the same node*/
             if (event.getGestureSource() != ((ListView) event.getSource())
-                    && event.getDragboard().hasContent(massDetailFormat)) {
+                    && event.getDragboard().hasContent(MASS_DETAIL_FORMAT)) {
 
                 event.acceptTransferModes(TransferMode.MOVE);
 
             }
-
             event.consume();
         }
     };
@@ -216,8 +244,8 @@ public class MassesAuditController implements Initializable {
             /* data dropped */
             Dragboard db = event.getDragboard();
             boolean success = false;
-            if (db.hasContent(massDetailFormat)) {
-                myListView.getItems().add((MassStationDetail) db.getContent(massDetailFormat));
+            if (db.hasContent(MASS_DETAIL_FORMAT)) {
+                myListView.getItems().add((MassStationDetail) db.getContent(MASS_DETAIL_FORMAT));
                 Collections.sort(myListView.getItems());
                 myListView.refresh();
 
@@ -242,7 +270,7 @@ public class MassesAuditController implements Initializable {
         public void handle(DragEvent event) {
             /* the drag and drop gesture ended if the data was successfully moved, clear it */
             if (event.getTransferMode() == TransferMode.MOVE) {
-                MassStationDetail massStationDetail = (MassStationDetail) event.getDragboard().getContent(massDetailFormat);
+                MassStationDetail massStationDetail = (MassStationDetail) event.getDragboard().getContent(MASS_DETAIL_FORMAT);
                 myListView.getItems().remove(massStationDetail);
                 massStationDetail.setViewedAsGraph(!myListView.idProperty().getValue().contains("viewedAsGraph"));
 
@@ -255,9 +283,178 @@ public class MassesAuditController implements Initializable {
         }
     };
 
-    private void displayMassStationsForReview() {
+    private void setupMassDeltas() {
+        massMinuends=squidProject.getTask().getMassMinuends();
+        massSubtrahends=squidProject.getTask().getMassSubtrahends();
 
-        showTimeNormalized = normalizeTimeAxisCheckBox.isSelected();
+        massDeltasGridPane.getRowConstraints().clear();
+        RowConstraints rowCon = new RowConstraints();
+        rowCon.setPrefHeight(ROW_HEIGHT + 2);
+        rowCon.setMinHeight(ROW_HEIGHT + 2);
+        rowCon.setMaxHeight(ROW_HEIGHT + 2);
+        rowCon.setValignment(VPos.CENTER);
+        massDeltasGridPane.getRowConstraints().add(rowCon);
+
+        massDeltasGridPane.getColumnConstraints().clear();
+        ColumnConstraints colconButtons = new ColumnConstraints();
+        colconButtons.setPrefWidth(BUTTON_WIDTH + 2);
+        colconButtons.setMinWidth(BUTTON_WIDTH + 2);
+        colconButtons.setMaxWidth(BUTTON_WIDTH + 2);
+        colconButtons.setHalignment(HPos.CENTER);
+        massDeltasGridPane.getColumnConstraints().add(0, colconButtons);
+
+        ColumnConstraints colconCombo = new ColumnConstraints();
+        colconCombo.setPrefWidth(COMBO_WIDTH + 2);
+        colconCombo.setMinWidth(COMBO_WIDTH + 2);
+        colconCombo.setMaxWidth(COMBO_WIDTH + 2);
+        colconCombo.setHalignment(HPos.CENTER);
+        massDeltasGridPane.getColumnConstraints().add(1, colconCombo);
+        massDeltasGridPane.getColumnConstraints().add(2, colconCombo);
+
+        // prepopulate with saved values
+        for (int row = 0; row < massMinuends.size(); row++) {
+            massDeltasGridPane.add(addRemoveButtonFactory("-"), 0, row);
+
+            ComboBox<MassStationDetail> massMinuendComboBox = addMassComboFactory(allMassStations);
+            massDeltasGridPane.add(massMinuendComboBox, 1, row);
+            massMinuendComboBox.getSelectionModel().select(massMinuends.get(row));
+
+            ComboBox<MassStationDetail> massSubtrahendComboBox = addMassComboFactory(allMassStations);
+            massDeltasGridPane.add(massSubtrahendComboBox, 2, row);
+            massSubtrahendComboBox.getSelectionModel().select(massSubtrahends.get(row));
+        }
+
+        // setup first add button
+        massDeltasGridPane.add(addRemoveButtonFactory("+"), 0, massMinuends.size());
+
+    }
+
+    private Button addRemoveButtonFactory(String labelText) {
+        Button addRemoveButton = new Button(labelText);
+        addRemoveButton.setMaxWidth(BUTTON_WIDTH);
+        addRemoveButton.setMinWidth(BUTTON_WIDTH);
+        addRemoveButton.setPrefWidth(BUTTON_WIDTH);
+        addRemoveButton.setMaxHeight(ROW_HEIGHT);
+        addRemoveButton.setMinHeight(ROW_HEIGHT);
+        addRemoveButton.setPrefHeight(ROW_HEIGHT);
+        addRemoveButton.setStyle(STYLE_BUTTON_LABEL);
+        addRemoveButton.setOnAction(new onAddRemoveButtonAction());
+
+        return addRemoveButton;
+    }
+
+    private ComboBox<MassStationDetail> addMassComboFactory(ObservableList<MassStationDetail> massStatonDetails) {
+        ComboBox<MassStationDetail> massComboBox = new ComboBox<>(massStatonDetails);
+
+        massComboBox.setMaxWidth(COMBO_WIDTH);
+        massComboBox.setMinWidth(COMBO_WIDTH);
+        massComboBox.setPrefWidth(COMBO_WIDTH);
+        massComboBox.setCellFactory(
+                (parameter)
+                -> new MassStationDetailListCell()
+        );
+        massComboBox.setConverter(new MassStationDetailStringConverter());
+        massComboBox.setOnAction(new onMassDeltaComboSelectionAction());
+        massComboBox.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
+
+        return massComboBox;
+    }
+
+    class onMassDeltaComboSelectionAction implements EventHandler<ActionEvent> {
+
+        @Override
+        public void handle(ActionEvent event) {
+            // reprocess all diffs
+            massMinuends.clear();
+            massSubtrahends.clear();
+            for (int i = 0; i < massDeltasGridPane.getChildren().size(); i += 3) {
+                // check for combo boxes in row
+                if (massDeltasGridPane.getChildren().size() >= (i + 2)) {
+                    ComboBox<MassStationDetail> massMinuendComboBox
+                            = (ComboBox) massDeltasGridPane.getChildren().get(i + 1);
+                    ComboBox<MassStationDetail> massSubtrahendComboBox
+                            = (ComboBox) massDeltasGridPane.getChildren().get(i + 2);
+                    MassStationDetail massMinuend = massMinuendComboBox.getSelectionModel().getSelectedItem();
+                    MassStationDetail massSubtrahend = massSubtrahendComboBox.getSelectionModel().getSelectedItem();
+
+                    if ((massMinuend != null) && (massSubtrahend != null)) {
+                        try {
+                            massMinuends.remove(i / 3);
+                        } catch (Exception e) {
+                        }
+                        massMinuends.add(i / 3, massMinuend);
+                        try {
+                            massSubtrahends.remove(i / 3);
+                        } catch (Exception e) {
+                        }
+                        massSubtrahends.add(i / 3, massSubtrahend);
+                    }
+                }
+
+                displayMassStationsForReview();
+            }
+        }
+
+    }
+
+    class onAddRemoveButtonAction implements EventHandler<ActionEvent> {
+
+        private ComboBox<MassStationDetail> massMinuendComboBox;
+        private ComboBox<MassStationDetail> massSubtrahendComboBox;
+
+        @Override
+        public void handle(ActionEvent e) {
+            Button addRemoveButton = (Button) e.getSource();
+            int row = GridPane.getRowIndex(addRemoveButton);
+ 
+            if (addRemoveButton.getText().compareTo("+") == 0) {
+                addRemoveButton.setText("-");
+
+                massMinuendComboBox = addMassComboFactory(allMassStations);
+                massDeltasGridPane.add(massMinuendComboBox, 1, row);
+
+                massSubtrahendComboBox = addMassComboFactory(allMassStations);
+                massDeltasGridPane.add(massSubtrahendComboBox, 2, row);
+
+                // setup next button
+                massDeltasGridPane.add(addRemoveButtonFactory("+"), 0, row + 1);
+
+            } else {
+                // case remove
+                massDeltasGridPane.getChildren().remove(addRemoveButton);
+
+                massDeltasGridPane.getChildren().remove(massMinuendComboBox);
+
+                massDeltasGridPane.getChildren().remove(massSubtrahendComboBox);
+                // test to reset grid
+                if (massDeltasGridPane.getChildren().isEmpty()) {
+                    // setup first button
+                    massDeltasGridPane.add(addRemoveButtonFactory("+"), 0, 0);
+                    massMinuends.clear();
+                    massSubtrahends.clear();
+                } else {
+                    if (massMinuendComboBox.getSelectionModel().getSelectedItem() != null) {
+                        massMinuends.remove(row);
+                    }
+                    if (massSubtrahendComboBox.getSelectionModel().getSelectedItem() != null) {
+                        massSubtrahends.remove(row);
+                    }
+
+                    // fix row index of all downstream
+                    for (Node node : massDeltasGridPane.getChildren()) {
+                        if (GridPane.getRowIndex(node) > row) {
+                            GridPane.setRowIndex(node, GridPane.getRowIndex(node) - 1);
+                        }
+                    }
+                }
+
+                displayMassStationsForReview();
+            }
+        }
+
+    }
+
+    private void displayMassStationsForReview() {
 
         scrolledBox.getChildren().clear();
         scrolledBox.getChildren().add(massChooserAccordion);
@@ -285,30 +482,33 @@ public class MassesAuditController implements Initializable {
 
             massCounter++;
         }
-        MassStationDetail A = viewedAsGraphMassStations.get(0);
-        MassStationDetail B = viewedAsGraphMassStations.get(1);
-        List<Double> deltas = new ArrayList<>();
-        for (int i = 0; i < A.getMeasuredTrimMasses().size(); i++) {
-            BigDecimal aBD = new BigDecimal(A.getMeasuredTrimMasses().get(i));
-            BigDecimal bBD = new BigDecimal(B.getMeasuredTrimMasses().get(i));
-            deltas.add(aBD.subtract(bBD).doubleValue());
+
+        for (int i = 0; i < massMinuends.size(); i++) {
+            MassStationDetail A = massMinuends.get(i);
+            MassStationDetail B = massSubtrahends.get(i);
+            List<Double> deltas = new ArrayList<>();
+            for (int j = 0; j < A.getMeasuredTrimMasses().size(); j++) {
+                BigDecimal aBD = new BigDecimal(A.getMeasuredTrimMasses().get(j));
+                BigDecimal bBD = new BigDecimal(B.getMeasuredTrimMasses().get(j));
+                deltas.add(aBD.subtract(bBD).doubleValue());
+            }
+
+            AbstractDataView canvas
+                    = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                            A.getMassStationLabel() + " - " + B.getMassStationLabel(),
+                            deltas,
+                            A.getTimesOfMeasuredTrimMasses(),
+                            A.getIndicesOfScansAtMeasurementTimes(),
+                            A.getIndicesOfRunsAtMeasurementTimes(),
+                            showTimeNormalized);
+
+            scrolledBox.getChildren().add(canvas);
+            GraphicsContext gc1 = canvas.getGraphicsContext2D();
+            canvas.preparePanel();
+            canvas.paint(gc1);
+
+            massCounter++;
         }
-
-        AbstractDataView canvas
-                = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                        A.getMassStationLabel() + " - " + B.getMassStationLabel(),
-                        deltas,
-                        A.getTimesOfMeasuredTrimMasses(),
-                        A.getIndicesOfScansAtMeasurementTimes(),
-                        A.getIndicesOfRunsAtMeasurementTimes(),
-                        showTimeNormalized);
-
-        scrolledBox.getChildren().add(canvas);
-        GraphicsContext gc1 = canvas.getGraphicsContext2D();
-        canvas.preparePanel();
-        canvas.paint(gc1);
-
-        massCounter++;
 
     }
 }

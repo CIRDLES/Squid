@@ -4,19 +4,21 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1100.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
+<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1150.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
   <content>
       <VBox fx:id="scrolledBox" styleClass="backgroundCalamari">
          <padding>
@@ -25,7 +27,7 @@
          <children>
             <Accordion>
               <panes>
-                <TitledPane fx:id="massChooserAccordion" animated="false" expanded="false" prefHeight="292.0" prefWidth="978.0" text="Mass Chooser">
+                <TitledPane fx:id="massChooserAccordion" animated="false" expanded="false" prefHeight="292.0" prefWidth="978.0" text="Manage Displayed Masses">
                   <content>
                     <AnchorPane prefWidth="976.0">
                            <children>
@@ -54,17 +56,37 @@
                               <Label layoutX="16.0" layoutY="27.0" text="Available Masses" />
                               <Label layoutX="282.0" layoutY="26.0" text="Displayed Masses" />
                               <CheckBox fx:id="normalizeTimeAxisCheckBox" layoutX="31.0" layoutY="273.0" mnemonicParsing="false" onAction="#normalizeTimeAxisCheckBoxAction" text="Display normalized time axis" />
-                              <Text layoutX="8.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: use drag-and-drop to populate lists.">
+                              <Text layoutX="8.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: use drag-and-drop to populate lists.">
                                  <font>
                                     <Font size="11.0" />
                                  </font>
                               </Text>
-                              <Line endX="100.0" layoutX="480.0" layoutY="100.0" rotate="90.0" scaleX="2.0" scaleY="2.0" translateY="55.0" />
-                              <Label layoutX="640.0" text="Displayed Mass Deltas (paired by row)" />
-                              <Label layoutX="592.0" layoutY="26.0" text="Mass A (minuend)" />
-                              <Label layoutX="842.0" layoutY="26.0" text="Mass B (subtrahend)" />
-                              <Line endX="20.0" layoutX="786.0" layoutY="148.0" stroke="#eb0b3f" strokeWidth="5.0" />
-                              <ComboBox fx:id="massMinuendComboBox" layoutX="570.0" layoutY="55.0" prefHeight="27.0" prefWidth="184.0" />
+                              <Line endX="125.0" layoutX="480.0" layoutY="90.0" rotate="90.0" scaleX="2.0" scaleY="2.0" translateX="-10.0" translateY="55.0" />
+                              <Label layoutX="640.0" text="Displayed Mass Deltas (choose pairs per row)" />
+                              <Label layoutX="690.0" layoutY="26.0" text="Mass A " />
+                              <Label layoutX="915.0" layoutY="26.0" text="Mass B" />
+                              <Line endX="20.0" layoutX="823.0" layoutY="41.0" stroke="#eb0b3f" strokeWidth="5.0" />
+                              <ScrollPane layoutX="560.0" layoutY="54.0" prefHeight="202.0" prefWidth="510.0">
+                                 <content>
+                                    <GridPane fx:id="massDeltasGridPane" prefHeight="190.0" prefWidth="480.0">
+                                      <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="48.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="210.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="241.0" minWidth="10.0" prefWidth="217.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="26.0" vgrow="NEVER" />
+                                        <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="34.0" vgrow="NEVER" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                    </GridPane>
+                                 </content>
+                              </ScrollPane>
+                              <Text layoutX="558.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add/Remove">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </Text>
                            </children>
                         </AnchorPane>
                   </content>

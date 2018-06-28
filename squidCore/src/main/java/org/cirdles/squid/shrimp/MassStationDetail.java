@@ -245,10 +245,10 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
         this.viewedAsGraph = viewedAsGraph;
     }
 
-    @Override
-    public String toString() {
-        return massStationLabel;
+    public String toPrettyString() {
+        return String.format("%1$-" + 8 + "s", massStationLabel)
+                + String.format("%1$-" + 7 + "s", isotopeLabel)
+                + (autoCentered() ? "auto-centered" : "");
     }
 
-    
 }

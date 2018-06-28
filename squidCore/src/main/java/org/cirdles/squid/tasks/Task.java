@@ -146,6 +146,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected IndexIsoptopesEnum selectedIndexIsotope;
 
+    // next 3 fields used to track user's choice of displayed deltas
+    protected List<MassStationDetail> massMinuends;
+    protected List<MassStationDetail> massSubtrahends;
+    protected boolean showTimeNormalized;
+
     public Task() {
         this("New Task", null, null);
     }
@@ -209,6 +214,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.useCalculated_pdMeanParentEleA = false;
         this.selectedIndexIsotope = IndexIsoptopesEnum.PB_204;
+        
+        this.massMinuends = new ArrayList<>();
+        this.massSubtrahends = new ArrayList<>();
+        this.showTimeNormalized = false;
 
         generateConstants();
         generateParameters();
@@ -686,7 +695,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     }
 
                     massStationDetail.setuThBearingName(ssm.getuThBearingName());
-                    
+
                     massStationDetail.setViewedAsGraph(ssm.isViewedAsGraph());
                 }
             } else {
@@ -764,7 +773,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         squidSpeciesModelList = new ArrayList<>();
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
             SquidSpeciesModel spm = new SquidSpeciesModel(
-                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(), 
+                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(),
                     entry.getValue().getElementLabel(), entry.getValue().getIsBackground(), entry.getValue().getuThBearingName(),
                     entry.getValue().isViewedAsGraph());
 
@@ -1770,5 +1779,59 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public boolean expressionExists(Expression expression) {
         return taskExpressionsOrdered.contains(expression);
+    }
+
+    /**
+     * @return the massMinuends
+     */
+    @Override
+    public List<MassStationDetail> getMassMinuends() {
+        if (massMinuends == null) {
+            massMinuends = new ArrayList<>();
+        }
+        return massMinuends;
+    }
+
+    /**
+     * @param massMinuends the massMinuends to set
+     */
+    @Override
+    public void setMassMinuends(List<MassStationDetail> massMinuends) {
+        this.massMinuends = massMinuends;
+    }
+
+    /**
+     * @return the massSubtrahends
+     */
+    @Override
+    public List<MassStationDetail> getMassSubtrahends() {
+        if (massSubtrahends == null) {
+            massSubtrahends = new ArrayList<>();
+        }
+        return massSubtrahends;
+    }
+
+    /**
+     * @param massSubtrahends the massSubtrahends to set
+     */
+    @Override
+    public void setMassSubtrahends(List<MassStationDetail> massSubtrahends) {
+        this.massSubtrahends = massSubtrahends;
+    }
+
+    /**
+     * @return the showTimeNormalized
+     */
+    @Override
+    public boolean isShowTimeNormalized() {
+        return showTimeNormalized;
+    }
+
+    /**
+     * @param showTimeNormalized the showTimeNormalized to set
+     */
+    @Override
+    public void setShowTimeNormalized(boolean showTimeNormalized) {
+        this.showTimeNormalized = showTimeNormalized;
     }
 }
