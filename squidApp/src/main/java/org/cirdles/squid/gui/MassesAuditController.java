@@ -55,7 +55,9 @@ import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.MassStationAuditViewForShrimp;
+import org.cirdles.squid.gui.dataViews.PrimaryBeamAuditViewForShrimp;
 import org.cirdles.squid.shrimp.MassStationDetail;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 
 /**
@@ -85,6 +87,8 @@ public class MassesAuditController implements Initializable {
     private CheckBox normalizeTimeAxisCheckBox;
     @FXML
     private GridPane massDeltasGridPane;
+    @FXML
+    private CheckBox showPrimaryBeamCheckBox;
 
     private static ObservableList<MassStationDetail> allMassStations;
     private static ObservableList<MassStationDetail> availableMassStations;
@@ -95,6 +99,7 @@ public class MassesAuditController implements Initializable {
     private static List<MassStationDetail> massSubtrahends;
 
     private static boolean showTimeNormalized;
+    private static boolean showPrimaryBeam;
 
     /**
      * Initializes the controller class.
@@ -107,9 +112,13 @@ public class MassesAuditController implements Initializable {
 
         setupMassStationDetailsListViews();
         setupMassDeltas();
-        
+
         showTimeNormalized = squidProject.getTask().isShowTimeNormalized();
         normalizeTimeAxisCheckBox.setSelected(showTimeNormalized);
+
+        showPrimaryBeam = squidProject.getTask().isShowPrimaryBeam();
+        showPrimaryBeamCheckBox.setSelected(showPrimaryBeam);
+
         displayMassStationsForReview();
 
     }
@@ -165,9 +174,16 @@ public class MassesAuditController implements Initializable {
     }
 
     @FXML
-    private void normalizeTimeAxisCheckBoxAction(ActionEvent event) {       
+    private void normalizeTimeAxisCheckBoxAction(ActionEvent event) {
         showTimeNormalized = normalizeTimeAxisCheckBox.isSelected();
         squidProject.getTask().setShowTimeNormalized(showTimeNormalized);
+        displayMassStationsForReview();
+    }
+
+    @FXML
+    private void showPrimaryBeamCheckBoxAction(ActionEvent event) {
+        showPrimaryBeam = showPrimaryBeamCheckBox.isSelected();
+        squidProject.getTask().setShowPrimaryBeam(showPrimaryBeam);
         displayMassStationsForReview();
     }
 
@@ -284,8 +300,8 @@ public class MassesAuditController implements Initializable {
     };
 
     private void setupMassDeltas() {
-        massMinuends=squidProject.getTask().getMassMinuends();
-        massSubtrahends=squidProject.getTask().getMassSubtrahends();
+        massMinuends = squidProject.getTask().getMassMinuends();
+        massSubtrahends = squidProject.getTask().getMassSubtrahends();
 
         massDeltasGridPane.getRowConstraints().clear();
         RowConstraints rowCon = new RowConstraints();
@@ -371,9 +387,9 @@ public class MassesAuditController implements Initializable {
                 // check for combo boxes in row
                 if (massDeltasGridPane.getChildren().size() >= (i + 2)) {
                     ComboBox<MassStationDetail> massMinuendComboBox
-                            = (ComboBox) massDeltasGridPane.getChildren().get(i + 1);
+                            = (ComboBox<MassStationDetail>) massDeltasGridPane.getChildren().get(i + 1);
                     ComboBox<MassStationDetail> massSubtrahendComboBox
-                            = (ComboBox) massDeltasGridPane.getChildren().get(i + 2);
+                            = (ComboBox<MassStationDetail>) massDeltasGridPane.getChildren().get(i + 2);
                     MassStationDetail massMinuend = massMinuendComboBox.getSelectionModel().getSelectedItem();
                     MassStationDetail massSubtrahend = massSubtrahendComboBox.getSelectionModel().getSelectedItem();
 
@@ -406,7 +422,7 @@ public class MassesAuditController implements Initializable {
         public void handle(ActionEvent e) {
             Button addRemoveButton = (Button) e.getSource();
             int row = GridPane.getRowIndex(addRemoveButton);
- 
+
             if (addRemoveButton.getText().compareTo("+") == 0) {
                 addRemoveButton.setText("-");
 
@@ -494,7 +510,8 @@ public class MassesAuditController implements Initializable {
             }
 
             AbstractDataView canvas
-                    = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                    = new MassStationAuditViewForShrimp(
+                            new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
                             A.getMassStationLabel() + " - " + B.getMassStationLabel(),
                             deltas,
                             A.getTimesOfMeasuredTrimMasses(),
@@ -510,5 +527,33 @@ public class MassesAuditController implements Initializable {
             massCounter++;
         }
 
+        // primary beam
+        // TODO: decide details of showing it - maybe use special class PrimaryBeamAuditViewForShrimp already made
+        if (showPrimaryBeam) {
+            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
+            List<Double> primaryBeam = new ArrayList<>();
+            for (int i = 0; i < spots.size(); i++) {
+                for (int j = 0; j < 6; j++) {
+                    primaryBeam.add(spots.get(i).getPrimaryBeam());
+                }
+            }
+
+            AbstractDataView canvas
+                    = new MassStationAuditViewForShrimp(
+                            new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                            "Primary Beam",
+                            primaryBeam,
+                            allMassStations.get(0).getTimesOfMeasuredTrimMasses(),
+                            allMassStations.get(0).getIndicesOfScansAtMeasurementTimes(),
+                            allMassStations.get(0).getIndicesOfRunsAtMeasurementTimes(),
+                            showTimeNormalized);
+
+            scrolledBox.getChildren().add(canvas);
+            GraphicsContext gc1 = canvas.getGraphicsContext2D();
+            canvas.preparePanel();
+            canvas.paint(gc1);
+
+            massCounter++;
+        }
     }
 }

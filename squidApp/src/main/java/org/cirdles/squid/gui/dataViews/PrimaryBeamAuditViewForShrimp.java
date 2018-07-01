@@ -30,20 +30,14 @@ import org.cirdles.ludwig.squid25.SquidMathUtils;
  *
  * @author James F. Bowring
  */
-public class MassStationAuditViewForShrimp extends AbstractDataView {
+public class PrimaryBeamAuditViewForShrimp extends AbstractDataView {
 
     private final List<Double> measuredTrimMasses;
     private final List<Double> timesOfMeasuredTrimMasses;
     private final List<Integer> indicesOfScansAtMeasurementTimes;
     private final List<Integer> indicesOfRunsAtMeasurementTimes;
 
-    private String massKey = "NONE";
-
-    private int[] scanIndices;
     private int[] runIndices;
-    private double maxMassAMU;
-    private double minMassAMU;
-    private double[] peakTukeysMeanAndUnct;
 
     /**
      *
@@ -54,9 +48,8 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * @param indicesOfScansAtMeasurementTimes
      * @param indicesOfRunsAtMeasurementTimes
      */
-    public MassStationAuditViewForShrimp(///
+    public PrimaryBeamAuditViewForShrimp(///
             Rectangle bounds,
-            String massKey,
             List<Double> measuredTrimMasses,
             List<Double> timesOfMeasuredTrimMasses,
             List<Integer> indicesOfScansAtMeasurementTimes,
@@ -64,7 +57,6 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             boolean showTimeNormalized) {
 
         super(bounds, 250, 0);
-        this.massKey = massKey;
         this.measuredTrimMasses = measuredTrimMasses;
         this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
         this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
@@ -87,31 +79,29 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         g2d.setLineWidth(0.5);
 
         g2d.setFill(Paint.valueOf("Red"));
-        g2d.fillText(massKey, 5, 15);
+        g2d.fillText("Primary Beam", 5, 15);
 
         g2d.beginPath();
-        g2d.moveTo(mapX(myOnPeakNormalizedAquireTimes[0]), mapY(myOnPeakData[0]));
+        g2d.moveTo(mapX(myOnPeakNormalizedAquireTimes[0]) + 2.0f, mapY(myOnPeakData[0]));
         for (int i = 0; i < myOnPeakData.length; i++) {
             // line tracing through points
-            g2d.lineTo(mapX(myOnPeakNormalizedAquireTimes[i]), mapY(myOnPeakData[i]));
+            g2d.lineTo(mapX(myOnPeakNormalizedAquireTimes[i]) + 2.0f, mapY(myOnPeakData[i]));
 
             // vertical lines just before scan # = 1
-            if (scanIndices[i + 1] == 1) {
+            if (i > 0) {
                 g2d.setStroke(Paint.valueOf("Red"));
                 g2d.setLineWidth(0.5);
 
-                if (i < (myOnPeakData.length - 1)) {
+                if (i < (myOnPeakData.length - 0)) {
                     double runX = mapX(myOnPeakNormalizedAquireTimes[i]) + 2.0f;
                     g2d.strokeLine(runX, 0, runX, height);
                 }
-
-                g2d.setFont(Font.font("Lucida Sans", 8));
-                g2d.fillText(String.valueOf(runIndices[i]), mapX(myOnPeakNormalizedAquireTimes[i]) - 15f, height - 1.5);
-                g2d.setStroke(Paint.valueOf("BLACK"));
-                g2d.setLineWidth(0.5);
             }
 
-            g2d.strokeOval(mapX(myOnPeakNormalizedAquireTimes[i]) - 1, mapY(myOnPeakData[i]) - 1, 2, 2);
+            g2d.setFont(Font.font("Lucida Sans", 8));
+            g2d.fillText(String.valueOf(runIndices[i]), mapX(myOnPeakNormalizedAquireTimes[i + 1]) - 15f, height - 1.5);
+
+            g2d.strokeOval(mapX(myOnPeakNormalizedAquireTimes[i]) + 2, mapY(myOnPeakData[i]) - 1, 2, 2);
 
         }
 
@@ -134,29 +124,6 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             }
         }
 
-        // stats
-        g2d.setStroke(Paint.valueOf("BLUE"));
-        g2d.setLineWidth(1.0);
-        g2d.strokeLine(
-                mapX(minX) - 50f,
-                mapY(peakTukeysMeanAndUnct[0]),
-                mapX(myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]),
-                mapY(peakTukeysMeanAndUnct[0]));
-
-        g2d.setFill(Paint.valueOf("BLUE"));
-        g2d.fillText("mean = " + (new BigDecimal(peakTukeysMeanAndUnct[0])).setScale(4, RoundingMode.HALF_UP).toPlainString(),
-                (float) mapX(minX) - 150f,
-                (float) mapY(peakTukeysMeanAndUnct[0]) + verticalTextShift);
-        g2d.fillText("  95% = " + (new BigDecimal(peakTukeysMeanAndUnct[2])).setScale(6, RoundingMode.HALF_UP).toEngineeringString(),
-                (float) mapX(minX) - 150f,
-                (float) mapY(peakTukeysMeanAndUnct[0]) + 15f);
-        g2d.fillText(" max = " + (new BigDecimal(maxMassAMU)).setScale(3, RoundingMode.HALF_UP).toPlainString(),
-                (float) mapX(minX) - 150f,
-                (float) mapY(maxMassAMU) + verticalTextShift);
-        g2d.fillText(" min = " + (new BigDecimal(minMassAMU)).setScale(3, RoundingMode.HALF_UP).toPlainString(),
-                (float) mapX(minX) - 150f,
-                (float) mapY(minMassAMU) + verticalTextShift);
-
     }
 
     /**
@@ -172,14 +139,11 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         myOnPeakNormalizedAquireTimes = timesOfMeasuredTrimMasses.stream().mapToDouble(Double::doubleValue).toArray();
 
         if (showTimeNormalized) {
+            myOnPeakNormalizedAquireTimes = new double[myOnPeakNormalizedAquireTimes.length - 1];
             for (int i = 0; i < myOnPeakNormalizedAquireTimes.length; i++) {
                 myOnPeakNormalizedAquireTimes[i] = i;
             }
         }
-
-        // add dummy placeholder
-        indicesOfScansAtMeasurementTimes.add(1);
-        scanIndices = indicesOfScansAtMeasurementTimes.stream().mapToInt(Integer::intValue).toArray();
 
         runIndices = indicesOfRunsAtMeasurementTimes.stream().mapToInt(Integer::intValue).toArray();
 
@@ -195,19 +159,18 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         maxX += xMarginStretch;
 
         // Y-axis is masses
-        minMassAMU = Double.MAX_VALUE;
-        maxMassAMU = -Double.MAX_VALUE;
+        minY = Double.MAX_VALUE;
+        maxY = -Double.MAX_VALUE;
 
         // on peak
         for (int i = 0; i < myOnPeakData.length; i++) {
-            minMassAMU = Math.min(minMassAMU, myOnPeakData[i]);
-            maxMassAMU = Math.max(maxMassAMU, myOnPeakData[i]);
+            minY = Math.min(minY, myOnPeakData[i]);
+            maxY = Math.max(maxY, myOnPeakData[i]);
         }
-        peakTukeysMeanAndUnct = SquidMathUtils.tukeysBiweight(myOnPeakData, 9.0);
 
         // force plot max and min
-        minY = Math.min(minMassAMU, peakTukeysMeanAndUnct[0]) - 0.0002;
-        maxY = Math.max(maxMassAMU, peakTukeysMeanAndUnct[0]) + 0.0002;
+        minY = minY - 0.0002;
+        maxY = maxY + 0.0002;
 
         // adjust margins
         double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);

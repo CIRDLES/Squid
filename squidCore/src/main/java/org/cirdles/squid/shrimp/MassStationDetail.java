@@ -18,7 +18,6 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.SimpleStringProperty;
 
 /**
  *

@@ -91,6 +91,8 @@ public abstract class AbstractDataView extends Canvas {
      */
     protected BigDecimal[] tics;
 
+    protected boolean showTimeNormalized;
+
     /**
      *
      */

@@ -150,6 +150,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<MassStationDetail> massMinuends;
     protected List<MassStationDetail> massSubtrahends;
     protected boolean showTimeNormalized;
+    protected boolean showPrimaryBeam;
 
     public Task() {
         this("New Task", null, null);
@@ -1833,5 +1834,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setShowTimeNormalized(boolean showTimeNormalized) {
         this.showTimeNormalized = showTimeNormalized;
+    }
+
+    /**
+     * @return the showPrimaryBeam
+     */
+    public boolean isShowPrimaryBeam() {
+        return showPrimaryBeam;
+    }
+
+    /**
+     * @param showPrimaryBeam the showPrimaryBeam to set
+     */
+    public void setShowPrimaryBeam(boolean showPrimaryBeam) {
+        this.showPrimaryBeam = showPrimaryBeam;
     }
 }

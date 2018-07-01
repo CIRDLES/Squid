@@ -153,4 +153,9 @@ public interface ShrimpFractionExpressionInterface {
     public double[][] getPkFerr();
 
     public double getHours();
+
+    /**
+     * @return the primaryBeam
+     */
+    public double getPrimaryBeam();
 }

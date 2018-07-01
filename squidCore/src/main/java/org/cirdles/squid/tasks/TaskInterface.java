@@ -415,4 +415,14 @@ public interface TaskInterface {
      */
     public void setShowTimeNormalized(boolean showTimeNormalized);
 
+    /**
+     * @return the showPrimaryBeam
+     */
+    public boolean isShowPrimaryBeam();
+
+    /**
+     * @param showPrimaryBeam the showPrimaryBeam to set
+     */
+    public void setShowPrimaryBeam(boolean showPrimaryBeam);
+
 }
