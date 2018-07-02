@@ -54,8 +54,8 @@ import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
+import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
 import org.cirdles.squid.gui.dataViews.MassStationAuditViewForShrimp;
-import org.cirdles.squid.gui.dataViews.PrimaryBeamAuditViewForShrimp;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -65,7 +65,7 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
  *
  * @author James F. Bowring
  */
-public class MassesAuditController implements Initializable {
+public class MassesAuditController implements Initializable, MassAuditRefreshInterface {
 
     private final int BUTTON_WIDTH = 60;
     private final int COMBO_WIDTH = 210;
@@ -78,8 +78,6 @@ public class MassesAuditController implements Initializable {
     @FXML
     private VBox scrolledBox;
     @FXML
-    private TitledPane massChooserAccordion;
-    @FXML
     private ListView<MassStationDetail> availableMassesListView;
     @FXML
     private ListView<MassStationDetail> viewedAsGraphMassesListView;
@@ -89,6 +87,10 @@ public class MassesAuditController implements Initializable {
     private GridPane massDeltasGridPane;
     @FXML
     private CheckBox showPrimaryBeamCheckBox;
+    @FXML
+    private CheckBox showQt1yCheckBox;
+    @FXML
+    private CheckBox showQt1zCheckBox;
 
     private static ObservableList<MassStationDetail> allMassStations;
     private static ObservableList<MassStationDetail> availableMassStations;
@@ -100,6 +102,10 @@ public class MassesAuditController implements Initializable {
 
     private static boolean showTimeNormalized;
     private static boolean showPrimaryBeam;
+    private static boolean showQt1y;
+    private static boolean showQt1z;
+    
+    private List<AbstractDataView> graphs;
 
     /**
      * Initializes the controller class.
@@ -118,6 +124,14 @@ public class MassesAuditController implements Initializable {
 
         showPrimaryBeam = squidProject.getTask().isShowPrimaryBeam();
         showPrimaryBeamCheckBox.setSelected(showPrimaryBeam);
+
+        showQt1y = squidProject.getTask().isShowPrimaryBeam();
+        showQt1yCheckBox.setSelected(showQt1y);
+
+        showQt1z = squidProject.getTask().isShowPrimaryBeam();
+        showQt1zCheckBox.setSelected(showQt1z);
+        
+        graphs = new ArrayList<>();
 
         displayMassStationsForReview();
 
@@ -184,6 +198,20 @@ public class MassesAuditController implements Initializable {
     private void showPrimaryBeamCheckBoxAction(ActionEvent event) {
         showPrimaryBeam = showPrimaryBeamCheckBox.isSelected();
         squidProject.getTask().setShowPrimaryBeam(showPrimaryBeam);
+        displayMassStationsForReview();
+    }
+
+    @FXML
+    private void showQt1yCheckBoxAction(ActionEvent event) {
+        showQt1y = showQt1yCheckBox.isSelected();
+        squidProject.getTask().setShowPrimaryBeam(showQt1y);
+        displayMassStationsForReview();
+    }
+
+    @FXML
+    private void showQt1zCheckBoxAction(ActionEvent event) {
+        showQt1z = showQt1zCheckBox.isSelected();
+        squidProject.getTask().setShowPrimaryBeam(showQt1z);
         displayMassStationsForReview();
     }
 
@@ -473,7 +501,7 @@ public class MassesAuditController implements Initializable {
     private void displayMassStationsForReview() {
 
         scrolledBox.getChildren().clear();
-        scrolledBox.getChildren().add(massChooserAccordion);
+        graphs.clear();
 
         int heightOfMassPlot = 150;
 
@@ -489,9 +517,12 @@ public class MassesAuditController implements Initializable {
                             entry.getTimesOfMeasuredTrimMasses(),
                             entry.getIndicesOfScansAtMeasurementTimes(),
                             entry.getIndicesOfRunsAtMeasurementTimes(),
-                            showTimeNormalized);
+                            squidProject.getPrawnFileRuns(),
+                            showTimeNormalized,
+                            this);
 
             scrolledBox.getChildren().add(canvas);
+            graphs.add(canvas);
             GraphicsContext gc1 = canvas.getGraphicsContext2D();
             canvas.preparePanel();
             canvas.paint(gc1);
@@ -517,9 +548,12 @@ public class MassesAuditController implements Initializable {
                             A.getTimesOfMeasuredTrimMasses(),
                             A.getIndicesOfScansAtMeasurementTimes(),
                             A.getIndicesOfRunsAtMeasurementTimes(),
-                            showTimeNormalized);
+                            squidProject.getPrawnFileRuns(),
+                            showTimeNormalized,
+                            this);
 
             scrolledBox.getChildren().add(canvas);
+            graphs.add(canvas);
             GraphicsContext gc1 = canvas.getGraphicsContext2D();
             canvas.preparePanel();
             canvas.paint(gc1);
@@ -528,7 +562,7 @@ public class MassesAuditController implements Initializable {
         }
 
         // primary beam
-        // TODO: decide details of showing it - maybe use special class PrimaryBeamAuditViewForShrimp already made
+        // TODO: decide details of showing it 
         if (showPrimaryBeam) {
             List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
             List<Double> primaryBeam = new ArrayList<>();
@@ -546,9 +580,76 @@ public class MassesAuditController implements Initializable {
                             allMassStations.get(0).getTimesOfMeasuredTrimMasses(),
                             allMassStations.get(0).getIndicesOfScansAtMeasurementTimes(),
                             allMassStations.get(0).getIndicesOfRunsAtMeasurementTimes(),
-                            showTimeNormalized);
+                            squidProject.getPrawnFileRuns(),
+                            showTimeNormalized,
+                            this);
 
             scrolledBox.getChildren().add(canvas);
+            graphs.add(canvas);
+            GraphicsContext gc1 = canvas.getGraphicsContext2D();
+            canvas.preparePanel();
+            canvas.paint(gc1);
+
+            massCounter++;
+        }
+
+        // qt1y
+        // TODO: decide details of showing it 
+        if (showQt1y) {
+            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
+            List<Double> qt1y = new ArrayList<>();
+            for (int i = 0; i < spots.size(); i++) {
+                for (int j = 0; j < 6; j++) {
+                    qt1y.add((double) spots.get(i).getQtlY());
+                }
+            }
+
+            AbstractDataView canvas
+                    = new MassStationAuditViewForShrimp(
+                            new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                            "qt1y",
+                            qt1y,
+                            allMassStations.get(0).getTimesOfMeasuredTrimMasses(),
+                            allMassStations.get(0).getIndicesOfScansAtMeasurementTimes(),
+                            allMassStations.get(0).getIndicesOfRunsAtMeasurementTimes(),
+                            squidProject.getPrawnFileRuns(),
+                            showTimeNormalized,
+                            this);
+
+            scrolledBox.getChildren().add(canvas);
+            graphs.add(canvas);
+            GraphicsContext gc1 = canvas.getGraphicsContext2D();
+            canvas.preparePanel();
+            canvas.paint(gc1);
+
+            massCounter++;
+        }
+
+        // qt1z
+        // TODO: decide details of showing it 
+        if (showQt1z) {
+            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
+            List<Double> qt1z = new ArrayList<>();
+            for (int i = 0; i < spots.size(); i++) {
+                for (int j = 0; j < 6; j++) {
+                    qt1z.add((double) spots.get(i).getQtlZ());
+                }
+            }
+
+            AbstractDataView canvas
+                    = new MassStationAuditViewForShrimp(
+                            new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                            "qt1z",
+                            qt1z,
+                            allMassStations.get(0).getTimesOfMeasuredTrimMasses(),
+                            allMassStations.get(0).getIndicesOfScansAtMeasurementTimes(),
+                            allMassStations.get(0).getIndicesOfRunsAtMeasurementTimes(),
+                            squidProject.getPrawnFileRuns(),
+                            showTimeNormalized,
+                            this);
+
+            scrolledBox.getChildren().add(canvas);
+            graphs.add(canvas);
             GraphicsContext gc1 = canvas.getGraphicsContext2D();
             canvas.preparePanel();
             canvas.paint(gc1);
@@ -556,4 +657,13 @@ public class MassesAuditController implements Initializable {
             massCounter++;
         }
     }
+
+    @Override
+    public void updateGraphs(int index) {
+        for (int i = 0; i < graphs.size(); i ++){
+            ((MassStationAuditViewForShrimp)graphs.get(i)).setIndexOfSelectedSpot(index);
+            graphs.get(i).repaint();
+        }
+    }
+    
 }

@@ -158,4 +158,14 @@ public interface ShrimpFractionExpressionInterface {
      * @return the primaryBeam
      */
     public double getPrimaryBeam();
+
+    /**
+     * @return the qtlY
+     */
+    public int getQtlY();
+
+    /**
+     * @return the qtlZ
+     */
+    public int getQtlZ();
 }

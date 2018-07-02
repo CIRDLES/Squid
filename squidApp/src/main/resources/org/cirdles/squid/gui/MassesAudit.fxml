@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
@@ -18,16 +19,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+
 <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1200.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
   <content>
-      <VBox fx:id="scrolledBox" styleClass="backgroundCalamari">
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
+      <VBox>
          <children>
             <Accordion>
               <panes>
-                <TitledPane fx:id="massChooserAccordion" animated="false" expanded="false" prefHeight="292.0" prefWidth="978.0" text="Manage Displayed Masses">
+                <TitledPane animated="false" expanded="false" text="Manage Displayed Masses">
                   <content>
                     <AnchorPane prefWidth="976.0">
                            <children>
@@ -66,7 +65,7 @@
                               <Label layoutX="650.0" layoutY="26.0" text="Mass A " />
                               <Label layoutX="875.0" layoutY="26.0" text="Mass B" />
                               <Line endX="20.0" layoutX="783.0" layoutY="41.0" stroke="#eb0b3f" strokeWidth="5.0" />
-                              <ScrollPane layoutX="520.0" layoutY="54.0" prefHeight="202.0" prefWidth="510.0">
+                              <ScrollPane layoutX="519.0" layoutY="54.0" prefHeight="202.0" prefWidth="510.0">
                                  <content>
                                     <GridPane fx:id="massDeltasGridPane" prefHeight="190.0" prefWidth="480.0">
                                       <columnConstraints>
@@ -82,20 +81,32 @@
                                     </GridPane>
                                  </content>
                               </ScrollPane>
-                              <Text layoutX="518.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add/Remove">
+                              <Text layoutX="517.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add/Remove">
                                  <font>
                                     <Font size="11.0" />
                                  </font>
                               </Text>
-                              <Line endX="125.0" layoutX="977.0" layoutY="131.0" rotate="90.0" scaleX="2.0" scaleY="2.0" />
-                              <Label layoutX="1050.0" layoutY="26.0" text="Other Graphs" />
-                              <CheckBox fx:id="showPrimaryBeamCheckBox" layoutX="1054.0" layoutY="57.0" mnemonicParsing="false" onAction="#showPrimaryBeamCheckBoxAction" text="Primary Beam" />
+                              <Line endX="125.0" layoutX="976.0" layoutY="131.0" rotate="90.0" scaleX="2.0" scaleY="2.0" />
+                              <Label layoutX="1049.0" layoutY="26.0" text="Other Graphs" />
+                              <CheckBox fx:id="showPrimaryBeamCheckBox" layoutX="1053.0" layoutY="57.0" mnemonicParsing="false" onAction="#showPrimaryBeamCheckBoxAction" text="Primary Beam" />
+                              <CheckBox fx:id="showQt1yCheckBox" layoutX="1054.0" layoutY="86.0" mnemonicParsing="false" onAction="#showQt1yCheckBoxAction" text="qt1y" />
+                              <CheckBox fx:id="showQt1zCheckBox" layoutX="1055.0" layoutY="115.0" mnemonicParsing="false" onAction="#showQt1zCheckBoxAction" text="qt1z" />
                            </children>
                         </AnchorPane>
                   </content>
                 </TitledPane>
               </panes>
             </Accordion>
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="700.0">
+               <content>
+                  <VBox fx:id="scrolledBox" prefHeight="612.0" prefWidth="1179.0" styleClass="backgroundCalamari">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <Pane prefHeight="0.0" prefWidth="1198.0" />
          </children>
       </VBox>
   </content>

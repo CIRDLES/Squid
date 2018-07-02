@@ -425,4 +425,23 @@ public interface TaskInterface {
      */
     public void setShowPrimaryBeam(boolean showPrimaryBeam);
 
+    /**
+     * @return the showQt1y
+     */
+    public boolean isShowQt1y();
+
+    /**
+     * @param aShowQt1y the showQt1y to set
+     */
+    public void setShowQt1y(boolean aShowQt1y);
+
+    /**
+     * @return the showQt1z
+     */
+    public boolean isShowQt1z();
+
+    /**
+     * @param aShowQt1z the showQt1z to set
+     */
+    public void setShowQt1z(boolean aShowQt1z);
 }

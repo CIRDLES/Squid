@@ -20,11 +20,20 @@ package org.cirdles.squid.gui.dataViews;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import javafx.event.EventHandler;
+import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
+import org.cirdles.squid.prawn.PrawnFile.Run;
 
 /**
  *
@@ -36,8 +45,9 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     private final List<Double> timesOfMeasuredTrimMasses;
     private final List<Integer> indicesOfScansAtMeasurementTimes;
     private final List<Integer> indicesOfRunsAtMeasurementTimes;
+    private final List<Run> prawnFileRuns;
 
-    private String massKey = "NONE";
+    private String plotTitle = "NONE";
 
     private int[] scanIndices;
     private int[] runIndices;
@@ -45,34 +55,87 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     private double minMassAMU;
     private double[] peakTukeysMeanAndUnct;
 
+    private int indexOfSelectedSpot;
+
+    private MassAuditRefreshInterface massAuditRefreshInterface;
+
+    ContextMenu contextMenu = new ContextMenu();
+
     /**
      *
      * @param bounds
-     * @param massKey
+     * @param plotTitle
      * @param measuredTrimMasses
      * @param timesOfMeasuredTrimMasses
      * @param indicesOfScansAtMeasurementTimes
      * @param indicesOfRunsAtMeasurementTimes
+     * @param prawnFileRuns the value of prawnFileRuns
+     * @param showTimeNormalized
+     * @param massAuditRefreshInterface the value of massAuditRefreshInterface
      */
     public MassStationAuditViewForShrimp(///
             Rectangle bounds,
-            String massKey,
+            String plotTitle,
             List<Double> measuredTrimMasses,
             List<Double> timesOfMeasuredTrimMasses,
             List<Integer> indicesOfScansAtMeasurementTimes,
             List<Integer> indicesOfRunsAtMeasurementTimes,
-            boolean showTimeNormalized) {
+            List<Run> prawnFileRuns,
+            boolean showTimeNormalized,
+            MassAuditRefreshInterface massAuditRefreshInterface) {
 
         super(bounds, 250, 0);
-        this.massKey = massKey;
+        this.plotTitle = plotTitle;
         this.measuredTrimMasses = measuredTrimMasses;
         this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
         this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
-
+        this.prawnFileRuns = prawnFileRuns;
         this.showTimeNormalized = showTimeNormalized;
+        this.massAuditRefreshInterface = massAuditRefreshInterface;
+
+        this.indexOfSelectedSpot = -1;
 
         setOpacity(1.0);
+
+        this.setOnMouseClicked(new MouseClickEventHandler());
+
+        MenuItem item1 = new MenuItem("About");
+
+        MenuItem item2 = new MenuItem("Preferences");
+
+        contextMenu.getItems().addAll(item1, item2);
+
+    }
+
+    private class MouseClickEventHandler implements EventHandler<MouseEvent> {
+
+        @Override
+        public void handle(MouseEvent mouseEvent) {
+            indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
+            if (indexOfSelectedSpot > -1) {
+                massAuditRefreshInterface.updateGraphs(indexOfSelectedSpot);
+                //if (mouseEvent.isSecondaryButtonDown()) {
+                    contextMenu.show((Node) mouseEvent.getSource(),Side.LEFT, 
+                            mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * 6]), 100);
+                //}
+            }
+        }
+    }
+
+    private int indexOfSpotFromMouseX(double x) {
+        double convertedX = convertMouseXToValue(x);
+        int index = -1;
+        // look up index
+        for (int i = 0; i < myOnPeakNormalizedAquireTimes.length - 1; i++) {
+            if ((convertedX < myOnPeakNormalizedAquireTimes[i])) {
+                index = i;
+                break;
+            }
+        }
+
+        int countOfScans = Integer.parseInt(prawnFileRuns.get(0).getPar().get(3).getValue());
+        return (int) Math.floor(index / countOfScans);
     }
 
     /**
@@ -83,12 +146,31 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     public void paint(GraphicsContext g2d) {
         super.paint(g2d);
 
+        g2d.setFont(Font.font("Lucida Sans", 12));
+
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(0.5);
 
         g2d.setFill(Paint.valueOf("Red"));
-        g2d.fillText(massKey, 5, 15);
+        g2d.fillText(plotTitle, 5, 15);
+        if (indexOfSelectedSpot >= 0) {
+            // gray spot rectangle
+            g2d.setFill(Color.rgb(0, 0, 0, 0.2));
+            g2d.fillRect(
+                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * 6]),
+                    0,
+                    Math.abs(mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * 6 + 5]) - mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * 6])),
+                    height);
+            g2d.setFill(Paint.valueOf("BLACK"));
+            Text text = new Text(prawnFileRuns.get(indexOfSelectedSpot).getPar().get(0).getValue());
+            text.applyCss();
+            g2d.fillText(
+                    prawnFileRuns.get(indexOfSelectedSpot).getPar().get(0).getValue(),
+                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * 6 + 5]) - text.getLayoutBounds().getWidth(),
+                    20);
+        }
 
+        g2d.setFill(Paint.valueOf("Red"));
         g2d.beginPath();
         g2d.moveTo(mapX(myOnPeakNormalizedAquireTimes[0]), mapY(myOnPeakData[0]));
         for (int i = 0; i < myOnPeakData.length; i++) {
@@ -216,6 +298,13 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         tics = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
 
+    }
+
+    /**
+     * @param aIndexOfSelectedSpot the indexOfSelectedSpot to set
+     */
+    public void setIndexOfSelectedSpot(int aIndexOfSelectedSpot) {
+        indexOfSelectedSpot = aIndexOfSelectedSpot;
     }
 
 }

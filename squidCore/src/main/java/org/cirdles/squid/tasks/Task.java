@@ -151,6 +151,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<MassStationDetail> massSubtrahends;
     protected boolean showTimeNormalized;
     protected boolean showPrimaryBeam;
+    protected boolean showQt1y;
+    protected boolean showQt1z;
 
     public Task() {
         this("New Task", null, null);
@@ -215,10 +217,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.useCalculated_pdMeanParentEleA = false;
         this.selectedIndexIsotope = IndexIsoptopesEnum.PB_204;
-        
+
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
         this.showTimeNormalized = false;
+        
+        this.showPrimaryBeam = false;
+        this.showQt1y = false;
+        this.showQt1z = false;
 
         generateConstants();
         generateParameters();
@@ -1839,6 +1845,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the showPrimaryBeam
      */
+    @Override
     public boolean isShowPrimaryBeam() {
         return showPrimaryBeam;
     }
@@ -1846,7 +1853,40 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param showPrimaryBeam the showPrimaryBeam to set
      */
+    @Override
     public void setShowPrimaryBeam(boolean showPrimaryBeam) {
         this.showPrimaryBeam = showPrimaryBeam;
+    }
+
+    /**
+     * @return the showQt1y
+     */
+    @Override
+    public boolean isShowQt1y() {
+        return showQt1y;
+    }
+
+    /**
+     * @param aShowQt1y the showQt1y to set
+     */
+    @Override
+    public void setShowQt1y(boolean aShowQt1y) {
+        showQt1y = aShowQt1y;
+    }
+
+    /**
+     * @return the showQt1z
+     */
+    @Override
+    public boolean isShowQt1z() {
+        return showQt1z;
+    }
+
+    /**
+     * @param aShowQt1z the showQt1z to set
+     */
+    @Override
+    public void setShowQt1z(boolean aShowQt1z) {
+        showQt1z = aShowQt1z;
     }
 }
