@@ -40,7 +40,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Masses" />
                   <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Choose Reference Materials" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Prawn File as ..." />
+                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Prawn File as ..." />
               </items>
             </Menu>
             <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">

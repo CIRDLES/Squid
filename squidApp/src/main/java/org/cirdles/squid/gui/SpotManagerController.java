@@ -35,6 +35,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -105,10 +106,13 @@ public class SpotManagerController implements Initializable {
         setFilteredSpotsAsRefMatButton.setDisable(true);
         setFilteredSpotsAsConcRefMatButton.setDisable(true);
 
-        setUpPrawnFile();
+        try {
+            setUpPrawnFile();
+        } catch (SquidException squidException) {
+        }
     }
 
-    private void setUpPrawnFile() {
+    private void setUpPrawnFile() throws SquidException {
 
         shrimpRuns = FXCollections.observableArrayList(squidProject.getPrawnFileRuns());
 
@@ -129,7 +133,8 @@ public class SpotManagerController implements Initializable {
         filterRuns("");
     }
 
-    private void setUpShrimpFractionList() {
+    private void setUpShrimpFractionList()
+            throws SquidException {
 
         shrimpFractionList.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
 
@@ -178,7 +183,8 @@ public class SpotManagerController implements Initializable {
         shrimpConcentrationRefMatList.setContextMenu(createConcRefMatSpotsViewContextMenu());
     }
 
-    private ContextMenu createAllSpotsViewContextMenu() {
+    private ContextMenu createAllSpotsViewContextMenu()
+            throws SquidException {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Remove this spot.");
         menuItem.setOnAction((evt) -> {
@@ -202,14 +208,26 @@ public class SpotManagerController implements Initializable {
         menuItem.setOnAction((evt) -> {
             PrawnFile.Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
             if (selectedRun != null) {
-                String[] splitNames = squidProject.splitPrawnFileAtRun(selectedRun, true);
-                SquidMessageDialog.showInfoDialog(
-                        "Two Prawn XML files have been written:\n\n"
-                        + "\t" + splitNames[0] + "\n"
-                        + "\t" + splitNames[1] + "\n\n"
-                        + "Create a new Squid Proejct with each of these Prawn XML files.",
-                        primaryStageWindow
-                );
+                try {
+                    String[] splitNames = squidProject.splitPrawnFileAtRun(selectedRun, true);
+                    SquidMessageDialog.showInfoDialog(
+                            "Two Prawn XML files have been written:\n\n"
+                            + "\t" + splitNames[0] + "\n"
+                            + "\t" + splitNames[1] + "\n\n"
+                            + "Create a new Squid Project with each of these Prawn XML files.",
+                            primaryStageWindow
+                    );
+                } catch (SquidException squidException) {
+                    String message = squidException.getMessage();
+                    if (message == null) {
+                        message = squidException.getCause().getMessage();
+                    }
+
+                    SquidMessageDialog.showWarningDialog(
+                            "The Project's Prawn File cannot be found ... please use PrawnFile menu to save it:\n\n"
+                            + message,
+                            primaryStageWindow);
+                }
             }
         });
         contextMenu.getItems().add(menuItem);
@@ -218,14 +236,26 @@ public class SpotManagerController implements Initializable {
         menuItem.setOnAction((evt) -> {
             PrawnFile.Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
             if (selectedRun != null) {
-                String[] splitNames = squidProject.splitPrawnFileAtRun(selectedRun, false);
-                SquidMessageDialog.showInfoDialog(
-                        "Two Prawn XML files have been written:\n\n"
-                        + "\t" + splitNames[0] + "\n"
-                        + "\t" + splitNames[1] + "\n\n"
-                        + "Create a new Squid Proejct with each of these Prawn XML files.",
-                        primaryStageWindow
-                );
+                try {
+                    String[] splitNames = squidProject.splitPrawnFileAtRun(selectedRun, false);
+                    SquidMessageDialog.showInfoDialog(
+                            "Two Prawn XML files have been written:\n\n"
+                            + "\t" + splitNames[0] + "\n"
+                            + "\t" + splitNames[1] + "\n\n"
+                            + "Create a new Squid Project with each of these Prawn XML files.",
+                            primaryStageWindow
+                    );
+                } catch (SquidException squidException) {
+                    String message = squidException.getMessage();
+                    if (message == null) {
+                        message = squidException.getCause().getMessage();
+                    }
+
+                    SquidMessageDialog.showWarningDialog(
+                            "The Project's Prawn File cannot be found ... please use PrawnFile menu to save it:\n\n"
+                            + message,
+                            primaryStageWindow);
+                }
             }
         });
         contextMenu.getItems().add(menuItem);
@@ -272,7 +302,7 @@ public class SpotManagerController implements Initializable {
                 + String.format("%1$-" + 12 + "s", "Time")
                 + String.format("%1$-" + 6 + "s", "Peaks")
                 + String.format("%1$-" + 6 + "s", "Scans"));
-        
+
         headerLabelConcRefMat.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabelConcRefMat.setText(
                 String.format("%1$-" + 21 + "s", "Ref Mat Name")
@@ -299,7 +329,7 @@ public class SpotManagerController implements Initializable {
                 filterSpotNameText.getText().toUpperCase(Locale.US).trim());
         updateReferenceMaterialsList(true);
     }
-    
+
     @FXML
     private void setFilteredSpotsToConcRefMatAction(ActionEvent event) {
         squidProject.updateFilterForConcRefMatSpotNames(
@@ -367,5 +397,5 @@ public class SpotManagerController implements Initializable {
             // refresh textbox in case "DUP" is removed or created
             selectedSpotNameText.setText(((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).getValue());
         }
-    }  
+    }
 }

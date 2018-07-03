@@ -1610,6 +1610,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the mapOfIndexToMassStationDetails
      */
+    @Override
     public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
         if (mapOfIndexToMassStationDetails == null) {
             createMapOfIndexToMassStationDetails();

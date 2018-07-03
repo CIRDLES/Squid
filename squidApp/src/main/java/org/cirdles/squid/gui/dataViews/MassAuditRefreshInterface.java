@@ -20,5 +20,7 @@ package org.cirdles.squid.gui.dataViews;
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface MassAuditRefreshInterface {
-    public void updateGraphs(int index);
+    public void updateGraphsWithSelectedIndex(int index);
+    
+    public void removeSpotFromGraphs(int spotIndex);
 }

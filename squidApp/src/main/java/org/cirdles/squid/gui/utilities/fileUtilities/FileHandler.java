@@ -136,7 +136,9 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Prawn XML file");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Prawn XML files", "*.xml"));
-        fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
+        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder().exists()) {
+            fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
+        }
         fileChooser.setInitialFileName(squidProject.getPrawnXMLFileName().toUpperCase(Locale.US).replace(".XML", "-REV.xml"));
 
         File prawnXMLFileNew = fileChooser.showSaveDialog(ownerWindow);
@@ -193,10 +195,10 @@ public class FileHandler {
 
         return retVal;
     }
-    
+
     public static File saveExpressionGraphHTML(Expression expression, Window ownerWindow)
             throws IOException {
-        
+
         File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
@@ -205,16 +207,16 @@ public class FileHandler {
         File mruFolder = new File(squidPersistentState.getMRUExpressionGraphFolderPath());
         fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
         fileChooser.setInitialFileName(expression.getName() + ".html");
-        
+
         File expressionGraphFileHTML = fileChooser.showSaveDialog(ownerWindow);
-        
-        if(expressionGraphFileHTML != null){
+
+        if (expressionGraphFileHTML != null) {
             retVal = expressionGraphFileHTML;
             squidPersistentState.updateExpressionGraphListMRU(expressionGraphFileHTML);
             String content = ExpressionTreeWriterMathML.toStringBuilderMathML(expression.getExpressionTree()).toString();
             Files.write(Paths.get(expressionGraphFileHTML.getPath()), content.getBytes());
         }
-        
+
         return retVal;
     }
 

@@ -104,7 +104,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private static boolean showPrimaryBeam;
     private static boolean showQt1y;
     private static boolean showQt1z;
-    
+
     private List<AbstractDataView> graphs;
 
     /**
@@ -125,12 +125,12 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         showPrimaryBeam = squidProject.getTask().isShowPrimaryBeam();
         showPrimaryBeamCheckBox.setSelected(showPrimaryBeam);
 
-        showQt1y = squidProject.getTask().isShowPrimaryBeam();
+        showQt1y = squidProject.getTask().isShowQt1y();
         showQt1yCheckBox.setSelected(showQt1y);
 
-        showQt1z = squidProject.getTask().isShowPrimaryBeam();
+        showQt1z = squidProject.getTask().isShowQt1z();
         showQt1zCheckBox.setSelected(showQt1z);
-        
+
         graphs = new ArrayList<>();
 
         displayMassStationsForReview();
@@ -204,14 +204,14 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @FXML
     private void showQt1yCheckBoxAction(ActionEvent event) {
         showQt1y = showQt1yCheckBox.isSelected();
-        squidProject.getTask().setShowPrimaryBeam(showQt1y);
+        squidProject.getTask().setShowQt1y(showQt1y);
         displayMassStationsForReview();
     }
 
     @FXML
     private void showQt1zCheckBoxAction(ActionEvent event) {
         showQt1z = showQt1zCheckBox.isSelected();
-        squidProject.getTask().setShowPrimaryBeam(showQt1z);
+        squidProject.getTask().setShowQt1z(showQt1z);
         displayMassStationsForReview();
     }
 
@@ -500,6 +500,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     private void displayMassStationsForReview() {
 
+        int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(0).getPar().get(3).getValue());
+
         scrolledBox.getChildren().clear();
         graphs.clear();
 
@@ -512,7 +514,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         for (MassStationDetail entry : viewedAsGraphMassStations) {
             AbstractDataView canvas
                     = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                            entry.getMassStationLabel() + "  " + entry.getIsotopeLabel(),
+                            entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
                             entry.getMeasuredTrimMasses(),
                             entry.getTimesOfMeasuredTrimMasses(),
                             entry.getIndicesOfScansAtMeasurementTimes(),
@@ -543,7 +545,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             AbstractDataView canvas
                     = new MassStationAuditViewForShrimp(
                             new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                            A.getMassStationLabel() + " - " + B.getMassStationLabel(),
+                            "(" + A.getMassStationLabel() + " " + A.getIsotopeLabel()
+                            + ") - ("
+                            + B.getMassStationLabel() + " " + B.getIsotopeLabel()
+                            + ")",
                             deltas,
                             A.getTimesOfMeasuredTrimMasses(),
                             A.getIndicesOfScansAtMeasurementTimes(),
@@ -566,8 +571,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         if (showPrimaryBeam) {
             List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
             List<Double> primaryBeam = new ArrayList<>();
-            for (int i = 0; i < spots.size(); i++) {
-                for (int j = 0; j < 6; j++) {
+            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                for (int j = 0; j < countOfScans; j++) {
                     primaryBeam.add(spots.get(i).getPrimaryBeam());
                 }
             }
@@ -598,8 +603,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         if (showQt1y) {
             List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
             List<Double> qt1y = new ArrayList<>();
-            for (int i = 0; i < spots.size(); i++) {
-                for (int j = 0; j < 6; j++) {
+            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                for (int j = 0; j < countOfScans; j++) {
                     qt1y.add((double) spots.get(i).getQtlY());
                 }
             }
@@ -630,8 +635,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         if (showQt1z) {
             List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
             List<Double> qt1z = new ArrayList<>();
-            for (int i = 0; i < spots.size(); i++) {
-                for (int j = 0; j < 6; j++) {
+            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                for (int j = 0; j < countOfScans; j++) {
                     qt1z.add((double) spots.get(i).getQtlZ());
                 }
             }
@@ -659,11 +664,18 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @Override
-    public void updateGraphs(int index) {
-        for (int i = 0; i < graphs.size(); i ++){
-            ((MassStationAuditViewForShrimp)graphs.get(i)).setIndexOfSelectedSpot(index);
+    public void updateGraphsWithSelectedIndex(int index) {
+        for (int i = 0; i < graphs.size(); i++) {
+            ((MassStationAuditViewForShrimp) graphs.get(i)).setIndexOfSelectedSpot(index);
             graphs.get(i).repaint();
         }
     }
-    
+
+    @Override
+    public void removeSpotFromGraphs(int spotIndex) {
+        setupMassStationDetailsListViews();
+        displayMassStationsForReview();
+
+    }
+
 }
