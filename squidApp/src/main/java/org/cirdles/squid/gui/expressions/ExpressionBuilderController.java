@@ -561,6 +561,9 @@ public class ExpressionBuilderController implements Initializable {
         toggleWhiteSpacesBtn.visibleProperty().bind(editAsText.not().and(containsWhiteSpaces));
 
         notesTextArea.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        notesTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            refreshSaved();
+        });
         notesStage.titleProperty().bind(new SimpleStringProperty("Notes on ").concat(expressionNameTextField.textProperty()));
         notesStage.setOnCloseRequest((event) -> {
             showNotesBtn.setText("Show notes");
@@ -2624,7 +2627,7 @@ public class ExpressionBuilderController implements Initializable {
 
     public void refreshSaved() {
         boolean saved = true;
-        if (currentMode.get().equals(Mode.EDIT)) {
+        if (currentMode.get().equals(Mode.EDIT) && selectedExpression.isNotNull().get()) {
             if (!selectedExpression.get().getName().equals(expressionNameTextField.getText())) {
                 saved = false;
             }
@@ -2647,6 +2650,9 @@ public class ExpressionBuilderController implements Initializable {
                 saved = false;
             }
             if (selectedExpression.get().getExpressionTree().isSquidSpecialUPbThExpression() != specialUPbThSwitchCheckBox.isSelected()) {
+                saved = false;
+            }
+            if(!selectedExpression.get().getNotes().equals(notesTextArea.getText())){
                 saved = false;
             }
         } else if (currentMode.get().equals(Mode.CREATE)) {
