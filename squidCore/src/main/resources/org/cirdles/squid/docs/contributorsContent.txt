@@ -1,1 +1,9 @@
-Contributors: Jim Bowring, Simon Bodorkos, John Zeringue, Casey Wilson, Ryan Barrett, Maël Gaonach, Nicole Rayner
+Contributors: 
+Jim Bowring, 
+Simon Bodorkos, 
+John Zeringue, 
+Chuck Magee, 
+Casey Wilson, 
+Ryan Barrett, 
+Maël Gaonach, 
+Nicole Rayner
