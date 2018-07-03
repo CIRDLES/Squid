@@ -90,6 +90,11 @@ public interface TaskInterface {
     public List<String> getRatioNames();
 
     /**
+     * @return the mapOfIndexToMassStationDetails
+     */
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails();
+
+    /**
      * @return the nominalMasses
      */
     public List<String> getNominalMasses();
@@ -210,9 +215,9 @@ public interface TaskInterface {
      * @return the taskExpressionsOrdered
      */
     public List<Expression> getTaskExpressionsOrdered();
-    
+
     /**
-     * 
+     *
      * @param expression Name of the expression to test
      * @return True if the expression exists, false if not
      */
@@ -380,4 +385,63 @@ public interface TaskInterface {
 
     public void produceSummaryReportsForGUI();
 
+    /**
+     * @return the massMinuends
+     */
+    public List<MassStationDetail> getMassMinuends();
+
+    /**
+     * @param massMinuends the massMinuends to set
+     */
+    public void setMassMinuends(List<MassStationDetail> massMinuends);
+
+    /**
+     * @return the massSubtrahends
+     */
+    public List<MassStationDetail> getMassSubtrahends();
+
+    /**
+     * @param massSubtrahends the massSubtrahends to set
+     */
+    public void setMassSubtrahends(List<MassStationDetail> massSubtrahends);
+
+    /**
+     * @return the showTimeNormalized
+     */
+    public boolean isShowTimeNormalized();
+
+    /**
+     * @param showTimeNormalized the showTimeNormalized to set
+     */
+    public void setShowTimeNormalized(boolean showTimeNormalized);
+
+    /**
+     * @return the showPrimaryBeam
+     */
+    public boolean isShowPrimaryBeam();
+
+    /**
+     * @param showPrimaryBeam the showPrimaryBeam to set
+     */
+    public void setShowPrimaryBeam(boolean showPrimaryBeam);
+
+    /**
+     * @return the showQt1y
+     */
+    public boolean isShowQt1y();
+
+    /**
+     * @param aShowQt1y the showQt1y to set
+     */
+    public void setShowQt1y(boolean aShowQt1y);
+
+    /**
+     * @return the showQt1z
+     */
+    public boolean isShowQt1z();
+
+    /**
+     * @param aShowQt1z the showQt1z to set
+     */
+    public void setShowQt1z(boolean aShowQt1z);
 }

@@ -46,8 +46,8 @@ public class ExpressionXMLConverterTest {
             Expression initialExpression = new Expression(LnUOU, "ln([\"254/238\"])", true);
             
 
-            SquidSpeciesModel sm1 = new SquidSpeciesModel(0, "254", "254", "Uranium", false, "");
-            SquidSpeciesModel sm2 = new SquidSpeciesModel(0, "238", "238", "Uranium", false, "");
+            SquidSpeciesModel sm1 = new SquidSpeciesModel(0, "254", "254", "Uranium", false, "", false);
+            SquidSpeciesModel sm2 = new SquidSpeciesModel(0, "238", "238", "Uranium", false, "", false);
 
             ExpressionTreeInterface sn1 = ShrimpSpeciesNode.buildShrimpSpeciesNode(sm1, "getPkInterpScanArray");
             ExpressionTreeInterface sn2 = ShrimpSpeciesNode.buildShrimpSpeciesNode(sm2, "getPkInterpScanArray");

@@ -40,7 +40,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Masses" />
                   <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Choose Reference Materials" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Prawn File as ..." />
+                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Prawn File as ..." />
               </items>
             </Menu>
             <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
@@ -81,26 +81,34 @@
                 <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
           </items>
         </Menu>
-            <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Reports">
+            <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
               <items>
-                  <Menu mnemonicParsing="false" text="Built-in Reports">
+                  <Menu mnemonicParsing="false" text="Built-in Report Tables">
                     <items>
-                        <Menu mnemonicParsing="false" text="Within-Spot Ratios">
+                        <Menu mnemonicParsing="false" text="Reference Materials">
                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="View Reference Materials" />
-                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="View Unknowns" />
+                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="within Spots" />
+                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="per Spot" />
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Mean Ratios per Spot">
+                        <Menu mnemonicParsing="false" text="Unknowns">
                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="View Reference Materials" />
-                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="View Unknowns" />
+                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="within Spots" />
+                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
                           </items>
                         </Menu>
                         <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
                     </items>
                   </Menu>
-                <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
+                  <Menu mnemonicParsing="false" text="Custom Report Tables">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Reference Materials">
+                           <items>
+                            <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
+                           </items>
+                        </Menu>
+                    </items>
+                  </Menu>
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Visualizations">
