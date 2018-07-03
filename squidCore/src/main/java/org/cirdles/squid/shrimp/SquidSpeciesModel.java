@@ -38,12 +38,13 @@ public class SquidSpeciesModel implements
     private String elementName;
     private boolean isBackground;
     private String uThBearingName;
+    private boolean viewedAsGraph;
 
     public SquidSpeciesModel() {
-        this(-1, "NONE", "NONE", "NONE", false, "No");
+        this(-1, "NONE", "NONE", "NONE", false, "No", false);
     }
 
-    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground, String uThBearingAbbreviation) {
+    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground, String uThBearingAbbreviation, boolean viewedAsGraph) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;
@@ -51,6 +52,7 @@ public class SquidSpeciesModel implements
         this.elementName = elementName;
         this.isBackground = isBackground;
         this.uThBearingName = uThBearingAbbreviation;
+        this.viewedAsGraph = viewedAsGraph;
         }
 
     @Override
@@ -169,6 +171,20 @@ public class SquidSpeciesModel implements
 
     public void setuThBearingName(String uThBearingName) {
         this.uThBearingName = uThBearingName;
+    }
+
+    /**
+     * @return the viewedAsGraph
+     */
+    public boolean isViewedAsGraph() {
+        return viewedAsGraph;
+    }
+
+    /**
+     * @param viewedAsGraph the viewedAsGraph to set
+     */
+    public void setViewedAsGraph(boolean viewedAsGraph) {
+        this.viewedAsGraph = viewedAsGraph;
     }
     
     

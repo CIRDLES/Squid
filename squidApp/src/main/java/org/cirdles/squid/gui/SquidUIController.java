@@ -771,6 +771,7 @@ public class SquidUIController implements Initializable {
                 launchTaskManager();
             }
         } catch (SquidException | IOException | JAXBException | SAXException iOException) {
+            
         }
     }
 

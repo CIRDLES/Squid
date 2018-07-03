@@ -276,7 +276,7 @@ public final class SquidProject implements Serializable {
     }
 
     public List<Run> getPrawnFileRuns() {
-        return prawnFile.getRun();
+        return new ArrayList<>(prawnFile.getRun());
     }
 
     public void processPrawnSessionForDuplicateSpotNames() {
@@ -349,7 +349,8 @@ public final class SquidProject implements Serializable {
      * @return String [2] containing the file names of the two Prawn XML files
      * written as a result of the split.
      */
-    public String[] splitPrawnFileAtRun(Run run, boolean useOriginalData) {
+    public String[] splitPrawnFileAtRun(Run run, boolean useOriginalData)
+            throws SquidException {
         String[] retVal = new String[2];
         retVal[0] = prawnFileHandler.getCurrentPrawnFileLocation().replace(".xml", "-PART-A.xml").replace(".XML", "-PART-A.xml");
         retVal[1] = prawnFileHandler.getCurrentPrawnFileLocation().replace(".xml", "-PART-B.xml").replace(".XML", "-PART-B.xml");
@@ -366,6 +367,7 @@ public final class SquidProject implements Serializable {
                 prawnFileOriginal = deserializePrawnData();
                 runsCopy = new CopyOnWriteArrayList<>(prawnFileOriginal.getRun());
             } catch (IOException | JAXBException | SAXException | SquidException iOException) {
+                throw new SquidException(iOException.getMessage());
             }
         } else {
             runsCopy = new CopyOnWriteArrayList<>(runs);

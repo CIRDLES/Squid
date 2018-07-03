@@ -91,6 +91,8 @@ public abstract class AbstractDataView extends Canvas {
      */
     protected BigDecimal[] tics;
 
+    protected boolean showTimeNormalized;
+
     /**
      *
      */
@@ -137,13 +139,17 @@ public abstract class AbstractDataView extends Canvas {
 
         drawBorder(g2d);
     }
+    
+    public void repaint(){
+        paint(this.getGraphicsContext2D());
+    }
 
     private void drawBorder(GraphicsContext g2d) {
         // fill it in
         g2d.setFill(Paint.valueOf("WHITE"));
         g2d.fillRect(0, 0, width, height);
 
-        // draw bordere
+        // draw border
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(1);
         g2d.strokeRect(0, 0, width, height);
@@ -220,7 +226,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     public double getMinX_Display() {
-        return minX + getDisplayOffsetX();
+        return minX + displayOffsetX;
     }
 
     /**
@@ -228,7 +234,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     public double getMaxX_Display() {
-        return maxX + getDisplayOffsetX();
+        return maxX + displayOffsetX;
     }
 
     /**
@@ -236,7 +242,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     public double getMinY_Display() {
-        return minY + getDisplayOffsetY();
+        return minY + displayOffsetY;
     }
 
     /**
@@ -244,7 +250,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     public double getMaxY_Display() {
-        return maxY + getDisplayOffsetY();
+        return maxY + displayOffsetY;
     }
 
     /**
@@ -282,12 +288,12 @@ public abstract class AbstractDataView extends Canvas {
      * @param x
      * @return
      */
-    protected int convertMouseXToValue(int x) {
-        return //
-                (int) Math.round(
-                        (((double) (x - leftMargin)) / (double) graphWidth) //
-                        * getRangeX_Display()//
-                        + getMinX_Display());
+    protected double convertMouseXToValue(double x) {
+        double convertedX = (((double) (x - leftMargin - 1)) / (double) graphWidth) //
+                * getRangeX_Display()//
+                + getMinX_Display();
+        
+        return convertedX;
     }
 
     /**
@@ -296,8 +302,7 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     protected double convertMouseYToValue(double y) {
-        return //
-                -1 * (((y - topMargin - 1) * getRangeY_Display() / graphHeight) //
+        return -1 * (((y - topMargin - 1) * getRangeY_Display() / graphHeight) //
                 - getMaxY_Display());
     }
 }

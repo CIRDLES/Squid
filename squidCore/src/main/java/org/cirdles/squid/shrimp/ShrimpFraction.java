@@ -298,6 +298,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     /**
      * @return the qtlZ
      */
+    @Override
     public int getQtlZ() {
         return qtlZ;
     }
@@ -312,6 +313,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     /**
      * @return the primaryBeam
      */
+    @Override
     public double getPrimaryBeam() {
         return primaryBeam;
     }

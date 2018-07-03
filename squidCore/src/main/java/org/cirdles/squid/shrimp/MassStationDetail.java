@@ -18,13 +18,12 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
  * @author James F. Bowring
  */
-public class MassStationDetail implements Serializable {
+public class MassStationDetail implements Comparable<MassStationDetail>, Serializable {
 
     private static final long serialVersionUID = -874679604916998001L;
 
@@ -44,6 +43,8 @@ public class MassStationDetail implements Serializable {
     private List<Integer> indicesOfRunsAtMeasurementTimes;
 
     private String uThBearingName;
+
+    private boolean viewedAsGraph;
 
     public MassStationDetail(
             int massStationIndex,
@@ -68,6 +69,33 @@ public class MassStationDetail implements Serializable {
         this.indicesOfRunsAtMeasurementTimes = new ArrayList<>();
 
         this.uThBearingName = uThBearingName;
+
+        // default value
+        this.viewedAsGraph = centeringTimeSec > 0.0;
+    }
+
+    @Override
+    public int compareTo(MassStationDetail massStationDetail) {
+        int retVal = 0;
+        if (this != massStationDetail) {
+            retVal = Integer.compare(this.massStationIndex, massStationDetail.getMassStationIndex());
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public boolean equals(Object massStationDetail) {
+        boolean retVal = false;
+        if (massStationDetail != null) {
+            retVal = (this.massStationIndex == ((MassStationDetail) massStationDetail).getMassStationIndex());
+        }
+        return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     /**
@@ -200,6 +228,26 @@ public class MassStationDetail implements Serializable {
      */
     public void setuThBearingName(String uThBearingName) {
         this.uThBearingName = uThBearingName;
+    }
+
+    /**
+     * @return the viewedAsGraph
+     */
+    public boolean isViewedAsGraph() {
+        return viewedAsGraph;
+    }
+
+    /**
+     * @param viewedAsGraph the viewedAsGraph to set
+     */
+    public void setViewedAsGraph(boolean viewedAsGraph) {
+        this.viewedAsGraph = viewedAsGraph;
+    }
+
+    public String toPrettyString() {
+        return String.format("%1$-" + 8 + "s", massStationLabel)
+                + String.format("%1$-" + 7 + "s", isotopeLabel)
+                + (autoCentered() ? "auto-centered" : "");
     }
 
 }

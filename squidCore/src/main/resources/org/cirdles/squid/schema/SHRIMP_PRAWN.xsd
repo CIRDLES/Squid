@@ -26,6 +26,7 @@
             Created: 24.October.2015
             Revised: 14.November.2016
             Revised: 23.October.2017
+            Revised: 03.July.2018 for SHRIMP SW v4.0 SHR 2
             
         </xs:documentation>
     </xs:annotation>    
@@ -357,8 +358,10 @@
             <xs:enumeration value="eisie_cps"/>
             <!-- Description-->
             <xs:enumeration value="eisie_date_time"/>
-             <!-- Description-->
+            <!-- Description-->
             <xs:enumeration value="lab_temperature_degc"/>
+            <!-- From SHRIMP SW v4.0 SHR 2-->
+            <xs:enumeration value="detector_set_zero_cps"/>
        </xs:restriction>
     </xs:simpleType>
     

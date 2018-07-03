@@ -69,8 +69,8 @@ public class PrawnFileRunFractionParser {
     private int stageX;
     private int stageY;
     private int stageZ;
-    private int qtlY;
-    private int qtlZ;
+    private int qt1Y;
+    private int qt1Z;
     private double primaryBeam;
 
     /**
@@ -125,8 +125,8 @@ public class PrawnFileRunFractionParser {
             shrimpFraction.setStageX(stageX);
             shrimpFraction.setStageY(stageY);
             shrimpFraction.setStageZ(stageZ);
-            shrimpFraction.setQtlY(qtlY);
-            shrimpFraction.setQtlZ(qtlZ);
+            shrimpFraction.setQtlY(qt1Y);
+            shrimpFraction.setQtlZ(qt1Z);
             shrimpFraction.setPrimaryBeam(primaryBeam);
             
             shrimpFraction.setCountTimeSec(countTimeSec);
@@ -190,8 +190,8 @@ public class PrawnFileRunFractionParser {
         } catch (ParseException parseException) {
         }
         
-        qtlY = Integer.parseInt(runFraction.getSet().getPar().get(2).getValue());
-        qtlZ = Integer.parseInt(runFraction.getSet().getPar().get(4).getValue());
+        qt1Y = Integer.parseInt(runFraction.getSet().getPar().get(2).getValue());
+        qt1Z = Integer.parseInt(runFraction.getSet().getPar().get(4).getValue());
         primaryBeam = Double.parseDouble(runFraction.getSet().getPar().get(5).getValue().replace("nA", ""));
 
         namesOfSpecies = new String[nSpecies];
