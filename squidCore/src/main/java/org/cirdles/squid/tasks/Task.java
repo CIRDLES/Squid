@@ -75,6 +75,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.overCountMeans;
 import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 
 /**
@@ -258,6 +259,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         //Squid2.5 Framework: Part 4 means
         SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(perSpotConcentrations);
+        
+        SortedSet<Expression> overCountMeansRefMaterials = overCountMeans();
+        taskExpressionsOrdered.addAll(overCountMeansRefMaterials);
 
         Collections.sort(taskExpressionsOrdered);
     }

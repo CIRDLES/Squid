@@ -28,7 +28,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class AgePb76 extends Function {
+public class AgePb76exp extends Function {
 
     private static final long serialVersionUID = -6711265919551953531L;
 
@@ -42,22 +42,23 @@ public class AgePb76 extends Function {
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
-    public AgePb76() {
+    public AgePb76exp() {
 
-        name = "agePb76";
-        argumentCount = 1;
+        name = "agePb76exp";
+        argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
-        labelsForInputValues = new String[]{"207/206RatioAnd1SigmaUnct"};
+        labelsForInputValues = new String[]{"207/206 Ratio, 207/206 1SigmaUnct"};
     }
 
     /**
+     * The "exp" suffix refers to "explicit" specification of ratio and unct.
      * Requires that child 0 is a VariableNode that evaluates to a double array
-     * with column 1 representing the 207/206 IsotopicRatio and column 2
-     * containing the 1sigma abs unct with a row for each member of
-     * shrimpFractions.
+     * with column 1 representing the 207/206 IsotopicRatio and that child 1
+     * evaluates to a double array with column 1 containing the 1sigma abs unct
+     * with a row for each member of shrimpFractions.
      *
      * @param childrenET list containing child 0
      * @param shrimpFractions a list of shrimpFractions
@@ -71,10 +72,11 @@ public class AgePb76 extends Function {
 
         Object[][] retVal;
         try {
-            double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
+            double[] pb207_206Ratio = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
+            double[] pb207_206Unct1Sigma = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(
-                    pb207_206RatioAndUnct[0],
-                    (pb207_206RatioAndUnct.length > 1) ? pb207_206RatioAndUnct[1] : 0.0);
+                    pb207_206Ratio[0],
+                    pb207_206Unct1Sigma[0]);
             retVal = new Object[][]{{agePb76[0], agePb76[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
@@ -92,7 +94,7 @@ public class AgePb76 extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>AgePb76</mi>"
+                + "<mi>AgePb76exp</mi>"
                 + "<mfenced>";
 
         for (int i = 0; i < childrenET.size(); i++) {
