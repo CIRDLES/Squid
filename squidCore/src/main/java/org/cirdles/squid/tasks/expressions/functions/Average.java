@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -32,15 +29,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 @XStreamAlias("Operation")
 public class Average extends Function {
 
-//    private static final long serialVersionUID = -198041668841495965L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Average.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Average " + theSUID);
-    }
+    private static final long serialVersionUID = -7728410761115586080L;
 
     /**
      * Provides the functionality of Excel's average and returns "average" and
@@ -99,17 +88,16 @@ public class Average extends Function {
      */
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        String retVal
-                = "<mrow>"
-                + "<mi>average</mi>"
-                + "<mfenced>";
-
+        StringBuilder retVal = new StringBuilder();
+        retVal.append("<mrow>");
+        retVal.append("<mi>").append(name).append("</mi>");
+        retVal.append("<mfenced>");
         for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
+            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
         }
 
-        retVal += "</mfenced></mrow>\n";
+        retVal.append("</mfenced></mrow>\n");
 
-        return retVal;
+        return retVal.toString();
     }
 }

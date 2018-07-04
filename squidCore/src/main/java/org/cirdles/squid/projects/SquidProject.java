@@ -359,7 +359,7 @@ public final class SquidProject implements Serializable {
         int indexOfRun = prawnFile.getRun().indexOf(run);
 
         List<Run> runs = prawnFile.getRun();
-        List<Run> runsCopy = new ArrayList<>();
+        List<Run> runsCopy;
 
         if (useOriginalData) {
             PrawnFile prawnFileOriginal = null;

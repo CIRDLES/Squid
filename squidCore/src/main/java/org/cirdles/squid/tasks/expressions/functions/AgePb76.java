@@ -44,7 +44,7 @@ public class AgePb76 extends Function {
      */
     public AgePb76() {
 
-        name = "agePb76";
+        name = "AgePb76";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
@@ -90,18 +90,18 @@ public class AgePb76 extends Function {
      */
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        String retVal
-                = "<mrow>"
-                + "<mi>AgePb76</mi>"
-                + "<mfenced>";
 
+        StringBuilder retVal = new StringBuilder();
+        retVal.append("<mrow>");
+        retVal.append("<mi>").append(name).append("</mi>");
+        retVal.append("<mfenced>");
         for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
+            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
         }
 
-        retVal += "</mfenced></mrow>\n";
+        retVal.append("</mfenced></mrow>\n");
 
-        return retVal;
+        return retVal.toString();
     }
 
 }

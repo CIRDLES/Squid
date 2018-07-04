@@ -405,7 +405,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     class onMassDeltaComboSelectionAction implements EventHandler<ActionEvent> {
-
+        @SuppressWarnings("unchecked")
         @Override
         public void handle(ActionEvent event) {
             // reprocess all diffs
