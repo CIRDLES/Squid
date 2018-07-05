@@ -112,30 +112,17 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> generatePpmUandPpmTh(String parentNuclide, boolean isDirectAltPD) {
         SortedSet<Expression> concentrationExpressionsOrdered = new TreeSet<>();
 
-        // ppmU calcs belong to both case of isDirectAltPD
-        String uConstant = "((238/232) * r238_235s / (r238_235s - 1.0))";
-        String ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
-        String ppmEquation = "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * Std_ppmU";
-        Expression expressionPpmU = buildExpression(ppmEqnName,
-                ppmEquation, true, true, false);
+        // ppmU calcs belong to both cases of isDirectAltPD
+        Expression expressionPpmU = buildExpression(SQUID_PPM_PARENT_EQN_NAME_U,
+                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * Std_ppmU", true, true, false);
         concentrationExpressionsOrdered.add(expressionPpmU);
 
         if (!isDirectAltPD) {
             // TODO: promote this and tie to physical constants model
             // handles SecondaryParentPpmFromThU
-
-            String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
-            String ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant;
-
-            if (parentNuclide.contains("232")) {
-                ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
-
-                ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
-                ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_TH + "\"] / [\"" + SQUID_TH_U_EQN_NAME + "\"] * " + uConstant;
-            }
-
-            Expression expressionPpmTh = buildExpression(ppmOtherEqnName,
-                    ppmOtherEqn, true, true, false);
+            String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
+            Expression expressionPpmTh = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
+                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant, true, true, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
 
             if (!parentNuclide.contains("232")) {
@@ -149,6 +136,7 @@ public abstract class BuiltInExpressionsFactory {
             // directlAltPD is true
             // this code for ppmTh comes from SQ2.50 Procedral Framework: Part 5
             // see: https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-5
+
             Expression expressionPpmTh = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
                     "[\"232Th/238U\"] * [\"ppmU\"] * 0.9678", true, true, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);

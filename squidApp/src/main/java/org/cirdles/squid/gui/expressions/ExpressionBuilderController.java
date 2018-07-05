@@ -744,8 +744,8 @@ public class ExpressionBuilderController implements Initializable {
         globalListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if(newValue!=null){
-                    if(currentMode.get().equals(Mode.VIEW)){
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
                         selectedExpression.set(newValue);
                     }
@@ -761,8 +761,8 @@ public class ExpressionBuilderController implements Initializable {
         brokenExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if(newValue!=null){
-                    if(currentMode.get().equals(Mode.VIEW)){
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
                         selectedExpression.set(newValue);
                     }
@@ -778,8 +778,8 @@ public class ExpressionBuilderController implements Initializable {
         nuSwitchedExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if(newValue!=null){
-                    if(currentMode.get().equals(Mode.VIEW)){
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
                         selectedExpression.set(newValue);
                     }
@@ -794,8 +794,8 @@ public class ExpressionBuilderController implements Initializable {
         builtInExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if(newValue!=null){
-                    if(currentMode.get().equals(Mode.VIEW)){
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
                         selectedExpression.set(newValue);
                     }
@@ -810,8 +810,8 @@ public class ExpressionBuilderController implements Initializable {
         customExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if(newValue!=null){
-                    if(currentMode.get().equals(Mode.VIEW)){
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
                         selectedExpression.set(newValue);
                     }
@@ -829,8 +829,8 @@ public class ExpressionBuilderController implements Initializable {
         ratioExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidRatiosModel>() {
             @Override
             public void changed(ObservableValue<? extends SquidRatiosModel> observable, SquidRatiosModel oldValue, SquidRatiosModel newValue) {
-                if(newValue!=null){
-                    if(currentMode.get().equals(Mode.VIEW)){
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
                         Expression expr = new Expression(squidProject.getTask().getNamedExpressionsMap().get(newValue.getRatioName()), "[\"" + newValue.getRatioName() + "\"]", false);
                         expr.getExpressionTree().setSquidSpecialUPbThExpression(true);
                         expr.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
@@ -2652,7 +2652,7 @@ public class ExpressionBuilderController implements Initializable {
             if (selectedExpression.get().getExpressionTree().isSquidSpecialUPbThExpression() != specialUPbThSwitchCheckBox.isSelected()) {
                 saved = false;
             }
-            if(!selectedExpression.get().getNotes().equals(notesTextArea.getText())){
+            if (!selectedExpression.get().getNotes().equals(notesTextArea.getText())) {
                 saved = false;
             }
         } else if (currentMode.get().equals(Mode.CREATE)) {
