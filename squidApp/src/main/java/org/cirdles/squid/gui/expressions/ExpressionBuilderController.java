@@ -870,7 +870,8 @@ public class ExpressionBuilderController implements Initializable {
     private void selectInAllPanes(Expression exp, boolean scrollIfAlreadySelected) {
         Boolean found = false;
         //If nothing is selected or the selected value is not the new one
-        if (brokenExpressionsListView.getSelectionModel().getSelectedItem() == null || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
+        if (brokenExpressionsListView.getSelectionModel().getSelectedItem() == null 
+                || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
             //Clear selection
             brokenExpressionsListView.getSelectionModel().clearSelection();
             //If the new value is on this pane then select it
@@ -889,7 +890,8 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         //Same thing for the other panes
-        if (nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem() == null || !nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
+        if (nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem() == null 
+                || !nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
             nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
             if (nuSwitchedExpressionsListView.getItems().contains(exp)) {
                 nuSwitchedExpressionsListView.getSelectionModel().select(exp);
@@ -904,7 +906,8 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
 
-        if (builtInExpressionsListView.getSelectionModel().getSelectedItem() == null || !builtInExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
+        if (builtInExpressionsListView.getSelectionModel().getSelectedItem() == null 
+                || !builtInExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
             builtInExpressionsListView.getSelectionModel().clearSelection();
             if (builtInExpressionsListView.getItems().contains(exp)) {
                 builtInExpressionsListView.getSelectionModel().select(exp);
@@ -919,7 +922,8 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
 
-        if (customExpressionsListView.getSelectionModel().getSelectedItem() == null || !customExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
+        if (customExpressionsListView.getSelectionModel().getSelectedItem() == null 
+                || !customExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
             customExpressionsListView.getSelectionModel().clearSelection();
             if (customExpressionsListView.getItems().contains(exp)) {
                 customExpressionsListView.getSelectionModel().select(exp);
@@ -939,7 +943,8 @@ public class ExpressionBuilderController implements Initializable {
             ratioExpressionsListView.getSelectionModel().clearSelection();
         }
 
-        if (globalListView.getSelectionModel().getSelectedItem() == null || !globalListView.getSelectionModel().getSelectedItem().equals(exp)) {
+        if (globalListView.getSelectionModel().getSelectedItem() == null 
+                || !globalListView.getSelectionModel().getSelectedItem().equals(exp)) {
             //If the current filtered list does not contain the expression, reset the filter to show all the expressions
             if (!globalListView.getItems().contains(exp)) {
                 fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);

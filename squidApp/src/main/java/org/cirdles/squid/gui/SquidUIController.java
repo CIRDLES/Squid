@@ -585,7 +585,7 @@ public class SquidUIController implements Initializable {
     private void launchRatiosManager() {
         try {
             mainPane.getChildren().remove(ratiosManagerUI);
-            // critical for puplating table
+            // critical for populating table
             squidProject.getTask().buildSquidSpeciesModelList();
 
             ratiosManagerUI = FXMLLoader.load(getClass().getResource("RatiosManager.fxml"));

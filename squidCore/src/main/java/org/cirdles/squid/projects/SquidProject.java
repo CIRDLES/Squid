@@ -188,9 +188,8 @@ public final class SquidProject implements Serializable {
         prawnXMLFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
-        task.setPrawnFile(prawnFile);
-        task.buildSquidSpeciesModelList();
-
+        task.setPrawnFile(prawnFile);   
+        ((Task)task).setupSquidSessionSkeleton();
     }
 
     public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)

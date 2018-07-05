@@ -130,6 +130,14 @@ public enum RunParameterNames implements Serializable {
      */
     @XmlEnumValue("stage_z")
     STAGE_Z("stage_z"),
+    @XmlEnumValue("stage_center_left_y")
+    stage_center_left_y("stage_center_left_y"),
+    @XmlEnumValue("stage_center_left_z")
+    stage_center_left_z("stage_center_left_z"),
+    @XmlEnumValue("stage_center_right_y")
+    stage_center_right_y("stage_center_right_y"),
+    @XmlEnumValue("stage_center_right_z")
+    stage_center_right_z("stage_center_right_z"),      
     /**
      *
      */
@@ -140,6 +148,7 @@ public enum RunParameterNames implements Serializable {
      */
     @XmlEnumValue("stage_map_cal")
     STAGE_MAP_CAL("stage_map_cal"),
+    
     /**
      *
      */

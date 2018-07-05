@@ -222,7 +222,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
         this.showTimeNormalized = false;
-        
+
         this.showPrimaryBeam = false;
         this.showQt1y = false;
         this.showQt1z = false;
@@ -259,7 +259,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         //Squid2.5 Framework: Part 4 means
         SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(perSpotConcentrations);
-        
+
         SortedSet<Expression> overCountMeansRefMaterials = overCountMeans();
         taskExpressionsOrdered.addAll(overCountMeansRefMaterials);
 
@@ -420,6 +420,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             changed = false;
         }
+    }
+
+    /**
+     * This method provides a skeleton of the ShrimpFractions to give additional info for mass audit graphs.
+     */
+    public void setupSquidSessionSkeleton() {
+
+        buildSquidSpeciesModelList();
+
+        squidSessionModel = new SquidSessionModel(
+                squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
+
+        try {
+            shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
