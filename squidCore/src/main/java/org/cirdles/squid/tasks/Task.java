@@ -1461,6 +1461,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
     }
 
+    /**
+     * @return the filterForRefMatSpotNames
+     */
+    public String getFilterForRefMatSpotNames() {
+        return filterForRefMatSpotNames;
+    }
+
     @Override
     /**
      *

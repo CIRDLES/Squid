@@ -59,13 +59,13 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
@@ -151,6 +151,8 @@ public class SquidUIController implements Initializable {
     private Menu openRecentExpressionFileMenu;
 
     private TopsoilWindow[] topsoilWindows;
+    @FXML
+    private Menu manageVisualizationsMenu;
 
     /**
      * Initializes the controller class.
@@ -173,6 +175,7 @@ public class SquidUIController implements Initializable {
         manageRatiosMenu.setDisable(true);
         manageExpressionsMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
+        manageVisualizationsMenu.setDisable(true);
 
         // Squid project menu items
         newSquidProjectMenuItem.setDisable(false);
@@ -283,6 +286,7 @@ public class SquidUIController implements Initializable {
             manageRatiosMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
             // log prawnFileFolderMRU
             squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
@@ -328,6 +332,8 @@ public class SquidUIController implements Initializable {
         manageRatiosMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
+        manageVisualizationsMenu.setDisable(true);
+        
 
         // logo
         mainPane.getChildren().get(0).setVisible(true);
@@ -560,6 +566,7 @@ public class SquidUIController implements Initializable {
             manageRatiosMenu.setDisable(false);
             manageExpressionsMenu.setDisable(false);
             manageReportsMenu.setDisable(false);
+            manageVisualizationsMenu.setDisable(false);
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
@@ -931,7 +938,7 @@ public class SquidUIController implements Initializable {
 //        AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Example Wetherill using CM2 data");
         AbstractTopsoilPlot topsoilPlot
                 = new TopsoilPlotWetherill(
-                        "Our first concordia",
+                        "Concordia of 4-corr reference material " + ((Task)squidProject.getTask()).getFilterForRefMatSpotNames(),
                         squidProject.getTask().getReferenceMaterialSpots());
 
         topsoilPlotUI = topsoilPlot.initializePlotPane();

@@ -28,9 +28,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
-import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
-import org.cirdles.squid.gui.topsoil.TopsoilDataFactory;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
+import static org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot.SigmaPresentationModes.ONE_SIGMA_ABSOLUTE;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.EXAMPLE_CM2_DATASET;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.topsoil.app.isotope.IsotopeType;
@@ -80,6 +79,8 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
         plot.setProperty(REGRESSION_LINE, false);
         plot.setProperty(REGRESSION_ENVELOPE, false);
+        
+        plot.setProperty(UNCERTAINTY, ONE_SIGMA_ABSOLUTE.getSigmaMultiplier());
     }
 
     @Override
