@@ -59,6 +59,7 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
 import org.cirdles.squid.projects.SquidProject;
@@ -771,7 +772,7 @@ public class SquidUIController implements Initializable {
                 launchTaskManager();
             }
         } catch (SquidException | IOException | JAXBException | SAXException iOException) {
-            
+
         }
     }
 
@@ -927,7 +928,11 @@ public class SquidUIController implements Initializable {
     private void topsoilAction(ActionEvent event) {
         mainPane.getChildren().remove(topsoilPlotUI);
 
-        AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Example Wetherill using CM2 data");
+//        AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Example Wetherill using CM2 data");
+        AbstractTopsoilPlot topsoilPlot
+                = new TopsoilPlotWetherill(
+                        "Our first concordia",
+                        squidProject.getTask().getReferenceMaterialSpots());
 
         topsoilPlotUI = topsoilPlot.initializePlotPane();
         topsoilPlotUI.setId("topsoilPlotUI");

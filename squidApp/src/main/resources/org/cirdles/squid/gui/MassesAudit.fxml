@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -19,10 +20,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1200.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
+<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1216.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
   <content>
-      <VBox>
+      <VBox prefHeight="798.0" prefWidth="1407.0">
          <children>
             <Accordion>
               <panes>
@@ -97,15 +97,28 @@
                 </TitledPane>
               </panes>
             </Accordion>
-            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="700.0">
-               <content>
-                  <VBox fx:id="scrolledBox" prefHeight="612.0" prefWidth="1179.0" styleClass="backgroundCalamari">
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </VBox>
-               </content>
-            </ScrollPane>
+            <SplitPane dividerPositions="0.18" prefHeight="774.0" prefWidth="1214.0">
+               <items>
+                  <ScrollPane fx:id="leftScrollPane" prefHeight="770.0">
+                     <content>
+                        <VBox fx:id="scrolledBoxLeft" onMouseEntered="#scrollBoxMouseEntered" prefHeight="770.0" prefWidth="230.0" styleClass="backgroundCalamari">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+                  <ScrollPane fx:id="rightScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="770.0" prefWidth="1089.0">
+                     <content>
+                        <VBox fx:id="scrolledBox" onMouseEntered="#scrollBoxMouseEntered" prefHeight="770.0" prefWidth="1092.0" styleClass="backgroundCalamari">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </items>
+            </SplitPane>
             <Pane prefHeight="0.0" prefWidth="1198.0" />
          </children>
       </VBox>

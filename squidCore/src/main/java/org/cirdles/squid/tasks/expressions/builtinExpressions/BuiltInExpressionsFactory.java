@@ -666,6 +666,8 @@ public abstract class BuiltInExpressionsFactory {
      * requires the index number of the last row of analytical data as an input,
      * so it can determine in which rows the "summary" results should be placed
      * so that the calculated biweights appear directly beneath the input data.
+     *
+     * @return
      */
     public static SortedSet<Expression> overCountMeans() {
         SortedSet<Expression> overCountMeansRefMaterials = new TreeSet<>();
@@ -717,6 +719,34 @@ public abstract class BuiltInExpressionsFactory {
 
         return overCountMeansRefMaterials;
 
+    }
+
+    public static SortedSet<Expression> stdRadiogenicCols() {
+        SortedSet<Expression> stdRadiogenicCols = new TreeSet<>();
+
+        Expression expression4corr206Pb238U = buildExpression("4-corr206Pb/238U",
+                "[\"4-corr206Pb/238Ucalibr.const\"] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", true, false, false);
+        stdRadiogenicCols.add(expression4corr206Pb238U);
+
+        Expression expression4corr206Pb238UPctErr = buildExpression("4-corr206Pb/238U %err",
+                "[\"4-corr206Pb/238Ucalibr.const %err\"]", true, false, false);
+        stdRadiogenicCols.add(expression4corr206Pb238UPctErr);
+
+        Expression expression4corr207Pb235U = buildExpression("4-corr207Pb/235U",
+                "[\"4-corr207Pb/206Pb\"] * [\"4-corr206Pb/238U\"] * r238_235s", true, false, false);
+        stdRadiogenicCols.add(expression4corr207Pb235U);
+
+        Expression expression4corr207Pb235UPctErr = buildExpression("4-corr207Pb/235U %err",
+                "sqrt( [\"4-corr206Pb/238U %err\"]^2 + [\"4-corr207Pb/206Pb%err\"]^2 )", true, false, false);
+        stdRadiogenicCols.add(expression4corr207Pb235UPctErr);
+        
+        Expression expression4correrrcorr = buildExpression("4-corr-errcorr",
+                "[\"4-corr206Pb/238U %err\"] / [\"4-corr207Pb/235U %err\"]", true, false, false);
+        stdRadiogenicCols.add(expression4correrrcorr);
+        
+        
+
+        return stdRadiogenicCols;
     }
 
     private static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc, boolean isSummaryCalc) {
