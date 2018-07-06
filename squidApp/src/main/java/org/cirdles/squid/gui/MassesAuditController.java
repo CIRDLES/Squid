@@ -116,7 +116,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     private List<AbstractDataView> graphs;
 
-    private static boolean synchedScrolls = false;
+    private static boolean synchedScrolls;
 
     /**
      * Initializes the controller class.
@@ -145,6 +145,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         graphs = new ArrayList<>();
 
         displayMassStationsForReview();
+        
+        synchedScrolls = false;
     }
 
     private void setupScrollBarSynch() {
@@ -583,20 +585,18 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
             produceGraphOnScrolledPane(
                     massCounter,
-                    "(" + A.getMassStationLabel() + " " + A.getIsotopeLabel()
-                    + ") - ("
-                    + B.getMassStationLabel() + " " + B.getIsotopeLabel()
-                    + ")",
+                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
+                    + " - "
+                    + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
                     deltas,
                     A,
                     scrolledBox);
 
             produceGraphOnScrolledPane(
                     massCounter,
-                    "(" + A.getMassStationLabel() + " " + A.getIsotopeLabel()
-                    + ") - ("
-                    + B.getMassStationLabel() + " " + B.getIsotopeLabel()
-                    + ")",
+                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
+                    + " - "
+                    + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
                     deltas,
                     A,
                     scrolledBoxLeft);

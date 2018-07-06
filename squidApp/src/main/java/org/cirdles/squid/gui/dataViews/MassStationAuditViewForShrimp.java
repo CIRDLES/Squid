@@ -92,7 +92,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             boolean showTimeNormalized,
             MassAuditRefreshInterface massAuditRefreshInterface) {
 
-        super(bounds, 250, 0);
+        super(bounds, 265, 0);
         this.plotTitle = plotTitle;
         this.measuredTrimMasses = measuredTrimMasses;
         this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;

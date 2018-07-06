@@ -97,7 +97,7 @@
                 </TitledPane>
               </panes>
             </Accordion>
-            <SplitPane dividerPositions="0.18" prefHeight="774.0" prefWidth="1214.0">
+            <SplitPane dividerPositions="0.23" prefHeight="774.0" prefWidth="1214.0">
                <items>
                   <ScrollPane fx:id="leftScrollPane" prefHeight="770.0">
                      <content>
