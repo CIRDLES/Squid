@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -76,6 +77,10 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated;
     private Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
 
+    // SimpleBooleanProperty does not serialize
+    private transient SimpleBooleanProperty selectedProperty;
+    private boolean selected;
+
     /**
      *
      */
@@ -111,6 +116,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         taskExpressionsForScansEvaluated = new ArrayList<>();
 
         taskExpressionsEvaluationsPerSpot = new HashMap<>();
+
+        this.selectedProperty = new SimpleBooleanProperty(true);
+        this.selected = true;
 
     }
 
@@ -663,7 +671,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName) {
-        double[][] values = new double[][]{{0.0,0.0}};
+        double[][] values = new double[][]{{0.0, 0.0}};
 
         for (Map.Entry<ExpressionTreeInterface, double[][]> entry : taskExpressionsEvaluationsPerSpot.entrySet()) {
             if (entry.getKey().getName().compareTo(fieldName) == 0) {
@@ -684,13 +692,47 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public double[][] getIsotopicRatioValuesByStringName(String name) {
         double[][] ratioAndUnct = new double[][]{{0.0, 0.0}};
-        
+
         SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
         if (ratio != null) {
             ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
         }
 
         return ratioAndUnct;
+    }
+
+    /**
+     * @return the selectedProperty
+     */
+    @Override
+    public boolean isSelected() {
+        return selected;//Property.get();
+    }
+
+    /**
+     * @param selected the selectedProperty to set
+     */
+    @Override
+    public void setSelected(boolean selected) {
+        this.selectedProperty.set(selected);
+        this.selected = selected;
+    }
+
+    @Override
+    public SimpleBooleanProperty selectedProperty() {
+        // transient field
+        if (this.selectedProperty == null) {
+            this.selectedProperty = new SimpleBooleanProperty(this.selected);
+        }
+        return selectedProperty;
+    }
+
+    /**
+     * @param selectedProperty the selectedProperty to set
+     */
+    @Override
+    public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
+        this.selectedProperty = selectedProperty;
     }
 
 }

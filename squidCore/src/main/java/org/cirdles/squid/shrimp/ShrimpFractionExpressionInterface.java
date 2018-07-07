@@ -17,6 +17,7 @@ package org.cirdles.squid.shrimp;
 
 import java.util.List;
 import java.util.Map;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -168,4 +169,22 @@ public interface ShrimpFractionExpressionInterface {
      * @return the qtlZ
      */
     public int getQtlZ();
+
+    /**
+     * @return the selected
+     */
+    public boolean isSelected();
+
+    /**
+     * @param selected the selected to set
+     */
+    public void setSelected(boolean selected);
+    
+    public SimpleBooleanProperty selectedProperty();
+    
+    /**
+     * @param selectedProperty the selectedProperty to set
+     */
+    public void setSelectedProperty(SimpleBooleanProperty selectedProperty);
+    
 }

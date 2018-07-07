@@ -133,7 +133,7 @@ public class SquidUIController implements Initializable {
 
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
-    private static Pane topsoilPlotUI;
+    private static SplitPane topsoilPlotUI;
 
     @FXML
     private MenuItem newSquid3TaskMenuItem;

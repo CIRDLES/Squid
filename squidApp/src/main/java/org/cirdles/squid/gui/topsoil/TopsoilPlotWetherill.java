@@ -25,6 +25,7 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
@@ -84,9 +85,9 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
     }
 
     @Override
-    public Pane initializePlotPane() {
+    public SplitPane initializePlotPane() {
         org.cirdles.squid.gui.topsoil.TopsoilPlotController.topsoilPlot = this;
-        Pane topsoilPlotUI = null;
+        SplitPane topsoilPlotUI = null;
         try {
             topsoilPlotUI = FXMLLoader.load(getClass().getResource("TopsoilPlot.fxml"));
         } catch (IOException iOException) {
