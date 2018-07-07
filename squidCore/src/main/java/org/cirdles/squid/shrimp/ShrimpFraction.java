@@ -77,8 +77,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated;
     private Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
 
-    // SimpleBooleanProperty does not serialize
-    private transient SimpleBooleanProperty selectedProperty;
     private boolean selected;
 
     /**
@@ -117,7 +115,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
         taskExpressionsEvaluationsPerSpot = new HashMap<>();
 
-        this.selectedProperty = new SimpleBooleanProperty(true);
         this.selected = true;
 
     }
@@ -706,7 +703,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public boolean isSelected() {
-        return selected;//Property.get();
+        return selected;
     }
 
     /**
@@ -714,25 +711,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setSelected(boolean selected) {
-        this.selectedProperty.set(selected);
         this.selected = selected;
     }
-
-    @Override
-    public SimpleBooleanProperty selectedProperty() {
-        // transient field
-        if (this.selectedProperty == null) {
-            this.selectedProperty = new SimpleBooleanProperty(this.selected);
-        }
-        return selectedProperty;
-    }
-
-    /**
-     * @param selectedProperty the selectedProperty to set
-     */
-    @Override
-    public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
-        this.selectedProperty = selectedProperty;
-    }
-
 }

@@ -180,11 +180,4 @@ public interface ShrimpFractionExpressionInterface {
      */
     public void setSelected(boolean selected);
     
-    public SimpleBooleanProperty selectedProperty();
-    
-    /**
-     * @param selectedProperty the selectedProperty to set
-     */
-    public void setSelectedProperty(SimpleBooleanProperty selectedProperty);
-    
 }

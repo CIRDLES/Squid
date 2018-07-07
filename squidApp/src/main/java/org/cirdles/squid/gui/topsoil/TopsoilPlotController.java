@@ -16,11 +16,11 @@
 package org.cirdles.squid.gui.topsoil;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -33,9 +33,9 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.topsoil.plot.JavaScriptPlot;
 
@@ -64,9 +64,11 @@ public class TopsoilPlotController implements Initializable {
     @FXML
     private ToolBar plotToolBar;
     @FXML
-    private ListView<ShrimpFractionExpressionInterface> fractionsListView;
+    private ListView<FractionNode> fractionsListView;
 
-    private static ObservableList<ShrimpFractionExpressionInterface> shrimpFractions;
+    private static ObservableList<FractionNode> fractionNodes;
+    
+    private static List<Map<String, Object>> data;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -87,32 +89,39 @@ public class TopsoilPlotController implements Initializable {
 
             List<ShrimpFractionExpressionInterface> shrimpFractionsDetails
                     = squidProject.getTask().getReferenceMaterialSpots();
-            shrimpFractions = FXCollections.observableArrayList(shrimpFractionsDetails);
-
-            for (ShrimpFractionExpressionInterface fraction : shrimpFractions) {
-                // observe item's on property and display message if it changes:
-                fraction.selectedProperty().addListener((obs, wasSelectedState, isSelectedState) -> {
-                    fraction.setSelected(isSelectedState);
-                    
-                    List<Map<String, Object>> data = topsoilPlot.getPlot().getData();
-                    data.get(0).put("Selected", fraction.isSelected());
+            List<FractionNode> fractionNodeDetails = new ArrayList<>();
+            data = new ArrayList<>();
+            
+            for (int i = 0; i < shrimpFractionsDetails.size(); i ++){
+                FractionNode fractionNode = 
+                        new FractionNode(shrimpFractionsDetails.get(i));
+                fractionNodeDetails.add(fractionNode);
+                data.add(fractionNode.getDatum());
+            }
+            fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
+            topsoilPlot.getPlot().setData(data);
+            
+            for (FractionNode fraction : fractionNodes) {
+                fraction.getSelectedProperty().addListener((obs, wasSelectedState, isSelectedState) -> {
+                    fraction.getShrimpFraction().setSelected(isSelectedState);
+                    fraction.getDatum().put("Selected", isSelectedState);
                     topsoilPlot.getPlot().setData(data);
-                    System.out.println(fraction.getFractionID() + " changed on state from " + wasSelectedState + " to " + isSelectedState);
+                    System.out.println(fraction.getShrimpFraction().getFractionID() + " changed on state from " + wasSelectedState + " to " + isSelectedState);
                 });
             }
 
-            fractionsListView.setItems(shrimpFractions);
+            fractionsListView.setItems(fractionNodes);
             fractionsListView.setCellFactory(CheckBoxListCell.forListView(
-                    item -> item.selectedProperty(),
-                    new StringConverter<ShrimpFractionExpressionInterface>() {
+                    item -> item.getSelectedProperty(),
+                    new StringConverter<FractionNode>() {
 
                 @Override
-                public String toString(ShrimpFractionExpressionInterface fraction) {
-                    return fraction.getFractionID() + "jj";
+                public String toString(FractionNode fraction) {
+                    return fraction.getShrimpFraction().getFractionID() + "jj";
                 }
 
                 @Override
-                public ShrimpFractionExpressionInterface fromString(String string) {
+                public FractionNode fromString(String string) {
                     throw new UnsupportedOperationException("Not supported yet.");
                 }
 
@@ -125,10 +134,10 @@ public class TopsoilPlotController implements Initializable {
         private Map<String, Object> datum;
         private SimpleBooleanProperty selectedProperty;
 
-        public FractionNode(ShrimpFractionExpressionInterface shrimpFraction, Map<String, Object> datum, SimpleBooleanProperty selectedProperty) {
+        public FractionNode(ShrimpFractionExpressionInterface shrimpFraction) {
             this.shrimpFraction = shrimpFraction;
-            this.datum = datum;
-            this.selectedProperty = selectedProperty;
+            this.datum = prepareWetherillDatum(shrimpFraction);
+            this.selectedProperty =  new SimpleBooleanProperty(shrimpFraction.isSelected());
         }
 
         /**
@@ -139,24 +148,10 @@ public class TopsoilPlotController implements Initializable {
         }
 
         /**
-         * @param shrimpFraction the shrimpFraction to set
-         */
-        public void setShrimpFraction(ShrimpFractionExpressionInterface shrimpFraction) {
-            this.shrimpFraction = shrimpFraction;
-        }
-
-        /**
          * @return the datum
          */
         public Map<String, Object> getDatum() {
             return datum;
-        }
-
-        /**
-         * @param datum the datum to set
-         */
-        public void setDatum(Map<String, Object> datum) {
-            this.datum = datum;
         }
 
         /**
