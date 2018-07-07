@@ -106,7 +106,6 @@ public class TopsoilPlotController implements Initializable {
                     fraction.getShrimpFraction().setSelected(isSelectedState);
                     fraction.getDatum().put("Selected", isSelectedState);
                     topsoilPlot.getPlot().setData(data);
-                    System.out.println(fraction.getShrimpFraction().getFractionID() + " changed on state from " + wasSelectedState + " to " + isSelectedState);
                 });
             }
 
@@ -117,7 +116,7 @@ public class TopsoilPlotController implements Initializable {
 
                 @Override
                 public String toString(FractionNode fraction) {
-                    return fraction.getShrimpFraction().getFractionID() + "jj";
+                    return fraction.getShrimpFraction().getFractionID();
                 }
 
                 @Override

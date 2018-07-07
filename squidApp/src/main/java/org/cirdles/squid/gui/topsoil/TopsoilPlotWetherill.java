@@ -61,7 +61,6 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
     public TopsoilPlotWetherill(String title, List<ShrimpFractionExpressionInterface> shrimpFractions) {
         plot = IsotopeType.UPb.getPlots()[0].getPlot();
-        plot.setData(TopsoilDataFactory.prepareWetherillData(shrimpFractions));
         setupPlot(title);
     }
 
