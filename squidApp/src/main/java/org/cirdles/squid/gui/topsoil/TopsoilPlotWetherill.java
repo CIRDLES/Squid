@@ -16,9 +16,7 @@
 package org.cirdles.squid.gui.topsoil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,7 +29,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot.SigmaPresentationModes.ONE_SIGMA_ABSOLUTE;
+import static org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot.SigmaPresentationModes.TWO_SIGMA_ABSOLUTE;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.EXAMPLE_CM2_DATASET;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.topsoil.app.isotope.IsotopeType;
@@ -64,9 +62,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         setupPlot(title);
     }
 
-    private void setupPlot(String title) {
-
-        
+    private void setupPlot(String title) {     
         plot.setProperties(new BasePlotDefaultProperties());
 
         plot.setProperty(ISOTOPE_TYPE, IsotopeType.UPb.getName());
@@ -81,7 +77,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         plot.setProperty(REGRESSION_LINE, false);
         plot.setProperty(REGRESSION_ENVELOPE, false);
         
-        plot.setProperty(UNCERTAINTY, ONE_SIGMA_ABSOLUTE.getSigmaMultiplier());
+        plot.setProperty(UNCERTAINTY, TWO_SIGMA_ABSOLUTE.getSigmaMultiplier());
     }
 
     @Override
@@ -107,7 +103,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         });
 
         ChoiceBox<SigmaPresentationModes> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(SigmaPresentationModes.values()));
-        uncertaintyChoiceBox.setValue(SigmaPresentationModes.ONE_SIGMA_ABSOLUTE);
+        uncertaintyChoiceBox.setValue(SigmaPresentationModes.TWO_SIGMA_ABSOLUTE);
         uncertaintyChoiceBox.setConverter(new StringConverter<SigmaPresentationModes>() {
             @Override
             public String toString(SigmaPresentationModes object) {
@@ -140,12 +136,6 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
             plot.setProperty(CONCORDIA_LINE, concordiaLineCheckBox.isSelected());
         });
 
-        CheckBox allSelectedCheckBox = new CheckBox("Select All");
-        allSelectedCheckBox.setSelected(true);
-        allSelectedCheckBox.setOnAction(mouseEvent -> {
-            setSelectedAllData(allSelectedCheckBox.isSelected());
-        });
-
         CheckBox regressionUnctEnvelopeCheckBox = new CheckBox("2D Regression Unct");
         regressionUnctEnvelopeCheckBox.setSelected(false);
         regressionUnctEnvelopeCheckBox.setOnAction(mouseEvent -> {
@@ -164,7 +154,6 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         controls.add(ellipsesCheckBox);
         controls.add(uncertaintyChoiceBox);
         controls.add(ellipsesColorPicker);
-        controls.add(allSelectedCheckBox);
         controls.add(concordiaLineCheckBox);
         controls.add(regressionCheckBox);
         controls.add(regressionUnctEnvelopeCheckBox);

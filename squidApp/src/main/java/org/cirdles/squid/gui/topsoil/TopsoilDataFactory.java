@@ -94,14 +94,14 @@ public class TopsoilDataFactory {
             double r207_235_1Sigmabs
                     = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr207Pb/235U %err"}))[0].clone()[0]
                     * r207_235 / 100.0;
-            datum.put(SIGMA_X.getName(), r207_235_1Sigmabs);
+            datum.put(SIGMA_X.getName(), 2.0 * r207_235_1Sigmabs);
 
             double r206_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr206Pb/238U"}))[0].clone()[0];
             datum.put(Y.getName(), r206_235);
             double r206_235_1Sigmabs
                     = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr206Pb/238U %err"}))[0].clone()[0]
                     * r206_235 / 100.0;
-            datum.put(SIGMA_Y.getName(), r206_235_1Sigmabs);
+            datum.put(SIGMA_Y.getName(), 2.0 * r206_235_1Sigmabs);
 
             double rho = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr-errcorr"}))[0].clone()[0];
             datum.put(RHO.getName(), rho);

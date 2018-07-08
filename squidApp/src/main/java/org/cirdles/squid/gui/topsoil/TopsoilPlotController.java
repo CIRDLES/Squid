@@ -27,9 +27,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
+import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.ToolBar;
-import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -37,6 +39,7 @@ import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.topsoil.plot.JavaScriptPlot;
 
 /**
@@ -64,10 +67,9 @@ public class TopsoilPlotController implements Initializable {
     @FXML
     private ToolBar plotToolBar;
     @FXML
-    private ListView<FractionNode> fractionsListView;
+    private TreeView<SampleTreeNodeInterface> fractionsTreeView1;
 
     private static ObservableList<FractionNode> fractionNodes;
-    
     private static List<Map<String, Object>> data;
 
     @Override
@@ -91,52 +93,106 @@ public class TopsoilPlotController implements Initializable {
                     = squidProject.getTask().getReferenceMaterialSpots();
             List<FractionNode> fractionNodeDetails = new ArrayList<>();
             data = new ArrayList<>();
-            
-            for (int i = 0; i < shrimpFractionsDetails.size(); i ++){
-                FractionNode fractionNode = 
-                        new FractionNode(shrimpFractionsDetails.get(i));
+
+            for (int i = 0; i < shrimpFractionsDetails.size(); i++) {
+                FractionNode fractionNode
+                        = new FractionNode(shrimpFractionsDetails.get(i));
                 fractionNodeDetails.add(fractionNode);
                 data.add(fractionNode.getDatum());
             }
             fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
             topsoilPlot.getPlot().setData(data);
-            
-            for (FractionNode fraction : fractionNodes) {
-                fraction.getSelectedProperty().addListener((obs, wasSelectedState, isSelectedState) -> {
-                    fraction.getShrimpFraction().setSelected(isSelectedState);
-                    fraction.getDatum().put("Selected", isSelectedState);
+
+//            for (FractionNode fraction : fractionNodeDetails) {
+//                fraction.getSelectedProperty().addListener((obs, wasSelectedState, isSelectedState) -> {
+//                    fraction.getShrimpFraction().setSelected(isSelectedState);
+//                    fraction.getDatum().put("Selected", isSelectedState);
+//                    topsoilPlot.getPlot().setData(data);
+//                });
+//            }
+//
+//            fractionsListView.setItems(fractionNodes);
+//            fractionsListView.setCellFactory(CheckBoxListCell.forListView(
+//                    item -> item.getSelectedProperty(),
+//                    new StringConverter<FractionNode>() {
+//
+//                @Override
+//                public String toString(FractionNode fraction) {
+//                    return fraction.getShrimpFraction().getFractionID();
+//                }
+//
+//                @Override
+//                public FractionNode fromString(String string) {
+//                    throw new UnsupportedOperationException("Not supported yet.");
+//                }
+//
+//            }));
+            CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
+                    = new CheckBoxTreeItem<>(new SampleNode(((Task)squidProject.getTask()).getFilterForRefMatSpotNames()));
+            rootItem.setExpanded(true);
+
+            fractionsTreeView1.setCellFactory(p -> new CheckBoxTreeCell<>(
+                    (TreeItem<SampleTreeNodeInterface> item) -> ((FractionNode) item.getValue()).getSelectedProperty(),
+                    new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
+
+                @Override
+                public String toString(TreeItem<SampleTreeNodeInterface> object) {
+                    SampleTreeNodeInterface item = object.getValue();
+                    return item.getNodeName();
+                }
+
+                @Override
+                public TreeItem<SampleTreeNodeInterface> fromString(String string) {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+            }));
+
+            for (int i = 0; i < fractionNodes.size(); i++) {
+                final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
+                        = new CheckBoxTreeItem<>(fractionNodes.get(i));
+                rootItem.getChildren().add(checkBoxTreeItem);
+                checkBoxTreeItem.setSelected(fractionNodes.get(i).getShrimpFraction().isSelected());
+                checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    ((FractionNode) checkBoxTreeItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
                     topsoilPlot.getPlot().setData(data);
                 });
             }
+            fractionsTreeView1.setRoot(rootItem);
+            fractionsTreeView1.setShowRoot(true);
+        } // end topsoil check
 
-            fractionsListView.setItems(fractionNodes);
-            fractionsListView.setCellFactory(CheckBoxListCell.forListView(
-                    item -> item.getSelectedProperty(),
-                    new StringConverter<FractionNode>() {
+    }
 
-                @Override
-                public String toString(FractionNode fraction) {
-                    return fraction.getShrimpFraction().getFractionID();
-                }
+    private interface SampleTreeNodeInterface {
 
-                @Override
-                public FractionNode fromString(String string) {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
+        public String getNodeName();
+    }
 
-            }));
+    private class SampleNode implements SampleTreeNodeInterface {
+
+        private String sampleName;
+
+        public SampleNode(String sampleName) {
+            this.sampleName = sampleName;
+        }
+
+        @Override
+        public String getNodeName() {
+            return sampleName;
         }
     }
-    
-    private class FractionNode{
+
+    private class FractionNode implements SampleTreeNodeInterface {
+
         private ShrimpFractionExpressionInterface shrimpFraction;
         private Map<String, Object> datum;
         private SimpleBooleanProperty selectedProperty;
 
         public FractionNode(ShrimpFractionExpressionInterface shrimpFraction) {
             this.shrimpFraction = shrimpFraction;
+            this.selectedProperty = new SimpleBooleanProperty(shrimpFraction.isSelected());
             this.datum = prepareWetherillDatum(shrimpFraction);
-            this.selectedProperty =  new SimpleBooleanProperty(shrimpFraction.isSelected());
+            this.datum.put("Selected", shrimpFraction.isSelected());
         }
 
         /**
@@ -165,7 +221,14 @@ public class TopsoilPlotController implements Initializable {
          */
         public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
             this.selectedProperty = selectedProperty;
+            this.shrimpFraction.setSelected(selectedProperty.getValue());
+            this.datum.put("Selected", selectedProperty.getValue());
         }
-        
+
+        @Override
+        public String getNodeName() {
+            return shrimpFraction.getFractionID();
+        }
+
     }
 }
