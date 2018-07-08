@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -61,6 +62,7 @@ public final class SquidProject implements Serializable {
     private String filterForConcRefMatSpotNames;
     private double sessionDurationHours;
     private TaskInterface task;
+    private BitSet changedProperties;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -72,6 +74,8 @@ public final class SquidProject implements Serializable {
         this.filterForConcRefMatSpotNames = "";
 
         this.sessionDurationHours = 0.0;
+        
+        this.changedProperties = new BitSet(24);
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
     }
@@ -188,9 +192,8 @@ public final class SquidProject implements Serializable {
         prawnXMLFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
-        task.setPrawnFile(prawnFile);
-        task.buildSquidSpeciesModelList();
-
+        task.setPrawnFile(prawnFile);   
+        ((Task)task).setupSquidSessionSkeleton();
     }
 
     public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
@@ -359,7 +362,7 @@ public final class SquidProject implements Serializable {
         int indexOfRun = prawnFile.getRun().indexOf(run);
 
         List<Run> runs = prawnFile.getRun();
-        List<Run> runsCopy = new ArrayList<>();
+        List<Run> runsCopy;
 
         if (useOriginalData) {
             PrawnFile prawnFileOriginal = null;

@@ -17,6 +17,7 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -41,7 +42,7 @@ public class And extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Conjuction"}};
-        labelsForInputValues = new String[]{"condition1","condition2"};
+        labelsForInputValues = new String[]{"condition1", "condition2"};
     }
 
     /**
@@ -58,8 +59,9 @@ public class And extends Function {
 
         boolean retVal;
         try {
-            retVal = (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0]) && (convertObjectArrayToBooleans(childrenET.get(1).eval(shrimpFractions, task)[0])[0]);
-        } catch (Exception e) {
+            retVal = (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0])
+                    && (convertObjectArrayToBooleans(childrenET.get(1).eval(shrimpFractions, task)[0])[0]);
+        } catch (SquidException squidException) {
             retVal = false;
         }
 
@@ -73,18 +75,17 @@ public class And extends Function {
      */
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        String retVal
-                = "<mrow>"
-                + "<mi>and</mi>"
-                + "<mfenced>";
-
+        StringBuilder retVal = new StringBuilder();
+        retVal.append("<mrow>");
+        retVal.append("<mi>").append(name).append("</mi>");
+        retVal.append("<mfenced>");
         for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
+            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
         }
 
-        retVal += "</mfenced></mrow>\n";
+        retVal.append("</mfenced></mrow>\n");
 
-        return retVal;
+        return retVal.toString();
     }
 
 }

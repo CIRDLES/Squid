@@ -69,17 +69,17 @@ public abstract class Function
      *
      */
     protected String[][] labelsForOutputValues = new String[][]{{}};
-    
+
     /**
      *
      */
     protected String[] labelsForInputValues = new String[]{};
-    
+
     /**
      *
      */
     public static final Map<String, String> FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    
+
     public static final Map<String, String> MATH_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final Map<String, String> SQUID_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final Map<String, String> LOGIC_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -87,6 +87,7 @@ public abstract class Function
     static {
 
         SQUID_FUNCTIONS_MAP.put("agePb76", "agePb76");
+        SQUID_FUNCTIONS_MAP.put("agePb76exp", "agePb76exp");
         SQUID_FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
         SQUID_FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
         SQUID_FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
@@ -104,7 +105,7 @@ public abstract class Function
         LOGIC_FUNCTIONS_MAP.put("and", "and");
         LOGIC_FUNCTIONS_MAP.put("if", "sqIf");
         LOGIC_FUNCTIONS_MAP.put("sqIf", "sqIf");
-        
+
         MATH_FUNCTIONS_MAP.put("exp", "exp");
         MATH_FUNCTIONS_MAP.put("sqrt", "sqrt");
         MATH_FUNCTIONS_MAP.put("ln", "ln");
@@ -177,6 +178,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface agePb76() {
         return new AgePb76();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface agePb76exp() {
+        return new AgePb76exp();
     }
 
     /**

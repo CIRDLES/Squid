@@ -69,7 +69,7 @@ public final class PrawnFileUtilities {
             String massStationLabel = entry.getPar().get(0).getValue();
             double atomicMassUnit = Double.parseDouble(entry.getPar().get(1).getValue());
             double centeringTimeSec = Double.parseDouble(entry.getPar().get(7).getValue());
-            String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(0, RoundingMode.HALF_UP).toPlainString();
+            String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(5, RoundingMode.HALF_UP).toPlainString();
             String elementLabel = massStationLabel.replace(isotopeLabel, "");
 
             boolean isBackground = massStationLabel.toUpperCase(Locale.US).contains("KG");

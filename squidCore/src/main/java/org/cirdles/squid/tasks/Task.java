@@ -75,6 +75,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.overCountMeans;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
 import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 
 /**
@@ -221,7 +223,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
         this.showTimeNormalized = false;
-        
+
         this.showPrimaryBeam = false;
         this.showQt1y = false;
         this.showQt1z = false;
@@ -258,6 +260,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         //Squid2.5 Framework: Part 4 means
         SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(perSpotConcentrations);
+
+        SortedSet<Expression> overCountMeansRefMaterials = overCountMeans();
+        taskExpressionsOrdered.addAll(overCountMeansRefMaterials);
+        
+        SortedSet<Expression> stdRadiogenicCols = stdRadiogenicCols();
+        taskExpressionsOrdered.addAll(stdRadiogenicCols);
 
         Collections.sort(taskExpressionsOrdered);
     }
@@ -416,6 +424,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             changed = false;
         }
+    }
+
+    /**
+     * This method provides a skeleton of the ShrimpFractions to give additional info for mass audit graphs.
+     */
+    public void setupSquidSessionSkeleton() {
+
+        buildSquidSpeciesModelList();
+
+        squidSessionModel = new SquidSessionModel(
+                squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
+
+        try {
+            shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
@@ -1331,7 +1356,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         return exp;
     }
-
+    
     /**
      * @return the name
      */
@@ -1434,6 +1459,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+    }
+
+    /**
+     * @return the filterForRefMatSpotNames
+     */
+    public String getFilterForRefMatSpotNames() {
+        return filterForRefMatSpotNames;
     }
 
     @Override

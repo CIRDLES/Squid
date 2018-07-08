@@ -112,30 +112,17 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> generatePpmUandPpmTh(String parentNuclide, boolean isDirectAltPD) {
         SortedSet<Expression> concentrationExpressionsOrdered = new TreeSet<>();
 
+        // ppmU calcs belong to both cases of isDirectAltPD
+        Expression expressionPpmU = buildExpression(SQUID_PPM_PARENT_EQN_NAME_U,
+                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * Std_ppmU", true, true, false);
+        concentrationExpressionsOrdered.add(expressionPpmU);
+
         if (!isDirectAltPD) {
             // TODO: promote this and tie to physical constants model
             // handles SecondaryParentPpmFromThU
-            String uConstant = "((238/232) * r238_235s / (r238_235s - 1.0))";
-
-            String ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
-            String ppmEquation = "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * Std_ppmU";
-
-            String ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
-            String ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant;
-
-            if (parentNuclide.contains("232")) {
-                ppmEqnName = SQUID_PPM_PARENT_EQN_NAME_TH;
-
-                ppmOtherEqnName = SQUID_PPM_PARENT_EQN_NAME_U;
-                ppmOtherEqn = "[\"" + SQUID_PPM_PARENT_EQN_NAME_TH + "\"] / [\"" + SQUID_TH_U_EQN_NAME + "\"] * " + uConstant;
-            }
-
-            Expression expressionPpmU = buildExpression(ppmEqnName,
-                    ppmEquation, true, true, false);
-            concentrationExpressionsOrdered.add(expressionPpmU);
-
-            Expression expressionPpmTh = buildExpression(ppmOtherEqnName,
-                    ppmOtherEqn, true, true, false);
+            String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
+            Expression expressionPpmTh = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
+                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant, true, true, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
 
             if (!parentNuclide.contains("232")) {
@@ -147,6 +134,13 @@ public abstract class BuiltInExpressionsFactory {
 
         } else {
             // directlAltPD is true
+            // this code for ppmTh comes from SQ2.50 Procedral Framework: Part 5
+            // see: https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-5
+
+            Expression expressionPpmTh = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
+                    "[\"232Th/238U\"] * [\"ppmU\"] * 0.9678", true, true, false);
+            concentrationExpressionsOrdered.add(expressionPpmTh);
+
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsU());
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsTh());
             // for unknown samples
@@ -657,6 +651,104 @@ public abstract class BuiltInExpressionsFactory {
         return meansAndAgesForRefMaterials;
     }
 
+    /**
+     * This subroutine (which is solely for the Standard) does a bit more than
+     * the name implies. Firstly it places, row-by-row, formulae to calculate
+     * the 204-corrected 207Pb/206Pb ratio and its 1sigma percentage
+     * uncertainty, as well as invoking (row-by-row) the relevant LudwigLibrary
+     * functions to calculate the associated 204-corrected 207Pb/206Pb date and
+     * its 1sigma absolute uncertainty.
+     *
+     * Secondly, it identifies which columns can usefully have robust means
+     * calculated, performs those calculations (using LudwigLibrary function
+     * TukeysBiweight, with tuning 9) and places the output of the expression as
+     * a 3 x 1 array beneath the relevant column. The SQUID 2.50 subroutine
+     * requires the index number of the last row of analytical data as an input,
+     * so it can determine in which rows the "summary" results should be placed
+     * so that the calculated biweights appear directly beneath the input data.
+     *
+     * @return
+     */
+    public static SortedSet<Expression> overCountMeans() {
+        SortedSet<Expression> overCountMeansRefMaterials = new TreeSet<>();
+
+        Expression expression4corr207Pb206Pb = buildExpression("4-corr207Pb/206Pb",
+                "([\"207/206\"]/[\"204/206\"]-sComm_74 )/(1/[\"204/206\"]-sComm_64)", true, false, false);
+        overCountMeansRefMaterials.add(expression4corr207Pb206Pb);
+
+        String term1 = "(([\"207/206\"]*[%\"207/206\"])^2 \n"
+                + "+ ([\"204/206\"]*([\"4-corr207Pb/206Pb\"] * sComm_64 - sComm_74) \n "
+                + "* [%\"204/206\"])^2)";
+
+        String term2 = "([\"207/206\"] - [\"204/206\"] * sComm_74)^2";
+
+        Expression expression4corr207Pb206PbPCTerr = buildExpression("4-corr207Pb/206Pb%err",
+                "sqrt(" + term1 + "/" + term2 + ")", true, false, false);
+        overCountMeansRefMaterials.add(expression4corr207Pb206PbPCTerr);
+
+        Expression expression4corr207Pb206PbAge = buildExpression("4-corr207Pb/206Pbage",
+                "AgePb76exp( [\"4-corr207Pb/206Pb\"],"
+                + "([\"4-corr207Pb/206Pb\"] * [\"4-corr207Pb/206Pb%err\"] / 100 ))", true, false, false);
+        overCountMeansRefMaterials.add(expression4corr207Pb206PbAge);
+
+        // The second part of the subroutine calculates the various biweight means
+        Expression expressionPb204OverCts7corr = buildExpression("Pb204OverCts7corr",
+                "sqBiweight([\"204 overcts/sec (fr. 207)\"], 9)", true, false, true);
+        expressionPb204OverCts7corr.setNotes("Robust avg 204 overcts assuming 206Pb/238U-207Pb/235U age concordance");
+        overCountMeansRefMaterials.add(expressionPb204OverCts7corr);
+
+        Expression expressionPb204OverCts8corr = buildExpression("Pb204OverCts8corr",
+                "sqBiweight([\"204 overcts/sec (fr. 208)\"], 9)", true, false, true);
+        expressionPb204OverCts8corr.setNotes("Robust avg 204 overcts assuming 206Pb/238U-208Pb/232Th age concordance");
+        overCountMeansRefMaterials.add(expressionPb204OverCts8corr);
+
+        Expression expressionOverCtsDeltaP7corr = buildExpression("OverCtsDeltaP7corr",
+                "sqBiweight([\"7-corrPrimary calib const. delta%\"], 9)", true, false, true);
+        expressionOverCtsDeltaP7corr.setNotes("Robust avg of diff. between 207-corr. and 204-corr. calibr. const.");
+        overCountMeansRefMaterials.add(expressionOverCtsDeltaP7corr);
+
+        Expression expressionOverCtsDeltaP8corr = buildExpression("OverCtsDeltaP8corr",
+                "sqBiweight([\"8-corrPrimary calib const. delta%\"], 9)", true, false, true);
+        expressionOverCtsDeltaP8corr.setNotes("Robust avg of diff. between 208-corr. and 204-corr. calibr. const.");
+        overCountMeansRefMaterials.add(expressionOverCtsDeltaP8corr);
+
+        Expression expressionOverCts4corr207Pb206Pbagecorr = buildExpression("OverCts4-corr207Pb/206Pbagecorr",
+                "sqBiweight([\"4-corr207Pb/206Pbage\"], 9)", true, false, true);
+        expressionOverCts4corr207Pb206Pbagecorr.setNotes("Robust average of 204-corrected 207/206 age");
+        overCountMeansRefMaterials.add(expressionOverCts4corr207Pb206Pbagecorr);
+
+        return overCountMeansRefMaterials;
+
+    }
+
+    public static SortedSet<Expression> stdRadiogenicCols() {
+        SortedSet<Expression> stdRadiogenicCols = new TreeSet<>();
+
+        Expression expression4corr206Pb238U = buildExpression("4-corr206Pb/238U",
+                "[\"4-corr206Pb/238Ucalibr.const\"] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", true, false, false);
+        stdRadiogenicCols.add(expression4corr206Pb238U);
+
+        Expression expression4corr206Pb238UPctErr = buildExpression("4-corr206Pb/238U %err",
+                "[\"4-corr206Pb/238Ucalibr.const %err\"]", true, false, false);
+        stdRadiogenicCols.add(expression4corr206Pb238UPctErr);
+
+        Expression expression4corr207Pb235U = buildExpression("4-corr207Pb/235U",
+                "[\"4-corr207Pb/206Pb\"] * [\"4-corr206Pb/238U\"] * r238_235s", true, false, false);
+        stdRadiogenicCols.add(expression4corr207Pb235U);
+
+        Expression expression4corr207Pb235UPctErr = buildExpression("4-corr207Pb/235U %err",
+                "sqrt( [\"4-corr206Pb/238U %err\"]^2 + [\"4-corr207Pb/206Pb%err\"]^2 )", true, false, false);
+        stdRadiogenicCols.add(expression4corr207Pb235UPctErr);
+        
+        Expression expression4correrrcorr = buildExpression("4-corr-errcorr",
+                "[\"4-corr206Pb/238U %err\"] / [\"4-corr207Pb/235U %err\"]", true, false, false);
+        stdRadiogenicCols.add(expression4correrrcorr);
+        
+        
+
+        return stdRadiogenicCols;
+    }
+
     private static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc, boolean isSummaryCalc) {
         Expression expression = new Expression(name, excelExpression);
         expression.setSquidSwitchNU(false);
@@ -669,7 +761,6 @@ public abstract class BuiltInExpressionsFactory {
         expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
         expressionTree.setSquidSpecialUPbThExpression(true);
         expressionTree.setRootExpressionTree(true);
-//        System.out.println(">>>>>   " + expressionTree.getName());
 
         return expression;
     }

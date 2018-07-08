@@ -21,41 +21,49 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
  *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class Average extends Function {
+public class AgePb76exp extends Function {
 
-    private static final long serialVersionUID = -7728410761115586080L;
+    private static final long serialVersionUID = -6711265919551953531L;
 
     /**
-     * Provides the functionality of Excel's average and returns "average" and
-     * encoding the labels for each cell of the values array produced by eval.
+     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
+     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
+     * values array produced by eval.
      *
      * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
+     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
+     * @see
+     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
-    public Average() {
-        name = "average";
-        argumentCount = 1;
+    public AgePb76exp() {
+
+        name = "AgePb76exp";
+        argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"average"}};
-        labelsForInputValues = new String[]{"numbers"};
+        labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
+        labelsForInputValues = new String[]{"207/206 Ratio, 207/206 1SigmaUnct"};
     }
 
     /**
+     * The "exp" suffix refers to "explicit" specification of ratio and unct.
      * Requires that child 0 is a VariableNode that evaluates to a double array
-     * with one column and a row for each member of shrimpFractions.
+     * with column 1 representing the 207/206 IsotopicRatio and that child 1
+     * evaluates to a double array with column 1 containing the 1sigma abs unct
+     * with a row for each member of shrimpFractions.
      *
      * @param childrenET list containing child 0
      * @param shrimpFractions a list of shrimpFractions
      * @param task
-     * @return the double[1][3] array of slope, slopeErr, y-Intercept, y-IntErr
+     * @return the double[1][2] array of age, ageErr
      * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
@@ -64,18 +72,14 @@ public class Average extends Function {
 
         Object[][] retVal;
         try {
-            double[] xValues = transposeColumnVectorOfDoubles(childrenET.get(0).eval(shrimpFractions, task), 0);
-            double sum = 0.0;
-            double average = 0.0;
-            if (xValues.length > 0) {
-                for (int i = 0; i < xValues.length; i++) {
-                    sum += xValues[i];
-                }
-                average = sum / xValues.length;
-            }
-            retVal = new Object[][]{{average}};
-        } catch (ArithmeticException | NullPointerException e) {
-            retVal = new Object[][]{{0.0}};
+            double[] pb207_206Ratio = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
+            double[] pb207_206Unct1Sigma = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
+            double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(
+                    pb207_206Ratio[0],
+                    pb207_206Unct1Sigma[0]);
+            retVal = new Object[][]{{agePb76[0], agePb76[1]}};
+        } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
+            retVal = new Object[][]{{0.0, 0.0}};
         }
 
         return retVal;
@@ -88,6 +92,7 @@ public class Average extends Function {
      */
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
+
         StringBuilder retVal = new StringBuilder();
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
@@ -100,4 +105,5 @@ public class Average extends Function {
 
         return retVal.toString();
     }
+
 }

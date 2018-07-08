@@ -37,6 +37,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
@@ -44,6 +46,7 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -78,6 +81,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @FXML
     private VBox scrolledBox;
     @FXML
+    private VBox scrolledBoxLeft;
+    @FXML
     private ListView<MassStationDetail> availableMassesListView;
     @FXML
     private ListView<MassStationDetail> viewedAsGraphMassesListView;
@@ -91,6 +96,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private CheckBox showQt1yCheckBox;
     @FXML
     private CheckBox showQt1zCheckBox;
+    @FXML
+    private ScrollPane leftScrollPane;
+    @FXML
+    private ScrollPane rightScrollPane;
 
     private static ObservableList<MassStationDetail> allMassStations;
     private static ObservableList<MassStationDetail> availableMassStations;
@@ -106,6 +115,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private static boolean showQt1z;
 
     private List<AbstractDataView> graphs;
+
+    private static boolean synchedScrolls;
 
     /**
      * Initializes the controller class.
@@ -134,7 +145,17 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         graphs = new ArrayList<>();
 
         displayMassStationsForReview();
+        
+        synchedScrolls = false;
+    }
 
+    private void setupScrollBarSynch() {
+        if (!synchedScrolls) {
+            ScrollBar rightBar = (ScrollBar) leftScrollPane.lookup(".scroll-bar:vertical");
+            ScrollBar leftBar = (ScrollBar) rightScrollPane.lookup(".scroll-bar:vertical");
+            rightBar.valueProperty().bindBidirectional(leftBar.valueProperty());
+            synchedScrolls = true;
+        }
     }
 
     private void setupMassStationDetailsListViews() {
@@ -213,6 +234,11 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         showQt1z = showQt1zCheckBox.isSelected();
         squidProject.getTask().setShowQt1z(showQt1z);
         displayMassStationsForReview();
+    }
+
+    @FXML
+    private void scrollBoxMouseEntered(MouseEvent event) {
+        setupScrollBarSynch();
     }
 
     static class MassStationDetailListCell extends ListCell<MassStationDetail> {
@@ -406,6 +432,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     class onMassDeltaComboSelectionAction implements EventHandler<ActionEvent> {
 
+        @SuppressWarnings("unchecked")
         @Override
         public void handle(ActionEvent event) {
             // reprocess all diffs
@@ -498,37 +525,51 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     }
 
+    private void produceGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry, VBox scrolledBox) {
+
+        int heightOfMassPlot = 150;
+        int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 350;
+
+        AbstractDataView canvas
+                = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                        title,
+                        data,
+                        entry.getTimesOfMeasuredTrimMasses(),
+                        entry.getIndicesOfScansAtMeasurementTimes(),
+                        entry.getIndicesOfRunsAtMeasurementTimes(),
+                        squidProject.getPrawnFileRuns(),
+                        showTimeNormalized,
+                        this);
+
+        scrolledBox.getChildren().add(canvas);
+        graphs.add(canvas);
+        GraphicsContext gc1 = canvas.getGraphicsContext2D();
+        canvas.preparePanel();
+        canvas.paint(gc1);
+    }
+
     private void displayMassStationsForReview() {
 
         int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(0).getPar().get(3).getValue());
 
         scrolledBox.getChildren().clear();
+        scrolledBoxLeft.getChildren().clear();
         graphs.clear();
-
-        int heightOfMassPlot = 150;
-
-        // plotting mass variations
-        int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 350;
 
         int massCounter = 0;
         for (MassStationDetail entry : viewedAsGraphMassStations) {
-            AbstractDataView canvas
-                    = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                            entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
-                            entry.getMeasuredTrimMasses(),
-                            entry.getTimesOfMeasuredTrimMasses(),
-                            entry.getIndicesOfScansAtMeasurementTimes(),
-                            entry.getIndicesOfRunsAtMeasurementTimes(),
-                            squidProject.getPrawnFileRuns(),
-                            showTimeNormalized,
-                            this);
-
-            scrolledBox.getChildren().add(canvas);
-            graphs.add(canvas);
-            GraphicsContext gc1 = canvas.getGraphicsContext2D();
-            canvas.preparePanel();
-            canvas.paint(gc1);
-
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
+                    entry.getMeasuredTrimMasses(),
+                    entry,
+                    scrolledBox);
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
+                    entry.getMeasuredTrimMasses(),
+                    entry,
+                    scrolledBoxLeft);
             massCounter++;
         }
 
@@ -542,26 +583,23 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                 deltas.add(aBD.subtract(bBD).doubleValue());
             }
 
-            AbstractDataView canvas
-                    = new MassStationAuditViewForShrimp(
-                            new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                            "(" + A.getMassStationLabel() + " " + A.getIsotopeLabel()
-                            + ") - ("
-                            + B.getMassStationLabel() + " " + B.getIsotopeLabel()
-                            + ")",
-                            deltas,
-                            A.getTimesOfMeasuredTrimMasses(),
-                            A.getIndicesOfScansAtMeasurementTimes(),
-                            A.getIndicesOfRunsAtMeasurementTimes(),
-                            squidProject.getPrawnFileRuns(),
-                            showTimeNormalized,
-                            this);
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
+                    + " - "
+                    + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
+                    deltas,
+                    A,
+                    scrolledBox);
 
-            scrolledBox.getChildren().add(canvas);
-            graphs.add(canvas);
-            GraphicsContext gc1 = canvas.getGraphicsContext2D();
-            canvas.preparePanel();
-            canvas.paint(gc1);
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
+                    + " - "
+                    + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
+                    deltas,
+                    A,
+                    scrolledBoxLeft);
 
             massCounter++;
         }
@@ -577,23 +615,19 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                 }
             }
 
-            AbstractDataView canvas
-                    = new MassStationAuditViewForShrimp(
-                            new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                            "Primary Beam",
-                            primaryBeam,
-                            allMassStations.get(0).getTimesOfMeasuredTrimMasses(),
-                            allMassStations.get(0).getIndicesOfScansAtMeasurementTimes(),
-                            allMassStations.get(0).getIndicesOfRunsAtMeasurementTimes(),
-                            squidProject.getPrawnFileRuns(),
-                            showTimeNormalized,
-                            this);
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    "Primary Beam",
+                    primaryBeam,
+                    allMassStations.get(0),
+                    scrolledBox);
 
-            scrolledBox.getChildren().add(canvas);
-            graphs.add(canvas);
-            GraphicsContext gc1 = canvas.getGraphicsContext2D();
-            canvas.preparePanel();
-            canvas.paint(gc1);
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    "Primary Beam",
+                    primaryBeam,
+                    allMassStations.get(0),
+                    scrolledBoxLeft);
 
             massCounter++;
         }
@@ -608,24 +642,19 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     qt1y.add((double) spots.get(i).getQtlY());
                 }
             }
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    "qt1y",
+                    qt1y,
+                    allMassStations.get(0),
+                    scrolledBox);
 
-            AbstractDataView canvas
-                    = new MassStationAuditViewForShrimp(
-                            new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                            "qt1y",
-                            qt1y,
-                            allMassStations.get(0).getTimesOfMeasuredTrimMasses(),
-                            allMassStations.get(0).getIndicesOfScansAtMeasurementTimes(),
-                            allMassStations.get(0).getIndicesOfRunsAtMeasurementTimes(),
-                            squidProject.getPrawnFileRuns(),
-                            showTimeNormalized,
-                            this);
-
-            scrolledBox.getChildren().add(canvas);
-            graphs.add(canvas);
-            GraphicsContext gc1 = canvas.getGraphicsContext2D();
-            canvas.preparePanel();
-            canvas.paint(gc1);
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    "qt1y",
+                    qt1y,
+                    allMassStations.get(0),
+                    scrolledBoxLeft);
 
             massCounter++;
         }
@@ -640,27 +669,23 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     qt1z.add((double) spots.get(i).getQtlZ());
                 }
             }
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    "qt1z",
+                    qt1z,
+                    allMassStations.get(0),
+                    scrolledBox);
 
-            AbstractDataView canvas
-                    = new MassStationAuditViewForShrimp(
-                            new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                            "qt1z",
-                            qt1z,
-                            allMassStations.get(0).getTimesOfMeasuredTrimMasses(),
-                            allMassStations.get(0).getIndicesOfScansAtMeasurementTimes(),
-                            allMassStations.get(0).getIndicesOfRunsAtMeasurementTimes(),
-                            squidProject.getPrawnFileRuns(),
-                            showTimeNormalized,
-                            this);
-
-            scrolledBox.getChildren().add(canvas);
-            graphs.add(canvas);
-            GraphicsContext gc1 = canvas.getGraphicsContext2D();
-            canvas.preparePanel();
-            canvas.paint(gc1);
+            produceGraphOnScrolledPane(
+                    massCounter,
+                    "qt1z",
+                    qt1z,
+                    allMassStations.get(0),
+                    scrolledBoxLeft);
 
             massCounter++;
         }
+
     }
 
     @Override

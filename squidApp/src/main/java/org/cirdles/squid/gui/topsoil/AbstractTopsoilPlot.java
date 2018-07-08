@@ -22,6 +22,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.cirdles.topsoil.plot.JavaScriptPlot;
@@ -39,7 +40,7 @@ public abstract class AbstractTopsoilPlot {
     protected AbstractTopsoilPlot() {
     }
 
-    public abstract Pane initializePlotPane();
+    public abstract SplitPane initializePlotPane();
 
     /**
      * @return the plot

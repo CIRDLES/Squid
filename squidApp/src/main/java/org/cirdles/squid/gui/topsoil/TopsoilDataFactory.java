@@ -15,10 +15,15 @@
  */
 package org.cirdles.squid.gui.topsoil;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import static org.cirdles.topsoil.app.plot.variable.Variables.RHO;
 import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_X;
 import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_Y;
@@ -64,5 +69,46 @@ public class TopsoilDataFactory {
         }
 
         return datumList;
+    }
+
+    public static List<Map<String, Object>> prepareWetherillData(List<ShrimpFractionExpressionInterface> shrimpFractions) {
+        List<Map<String, Object>> datumList = new ArrayList<>();
+
+        for (int i = 0; i < shrimpFractions.size(); i++) {
+            Map<String, Object> datum = prepareWetherillDatum(shrimpFractions.get(i));
+            datumList.add(datum);
+        }
+
+        return datumList;
+    }
+
+    public static Map<String, Object> prepareWetherillDatum(ShrimpFractionExpressionInterface shrimpFraction) {
+        Map<String, Object> datum = new HashMap<>();
+        try {
+            Method method = ShrimpFractionExpressionInterface.class.getMethod(//
+                    "getTaskExpressionsEvaluationsPerSpotByField",
+                    new Class[]{String.class});
+
+            double r207_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr207Pb/235U"}))[0].clone()[0];
+            datum.put(X.getName(), r207_235);
+            double r207_235_1Sigmabs
+                    = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr207Pb/235U %err"}))[0].clone()[0]
+                    * r207_235 / 100.0;
+            datum.put(SIGMA_X.getName(), 2.0 * r207_235_1Sigmabs);
+
+            double r206_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr206Pb/238U"}))[0].clone()[0];
+            datum.put(Y.getName(), r206_235);
+            double r206_235_1Sigmabs
+                    = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr206Pb/238U %err"}))[0].clone()[0]
+                    * r206_235 / 100.0;
+            datum.put(SIGMA_Y.getName(), 2.0 * r206_235_1Sigmabs);
+
+            double rho = ((double[][]) method.invoke(shrimpFraction, new Object[]{"4-corr-errcorr"}))[0].clone()[0];
+            datum.put(RHO.getName(), rho);
+            datum.put("Selected", true);
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
+        }
+
+        return datum;
     }
 }

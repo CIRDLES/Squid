@@ -87,8 +87,8 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     @Override
     public boolean equals(Object massStationDetail) {
         boolean retVal = false;
-        if (massStationDetail != null) {
-            retVal = (this.massStationIndex == ((MassStationDetail) massStationDetail).getMassStationIndex());
+        if (massStationDetail instanceof MassStationDetail) {
+            retVal = (massStationIndex == ((MassStationDetail) massStationDetail).getMassStationIndex());
         }
         return retVal;
     }

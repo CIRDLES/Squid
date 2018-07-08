@@ -111,9 +111,9 @@
                   </Menu>
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Visualizations">
+            <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#topsoilAction" text="Topsoil Demo" />
+                <MenuItem mnemonicParsing="false" onAction="#topsoilAction" text="4-corr Concordia of Ref Material" />
                   <MenuItem disable="true" mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" visible="false" />
               </items>
             </Menu>

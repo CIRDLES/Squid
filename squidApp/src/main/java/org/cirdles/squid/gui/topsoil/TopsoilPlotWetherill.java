@@ -25,13 +25,13 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
-import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
-import org.cirdles.squid.gui.topsoil.TopsoilDataFactory;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
+import static org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot.SigmaPresentationModes.TWO_SIGMA_ABSOLUTE;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.EXAMPLE_CM2_DATASET;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.topsoil.app.isotope.IsotopeType;
 import org.cirdles.topsoil.plot.base.BasePlotDefaultProperties;
 import static org.cirdles.topsoil.plot.base.BasePlotProperties.CONCORDIA_LINE;
@@ -52,10 +52,17 @@ import static org.cirdles.topsoil.plot.base.BasePlotProperties.Y_AXIS;
 public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
     public TopsoilPlotWetherill(String title) {
-
         plot = IsotopeType.UPb.getPlots()[0].getPlot();
         plot.setData(TopsoilDataFactory.prepareWetherillData(EXAMPLE_CM2_DATASET));
+        setupPlot(title);
+    }
 
+    public TopsoilPlotWetherill(String title, List<ShrimpFractionExpressionInterface> shrimpFractions) {
+        plot = IsotopeType.UPb.getPlots()[0].getPlot();
+        setupPlot(title);
+    }
+
+    private void setupPlot(String title) {     
         plot.setProperties(new BasePlotDefaultProperties());
 
         plot.setProperty(ISOTOPE_TYPE, IsotopeType.UPb.getName());
@@ -69,12 +76,14 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
         plot.setProperty(REGRESSION_LINE, false);
         plot.setProperty(REGRESSION_ENVELOPE, false);
+        
+        plot.setProperty(UNCERTAINTY, TWO_SIGMA_ABSOLUTE.getSigmaMultiplier());
     }
 
     @Override
-    public Pane initializePlotPane() {
+    public SplitPane initializePlotPane() {
         org.cirdles.squid.gui.topsoil.TopsoilPlotController.topsoilPlot = this;
-        Pane topsoilPlotUI = null;
+        SplitPane topsoilPlotUI = null;
         try {
             topsoilPlotUI = FXMLLoader.load(getClass().getResource("TopsoilPlot.fxml"));
         } catch (IOException iOException) {
@@ -92,7 +101,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         ellipsesCheckBox.setOnAction(mouseEvent -> {
             plot.setProperty(ELLIPSES, ellipsesCheckBox.isSelected());
         });
-        
+
         ChoiceBox<SigmaPresentationModes> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(SigmaPresentationModes.values()));
         uncertaintyChoiceBox.setValue(SigmaPresentationModes.TWO_SIGMA_ABSOLUTE);
         uncertaintyChoiceBox.setConverter(new StringConverter<SigmaPresentationModes>() {
@@ -127,12 +136,6 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
             plot.setProperty(CONCORDIA_LINE, concordiaLineCheckBox.isSelected());
         });
 
-        CheckBox allSelectedCheckBox = new CheckBox("Select All");
-        allSelectedCheckBox.setSelected(true);
-        allSelectedCheckBox.setOnAction(mouseEvent -> {
-            setSelectedAllData(allSelectedCheckBox.isSelected());
-        });
-
         CheckBox regressionUnctEnvelopeCheckBox = new CheckBox("2D Regression Unct");
         regressionUnctEnvelopeCheckBox.setSelected(false);
         regressionUnctEnvelopeCheckBox.setOnAction(mouseEvent -> {
@@ -151,7 +154,6 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         controls.add(ellipsesCheckBox);
         controls.add(uncertaintyChoiceBox);
         controls.add(ellipsesColorPicker);
-        controls.add(allSelectedCheckBox);
         controls.add(concordiaLineCheckBox);
         controls.add(regressionCheckBox);
         controls.add(regressionUnctEnvelopeCheckBox);

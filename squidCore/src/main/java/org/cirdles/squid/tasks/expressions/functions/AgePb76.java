@@ -44,19 +44,20 @@ public class AgePb76 extends Function {
      */
     public AgePb76() {
 
-        name = "agePb76";
+        name = "AgePb76";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "AgeErr"}};
-        labelsForInputValues = new String[]{"207/206RatioAndUnct"};
+        labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
+        labelsForInputValues = new String[]{"207/206RatioAnd1SigmaUnct"};
     }
 
     /**
      * Requires that child 0 is a VariableNode that evaluates to a double array
-     * with one column representing the 207/206 IsotopicRatio and a row for each
-     * member of shrimpFractions.
+     * with column 1 representing the 207/206 IsotopicRatio and column 2
+     * containing the 1sigma abs unct with a row for each member of
+     * shrimpFractions.
      *
      * @param childrenET list containing child 0
      * @param shrimpFractions a list of shrimpFractions
@@ -71,9 +72,11 @@ public class AgePb76 extends Function {
         Object[][] retVal;
         try {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
-            double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(pb207_206RatioAndUnct[0], pb207_206RatioAndUnct[1]);
+            double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(
+                    pb207_206RatioAndUnct[0],
+                    (pb207_206RatioAndUnct.length > 1) ? pb207_206RatioAndUnct[1] : 0.0);
             retVal = new Object[][]{{agePb76[0], agePb76[1]}};
-        } catch (ArithmeticException | IndexOutOfBoundsException  | NullPointerException e) {
+        } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
         }
 
@@ -87,18 +90,18 @@ public class AgePb76 extends Function {
      */
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        String retVal
-                = "<mrow>"
-                + "<mi>AgePb76</mi>"
-                + "<mfenced>";
 
+        StringBuilder retVal = new StringBuilder();
+        retVal.append("<mrow>");
+        retVal.append("<mi>").append(name).append("</mi>");
+        retVal.append("<mfenced>");
         for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
+            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
         }
 
-        retVal += "</mfenced></mrow>\n";
+        retVal.append("</mfenced></mrow>\n");
 
-        return retVal;
+        return retVal.toString();
     }
 
 }

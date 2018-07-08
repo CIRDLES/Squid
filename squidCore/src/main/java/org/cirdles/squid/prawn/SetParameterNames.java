@@ -24,7 +24,6 @@ package org.cirdles.squid.prawn;
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>
@@ -130,7 +129,9 @@ public enum SetParameterNames implements Serializable {
      *
      */
     @XmlEnumValue("lab_temperature_degc")
-    lab_temperature_degc("lab_temperature_degc");
+    lab_temperature_degc("lab_temperature_degc"),
+    @XmlEnumValue("detector_set_zero_cps")
+    detector_set_zero_cps("detector_set_zero_cps");
 
     private final String value;
 
