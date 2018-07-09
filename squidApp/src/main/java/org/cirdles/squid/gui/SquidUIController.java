@@ -437,6 +437,7 @@ public class SquidUIController implements Initializable {
 
     private void openProject(String projectFileName) throws IOException {
         if (!"".equals(projectFileName)) {
+            confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
