@@ -74,6 +74,7 @@ public class FileHandler {
         File projectFileNew = fileChooser.showSaveDialog(ownerWindow);
 
         if (projectFileNew != null) {
+            SquidProject.setProjectChanged(false);
             retVal = projectFileNew;
             ProjectFileUtilities.serializeSquidProject(squidProject, projectFileNew.getCanonicalPath());
         }
@@ -158,6 +159,9 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Squid 2.5 Task File in Excel '.xls");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 2.5 Excel Task Files", "*.xls"));
+
+        File initDirectory = new File(squidPersistentState.getMRUTaskFolderPath());
+        fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
         File squidTaskFile = fileChooser.showOpenDialog(ownerWindow);
 

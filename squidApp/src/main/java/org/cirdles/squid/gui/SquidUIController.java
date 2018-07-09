@@ -289,8 +289,7 @@ public class SquidUIController implements Initializable {
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
             // log prawnFileFolderMRU
-            squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
-
+            // squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
         } catch (IOException | RuntimeException iOException) {
             System.out.println("ProjectManager >>>>   " + iOException.getMessage());
         }
@@ -333,7 +332,6 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
         manageVisualizationsMenu.setDisable(true);
-        
 
         // logo
         mainPane.getChildren().get(0).setVisible(true);
@@ -341,6 +339,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void prepareForNewProject() {
+        confirmSaveOnProjectClose();
         removeAllManagers();
 
         squidProject = new SquidProject();
@@ -358,6 +357,7 @@ public class SquidUIController implements Initializable {
             File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
             if (prawnXMLFileNew != null) {
                 squidProject.setupPrawnFile(prawnXMLFileNew);
+                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
             }
@@ -425,6 +425,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void openSquidProjectMenuItemAction(ActionEvent event) {
+        confirmSaveOnProjectClose();
         removeAllManagers();
 
         try {
@@ -436,6 +437,7 @@ public class SquidUIController implements Initializable {
 
     private void openProject(String projectFileName) throws IOException {
         if (!"".equals(projectFileName)) {
+            confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
@@ -456,6 +458,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void closeSquidProjectMenuItemClose(ActionEvent event) {
+        confirmSaveOnProjectClose();
         removeAllManagers();
     }
 
@@ -469,8 +472,40 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    private void confirmSaveOnProjectClose() {
+        if (SquidProject.isProjectChanged()) {
+
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "Do you want to save Squid Project changes?",
+                    ButtonType.YES,
+                    ButtonType.NO
+            );
+            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+            alert.showAndWait().ifPresent((t) -> {
+                if (t.equals(ButtonType.YES)) {
+                    try {
+                        if (squidProject.getTask().getRatioNames().isEmpty()) {
+                            File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                        } else {
+                            ProjectFileUtilities.serializeSquidProject(squidProject,
+                                    squidPersistentState.getMRUProjectFile().getCanonicalPath());
+                        }
+                    } catch (IOException iOException) {
+                        SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n",
+                                null);
+                    }
+                }
+            });
+
+            SquidProject.setProjectChanged(false);
+
+        }
+    }
+
     @FXML
     private void quitAction(ActionEvent event) {
+        confirmSaveOnProjectClose();
         Platform.exit();
     }
 
@@ -563,10 +598,10 @@ public class SquidUIController implements Initializable {
 
             mainPane.getChildren().add(taskManagerUI);
             showUI(taskManagerUI);
-            manageRatiosMenu.setDisable(false);
-            manageExpressionsMenu.setDisable(false);
-            manageReportsMenu.setDisable(false);
-            manageVisualizationsMenu.setDisable(false);
+            manageRatiosMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
@@ -775,6 +810,7 @@ public class SquidUIController implements Initializable {
         try {
             File squidTaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
             if (squidTaskFile != null) {
+                squidPersistentState.updateTaskListMRU(squidTaskFile);
                 squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
                 launchTaskManager();
             }
@@ -938,7 +974,7 @@ public class SquidUIController implements Initializable {
 //        AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Example Wetherill using CM2 data");
         AbstractTopsoilPlot topsoilPlot
                 = new TopsoilPlotWetherill(
-                        "Concordia of 4-corr reference material " + ((Task)squidProject.getTask()).getFilterForRefMatSpotNames(),
+                        "Concordia of 4-corr reference material " + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                         squidProject.getTask().getReferenceMaterialSpots());
 
         topsoilPlotUI = topsoilPlot.initializePlotPane();

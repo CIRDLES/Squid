@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +41,7 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -216,6 +218,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.reportsEngine = reportsEngine;
 
         this.changed = true;
+        SquidProject.setProjectChanged(true);
 
         this.useCalculated_pdMeanParentEleA = false;
         this.selectedIndexIsotope = IndexIsoptopesEnum.PB_204;
@@ -732,7 +735,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
-                alignTaskMassStationsWithPrawnFile();
+   // TODO: Juyl 2018 not a priority          alignTaskMassStationsWithPrawnFile();
             }
         }
     }
@@ -755,6 +758,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         changed = true;
+        SquidProject.setProjectChanged(true);
         updateAllExpressions();
         processAndSortExpressions();
 
@@ -797,6 +801,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
 
         changed = true;
+        SquidProject.setProjectChanged(true);
         setupSquidSessionSpecsAndReduceAndReport();
         updateAllExpressions();
     }
@@ -827,8 +832,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 int intTaskIsotopeLabel = new BigDecimal(taskIsotopeLabel).add(new BigDecimal(0.5)).intValue();
                 for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
                     if (!matched) {
-                        int intPrawnIsoptopeLabel = Integer.parseInt(entry.getValue().getIsotopeLabel());
-                        if ((intTaskIsotopeLabel == intPrawnIsoptopeLabel) && !recordedMatches[entry.getKey()]) {
+                        int intPrawnIsoptopeLabel =  new BigDecimal(entry.getValue().getIsotopeLabel()).setScale(0, RoundingMode.HALF_EVEN).intValue();//               Integer.parseInt(entry.getValue().getIsotopeLabel());
+                        int recordedEntryKey = (int)entry.getKey();
+                        if ((intTaskIsotopeLabel == intPrawnIsoptopeLabel) && !recordedMatches[recordedEntryKey]) {
                             matchedNominalMasses.add(taskIsotopeLabel);
                             recordedMatches[entry.getKey()] = true;
                             matched = true;
@@ -1741,6 +1747,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setChanged(boolean changed) {
         this.changed = changed;
+        SquidProject.setProjectChanged(true);
     }
 
     /**

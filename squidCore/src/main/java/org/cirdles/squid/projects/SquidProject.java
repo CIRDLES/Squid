@@ -62,7 +62,8 @@ public final class SquidProject implements Serializable {
     private String filterForConcRefMatSpotNames;
     private double sessionDurationHours;
     private TaskInterface task;
-    private BitSet changedProperties;
+
+    private static boolean projectChanged;
 
     public SquidProject() {
         this.prawnFileHandler = new PrawnFileHandler();
@@ -75,7 +76,7 @@ public final class SquidProject implements Serializable {
 
         this.sessionDurationHours = 0.0;
         
-        this.changedProperties = new BitSet(24);
+        projectChanged = false;
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
     }
@@ -538,6 +539,20 @@ public final class SquidProject implements Serializable {
      */
     public void setTask(TaskInterface task) {
         this.task = task;
+    }
+
+    /**
+     * @return the projectChanged
+     */
+    public static boolean isProjectChanged() {
+        return projectChanged;
+    }
+
+    /**
+     * @param aProjectChanged the projectChanged to set
+     */
+    public static void setProjectChanged(boolean aProjectChanged) {
+        projectChanged = aProjectChanged;
     }
 
 }

@@ -74,10 +74,13 @@ public class TaskSquid25 implements Serializable {
             String text = extractor.getText();
 
             String[] lines = text.split("\n");
+            boolean isSquid2_20 = false;
             if (lines[0].startsWith("Created by SQUID")) {
                 taskSquid25 = new TaskSquid25();
 
                 taskSquid25.squidVersion = lines[0].split("\t")[1];
+                // July 2018 detect if version 2.20
+                isSquid2_20 = (taskSquid25.squidVersion.startsWith("2.20"));
 
                 int firstRow = Integer.parseInt(lines[1].split("\t")[1]) - 1;
 
@@ -94,6 +97,12 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.nominalMasses = new ArrayList<>();
                 for (int i = 0; i < countOfMasses; i++) {
                     taskSquid25.nominalMasses.add(nominalMasses[i + 2]);
+                }
+
+                // July 2018
+                // decrement first row to handle missing line for Hidden Masses in Squid 2.20
+                if (isSquid2_20) {
+                    firstRow--;
                 }
 
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
@@ -123,7 +132,7 @@ public class TaskSquid25 implements Serializable {
 
                     if (taskSquid25.parentNuclide.contains("232")) {
                         primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
-                        primaryUThPbEqn[1] = primaryUThPbEqn[1];
+//                        primaryUThPbEqn[1] = primaryUThPbEqn[1];
                         primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
                     }
 
@@ -200,6 +209,7 @@ public class TaskSquid25 implements Serializable {
 
                 String[] equationNames = lines[firstRow + 27].split("\t");
 
+                // these sqitches split into an array of length equations mius 1 in Squid2.20 due to missing count entry
                 String[] switchST = lines[firstRow + 28].split("\t");
 
                 String[] switchSA = lines[firstRow + 29].split("\t");
@@ -210,8 +220,8 @@ public class TaskSquid25 implements Serializable {
 
                 for (int i = 0; i < countOfEquations; i++) {
                     // handle backwards logic of Squid25 where both ST, SA false, means both True
-                    boolean switchRM = Boolean.parseBoolean(switchST[i + 2]);
-                    boolean switchUN = Boolean.parseBoolean(switchSA[i + 2]);
+                    boolean switchRM = Boolean.parseBoolean(switchST[i + (isSquid2_20 ? 1 : 2)]);
+                    boolean switchUN = Boolean.parseBoolean(switchSA[i + (isSquid2_20 ? 1 : 2)]);
                     if (!switchRM && !switchUN) {
                         switchRM = true;
                         switchUN = true;
@@ -223,8 +233,8 @@ public class TaskSquid25 implements Serializable {
                                 prepareSquid25ExcelEquationNameForSquid3(equationNames[i + 2]),
                                 switchRM,
                                 switchUN,
-                                Boolean.parseBoolean(switchSC[i + 2]),
-                                Boolean.parseBoolean(switchNU[i + 2]),
+                                Boolean.parseBoolean(switchSC[i + (isSquid2_20 ? 1 : 2)]),
+                                Boolean.parseBoolean(switchNU[i + (isSquid2_20 ? 1 : 2)]),
                                 false, false));
                     }
                 }
@@ -232,7 +242,10 @@ public class TaskSquid25 implements Serializable {
                 String[] constantNamesSource = lines[firstRow + 40].split("\t");
                 String[] constantValuesSource = lines[firstRow + 41].split("\t");
 
-                int countOfConstants = Integer.valueOf(constantNamesSource[1]);
+                int countOfConstants = 0;
+                if (constantNamesSource.length > 1) {
+                    countOfConstants = Integer.valueOf(constantNamesSource[1]);
+                }
                 taskSquid25.constantNames = new ArrayList<>();
                 taskSquid25.constantValues = new ArrayList<>();
                 for (int i = 0; i < countOfConstants; i++) {

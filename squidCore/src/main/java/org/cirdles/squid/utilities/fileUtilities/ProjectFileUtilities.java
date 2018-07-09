@@ -29,6 +29,7 @@ public final class ProjectFileUtilities {
     public static void serializeSquidProject(SquidProject squidProject, String projectFileName) {
         try {
             SquidSerializer.serializeObjectToFile(squidProject, projectFileName);
+            SquidProject.setProjectChanged(false);
         } catch (SquidException ex) {
             SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
         }
