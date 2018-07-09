@@ -74,6 +74,7 @@ public class FileHandler {
         File projectFileNew = fileChooser.showSaveDialog(ownerWindow);
 
         if (projectFileNew != null) {
+            SquidProject.setProjectChanged(false);
             retVal = projectFileNew;
             ProjectFileUtilities.serializeSquidProject(squidProject, projectFileNew.getCanonicalPath());
         }
