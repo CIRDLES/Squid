@@ -69,6 +69,12 @@
                   </Menu>
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Parameters" visible="false">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Manage Physical Constants" />
+                  <MenuItem mnemonicParsing="false" text="Manage Reference Materials" />
+              </items>
+            </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Manage Expressions" />
@@ -78,7 +84,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />
                   <Menu fx:id="openRecentExpressionFileMenu" mnemonicParsing="false" text="Load Recent Expression from xml File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem disable="true" mnemonicParsing="false" text="Manage Constants" />
+                <MenuItem mnemonicParsing="false" text="Manage Constants" visible="false" />
           </items>
         </Menu>
             <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
