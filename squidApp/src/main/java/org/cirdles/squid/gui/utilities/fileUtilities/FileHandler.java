@@ -159,6 +159,9 @@ public class FileHandler {
         fileChooser.setTitle("Select Squid 2.5 Task File in Excel '.xls");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 2.5 Excel Task Files", "*.xls"));
 
+        File initDirectory = new File(squidPersistentState.getMRUTaskFolderPath());
+        fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
+
         File squidTaskFile = fileChooser.showOpenDialog(ownerWindow);
 
         if (squidTaskFile != null) {

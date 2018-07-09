@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
 import org.cirdles.squid.exceptions.SquidException;
 
@@ -38,22 +40,25 @@ public class SquidPersistentState implements Serializable {
 
     // instance variables
     private SquidUserPreferences squidUserPreferences;
-    private String MRUPrawnFileFolderPath;
 
     private File MRUProjectFile;
-    private ArrayList<String> MRUProjectList;
+    private List<String> MRUProjectList;
     private String MRUProjectFolderPath;
 
+    private File MRUPrawnFile;
+    private List<String> MRUPrawnFileList;
+    private String MRUPrawnFileFolderPath;
+
     private File MRUTaskFile;
-    private ArrayList<String> MRUTaskList;
+    private List<String> MRUTaskList;
     private String MRUTaskFolderPath;
 
     private File MRUExpressionFile;
-    private ArrayList<String> MRUExpressionList;
+    private List<String> MRUExpressionList;
     private String MRUExpressionFolderPath;
-    
+
     private File MRUExpressionGraphFile;
-    private ArrayList<String> MRUExpressionGraphList;
+    private List<String> MRUExpressionGraphList;
     private String MRUExpressionGraphFolderPath;
 
     /**
@@ -73,13 +78,19 @@ public class SquidPersistentState implements Serializable {
         }
 
         MRUProjectFile = null;
+        MRUProjectList = new ArrayList<>();
         MRUProjectFolderPath = "";
+
+        MRUPrawnFile = null;
+        MRUPrawnFileList = new ArrayList<>();
         MRUPrawnFileFolderPath = "";
 
         MRUTaskFile = null;
+        MRUTaskList = new ArrayList<>();
         MRUTaskFolderPath = "";
 
         MRUExpressionFile = null;
+        MRUExpressionList = new ArrayList<>();
         MRUExpressionFolderPath = "";
 
         serializeSelf();
@@ -134,20 +145,6 @@ public class SquidPersistentState implements Serializable {
     }
 
     /**
-     * @return the MRUPrawnFileFolderPath
-     */
-    public String getMRUPrawnFileFolderPath() {
-        return MRUPrawnFileFolderPath;
-    }
-
-    /**
-     * @param MRUPrawnFileFolderPath the MRUPrawnFileFolderPath to set
-     */
-    public void setMRUPrawnFileFolderPath(String MRUPrawnFileFolderPath) {
-        this.MRUPrawnFileFolderPath = MRUPrawnFileFolderPath;
-    }
-
-    /**
      * @return the squidUserPreferences
      */
     public SquidUserPreferences getSquidUserPreferences() {
@@ -161,10 +158,30 @@ public class SquidPersistentState implements Serializable {
         this.squidUserPreferences = squidUserPreferences;
     }
 
+    // General methods *********************************************************
     private void initMRULists() {
         MRUProjectList = new ArrayList<>(MRU_COUNT);
+        MRUPrawnFileList = new ArrayList<>(MRU_COUNT);
         MRUTaskList = new ArrayList<>(MRU_COUNT);
         MRUExpressionList = new ArrayList<>(MRU_COUNT);
+    }
+
+    private void cleanListMRU(List<String> MRUfileList) {
+        ArrayList<String> missingFileNames = new ArrayList<>();
+        // test for missing files
+        for (String projectFileName : MRUfileList) {
+            File projectFile = new File(projectFileName);
+            if (!projectFile.exists()) {
+                missingFileNames.add(projectFileName);
+            }
+        }
+
+        // remove missing fileNames
+        for (String projectFileName : missingFileNames) {
+            removeProjectFileNameFromMRU(projectFileName);
+        }
+
+        serializeSelf();
     }
 
     // MRU Project Data *********************************************************
@@ -208,21 +225,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     public void cleanProjectListMRU() {
-        ArrayList<String> missingFileNames = new ArrayList<>();
-        // test for missing files
-        for (String projectFileName : MRUProjectList) {
-            File projectFile = new File(projectFileName);
-            if (!projectFile.exists()) {
-                missingFileNames.add(projectFileName);
-            }
-        }
-
-        // remove missing fileNames
-        for (String projectFileName : missingFileNames) {
-            removeProjectFileNameFromMRU(projectFileName);
-        }
-
-        serializeSelf();
+        cleanListMRU(MRUProjectList);
     }
 
     public void removeProjectFileNameFromMRU(String projectFileName) {
@@ -247,7 +250,7 @@ public class SquidPersistentState implements Serializable {
      *
      * @return
      */
-    public ArrayList<String> getMRUProjectList() {
+    public List<String> getMRUProjectList() {
         cleanProjectListMRU();
         return MRUProjectList;
     }
@@ -272,6 +275,99 @@ public class SquidPersistentState implements Serializable {
      */
     public void setMRUProjectFolderPath(String MRUProjectFolderPath) {
         this.MRUProjectFolderPath = MRUProjectFolderPath;
+    }
+
+    // MRU PrawnFile Data ***************************************************
+    /**
+     *
+     * @param PrawnFileMRU
+     */
+    public void updatePrawnFileListMRU(File PrawnFileMRU) {
+        if (MRUPrawnFileList == null) {
+            MRUPrawnFileList = new ArrayList<>();
+        }
+
+        if (PrawnFileMRU != null) {
+            try {
+                // remove if exists in MRU list
+                String MRUPrawnFileName = PrawnFileMRU.getCanonicalPath();
+                MRUPrawnFileList.remove(MRUPrawnFileName);
+                MRUPrawnFileList.add(0, MRUPrawnFileName);
+
+                // trim list
+                if (MRUPrawnFileList.size() > MRU_COUNT) {
+                    MRUPrawnFileList.remove(MRU_COUNT);
+                }
+
+                // update MRU folder
+                MRUPrawnFileFolderPath = PrawnFileMRU.getParent();
+
+                // update current file
+                MRUPrawnFile = PrawnFileMRU;
+
+            } catch (IOException iOException) {
+            }
+        }
+
+        // save
+        try {
+            SquidSerializer.serializeObjectToFile(this, getMySerializedName());
+        } catch (SquidException squidException) {
+        }
+    }
+
+    public void removeFileNameFromPrawnFileListMRU(String mruPrawnFileName) {
+        MRUProjectList.remove(mruPrawnFileName);
+    }
+
+    public void cleanPrawnFileListMRU() {
+        cleanListMRU(MRUPrawnFileList);
+    }
+
+    public void removePrawnFileNameFromMRU(String prawnFileName) {
+        MRUPrawnFileList.remove(prawnFileName);
+    }
+
+    /**
+     * @return the MRUPrawnFile
+     */
+    public File getMRUPrawnFile() {
+        return MRUPrawnFile;
+    }
+
+    /**
+     * @param MRUPrawnFile the MRUPrawnFile to set
+     */
+    public void setMRUPrawnFile(File MRUPrawnFile) {
+        this.MRUPrawnFile = MRUPrawnFile;
+    }
+
+    /**
+     * @return the MRUPrawnFileList
+     */
+    public List<String> getMRUPrawnFileList() {
+        return MRUPrawnFileList;
+    }
+
+    /**
+     * @param MRUPrawnFileList the MRUPrawnFileList to set
+     */
+    public void setMRUPrawnFileList(List<String> MRUPrawnFileList) {
+        this.MRUPrawnFileList = MRUPrawnFileList;
+    }
+
+    /**
+     * @return the MRUPrawnFileFolderPath
+     */
+    public String getMRUPrawnFileFolderPath() {
+        return MRUPrawnFileFolderPath;
+    }
+
+    /**
+     * @param MRUPrawnFileFolderPath the MRUPrawnFileFolderPath to set
+     */
+    public void setMRUPrawnFileFolderPath(String MRUPrawnFileFolderPath) {
+        this.MRUPrawnFileFolderPath = MRUPrawnFileFolderPath;
     }
 
     // MRU Task Data ********************************************************
@@ -319,21 +415,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     public void cleanTaskListMRU() {
-        ArrayList<String> missingFileNames = new ArrayList<>();
-        // test for missing files
-        for (String taskFileName : MRUTaskList) {
-            File taskFile = new File(taskFileName);
-            if (!taskFile.exists()) {
-                missingFileNames.add(taskFileName);
-            }
-        }
-
-        // remove missing fileNames
-        for (String taskFileName : missingFileNames) {
-            removeTaskFileNameFromMRU(taskFileName);
-        }
-
-        serializeSelf();
+        cleanListMRU(MRUTaskList);
     }
 
     public void removeTaskFileNameFromMRU(String taskFileName) {
@@ -357,7 +439,7 @@ public class SquidPersistentState implements Serializable {
     /**
      * @return the MRUTaskList
      */
-    public ArrayList<String> getMRUTaskList() {
+    public List<String> getMRUTaskList() {
         if (MRUTaskList == null) {
             MRUTaskList = null;
         }
@@ -434,21 +516,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     public void cleanExpressionListMRU() {
-        ArrayList<String> missingFileNames = new ArrayList<>();
-        // test for missing files
-        for (String expressionFileName : MRUExpressionList) {
-            File expressionFile = new File(expressionFileName);
-            if (!expressionFile.exists()) {
-                missingFileNames.add(expressionFileName);
-            }
-        }
-
-        // remove missing fileNames
-        for (String expressionFileName : missingFileNames) {
-            removeExpressionFileNameFromMRU(expressionFileName);
-        }
-
-        serializeSelf();
+        cleanListMRU(MRUExpressionList);
     }
 
     public void removeExpressionFileNameFromMRU(String expressionFileName) {
@@ -472,7 +540,7 @@ public class SquidPersistentState implements Serializable {
     /**
      * @return the MRUExpressionList
      */
-    public ArrayList<String> getMRUExpressionList() {
+    public List<String> getMRUExpressionList() {
         if (MRUExpressionList == null) {
             MRUExpressionList = null;
         }
@@ -549,21 +617,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     public void cleanExpressionGraphListMRU() {
-        ArrayList<String> missingFileNames = new ArrayList<>();
-        // test for missing files
-        for (String expressionGraphFileName : MRUExpressionGraphList) {
-            File expressionGraphFile = new File(expressionGraphFileName);
-            if (!expressionGraphFile.exists()) {
-                missingFileNames.add(expressionGraphFileName);
-            }
-        }
-
-        // remove missing fileNames
-        for (String expressionGraphFileName : missingFileNames) {
-            removeExpressionGraphFileNameFromMRU(expressionGraphFileName);
-        }
-
-        serializeSelf();
+        cleanListMRU(MRUExpressionGraphList);
     }
 
     public void removeExpressionGraphFileNameFromMRU(String expressionGraphFileName) {
@@ -587,7 +641,7 @@ public class SquidPersistentState implements Serializable {
     /**
      * @return the MRUExpressionList
      */
-    public ArrayList<String> getMRUExpressionGraphList() {
+    public List<String> getMRUExpressionGraphList() {
         if (MRUExpressionGraphList == null) {
             MRUExpressionGraphList = null;
         }

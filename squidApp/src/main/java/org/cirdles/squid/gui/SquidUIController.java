@@ -289,7 +289,7 @@ public class SquidUIController implements Initializable {
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
             // log prawnFileFolderMRU
-            squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
+            // squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
 
         } catch (IOException | RuntimeException iOException) {
             System.out.println("ProjectManager >>>>   " + iOException.getMessage());
@@ -358,6 +358,7 @@ public class SquidUIController implements Initializable {
             File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
             if (prawnXMLFileNew != null) {
                 squidProject.setupPrawnFile(prawnXMLFileNew);
+                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
             }
@@ -775,6 +776,7 @@ public class SquidUIController implements Initializable {
         try {
             File squidTaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
             if (squidTaskFile != null) {
+                squidPersistentState.updateTaskListMRU(squidTaskFile);
                 squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
                 launchTaskManager();
             }
