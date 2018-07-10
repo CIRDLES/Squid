@@ -567,8 +567,8 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                                     }
                                 }
                             }
-                            retVal[6][columnCount] = superScript;
-                            // row 6 is written below as a rendition of footnotes by code (FN-n) in order from footNotesMap
+                            retVal[7][columnCount] = superScript;
+                            // row 7 is written below as a rendition of footnotes by code (FN-n) in order from footNotesMap
                             // retVal[6][columnCount] = (String) (numberStyleIsNumeric ? "Numeric" : "");
 
                             if (myCol.getUncertaintyColumn() != null) {

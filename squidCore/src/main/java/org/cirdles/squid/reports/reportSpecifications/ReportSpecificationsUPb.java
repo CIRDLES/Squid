@@ -48,7 +48,8 @@ public class ReportSpecificationsUPb extends ReportSpecificationsAbstract {
         },
         {"", "", "204Pb", "/206Pb", "", "getIsotopicRatioValuesByStringName", "204/206", "",
             "", "true", "false", "3", "true", "204/206 measured ratio", "false", "false"
-        },};
+        }
+    };
 
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
@@ -63,6 +64,12 @@ public class ReportSpecificationsUPb extends ReportSpecificationsAbstract {
         },
         {"204cor", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238U Age", "",
             "", "true", "false", "6", "", "", "false", "false"
+        },
+        {"", "", "", "±1sigma", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238U Age 1sigma", "",
+            "", "true", "false", "6", "", "", "false", "false"
+        },
+        {"204cor", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/206Pbage", "ABS",
+            "", "true", "false", "6", "true", "", "false", "false"
         },};
 
     // Report column order =

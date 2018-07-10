@@ -60,11 +60,9 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
 
         this.displayName = displayName;
         this.positionIndex = 0;
-        categoryColumns
-                = new ReportColumn[reportCategorySpecs.length];
+        categoryColumns = new ReportColumn[reportCategorySpecs.length];
         for (int i = 0; i < categoryColumns.length; i++) {
-            categoryColumns[i]
-                    = SetupReportColumn(i, reportCategorySpecs);
+            categoryColumns[i] = SetupReportColumn(i, reportCategorySpecs);
         }
 
         this.categoryColor = Color.WHITE;
@@ -112,7 +110,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                     specs[index][6],
                     specs[index][7],
                     "",
-                    Boolean.valueOf(specs[index][11]),// show uncertainty
+                    Boolean.valueOf(specs[index][12]),// show uncertainty
                     true); // amUncertainty
 
             uncertaintyCol.setAlternateDisplayName("");
