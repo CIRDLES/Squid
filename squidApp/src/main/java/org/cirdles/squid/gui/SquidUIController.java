@@ -21,6 +21,7 @@ import org.cirdles.squid.gui.topsoil.TopsoilWindow;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,6 +66,8 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.reports.reportSettings.ReportSettings;
+import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -1019,6 +1022,20 @@ public class SquidUIController implements Initializable {
     @FXML
     private void videoTutorialsMenuItemAction(ActionEvent event) {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
+    }
+
+    @FXML
+    private void TEST_REPORT_ACTION(ActionEvent event) {
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST");
+
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
+
+        for (int i = 0; i < report.length; i ++){
+            for (int j = 0; j < report[0].length; j ++){
+                System.out.print(report[i][j] + ",  ");
+            }
+            System.out.println();
+        }
     }
 
 }
