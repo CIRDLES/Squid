@@ -22,7 +22,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPb;
+import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples;
 import org.cirdles.squid.reports.reportViews.ReportListItemI;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
@@ -156,7 +157,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      * @return
      */
     public default String getUnitsFoxXML() {
-        String retVal = ReportSpecificationsUPb.unicodeConversionsToXML.get(getUnits());
+        String retVal = ReportSpecificationsUPbSamples.unicodeConversionsToXML.get(getUnits());
         if (retVal == null) {
             retVal = getUnits();
         }
@@ -391,23 +392,65 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                         System.err.println(e);
                     }
-                } else {
+                } else if (getRetrieveVariableName().compareToIgnoreCase("<DATE>") == 0) {
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
                                         getRetrieveMethodName(),
-                                        new Class[]{String.class});
+                                        new Class[0]);
+
+                        long milliseconds = (long) meth.invoke(fraction, new Object[0]);
+
+                        retVal[0] = CalamariReportsEngine.getFormattedDate(milliseconds);
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
+                } else if (getRetrieveVariableName().compareToIgnoreCase("<INT>") == 0) {
+                    try {
+                        Method meth
+                                = fractionClass.getMethod(//
+                                        getRetrieveMethodName(),
+                                        new Class[0]);
+
+                        int intValue = (int) meth.invoke(fraction, new Object[0]);
+
+                        retVal[0] = String.valueOf(intValue);
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
+                } else if (getRetrieveVariableName().compareToIgnoreCase("<DOUBLE>") == 0) {
+                    try {
+                        Method meth
+                                = fractionClass.getMethod(//
+                                        getRetrieveMethodName(),
+                                        new Class[0]);
+
+                        double doubleValue = (double) meth.invoke(fraction, new Object[0]);
+
+                        if (isNumeric) {
+                            retVal[0] = String.valueOf(doubleValue);
+                        } else if (isDisplayedWithArbitraryDigitCount()) {
+                            retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
+                                    new BigDecimal(doubleValue),
+                                    getCountOfSignificantDigits());
+                        }
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
+                } else {
+                    try {
+                        Method meth = fractionClass.getMethod(//
+                                getRetrieveMethodName(),
+                                new Class[]{String.class});
 
                         double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
 
                         if (isNumeric) {
-                            retVal[0]
-                                    = getValueInUnits(vm[0], getUnits()).toPlainString().trim();
+                            retVal[0] = getValueInUnits(vm[0], getUnits()).toPlainString().trim();
                         } else if (isDisplayedWithArbitraryDigitCount()) {
-                            retVal[0]
-                                    = formatBigDecimalForPublicationArbitraryMode(//
-                                            getValueInUnits(vm[0], getUnits()),
-                                            getCountOfSignificantDigits());
+                            retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
+                                    getValueInUnits(vm[0], getUnits()),
+                                    getCountOfSignificantDigits());
                         } else {
                             // value is in sigfig mode = two flavors
                             // if there is no uncertainty column, then show the value with

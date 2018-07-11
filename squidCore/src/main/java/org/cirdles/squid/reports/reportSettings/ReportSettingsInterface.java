@@ -26,7 +26,6 @@ import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import java.awt.Frame;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -34,11 +33,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 import org.cirdles.squid.reports.ReduxLabDataListElementI;
 import org.cirdles.squid.reports.XMLSerializationI;
-import static org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsAbstract.unitsType;
-import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPb;
+import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 /**
@@ -70,16 +67,19 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         return retVal;
     }
 
-    public default void assembleReportCategories() {
+    public default void assembleReportCategories(boolean referenceMaterial) {
         setReportCategories(new ArrayList<>());
         getReportCategories().add(getFractionCategory());
-//
-//        getReportCategories().add(getDatesCategory());
-//        getReportCategories().add(getDatesPbcCorrCategory());
-        getReportCategories().add(getCorrectionIndependentCategory());
-        getReportCategories().add(getPb204CorrectedCategory());
-//        getReportCategories().add(getIsotopicRatiosPbcCorrCategory());
-//        getReportCategories().add(getRhosCategory());
+
+        if (referenceMaterial) {
+            getReportCategories().add(getSpotFundamentalsCategory());
+            getReportCategories().add(getCpsCategory());
+        } else {
+            getReportCategories().add(getCorrectionIndependentCategory());
+            getReportCategories().add(getPb204CorrectedCategory());
+            getReportCategories().add(getPb207CorrectedCategory());
+            getReportCategories().add(getPb208CorrectedCategory());
+        }
 
         getReportCategories().add(getFractionCategory2());
     }
@@ -203,21 +203,20 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     }
 
     /**
+     * @return the spotFundamentalsCategory
+     */
+    public ReportCategoryInterface getSpotFundamentalsCategory();
+
+    /**
+     * @return the cpsCategory
+     */
+    public ReportCategoryInterface getCpsCategory();
+
+    /**
      *
      * @return
      */
     ReportCategoryInterface getCorrectionIndependentCategory();
-
-    /**
-     *
-     * @return
-     */
-    ReportCategoryInterface getDatesCategory();
-
-    /**
-     * @return the datesPbcCorrCategory
-     */
-    ReportCategoryInterface getDatesPbcCorrCategory();
 
     /**
      *
@@ -237,9 +236,16 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     ReportCategoryInterface getPb204CorrectedCategory();
 
     /**
-     * @return the isotopicRatiosPbcCorrCategory
+     *
+     * @return
      */
-    ReportCategoryInterface getIsotopicRatiosPbcCorrCategory();
+    ReportCategoryInterface getPb207CorrectedCategory();
+
+    /**
+     *
+     * @return
+     */
+    ReportCategoryInterface getPb208CorrectedCategory();
 
     /**
      *
@@ -255,20 +261,10 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     String getReportSettingsComment();
 
     /**
-     * @return the rhosCategory
-     */
-    ReportCategoryInterface getRhosCategory();
-
-    /**
      *
      * @return
      */
     int getVersion();
-
-    /**
-     * @return the legacyData
-     */
-    boolean isLegacyData();
 
     /**
      *
@@ -305,17 +301,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
 
     /**
      *
-     * @param datesCategory
-     */
-    void setDatesCategory(ReportCategoryInterface datesCategory);
-
-    /**
-     * @param datesPbcCorrCategory the datesPbcCorrCategory to set
-     */
-    void setDatesPbcCorrCategory(ReportCategoryInterface datesPbcCorrCategory);
-
-    /**
-     *
      * @param fractionCategory
      */
     void setFractionCategory(ReportCategoryInterface fractionCategory);
@@ -327,20 +312,18 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
 
     /**
      *
-     * @param isotopicRatiosCategory
+     * @param pb204CorrectedCategory
      */
-    void setPb204CorrectedCategory(ReportCategoryInterface isotopicRatiosCategory);
+    void setPb204CorrectedCategory(ReportCategoryInterface pb204CorrectedCategory);
+
+    void setPb207CorrectedCategory(ReportCategoryInterface pb207CorrectedCategory);
+
+    void setPb208CorrectedCategory(ReportCategoryInterface pb2084CorrectedCategory);
 
     /**
-     * @param isotopicRatiosPbcCorrCategory the isotopicRatiosPbcCorrCategory to
-     * set
+     * @param cpsCategory the cpsCategory to set
      */
-    void setIsotopicRatiosPbcCorrCategory(ReportCategoryInterface isotopicRatiosPbcCorrCategory);
-
-    /**
-     * @param legacyData the legacyData to set
-     */
-    void setLegacyData(boolean legacyData);
+    public void setCpsCategory(ReportCategoryInterface cpsCategory);
 
     /**
      *
@@ -353,11 +336,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      * @param reportSettingsComment
      */
     void setReportSettingsComment(String reportSettingsComment);
-
-    /**
-     * @param rhosCategory the rhosCategory to set
-     */
-    void setRhosCategory(ReportCategoryInterface rhosCategory);
 
     /**
      *
@@ -510,7 +488,11 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         // row 5 is reserved for column footnotes as reference letters
         // row 6 is reserved for storage of actual footnotes in the correct order
         // fraction data starts at col 2, row FRACTION_DATA_START_ROW
-        // FRACTION_DATA_START_ROW is stored in 0,0
+        //
+        // filename is stored in 0,1
+        retVal[0][1] = fractions.get(0).getFractionID();
+
+        // FileName is stored in 0,0
         retVal[0][0] = Integer.toString(FRACTION_DATA_START_ROW);
 
         int columnCount = 2;
@@ -532,22 +514,16 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                         if (myCol.isVisible()) {
                             // record column headings
                             retVal[0][columnCount] = categories.get(c).getDisplayName();
-                            retVal[1][columnCount] = myCol.getDisplayName1();//.replace( "\u03c1", "" ); // remove greek rho
+                            retVal[1][columnCount] = myCol.getDisplayName1();
                             retVal[2][columnCount] = myCol.getDisplayName2();
                             retVal[3][columnCount] = myCol.getDisplayName3();
                             retVal[4][columnCount] = myCol.getDisplayName4();
 
-                            if (!myCol.getUnits().equals("")
-                                    && (!categories.get(c).getDisplayName().contains("Dates"))) {
-                                if ((unitsType.get(myCol.getUnits()) == "date")) {
-                                    // July 2017 provides for special case of BP in Useries, where BP is string in retVal[1]
-                                    retVal[4][columnCount] += "(" + myCol.getUnits() + retVal[1][columnCount] + ")";
-                                    retVal[1][columnCount] = "";
-                                } else {
-                                    retVal[4][columnCount] += "(" + myCol.getUnits() + ")";
-                                }
-                            }
+                            // handle units
                             retVal[5][columnCount] = myCol.getUnits();
+                            if (retVal[5][columnCount].length() > 0) {
+                                retVal[4][columnCount] += "(" + myCol.getUnits() + ")";
+                            }
 
                             // detect and handle footnotes, which are referred to in reportFractions[5]
                             // multiple footnotes are separated by "&" as in FN-1&FN-2
@@ -645,11 +621,11 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
             Map<String, String> reportTableFootnotes;
             switch (retVal[1][0]) {
                 case "UPb":
-                    reportTableFootnotes = ReportSpecificationsUPb.reportTableFootnotes;
+                    reportTableFootnotes = ReportSpecificationsUPbSamples.reportTableFootnotes;
                     break;
 
                 default:
-                    reportTableFootnotes = ReportSpecificationsUPb.reportTableFootnotes;
+                    reportTableFootnotes = ReportSpecificationsUPbSamples.reportTableFootnotes;
             }
 
             for (int i = 0;
@@ -755,11 +731,11 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
 //                    // april 2010 specialize footnote for zircons
 //                    switch (zirconPopulationType) {
 //                        case 1:
-//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPb.reportTableFootnotes.get("FN-5zircon"));
+//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPbSamples.reportTableFootnotes.get("FN-5zircon"));
 //                        case 2:
-//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPb.reportTableFootnotes.get("FN-5mixed"));
+//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPbSamples.reportTableFootnotes.get("FN-5mixed"));
 //                        default:
-//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPb.reportTableFootnotes.get("FN-5noZircon"));
+//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPbSamples.reportTableFootnotes.get("FN-5noZircon"));
 //                    }
 //                }
                 retVal[7][i] = determineFootNoteLetter(i) + "&" + footNote;

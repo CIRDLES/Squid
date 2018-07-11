@@ -247,6 +247,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     /**
      * @return the stageX
      */
+    @Override
     public int getStageX() {
         return stageX;
     }
@@ -261,6 +262,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     /**
      * @return the stageY
      */
+    @Override
     public int getStageY() {
         return stageY;
     }
@@ -275,6 +277,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     /**
      * @return the stageZ
      */
+    @Override
     public int getStageZ() {
         return stageZ;
     }

@@ -20,7 +20,6 @@
  */
 package org.cirdles.squid.reports.reportSettings;
 
-import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportCategories.ReportCategory;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -105,28 +104,16 @@ public class ReportSettingsXMLConverter implements Converter {
         context.convertAnother(reportSettings.getCorrectionIndependentCategory());
         writer.endNode();
 
-        writer.startNode("isotopicRatiosCategory");
+        writer.startNode("XXXXXX");
         context.convertAnother(reportSettings.getPb204CorrectedCategory());
         writer.endNode();
 
-        writer.startNode("isotopicRatiosPbcCorrCategory");
-        context.convertAnother(reportSettings.getIsotopicRatiosPbcCorrCategory());
+        writer.startNode("XXXXX");
+        context.convertAnother(reportSettings.getPb207CorrectedCategory());
         writer.endNode();
 
-        writer.startNode("datesCategory");
-        context.convertAnother(reportSettings.getDatesCategory());
-        writer.endNode();
-
-        writer.startNode("datesPbcCorrCategory");
-        context.convertAnother(reportSettings.getDatesPbcCorrCategory());
-        writer.endNode();
-
-        writer.startNode("rhosCategory");
-        context.convertAnother(reportSettings.getRhosCategory());
-        writer.endNode();
-
-        writer.startNode("datesCategory");
-        context.convertAnother(reportSettings.getDatesCategory());
+        writer.startNode("XXXX");
+        context.convertAnother(reportSettings.getPb208CorrectedCategory());
         writer.endNode();
 
         writer.startNode("fractionCategory2");
@@ -135,10 +122,6 @@ public class ReportSettingsXMLConverter implements Converter {
 
         writer.startNode("reportSettingsComment");
         writer.setValue(reportSettings.getReportSettingsComment());
-        writer.endNode();
-
-        writer.startNode("legacyData");
-        writer.setValue(Boolean.toString(reportSettings.isLegacyData()));
         writer.endNode();
 
     }
@@ -190,25 +173,13 @@ public class ReportSettingsXMLConverter implements Converter {
         reader.moveDown();
         reportCategory = new ReportCategory();
         reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setIsotopicRatiosPbcCorrCategory(reportCategory);
+        reportSettings.setPb207CorrectedCategory(reportCategory);
         reader.moveUp();
 
         reader.moveDown();
         reportCategory = new ReportCategory();
         reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setDatesCategory(reportCategory);
-        reader.moveUp();
-
-        reader.moveDown();
-        reportCategory = new ReportCategory();
-        reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setDatesPbcCorrCategory(reportCategory);
-        reader.moveUp();
-
-        reader.moveDown();
-        reportCategory = new ReportCategory();
-        reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setRhosCategory(reportCategory);
+        reportSettings.setPb208CorrectedCategory(reportCategory);
         reader.moveUp();
 
         reader.moveDown();
@@ -221,11 +192,7 @@ public class ReportSettingsXMLConverter implements Converter {
         reportSettings.setReportSettingsComment(reader.getValue());
         reader.moveUp();
 
-        reader.moveDown();
-        reportSettings.setLegacyData((reader.getValue().equalsIgnoreCase("true")));
-        reader.moveUp();
-
-        reportSettings.assembleReportCategories();
+        reportSettings.assembleReportCategories(true);
         return reportSettings;
     }
 }

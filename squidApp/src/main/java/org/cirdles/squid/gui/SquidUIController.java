@@ -1025,16 +1025,32 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void TEST_REPORT_ACTION(ActionEvent event) {
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST");
+    private void referenceMaterialsReportTableAction(ActionEvent event) {
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", true);
 
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
 
-        for (int i = 0; i < report.length; i ++){
-            for (int j = 0; j < report[0].length; j ++){
+        for (int i = 0; i < report.length; i++) {
+            for (int j = 0; j < report[0].length; j++) {
                 System.out.print(report[i][j] + ",  ");
             }
             System.out.println();
+        }
+//        try {
+//            FileHandler.saveReportFileCSV(true, report, primaryStageWindow);
+//        } catch (IOException iOException) {
+//        }
+    }
+
+    @FXML
+    private void unknownsReportTableAction(ActionEvent event) {
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false);
+
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
+
+        try {
+            FileHandler.saveReportFileCSV(true, report, primaryStageWindow);
+        } catch (IOException iOException) {
         }
     }
 

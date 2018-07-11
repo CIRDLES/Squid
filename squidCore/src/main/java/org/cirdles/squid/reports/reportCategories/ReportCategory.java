@@ -32,7 +32,7 @@ import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
  */
 public class ReportCategory implements org.cirdles.squid.reports.reportCategories.ReportCategoryInterface {
 
-    private static final long serialVersionUID = 5227409808812622714L;
+   // private static final long serialVersionUID = 5227409808812622714L;
 
     // Fields
     private String displayName;

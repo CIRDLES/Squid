@@ -32,7 +32,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsAbstract;
-import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPb;
+import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbReferenceMaterials;
+import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples;
 
 /**
  *
@@ -41,36 +42,39 @@ import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPb;
 public class ReportSettings implements
         ReportSettingsInterface {
 
-    private static final long serialVersionUID = 3742875572117123821L;
+    //private static final long serialVersionUID = 3742875572117123821L;
     private transient String reportSettingsXMLSchemaURL;
     /**
      * Each time the report specifications evolve in DataDictionary, this
      * version number is advanced so that any existing analysis will update its
      * report models upon opening in ET_Redux.
      */
-    private static transient int CURRENT_VERSION_REPORT_SETTINGS_UPB = 367;
+    private static transient int CURRENT_VERSION_REPORT_SETTINGS_UPB = 1;
 
     // Fields
     private String name;
     private int version;
     private ReportCategoryInterface fractionCategory;
+
+    // for reference materials
+    private ReportCategoryInterface spotFundamentalsCategory;
+    private ReportCategoryInterface cpsCategory;
+    // for Unknown Samples
     private ReportCategoryInterface correctionIndependentCategory;
     private ReportCategoryInterface pb204CorrectedCategory;
-    private ReportCategoryInterface isotopicRatiosPbcCorrCategory;
-    private ReportCategoryInterface datesCategory;
-    private ReportCategoryInterface datesPbcCorrCategory;
-    private ReportCategoryInterface rhosCategory;
+    private ReportCategoryInterface pb207CorrectedCategory;
+    private ReportCategoryInterface pb208CorrectedCategory;
 
     private ReportCategoryInterface fractionCategory2;
     protected ArrayList<ReportCategoryInterface> reportCategories;
     private String reportSettingsComment;
-    private boolean legacyData;
+    private boolean referenceMaterial;
 
     /**
      * Creates a new instance of ReportSettings
      */
     public ReportSettings() {
-        this("NONE");
+        this("NONE", true);
     }
 
     /**
@@ -79,55 +83,59 @@ public class ReportSettings implements
      * @param name
      * @param defaultReportSpecsType the value of defaultReportSpecsType
      */
-    public ReportSettings(String name) {
+    public ReportSettings(String name, boolean referenceMaterial) {
 
         this.name = name;
+        this.referenceMaterial = referenceMaterial;
 
         this.version = CURRENT_VERSION_REPORT_SETTINGS_UPB;
 
         this.reportSettingsComment = "";
 
         this.fractionCategory
-                = new ReportCategory(//
+                = new ReportCategory(
                         "Fraction",
                         ReportSpecificationsAbstract.ReportCategory_Fraction, true);
 
         this.fractionCategory2
-                = new ReportCategory(//
+                = new ReportCategory(
                         "Fraction",
                         ReportSpecificationsAbstract.ReportCategory_Fraction2, true);
 
-//        this.datesCategory
-//                = new ReportCategory(//
-//                        "Dates",
-//                        ReportSpecificationsUPb.ReportCategory_Dates, true);
-//
-//        this.datesPbcCorrCategory
-//                = new ReportCategory(//
-//                        "PbcCorr Dates",//
-//                        ReportSpecificationsUPb.ReportCategory_PbcCorrDates, false);
-        this.correctionIndependentCategory
-                = new ReportCategory(//
-                        "Correction-Independent Data",//
-                        ReportSpecificationsUPb.ReportCategory_CorrectionIndependentData, true);
+        if (referenceMaterial) {
+            this.spotFundamentalsCategory
+                    = new ReportCategory(
+                            "Spot Fundamentals",
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_SpotFundamentals, true);
+            this.cpsCategory
+                    = new ReportCategory(
+                            "CPS",
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CPS, true);
 
-        this.pb204CorrectedCategory
-                = new ReportCategory(//
-                        "204Pb-Corrected",//
-                        ReportSpecificationsUPb.ReportCategory_204PbCorrected, true);
+        } else {
+            this.correctionIndependentCategory
+                    = new ReportCategory(
+                            "Correction-Independent Data",
+                            ReportSpecificationsUPbSamples.ReportCategory_CorrectionIndependentData, true);
 
-//        this.isotopicRatiosPbcCorrCategory
-//                = new ReportCategory(//
-//                        "PbcCorr Isotopic Ratios",//
-//                        ReportSpecificationsUPb.ReportCategory_PbcCorrIsotopicRatios, false);
-//
-//        this.rhosCategory
-//                = new ReportCategory(//
-//                        "Correlation Coefficients",//
-//                        ReportSpecificationsUPb.ReportCategory_CorrelationCoefficients, true);
-        legacyData = false;
+            this.pb204CorrectedCategory
+                    = new ReportCategory(
+                            "204Pb-Corrected",
+                            ReportSpecificationsUPbSamples.ReportCategory_204PbCorrected, true);
 
-        assembleReportCategories();
+            this.pb207CorrectedCategory
+                    = new ReportCategory(
+                            "207Pb-Corrected",
+                            ReportSpecificationsUPbSamples.ReportCategory_207PbCorrected, true);
+
+            this.pb208CorrectedCategory
+                    = new ReportCategory(
+                            "208Pb-Corrected",
+                            ReportSpecificationsUPbSamples.ReportCategory_208PbCorrected, true);
+
+        }
+
+        assembleReportCategories(this.referenceMaterial);
         normalizeReportCategories();
 
     }
@@ -136,10 +144,9 @@ public class ReportSettings implements
      *
      * @return
      */
-    public static ReportSettingsInterface EARTHTIMEReportSettingsUPb() {
+    public static ReportSettingsInterface EARTHTIMEReportSettingsUPb(boolean referenceMaterial) {
         ReportSettingsInterface EARTHTIME
-                = new ReportSettings("EARTHTIME UPb");
-
+                = new ReportSettings("EARTHTIME UPb", referenceMaterial);
         return EARTHTIME;
     }
 
@@ -327,24 +334,6 @@ public class ReportSettings implements
 
     /**
      *
-     * @return
-     */
-    @Override
-    public ReportCategoryInterface getDatesCategory() {
-        return datesCategory;
-    }
-
-    /**
-     *
-     * @param datesCategory
-     */
-    @Override
-    public void setDatesCategory(ReportCategoryInterface datesCategory) {
-        this.datesCategory = datesCategory;
-    }
-
-    /**
-     *
      * @param reportSettingsModel
      * @return
      */
@@ -436,22 +425,6 @@ public class ReportSettings implements
     }
 
     /**
-     * @return the rhosCategory
-     */
-    @Override
-    public ReportCategoryInterface getRhosCategory() {
-        return rhosCategory;
-    }
-
-    /**
-     * @param rhosCategory the rhosCategory to set
-     */
-    @Override
-    public void setRhosCategory(ReportCategoryInterface rhosCategory) {
-        this.rhosCategory = rhosCategory;
-    }
-
-    /**
      * @return the fractionCategory2
      */
     @Override
@@ -487,64 +460,10 @@ public class ReportSettings implements
     }
 
     /**
-     * @return the legacyData
-     */
-    @Override
-    public boolean isLegacyData() {
-        return legacyData;
-    }
-
-    /**
-     * @param legacyData the legacyData to set
-     */
-    @Override
-    public void setLegacyData(boolean legacyData) {
-        this.legacyData = legacyData;
-
-        getReportCategories().stream().filter((rc) -> (rc != null)).forEach((rc) -> {
-            rc.setLegacyData(legacyData);
-        });
-    }
-
-    /**
      *
      */
     @Override
     public void removeSelf() {
-//        throw new UnsupportedOperationException( "Not supported yet." );
-    }
-
-    /**
-     * @return the isotopicRatiosPbcCorrCategory
-     */
-    @Override
-    public ReportCategoryInterface getIsotopicRatiosPbcCorrCategory() {
-        return isotopicRatiosPbcCorrCategory;
-    }
-
-    /**
-     * @param isotopicRatiosPbcCorrCategory the isotopicRatiosPbcCorrCategory to
-     * set
-     */
-    @Override
-    public void setIsotopicRatiosPbcCorrCategory(ReportCategoryInterface isotopicRatiosPbcCorrCategory) {
-        this.isotopicRatiosPbcCorrCategory = isotopicRatiosPbcCorrCategory;
-    }
-
-    /**
-     * @return the datesPbcCorrCategory
-     */
-    @Override
-    public ReportCategoryInterface getDatesPbcCorrCategory() {
-        return datesPbcCorrCategory;
-    }
-
-    /**
-     * @param datesPbcCorrCategory the datesPbcCorrCategory to set
-     */
-    @Override
-    public void setDatesPbcCorrCategory(ReportCategoryInterface datesPbcCorrCategory) {
-        this.datesPbcCorrCategory = datesPbcCorrCategory;
     }
 
     /**
@@ -570,7 +489,69 @@ public class ReportSettings implements
     public void setReportCategories(ArrayList<ReportCategoryInterface> reportCategories) {
         this.reportCategories = reportCategories;
     }
+
     public static void main(String[] args) {
 
+    }
+
+    /**
+     * @return the pb207CorrectedCategory
+     */
+    @Override
+    public ReportCategoryInterface getPb207CorrectedCategory() {
+        return pb207CorrectedCategory;
+    }
+
+    /**
+     * @param pb207CorrectedCategory the pb207CorrectedCategory to set
+     */
+    @Override
+    public void setPb207CorrectedCategory(ReportCategoryInterface pb207CorrectedCategory) {
+        this.pb207CorrectedCategory = pb207CorrectedCategory;
+    }
+
+    /**
+     * @return the pb208CorrectedCategory
+     */
+    @Override
+    public ReportCategoryInterface getPb208CorrectedCategory() {
+        return pb208CorrectedCategory;
+    }
+
+    /**
+     * @param pb208CorrectedCategory the pb208CorrectedCategory to set
+     */
+    @Override
+    public void setPb208CorrectedCategory(ReportCategoryInterface pb208CorrectedCategory) {
+        this.pb208CorrectedCategory = pb208CorrectedCategory;
+    }
+
+    /**
+     * @return the spotFundamentalsCategory
+     */
+    public ReportCategoryInterface getSpotFundamentalsCategory() {
+        return spotFundamentalsCategory;
+    }
+
+    /**
+     * @param spotFundamentalsCategory the spotFundamentalsCategory to set
+     */
+    public void setSpotFundamentalsCategory(ReportCategoryInterface spotFundamentalsCategory) {
+        this.spotFundamentalsCategory = spotFundamentalsCategory;
+    }
+
+    /**
+     * @return the cpsCategory
+     */
+    public ReportCategoryInterface getCpsCategory() {
+        return cpsCategory;
+    }
+
+    /**
+     * @param cpsCategory the cpsCategory to set
+     */
+    @Override
+    public void setCpsCategory(ReportCategoryInterface cpsCategory) {
+        this.cpsCategory = cpsCategory;
     }
 }

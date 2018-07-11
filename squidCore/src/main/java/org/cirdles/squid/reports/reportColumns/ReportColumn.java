@@ -34,7 +34,7 @@ import static org.cirdles.squid.reports.reportSpecifications.ReportSpecification
 public class ReportColumn implements
         ReportColumnInterface {
 
-    private static final long serialVersionUID = 1474850196549001090L;
+    //private static final long serialVersionUID = 1474850196549001090L;
     // fields
     private String displayName1;
     private String displayName2;
