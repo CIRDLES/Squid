@@ -92,7 +92,7 @@ public class ReportSerializerToCSV {
                         }
 
                         // fraction data
-                        for (int c = firstColumnShown; c < reportFractions[0].length; c++) {
+                        for (int c = firstColumnShown; c < reportFractions[0].length - 1; c++) {
                             outputWriter.write(reportFractions[row][c] + ",");
                         }
 

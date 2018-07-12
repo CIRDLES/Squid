@@ -75,6 +75,8 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
             getReportCategories().add(getSpotFundamentalsCategory());
             getReportCategories().add(getCpsCategory());
             getReportCategories().add(getRawRatiosCategory());
+            getReportCategories().add(getCustomExpressionsCategory());
+            getReportCategories().add(getCorrectionIndependentRMCategory());
         } else {
             getReportCategories().add(getCorrectionIndependentCategory());
             getReportCategories().add(getPb204CorrectedCategory());
@@ -335,6 +337,27 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      * @param rawRatiosCategory the rawRatiosCategory to set
      */
     public void setRawRatiosCategory(ReportCategoryInterface rawRatiosCategory);
+
+    /**
+     * @return the customExpressionsCategory
+     */
+    public ReportCategoryInterface getCustomExpressionsCategory();
+
+    /**
+     * @param customExpressionsCategory the customExpressionsCategory to set
+     */
+    public void setCustomExpressionsCategory(ReportCategoryInterface customExpressionsCategory);
+
+    /**
+     * @return the correctionIndependentRMCategory
+     */
+    public ReportCategoryInterface getCorrectionIndependentRMCategory();
+
+    /**
+     * @param correctionIndependentRMCategory the
+     * correctionIndependentRMCategory to set
+     */
+    public void setCorrectionIndependentRMCategory(ReportCategoryInterface correctionIndependentRMCategory);
 
     /**
      *

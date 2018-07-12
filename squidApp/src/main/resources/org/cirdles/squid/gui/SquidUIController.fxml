@@ -110,14 +110,14 @@
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
                            <items>
-                            <MenuItem mnemonicParsing="false" text="Specify Reports Layout" />
+                            <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
                               <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - beta" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
                           <items>
-                              <MenuItem mnemonicParsing="false" text="Specify Reports Layout" />
-                              <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - beta" />
+                              <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
+                              <MenuItem disable="true" mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - beta" />
                           </items>
                         </Menu>
                     </items>

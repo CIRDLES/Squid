@@ -930,6 +930,13 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     /**
+     * @return the folderToWriteCalamariReports
+     */
+    public File getFolderToWriteCalamariReports() {
+        return folderToWriteCalamariReports;
+    }
+
+    /**
      * @param nameOfPrawnXMLFile the nameOfPrawnXMLFile to set
      */
     public void setNameOfPrawnXMLFile(String nameOfPrawnXMLFile) {

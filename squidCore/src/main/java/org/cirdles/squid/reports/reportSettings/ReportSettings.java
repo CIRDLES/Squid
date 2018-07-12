@@ -62,6 +62,9 @@ public class ReportSettings implements
     private ReportCategoryInterface spotFundamentalsCategory;
     private ReportCategoryInterface cpsCategory;
     private ReportCategoryInterface rawRatiosCategory;
+    private ReportCategoryInterface customExpressionsCategory;
+    private ReportCategoryInterface correctionIndependentRMCategory;
+
     // for Unknown Samples
     private ReportCategoryInterface correctionIndependentCategory;
     private ReportCategoryInterface pb204CorrectedCategory;
@@ -120,6 +123,14 @@ public class ReportSettings implements
                     = new ReportCategory(
                             "Raw Nuclide Ratios",
                             ReportSpecificationsUPbReferenceMaterials.ReportCategory_RawRatios, true, task);
+            this.customExpressionsCategory
+                    = new ReportCategory(
+                            "Custom",
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CustomExpressions, true, task);
+            this.correctionIndependentRMCategory
+                    =new ReportCategory(
+                            "Correction-Independent Built-In",
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CorrectionIndependent, true, task);
 
         } else {
             this.correctionIndependentCategory
@@ -557,6 +568,7 @@ public class ReportSettings implements
     /**
      * @return the rawRatiosCategory
      */
+    @Override
     public ReportCategoryInterface getRawRatiosCategory() {
         return rawRatiosCategory;
     }
@@ -564,7 +576,38 @@ public class ReportSettings implements
     /**
      * @param rawRatiosCategory the rawRatiosCategory to set
      */
+    @Override
     public void setRawRatiosCategory(ReportCategoryInterface rawRatiosCategory) {
         this.rawRatiosCategory = rawRatiosCategory;
+    }
+
+    /**
+     * @return the customExpressionsCategory
+     */
+    @Override
+    public ReportCategoryInterface getCustomExpressionsCategory() {
+        return customExpressionsCategory;
+    }
+
+    /**
+     * @param customExpressionsCategory the customExpressionsCategory to set
+     */
+    @Override
+    public void setCustomExpressionsCategory(ReportCategoryInterface customExpressionsCategory) {
+        this.customExpressionsCategory = customExpressionsCategory;
+    }
+
+    /**
+     * @return the correctionIndependentRMCategory
+     */
+    public ReportCategoryInterface getCorrectionIndependentRMCategory() {
+        return correctionIndependentRMCategory;
+    }
+
+    /**
+     * @param correctionIndependentRMCategory the correctionIndependentRMCategory to set
+     */
+    public void setCorrectionIndependentRMCategory(ReportCategoryInterface correctionIndependentRMCategory) {
+        this.correctionIndependentRMCategory = correctionIndependentRMCategory;
     }
 }

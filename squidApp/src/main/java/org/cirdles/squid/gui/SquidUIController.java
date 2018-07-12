@@ -21,7 +21,6 @@ import org.cirdles.squid.gui.topsoil.TopsoilWindow;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -71,6 +70,7 @@ import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
@@ -1025,21 +1025,36 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void referenceMaterialsReportTableAction(ActionEvent event) {
+    private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
 
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
-
-        for (int i = 0; i < report.length; i++) {
-            for (int j = 0; j < report[0].length; j++) {
-                System.out.print(report[i][j] + ",  ");
-            }
-            System.out.println();
-        }
-//        try {
-//            FileHandler.saveReportFileCSV(true, report, primaryStageWindow);
-//        } catch (IOException iOException) {
+//
+//        for (int i = 0; i < report.length; i++) {
+//            for (int j = 0; j < report[0].length; j++) {
+//                System.out.print(report[i][j] + ",  ");
+//            }
+//            System.out.println();
 //        }
+//        
+        // output a file
+        File reportsFolderParent = squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports();
+        String reportsPath
+                = reportsFolderParent.getCanonicalPath()
+                + File.separator
+                + "DataTables"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = new File(reportsPath + "ReferenceMaterialReportTable.csv");
+        ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
+        File reportTableFileRaw = new File(reportsPath + "RAW_ReferenceMaterialReportTable.csv");
+        ReportSerializerToCSV.writeCSVReport(true, reportTableFileRaw, report);
+
+        org.cirdles.squid.gui.utilities.BrowserControl.showURI(reportTableFile.getCanonicalPath());
     }
 
     @FXML

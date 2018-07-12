@@ -29,6 +29,7 @@ import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 
 /**
  *
@@ -87,7 +88,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                             "cts",
                             "/sec",
                             "",
-                            "getTotalCps",
+                            reportCategorySpecs[0][5],
                             "<INDEX>" + i,
                             "",
                             "", "true", "true", "2", "", "", "false", "false"
@@ -115,14 +116,48 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                         displayNameNoSpaces.split("/")[0],
                         "/" + displayNameNoSpaces.split("/")[1],
                         "",
-                        "getIsotopicRatioValuesByStringName",
+                        reportCategorySpecs[0][5],
                         displayNameNoSpaces,
                         "PCT",
                         "", "true", "true", "4", "true", "", "false", "false"
                     };
-                    
+
                     generatedReportCategorySpecsList.add(columnSpec);
                 }
+            }
+            categoryColumns = new ReportColumn[generatedReportCategorySpecsList.size()];
+            for (int i = 0; i < categoryColumns.length; i++) {
+                categoryColumns[i] = SetupReportColumn(i, generatedReportCategorySpecsList.get(i));
+            }
+        } else if (reportCategorySpecs[0][6].compareToIgnoreCase("<RM_EXPRESSIONS_ARRAY>") == 0) {
+            // special case of generation
+            List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated
+                    = ((ShrimpFraction) task.getReferenceMaterialSpots().get(0)).getTaskExpressionsForScansEvaluated();
+            List<String[]> generatedReportCategorySpecsList = new ArrayList<>();
+            for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
+                
+                if ((!taskExpressionEval.getExpression().isSquidSpecialUPbThExpression())
+                        && (taskExpressionEval.getExpression().isSquidSwitchSTReferenceMaterialCalculation())) {
+                    // Report column order =
+                    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+                    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+                    //     needsLead, needsUranium
+                    String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20, taskExpressionEval.getExpression().getName().length()));
+                    String[] columnSpec = new String[]{
+                        "",
+                        "",
+                        "",
+                        expressionName,
+                        "",
+                        reportCategorySpecs[0][5],
+                        expressionName,
+                        "PCT",
+                        "", "true", "true", "4", "true", "", "false", "false"
+                    };
+
+                    generatedReportCategorySpecsList.add(columnSpec);
+                }
+
             }
             categoryColumns = new ReportColumn[generatedReportCategorySpecsList.size()];
             for (int i = 0; i < categoryColumns.length; i++) {
@@ -147,7 +182,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                 specs[0], // displayname1
                 specs[1], // displayname2
                 specs[2], // displayname3
-                specs[3], // displayname4
+                specs[3].contains("delta") ? specs[3].replace("delta", "\u1E9F") : specs[3], // displayname4
                 index, // positionIndex
                 specs[4], // units
                 specs[5], // retrieveMethodName

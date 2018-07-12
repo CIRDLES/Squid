@@ -89,6 +89,63 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         }
     };
 
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_CustomExpressions = new String[][]{
+        {"", "", "", "", "", "getTaskExpressionsEvaluationsPerSpotByField", "<RM_EXPRESSIONS_ARRAY>", "",
+            "", "", "", "", "", "", "", ""
+        }
+    };
+
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_CorrectionIndependent = new String[][]{
+        {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_U, "",
+            "", "true", "false", "6", "", "concentration of U", "false", "false"
+        },
+        {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH, "",
+            "", "true", "false", "6", "", "concentration of Th", "false", "false"
+        },
+        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME, "PCT",
+            "", "true", "false", "3", "true", "232/238 ratio", "false", "false"
+        },
+        {"204", "overcts", "/sec", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204 overcts/sec (fr. 207)", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        },
+        {"204", "overcts", "/sec", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204 overcts/sec (fr. 208)", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        },
+        {"", "204", "/206", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204/206 (fr. 207)", "",
+            "", "true", "true", "6", "true", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "204/206 (fr. 207) %err", "",
+            "", "true", "true", "0", "true", "", "false", "false"
+        },
+        {"", "204", "/206", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204/206 (fr. 208)", "",
+            "", "true", "true", "6", "true", "", "false", "false"
+        },
+        {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corrPrimary calib const. delta%", "",
+            "", "true", "true", "3", "true", "", "false", "false"
+        },
+        {"8-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corrPrimary calib const. delta%", "",
+            "", "true", "true", "3", "true", "", "false", "false"
+        },
+        {"", "Uncorr", "Pb/U", "const", "", "getTaskExpressionsEvaluationsPerSpotByField", "UncorrPb/Uconst", "PCT",
+            "", "true", "false", "3", "true", "232/238 ratio", "false", "false"
+        }
+
+    };
+
     /**
      *
      */
