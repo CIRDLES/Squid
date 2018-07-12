@@ -77,6 +77,9 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
             getReportCategories().add(getRawRatiosCategory());
             getReportCategories().add(getCustomExpressionsCategory());
             getReportCategories().add(getCorrectionIndependentRMCategory());
+            getReportCategories().add(getPb204CorrectedRMCategory());
+            getReportCategories().add(getPb207CorrectedRMCategory());
+            getReportCategories().add(getPb208CorrectedRMCategory());
         } else {
             getReportCategories().add(getCorrectionIndependentCategory());
             getReportCategories().add(getPb204CorrectedCategory());
@@ -352,6 +355,36 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      * @return the correctionIndependentRMCategory
      */
     public ReportCategoryInterface getCorrectionIndependentRMCategory();
+
+    /**
+     * @return the pb204CorrectedRMCategory
+     */
+    public ReportCategoryInterface getPb204CorrectedRMCategory();
+
+    /**
+     * @param pb204CorrectedRMCategory the pb204CorrectedRMCategory to set
+     */
+    public void setPb204CorrectedRMCategory(ReportCategoryInterface pb204CorrectedRMCategory);
+
+    /**
+     * @return the pb207CorrectedRMCategory
+     */
+    public ReportCategoryInterface getPb207CorrectedRMCategory();
+
+    /**
+     * @param pb207CorrectedRMCategory the pb207CorrectedRMCategory to set
+     */
+    public void setPb207CorrectedRMCategory(ReportCategoryInterface pb207CorrectedRMCategory);
+
+    /**
+     * @return the pb208CorrectedRMCategory
+     */
+    public ReportCategoryInterface getPb208CorrectedRMCategory();
+
+    /**
+     * @param pb208CorrectedRMCategory the pb208CorrectedRMCategory to set
+     */
+    public void setPb208CorrectedRMCategory(ReportCategoryInterface pb208CorrectedRMCategory);
 
     /**
      * @param correctionIndependentRMCategory the

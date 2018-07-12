@@ -64,6 +64,9 @@ public class ReportSettings implements
     private ReportCategoryInterface rawRatiosCategory;
     private ReportCategoryInterface customExpressionsCategory;
     private ReportCategoryInterface correctionIndependentRMCategory;
+    private ReportCategoryInterface pb204CorrectedRMCategory;
+    private ReportCategoryInterface pb207CorrectedRMCategory;
+    private ReportCategoryInterface pb208CorrectedRMCategory;
 
     // for Unknown Samples
     private ReportCategoryInterface correctionIndependentCategory;
@@ -128,12 +131,26 @@ public class ReportSettings implements
                             "Custom",
                             ReportSpecificationsUPbReferenceMaterials.ReportCategory_CustomExpressions, true, task);
             this.correctionIndependentRMCategory
-                    =new ReportCategory(
+                    = new ReportCategory(
                             "Correction-Independent Built-In",
                             ReportSpecificationsUPbReferenceMaterials.ReportCategory_CorrectionIndependent, true, task);
+            this.pb204CorrectedRMCategory
+                    = new ReportCategory(
+                            "204Pb-Corrected",
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_204PbCorrected, true, task);
+
+            this.pb207CorrectedRMCategory
+                    = new ReportCategory(
+                            "207Pb-Corrected",
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_207PbCorrected, true, task);
+
+            this.pb208CorrectedRMCategory
+                    = new ReportCategory(
+                            "208Pb-Corrected",
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_208PbCorrected, true, task);
 
         } else {
-            this.correctionIndependentCategory
+            this.correctionIndependentRMCategory
                     = new ReportCategory(
                             "Correction-Independent Data",
                             ReportSpecificationsUPbSamples.ReportCategory_CorrectionIndependentData, true, task);
@@ -600,14 +617,58 @@ public class ReportSettings implements
     /**
      * @return the correctionIndependentRMCategory
      */
+    @Override
     public ReportCategoryInterface getCorrectionIndependentRMCategory() {
         return correctionIndependentRMCategory;
     }
 
     /**
-     * @param correctionIndependentRMCategory the correctionIndependentRMCategory to set
+     * @param correctionIndependentRMCategory the
+     * correctionIndependentRMCategory to set
      */
     public void setCorrectionIndependentRMCategory(ReportCategoryInterface correctionIndependentRMCategory) {
         this.correctionIndependentRMCategory = correctionIndependentRMCategory;
+    }
+
+    /**
+     * @return the pb204CorrectedRMCategory
+     */
+    public ReportCategoryInterface getPb204CorrectedRMCategory() {
+        return pb204CorrectedRMCategory;
+    }
+
+    /**
+     * @param pb204CorrectedRMCategory the pb204CorrectedRMCategory to set
+     */
+    public void setPb204CorrectedRMCategory(ReportCategoryInterface pb204CorrectedRMCategory) {
+        this.pb204CorrectedRMCategory = pb204CorrectedRMCategory;
+    }
+
+    /**
+     * @return the pb207CorrectedRMCategory
+     */
+    public ReportCategoryInterface getPb207CorrectedRMCategory() {
+        return pb207CorrectedRMCategory;
+    }
+
+    /**
+     * @param pb207CorrectedRMCategory the pb207CorrectedRMCategory to set
+     */
+    public void setPb207CorrectedRMCategory(ReportCategoryInterface pb207CorrectedRMCategory) {
+        this.pb207CorrectedRMCategory = pb207CorrectedRMCategory;
+    }
+
+    /**
+     * @return the pb208CorrectedRMCategory
+     */
+    public ReportCategoryInterface getPb208CorrectedRMCategory() {
+        return pb208CorrectedRMCategory;
+    }
+
+    /**
+     * @param pb208CorrectedRMCategory the pb208CorrectedRMCategory to set
+     */
+    public void setPb208CorrectedRMCategory(ReportCategoryInterface pb208CorrectedRMCategory) {
+        this.pb208CorrectedRMCategory = pb208CorrectedRMCategory;
     }
 }

@@ -145,6 +145,120 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         }
 
     };
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_204PbCorrected = new String[][]{
+        {"4-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238Ucalibr.const", "",
+            "", "true", "false", "4", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238Ucalibr.const %err", "",
+            "", "true", "false", "2", "", "", "false", "false"
+        },
+        {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238U Age", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "", "\u00B11\u03C3", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238U Age 1sigma", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr%com206", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        },
+        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb*", "",
+            "", "true", "false", "4", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb* %err", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        },
+        
+        
+        {"4-corr", "207Pb", "206Pb", "age","Ma",  "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/206Pbage", "ABS",
+            "", "true", "false", "3", "true", "", "false", "false"
+        },
+        {"", "4-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/206Pb", "",
+            "", "true", "false", "4", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/206Pb%err", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        },
+        {"", "4-corr", "207Pb", "/235U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/235U", "",
+            "", "true", "false", "4", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/235U %err", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        },
+        {"", "4-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238U", "",
+            "", "true", "false", "4", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238U %err", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        },
+        {"", "4-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr-errcorr", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        }
+
+    };
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_207PbCorrected = new String[][]{
+        {"7-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr206Pb/238Ucalibr.const", "",
+            "", "true", "false", "4", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr206Pb/238Ucalibr.const %err", "",
+            "", "true", "false", "2", "", "", "false", "false"
+        },
+        {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr206Pb/238U Age", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "", "\u00B11\u03C3", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr206Pb/238U Age 1sigma", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr%com206", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        },
+        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb*", "",
+            "", "true", "false", "4", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb* %err", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        }
+
+    };
+
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_208PbCorrected = new String[][]{
+        {"8-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr206Pb/238Ucalibr.const", "",
+            "", "true", "false", "4", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr206Pb/238Ucalibr.const %err", "",
+            "", "true", "false", "2", "", "", "false", "false"
+        },
+        {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr206Pb/238U Age", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "", "\u00B11\u03C3", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr206Pb/238U Age 1sigma", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr%com206", "",
+            "", "true", "false", "3", "", "", "false", "false"
+        }
+
+    };
 
     /**
      *
