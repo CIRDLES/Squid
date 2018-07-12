@@ -18,13 +18,11 @@
  */
 package org.cirdles.squid.reports.reportCategories;
 
-import org.cirdles.squid.reports.reportCategories.ReportCategory;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.cirdles.squid.reports.reportColumns.ReportColumn;

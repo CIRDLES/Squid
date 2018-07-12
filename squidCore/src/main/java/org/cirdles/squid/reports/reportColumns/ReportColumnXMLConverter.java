@@ -231,9 +231,9 @@ public class ReportColumnXMLConverter implements Converter {
             uncertaintyColumn = (ReportColumnInterface) context.convertAnother(uncertaintyColumn, ReportColumn.class);
             // correct for unicode missing in xml
             if (uncertaintyColumn.getUncertaintyType().equalsIgnoreCase("PCT")) {
-                uncertaintyColumn.setDisplayName3("\u00B12\u03C3 %");
+                uncertaintyColumn.setDisplayName3("\u00B11\u03C3 %");
             } else {
-                uncertaintyColumn.setDisplayName2("\u00B12\u03C3");
+                uncertaintyColumn.setDisplayName2("\u00B11\u03C3");
             }
             reportColumn.setUncertaintyColumn(uncertaintyColumn);
         } else {

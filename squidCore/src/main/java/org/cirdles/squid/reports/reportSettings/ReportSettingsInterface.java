@@ -74,6 +74,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         if (referenceMaterial) {
             getReportCategories().add(getSpotFundamentalsCategory());
             getReportCategories().add(getCpsCategory());
+            getReportCategories().add(getRawRatiosCategory());
         } else {
             getReportCategories().add(getCorrectionIndependentCategory());
             getReportCategories().add(getPb204CorrectedCategory());
@@ -324,6 +325,16 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      * @param cpsCategory the cpsCategory to set
      */
     public void setCpsCategory(ReportCategoryInterface cpsCategory);
+
+    /**
+     * @return the rawRatiosCategory
+     */
+    public ReportCategoryInterface getRawRatiosCategory();
+
+    /**
+     * @param rawRatiosCategory the rawRatiosCategory to set
+     */
+    public void setRawRatiosCategory(ReportCategoryInterface rawRatiosCategory);
 
     /**
      *
@@ -874,17 +885,4 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
 
     public String getReportSettingsXMLSchemaURL();
 
-    /**
-     *
-     * @param reportSettingsModel the value of reportSettingsModel
-     * @param parent the value of parent
-     */
-    public static void EditReportSettings(ReportSettingsInterface reportSettingsModel, Frame parent) {
-//
-//        DialogEditor myReportSettingsManager
-//                = new ReportSettingsManager(parent, true, reportSettingsModel);
-//        myReportSettingsManager.setSize(455, 685);
-//
-//        myReportSettingsManager.setVisible(true);
-    }
 }

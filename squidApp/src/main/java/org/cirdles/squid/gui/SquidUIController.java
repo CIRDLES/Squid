@@ -1026,7 +1026,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) {
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST", true);
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
 
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
 
@@ -1044,7 +1044,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void unknownsReportTableAction(ActionEvent event) {
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false);
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
 
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
 

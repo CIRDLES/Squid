@@ -72,30 +72,10 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
      *
      */
     public static final String[][] ReportCategory_CPS = new String[][]{
-
-    };
-    // Report column order =
-    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
-    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
-    //     needsLead, needsUranium
-    /**
-     *
-     */
-    public static final String[][] ReportCategory_207PbCorrected = new String[][]{
-        {"207cor", "Common", "206Pb", "(%)", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr%com206", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"207cor", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "207corr206Pb/238UAge", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"", "", "", "±1sigma", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"", "207cor", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "3", "true", "", "false", "false"
+        {"", "", "", "", "", "getTotalCps", "<SPECIES_ARRAY>", "",
+            "", "", "", "", "", "", "", ""
         }
     };
-
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
     //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
@@ -103,39 +83,9 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
     /**
      *
      */
-    public static final String[][] ReportCategory_208PbCorrected = new String[][]{
-        {"208cor", "Common", "206Pb", "(%)", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr%com206", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"208cor", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "208corr206Pb/238UAge", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"", "", "", "±1sigma", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"208cor", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "3", "true", "", "false", "false"
-        },
-        {"", "", "", "±1sigma", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"208cor", "Discor-", "dance", "(%)", "", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "3", "true", "", "false", "false"
-        },
-        {"", "208cor", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "3", "true", "", "false", "false"
-        },
-        {"", "208cor", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "3", "true", "", "false", "false"
-        },
-        {"", "208cor", "207Pb", "/235U", "", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "3", "true", "", "false", "false"
-        },
-        {"", "208cor", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "3", "true", "", "false", "false"
-        },
-        {"", "208cor", "Error", "Correl", "", "getTaskExpressionsEvaluationsPerSpotByField", "**TODO**", "",
-            "", "true", "false", "3", "false", "", "false", "false"
+    public static final String[][] ReportCategory_RawRatios = new String[][]{
+        {"", "", "", "", "", "getIsotopicRatioValuesByStringName", "<RATIOS_ARRAY>", "",
+            "", "", "", "", "", "", "", ""
         }
     };
 

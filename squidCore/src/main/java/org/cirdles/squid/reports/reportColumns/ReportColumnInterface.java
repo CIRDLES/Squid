@@ -437,6 +437,26 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                         System.err.println(e);
                     }
+                } else if (getRetrieveVariableName().startsWith("<INDEX>")) {
+                    int index = Integer.parseInt(getRetrieveVariableName().split(">")[1]);
+                    try {
+                        Method meth
+                                = fractionClass.getMethod(//
+                                        getRetrieveMethodName(),
+                                        new Class[0]);
+
+                        double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
+
+                        if (isNumeric) {
+                            retVal[0] = String.valueOf(doubleValue);
+                        } else if (isDisplayedWithArbitraryDigitCount()) {
+                            retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
+                                    new BigDecimal(doubleValue),
+                                    getCountOfSignificantDigits());
+                        }
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
                 } else {
                     try {
                         Method meth = fractionClass.getMethod(//
@@ -469,7 +489,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                 // added July 2017 to disable uncert column effect if it is not visible (making it behave as if arbitrary)
                                 if (getUncertaintyColumn().isVisible() && !getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
                                     // uncertainty column is in sigfig mode
-                                    retVal[0] = formatValueFromTwoSigmaForPublicationSigDigMode(//
+                                    retVal[0] = formatValueFromOneSigmaForPublicationSigDigMode(//
                                             vm[0], vm[1],
                                             getUncertaintyType(), Squid3Constants.getUnitConversionMoveCount(getUnits()),//
                                             getUncertaintyColumn().getCountOfSignificantDigits());
@@ -483,7 +503,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                             retVal[0] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[0]);
                         }
 
-                        // report 2-sigma uncertainty
+                        // report 1-sigma uncertainty
                         if (getUncertaintyColumn() != null) {
                             if (getUncertaintyColumn().isVisible()) {
                                 // check for reporting mode
@@ -497,14 +517,14 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
                                 } else if (isNumeric) {
                                     retVal[1]
-                                            = getTwoSigma(vm[0], vm[1], getUncertaintyType(), getUnits()).toPlainString().trim();
+                                            = getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()).toPlainString().trim();
                                 } else if (getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
                                     retVal[1]
                                             = formatBigDecimalForPublicationArbitraryMode(//
-                                                    getTwoSigma(vm[0], vm[1], getUncertaintyType(), getUnits()),
+                                                    getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()),
                                                     getUncertaintyColumn().getCountOfSignificantDigits());
                                 } else {
-                                    retVal[1] = formatTwoSigmaForPublicationSigDigMode(//
+                                    retVal[1] = formatOneSigmaForPublicationSigDigMode(//
                                             vm[0],
                                             vm[1],
                                             getUncertaintyType(),
@@ -551,14 +571,14 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         }
     }
 
-    static String formatValueFromTwoSigmaForPublicationSigDigMode(
+    static String formatValueFromOneSigmaForPublicationSigDigMode(
             double value,
             double oneSigmaAbs,
             String uncertaintyType,
             int movePointRightCount,
             int uncertaintySigDigits) {
 
-        String temp = formatValueAndTwoSigmaForPublicationSigDigMode(//
+        String temp = formatValueAndOneSigmaForPublicationSigDigMode(//
                 value, oneSigmaAbs,
                 uncertaintyType, movePointRightCount, uncertaintySigDigits);
 
@@ -567,7 +587,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         return retVal[0].trim();
     }
 
-    static String formatValueAndTwoSigmaForPublicationSigDigMode(
+    static String formatValueAndOneSigmaForPublicationSigDigMode(
             double value,
             double oneSigmaAbs,
             String uncertaintyType,
@@ -576,19 +596,19 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
         // sept 2009 modified to force use of ABS uncertainty for sigfig counting
         // first determine the shape of significant digits of ABS uncertainty
-        String twoSigmaUnct
-                = formatTwoSigmaForPublicationSigDigMode(//
+        String oneSigmaUnct
+                = formatOneSigmaForPublicationSigDigMode(//
                         value, oneSigmaAbs,
                         "ABS", movePointRightCount, uncertaintySigDigits);
 
         // then generate the ouput string based on uncertainty type
-        String twoSigmaUnctOutput
-                = formatTwoSigmaForPublicationSigDigMode(//
+        String oneSigmaUnctOutput
+                = formatOneSigmaForPublicationSigDigMode(//
                         value, oneSigmaAbs,
                         uncertaintyType, movePointRightCount, uncertaintySigDigits);
 
         // determine location of decimal point in uncertainty
-        int countOfDigitsAfterDecPointInError = calculateCountOfDigitsAfterDecPoint(twoSigmaUnct);
+        int countOfDigitsAfterDecPointInError = calculateCountOfDigitsAfterDecPoint(oneSigmaUnct);
 
         // create string from value
         String valueString
@@ -602,9 +622,9 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         if (valueString.endsWith(".")) {
             valueString = valueString.substring(0, valueString.length() - 1);
             // now check if trailing zeroes in uncertainty and zero those in value
-            if (twoSigmaUnct.length() > uncertaintySigDigits) {
+            if (oneSigmaUnct.length() > uncertaintySigDigits) {
                 // the extra length is zeroes and these need to be transferred to value
-                int zeroesCount = twoSigmaUnct.length() - uncertaintySigDigits;
+                int zeroesCount = oneSigmaUnct.length() - uncertaintySigDigits;
                 try {
                     valueString
                             = valueString.substring(0, valueString.length() - zeroesCount)//
@@ -614,10 +634,10 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
             }
         }
 
-        return valueString + " \u00B1 " + twoSigmaUnctOutput;
+        return valueString + " \u00B1 " + oneSigmaUnctOutput;
     }
 
-    static String formatTwoSigmaForPublicationSigDigMode(
+    static String formatOneSigmaForPublicationSigDigMode(
             double value,
             double oneSigmaAbs,
             String uncertaintyType,
@@ -626,11 +646,11 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
         if (uncertaintyType.equalsIgnoreCase("PCT")) {
             return formatBigDecimalForPublicationSigDigMode(//
-                    new BigDecimal(oneSigmaAbs / value * 200.0).movePointRight(movePointRightCount),//
+                    new BigDecimal(oneSigmaAbs / value * 100.0).movePointRight(movePointRightCount),//
                     uncertaintySigDigits);
         } else {
             return formatBigDecimalForPublicationSigDigMode(//
-                    new BigDecimal(oneSigmaAbs * 2.0).movePointRight(movePointRightCount),//
+                    new BigDecimal(oneSigmaAbs * 1.0).movePointRight(movePointRightCount),//
                     uncertaintySigDigits);
         }
     }
@@ -641,7 +661,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
         if ((number.compareTo(BigDecimal.ZERO) == 0)//
                 || // jan 2011 to trap for absurdly small uncertainties
-                // july 2011 added abs to handle negative values in tripoli alphas
                 (number.abs().doubleValue() < Math.pow(10, -1 * 15))) {
             return "0";
         } else {
@@ -650,7 +669,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         }
     }
 
-    static BigDecimal getTwoSigma(double value, double oneSigmaAbs, String uncertaintyType, String units) {
+    static BigDecimal getOneSigma(double value, double oneSigmaAbs, String uncertaintyType, String units) {
         int shiftPointRightCount = 0;
 
         try {
@@ -659,34 +678,33 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         }
 
         if (uncertaintyType.equalsIgnoreCase("PCT")) {
-            return getTwoSigmaPct(value, oneSigmaAbs).movePointRight(shiftPointRightCount);
+            return getOneSigmaPct(value, oneSigmaAbs).movePointRight(shiftPointRightCount);
         } else {
-            return getTwoSigmaAbs(oneSigmaAbs).movePointRight(shiftPointRightCount);
+            return getOneSigmaAbs(oneSigmaAbs).movePointRight(shiftPointRightCount);
         }
     }
 
-    static BigDecimal getTwoSigmaAbs(double oneSigmaAbs) {
-        return new BigDecimal(2.0 * oneSigmaAbs);
+    static BigDecimal getOneSigmaAbs(double oneSigmaAbs) {
+        return new BigDecimal(oneSigmaAbs);
     }
 
     /**
      *
      * @return
      */
-    static BigDecimal getTwoSigmaPct(double value, double oneSigmaAbs) {
-        return new BigDecimal(oneSigmaAbs / value * 200.0);
+    static BigDecimal getOneSigmaPct(double value, double oneSigmaAbs) {
+        return new BigDecimal(oneSigmaAbs / value * 100.0);
     }
 
-    static int calculateCountOfDigitsAfterDecPoint(String twoSigError) {
+    static int calculateCountOfDigitsAfterDecPoint(String oneSigError) {
         // determine location of decimal point in uncertainty
         int countOfDigitsAfterDecPointInError;
-        int indexOfDecPoint = twoSigError.indexOf(".");
+        int indexOfDecPoint = oneSigError.indexOf(".");
         if (indexOfDecPoint < 0) {
             countOfDigitsAfterDecPointInError = 0;
         } else {
             countOfDigitsAfterDecPointInError
-                    =//
-                    twoSigError.length() - (indexOfDecPoint + 1);
+                    = oneSigError.length() - (indexOfDecPoint + 1);
         }
 
         return countOfDigitsAfterDecPointInError;

@@ -20,11 +20,15 @@
  */
 package org.cirdles.squid.reports.reportCategories;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import javafx.scene.paint.Color;
 import org.cirdles.squid.reports.reportColumns.ReportColumn;
 import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
-
-
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.tasks.TaskInterface;
 
 /**
  *
@@ -32,11 +36,11 @@ import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
  */
 public class ReportCategory implements org.cirdles.squid.reports.reportCategories.ReportCategoryInterface {
 
-   // private static final long serialVersionUID = 5227409808812622714L;
-
+    // private static final long serialVersionUID = 5227409808812622714L;
     // Fields
     private String displayName;
     private int positionIndex;
+    private TaskInterface task;
     private ReportColumnInterface[] categoryColumns;
     private Color categoryColor;
     private boolean visible;
@@ -54,15 +58,81 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
      * @param displayName
      * @param reportCategorySpecs
      * @param isVisible
+     * @param task the value of task
      */
     public ReportCategory(
-            String displayName, String[][] reportCategorySpecs, boolean isVisible) {
+            String displayName, String[][] reportCategorySpecs, boolean isVisible, TaskInterface task) {
 
         this.displayName = displayName;
         this.positionIndex = 0;
-        categoryColumns = new ReportColumn[reportCategorySpecs.length];
-        for (int i = 0; i < categoryColumns.length; i++) {
-            categoryColumns[i] = SetupReportColumn(i, reportCategorySpecs);
+
+        if (reportCategorySpecs[0][6].compareToIgnoreCase("<SPECIES_ARRAY>") == 0) {
+            // special case of generation
+            String[] isotopeLabels = new String[task.getSquidSpeciesModelList().size()];
+            task.getMapOfIndexToMassStationDetails().get(1).getIsotopeLabel();
+            for (int i = 0; i < isotopeLabels.length; i++) {
+                isotopeLabels[i] = task.getMapOfIndexToMassStationDetails().get(i).getIsotopeLabel();
+            }
+
+            String[][] generatedReportCategorySpecs = new String[isotopeLabels.length][];
+            for (int i = 0; i < isotopeLabels.length; i++) {
+                // Report column order =
+                //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+                //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+                //     needsLead, needsUranium
+                generatedReportCategorySpecs[i]
+                        = new String[]{
+                            "total",
+                            isotopeLabels[i],
+                            "cts",
+                            "/sec",
+                            "",
+                            "getTotalCps",
+                            "<INDEX>" + i,
+                            "",
+                            "", "true", "true", "2", "", "", "false", "false"
+                        };
+            }
+            categoryColumns = new ReportColumn[generatedReportCategorySpecs.length];
+            for (int i = 0; i < categoryColumns.length; i++) {
+                categoryColumns[i] = SetupReportColumn(i, generatedReportCategorySpecs[i]);
+            }
+        } else if (reportCategorySpecs[0][6].compareToIgnoreCase("<RATIOS_ARRAY>") == 0) {
+            // special case of generation
+            Iterator<SquidRatiosModel> squidRatiosIterator = ((ShrimpFraction) task.getReferenceMaterialSpots().get(0)).getIsotopicRatiosII().iterator();
+            List<String[]> generatedReportCategorySpecsList = new ArrayList<>();
+            while (squidRatiosIterator.hasNext()) {
+                SquidRatiosModel entry = squidRatiosIterator.next();
+                if (entry.isActive()) {
+                    // Report column order =
+                    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+                    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+                    //     needsLead, needsUranium
+                    String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20, entry.getDisplayNameNoSpaces().length()));
+                    String[] columnSpec = new String[]{
+                        "",
+                        "",
+                        displayNameNoSpaces.split("/")[0],
+                        "/" + displayNameNoSpaces.split("/")[1],
+                        "",
+                        "getIsotopicRatioValuesByStringName",
+                        displayNameNoSpaces,
+                        "PCT",
+                        "", "true", "true", "4", "true", "", "false", "false"
+                    };
+                    
+                    generatedReportCategorySpecsList.add(columnSpec);
+                }
+            }
+            categoryColumns = new ReportColumn[generatedReportCategorySpecsList.size()];
+            for (int i = 0; i < categoryColumns.length; i++) {
+                categoryColumns[i] = SetupReportColumn(i, generatedReportCategorySpecsList.get(i));
+            }
+        } else {
+            categoryColumns = new ReportColumn[reportCategorySpecs.length];
+            for (int i = 0; i < categoryColumns.length; i++) {
+                categoryColumns[i] = SetupReportColumn(i, reportCategorySpecs[i]);
+            }
         }
 
         this.categoryColor = Color.WHITE;
@@ -71,46 +141,46 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
 
     }
 
-    private ReportColumnInterface SetupReportColumn(int index, String[][] specs) {
-        String displayName1 = specs[index][0];
+    private ReportColumnInterface SetupReportColumn(int index, String[] specs) {
+
         ReportColumnInterface retVal = new ReportColumn(//
-                specs[index][0].contains("delta") ? specs[index][0].replace("delta", "\u03B4") : specs[index][0], //displayName1, //specs[index][0], // displayname1
-                specs[index][1].contains("delta") ? specs[index][1].replace("delta", "\u03B4") : specs[index][1], // displayname2
-                specs[index][2].contains("delta") ? specs[index][2].replace("delta", "\u03B4") : specs[index][2], // displayname3
-                specs[index][3].contains("delta") ? specs[index][3].replace("delta", "\u03B4") : specs[index][3], // displayname4
+                specs[0], // displayname1
+                specs[1], // displayname2
+                specs[2], // displayname3
+                specs[3], // displayname4
                 index, // positionIndex
-                specs[index][4], // units
-                specs[index][5], // retrieveMethodName
-                specs[index][6], // retrieveMethodParameterName
-                specs[index][7], // uncertaintyType
-                specs[index][8], // footnoteSpec
-                Boolean.valueOf(specs[index][9]), // visible
+                specs[4], // units
+                specs[5], // retrieveMethodName
+                specs[6], // retrieveMethodParameterName
+                specs[7], // uncertaintyType
+                specs[8], // footnoteSpec
+                Boolean.valueOf(specs[9]), // visible
                 false); // amUncertainty
 
-        retVal.setDisplayedWithArbitraryDigitCount(Boolean.valueOf(specs[index][10]));
-        retVal.setCountOfSignificantDigits(Integer.parseInt(specs[index][11]));
-        retVal.setAlternateDisplayName(specs[index][13]);
-        retVal.setNeedsPb(Boolean.valueOf(specs[index][14]));
-        retVal.setNeedsU(Boolean.valueOf(specs[index][15]));
+        retVal.setDisplayedWithArbitraryDigitCount(Boolean.valueOf(specs[10]));
+        retVal.setCountOfSignificantDigits(Integer.parseInt(specs[11]));
+        retVal.setAlternateDisplayName(specs[13]);
+        retVal.setNeedsPb(Boolean.valueOf(specs[14]));
+        retVal.setNeedsU(Boolean.valueOf(specs[15]));
         retVal.setLegacyData(isLegacyData());
 
         // check for need to create uncertainty column
         ReportColumnInterface uncertaintyCol = null;
 
-        if (!specs[index][7].equals("")) {
+        if (!specs[7].equals("")) {
             uncertaintyCol = new ReportColumn(//
                     "",
                     "",
-                    specs[index][7].equalsIgnoreCase("PCT") ? "" : "\u00B12\u03C3",
-                    specs[index][7].equalsIgnoreCase("PCT") ? "\u00B12\u03C3 %" : "abs",
+                    specs[7].equalsIgnoreCase("PCT") ? "" : "\u00B11\u03C3",
+                    specs[7].equalsIgnoreCase("PCT") ? "\u00B11\u03C3 %" : "abs",
                     //"third",
                     index,
-                    specs[index][4],
-                    specs[index][5],
-                    specs[index][6],
-                    specs[index][7],
+                    specs[4],
+                    specs[5],
+                    specs[6],
+                    specs[7],
                     "",
-                    Boolean.valueOf(specs[index][12]),// show uncertainty
+                    Boolean.valueOf(specs[12]),// show uncertainty
                     true); // amUncertainty
 
             uncertaintyCol.setAlternateDisplayName("");

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsAbstract;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbReferenceMaterials;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples;
+import org.cirdles.squid.tasks.TaskInterface;
 
 /**
  *
@@ -54,11 +55,13 @@ public class ReportSettings implements
     // Fields
     private String name;
     private int version;
+    private TaskInterface task;
     private ReportCategoryInterface fractionCategory;
 
     // for reference materials
     private ReportCategoryInterface spotFundamentalsCategory;
     private ReportCategoryInterface cpsCategory;
+    private ReportCategoryInterface rawRatiosCategory;
     // for Unknown Samples
     private ReportCategoryInterface correctionIndependentCategory;
     private ReportCategoryInterface pb204CorrectedCategory;
@@ -74,19 +77,21 @@ public class ReportSettings implements
      * Creates a new instance of ReportSettings
      */
     public ReportSettings() {
-        this("NONE", true);
+        this("NONE", true, null);
     }
 
     /**
      * Creates a new instance of ReportSettings
      *
      * @param name
-     * @param defaultReportSpecsType the value of defaultReportSpecsType
+     * @param referenceMaterial
+     * @param task
      */
-    public ReportSettings(String name, boolean referenceMaterial) {
+    public ReportSettings(String name, boolean referenceMaterial, TaskInterface task) {
 
         this.name = name;
         this.referenceMaterial = referenceMaterial;
+        this.task = task;
 
         this.version = CURRENT_VERSION_REPORT_SETTINGS_UPB;
 
@@ -95,59 +100,53 @@ public class ReportSettings implements
         this.fractionCategory
                 = new ReportCategory(
                         "Fraction",
-                        ReportSpecificationsAbstract.ReportCategory_Fraction, true);
+                        ReportSpecificationsAbstract.ReportCategory_Fraction, true, task);
 
         this.fractionCategory2
                 = new ReportCategory(
                         "Fraction",
-                        ReportSpecificationsAbstract.ReportCategory_Fraction2, true);
+                        ReportSpecificationsAbstract.ReportCategory_Fraction2, true, task);
 
         if (referenceMaterial) {
             this.spotFundamentalsCategory
                     = new ReportCategory(
                             "Spot Fundamentals",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_SpotFundamentals, true);
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_SpotFundamentals, true, task);
             this.cpsCategory
                     = new ReportCategory(
                             "CPS",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CPS, true);
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CPS, true, task);
+            this.rawRatiosCategory
+                    = new ReportCategory(
+                            "Raw Nuclide Ratios",
+                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_RawRatios, true, task);
 
         } else {
             this.correctionIndependentCategory
                     = new ReportCategory(
                             "Correction-Independent Data",
-                            ReportSpecificationsUPbSamples.ReportCategory_CorrectionIndependentData, true);
+                            ReportSpecificationsUPbSamples.ReportCategory_CorrectionIndependentData, true, task);
 
             this.pb204CorrectedCategory
                     = new ReportCategory(
                             "204Pb-Corrected",
-                            ReportSpecificationsUPbSamples.ReportCategory_204PbCorrected, true);
+                            ReportSpecificationsUPbSamples.ReportCategory_204PbCorrected, true, task);
 
             this.pb207CorrectedCategory
                     = new ReportCategory(
                             "207Pb-Corrected",
-                            ReportSpecificationsUPbSamples.ReportCategory_207PbCorrected, true);
+                            ReportSpecificationsUPbSamples.ReportCategory_207PbCorrected, true, task);
 
             this.pb208CorrectedCategory
                     = new ReportCategory(
                             "208Pb-Corrected",
-                            ReportSpecificationsUPbSamples.ReportCategory_208PbCorrected, true);
+                            ReportSpecificationsUPbSamples.ReportCategory_208PbCorrected, true, task);
 
         }
 
         assembleReportCategories(this.referenceMaterial);
         normalizeReportCategories();
 
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static ReportSettingsInterface EARTHTIMEReportSettingsUPb(boolean referenceMaterial) {
-        ReportSettingsInterface EARTHTIME
-                = new ReportSettings("EARTHTIME UPb", referenceMaterial);
-        return EARTHTIME;
     }
 
     public static ReportSettingsInterface getReportSettingsModelUpdatedToLatestVersion(ReportSettingsInterface myReportSettingsModel) {
@@ -553,5 +552,19 @@ public class ReportSettings implements
     @Override
     public void setCpsCategory(ReportCategoryInterface cpsCategory) {
         this.cpsCategory = cpsCategory;
+    }
+
+    /**
+     * @return the rawRatiosCategory
+     */
+    public ReportCategoryInterface getRawRatiosCategory() {
+        return rawRatiosCategory;
+    }
+
+    /**
+     * @param rawRatiosCategory the rawRatiosCategory to set
+     */
+    public void setRawRatiosCategory(ReportCategoryInterface rawRatiosCategory) {
+        this.rawRatiosCategory = rawRatiosCategory;
     }
 }

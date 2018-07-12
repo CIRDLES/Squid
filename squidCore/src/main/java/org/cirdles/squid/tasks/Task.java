@@ -735,7 +735,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
-   // TODO: Juyl 2018 not a priority          alignTaskMassStationsWithPrawnFile();
+                // TODO: July 2018 not a priority          alignTaskMassStationsWithPrawnFile();
             }
         }
     }
