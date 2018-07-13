@@ -40,7 +40,7 @@ public abstract class AbstractTopsoilPlot {
     protected AbstractTopsoilPlot() {
     }
 
-    public abstract SplitPane initializePlotPane();
+    public abstract Node initializePlotPane();
 
     /**
      * @return the plot

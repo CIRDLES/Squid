@@ -81,9 +81,9 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
     }
 
     @Override
-    public SplitPane initializePlotPane() {
+    public Node initializePlotPane() {
         org.cirdles.squid.gui.topsoil.TopsoilPlotController.topsoilPlot = this;
-        SplitPane topsoilPlotUI = null;
+        Node topsoilPlotUI = null;
         try {
             topsoilPlotUI = FXMLLoader.load(getClass().getResource("TopsoilPlot.fxml"));
         } catch (IOException iOException) {

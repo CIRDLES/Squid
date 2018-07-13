@@ -15,8 +15,9 @@
  */
 package org.cirdles.squid.gui.topsoil;
 
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -40,9 +41,9 @@ public final class TopsoilWindow {
 
     public void loadTopsoilWindow(double x, double y) {
 
-        SplitPane topsoilPlotUI = topsoilPlot.initializePlotPane();
+        Node topsoilPlotUI = topsoilPlot.initializePlotPane();
 
-        Scene topsoilPlotScene = new Scene(topsoilPlotUI, 600, 600);
+        Scene topsoilPlotScene = new Scene((VBox)topsoilPlotUI, 600, 600);
         topsoilPlotWindow = new Stage(StageStyle.DECORATED);
         // center on Squid
         topsoilPlotWindow.setX(x);

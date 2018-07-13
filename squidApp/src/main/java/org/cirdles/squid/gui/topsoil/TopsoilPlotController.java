@@ -36,6 +36,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -71,9 +73,14 @@ public class TopsoilPlotController implements Initializable {
 
     private static ObservableList<FractionNode> fractionNodes;
     private static List<Map<String, Object>> data;
+    @FXML
+    private VBox plotVBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
         if (topsoilPlot.getPlot() instanceof JavaScriptPlot) {
             Node topsoilPlotNode = topsoilPlot.getPlot().displayAsNode();
@@ -85,6 +92,8 @@ public class TopsoilPlotController implements Initializable {
             AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
 
             VBox.setVgrow(plotAndConfig, Priority.ALWAYS);
+            VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
+            VBox.setVgrow(plotVBox, Priority.ALWAYS);
 
             plotToolBar.getItems().addAll(topsoilPlot.toolbarControlsFactory());
             plotToolBar.setPadding(Insets.EMPTY);
@@ -128,7 +137,7 @@ public class TopsoilPlotController implements Initializable {
 //
 //            }));
             CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
-                    = new CheckBoxTreeItem<>(new SampleNode(((Task)squidProject.getTask()).getFilterForRefMatSpotNames()));
+                    = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
             rootItem.setExpanded(true);
 
             fractionsTreeView1.setCellFactory(p -> new CheckBoxTreeCell<>(
