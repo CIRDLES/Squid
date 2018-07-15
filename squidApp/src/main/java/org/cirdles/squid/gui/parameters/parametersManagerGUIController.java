@@ -270,11 +270,11 @@ public class parametersManagerGUIController implements Initializable {
     private static ObservableList<ObservableList<String>> getObListFromMatrix(AbstractMatrixModel matrix) {
         ObservableList<ObservableList<String>> obList = FXCollections.observableArrayList();
         if (matrix != null && matrix.getMatrix() != null) {
-            Iterator<Entry<String, Integer>> colIterator = matrix.getCols().entrySet().iterator();
+            Iterator<String> colIterator = matrix.getRows().values().iterator();
             ObservableList<String> colList = FXCollections.observableArrayList();
             colList.add("names ↓→");
             while (colIterator.hasNext()) {
-                colList.add(colIterator.next().getKey());
+                colList.add(colIterator.next());
             }
             obList.add(colList);
 

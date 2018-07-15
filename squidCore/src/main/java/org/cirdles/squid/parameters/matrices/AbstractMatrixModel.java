@@ -26,6 +26,7 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -189,12 +190,11 @@ public abstract class AbstractMatrixModel implements Serializable {
      */
     public static Map<String, Integer> invertRowMap ( Map<Integer, String> rowMap ) {
         Map<String, Integer> myCols = new HashMap<String, Integer>();
-        Iterator<Integer> keys = rowMap.keySet().iterator();
-        while (keys.hasNext()) {
-            Integer key = keys.next();
-            myCols.put( rowMap.get( key ), key );
+        Iterator<Entry<Integer, String>> entries = rowMap.entrySet().iterator();
+        while (entries.hasNext()) {
+            Entry<Integer, String> entry = entries.next();
+            myCols.put(entry.getValue(), entry.getKey());
         }
-
         return myCols;
     }
 

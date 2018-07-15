@@ -181,6 +181,7 @@ public abstract class ParametersManager implements
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
