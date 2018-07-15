@@ -183,6 +183,25 @@ public abstract class ParametersManager implements
         } catch (Exception e) {
         }
     }
+    
+    public void initializeCorrelations() {
+        Map<Integer, String> dataNamesList = new HashMap<>();
+
+        // only build matrices for values with positive uncertainties
+        int valueCount = 0;
+        for (ValueModel value : values) {
+            if (value.isPositive()) {
+                dataNamesList.put(valueCount, value.getName());
+                valueCount++;
+            }
+        }
+        corrModel.setRows(dataNamesList);
+        corrModel.setCols(dataNamesList);
+
+        corrModel.initializeMatrix();
+
+        ((CorrelationMatrixModel) corrModel).initializeCorrelations(rhos);
+    }
 
     public abstract void initializeNewRatiosAndRhos();
 

@@ -26,6 +26,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -40,6 +41,7 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.StringComparer;
 import org.cirdles.squid.parameters.util.TextFieldComparer;
+
 /**
  * FXML Controller class
  *
@@ -143,6 +145,8 @@ public class parametersManagerGUIController implements Initializable {
     private Label refMatCovLabel;
     @FXML
     private TableView<ObservableList<String>> refMatCovTable;
+    @FXML
+    private TabPane rootTabPane;
 
     String laboratoryName;
     PhysicalConstantsModel physConstModel;
@@ -178,31 +182,33 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstCovariancesAndCorrelations() {
 //        physConstModel.initializeNewRatiosAndRhos();
-        Iterator<Entry<String, BigDecimal>> rowIterator = physConstModel.getRhos().entrySet().iterator();
-        String[] rowNames = new String[physConstModel.getRhos().entrySet().size()];
-        for (int i = 0; i < rowNames.length; i++) {
-            rowNames[i] = rowIterator.next().getKey();
-        }
-        physConstModel.getCorrModel().setRows(rowNames);
-        physConstModel.getCorrModel().setCols(physConstModel.getCorrModel().getRows());
-        physConstModel.getCorrModel().initializeMatrix();
-        physConstModel.getCovModel().initializeMatrixModelFromMatrixModel(physConstModel.getCorrModel());
+//        Iterator<Entry<String, BigDecimal>> rowIterator = physConstModel.getRhos().entrySet().iterator();
+//        String[] rowNames = new String[physConstModel.getRhos().entrySet().size()];
+//        for (int i = 0; i < rowNames.length; i++) {
+//            rowNames[i] = rowIterator.next().getKey();
+//        }
+//        physConstModel.getCorrModel().setRows(rowNames);
+//        physConstModel.getCorrModel().setCols(physConstModel.getCorrModel().getRows());
+//        physConstModel.getCorrModel().initializeMatrix();
+        physConstModel.initializeCorrelations();
         physConstModel.getCorrModel().initializeCorrelations(physConstModel.getRhos());
+        physConstModel.getCovModel().initializeMatrixModelFromMatrixModel(physConstModel.getCorrModel());
         physConstModel.generateCovariancesFromCorrelations();
     }
 
     private void setUpRefMatCovariancesAndCorrelations() {
 //        refMatModel.initializeNewRatiosAndRhos();
-        Iterator<Entry<String, BigDecimal>> rowIterator = refMatModel.getRhos().entrySet().iterator();
-        String[] rowNames = new String[refMatModel.getRhos().entrySet().size()];
-        for (int i = 0; i < rowNames.length; i++) {
-            rowNames[i] = rowIterator.next().getKey();
-        }
-        refMatModel.getCorrModel().setRows(rowNames);
-        refMatModel.getCorrModel().setCols(refMatModel.getCorrModel().getRows());
-        refMatModel.getCorrModel().initializeMatrix();
-        refMatModel.getCovModel().initializeMatrixModelFromMatrixModel(refMatModel.getCorrModel());
+//        Iterator<Entry<String, BigDecimal>> rowIterator = refMatModel.getRhos().entrySet().iterator();
+//        String[] rowNames = new String[refMatModel.getRhos().entrySet().size()];
+//        for (int i = 0; i < rowNames.length; i++) {
+//            rowNames[i] = rowIterator.next().getKey();
+//        }
+//        refMatModel.getCorrModel().setRows(rowNames);
+//        refMatModel.getCorrModel().setCols(refMatModel.getCorrModel().getRows());
+//        refMatModel.getCorrModel().initializeMatrix();
+        refMatModel.initializeCorrelations();
         refMatModel.getCorrModel().initializeCorrelations(refMatModel.getRhos());
+        refMatModel.getCovModel().initializeMatrixModelFromMatrixModel(refMatModel.getCorrModel());
         refMatModel.generateCovariancesFromCorrelations();
     }
 

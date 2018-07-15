@@ -19,7 +19,6 @@ import javafx.stage.WindowEvent;
 public class ParametersLauncher {
 
     private Stage stage;
-    private FXMLLoader loader;
     private TabPane tabs;
 
     public ParametersLauncher() {
@@ -29,12 +28,11 @@ public class ParametersLauncher {
             stage.setMinHeight(700);
             stage.setMinWidth(800);
 
-            loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));           
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
             Scene scene = new Scene(loader.load());
 
             Map<String, Object> obMap = loader.getNamespace();
             tabs = (TabPane) obMap.get("rootTabPane");
-            
 
             stage.setScene(scene);
             stage.setTitle("Squid Parameters Manager");
@@ -48,11 +46,11 @@ public class ParametersLauncher {
     }
 
     public void launchParametersManager(boolean isRefMat) {
-        stage.show();
         if (isRefMat) {
             tabs.getSelectionModel().select(1);
         } else {
             tabs.getSelectionModel().select(0);
         }
+        stage.show();
     }
 }

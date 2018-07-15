@@ -130,4 +130,8 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
     public void setOneSigma(BigDecimal oneSigma) {
         this.oneSigma = oneSigma;
     }
+    
+    public boolean isPositive() {
+        return getOneSigma().compareTo(BigDecimal.ZERO) > 0;
+    }
 }
