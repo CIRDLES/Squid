@@ -20,8 +20,8 @@ import org.cirdles.squid.parameters.util.DateHelper;
  *
  * @author ryanb
  */
-public abstract class ParametersManager implements
-        Comparable<ParametersManager>,
+public class ParametersModel implements
+        Comparable<ParametersModel>,
         Serializable {
 
     protected String modelName;
@@ -35,7 +35,7 @@ public abstract class ParametersManager implements
     protected CovarianceMatrixModel covModel;
     protected Map<String, BigDecimal> rhos;
 
-    public ParametersManager() {
+    public ParametersModel() {
         modelName = "";
         labName = "";
         version = "";
@@ -48,7 +48,7 @@ public abstract class ParametersManager implements
         this.rhos = new HashMap<>();
     }
 
-    public ParametersManager(String modelName) {
+    public ParametersModel(String modelName) {
         this.modelName = modelName;
         this.labName = labName;
         this.version = version;
@@ -61,7 +61,7 @@ public abstract class ParametersManager implements
         this.rhos = new HashMap<>();
     }
 
-    public ParametersManager(String modelName, String labName,
+    public ParametersModel(String modelName, String labName,
             String version, String dateCertified) {
         this.modelName = modelName;
         this.labName = labName;
@@ -75,7 +75,7 @@ public abstract class ParametersManager implements
         this.rhos = new HashMap<>();
     }
 
-    public ParametersManager(String modelName, String labName, String version,
+    public ParametersModel(String modelName, String labName, String version,
             String dateCertified, String comments, String references) {
         this.modelName = modelName;
         this.labName = labName;
@@ -89,7 +89,7 @@ public abstract class ParametersManager implements
         this.rhos = new HashMap<>();
     }
 
-    public ParametersManager(String modelName, String labName, String version,
+    public ParametersModel(String modelName, String labName, String version,
             String dateCertified, String comments, String references,
             ValueModel[] values) {
         this.modelName = modelName;
@@ -105,13 +105,13 @@ public abstract class ParametersManager implements
     }
 
     @Override
-    public int compareTo(ParametersManager o) {
+    public int compareTo(ParametersModel o) {
         return modelName.compareTo(o.getModelName());
     }
 
     public boolean equals(Object o) {
-        boolean retVal = o instanceof ParametersManager;
-        if (retVal && ((ParametersManager) o).
+        boolean retVal = o instanceof ParametersModel;
+        if (retVal && ((ParametersModel) o).
                 getModelName().compareTo(modelName) != 0) {
             retVal = false;
         }
@@ -203,8 +203,6 @@ public abstract class ParametersManager implements
 
         ((CorrelationMatrixModel) corrModel).initializeCorrelations(rhos);
     }
-
-    public abstract void initializeNewRatiosAndRhos();
 
     protected void buildRhosMap() {
 

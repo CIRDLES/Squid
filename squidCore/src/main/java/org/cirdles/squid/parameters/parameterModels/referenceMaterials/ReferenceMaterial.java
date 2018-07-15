@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.cirdles.squid.parameters.ValueModel;
-import org.cirdles.squid.parameters.parameterModels.ParametersManager;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.ReferenceMaterialEnum;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxRefMatConverter;
 
@@ -19,7 +19,7 @@ import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxRefMatC
  *
  * @author ryanb
  */
-public class ReferenceMaterial extends ParametersManager {
+public class ReferenceMaterial extends ParametersModel {
 
     ValueModel[] concentrations;
     boolean[] dataMeasured;
@@ -30,7 +30,6 @@ public class ReferenceMaterial extends ParametersManager {
         dataMeasured = new boolean[0];
     }
     
-    @Override
     public final void initializeNewRatiosAndRhos() {
         ArrayList<ValueModel> holdRatios = new ArrayList<>();
         for (ReferenceMaterialEnum value : ReferenceMaterialEnum.values()) {

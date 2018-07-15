@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.cirdles.squid.parameters.ValueModel;
-import org.cirdles.squid.parameters.parameterModels.ParametersManager;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.util.DataDictionary;
 
@@ -20,7 +20,7 @@ import org.cirdles.squid.parameters.util.DataDictionary;
  *
  * @author ryanb
  */
-public class PhysicalConstantsModel extends ParametersManager {
+public class PhysicalConstantsModel extends ParametersModel {
 
     Map<String, BigDecimal> molarMasses;
 
@@ -64,7 +64,6 @@ public class PhysicalConstantsModel extends ParametersManager {
         return xstream;
     }
 
-    @Override
     public final void initializeNewRatiosAndRhos() {
 
         this.values = new ValueModel[DataDictionary.MeasuredConstants.length];
