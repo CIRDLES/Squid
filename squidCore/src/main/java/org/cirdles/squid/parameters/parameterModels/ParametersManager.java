@@ -172,12 +172,12 @@ public abstract class ParametersManager implements
                 for (int row = 0; row < rowColDimension; row++) {
                     String rowName = covModel.getRows().get(row);
                     ValueModel rowData = getDatumByName(rowName);
-                    double correlation
+                     double covariance
                             = //
                             corrModel.getMatrix().get(row, col)//
-                            / rowData.getOneSigmaABS().doubleValue() //
-                            / colData.getOneSigmaABS().doubleValue();
-                    covModel.setValueAt(row, col, correlation);
+                            * rowData.getOneSigmaABS().doubleValue() //
+                            * colData.getOneSigmaABS().doubleValue();
+                    covModel.setValueAt(row, col, covariance);
                 }
             }
         } catch (Exception e) {

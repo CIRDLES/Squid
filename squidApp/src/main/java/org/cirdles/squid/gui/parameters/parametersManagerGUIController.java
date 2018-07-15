@@ -181,34 +181,12 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpPhysConstCovariancesAndCorrelations() {
-//        physConstModel.initializeNewRatiosAndRhos();
-//        Iterator<Entry<String, BigDecimal>> rowIterator = physConstModel.getRhos().entrySet().iterator();
-//        String[] rowNames = new String[physConstModel.getRhos().entrySet().size()];
-//        for (int i = 0; i < rowNames.length; i++) {
-//            rowNames[i] = rowIterator.next().getKey();
-//        }
-//        physConstModel.getCorrModel().setRows(rowNames);
-//        physConstModel.getCorrModel().setCols(physConstModel.getCorrModel().getRows());
-//        physConstModel.getCorrModel().initializeMatrix();
         physConstModel.initializeCorrelations();
-        physConstModel.getCorrModel().initializeCorrelations(physConstModel.getRhos());
-        physConstModel.getCovModel().initializeMatrixModelFromMatrixModel(physConstModel.getCorrModel());
         physConstModel.generateCovariancesFromCorrelations();
     }
 
     private void setUpRefMatCovariancesAndCorrelations() {
-//        refMatModel.initializeNewRatiosAndRhos();
-//        Iterator<Entry<String, BigDecimal>> rowIterator = refMatModel.getRhos().entrySet().iterator();
-//        String[] rowNames = new String[refMatModel.getRhos().entrySet().size()];
-//        for (int i = 0; i < rowNames.length; i++) {
-//            rowNames[i] = rowIterator.next().getKey();
-//        }
-//        refMatModel.getCorrModel().setRows(rowNames);
-//        refMatModel.getCorrModel().setCols(refMatModel.getCorrModel().getRows());
-//        refMatModel.getCorrModel().initializeMatrix();
         refMatModel.initializeCorrelations();
-        refMatModel.getCorrModel().initializeCorrelations(refMatModel.getRhos());
-        refMatModel.getCovModel().initializeMatrixModelFromMatrixModel(refMatModel.getCorrModel());
         refMatModel.generateCovariancesFromCorrelations();
     }
 
