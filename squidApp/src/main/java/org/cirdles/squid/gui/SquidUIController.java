@@ -34,6 +34,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -50,6 +52,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.WindowEvent;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
@@ -60,6 +63,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
+import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
@@ -153,6 +157,10 @@ public class SquidUIController implements Initializable {
     private TopsoilWindow[] topsoilWindows;
     @FXML
     private Menu manageVisualizationsMenu;
+    @FXML
+    private MenuItem openParametersManagerPhysConstMenuItem;
+    @FXML
+    private MenuItem openParametersManagerRefMatMenuItem;
 
     /**
      * Initializes the controller class.
@@ -196,7 +204,7 @@ public class SquidUIController implements Initializable {
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
-
+        
         // Expression menu
         buildExpressionMenuMRU();
 
@@ -1019,6 +1027,18 @@ public class SquidUIController implements Initializable {
     @FXML
     private void videoTutorialsMenuItemAction(ActionEvent event) {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
+    }
+
+    @FXML
+    private void openParametersManagerPhysConst(ActionEvent event) {
+        ParametersLauncher launcher = new ParametersLauncher();
+     launcher.launchParametersManager();
+    }
+
+    @FXML
+    private void openParametersManagerRefMat(ActionEvent event) {
+        ParametersLauncher launcher = new ParametersLauncher();
+        launcher.launchParametersManager();
     }
 
 }

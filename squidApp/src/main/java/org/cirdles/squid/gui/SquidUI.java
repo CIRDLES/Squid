@@ -45,6 +45,9 @@ public final class SquidUI extends Application {
     public static Window primaryStageWindow;
     public static CalamariReportsEngine.CalamariReportFlavors calamariReportFlavor;
     
+    public static Window parametersWindow;
+    public static Stage parametersStage;
+    
     protected static SquidAboutWindow squidAboutWindow;
     protected static Stage primaryStage;
 
@@ -73,6 +76,8 @@ public final class SquidUI extends Application {
         primaryStage.setMinWidth(scene.getWidth());
 
         squidAboutWindow = new SquidAboutWindow(primaryStage);
+        
+        
     }
     
     public static void updateStageTitle(String title){
