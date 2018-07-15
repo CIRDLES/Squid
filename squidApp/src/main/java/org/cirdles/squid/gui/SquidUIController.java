@@ -88,6 +88,7 @@ public class SquidUIController implements Initializable {
 
     public static SquidProject squidProject;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
+    public ParametersLauncher squidParametersManagerLauncher;
 
     @FXML
     private Menu manageExpressionsMenu;
@@ -204,6 +205,8 @@ public class SquidUIController implements Initializable {
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
+        
+        squidParametersManagerLauncher = new ParametersLauncher();
         
         // Expression menu
         buildExpressionMenuMRU();
@@ -1031,14 +1034,12 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void openParametersManagerPhysConst(ActionEvent event) {
-        ParametersLauncher launcher = new ParametersLauncher();
-     launcher.launchParametersManager();
+     squidParametersManagerLauncher.launchParametersManager(false);
     }
 
     @FXML
     private void openParametersManagerRefMat(ActionEvent event) {
-        ParametersLauncher launcher = new ParametersLauncher();
-        launcher.launchParametersManager();
+        squidParametersManagerLauncher.launchParametersManager(true);
     }
 
 }

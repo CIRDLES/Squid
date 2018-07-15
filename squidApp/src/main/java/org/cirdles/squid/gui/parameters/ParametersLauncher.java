@@ -5,9 +5,10 @@
  */
 package org.cirdles.squid.gui.parameters;
 
-import javafx.application.Platform;
+import java.util.Map;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -17,32 +18,41 @@ import javafx.stage.WindowEvent;
  */
 public class ParametersLauncher {
 
-    public ParametersLauncher() {
+    private Stage stage;
+    private FXMLLoader loader;
+    private TabPane tabs;
 
+    public ParametersLauncher() {
+        try {
+            stage = new Stage();;
+
+            stage.setMinHeight(700);
+            stage.setMinWidth(800);
+
+            loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));           
+            Scene scene = new Scene(loader.load());
+
+            Map<String, Object> obMap = loader.getNamespace();
+            tabs = (TabPane) obMap.get("rootTabPane");
+            
+
+            stage.setScene(scene);
+            stage.setTitle("Squid Parameters Manager");
+
+            stage.setOnCloseRequest((WindowEvent e) -> {
+                stage.hide();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    ;
-
-    public void launchParametersManager() {
-        try{
-        Stage stage = new Stage();;
-        
-        stage.setMinHeight(700);
-        stage.setMinWidth(800);
-        
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("SquidParametersManagerGUI.fxml")));
-        
-        stage.setScene(scene);
-        stage.setTitle("Squid Parameters Manager");
-
-        stage.setOnCloseRequest((WindowEvent e) -> {
-            Platform.exit();
-            System.exit(0);
-        });
-        
+    public void launchParametersManager(boolean isRefMat) {
         stage.show();
-        } catch(Exception e) {
-            e.printStackTrace();
+        if (isRefMat) {
+            tabs.getSelectionModel().select(1);
+        } else {
+            tabs.getSelectionModel().select(0);
         }
     }
 }
