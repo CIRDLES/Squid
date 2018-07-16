@@ -248,4 +248,36 @@ public class FileHandler {
         return retVal;
     }
 
+    public static File parametersManagerSelectPhysicalConstantsXMLFile(Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Squid Physical Constants xml File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+
+        return fileChooser.showOpenDialog(ownerWindow);
+    }
+
+    public static File parametersManagerSavePhysicalConstantsXMLFile(Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Squid Physical Constants xml File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+
+        return fileChooser.showSaveDialog(ownerWindow);
+
+    }
+
+    public static File parametersManagerSelectReferenceMaterialXMLFile(Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Squid Reference Material xml File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+
+        return fileChooser.showOpenDialog(ownerWindow);
+    }
+
+    public static File parametersManagerSaveReferenceMaterialXMLFile(Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Squid Reference Material xml File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+
+        return fileChooser.showSaveDialog(ownerWindow);
+    }
 }

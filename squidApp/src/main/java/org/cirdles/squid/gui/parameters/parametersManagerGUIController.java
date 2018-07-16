@@ -6,6 +6,7 @@
 package org.cirdles.squid.gui.parameters;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -35,6 +37,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ValueModel;
 import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
@@ -495,6 +500,68 @@ public class parametersManagerGUIController implements Initializable {
             laboratoryName = labNameTextField.getText();
         });
 
+    }
+
+    @FXML
+    private void physConstImpXMLAction(ActionEvent event) {
+        File file = null;
+        try {
+            file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(primaryStageWindow);
+        } catch (IOException e) {
+            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+        }
+        if (file != null) {
+            PhysicalConstantsModel importedMod = (PhysicalConstantsModel) physConstModel.readXMLObject(file.getAbsolutePath(), false);
+            physConstModels.add(importedMod);
+            physConstCB.getItems().add(importedMod.getModelName() + " v." + importedMod.getVersion());
+            physConstCB.getSelectionModel().selectLast();
+            physConstModel = importedMod;
+            setUpPhysConst();
+        }
+    }
+
+    @FXML
+    private void physConstExpXMLAction(ActionEvent event) {
+        File file = null;
+        try {
+            file = FileHandler.parametersManagerSavePhysicalConstantsXMLFile(primaryStageWindow);
+        } catch (IOException e) {
+            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+        }
+        if (file != null) {
+            physConstModel.serializeXMLObject(file.getAbsolutePath());
+        }
+    }
+
+    @FXML
+    private void refMatExpXMLAction(ActionEvent event) {
+        File file = null;
+        try {
+            file = FileHandler.parametersManagerSaveReferenceMaterialXMLFile(primaryStageWindow);
+        } catch (IOException e) {
+            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+        }
+        if (file != null) {
+            refMatModel.serializeXMLObject(file.getAbsolutePath());
+        }
+    }
+
+    @FXML
+    private void refMatImpXMLAction(ActionEvent event) {
+        File file = null;
+        try {
+            file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(primaryStageWindow);
+        } catch (IOException e) {
+            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+        }
+        if (file != null) {
+            ReferenceMaterial importedMod = (ReferenceMaterial) refMatModel.readXMLObject(file.getAbsolutePath(), false);
+            refMatModels.add(importedMod);
+            refMatCB.getItems().add(importedMod.getModelName() + " v." + importedMod.getVersion());
+            refMatCB.getSelectionModel().selectLast();
+            refMatModel = importedMod;
+            setUpRefMat();
+        }
     }
 
     public class DataModel {

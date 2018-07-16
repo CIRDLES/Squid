@@ -26,8 +26,8 @@
                                     <menus>
                                         <Menu mnemonicParsing="false" text="File">
                                             <items>
-                                                <MenuItem fx:id="physConstImpXML" mnemonicParsing="false" text="Import Physical Constants Model from XML File" />
-                                                <MenuItem fx:id="phyConstExpXML" mnemonicParsing="false" text="Export Physical Constants Model as XML File" />
+                                                <MenuItem fx:id="physConstImpXML" mnemonicParsing="false" onAction="#physConstImpXMLAction" text="Import Physical Constants Model from XML File" />
+                                                <MenuItem fx:id="phyConstExpXML" mnemonicParsing="false" onAction="#physConstExpXMLAction" text="Export Physical Constants Model as XML File" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
@@ -136,8 +136,8 @@
                                     <menus>
                                         <Menu mnemonicParsing="false" text="File">
                                             <items>
-                                                <MenuItem fx:id="expRefMatXML" mnemonicParsing="false" text="Export Reference Material Model as XML File" />
-                                                <MenuItem fx:id="impRefMatXML" mnemonicParsing="false" text="Import Reference Material Model from XML File" />
+                                                <MenuItem fx:id="expRefMatXML" mnemonicParsing="false" onAction="#refMatExpXMLAction" text="Export Reference Material Model as XML File" />
+                                                <MenuItem fx:id="impRefMatXML" mnemonicParsing="false" onAction="#refMatImpXMLAction" text="Import Reference Material Model from XML File" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">

@@ -5,6 +5,7 @@
  */
 package org.cirdles.squid.parameters.parameterModels;
 
+import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -12,9 +13,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.cirdles.squid.parameters.ValueModel;
+import org.cirdles.squid.parameters.ValueModelConverter;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModelConverter;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterialConverter;
 import org.cirdles.squid.parameters.util.DateHelper;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
@@ -22,7 +29,7 @@ import org.cirdles.squid.parameters.util.DateHelper;
  */
 public class ParametersModel implements
         Comparable<ParametersModel>,
-        Serializable {
+        Serializable, XMLSerializerInterface {
 
     protected String modelName;
     protected String labName;
@@ -216,7 +223,21 @@ public class ParametersModel implements
             }
         }
     }
-
+    
+    public void customizeXstream(XStream xstream) {
+        xstream.registerConverter(new ValueModelConverter());
+        xstream.alias("ValueModel", ValueModel.class);
+        
+        xstream.registerConverter(new ReferenceMaterialConverter());
+        xstream.alias("ReferenceMaterial", ReferenceMaterial.class);
+        
+        xstream.registerConverter(new PhysicalConstantsModelConverter());
+        xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
+        
+        xstream.registerConverter(new ParametersModelConverter());
+        xstream.alias("ParametersModel", ParametersModel.class);
+    }
+    
     public String getComments() {
         return comments;
     }
