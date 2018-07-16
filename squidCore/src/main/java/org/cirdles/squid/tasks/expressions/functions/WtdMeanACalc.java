@@ -188,8 +188,6 @@ public class WtdMeanACalc extends Function {
 
         boolean noReject = (noUPbConstAutoReject && !pbCanDriftCorr);
 
-        double[][] ww = new double[2][1];
-
         // create a double array - selectionArray - that works as a boolean array with 1s for active values and 0s for Large errrejected
         double[] selectionArray = new double[countOfValues];
         // create two index arrays to return rejected indices
@@ -252,7 +250,7 @@ public class WtdMeanACalc extends Function {
             }
 
             // calculate weightedAverage
-            ww = weightedAverage(valuesKeep, oneSigmaAbsUnctKeep, !noReject, false);
+            double[][] ww = weightedAverage(valuesKeep, oneSigmaAbsUnctKeep, !noReject, false);
 
             // detect any selectionArray value rejected by weightedAverage
             // walk returned values array where rejects are 0 and

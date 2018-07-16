@@ -16,8 +16,6 @@
  */
 package org.cirdles.squid.gui;
 
-import org.cirdles.squid.gui.topsoil.TopsoilPlotWetherill;
-import org.cirdles.squid.gui.topsoil.TopsoilWindow;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -60,14 +58,14 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
-import org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot;
+import org.cirdles.squid.gui.plots.PlotsController;
+import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
@@ -75,7 +73,6 @@ import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DE
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.TITLE;
 import org.xml.sax.SAXException;
 
 /**
@@ -136,7 +133,7 @@ public class SquidUIController implements Initializable {
 
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
-    private static Node topsoilPlotUI;
+    public static Node topsoilPlotUI;
 
     @FXML
     private MenuItem newSquid3TaskMenuItem;
@@ -152,8 +149,6 @@ public class SquidUIController implements Initializable {
     private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
     private Menu openRecentExpressionFileMenu;
-
-    private TopsoilWindow[] topsoilWindows;
     @FXML
     private Menu manageVisualizationsMenu;
 
@@ -172,6 +167,8 @@ public class SquidUIController implements Initializable {
         mainPane.widthProperty().addListener((ov, oldValue, newValue) -> {
             AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitWidth() / 2.0);
         });
+
+        PlotsController.plotSelected = PlotTypes.CONCORDIA;
 
         managePrawnFileMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
@@ -971,39 +968,46 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void topsoilAction(ActionEvent event) {
+    private void referenceMaterialTopsoilAction(ActionEvent event) {
+
         mainPane.getChildren().remove(topsoilPlotUI);
-
-//        AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Example Wetherill using CM2 data");
-        AbstractTopsoilPlot topsoilPlot
-                = new TopsoilPlotWetherill(
-                        "Concordia of 4-corr reference material " + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
-                        squidProject.getTask().getReferenceMaterialSpots());
-
-        topsoilPlotUI = topsoilPlot.initializePlotPane();
-        topsoilPlotUI.setId("topsoilPlotUI");
-        VBox.setVgrow(topsoilPlotUI, Priority.ALWAYS);
-        HBox.setHgrow(topsoilPlotUI, Priority.ALWAYS);
-        mainPane.getChildren().add(topsoilPlotUI);
-        topsoilPlotUI.setVisible(false);
+        squidProject.getTask().buildSquidSpeciesModelList();
+        launchVisualizations();
         showUI(topsoilPlotUI);
+    }
+
+    private void launchVisualizations() {
+        try {
+            topsoilPlotUI = FXMLLoader.load(getClass().getResource("plots/Plots.fxml"));
+            topsoilPlotUI.setId("TopsoilPlot");
+
+            AnchorPane.setLeftAnchor(topsoilPlotUI, 0.0);
+            AnchorPane.setRightAnchor(topsoilPlotUI, 0.0);
+            AnchorPane.setTopAnchor(topsoilPlotUI, 0.0);
+            AnchorPane.setBottomAnchor(topsoilPlotUI, 0.0);
+
+            mainPane.getChildren().add(topsoilPlotUI);
+            topsoilPlotUI.setVisible(false);
+        } catch (IOException | RuntimeException iOException) {
+            System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
+        }
     }
 
     @FXML
     private void topsoilAction2(ActionEvent event) {
-        if (topsoilWindows != null) {
-            for (int i = 0; i < 6; i++) {
-                topsoilWindows[i].close();
-            }
-        }
-        topsoilWindows = new TopsoilWindow[6];
-        for (int i = 0; i < 6; i++) {
-            AbstractTopsoilPlot topsoilPlot = new TopsoilPlotWetherill("Squid Test Plot #" + i);
-            topsoilWindows[i] = new TopsoilWindow(topsoilPlot);
-            topsoilWindows[i].loadTopsoilWindow(i * 40, 100);
-        }
-
-        topsoilWindows[3].getTopsoilPlot().getPlot().getProperties().put(TITLE, "Testing Handle");
+//        if (topsoilWindows != null) {
+//            for (int i = 0; i < 6; i++) {
+//                topsoilWindows[i].close();
+//            }
+//        }
+//        topsoilWindows = new TopsoilWindow[6];
+//        for (int i = 0; i < 6; i++) {
+//            AbstractTopsoilPlot plot = new TopsoilPlotWetherill("Squid Test Plot #" + i);
+//            topsoilWindows[i] = new TopsoilWindow(plot);
+//            topsoilWindows[i].loadTopsoilWindow(i * 40, 100);
+//        }
+//
+//        topsoilWindows[3].getTopsoilPlot().getPlot().getProperties().put(TITLE, "Testing Handle");
 
     }
 

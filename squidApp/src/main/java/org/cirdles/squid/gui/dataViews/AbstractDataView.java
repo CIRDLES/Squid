@@ -23,9 +23,7 @@ import java.math.BigDecimal;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
-import javax.swing.JLayeredPane;
 
 /**
  *
@@ -57,11 +55,11 @@ public abstract class AbstractDataView extends Canvas {
     /**
      *
      */
-    private int topMargin = 0;
+    protected int topMargin = 0;
     /**
      *
      */
-    private int leftMargin = 0;
+    protected int leftMargin = 0;
     /**
      *
      */
@@ -89,7 +87,11 @@ public abstract class AbstractDataView extends Canvas {
     /**
      *
      */
-    protected BigDecimal[] tics;
+    protected BigDecimal[] ticsX;
+    /**
+     *
+     */
+    protected BigDecimal[] ticsY;
 
     protected boolean showTimeNormalized;
 
@@ -118,7 +120,7 @@ public abstract class AbstractDataView extends Canvas {
         graphWidth = (int) width - leftMargin;
         graphHeight = (int) height - topMargin;
 
-        this.tics = null;
+        this.ticsY = null;
     }
 
     /**
