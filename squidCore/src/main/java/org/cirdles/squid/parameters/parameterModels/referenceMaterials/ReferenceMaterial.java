@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.cirdles.squid.parameters.ValueModel;
+import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
+import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.ReferenceMaterialEnum;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxRefMatConverter;
@@ -30,6 +32,23 @@ public class ReferenceMaterial extends ParametersModel {
         dataMeasured = new boolean[0];
     }
     
+    public ReferenceMaterial clone() {
+        ReferenceMaterial model = new ReferenceMaterial();
+        
+        model.setModelName(modelName + " - copy");
+        model.setLabName(labName);
+        model.setVersion(version);
+        model.setDateCertified(dateCertified);
+        model.setComments(comments);
+        model.setReferences(references);
+        model.setValues(values.clone());
+        model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
+        model.setCovModel((CovarianceMatrixModel) covModel.copy());
+        model.setConcentrations(concentrations.clone());
+        
+        return model;
+    }
+    
     public final void initializeNewRatiosAndRhos() {
         ArrayList<ValueModel> holdRatios = new ArrayList<>();
         for (ReferenceMaterialEnum value : ReferenceMaterialEnum.values()) {
@@ -44,7 +63,6 @@ public class ReferenceMaterial extends ParametersModel {
         Arrays.sort(values, new DataValueModelNameComparator());
 
         buildRhosMap();
-
     }
 
     public ValueModel[] getConcentrations() {

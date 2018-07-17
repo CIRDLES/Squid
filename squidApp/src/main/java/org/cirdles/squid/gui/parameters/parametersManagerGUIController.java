@@ -178,6 +178,7 @@ public class parametersManagerGUIController implements Initializable {
         physConstModels = new ArrayList<>();
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
+        physConstEditable(false);
 
         File refMatFile = new File("src/main/resources/org/cirdles/squid/gui/parameters/Zircon-91500 v.1.0.xml");
         refMatModel = ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
@@ -185,6 +186,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatModels.add(refMatModel);
         setUpRefMatCB();
         setUpLaboratoryName();
+        refMatEditable(false);
     }
 
     private void setUpPhysConstCovariancesAndCorrelations() {
@@ -577,6 +579,38 @@ public class parametersManagerGUIController implements Initializable {
         physConstReferencesArea.setEditable(isEditable);
     }
 
+    private void refMatEditable(boolean isEditable) {
+        refMatModelName.setEditable(isEditable);
+        refMatLabName.setEditable(isEditable);
+        refMatVersion.setEditable(isEditable);
+        refMatDateCertified.setEditable(isEditable);
+
+        refMatDataTable.setEditable(isEditable);
+        refMatDataTable.getColumns().get(0).setEditable(false);
+        ObservableList<RefMatDataModel> refMatData = refMatDataTable.getItems();
+        for (RefMatDataModel mod : refMatData) {
+            if (!isEditable) {
+                mod.getIsMeasured().setStyle("-fx-opacity: 1");
+                mod.getIsMeasured().setDisable(true);
+            } else {
+                mod.getIsMeasured().setDisable(false);
+            }
+
+        }
+
+        refMatConcentrationsTable.setEditable(isEditable);
+        refMatConcentrationsTable.getColumns().get(0).setEditable(false);
+
+        refMatCorrTable.setEditable(isEditable);
+        refMatCorrTable.getColumns().get(0).setEditable(false);
+
+        refMatCovTable.setEditable(isEditable);
+        refMatCovTable.getColumns().get(0).setEditable(false);
+
+        refMatCommentsArea.setEditable(isEditable);
+        refMatReferencesArea.setEditable(isEditable);
+    }
+
     @FXML
     private void physConstRemoveCurrMod(ActionEvent event) {
         physConstModels.remove(physConstModel);
@@ -606,7 +640,6 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstCancelEdit(ActionEvent event) {
-        physConstModel = physConstModels.get(0);
         setUpPhysConst();
         physConstEditable(false);
     }
@@ -680,26 +713,107 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatSaveAndRegisterEdit(ActionEvent event) {
+        refMatModel.setIsEditable(true);
+        refMatModel.setModelName(refMatModelName.getText());
+        refMatModel.setLabName(refMatLabName.getText());
+        refMatModel.setVersion(refMatVersion.getText());
+        refMatModel.setDateCertified(refMatDateCertified.getText());
+
+        ObservableList<RefMatDataModel> dataModels = refMatDataTable.getItems();
+        ValueModel[] values = new ValueModel[dataModels.size()];
+        boolean[] isMeasures = new boolean[dataModels.size()];
+        for (int i = 0; i < values.length; i++) {
+            RefMatDataModel mod = dataModels.get(i);
+            ValueModel currVal = new ValueModel();
+
+            currVal.setName(mod.getName());
+
+            String currBigDec = mod.getValue();
+            if (Double.parseDouble(currBigDec) == 0) {
+                currVal.setValue(BigDecimal.ZERO);
+            } else {
+                currVal.setValue(new BigDecimal(currBigDec));
+            }
+
+            currBigDec = mod.getOneSigmaABS();
+            if (Double.parseDouble(currBigDec) == 0) {
+                currVal.setOneSigma(BigDecimal.ZERO);
+            } else {
+                currVal.setOneSigma(new BigDecimal(currBigDec));
+            }
+
+            isMeasures[i] = mod.getIsMeasured().isSelected();
+
+            currVal.setUncertaintyType("ABS");
+            values[i] = currVal;
+        }
+        refMatModel.setValues(values);
+        refMatModel.setDataMeasured(isMeasures);
+
+        ObservableList<DataModel> concentrationsData = refMatConcentrationsTable.getItems();
+        ValueModel[] concentrations = new ValueModel[concentrationsData.size()];
+        for (int i = 0; i < concentrations.length; i++) {
+            DataModel mod = concentrationsData.get(i);
+            ValueModel currVal = new ValueModel();
+
+            currVal.setName(mod.getName());
+
+            String currBigDec = mod.getValue();
+            if (Double.parseDouble(currBigDec) == 0) {
+                currVal.setValue(BigDecimal.ZERO);
+            } else {
+                currVal.setValue(new BigDecimal(currBigDec));
+            }
+
+            currBigDec = mod.getOneSigmaABS();
+            if (Double.parseDouble(currBigDec) == 0) {
+                currVal.setOneSigma(BigDecimal.ZERO);
+            } else {
+                currVal.setOneSigma(new BigDecimal(currBigDec));
+            }
+
+            currVal.setReference(physConstReferences.get(i).getText());
+            currVal.setUncertaintyType("ABS");
+            concentrations[i] = currVal;
+        }
+        refMatModel.setConcentrations(concentrations);
+
+        refMatModel.setReferences(refMatReferencesArea.getText());
+        refMatModel.setComments(refMatCommentsArea.getText());
+        refMatEditable(false);
     }
 
     @FXML
     private void refMatRemoveCurrMod(ActionEvent event) {
+        refMatModels.remove(refMatModel);
+        refMatCB.getItems().remove(refMatModel.getModelName() + " v." + refMatModel.getVersion());
+        refMatCB.getSelectionModel().selectFirst();
+        refMatEditable(false);
     }
 
     @FXML
     private void refMatCancelEdit(ActionEvent event) {
+        refMatEditable(false);
+        setUpRefMat();
     }
 
     @FXML
     private void refMateEditEmptyMod(ActionEvent event) {
+        refMatModel = new ReferenceMaterial();
+        setUpRefMat();
+        refMatEditable(true);
     }
 
     @FXML
     private void refMatEditCopy(ActionEvent event) {
+        refMatModel = refMatModel.clone();
+        setUpRefMat();
+        refMatEditable(true);
     }
 
     @FXML
     private void refMatEditCurrMod(ActionEvent event) {
+        refMatEditable(true);
     }
 
     private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<String>> table) {
@@ -782,7 +896,7 @@ public class parametersManagerGUIController implements Initializable {
 
     public class RefMatDataModel extends DataModel {
 
-        CheckBox isMeasured;
+        private CheckBox isMeasured;
 
         public RefMatDataModel(String name, BigDecimal value,
                 BigDecimal oneSigmaABS, BigDecimal oneSigmaPCT,
