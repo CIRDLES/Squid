@@ -571,7 +571,7 @@ public class parametersManagerGUIController implements Initializable {
             ValueModel currVal = new ValueModel();
             currVal.setName(mod.getName());
 
-            String currBigDec = mod.getValue().toString();
+            String currBigDec = mod.getValue().getText();
             if (Double.parseDouble(currBigDec) == 0) {
                 currVal.setValue(BigDecimal.ZERO);
             } else {
