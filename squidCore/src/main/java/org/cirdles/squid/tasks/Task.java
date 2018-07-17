@@ -78,6 +78,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.overCountMeans;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.samRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
 import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 
@@ -269,6 +270,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         
         SortedSet<Expression> stdRadiogenicCols = stdRadiogenicCols();
         taskExpressionsOrdered.addAll(stdRadiogenicCols);
+
+        SortedSet<Expression> samRadiogenicCols = samRadiogenicCols();
+        taskExpressionsOrdered.addAll(samRadiogenicCols);
 
         Collections.sort(taskExpressionsOrdered);
     }

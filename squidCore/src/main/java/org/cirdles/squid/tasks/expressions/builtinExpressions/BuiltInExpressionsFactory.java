@@ -97,6 +97,9 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface lambda232 = new ConstantNode("lambda232", Squid3Constants.lambda232);
         parameters.put(lambda232.getName(), lambda232);
+        
+        ExpressionTreeInterface ExtPErr = new ConstantNode("ExtPErr", 0.75);
+        parameters.put("ExtPErr", ExtPErr);
 
         return parameters;
     }
@@ -360,7 +363,6 @@ public abstract class BuiltInExpressionsFactory {
 //        Expression dummyS = buildExpression("DUMMYsum", "5", true, true, true);
 //        dummyS.getExpressionTree().setSquidSpecialUPbThExpression(false);
 //        experimentalExpressions.add(dummyS);
-
         return experimentalExpressions;
     }
 
@@ -739,14 +741,69 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression4corr207Pb235UPctErr = buildExpression("4-corr207Pb/235U %err",
                 "sqrt( [\"4-corr206Pb/238U %err\"]^2 + [\"4-corr207Pb/206Pb%err\"]^2 )", true, false, false);
         stdRadiogenicCols.add(expression4corr207Pb235UPctErr);
-        
+
         Expression expression4correrrcorr = buildExpression("4-corr-errcorr",
                 "[\"4-corr206Pb/238U %err\"] / [\"4-corr207Pb/235U %err\"]", true, false, false);
         stdRadiogenicCols.add(expression4correrrcorr);
-        
-        
 
         return stdRadiogenicCols;
+    }
+
+    /**
+     * https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-SamRadiogenicCols
+     *
+     * @return
+     */
+    public static SortedSet<Expression> samRadiogenicCols() {
+        SortedSet<Expression> samRadiogenicCols = new TreeSet<>();
+
+        Expression expressionAlpha = buildExpression("Alpha",
+                "1 / [\"204/206\"]", false, true, false);
+        samRadiogenicCols.add(expressionAlpha);
+
+        Expression expressionNetAlpha = buildExpression("NetAlpha",
+                "Alpha - sComm_64", false, true, false);
+        samRadiogenicCols.add(expressionNetAlpha);
+
+        Expression expressionBeta = buildExpression("Beta",
+                "[\"207/206\"] / [\"204/206\"]", false, true, false);
+        samRadiogenicCols.add(expressionBeta);
+
+        Expression expressionNetBeta = buildExpression("NetBeta",
+                "Beta - sComm_74", false, true, false);
+        samRadiogenicCols.add(expressionNetBeta);
+
+        Expression expressionGamma = buildExpression("Gamma",
+                "[\"208/206\"] / [\"204/206\"]", false, true, false);
+        samRadiogenicCols.add(expressionGamma);
+
+        Expression expressionNetGamma = buildExpression("NetGamma",
+                "Gamma - sComm_68", false, true, false);
+        samRadiogenicCols.add(expressionNetGamma);
+
+        Expression expressionRadd6 = buildExpression("radd6",
+                "NetAlpha / Alpha", false, true, false);
+        samRadiogenicCols.add(expressionRadd6);
+
+        Expression expressionRadd8 = buildExpression("radd8",
+                "NetGamma / Gamma", false, true, false);
+        samRadiogenicCols.add(expressionRadd8);
+
+        // this is same as for RM above, so add "S" for Sample
+        Expression expression4corr206Pb238U = buildExpression("4-corr206Pb/238US",
+                "[\"4-corr206Pb/238Ucalibr.const\"] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
+        samRadiogenicCols.add(expression4corr206Pb238U);
+
+        // this should be moved to WM calcs.
+        Expression expression4corrExtPerrA = buildExpression("4-corrExtPerrA",
+                "Max(ExtPErr, [\"4-corr206Pb/238Ucalibr.const WM\"][1] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * 100)", true, false, true);
+        samRadiogenicCols.add(expression4corrExtPerrA);
+
+        Expression expression4corr206Pb238UPctErr = buildExpression("4-corr206Pb/238US %err",
+                "SQRT([\"4-corr206Pb/238Ucalibr.const %err\"]^2 + [\"4-corrExtPerrA\"] ^ 2)", false, true, false);
+        samRadiogenicCols.add(expression4corr206Pb238UPctErr);
+
+        return samRadiogenicCols;
     }
 
     private static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc, boolean isSummaryCalc) {
