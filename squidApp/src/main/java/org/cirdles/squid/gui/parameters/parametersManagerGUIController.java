@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -111,8 +113,6 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private TextField refMatDateCertified;
     @FXML
-    private Label refMatIsEditable;
-    @FXML
     private Button okayButton;
     @FXML
     private TextField labNameTextField;
@@ -124,6 +124,8 @@ public class parametersManagerGUIController implements Initializable {
     private TextArea refMatReferencesArea;
     @FXML
     private TextArea refMatCommentsArea;
+    @FXML
+    private Label refMatIsEditableLabel;
     @FXML
     private TableView<DataModel> physConstDataTable;
     @FXML
@@ -158,6 +160,8 @@ public class parametersManagerGUIController implements Initializable {
     ReferenceMaterial refMatModel;
     List<PhysicalConstantsModel> physConstModels;
     List<ReferenceMaterial> refMatModels;
+
+    List<TextField> physConstReferences;
 
     /**
      * Initializes the controller class.
@@ -196,20 +200,20 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpPhysConst() {
-        setUpPhysicalConstantsModelsTextFields();
         setUpPhysConstData();
         setUpMolarMasses();
         setUpReferences();
         setUpPhysConstCov();
         setUpPhysConstCorr();
+        setUpPhysConstEditableLabel();
     }
 
     private void setUpRefMat() {
-        setUpReferenceMaterialTextFields();
         setUpRefMatData();
         setUpConcentrations();
         setUpRefMatCov();
         setUpRefMatCorr();
+        setUpRefMatEditableLabel();
     }
 
     private void setUpPhysConstCB() {
@@ -416,6 +420,7 @@ public class parametersManagerGUIController implements Initializable {
     private void setUpReferences() {
         referencesPane.getChildren().clear();
         ValueModel[] models = physConstModel.getValues();
+        physConstReferences = new ArrayList<>();
         int currHeight = 0;
         for (int i = 0; i < models.length; i++) {
             ValueModel mod = models[i];
@@ -436,62 +441,25 @@ public class parametersManagerGUIController implements Initializable {
                 mod.setReference(text.getText());
             });
 
+            physConstReferences.add(text);
             currHeight += 40;
         }
     }
 
-    private void setUpPhysicalConstantsModelsTextFields() {
-        physConstModelName.setText(physConstModel.getModelName());
-        physConstModelName.setOnKeyReleased(value -> {
-            physConstModel.setModelName(physConstModelName.getText());
-        });
-        physConstLabName.setText(physConstModel.getLabName());
-        physConstLabName.setOnKeyReleased(value -> {
-            physConstModel.setLabName(physConstLabName.getText());
-        });
-        physConstDateCertified.setText(physConstModel.getDateCertified());
-        physConstDateCertified.setOnKeyReleased(value -> {
-            physConstModel.setModelName(physConstDateCertified.getText());
-        });
-        physConstVersion.setText(physConstModel.getVersion());
-        physConstVersion.setOnKeyReleased(value -> {
-            physConstModel.setModelName(physConstVersion.getText());
-        });
-        physConstReferencesArea.setText(physConstModel.getReferences());
-        physConstReferencesArea.setOnKeyReleased(value -> {
-            physConstModel.setReferences(physConstReferencesArea.getText());
-        });
-        physConstCommentsArea.setText(physConstModel.getComments());
-        physConstCommentsArea.setOnKeyReleased(value -> {
-            physConstModel.setComments(physConstCommentsArea.getText());
-        });
+    private void setUpPhysConstEditableLabel() {
+        if (physConstModel.isEditable()) {
+            physConstIsEditableLabel.setText("editable");
+        } else {
+            physConstIsEditableLabel.setText("not editable");
+        }
     }
 
-    private void setUpReferenceMaterialTextFields() {
-        refMatModelName.setText(refMatModel.getModelName());
-        refMatModelName.setOnKeyReleased(value -> {
-            refMatModel.setModelName(refMatModelName.getText());
-        });
-        refMatLabName.setText(refMatModel.getLabName());
-        refMatLabName.setOnKeyReleased(value -> {
-            refMatModel.setLabName(refMatModel.getLabName());
-        });
-        refMatDateCertified.setText(refMatModel.getDateCertified());
-        refMatDateCertified.setOnKeyReleased(value -> {
-            refMatModel.setDateCertified(refMatDateCertified.getText());
-        });
-        refMatVersion.setText(refMatModel.getVersion());
-        refMatVersion.setOnKeyReleased(value -> {
-            refMatModel.setVersion(refMatVersion.getText());
-        });
-        refMatReferencesArea.setText(refMatModel.getReferences());
-        refMatReferencesArea.setOnKeyReleased(value -> {
-            refMatModel.setReferences(refMatReferencesArea.getText());
-        });
-        refMatCommentsArea.setText(refMatModel.getComments());
-        refMatCommentsArea.setOnKeyReleased(value -> {
-            refMatModel.setComments(refMatCommentsArea.getText());
-        });
+    private void setUpRefMatEditableLabel() {
+        if (refMatModel.isEditable()) {
+            refMatIsEditableLabel.setText("editable");
+        } else {
+            refMatIsEditableLabel.setText("not editable");
+        }
     }
 
     private void setUpLaboratoryName() {
@@ -562,6 +530,150 @@ public class parametersManagerGUIController implements Initializable {
             refMatModel = importedMod;
             setUpRefMat();
         }
+    }
+
+    @FXML
+    private void physConstRemoveCurrMod(ActionEvent event) {
+        physConstModels.remove(physConstModel);
+        refMatCB.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void physConstEditCurrMod(ActionEvent event) {
+    }
+
+    @FXML
+    private void physConstEditCopy(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void physConstEditEmptyMod(ActionEvent event) {
+    }
+
+    @FXML
+    private void physConstCancelEdit(ActionEvent event) {
+    }
+
+    @FXML
+    private void physConstSaveAndRegisterEdit(ActionEvent event) {
+        physConstModel = new PhysicalConstantsModel();
+        physConstModel.setIsEditable(true);
+        physConstModel.setModelName(physConstModelName.getText());
+        physConstModel.setVersion(physConstVersion.getText());
+        physConstModel.setDateCertified(physConstDateCertified.getText());
+        physConstModel.setLabName(physConstLabName.getText());
+
+        ObservableList<DataModel> dataModels = physConstDataTable.getItems();
+        ValueModel[] values = new ValueModel[dataModels.size()];
+        for (int i = 0; i < values.length; i++) {
+            DataModel mod = dataModels.get(i);
+            ValueModel currVal = new ValueModel();
+            currVal.setName(mod.getName());
+
+            String currBigDec = mod.getValue().toString();
+            if (Double.parseDouble(currBigDec) == 0) {
+                currVal.setValue(BigDecimal.ZERO);
+            } else {
+                currVal.setValue(new BigDecimal(currBigDec));
+            }
+
+            currBigDec = mod.getOneSigmaABS().getText();
+            if (Double.parseDouble(currBigDec) == 0) {
+                currVal.setOneSigma(BigDecimal.ZERO);
+            } else {
+                currVal.setOneSigma(new BigDecimal(currBigDec));
+            }
+
+            currVal.setReference(physConstReferences.get(i).getText());
+            currVal.setUncertaintyType("ABS");
+        }
+
+        Map<String, BigDecimal> masses = physConstModel.getMolarMasses();
+        masses.clear();
+        try {
+            String[] lines = molarMassesTextArea.getText().split("\n");
+            for (int i = 0; i < lines.length; i++) {
+                if (!lines[i].trim().equals("")) {
+                    String[] currLine = lines[i].split(" = ");
+                    String key = currLine[0];
+                    String bigDec = currLine[1];
+                    if (Double.parseDouble(bigDec) == 0) {
+                        masses.put(key, BigDecimal.ZERO);
+                    } else {
+                        masses.put(key, new BigDecimal(bigDec));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            String message = "incorrect molar masses format: " + e.getMessage();
+            SquidMessageDialog.showWarningDialog(message, primaryStageWindow);
+        }
+
+        physConstModel.setReferences(physConstReferencesArea.getText());
+        physConstModel.setComments(physConstCommentsArea.getText());
+        physConstModel.setRhos(getRhosFromTable(physConstCorrTable));
+
+    }
+
+    private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<String>> table) {
+        Map<String, BigDecimal> rhos = new HashMap<>();
+
+        if (table.getColumns().size() > 0) {
+            ObservableList<TableColumn<ObservableList<String>, ?>> colHeaders = table.getColumns();
+            ObservableList<ObservableList<String>> items = table.getItems();
+            ObservableList<String> headerNames = FXCollections.observableArrayList();
+            for (int i = 0; i < colHeaders.size(); i++) {
+                headerNames.add(colHeaders.get(i).getText());
+            }
+
+            for (int i = 0; i < items.size(); i++) {
+                ObservableList<String> currItem = items.get(i);
+                for (int j = 1; j < currItem.size(); j++) {
+                    if (i + 1 > j) {
+                        String val = currItem.get(j);
+                        if (Double.parseDouble(val) != 0) {
+                            String key = "rhoR" + headerNames.get(j).substring(1)
+                                    + "__" + currItem.get(0);
+                            rhos.put(key, new BigDecimal(val));
+                        }
+                    }
+                }
+            }
+        }
+
+        return rhos;
+    }
+
+    @FXML
+    private void refMatSaveAndRegisterEdit(ActionEvent event
+    ) {
+        getRhosFromTable(refMatCorrTable);
+    }
+
+    @FXML
+    private void refMatRemoveCurrMod(ActionEvent event
+    ) {
+    }
+
+    @FXML
+    private void refMatCancelEdit(ActionEvent event
+    ) {
+    }
+
+    @FXML
+    private void refMateEditEmptyMod(ActionEvent event
+    ) {
+    }
+
+    @FXML
+    private void refMatEditCopy(ActionEvent event
+    ) {
+    }
+
+    @FXML
+    private void refMatEditCurrMod(ActionEvent event
+    ) {
     }
 
     public class DataModel {

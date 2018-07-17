@@ -57,6 +57,10 @@ public class PhysicalConstantsModelConverter implements Converter {
         writer.startNode("rhos");
         context.convertAnother(model.getRhos());
         writer.endNode();
+        
+        writer.startNode("isEditable");
+        writer.setValue(Boolean.toString(model.isEditable()));
+        writer.endNode();
 
         writer.startNode("molarMasses");
         context.convertAnother(model.getMolarMasses());
@@ -101,6 +105,10 @@ reader.moveDown();
         rhos = (HashMap) context.convertAnother(rhos, Map.class);
         reader.moveUp();
         model.setRhos(rhos);
+        
+        reader.moveDown();
+        model.setIsEditable(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
         
         reader.moveDown();
         model.setMolarMasses(new HashMap<>());

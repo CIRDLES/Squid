@@ -32,12 +32,12 @@
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="Remove Current Physical Constants Model from Lab Data (for editable models only)" />
-                                                <MenuItem fx:id="remCurrPhyConst" mnemonicParsing="false" text="Edit Current Physical Constants Model (for editable models only)" />
-                                                <MenuItem fx:id="editCopyOfCurrPhysConst" mnemonicParsing="false" text="Edit Copy of Current Physical Constants Model" />
-                                                <MenuItem fx:id="editNewEmpPhysConst" mnemonicParsing="false" text="Edit New Empty Physical Constants Model" />
-                                                <MenuItem fx:id="cancelEditOfPhysConst" mnemonicParsing="false" text="Cancel Edit of Physical Constants Model" />
-                                                <MenuItem fx:id="saveAndRegCurrPhysConst" mnemonicParsing="false" text="Save and Register Current Edit of Physical Constants Model" />
+                                                <MenuItem mnemonicParsing="false" onAction="#physConstRemoveCurrMod" text="Remove Current Physical Constants Model from Lab Data (for editable models only)" />
+                                                <MenuItem fx:id="remCurrPhyConst" mnemonicParsing="false" onAction="#physConstEditCurrMod" text="Edit Current Physical Constants Model (for editable models only)" />
+                                                <MenuItem fx:id="editCopyOfCurrPhysConst" mnemonicParsing="false" onAction="#physConstEditCopy" text="Edit Copy of Current Physical Constants Model" />
+                                                <MenuItem fx:id="editNewEmpPhysConst" mnemonicParsing="false" onAction="#physConstEditEmptyMod" text="Edit New Empty Physical Constants Model" />
+                                                <MenuItem fx:id="cancelEditOfPhysConst" mnemonicParsing="false" onAction="#physConstCancelEdit" text="Cancel Edit of Physical Constants Model" />
+                                                <MenuItem fx:id="saveAndRegCurrPhysConst" mnemonicParsing="false" onAction="#physConstSaveAndRegisterEdit" text="Save and Register Current Edit of Physical Constants Model" />
                                             </items>
                                         </Menu>
                                     </menus>
@@ -53,7 +53,7 @@
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" textAlignment="RIGHT" AnchorPane.leftAnchor="16.0" />
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="397.0" layoutY="57.0" text="Version:" />
-                                <Label fx:id="physConstIsEditableLabel" layoutX="579.0" layoutY="57.0" />
+                                <Label fx:id="physConstIsEditableLabel" layoutX="600.0" layoutY="45.0" />
                                 <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">
@@ -142,12 +142,12 @@
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
                                             <items>
-                                                <MenuItem fx:id="saveAndRegCurrRefMat" mnemonicParsing="false" text="Save and Register Current Edit of Reference Material Model" />
-                                                <MenuItem fx:id="remCurrRefMat" mnemonicParsing="false" text="Remove Current Reference Material Model (for editable models only)" />
-                                                <MenuItem fx:id="canEditOfRefMat" mnemonicParsing="false" text="Cancel Edit of Reference Material Model" />
-                                                <MenuItem fx:id="editNewEmptyRefMat" mnemonicParsing="false" text="Edit New Empty Reference Material Model" />
-                                                <MenuItem fx:id="editCopyOfCurrRefMat" mnemonicParsing="false" text="Edit Copy of Current Reference Material Model" />
-                                                <MenuItem fx:id="editCurrRefMat" mnemonicParsing="false" text="Edit Current Reference Material Model (for editable models only)" />
+                                                <MenuItem fx:id="saveAndRegCurrRefMat" mnemonicParsing="false" onAction="#refMatSaveAndRegisterEdit" text="Save and Register Current Edit of Reference Material Model" />
+                                                <MenuItem fx:id="remCurrRefMat" mnemonicParsing="false" onAction="#refMatRemoveCurrMod" text="Remove Current Reference Material Model (for editable models only)" />
+                                                <MenuItem fx:id="canEditOfRefMat" mnemonicParsing="false" onAction="#refMatCancelEdit" text="Cancel Edit of Reference Material Model" />
+                                                <MenuItem fx:id="editNewEmptyRefMat" mnemonicParsing="false" onAction="#refMateEditEmptyMod" text="Edit New Empty Reference Material Model" />
+                                                <MenuItem fx:id="editCopyOfCurrRefMat" mnemonicParsing="false" onAction="#refMatEditCopy" text="Edit Copy of Current Reference Material Model" />
+                                                <MenuItem fx:id="editCurrRefMat" mnemonicParsing="false" onAction="#refMatEditCurrMod" text="Edit Current Reference Material Model (for editable models only)" />
                                             </items>
                                         </Menu>
                                     </menus>
@@ -163,7 +163,7 @@
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" AnchorPane.leftAnchor="16.0" />
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="397.0" layoutY="57.0" text="Version:" />
-                                <Label fx:id="refMatIsEditable" layoutX="579.0" layoutY="57.0" />
+                                <Label fx:id="refMatIsEditableLabel" layoutX="600.0" layoutY="45.0" />
                                 <TabPane layoutX="14.0" layoutY="112.0" prefHeight="240.0" prefWidth="635.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">

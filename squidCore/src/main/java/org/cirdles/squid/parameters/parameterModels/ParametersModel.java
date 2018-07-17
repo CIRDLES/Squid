@@ -41,6 +41,7 @@ public class ParametersModel implements
     protected CorrelationMatrixModel corrModel;
     protected CovarianceMatrixModel covModel;
     protected Map<String, BigDecimal> rhos;
+    protected boolean isEditable;
 
     public ParametersModel() {
         modelName = "";
@@ -53,6 +54,7 @@ public class ParametersModel implements
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
+        isEditable = false;
     }
 
     public ParametersModel(String modelName) {
@@ -66,6 +68,7 @@ public class ParametersModel implements
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
+        isEditable = false;
     }
 
     public ParametersModel(String modelName, String labName,
@@ -80,6 +83,7 @@ public class ParametersModel implements
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
+        isEditable = false;
     }
 
     public ParametersModel(String modelName, String labName, String version,
@@ -94,6 +98,7 @@ public class ParametersModel implements
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
+        isEditable = false;
     }
 
     public ParametersModel(String modelName, String labName, String version,
@@ -109,6 +114,24 @@ public class ParametersModel implements
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
+        isEditable = false;
+    }
+
+    public ParametersModel(String modelName, String labName, String version,
+            String dateCertified, String comments, String references, ValueModel[] values,
+            CorrelationMatrixModel corrModel, CovarianceMatrixModel covModel,
+            Map<String, BigDecimal> rhos, boolean isEditable) {
+        this.modelName = modelName;
+        this.labName = labName;
+        this.version = version;
+        this.dateCertified = dateCertified;
+        this.comments = comments;
+        this.references = references;
+        this.values = values;
+        this.corrModel = corrModel;
+        this.covModel = covModel;
+        this.rhos = rhos;
+        this.isEditable = isEditable;
     }
 
     @Override
@@ -179,7 +202,7 @@ public class ParametersModel implements
                 for (int row = 0; row < rowColDimension; row++) {
                     String rowName = covModel.getRows().get(row);
                     ValueModel rowData = getDatumByName(rowName);
-                     double covariance
+                    double covariance
                             = //
                             corrModel.getMatrix().get(row, col)//
                             * rowData.getOneSigmaABS().doubleValue() //
@@ -191,7 +214,7 @@ public class ParametersModel implements
             e.printStackTrace();
         }
     }
-    
+
     public void initializeCorrelations() {
         Map<Integer, String> dataNamesList = new HashMap<>();
 
@@ -223,21 +246,18 @@ public class ParametersModel implements
             }
         }
     }
-    
+
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new ValueModelConverter());
         xstream.alias("ValueModel", ValueModel.class);
-        
+
         xstream.registerConverter(new ReferenceMaterialConverter());
         xstream.alias("ReferenceMaterial", ReferenceMaterial.class);
-        
+
         xstream.registerConverter(new PhysicalConstantsModelConverter());
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
-        
-        xstream.registerConverter(new ParametersModelConverter());
-        xstream.alias("ParametersModel", ParametersModel.class);
     }
-    
+
     public String getComments() {
         return comments;
     }
@@ -336,4 +356,11 @@ public class ParametersModel implements
         this.rhos = rhos;
     }
 
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void setIsEditable(boolean isEditable) {
+        this.isEditable = isEditable;
+    }
 }

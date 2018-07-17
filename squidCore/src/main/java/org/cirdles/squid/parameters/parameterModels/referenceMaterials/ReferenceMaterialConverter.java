@@ -58,6 +58,10 @@ public class ReferenceMaterialConverter implements Converter {
         context.convertAnother(model.getRhos());
         writer.endNode();
         
+       writer.startNode("isEditable");
+       writer.setValue(Boolean.toString(model.isEditable()));
+       writer.endNode();
+        
         writer.startNode("concentrations");
         context.convertAnother(model.getConcentrations());
         writer.endNode();
@@ -105,6 +109,10 @@ public class ReferenceMaterialConverter implements Converter {
         rhos = (HashMap) context.convertAnother(rhos, Map.class);
         reader.moveUp();
         model.setRhos(rhos);
+        
+        reader.moveDown();
+        model.setIsEditable(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
         
         reader.moveDown();
         model.setConcentrations(new ValueModel[0]);
