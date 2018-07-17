@@ -62,7 +62,7 @@ public abstract class AbstractMatrixModel implements Serializable {
         this.levelName = levelName;
         rows = new HashMap<>();
         cols = new HashMap<>();
-        matrix = null;
+        matrix = new Matrix(0, 0);
     }
 
     /**

@@ -42,7 +42,6 @@
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <Button fx:id="physConstQuitButton" layoutX="604.0" layoutY="11.0" mnemonicParsing="false" text="Quit" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="2.0" />
                                 <Label layoutX="148.0" layoutY="6.0" text="Choose Physical Constants Model:" AnchorPane.leftAnchor="148.0" AnchorPane.topAnchor="6.0" />
                                 <ChoiceBox fx:id="physConstCB" layoutX="384.0" layoutY="2.0" prefWidth="250.0" AnchorPane.leftAnchor="384.0" AnchorPane.topAnchor="2.0" />
                                 <TextField fx:id="physConstModelName" layoutX="100.0" layoutY="53.0" prefHeight="26.0" prefWidth="258.0" />
@@ -152,7 +151,6 @@
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <Button fx:id="refMatQuitButton" layoutX="604.0" layoutY="10.0" mnemonicParsing="false" text="Quit" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="2.0" />
                                 <Label layoutX="152.0" layoutY="5.0" text="Choose Reference Material:" />
                                 <ChoiceBox fx:id="refMatCB" layoutX="345.0" layoutY="1.0" prefWidth="250.0" />
                                 <TextField fx:id="refMatModelName" layoutX="100.0" layoutY="53.0" prefHeight="26.0" prefWidth="258.0" />

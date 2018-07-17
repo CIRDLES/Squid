@@ -10,8 +10,12 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.cirdles.squid.parameters.ValueModel;
+import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
+import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.util.DataDictionary;
@@ -28,6 +32,29 @@ public class PhysicalConstantsModel extends ParametersModel {
         super();
         molarMasses = new HashMap<>();
         setUpDefaultMolarMasses();
+    }
+
+    public PhysicalConstantsModel clone() {
+        PhysicalConstantsModel model = new PhysicalConstantsModel();
+        model.setModelName(modelName + " - copy");
+        model.setLabName(labName);
+        model.setVersion(version);
+        model.setDateCertified(dateCertified);
+        model.setComments(comments);
+        model.setReferences(references);
+        model.setValues(values.clone());
+        model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
+        model.setCovModel((CovarianceMatrixModel) covModel.copy());
+
+        Map<String, BigDecimal> masses = model.getMolarMasses();
+        Iterator<Entry<String, BigDecimal>> massesIterator = molarMasses.entrySet().iterator();
+        while (massesIterator.hasNext()) {
+            Entry<String, BigDecimal> entry = massesIterator.next();
+            masses.put(entry.getKey(), entry.getValue());
+        }
+        model.setMolarMasses(masses);
+        
+        return model;
     }
 
     public void setUpDefaultMolarMasses() {

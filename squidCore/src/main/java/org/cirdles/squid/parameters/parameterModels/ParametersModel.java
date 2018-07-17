@@ -50,7 +50,7 @@ public class ParametersModel implements
         dateCertified = DateHelper.getCurrentDate();
         comments = "";
         references = "";
-        values = new ValueModel[0];
+        generateDefaultValueModels();
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
@@ -64,7 +64,7 @@ public class ParametersModel implements
         this.dateCertified = dateCertified;
         comments = "";
         references = "";
-        values = new ValueModel[0];
+        generateDefaultValueModels();
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
@@ -79,7 +79,7 @@ public class ParametersModel implements
         this.dateCertified = dateCertified;
         comments = "";
         references = "";
-        values = new ValueModel[0];
+        generateDefaultValueModels();
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
@@ -94,7 +94,7 @@ public class ParametersModel implements
         this.dateCertified = dateCertified;
         this.comments = comments;
         this.references = references;
-        values = new ValueModel[0];
+        generateDefaultValueModels();
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
         this.rhos = new HashMap<>();
@@ -132,6 +132,17 @@ public class ParametersModel implements
         this.covModel = covModel;
         this.rhos = rhos;
         this.isEditable = isEditable;
+    }
+
+    private void generateDefaultValueModels() {
+        values = new ValueModel[7];
+        values[0] = new ValueModel("lambda226", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[1] = new ValueModel("lambda230", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[2] = new ValueModel("lambda231", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[3] = new ValueModel("lambda232", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[4] = new ValueModel("lambda234", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[5] = new ValueModel("lambda235", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[6] = new ValueModel("lambda238", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     @Override

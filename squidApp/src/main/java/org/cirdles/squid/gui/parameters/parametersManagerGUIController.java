@@ -36,6 +36,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
@@ -47,7 +48,6 @@ import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.StringComparer;
-import org.cirdles.squid.parameters.util.TextFieldComparer;
 
 /**
  * FXML Controller class
@@ -175,14 +175,12 @@ public class parametersManagerGUIController implements Initializable {
 
         File physConstFile = new File("src/main/resources/org/cirdles/squid/gui/parameters/EARTHTIME Physical Constants Model v.1.1.xml");
         physConstModel = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
-        setUpPhysConstCovariancesAndCorrelations();
         physConstModels = new ArrayList<>();
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
 
         File refMatFile = new File("src/main/resources/org/cirdles/squid/gui/parameters/Zircon-91500 v.1.0.xml");
         refMatModel = ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
-        setUpRefMatCovariancesAndCorrelations();
         refMatModels = new ArrayList<>();
         refMatModels.add(refMatModel);
         setUpRefMatCB();
@@ -200,17 +198,21 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpPhysConst() {
+        setUpPhysConstTextFields();
         setUpPhysConstData();
         setUpMolarMasses();
         setUpReferences();
+        setUpPhysConstCovariancesAndCorrelations();
         setUpPhysConstCov();
         setUpPhysConstCorr();
         setUpPhysConstEditableLabel();
     }
 
     private void setUpRefMat() {
+        setUpRefMatTextFields();
         setUpRefMatData();
         setUpConcentrations();
+        setUpRefMatCovariancesAndCorrelations();
         setUpRefMatCov();
         setUpRefMatCorr();
         setUpRefMatEditableLabel();
@@ -223,12 +225,12 @@ public class parametersManagerGUIController implements Initializable {
         }
         physConstCB.setItems(cbList);
         setPhysConstModel(0);
-        physConstCB.getSelectionModel().selectFirst();
         physConstCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue val, Number ov, Number nv) {
                 setPhysConstModel(nv.intValue());
             }
         });
+        physConstCB.getSelectionModel().selectFirst();
     }
 
     private void setPhysConstModel(int num) {
@@ -243,12 +245,12 @@ public class parametersManagerGUIController implements Initializable {
         }
         refMatCB.setItems(cbList);
         setRefMatModel(0);
-        refMatCB.getSelectionModel().selectFirst();
         refMatCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue val, Number ov, Number nv) {
                 setRefMatModel(nv.intValue());
             }
         });
+        refMatCB.getSelectionModel().selectFirst();
     }
 
     private void setRefMatModel(int num) {
@@ -312,6 +314,7 @@ public class parametersManagerGUIController implements Initializable {
                 final int colNum = i;
                 col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
                 col.setComparator(new StringComparer());
+                col.setCellFactory(TextFieldTableCell.<ObservableList<String>>forTableColumn());
                 table.getColumns().add(col);
             }
             table.setItems(obList);
@@ -370,21 +373,25 @@ public class parametersManagerGUIController implements Initializable {
         TableColumn nameCol = new TableColumn("name");
         nameCol.setCellValueFactory(new PropertyValueFactory("name"));
         nameCol.setComparator(new StringComparer());
+        nameCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(nameCol);
 
         TableColumn valCol = new TableColumn("value");
         valCol.setCellValueFactory(new PropertyValueFactory("value"));
-        valCol.setComparator(new TextFieldComparer());
+        valCol.setComparator(new StringComparer());
+        valCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(valCol);
 
         TableColumn absCol = new TableColumn("1σ ABS");
         absCol.setCellValueFactory(new PropertyValueFactory("oneSigmaABS"));
-        absCol.setComparator(new TextFieldComparer());
+        absCol.setComparator(new StringComparer());
+        absCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(absCol);
 
         TableColumn pctCol = new TableColumn("1σ PCT");
         pctCol.setCellValueFactory(new PropertyValueFactory("oneSigmaPCT"));
-        pctCol.setComparator(new TextFieldComparer());
+        pctCol.setComparator(new StringComparer());
+        pctCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(pctCol);
 
         return columns;
@@ -462,6 +469,20 @@ public class parametersManagerGUIController implements Initializable {
         }
     }
 
+    private void setUpPhysConstTextFields() {
+        physConstModelName.setText(physConstModel.getModelName());
+        physConstLabName.setText(physConstModel.getLabName());
+        physConstVersion.setText(physConstModel.getVersion());
+        physConstDateCertified.setText(physConstModel.getDateCertified());
+    }
+
+    private void setUpRefMatTextFields() {
+        refMatModelName.setText(refMatModel.getModelName());
+        refMatLabName.setText(refMatModel.getLabName());
+        refMatVersion.setText(refMatModel.getVersion());
+        refMatDateCertified.setText(refMatModel.getDateCertified());
+    }
+
     private void setUpLaboratoryName() {
         labNameTextField.setText(laboratoryName);
         labNameTextField.setOnKeyReleased(value -> {
@@ -528,36 +549,70 @@ public class parametersManagerGUIController implements Initializable {
             refMatCB.getItems().add(importedMod.getModelName() + " v." + importedMod.getVersion());
             refMatCB.getSelectionModel().selectLast();
             refMatModel = importedMod;
-            setUpRefMat();
         }
+    }
+
+    private void physConstEditable(boolean isEditable) {
+        physConstModelName.setEditable(isEditable);
+        physConstLabName.setEditable(isEditable);
+        physConstVersion.setEditable(isEditable);
+        physConstDateCertified.setEditable(isEditable);
+
+        physConstDataTable.setEditable(isEditable);
+        physConstDataTable.getColumns().get(0).setEditable(false);
+
+        physConstCorrTable.setEditable(isEditable);
+        physConstCorrTable.getColumns().get(0).setEditable(false);
+
+        physConstCovTable.setEditable(isEditable);
+        physConstCovTable.getColumns().get(0).setEditable(false);
+
+        molarMassesTextArea.setEditable(isEditable);
+
+        for (int i = 0; i < physConstReferences.size(); i++) {
+            physConstReferences.get(i).setEditable(isEditable);
+        }
+
+        physConstCommentsArea.setEditable(isEditable);
+        physConstReferencesArea.setEditable(isEditable);
     }
 
     @FXML
     private void physConstRemoveCurrMod(ActionEvent event) {
         physConstModels.remove(physConstModel);
-        refMatCB.getSelectionModel().selectFirst();
+        physConstCB.getItems().remove(physConstModel.getModelName() + " v." + physConstModel.getVersion());
+        physConstCB.getSelectionModel().selectFirst();
+        physConstEditable(false);
     }
 
     @FXML
     private void physConstEditCurrMod(ActionEvent event) {
+        physConstEditable(true);
     }
 
     @FXML
     private void physConstEditCopy(ActionEvent event) {
-
+        physConstModel = physConstModel.clone();
+        setUpPhysConst();
+        physConstEditable(true);
     }
 
     @FXML
     private void physConstEditEmptyMod(ActionEvent event) {
+        physConstModel = new PhysicalConstantsModel();
+        setUpPhysConst();
+        physConstEditable(true);
     }
 
     @FXML
     private void physConstCancelEdit(ActionEvent event) {
+        physConstModel = physConstModels.get(0);
+        setUpPhysConst();
+        physConstEditable(false);
     }
 
     @FXML
     private void physConstSaveAndRegisterEdit(ActionEvent event) {
-        physConstModel = new PhysicalConstantsModel();
         physConstModel.setIsEditable(true);
         physConstModel.setModelName(physConstModelName.getText());
         physConstModel.setVersion(physConstVersion.getText());
@@ -569,16 +624,17 @@ public class parametersManagerGUIController implements Initializable {
         for (int i = 0; i < values.length; i++) {
             DataModel mod = dataModels.get(i);
             ValueModel currVal = new ValueModel();
+
             currVal.setName(mod.getName());
 
-            String currBigDec = mod.getValue().getText();
+            String currBigDec = mod.getValue();
             if (Double.parseDouble(currBigDec) == 0) {
                 currVal.setValue(BigDecimal.ZERO);
             } else {
                 currVal.setValue(new BigDecimal(currBigDec));
             }
 
-            currBigDec = mod.getOneSigmaABS().getText();
+            currBigDec = mod.getOneSigmaABS();
             if (Double.parseDouble(currBigDec) == 0) {
                 currVal.setOneSigma(BigDecimal.ZERO);
             } else {
@@ -587,7 +643,9 @@ public class parametersManagerGUIController implements Initializable {
 
             currVal.setReference(physConstReferences.get(i).getText());
             currVal.setUncertaintyType("ABS");
+            values[i] = currVal;
         }
+        physConstModel.setValues(values);
 
         Map<String, BigDecimal> masses = physConstModel.getMolarMasses();
         masses.clear();
@@ -614,6 +672,34 @@ public class parametersManagerGUIController implements Initializable {
         physConstModel.setComments(physConstCommentsArea.getText());
         physConstModel.setRhos(getRhosFromTable(physConstCorrTable));
 
+        physConstModels.add(physConstModel);
+        physConstCB.getItems().add(physConstModel.getModelName() + " v." + physConstModel.getVersion());
+        physConstCB.getSelectionModel().selectLast();
+        physConstEditable(false);
+    }
+
+    @FXML
+    private void refMatSaveAndRegisterEdit(ActionEvent event) {
+    }
+
+    @FXML
+    private void refMatRemoveCurrMod(ActionEvent event) {
+    }
+
+    @FXML
+    private void refMatCancelEdit(ActionEvent event) {
+    }
+
+    @FXML
+    private void refMateEditEmptyMod(ActionEvent event) {
+    }
+
+    @FXML
+    private void refMatEditCopy(ActionEvent event) {
+    }
+
+    @FXML
+    private void refMatEditCurrMod(ActionEvent event) {
     }
 
     private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<String>> table) {
@@ -645,84 +731,50 @@ public class parametersManagerGUIController implements Initializable {
         return rhos;
     }
 
-    @FXML
-    private void refMatSaveAndRegisterEdit(ActionEvent event
-    ) {
-        getRhosFromTable(refMatCorrTable);
-    }
-
-    @FXML
-    private void refMatRemoveCurrMod(ActionEvent event
-    ) {
-    }
-
-    @FXML
-    private void refMatCancelEdit(ActionEvent event
-    ) {
-    }
-
-    @FXML
-    private void refMateEditEmptyMod(ActionEvent event
-    ) {
-    }
-
-    @FXML
-    private void refMatEditCopy(ActionEvent event
-    ) {
-    }
-
-    @FXML
-    private void refMatEditCurrMod(ActionEvent event
-    ) {
-    }
-
     public class DataModel {
 
         private SimpleStringProperty name;
-        private TextField value;
-        private TextField oneSigmaABS;
-        private TextField oneSigmaPCT;
+        private SimpleStringProperty value;
+        private SimpleStringProperty oneSigmaABS;
+        private SimpleStringProperty oneSigmaPCT;
 
         public DataModel(String name, BigDecimal value,
                 BigDecimal oneSigmaABS, BigDecimal oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
-            this.value = new TextField(value.toPlainString());
-            this.value.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            this.oneSigmaABS = new TextField(oneSigmaABS.toPlainString());
-            this.oneSigmaABS.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            this.oneSigmaPCT = new TextField(oneSigmaPCT.toPlainString());
-            this.oneSigmaPCT.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            this.value = new SimpleStringProperty(value.toPlainString());
+            this.oneSigmaABS = new SimpleStringProperty(oneSigmaABS.toPlainString());
+            this.oneSigmaPCT = new SimpleStringProperty(oneSigmaPCT.toPlainString());
         }
 
         public String getName() {
             return name.get();
         }
 
-        public TextField getValue() {
-            return value;
+        public String getValue() {
+            return value.get();
         }
 
-        public TextField getOneSigmaABS() {
-            return oneSigmaABS;
+        public String getOneSigmaABS() {
+            return oneSigmaABS.get();
         }
 
-        public TextField getOneSigmaPCT() {
-            return oneSigmaPCT;
+        public String getOneSigmaPCT() {
+            return oneSigmaPCT.get();
         }
 
         public void setName(String name) {
             this.name.set(name);
         }
 
-        public void setValue(TextField value) {
+        public void setValue(SimpleStringProperty value) {
             this.value = value;
         }
 
-        public void setOneSigmaABS(TextField oneSigmaABS) {
+        public void setOneSigmaABS(SimpleStringProperty oneSigmaABS) {
             this.oneSigmaABS = oneSigmaABS;
         }
 
-        public void setOneSigmaPCT(TextField oneSigmaPCT) {
+        public void setOneSigmaPCT(SimpleStringProperty oneSigmaPCT) {
             this.oneSigmaPCT = oneSigmaPCT;
         }
 
