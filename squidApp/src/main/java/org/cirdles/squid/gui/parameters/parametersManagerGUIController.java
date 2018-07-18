@@ -709,6 +709,7 @@ public class parametersManagerGUIController implements Initializable {
         physConstCB.getItems().add(physConstModel.getModelName() + " v." + physConstModel.getVersion());
         physConstCB.getSelectionModel().selectLast();
         physConstEditable(false);
+        setUpPhysConst();
     }
 
     @FXML
@@ -781,6 +782,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel.setReferences(refMatReferencesArea.getText());
         refMatModel.setComments(refMatCommentsArea.getText());
         refMatEditable(false);
+        setUpRefMat();
     }
 
     @FXML
