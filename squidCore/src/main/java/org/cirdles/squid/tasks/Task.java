@@ -271,7 +271,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> stdRadiogenicCols = stdRadiogenicCols();
         taskExpressionsOrdered.addAll(stdRadiogenicCols);
 
-        SortedSet<Expression> samRadiogenicCols = samRadiogenicCols();
+        SortedSet<Expression> samRadiogenicCols = samRadiogenicCols(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(samRadiogenicCols);
 
         Collections.sort(taskExpressionsOrdered);
