@@ -30,6 +30,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
+import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.xml.sax.SAXException;
@@ -243,6 +244,30 @@ public class FileHandler {
             } else {
                 throw new IOException("Filename does not end with '.xml'");
             }
+        }
+
+        return retVal;
+    }
+
+    public static File saveReportFileCSV(boolean rawOutput , String[][] report, Window ownerWindow)
+            throws IOException {
+
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Report '.csv' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Report '.csv' files", "*.csv"));
+        File mruFolder = new File("");//squidPersistentState.getMRUExpressionFolderPath());
+        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
+        fileChooser.setInitialFileName(report[0][1] + ".csv");
+
+        File reportFileCSV = fileChooser.showSaveDialog(ownerWindow);
+
+        if (reportFileCSV != null) {
+            retVal = reportFileCSV;
+            //squidPersistentState.updateExpressionListMRU(reportFileCSV);
+
+            ReportSerializerToCSV.writeCSVReport(rawOutput, reportFileCSV, report);
         }
 
         return retVal;

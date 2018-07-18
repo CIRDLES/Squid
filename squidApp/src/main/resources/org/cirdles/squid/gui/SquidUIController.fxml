@@ -111,7 +111,14 @@
                         <Menu mnemonicParsing="false" text="Reference Materials">
                            <items>
                             <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
+                              <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - beta" />
                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Unknowns">
+                          <items>
+                              <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
+                              <MenuItem disable="true" mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - beta" />
+                          </items>
                         </Menu>
                     </items>
                   </Menu>
@@ -119,7 +126,7 @@
             </Menu>
             <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#topsoilAction" text="4-corr Concordia of Ref Material" />
+                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialTopsoilAction" text="Reference Materials" />
                   <MenuItem disable="true" mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" visible="false" />
               </items>
             </Menu>

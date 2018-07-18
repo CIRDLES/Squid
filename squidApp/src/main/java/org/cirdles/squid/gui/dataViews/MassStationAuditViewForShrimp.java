@@ -292,18 +292,18 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         g2d.stroke();
 
-        // tics
+        // ticsY
         float verticalTextShift = 3.1f;
         g2d.setFont(Font.font("Lucida Sans", 10));
-        if (tics != null) {
-            for (int i = 0; i < tics.length; i++) {
+        if (ticsY != null) {
+            for (int i = 0; i < ticsY.length; i++) {
                 try {
                     g2d.strokeLine(
-                            mapX(minX), mapY(tics[i].doubleValue()), mapX(maxX), mapY(tics[i].doubleValue()));
+                            mapX(minX), mapY(ticsY[i].doubleValue()), mapX(maxX), mapY(ticsY[i].doubleValue()));
 
-                    g2d.fillText(tics[i].toPlainString(),//
+                    g2d.fillText(ticsY[i].toPlainString(),//
                             (float) mapX(minX) - 50f,
-                            (float) mapY(tics[i].doubleValue()) + verticalTextShift);
+                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
                 } catch (Exception e) {
                 }
             }
@@ -389,7 +389,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         minY -= yMarginStretch;
         maxY += yMarginStretch;
 
-        tics = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
+        ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
 
     }
 

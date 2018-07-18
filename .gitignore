@@ -43,6 +43,11 @@ test_*
 EXPRESSION.HTML
 squidApp/LudwigLibraryJavadoc/
 squidApp/Schema/
+squidCore/LudwigLibraryJavadoc/
+squidCore/Schema/
+LudwigLibraryJavadoc/
+Schema/
+/Schema/
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt

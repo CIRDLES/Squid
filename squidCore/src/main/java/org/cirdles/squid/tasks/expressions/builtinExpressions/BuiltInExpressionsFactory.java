@@ -92,11 +92,17 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", Squid3Constants.sComm0_84);//          37.5933995);
         parameters.put(sComm_84.getName(), sComm_84);
 
+        ExpressionTreeInterface sComm_68 = new ConstantNode("sComm_68", 0.0/2.1095);
+        parameters.put(sComm_68.getName(), sComm_68);
+
         ExpressionTreeInterface lambda238 = new ConstantNode("lambda238", Squid3Constants.lambda238);
         parameters.put(lambda238.getName(), lambda238);
 
         ExpressionTreeInterface lambda232 = new ConstantNode("lambda232", Squid3Constants.lambda232);
         parameters.put(lambda232.getName(), lambda232);
+
+        ExpressionTreeInterface ExtPErr = new ConstantNode("ExtPErr", 0.75);
+        parameters.put("ExtPErr", ExtPErr);
 
         return parameters;
     }
@@ -353,14 +359,13 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> generateExperimentalExpressions() {
         SortedSet<Expression> experimentalExpressions = new TreeSet<>();
 
-        Expression dummy = buildExpression("DUMMY", "5", true, true, false);
-        dummy.getExpressionTree().setSquidSpecialUPbThExpression(false);
-        experimentalExpressions.add(dummy);
-
-        Expression dummyS = buildExpression("DUMMYsum", "5", true, true, true);
-        dummyS.getExpressionTree().setSquidSpecialUPbThExpression(false);
-        experimentalExpressions.add(dummyS);
-
+//        Expression dummy = buildExpression("DUMMY", "5", true, true, false);
+//        dummy.getExpressionTree().setSquidSpecialUPbThExpression(false);
+//        experimentalExpressions.add(dummy);
+//
+//        Expression dummyS = buildExpression("DUMMYsum", "5", true, true, true);
+//        dummyS.getExpressionTree().setSquidSpecialUPbThExpression(false);
+//        experimentalExpressions.add(dummyS);
         return experimentalExpressions;
     }
 
@@ -504,6 +509,10 @@ public abstract class BuiltInExpressionsFactory {
                 "WtdMeanACalc( [\"4-corr206Pb/238Ucalibr.const\"], [\"4-corr206Pb/238Ucalibr.const %err\"], FALSE, FALSE )", true, false, true);
         meansAndAgesForRefMaterials.add(expression4corr206Pb238UcalibrconstWM);
 
+        Expression expression4corrExtPerrA = buildExpression("4-corrExtPerrA",
+                "Max(ExtPErr, [\"4-corr206Pb/238Ucalibr.const WM\"][1] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * 100)", true, false, true);
+        meansAndAgesForRefMaterials.add(expression4corrExtPerrA);
+
         // age calc
         Expression expression4corr206Pb238UAge = buildExpression("4-corr206Pb/238U Age",
                 "LN( 1.0 + [\"4-corr206Pb/238Ucalibr.const\"] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio ) / lambda238", true, false, false);
@@ -530,6 +539,10 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression7corr206Pb238UcalibrconstWM = buildExpression("7-corr206Pb/238Ucalibr.const WM",
                 "WtdMeanACalc( [\"7-corr206Pb/238Ucalibr.const\"], [\"7-corr206Pb/238Ucalibr.const %err\"], FALSE, FALSE )", true, false, true);
         meansAndAgesForRefMaterials.add(expression7corr206Pb238UcalibrconstWM);
+
+        Expression expression7corrExtPerrA = buildExpression("7-corrExtPerrA",
+                "Max(ExtPErr, [\"7-corr206Pb/238Ucalibr.const WM\"][1] / [\"7-corr206Pb/238Ucalibr.const WM\"][0] * 100)", true, false, true);
+        meansAndAgesForRefMaterials.add(expression7corrExtPerrA);
 
         // age calc
         Expression expression7corr206Pb238UAge = buildExpression("7-corr206Pb/238U Age",
@@ -573,6 +586,10 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression8corr206Pb238UcalibrconstWM = buildExpression("8-corr206Pb/238Ucalibr.const WM",
                 "WtdMeanACalc( [\"8-corr206Pb/238Ucalibr.const\"], [\"8-corr206Pb/238Ucalibr.const %err\"], FALSE, FALSE )", true, false, true);
         meansAndAgesForRefMaterials.add(expression8corr206Pb238UcalibrconstWM);
+
+        Expression expression8corrExtPerrA = buildExpression("8-corrExtPerrA",
+                "Max(ExtPErr, [\"8-corr206Pb/238Ucalibr.const WM\"][1] / [\"8-corr206Pb/238Ucalibr.const WM\"][0] * 100)", true, false, true);
+        meansAndAgesForRefMaterials.add(expression8corrExtPerrA);
 
         // age calc
         Expression expression8corr206Pb238UAge = buildExpression("8-corr206Pb/238U Age",
@@ -739,14 +756,174 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression4corr207Pb235UPctErr = buildExpression("4-corr207Pb/235U %err",
                 "sqrt( [\"4-corr206Pb/238U %err\"]^2 + [\"4-corr207Pb/206Pb%err\"]^2 )", true, false, false);
         stdRadiogenicCols.add(expression4corr207Pb235UPctErr);
-        
+
         Expression expression4correrrcorr = buildExpression("4-corr-errcorr",
                 "[\"4-corr206Pb/238U %err\"] / [\"4-corr207Pb/235U %err\"]", true, false, false);
         stdRadiogenicCols.add(expression4correrrcorr);
-        
-        
 
         return stdRadiogenicCols;
+    }
+
+    /**
+     * https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-SamRadiogenicCols
+     *
+     * @param parentNuclide
+     * @param isDirectAltPD
+     * @return
+     */
+    public static SortedSet<Expression> samRadiogenicCols(String parentNuclide, boolean isDirectAltPD) {
+        SortedSet<Expression> samRadiogenicCols = new TreeSet<>();
+
+        Expression expressionAlpha = buildExpression("Alpha",
+                "1 / [\"204/206\"]", false, true, false);
+        samRadiogenicCols.add(expressionAlpha);
+
+        Expression expressionNetAlpha = buildExpression("NetAlpha",
+                "Alpha - sComm_64", false, true, false);
+        samRadiogenicCols.add(expressionNetAlpha);
+
+        Expression expressionBeta = buildExpression("Beta",
+                "[\"207/206\"] / [\"204/206\"]", false, true, false);
+        samRadiogenicCols.add(expressionBeta);
+
+        Expression expressionNetBeta = buildExpression("NetBeta",
+                "Beta - sComm_74", false, true, false);
+        samRadiogenicCols.add(expressionNetBeta);
+
+        Expression expressionGamma = buildExpression("Gamma",
+                "[\"208/206\"] / [\"204/206\"]", false, true, false);
+        samRadiogenicCols.add(expressionGamma);
+
+        Expression expressionNetGamma = buildExpression("NetGamma",
+                "Gamma - sComm_68", false, true, false);
+        samRadiogenicCols.add(expressionNetGamma);
+
+        Expression expressionRadd6 = buildExpression("radd6",
+                "NetAlpha / Alpha", false, true, false);
+        samRadiogenicCols.add(expressionRadd6);
+
+        Expression expressionRadd8 = buildExpression("radd8",
+                "NetGamma / Gamma", false, true, false);
+        samRadiogenicCols.add(expressionRadd8);
+
+        // Case Perm1 and Perm2, i.e. has uranium as parent nuclide ***************************
+        if (!parentNuclide.contains("232")) {
+            // this is same as for RM above, so add "S" for Sample
+            Expression expression4corrTotal206Pb238U = buildExpression("4-corrTotal 206Pb/238US",
+                    "[\"4-corr206Pb/238Ucalibr.const\"] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
+            samRadiogenicCols.add(expression4corrTotal206Pb238U);
+
+            Expression expression4corrTotal206Pb238UPctErr = buildExpression("4-corrTotal 206Pb/238US %err",
+                    "SQRT([\"4-corr206Pb/238Ucalibr.const %err\"]^2 + [\"4-corrExtPerrA\"] ^ 2)", false, true, false);
+            samRadiogenicCols.add(expression4corrTotal206Pb238UPctErr);
+
+            // this is same as for RM above, so add "S" for Sample
+            Expression expression7corrTotal206Pb238U = buildExpression("7-corrTotal 206Pb/238US",
+                    "[\"7-corr206Pb/238Ucalibr.const\"] / [\"7-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
+            samRadiogenicCols.add(expression7corrTotal206Pb238U);
+
+            Expression expression7corrTotal206Pb238UPctErr = buildExpression("7-corrTotal 206Pb/238US %err",
+                    "SQRT([\"7-corr206Pb/238Ucalibr.const %err\"]^2 + [\"7-corrExtPerrA\"] ^ 2)", false, true, false);
+            samRadiogenicCols.add(expression7corrTotal206Pb238UPctErr);
+
+            // perm1 only
+            if (!isDirectAltPD) {
+                // this is same as for RM above, so add "S" for Sample
+                Expression expression8corrTotal206Pb238U = buildExpression("8-corrTotal 206Pb/238US",
+                        "[\"8-corr206Pb/238Ucalibr.const\"] / [\"8-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
+                samRadiogenicCols.add(expression8corrTotal206Pb238U);
+
+                Expression expression8corrTotal206Pb238UPctErr = buildExpression("8-corrTotal 206Pb/238US %err",
+                        "SQRT([\"8-corr206Pb/238Ucalibr.const %err\"]^2 + [\"8-corrExtPerrA\"] ^ 2)", false, true, false);
+                samRadiogenicCols.add(expression8corrTotal206Pb238UPctErr);
+
+                // special case
+                Expression expression4corrTotal208Pb232ThS = buildExpression("4-corrTotal 208Pb/232ThS",
+                        "[\"4-corrTotal 206Pb/238US\"] * [\"208/206\"] / [\"232Th/238U\"]", false, true, false);
+                samRadiogenicCols.add(expression4corrTotal208Pb232ThS);
+
+                Expression expression4corrTotal208Pb232ThSPctErr = buildExpression("4-corrTotal 208Pb/232ThS %err",
+                        "SQRT([%\"208/206\"]^2 + [\"4-corrTotal 206Pb/238US %err\"]^2 + [%\"232Th/238U\"]^2)", false, true, false);
+                samRadiogenicCols.add(expression4corrTotal208Pb232ThSPctErr);
+
+                Expression expression7corrTotal208Pb232ThS = buildExpression("7-corrTotal 208Pb/232ThS",
+                        "[\"7-corrTotal 206Pb/238US\"] * [\"208/206\"] / [\"232Th/238U\"]", false, true, false);
+                samRadiogenicCols.add(expression7corrTotal208Pb232ThS);
+
+                Expression expression7corrTotal208Pb232ThSPctErr = buildExpression("7-corrTotal 208Pb/232ThS %err",
+                        "SQRT([%\"208/206\"]^2 + [\"7-corrTotal 206Pb/238US %err\"]^2 + [%\"232Th/238U\"]^2)", false, true, false);
+                samRadiogenicCols.add(expression7corrTotal208Pb232ThSPctErr);
+
+                Expression expression8corrTotal208Pb232ThS = buildExpression("8-corrTotal 208Pb/232ThS",
+                        "[\"8-corrTotal 206Pb/238US\"] * [\"208/206\"] / [\"232Th/238U\"]", false, true, false);
+                samRadiogenicCols.add(expression8corrTotal208Pb232ThS);
+
+                Expression expression8corrTotal208Pb232ThSPctErr = buildExpression("8-corrTotal 208Pb/232ThS %err",
+                        "SQRT([%\"208/206\"]^2 + [\"8-corrTotal 206Pb/238US %err\"]^2 + [%\"232Th/238U\"]^2)", false, true, false);
+                samRadiogenicCols.add(expression8corrTotal208Pb232ThSPctErr);
+            }
+        } else {
+            // perm3 and perm4
+            Expression expression4corrTotal208Pb232ThS = buildExpression("4-corrTotal 208Pb/232ThS",
+                    "[\"4-corr208Pb/232Thcalibr.const\"] / [\"4-corr208Pb/232Thcalibr.const WM\"][0] * StdThPbRatio", false, true, false);
+            samRadiogenicCols.add(expression4corrTotal208Pb232ThS);
+
+            Expression expression4corrTotal208Pb232ThSPctErr = buildExpression("4-corrTotal 208Pb/232ThS %err",
+                    "SQRT([\"4-corr208Pb/232Thcalibr.const %err\"]^2 + [\"4-corrExtPerrA\"] ^ 2)", false, true, false);
+            samRadiogenicCols.add(expression4corrTotal208Pb232ThSPctErr);
+
+            Expression expression7corrTotal208Pb232ThS = buildExpression("7-corrTotal 208Pb/232ThS",
+                    "[\"7-corr208Pb/232Thcalibr.const\"] / [\"7-corr208Pb/232Thcalibr.const WM\"][0] * StdThPbRatio", false, true, false);
+            samRadiogenicCols.add(expression7corrTotal208Pb232ThS);
+
+            Expression expression7corrTotal208Pb232ThSPctErr = buildExpression("7-corrTotal 208Pb/232ThS %err",
+                    "SQRT([\"7-corr208Pb/232Thcalibr.const %err\"]^2 + [\"7-corrExtPerrA\"] ^ 2)", false, true, false);
+            samRadiogenicCols.add(expression7corrTotal208Pb232ThSPctErr);
+
+            // perm3 special case - needs confirmation
+            if (!isDirectAltPD) {
+                Expression expression4corrTotal238U206PbS = buildExpression("4-corrTotal 238U/206PbS",
+                        "[\"4-corrTotal 208Pb/232Th\"] / [\"208/206\"] * [\"232Th/238U\"]", false, true, false);
+                samRadiogenicCols.add(expression4corrTotal238U206PbS);
+
+                Expression expression4corrTotal238U206PbSPctErr = buildExpression("4-corrTotal 238U/206PbS %err",
+                        "SQRT( [%\"208/206\"]^2 + [\"4-corrTotal 208Pb/232Th %err\"]^2 + \n"
+                        + "      [%\"232Th/238U\"]^2 )", false, true, false);
+                samRadiogenicCols.add(expression4corrTotal238U206PbSPctErr);
+
+                Expression expression7corrTotal238U206PbS = buildExpression("7-corrTotal 238U/206PbS",
+                        "[\"7-corrTotal 208Pb/232Th\"] / [\"208/206\"] * [\"232Th/238U\"]", false, true, false);
+                samRadiogenicCols.add(expression7corrTotal238U206PbS);
+
+                Expression expression7corrTotal238U206PbSPctErr = buildExpression("7-corrTotal 238U/206PbS %err",
+                        "SQRT( [%\"208/206\"]^2 + [\"7-corrTotal 208Pb/232Th %err\"]^2 + \n"
+                        + "      [%\"232Th/238U\"]^2 )", false, true, false);
+                samRadiogenicCols.add(expression7corrTotal238U206PbSPctErr);
+            }
+        }
+        // perm4
+        if (parentNuclide.contains("232") && isDirectAltPD) {
+            // this is same as for RM above, so add "S" for Sample
+            Expression expression4corrTotal206Pb238U = buildExpression("4-corrTotal 206Pb/238US",
+                    "[\"4-corr206Pb/238Ucalibr.const\"] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
+            samRadiogenicCols.add(expression4corrTotal206Pb238U);
+
+            Expression expression4corrTotal206Pb238UPctErr = buildExpression("4-corrTotal 206Pb/238US %err",
+                    "SQRT([\"4-corr206Pb/238Ucalibr.const %err\"]^2 + [\"4-corrExtPerrA\"] ^ 2)", false, true, false);
+            samRadiogenicCols.add(expression4corrTotal206Pb238UPctErr);
+
+            // this is same as for RM above, so add "S" for Sample
+            Expression expression7corrTotal206Pb238U = buildExpression("7-corrTotal 206Pb/238US",
+                    "[\"7-corr206Pb/238Ucalibr.const\"] / [\"7-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
+            samRadiogenicCols.add(expression7corrTotal206Pb238U);
+
+            Expression expression7corrTotal206Pb238UPctErr = buildExpression("7-corrTotal 206Pb/238US %err",
+                    "SQRT([\"7-corr206Pb/238Ucalibr.const %err\"]^2 + [\"7-corrExtPerrA\"] ^ 2)", false, true, false);
+            samRadiogenicCols.add(expression7corrTotal206Pb238UPctErr);
+
+        }
+
+        return samRadiogenicCols;
     }
 
     private static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc, boolean isSummaryCalc) {
