@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -32,15 +29,9 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  */
 @XStreamAlias("Operation")
 public class Max extends Function {
-        //    private static final long serialVersionUID = 6522574920235718028L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Max.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Max " + theSUID);
-    }
+
+    private static final long serialVersionUID = 6100395800966162199L;
+
     /**
      *
      */
@@ -51,7 +42,7 @@ public class Max extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"maximum"}};
-        labelsForInputValues = new String[]{"number1","number2"};
+        labelsForInputValues = new String[]{"number1", "number2"};
     }
 
     /**
@@ -66,7 +57,7 @@ public class Max extends Function {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
         double retVal;
-        try {          
+        try {
             double leftNumber = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0];
             double rightNumber = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0])[0];
             retVal = Math.max(leftNumber, rightNumber);

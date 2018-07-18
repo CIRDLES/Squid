@@ -15,13 +15,17 @@
  */
 package org.cirdles.squid.tasks.expressions.parsing;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
@@ -75,71 +79,76 @@ public class ExpressionParser {
         ExpressionTreeInterface returnExpressionTree = new ExpressionTree(expression.getName());
 
         // Get our lexer
-        ExpressionsForSquid2Lexer lexer = new ExpressionsForSquid2Lexer(new ANTLRInputStream(expression.getExcelExpressionString()));
+        // updated due to deprecations Jul 2018
+        ExpressionsForSquid2Lexer lexer;
+        try {
+            InputStream stream = new ByteArrayInputStream(expression.getExcelExpressionString().getBytes(StandardCharsets.UTF_8));
+            lexer = new ExpressionsForSquid2Lexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
 
-        // Get a list of matched tokens
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+            // Get a list of matched tokens
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        // Pass the tokens to the parser
-        ExpressionsForSquid2Parser parser = new ExpressionsForSquid2Parser(tokens);
+            // Pass the tokens to the parser
+            ExpressionsForSquid2Parser parser = new ExpressionsForSquid2Parser(tokens);
 
-        // https://stackoverflow.com/questions/18132078/handling-errors-in-antlr4
-        lexer.removeErrorListeners();
-        DescriptiveErrorListener descriptiveErrorListenerLexer = new DescriptiveErrorListener(true);
-        lexer.addErrorListener(descriptiveErrorListenerLexer);
+            // https://stackoverflow.com/questions/18132078/handling-errors-in-antlr4
+            lexer.removeErrorListeners();
+            DescriptiveErrorListener descriptiveErrorListenerLexer = new DescriptiveErrorListener(true);
+            lexer.addErrorListener(descriptiveErrorListenerLexer);
 
-        parser.removeErrorListeners();
-        DescriptiveErrorListener descriptiveErrorListenerParser = new DescriptiveErrorListener(true);
-        parser.addErrorListener(descriptiveErrorListenerParser);
+            parser.removeErrorListeners();
+            DescriptiveErrorListener descriptiveErrorListenerParser = new DescriptiveErrorListener(true);
+            parser.addErrorListener(descriptiveErrorListenerParser);
 
-        // Specify our entry point
-        ExpressionsForSquid2Parser.ExprContext expSentenceContext = parser.expr();
+            // Specify our entry point
+            ExpressionsForSquid2Parser.ExprContext expSentenceContext = parser.expr();
 
-        // we don't want to build expressiontree if any bad parsing present
-        if (descriptiveErrorListenerLexer.getSyntaxErrors().length() + descriptiveErrorListenerParser.getSyntaxErrors().length() > 0) {
-            expression.setParsingStatusReport(
-                    descriptiveErrorListenerLexer.getSyntaxErrors()
-                    + (String) (descriptiveErrorListenerLexer.getSyntaxErrors().length() > 0 ? descriptiveErrorListenerLexer.getSyntaxErrors() + "\n" : "")
-                    + descriptiveErrorListenerParser.getSyntaxErrors());
-        } else {
-            parser.setBuildParseTree(true);
-            List<ParseTree> children = expSentenceContext.children;
+            // we don't want to build expressiontree if any bad parsing present
+            if (descriptiveErrorListenerLexer.getSyntaxErrors().length() + descriptiveErrorListenerParser.getSyntaxErrors().length() > 0) {
+                expression.setParsingStatusReport(
+                        descriptiveErrorListenerLexer.getSyntaxErrors()
+                        + (String) (descriptiveErrorListenerLexer.getSyntaxErrors().length() > 0 ? descriptiveErrorListenerLexer.getSyntaxErrors() + "\n" : "")
+                        + descriptiveErrorListenerParser.getSyntaxErrors());
+            } else {
+                parser.setBuildParseTree(true);
+                List<ParseTree> children = expSentenceContext.children;
 
-            List<String> parsed = new ArrayList<>();
-            List<String> parsedRPN = new ArrayList<>();
+                List<String> parsed = new ArrayList<>();
+                List<String> parsedRPN = new ArrayList<>();
 
-            if (children != null) {
-                for (int i = 0; i < children.size(); i++) {
-                    printTree(parser, children.get(i), parsed);
+                if (children != null) {
+                    for (int i = 0; i < children.size(); i++) {
+                        printTree(parser, children.get(i), parsed);
+                    }
+                    parsedRPN = ShuntingYard.infixToPostfix(parsed);
                 }
-                parsedRPN = ShuntingYard.infixToPostfix(parsed);
+
+                Collections.reverse(parsedRPN);
+
+                // detect if top-level singleton and if so, wrap in expression with hidden Value operation, '$$'
+                if (parsedRPN.size() == 1) {
+                    parsedRPN.add(0, "$$");
+                }
+
+                returnExpressionTree = buildTree(parsedRPN);
+
+                // if single objects are the actual expression, don't change
+                if (!(returnExpressionTree instanceof SpotFieldNode)
+                        && !(returnExpressionTree instanceof ShrimpSpeciesNode)
+                        && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)
+                        && !(returnExpressionTree instanceof VariableNodeForSummary)
+                        && returnExpressionTree.isValid()) {
+
+                    returnExpressionTree.setName(expression.getName());
+
+                }
+
+                // be sure top level expression is root
+                returnExpressionTree.setRootExpressionTree(!(((ExpressionTree) returnExpressionTree).getLeftET() instanceof ShrimpSpeciesNode));
+
             }
-
-            Collections.reverse(parsedRPN);
-
-            // detect if top-level singleton and if so, wrap in expression with hidden Value operation, '$$'
-            if (parsedRPN.size() == 1) {
-                parsedRPN.add(0, "$$");
-            }
-
-            returnExpressionTree = buildTree(parsedRPN);
-
-            // if single objects are the actual expression, don't change
-            if (!(returnExpressionTree instanceof SpotFieldNode)
-                    && !(returnExpressionTree instanceof ShrimpSpeciesNode)
-                    && !(returnExpressionTree instanceof VariableNodeForIsotopicRatios)
-                    && !(returnExpressionTree instanceof VariableNodeForSummary)
-                    && returnExpressionTree.isValid()) {
-
-                returnExpressionTree.setName(expression.getName());
-
-            }
-
-            // be sure top level expression is root
-            returnExpressionTree.setRootExpressionTree(!(((ExpressionTree) returnExpressionTree).getLeftET() instanceof ShrimpSpeciesNode));
-
+        } catch (IOException iOException) {
         }
-
         return returnExpressionTree;
 
     }
