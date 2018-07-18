@@ -224,7 +224,6 @@ public class parametersManagerGUIController implements Initializable {
             cbList.add(mod.getModelName() + " v." + mod.getVersion());
         }
         physConstCB.setItems(cbList);
-        setPhysConstModel(0);
         physConstCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue val, Number ov, Number nv) {
                 setPhysConstModel(nv.intValue());
@@ -244,7 +243,6 @@ public class parametersManagerGUIController implements Initializable {
             cbList.add(mod.getModelName() + " v." + mod.getVersion());
         }
         refMatCB.setItems(cbList);
-        setRefMatModel(0);
         refMatCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue val, Number ov, Number nv) {
                 setRefMatModel(nv.intValue());
@@ -637,7 +635,7 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstCancelEdit(ActionEvent event) {
-        setUpPhysConst();
+        physConstCB.getSelectionModel().selectFirst();
         physConstEditable(false);
     }
 
@@ -793,7 +791,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private void refMatCancelEdit(ActionEvent event) {
         refMatEditable(false);
-        setUpRefMat();
+        refMatCB.getSelectionModel().selectFirst();
     }
 
     @FXML
