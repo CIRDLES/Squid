@@ -14,6 +14,7 @@ import org.cirdles.squid.parameters.ValueModel;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.util.ReferenceMaterialEnum;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxRefMatConverter;
 
@@ -78,6 +79,11 @@ public class ReferenceMaterial extends ParametersModel {
 
         buildRhosMap();
     }
+    
+   public static ReferenceMaterial getDefaultModel() {
+       File refMatFile = new File("../squidCore/src/main/resources/org/cirdles/squid/parameters/Zircon-91500 v.1.0.xml");
+        return ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
+   }
 
     public ValueModel[] getConcentrations() {
         return concentrations;

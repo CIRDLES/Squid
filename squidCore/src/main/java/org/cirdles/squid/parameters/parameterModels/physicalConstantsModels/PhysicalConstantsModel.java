@@ -54,7 +54,7 @@ public class PhysicalConstantsModel extends ParametersModel {
             masses.put(entry.getKey(), entry.getValue());
         }
         model.setMolarMasses(masses);
-        
+
         return model;
     }
 
@@ -68,7 +68,12 @@ public class PhysicalConstantsModel extends ParametersModel {
         values[5] = new ValueModel("lambda235", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
         values[6] = new ValueModel("lambda238", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
     }
-    
+
+    public static PhysicalConstantsModel getDefaultModel() {
+        File physConstFile = new File("../squidCore/src/main/resources/org/cirdles/squid/parameters/EARTHTIME Physical Constants Model v.1.1.xml");
+        return PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
+    }
+
     public void setUpDefaultMolarMasses() {
         String[][] masses = DataDictionary.AtomicMolarMasses;
         for (int i = 0; i < masses.length; i++) {

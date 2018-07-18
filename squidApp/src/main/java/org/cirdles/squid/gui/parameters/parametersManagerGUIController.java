@@ -173,15 +173,13 @@ public class parametersManagerGUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         laboratoryName = "";
 
-        File physConstFile = new File("../squidCore/src/main/resources/org/cirdles/squid/parameters/EARTHTIME Physical Constants Model v.1.1.xml");
-        physConstModel = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
+        physConstModel = PhysicalConstantsModel.getDefaultModel();
         physConstModels = new ArrayList<>();
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
         physConstEditable(false);
 
-        File refMatFile = new File("../squidCore/src/main/resources/org/cirdles/squid/parameters/Zircon-91500 v.1.0.xml");
-        refMatModel = ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
+        refMatModel = ReferenceMaterial.getDefaultModel();
         refMatModels = new ArrayList<>();
         refMatModels.add(refMatModel);
         setUpRefMatCB();
