@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.topsoil;
+package org.cirdles.squid.gui.plots.topsoil;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.SplitPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+import org.cirdles.squid.gui.topsoil.TopsoilDataFactory;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.topsoil.AbstractTopsoilPlot.SigmaPresentationModes.TWO_SIGMA_ABSOLUTE;
+import static org.cirdles.squid.gui.plots.PlotDisplayInterface.SigmaPresentationModes.TWO_SIGMA_ABSOLUTE;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.EXAMPLE_CM2_DATASET;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.topsoil.app.isotope.IsotopeType;
@@ -78,18 +77,6 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         plot.setProperty(REGRESSION_ENVELOPE, false);
         
         plot.setProperty(UNCERTAINTY, TWO_SIGMA_ABSOLUTE.getSigmaMultiplier());
-    }
-
-    @Override
-    public SplitPane initializePlotPane() {
-        org.cirdles.squid.gui.topsoil.TopsoilPlotController.topsoilPlot = this;
-        SplitPane topsoilPlotUI = null;
-        try {
-            topsoilPlotUI = FXMLLoader.load(getClass().getResource("TopsoilPlot.fxml"));
-        } catch (IOException iOException) {
-        }
-
-        return topsoilPlotUI;
     }
 
     @Override
@@ -159,5 +146,20 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         controls.add(regressionUnctEnvelopeCheckBox);
 
         return controls;
+    }
+
+    @Override
+    public void setData(List<Map<String, Object>> data) {
+        plot.setData(data);
+    }
+
+    @Override
+    public Node displayPlotAsNode() {
+        return plot.displayAsNode();
+    }
+
+    @Override
+    public void setProperty(String key, Object datum) {
+        plot.getProperties().put(key, datum);
     }
 }

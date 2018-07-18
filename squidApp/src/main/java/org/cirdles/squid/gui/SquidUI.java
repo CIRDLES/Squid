@@ -41,7 +41,7 @@ public final class SquidUI extends Application {
     public static final String COLORPICKER_CSS_STYLE_SPECS = "-fx-font-size: 8px; -fx-font-family: 'Courier New';";
     public static final String SQUID_LOGO_SANS_TEXT_URL = "org/cirdles/squid/gui/images/SquidLogoSansBg.png";
     
-    public static final int PIXEL_OFFSET_FOR_MENU = 40;
+    public static final int PIXEL_OFFSET_FOR_MENU = 38;
     public static Window primaryStageWindow;
     public static CalamariReportsEngine.CalamariReportFlavors calamariReportFlavor;
     

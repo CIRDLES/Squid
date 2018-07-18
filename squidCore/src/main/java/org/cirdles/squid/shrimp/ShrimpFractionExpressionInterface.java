@@ -17,7 +17,6 @@ package org.cirdles.squid.shrimp;
 
 import java.util.List;
 import java.util.Map;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -161,6 +160,21 @@ public interface ShrimpFractionExpressionInterface {
     public double getPrimaryBeam();
 
     /**
+     * @return the stageX
+     */
+    public int getStageX();
+
+    /**
+     * @return the stageY
+     */
+    public int getStageY();
+
+    /**
+     * @return the stageZ
+     */
+    public int getStageZ();
+
+    /**
      * @return the qtlY
      */
     public int getQtlY();
@@ -179,5 +193,5 @@ public interface ShrimpFractionExpressionInterface {
      * @param selected the selected to set
      */
     public void setSelected(boolean selected);
-    
+
 }

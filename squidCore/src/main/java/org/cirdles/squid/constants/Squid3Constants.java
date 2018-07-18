@@ -15,6 +15,9 @@
  */
 package org.cirdles.squid.constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author bowring
@@ -157,4 +160,59 @@ public final class Squid3Constants {
     public static final int EXPRESSIONBUILDERDEFAULTFONTSIZE = 13;
     public static final int EXPRESSIONBUILDERMINFONTSIZE = 11;
     public static final int EXPRESSIONBUILDERMAXFONTSIZE = 18;
+    
+        /**
+     *
+     */
+    private static final Map<String, Integer> UnitConversions = new HashMap<>();
+
+    // key = units, value = points to shift right
+    static {
+
+        UnitConversions.put("", 0);
+
+        // mass is stored in grams
+        UnitConversions.put("g", 0);
+        UnitConversions.put("mg", 3);
+        UnitConversions.put("\u03bcg", 6);
+        UnitConversions.put("ng", 9);
+        UnitConversions.put("pg", 12);
+        UnitConversions.put("fg", 15);
+
+        // concentrations
+        UnitConversions.put("\u0025", 2);
+        UnitConversions.put("\u2030", 3);
+        UnitConversions.put("ppm", 6);
+        UnitConversions.put("ppb", 9);
+        UnitConversions.put("ppt", 12);
+        UnitConversions.put("g/g", 0);
+        UnitConversions.put("*1e5", 5);
+        UnitConversions.put("*1", 0);
+        UnitConversions.put("dpm/g", 0);
+        UnitConversions.put("*1e3 dpm/g", 3);
+        UnitConversions.put("*1e6 dpm/g", 6);
+        UnitConversions.put("*1e9 dpm/g", 9);
+
+        // dates are stored in years
+        UnitConversions.put("a", 0);
+        UnitConversions.put("ka", -3);
+        UnitConversions.put("Ma", -6);
+        UnitConversions.put("Ga", -9);
+
+        // misc in % per amu
+        UnitConversions.put("%/amu", 2);
+
+        // time in seconds
+        UnitConversions.put("ns", 9);
+    }
+
+    /**
+     *
+     * @param unit
+     * @return
+     */
+    static public int getUnitConversionMoveCount(String unit) {
+        return UnitConversions.get(unit);
+    }
+
 }

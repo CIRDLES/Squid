@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.topsoil;
+package org.cirdles.squid.gui.plots.topsoil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import org.cirdles.squid.gui.plots.PlotDisplayInterface;
 import org.cirdles.topsoil.plot.JavaScriptPlot;
 import org.cirdles.topsoil.plot.Plot;
 import org.cirdles.topsoil.plot.internal.SVGSaver;
@@ -33,22 +34,23 @@ import org.cirdles.topsoil.plot.internal.SVGSaver;
  *
  * @author James F. Bowring
  */
-public abstract class AbstractTopsoilPlot {
+public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
     protected Plot plot;
 
     protected AbstractTopsoilPlot() {
     }
 
-    public abstract SplitPane initializePlotPane();
+    @Override
+    public abstract void setData(List<Map<String, Object>> data);
 
-    /**
-     * @return the plot
-     */
-    public Plot getPlot() {
-        return plot;
-    }
+    @Override
+    public abstract Node displayPlotAsNode();
 
+    @Override
+    public abstract void setProperty(String key, Object datum);
+
+    @Override
     public void setSelectedAllData(boolean selected) {
         for (Map<String, Object> datum : plot.getData()) {
             datum.replace("Selected", selected);
@@ -57,6 +59,7 @@ public abstract class AbstractTopsoilPlot {
         plot.setData(plot.getData());
     }
 
+    @Override
     public List<Node> toolbarControlsFactory() {
         List<Node> controls = new ArrayList<>();
 
@@ -86,34 +89,6 @@ public abstract class AbstractTopsoilPlot {
         controls.add(recenterButton);
 
         return controls;
-    }
-
-    protected enum SigmaPresentationModes {
-        ONE_SIGMA_ABSOLUTE("1σ (abs)", 1.0),
-        TWO_SIGMA_ABSOLUTE("2σ (abs)", 2.0),
-        NINETY_FIVE_PERCENT_CONFIDENCE("95% Conf.", 2.4477);
-        
-        private String displayName;
-        private double sigmaMultiplier;
-
-        private SigmaPresentationModes(String displayName, double sigmaMultiplier) {
-            this.displayName = displayName;
-            this.sigmaMultiplier = sigmaMultiplier;
-        }
-
-        /**
-         * @return the displayName
-         */
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        /**
-         * @return the sigmaMultiplier
-         */
-        public double getSigmaMultiplier() {
-            return sigmaMultiplier;
-        }
     }
 
 }

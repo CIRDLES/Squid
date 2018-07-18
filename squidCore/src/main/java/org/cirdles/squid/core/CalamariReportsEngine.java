@@ -875,7 +875,7 @@ public class CalamariReportsEngine implements Serializable {
         }
     }
 
-    private String getFormattedDate(long milliseconds) {
+    public static String getFormattedDate(long milliseconds) {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(milliseconds);
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
@@ -927,6 +927,13 @@ public class CalamariReportsEngine implements Serializable {
      */
     public void setFolderToWriteCalamariReports(File aFolderToWriteCalamariReports) {
         folderToWriteCalamariReports = aFolderToWriteCalamariReports;
+    }
+
+    /**
+     * @return the folderToWriteCalamariReports
+     */
+    public File getFolderToWriteCalamariReports() {
+        return folderToWriteCalamariReports;
     }
 
     /**
