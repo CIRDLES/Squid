@@ -28,13 +28,13 @@ public class ReferenceMaterial extends ParametersModel {
 
     public ReferenceMaterial() {
         super();
+        generateDefaultValueModels();
         concentrations = new ValueModel[0];
-        dataMeasured = new boolean[0];
     }
-    
+
     public ReferenceMaterial clone() {
         ReferenceMaterial model = new ReferenceMaterial();
-        
+
         model.setModelName(modelName + " - copy");
         model.setLabName(labName);
         model.setVersion(version);
@@ -45,10 +45,24 @@ public class ReferenceMaterial extends ParametersModel {
         model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
         model.setCovModel((CovarianceMatrixModel) covModel.copy());
         model.setConcentrations(concentrations.clone());
-        
+        model.setDataMeasured(dataMeasured.clone());
+
         return model;
     }
-    
+
+    private void generateDefaultValueModels() {
+        values = new ValueModel[5];
+        values[0] = new ValueModel("r206_207r", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[1] = new ValueModel("r206_208r", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[2] = new ValueModel("r206_238r", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[3] = new ValueModel("r208_232r", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[4] = new ValueModel("r238_235s", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        dataMeasured = new boolean[5];
+        for (int i = 0; i < dataMeasured.length; i++) {
+            dataMeasured[i] = false;
+        }
+    }
+
     public final void initializeNewRatiosAndRhos() {
         ArrayList<ValueModel> holdRatios = new ArrayList<>();
         for (ReferenceMaterialEnum value : ReferenceMaterialEnum.values()) {

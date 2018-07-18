@@ -135,9 +135,9 @@ public class SquidUIController implements Initializable {
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
-    
-    public ParametersLauncher parametersLauncher;
-    
+
+    public static ParametersLauncher squidParametersLauncher;
+
     @FXML
     private MenuItem newSquid3TaskMenuItem;
     @FXML
@@ -206,8 +206,8 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
-        
-        parametersLauncher = new ParametersLauncher();
+
+        squidParametersLauncher = new ParametersLauncher();
     }
 
     private void buildProjectMenuMRU() {
@@ -1080,11 +1080,11 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void openParametersManagerPhysConst(ActionEvent event) {
-        parametersLauncher.launchParametersManager(false);
+        squidParametersLauncher.launchParametersManager(false);
     }
 
     @FXML
     private void openParametersManagerRefMat(ActionEvent event) {
-        parametersLauncher.launchParametersManager(true);
+        squidParametersLauncher.launchParametersManager(true);
     }
 }

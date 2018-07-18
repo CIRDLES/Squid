@@ -59,7 +59,8 @@ Schema/
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.xls
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.squid
 !squidCore/src/main/resources/org/cirdles/squid/javadoc/*.jar
-
+!squidCore/src/main/resources/org/cirdles/squid/parameters/EARTHTIME Physical Constants Model v.1.1.xml
+!squidCore/src/main/resources/org/cirdles/squid/parameters/Zircon-91500 v.1.0.xml
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
 
 

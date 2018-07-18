@@ -173,14 +173,14 @@ public class parametersManagerGUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         laboratoryName = "";
 
-        File physConstFile = new File("src/main/resources/org/cirdles/squid/gui/parameters/EARTHTIME Physical Constants Model v.1.1.xml");
+        File physConstFile = new File("../squidCore/src/main/resources/org/cirdles/squid/parameters/EARTHTIME Physical Constants Model v.1.1.xml");
         physConstModel = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
         physConstModels = new ArrayList<>();
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
         physConstEditable(false);
 
-        File refMatFile = new File("src/main/resources/org/cirdles/squid/gui/parameters/Zircon-91500 v.1.0.xml");
+        File refMatFile = new File("../squidCore/src/main/resources/org/cirdles/squid/parameters/Zircon-91500 v.1.0.xml");
         refMatModel = ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
         refMatModels = new ArrayList<>();
         refMatModels.add(refMatModel);
@@ -351,8 +351,7 @@ public class parametersManagerGUIController implements Initializable {
             ValueModel valMod = values[i];
             Boolean isMeasured = refMatModel.getDataMeasured()[i];
             RefMatDataModel mod = new RefMatDataModel(valMod.getName(), valMod.getValue(),
-                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT(),
-                    isMeasured);
+                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT(), isMeasured);
             obList.add(mod);
         }
         refMatDataTable.setItems(obList);
