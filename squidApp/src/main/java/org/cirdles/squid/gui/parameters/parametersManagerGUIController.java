@@ -39,6 +39,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import javafx.scene.control.Menu;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -154,6 +155,14 @@ public class parametersManagerGUIController implements Initializable {
     private TableView<ObservableList<String>> refMatCovTable;
     @FXML
     private TabPane rootTabPane;
+    @FXML
+    private Menu physConstFileMenu;
+    @FXML
+    private Menu refMatFileMenu;
+    @FXML
+    private MenuItem editCurrPhysConst;
+    @FXML
+            private MenuItem remCurrPhysConst;
 
     String laboratoryName;
     PhysicalConstantsModel physConstModel;
@@ -178,6 +187,7 @@ public class parametersManagerGUIController implements Initializable {
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
         physConstEditable(false);
+        setUpPhysConstMenuItems(false, false);
 
         refMatModel = ReferenceMaterial.getDefaultModel();
         refMatModels = new ArrayList<>();
@@ -185,6 +195,7 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMatCB();
         setUpLaboratoryName();
         refMatEditable(false);
+        setUpRefMatMenuItems(false, false);
     }
 
     private void setUpPhysConstCovariancesAndCorrelations() {
@@ -235,6 +246,7 @@ public class parametersManagerGUIController implements Initializable {
     private void setPhysConstModel(int num) {
         physConstModel = physConstModels.get(num);
         setUpPhysConst();
+        setUpPhysConstMenuItems(false, physConstModel.isEditable());
     }
 
     private void setUpRefMatCB() {
@@ -254,6 +266,7 @@ public class parametersManagerGUIController implements Initializable {
     private void setRefMatModel(int num) {
         refMatModel = refMatModels.get(num);
         setUpRefMat();
+        setUpRefMatMenuItems(false, refMatModel.isEditable());
     }
 
     private void setUpPhysConstCov() {
@@ -605,6 +618,26 @@ public class parametersManagerGUIController implements Initializable {
         refMatCommentsArea.setEditable(isEditable);
         refMatReferencesArea.setEditable(isEditable);
     }
+    
+    private void setUpRefMatMenuItems(boolean isEditing, boolean isEditable) {
+        refMatFileMenu.setDisable(isEditing);
+        saveAndRegCurrRefMat.setDisable(!isEditing);
+        remCurrRefMat.setDisable(!isEditable || isEditing);
+        canEditOfRefMat.setDisable(!isEditing);
+        editNewEmptyRefMat.setDisable(isEditing);
+        editCopyOfCurrRefMat.setDisable(isEditing);
+        editCurrRefMat.setDisable(!isEditable || isEditing);
+    }
+    
+    private void setUpPhysConstMenuItems(boolean isEditing, boolean isEditable) {
+        physConstFileMenu.setDisable(isEditing);
+        saveAndRegCurrPhysConst.setDisable(!isEditing);
+        remCurrPhysConst.setDisable(!isEditable || isEditing);
+        cancelEditOfPhysConst.setDisable(!isEditing);
+        editNewEmpPhysConst.setDisable(isEditing);
+        editCopyOfCurrPhysConst.setDisable(isEditing);
+        editCurrPhysConst.setDisable(!isEditable || isEditing);
+    }
 
     @FXML
     private void physConstRemoveCurrMod(ActionEvent event) {
@@ -612,18 +645,21 @@ public class parametersManagerGUIController implements Initializable {
         physConstCB.getItems().remove(physConstModel.getModelName() + " v." + physConstModel.getVersion());
         physConstCB.getSelectionModel().selectFirst();
         physConstEditable(false);
+        setUpPhysConstMenuItems(false, physConstModel.isEditable());
     }
 
     @FXML
     private void physConstEditCurrMod(ActionEvent event) {
         physConstEditable(true);
-    }
-
+        setUpPhysConstMenuItems(true, physConstModel.isEditable());
+    } 
+    
     @FXML
     private void physConstEditCopy(ActionEvent event) {
         physConstModel = physConstModel.clone();
         setUpPhysConst();
         physConstEditable(true);
+        setUpPhysConstMenuItems(true, true);
     }
 
     @FXML
@@ -631,12 +667,14 @@ public class parametersManagerGUIController implements Initializable {
         physConstModel = new PhysicalConstantsModel();
         setUpPhysConst();
         physConstEditable(true);
+        setUpPhysConstMenuItems(true, true);
     }
 
     @FXML
     private void physConstCancelEdit(ActionEvent event) {
         physConstCB.getSelectionModel().selectFirst();
         physConstEditable(false);
+        setUpPhysConstMenuItems(false, physConstModel.isEditable());
     }
 
     @FXML
@@ -705,6 +743,7 @@ public class parametersManagerGUIController implements Initializable {
         physConstCB.getSelectionModel().selectLast();
         physConstEditable(false);
         setUpPhysConst();
+        setUpPhysConstMenuItems(false, physConstModel.isEditable());
     }
 
     @FXML
@@ -778,6 +817,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel.setComments(refMatCommentsArea.getText());
         refMatEditable(false);
         setUpRefMat();
+        setUpRefMatMenuItems(false, refMatModel.isEditable());
     }
 
     @FXML
@@ -786,12 +826,14 @@ public class parametersManagerGUIController implements Initializable {
         refMatCB.getItems().remove(refMatModel.getModelName() + " v." + refMatModel.getVersion());
         refMatCB.getSelectionModel().selectFirst();
         refMatEditable(false);
+        setUpRefMatMenuItems(false, refMatModel.isEditable());
     }
 
     @FXML
     private void refMatCancelEdit(ActionEvent event) {
         refMatEditable(false);
         refMatCB.getSelectionModel().selectFirst();
+        setUpRefMatMenuItems(false, refMatModel.isEditable());
     }
 
     @FXML
@@ -799,6 +841,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel = new ReferenceMaterial();
         setUpRefMat();
         refMatEditable(true);
+        setUpRefMatMenuItems(true, true);
     }
 
     @FXML
@@ -806,11 +849,13 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel = refMatModel.clone();
         setUpRefMat();
         refMatEditable(true);
+        setUpRefMatMenuItems(true, true);
     }
 
     @FXML
     private void refMatEditCurrMod(ActionEvent event) {
         refMatEditable(true);
+        setUpRefMatMenuItems(true, true);
     }
 
     private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<String>> table) {

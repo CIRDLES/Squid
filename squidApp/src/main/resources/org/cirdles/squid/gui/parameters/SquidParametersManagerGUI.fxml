@@ -24,16 +24,16 @@
                             <children>
                                 <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <menus>
-                                        <Menu mnemonicParsing="false" text="File">
+                                        <Menu fx:id="physConstFileMenu" mnemonicParsing="false" text="File">
                                             <items>
-                                                <MenuItem fx:id="physConstImpXML" mnemonicParsing="false" onAction="#physConstImpXMLAction" text="Import Physical Constants Model from XML File" />
-                                                <MenuItem fx:id="phyConstExpXML" mnemonicParsing="false" onAction="#physConstExpXMLAction" text="Export Physical Constants Model as XML File" />
+                                                <MenuItem mnemonicParsing="false" onAction="#physConstImpXMLAction" text="Import Physical Constants Model from XML File" />
+                                                <MenuItem mnemonicParsing="false" onAction="#physConstExpXMLAction" text="Export Physical Constants Model as XML File" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#physConstRemoveCurrMod" text="Remove Current Physical Constants Model from Lab Data (for editable models only)" />
-                                                <MenuItem fx:id="remCurrPhyConst" mnemonicParsing="false" onAction="#physConstEditCurrMod" text="Edit Current Physical Constants Model (for editable models only)" />
+                                                <MenuItem fx:id="remCurrPhysConst" mnemonicParsing="false" onAction="#physConstRemoveCurrMod" text="Remove Current Physical Constants Model from Lab Data (for editable models only)" />
+                                                <MenuItem fx:id="editCurrPhysConst" mnemonicParsing="false" onAction="#physConstEditCurrMod" text="Edit Current Physical Constants Model (for editable models only)" />
                                                 <MenuItem fx:id="editCopyOfCurrPhysConst" mnemonicParsing="false" onAction="#physConstEditCopy" text="Edit Copy of Current Physical Constants Model" />
                                                 <MenuItem fx:id="editNewEmpPhysConst" mnemonicParsing="false" onAction="#physConstEditEmptyMod" text="Edit New Empty Physical Constants Model" />
                                                 <MenuItem fx:id="cancelEditOfPhysConst" mnemonicParsing="false" onAction="#physConstCancelEdit" text="Cancel Edit of Physical Constants Model" />
@@ -133,7 +133,7 @@
                             <children>
                                 <MenuBar layoutY="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <menus>
-                                        <Menu mnemonicParsing="false" text="File">
+                                        <Menu fx:id="refMatFileMenu" mnemonicParsing="false" text="File">
                                             <items>
                                                 <MenuItem fx:id="expRefMatXML" mnemonicParsing="false" onAction="#refMatExpXMLAction" text="Export Reference Material Model as XML File" />
                                                 <MenuItem fx:id="impRefMatXML" mnemonicParsing="false" onAction="#refMatImpXMLAction" text="Import Reference Material Model from XML File" />
