@@ -815,8 +815,11 @@ public class parametersManagerGUIController implements Initializable {
 
         refMatModel.setReferences(refMatReferencesArea.getText());
         refMatModel.setComments(refMatCommentsArea.getText());
+        
+        refMatModels.add(refMatModel);
+        refMatCB.getItems().add(refMatModel.getModelName() + "v." + refMatModel.getVersion());
+        refMatCB.getSelectionModel().selectLast();
         refMatEditable(false);
-        setUpRefMat();
         setUpRefMatMenuItems(false, refMatModel.isEditable());
     }
 

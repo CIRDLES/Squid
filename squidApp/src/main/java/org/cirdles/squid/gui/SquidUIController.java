@@ -213,6 +213,7 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
+        CalamariFileUtilities.initSampleParametersModels();
     }
 
     private void buildProjectMenuMRU() {

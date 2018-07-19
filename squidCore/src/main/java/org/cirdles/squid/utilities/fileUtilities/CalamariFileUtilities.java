@@ -17,6 +17,7 @@ package org.cirdles.squid.utilities.fileUtilities;
 
 import java.io.File;
 import java.io.IOException;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +27,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
@@ -37,6 +39,8 @@ public class CalamariFileUtilities {
     private static File exampleFolder;
     private static File schemaFolder;
     public static File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
+    private static File physicalConstantsFolder;
+    private static File referenceMaterialsFolder;
 
     /**
      * Provides a clean copy of two example Prawn XML files every time Squid
@@ -70,6 +74,70 @@ public class CalamariFileUtilities {
                     }
                 }
             } catch (IOException iOException) {
+            }
+
+        }
+    }
+
+    public static void initSampleParametersModels() {
+        ResourceExtractor physConstResourceExtractor = new ResourceExtractor(getSystemClassLoader());
+
+        Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("listOfSamplePhysicalConstantsModels.txt");
+        if (listOfPhysicalConstants != null) {
+            physicalConstantsFolder = new File("SamplePhysicalConstantsModels");
+            try {
+                if (physicalConstantsFolder.exists()) {
+                    FileUtilities.recursiveDelete(physicalConstantsFolder.toPath());
+                }
+                if (physicalConstantsFolder.mkdir()) {
+                    List<String> fileNames = Files.readAllLines(listOfPhysicalConstants, ISO_8859_1);
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        // test for empty string
+                        if (fileNames.get(i).trim().length() > 0) {
+                            File physConstResource = physConstResourceExtractor.extractResourceAsFile(fileNames.get(i));
+                            File physConstFile = new File(physicalConstantsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+
+                            if (physConstResource.renameTo(physConstFile)) {
+                                System.out.println("PhysicalConstantsModelFile added: " + fileNames.get(i));
+                            } else {
+                                System.out.println("PhysicalConstantsModelFile failed to add: " + fileNames.get(i));
+                            }
+                        }
+                    }
+                }
+            } catch (IOException iOException) {
+                iOException.printStackTrace();
+            }
+
+        }
+
+        ResourceExtractor refMatResourceExtractor = new ResourceExtractor(getSystemClassLoader());
+
+        Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSampleReferenceMaterials.txt");
+        if (listOfReferenceMaterials != null) {
+            referenceMaterialsFolder = new File("SampleReferenceMaterials");
+            try {
+                if (referenceMaterialsFolder.exists()) {
+                    FileUtilities.recursiveDelete(referenceMaterialsFolder.toPath());
+                }
+                if (referenceMaterialsFolder.mkdir()) {
+                    List<String> fileNames = Files.readAllLines(listOfReferenceMaterials, ISO_8859_1);
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        // test for empty string
+                        if (fileNames.get(i).trim().length() > 0) {
+                            File refMatResource = physConstResourceExtractor.extractResourceAsFile(fileNames.get(i));
+                            File refMatFile = new File(referenceMaterialsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+
+                            if (refMatResource.renameTo(refMatFile)) {
+                                System.out.println("ReferenceMaterialFile added: " + fileNames.get(i));
+                            } else {
+                                System.out.println("ReferenceMaterialFile failed to add: " + fileNames.get(i));
+                            }
+                        }
+                    }
+                }
+            } catch (IOException iOException) {
+                iOException.printStackTrace();
             }
 
         }
