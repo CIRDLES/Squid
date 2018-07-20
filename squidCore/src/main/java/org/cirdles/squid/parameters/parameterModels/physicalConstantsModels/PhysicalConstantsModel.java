@@ -70,7 +70,7 @@ public class PhysicalConstantsModel extends ParametersModel {
     }
 
     public static PhysicalConstantsModel getDefaultModel() {
-        File physConstFile = new File("../squidCore/src/main/resources/org/cirdles/squid/parameters/EARTHTIME Physical Constants Model v.1.1.xml");
+        File physConstFile = new File("../squidCore/src/main/resources/org/cirdles/squid/physicalConstantsModels/EARTHTIME Physical Constants Model v.1.1.xml");
         return PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
     }
 
