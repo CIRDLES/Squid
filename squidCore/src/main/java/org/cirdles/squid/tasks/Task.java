@@ -1938,22 +1938,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setShowQt1z(boolean aShowQt1z) {
         showQt1z = aShowQt1z;
     }
-
-    public SortedSet<Expression> getTaskExpressionsRemoved() {
-        return taskExpressionsRemoved;
-    }
-
-    public void setTaskExpressionsRemoved(SortedSet<Expression> taskExpressionsRemoved) {
-        this.taskExpressionsRemoved = taskExpressionsRemoved;
-    }
-
-    public Map<String, ExpressionTreeInterface> getNamedOvercountExpressionsMap() {
-        return namedOvercountExpressionsMap;
-    }
-
-    public void setNamedOvercountExpressionsMap(Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap) {
-        this.namedOvercountExpressionsMap = namedOvercountExpressionsMap;
-    }
     
     @Override
     public ReferenceMaterial getReferenceMaterial() {
