@@ -17,6 +17,9 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import static org.cirdles.ludwig.squid25.SquidConstants.lambda235;
+import static org.cirdles.ludwig.squid25.SquidConstants.lambda238;
+import static org.cirdles.ludwig.squid25.SquidConstants.uRatio;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -76,7 +79,8 @@ public class AgePb76exp extends Function {
             double[] pb207_206Unct1Sigma = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(
                     pb207_206Ratio[0],
-                    pb207_206Unct1Sigma[0]);
+                    pb207_206Unct1Sigma[0],
+                    lambda235, lambda238, uRatio);
             retVal = new Object[][]{{agePb76[0], agePb76[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};

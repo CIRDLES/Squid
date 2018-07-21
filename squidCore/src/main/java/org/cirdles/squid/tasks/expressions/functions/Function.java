@@ -88,6 +88,8 @@ public abstract class Function
 
         SQUID_FUNCTIONS_MAP.put("agePb76", "agePb76");
         SQUID_FUNCTIONS_MAP.put("agePb76exp", "agePb76exp");
+        SQUID_FUNCTIONS_MAP.put("age7corrWithErr", "age7corrWithErr");
+        SQUID_FUNCTIONS_MAP.put("age7CorrPb8Th2WithErr", "age7CorrPb8Th2WithErr");
         SQUID_FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
         SQUID_FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
         SQUID_FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
@@ -186,6 +188,22 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface agePb76exp() {
         return new AgePb76exp();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface age7corrWithErr() {
+        return new Age7corrWithErr();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface age7CorrPb8Th2WithErr() {
+        return new Age7CorrPb8Th2WithErr();
     }
 
     /**
