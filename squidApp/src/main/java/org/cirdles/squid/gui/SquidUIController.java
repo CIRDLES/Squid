@@ -174,6 +174,8 @@ public class SquidUIController implements Initializable {
     private MenuItem openParametersManagerPhysConstMenuItem;
     @FXML
     private MenuItem openParametersManagerRefMatMenuItem;
+    @FXML
+    private Menu parametersMenu;
 
     /**
      * Initializes the controller class.

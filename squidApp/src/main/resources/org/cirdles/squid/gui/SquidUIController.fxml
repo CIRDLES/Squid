@@ -70,7 +70,7 @@
                   </Menu>
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="parameters">
+            <Menu fx:id="parametersMenu" mnemonicParsing="false" text="parameters">
               <items>
                   <MenuItem mnemonicParsing="false" text="Physical Constants Model">
                      <graphic>
