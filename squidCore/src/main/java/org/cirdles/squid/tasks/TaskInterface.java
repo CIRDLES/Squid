@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -191,6 +193,11 @@ public interface TaskInterface {
     public void restoreRemovedExpressions();
 
     public void addExpression(Expression exp);
+    
+    public void setReferenceMaterial(ReferenceMaterial refMat);
+    public ReferenceMaterial getReferenceMaterial();
+    public void setPhysicalConstantsModel(PhysicalConstantsModel physConst);
+    public PhysicalConstantsModel getPhysicalConstantsModel();
 
     /**
      * @param type the type to set

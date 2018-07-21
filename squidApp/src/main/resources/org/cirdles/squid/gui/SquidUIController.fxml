@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -67,6 +68,20 @@
                         <MenuItem disable="true" mnemonicParsing="false" text="11 Species" />
                     </items>
                   </Menu>
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="parameters">
+              <items>
+                  <MenuItem mnemonicParsing="false" text="Physical Constants Model">
+                     <graphic>
+                        <ListView fx:id="parametersPhysicalConstantsListView" prefHeight="200.0" prefWidth="200.0" />
+                     </graphic>
+                  </MenuItem>
+                <MenuItem mnemonicParsing="false" text="Reference Material">
+                     <graphic>
+                        <ListView fx:id="parametersReferenceMaterialsListView" prefHeight="200.0" prefWidth="200.0" />
+                     </graphic>
+                  </MenuItem>
               </items>
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">

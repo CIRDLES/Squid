@@ -39,6 +39,8 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NA
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
@@ -158,6 +160,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean showPrimaryBeam;
     protected boolean showQt1y;
     protected boolean showQt1z;
+    
+    protected ReferenceMaterial referenceMaterial;
+    protected PhysicalConstantsModel physicalConstantsModel;
 
     public Task() {
         this("New Task", null, null);
@@ -1933,4 +1938,42 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setShowQt1z(boolean aShowQt1z) {
         showQt1z = aShowQt1z;
     }
+
+    public SortedSet<Expression> getTaskExpressionsRemoved() {
+        return taskExpressionsRemoved;
+    }
+
+    public void setTaskExpressionsRemoved(SortedSet<Expression> taskExpressionsRemoved) {
+        this.taskExpressionsRemoved = taskExpressionsRemoved;
+    }
+
+    public Map<String, ExpressionTreeInterface> getNamedOvercountExpressionsMap() {
+        return namedOvercountExpressionsMap;
+    }
+
+    public void setNamedOvercountExpressionsMap(Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap) {
+        this.namedOvercountExpressionsMap = namedOvercountExpressionsMap;
+    }
+    
+    @Override
+    public ReferenceMaterial getReferenceMaterial() {
+        return referenceMaterial;
+    }
+    
+    @Override
+    public void setReferenceMaterial(ReferenceMaterial referenceMaterial) {
+        this.referenceMaterial = referenceMaterial;
+    }
+    
+    @Override
+    public PhysicalConstantsModel getPhysicalConstantsModel() {
+        return physicalConstantsModel;
+    }
+
+    @Override
+    public void setPhysicalConstantsModel(PhysicalConstantsModel physicalConstantsModel) {
+        this.physicalConstantsModel = physicalConstantsModel;
+    }
+    
+    
 }

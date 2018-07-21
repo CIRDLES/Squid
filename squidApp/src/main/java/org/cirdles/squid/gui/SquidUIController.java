@@ -26,8 +26,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,6 +38,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -43,6 +48,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -75,6 +81,8 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
@@ -139,7 +147,7 @@ public class SquidUIController implements Initializable {
     public static Node topsoilPlotUI;
 
     public static ParametersLauncher squidParametersLauncher;
-    
+
     @FXML
     private MenuItem newSquid3TaskMenuItem;
     @FXML
@@ -158,6 +166,14 @@ public class SquidUIController implements Initializable {
     private Menu manageVisualizationsMenu;
     @FXML
     private Menu squidLabDataMenu;
+    @FXML
+    private  ListView<PhysicalConstantsModel> parametersPhysicalConstantsListView;
+    @FXML
+    private  ListView<ReferenceMaterial> parametersReferenceMaterialsListView;
+    @FXML
+    private MenuItem openParametersManagerPhysConstMenuItem;
+    @FXML
+    private MenuItem openParametersManagerRefMatMenuItem;
 
     /**
      * Initializes the controller class.
@@ -203,19 +219,71 @@ public class SquidUIController implements Initializable {
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
-        
+
         //Parameters Menu
         squidLabDataMenu.setDisable(false);
 
         // Expression menu
         buildExpressionMenuMRU();
-        
+
         squidParametersLauncher = new ParametersLauncher();
+        setUpParametersListViews();
+//        setUpReferenceMaterialListViewItems();
+//        setUpPhysicalConstantsListViewItems();
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
         CalamariFileUtilities.initSampleParametersModels();
+    }
+
+    public void setUpParametersListViews() {
+        parametersReferenceMaterialsListView.setCellFactory(param -> new ListCell<ReferenceMaterial>() {
+            @Override
+            protected void updateItem(ReferenceMaterial item, boolean empty) {
+                if (!empty) {
+                    setText(item.getModelName());
+                }
+            }
+        });
+        parametersReferenceMaterialsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ReferenceMaterial refMat = parametersReferenceMaterialsListView.getSelectionModel().getSelectedItem();
+                if (refMat != null) {
+                    squidProject.getTask().setReferenceMaterial(refMat);
+                }
+            }
+        });
+        parametersPhysicalConstantsListView.setCellFactory(param -> new ListCell<PhysicalConstantsModel>() {
+            @Override
+            protected void updateItem(PhysicalConstantsModel item, boolean empty) {
+                if (!empty) {
+                    setText(item.getModelName());
+                }
+            }
+        });
+        parametersPhysicalConstantsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                PhysicalConstantsModel model = parametersPhysicalConstantsListView.getSelectionModel().getSelectedItem();
+                if (model != null) {
+                    squidProject.getTask().setPhysicalConstantsModel(model);
+                }
+            }
+        });
+    }
+
+    private void setUpReferenceMaterialListViewItems() {
+        ObservableList<ReferenceMaterial> refMatList
+                = FXCollections.observableArrayList(squidLabData.getReferenceMaterials());
+        parametersReferenceMaterialsListView.setItems(refMatList);
+    }
+
+    private void setUpPhysicalConstantsListViewItems() {
+        ObservableList<PhysicalConstantsModel> physConstList
+                = FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels());
+        parametersPhysicalConstantsListView.setItems(physConstList);
     }
 
     private void buildProjectMenuMRU() {
@@ -300,7 +368,7 @@ public class SquidUIController implements Initializable {
             manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
-            
+
             // log prawnFileFolderMRU
             // squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
         } catch (IOException | RuntimeException iOException) {
@@ -345,7 +413,7 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
         manageVisualizationsMenu.setDisable(true);
-        
+
         // logo
         mainPane.getChildren().get(0).setVisible(true);
 
