@@ -17,7 +17,6 @@ package org.cirdles.squid.utilities.fileUtilities;
 
 import java.io.File;
 import java.io.IOException;
-import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +26,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
@@ -80,7 +80,7 @@ public class CalamariFileUtilities {
     }
 
     public static void initSampleParametersModels() {
-        ResourceExtractor physConstResourceExtractor = new ResourceExtractor(ReferenceMaterial.class);
+        ResourceExtractor physConstResourceExtractor = new ResourceExtractor(PhysicalConstantsModel.class);
 
         Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("listOfSamplePhysicalConstantsModels.txt");
         if (listOfPhysicalConstants != null) {
@@ -111,7 +111,7 @@ public class CalamariFileUtilities {
 
         }
 
-        ResourceExtractor refMatResourceExtractor = new ResourceExtractor(getSystemClassLoader());
+        ResourceExtractor refMatResourceExtractor = new ResourceExtractor(ReferenceMaterial.class);
 
         Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSampleReferenceMaterials.txt");
         if (listOfReferenceMaterials != null) {
