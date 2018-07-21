@@ -42,7 +42,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import org.cirdles.squid.gui.SquidUIController;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ValueModel;
@@ -725,7 +724,6 @@ public class parametersManagerGUIController implements Initializable {
         physConstEditable(false);
         setUpPhysConst();
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
-        SquidUIController.setUpPhysicalConstantsListViewItems();
     }
 
     @FXML
@@ -803,7 +801,6 @@ public class parametersManagerGUIController implements Initializable {
         refMatCB.getSelectionModel().selectLast();
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
-        SquidUIController.setUpReferenceMaterialListViewItems();
     }
 
     @FXML
