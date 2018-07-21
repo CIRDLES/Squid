@@ -75,6 +75,7 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
  * FXML Controller class
@@ -85,6 +86,7 @@ public class SquidUIController implements Initializable {
 
     public static SquidProject squidProject;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
+    public static final SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
     @FXML
     private Menu manageExpressionsMenu;
@@ -155,7 +157,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private Menu manageVisualizationsMenu;
     @FXML
-    private Menu parametersMenu;
+    private Menu squidLabDataMenu;
 
     /**
      * Initializes the controller class.
@@ -203,7 +205,7 @@ public class SquidUIController implements Initializable {
         exportSquid3TaskMenuItem.setDisable(true);
         
         //Parameters Menu
-        parametersMenu.setDisable(true);
+        squidLabDataMenu.setDisable(false);
 
         // Expression menu
         buildExpressionMenuMRU();
@@ -299,8 +301,6 @@ public class SquidUIController implements Initializable {
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             
-            parametersMenu.setDisable(false);
-
             // log prawnFileFolderMRU
             // squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
         } catch (IOException | RuntimeException iOException) {
@@ -346,8 +346,6 @@ public class SquidUIController implements Initializable {
         manageReportsMenu.setDisable(true);
         manageVisualizationsMenu.setDisable(true);
         
-        parametersMenu.setDisable(true);
-
         // logo
         mainPane.getChildren().get(0).setVisible(true);
 
@@ -520,6 +518,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void quitAction(ActionEvent event) {
+        squidLabData.storeState();
         confirmSaveOnProjectClose();
         Platform.exit();
     }

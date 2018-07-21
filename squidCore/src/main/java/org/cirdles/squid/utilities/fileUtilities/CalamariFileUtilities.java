@@ -82,7 +82,7 @@ public class CalamariFileUtilities {
     public static void initSampleParametersModels() {
         ResourceExtractor physConstResourceExtractor = new ResourceExtractor(ReferenceMaterial.class);
 
-        Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("physicalConstantsModels/listOfSamplePhysicalConstantsModels.txt");
+        Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("listOfSamplePhysicalConstantsModels.txt");
         if (listOfPhysicalConstants != null) {
             physicalConstantsFolder = new File("SamplePhysicalConstantsModels");
             try {
@@ -113,7 +113,7 @@ public class CalamariFileUtilities {
 
         ResourceExtractor refMatResourceExtractor = new ResourceExtractor(getSystemClassLoader());
 
-        Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("referenceMaterials/listOfSampleReferenceMaterials.txt");
+        Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSampleReferenceMaterials.txt");
         if (listOfReferenceMaterials != null) {
             referenceMaterialsFolder = new File("SampleReferenceMaterials");
             try {

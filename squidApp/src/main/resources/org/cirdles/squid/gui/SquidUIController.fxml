@@ -69,12 +69,6 @@
                   </Menu>
               </items>
             </Menu>
-            <Menu fx:id="parametersMenu" mnemonicParsing="false" text="Parameters">
-              <items>
-                <MenuItem fx:id="openParametersManagerPhysConstMenuItem" mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Manage Physical Constants" />
-                  <MenuItem fx:id="openParametersManagerRefMatMenuItem" mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Manage Reference Materials" />
-              </items>
-            </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Manage Expressions" />
@@ -133,6 +127,12 @@
             <Menu disable="true" mnemonicParsing="false" text="Archiving">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
+              </items>
+            </Menu>
+            <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="SquidLabData">
+              <items>
+                <MenuItem fx:id="openParametersManagerPhysConstMenuItem" mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Manage Physical Constants" />
+                  <MenuItem fx:id="openParametersManagerRefMatMenuItem" mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Manage Reference Materials" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">

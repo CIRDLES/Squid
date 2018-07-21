@@ -53,6 +53,8 @@ public final class Squid3Constants {
 
     public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL
             = "Schema/SHRIMP_PRAWN.xsd";
+    
+    public static final String SQUID_LAB_DATA_SERIALIZED_NAME = "SquidLabData.ser";
 
     /**
      *

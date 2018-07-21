@@ -43,6 +43,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ValueModel;
 import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
@@ -58,12 +59,6 @@ import org.cirdles.squid.parameters.util.StringComparer;
 public class parametersManagerGUIController implements Initializable {
 
     @FXML
-    private MenuItem physConstImpXML;
-    @FXML
-    private MenuItem phyConstExpXML;
-    @FXML
-    private MenuItem remCurrPhyConst;
-    @FXML
     private MenuItem editCopyOfCurrPhysConst;
     @FXML
     private MenuItem editNewEmpPhysConst;
@@ -71,8 +66,6 @@ public class parametersManagerGUIController implements Initializable {
     private MenuItem cancelEditOfPhysConst;
     @FXML
     private MenuItem saveAndRegCurrPhysConst;
-    @FXML
-    private Button physConstQuitButton;
     @FXML
     private ChoiceBox<String> physConstCB;
     @FXML
@@ -86,10 +79,6 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private Label physConstIsEditableLabel;
     @FXML
-    private MenuItem expRefMatXML;
-    @FXML
-    private MenuItem impRefMatXML;
-    @FXML
     private MenuItem saveAndRegCurrRefMat;
     @FXML
     private MenuItem remCurrRefMat;
@@ -102,8 +91,6 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private MenuItem editCurrRefMat;
     @FXML
-    private Button refMatQuitButton;
-    @FXML
     private ChoiceBox<String> refMatCB;
     @FXML
     private TextField refMatModelName;
@@ -113,8 +100,6 @@ public class parametersManagerGUIController implements Initializable {
     private TextField refMatVersion;
     @FXML
     private TextField refMatDateCertified;
-    @FXML
-    private Button okayButton;
     @FXML
     private TextField labNameTextField;
     @FXML
@@ -162,7 +147,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private MenuItem editCurrPhysConst;
     @FXML
-            private MenuItem remCurrPhysConst;
+    private MenuItem remCurrPhysConst;
 
     String laboratoryName;
     PhysicalConstantsModel physConstModel;
@@ -182,16 +167,12 @@ public class parametersManagerGUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         laboratoryName = "";
 
-        physConstModel = PhysicalConstantsModel.getDefaultModel();
-        physConstModels = new ArrayList<>();
-        physConstModels.add(physConstModel);
+        physConstModels = squidLabData.getPhysicalConstantsModels();
         setUpPhysConstCB();
         physConstEditable(false);
         setUpPhysConstMenuItems(false, false);
 
-        refMatModel = ReferenceMaterial.getDefaultModel();
-        refMatModels = new ArrayList<>();
-        refMatModels.add(refMatModel);
+        refMatModels = squidLabData.getReferenceMaterials();
         setUpRefMatCB();
         setUpLaboratoryName();
         refMatEditable(false);
