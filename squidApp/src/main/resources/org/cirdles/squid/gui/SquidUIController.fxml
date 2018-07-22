@@ -74,12 +74,12 @@
               <items>
                   <MenuItem mnemonicParsing="false" text="Physical Constants Model">
                      <graphic>
-                        <ListView fx:id="parametersPhysicalConstantsListView" prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="parametersPhysicalConstantsListView" prefHeight="200.0" prefWidth="300.0" stylesheets="@css/parametersListView.css" />
                      </graphic>
                   </MenuItem>
                 <MenuItem mnemonicParsing="false" text="Reference Material">
                      <graphic>
-                        <ListView fx:id="parametersReferenceMaterialsListView" prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="parametersReferenceMaterialsListView" prefHeight="200.0" prefWidth="300.0" stylesheets="@css/parametersListView.css" />
                      </graphic>
                   </MenuItem>
               </items>
