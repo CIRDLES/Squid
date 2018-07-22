@@ -64,7 +64,6 @@ public final class SquidUI extends Application {
         primaryStageWindow = primaryStage.getScene().getWindow();
 
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
-            squidLabData.storeState();
             Platform.exit();
             System.exit(0);
         });

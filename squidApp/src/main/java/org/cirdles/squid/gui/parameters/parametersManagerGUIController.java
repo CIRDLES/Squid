@@ -148,7 +148,6 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private MenuItem remCurrPhysConst;
 
-    String laboratoryName;
     PhysicalConstantsModel physConstModel;
     ReferenceMaterial refMatModel;
     List<PhysicalConstantsModel> physConstModels;
@@ -164,18 +163,19 @@ public class parametersManagerGUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        laboratoryName = "";
-
         physConstModels = squidLabData.getPhysicalConstantsModels();
+        physConstModel = physConstModels.get(0);
         setUpPhysConstCB();
         physConstEditable(false);
         setUpPhysConstMenuItems(false, false);
 
         refMatModels = squidLabData.getReferenceMaterials();
+        refMatModel = refMatModels.get(0);
         setUpRefMatCB();
-        setUpLaboratoryName();
         refMatEditable(false);
         setUpRefMatMenuItems(false, false);
+
+        setUpLaboratoryName();
     }
 
     private void setUpPhysConstCovariancesAndCorrelations() {
@@ -474,11 +474,18 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpLaboratoryName() {
-        labNameTextField.setText(laboratoryName);
-        labNameTextField.setOnKeyReleased(value -> {
-            laboratoryName = labNameTextField.getText();
+        labNameTextField.setText(squidLabData.getLaboratoryName());
+        labNameTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                if (!newPropertyValue) {
+                    if (!squidLabData.getLaboratoryName().equals(labNameTextField.getText())) {
+                        squidLabData.setLaboratoryName(labNameTextField.getText());
+                        squidLabData.storeState();
+                    }
+                }
+            }
         });
-
     }
 
     @FXML
@@ -496,6 +503,7 @@ public class parametersManagerGUIController implements Initializable {
             physConstCB.getSelectionModel().selectLast();
             physConstModel = importedMod;
             setUpPhysConst();
+            squidLabData.storeState();
         }
     }
 
@@ -539,6 +547,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatCB.getItems().add(importedMod.getModelName() + " v." + importedMod.getVersion());
             refMatCB.getSelectionModel().selectLast();
             refMatModel = importedMod;
+            squidLabData.storeState();
         }
     }
 
@@ -598,7 +607,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatCommentsArea.setEditable(isEditable);
         refMatReferencesArea.setEditable(isEditable);
     }
-    
+
     private void setUpRefMatMenuItems(boolean isEditing, boolean isEditable) {
         refMatFileMenu.setDisable(isEditing);
         saveAndRegCurrRefMat.setDisable(!isEditing);
@@ -607,8 +616,9 @@ public class parametersManagerGUIController implements Initializable {
         editNewEmptyRefMat.setDisable(isEditing);
         editCopyOfCurrRefMat.setDisable(isEditing);
         editCurrRefMat.setDisable(!isEditable || isEditing);
+        refMatCB.setDisable(isEditing);
     }
-    
+
     private void setUpPhysConstMenuItems(boolean isEditing, boolean isEditable) {
         physConstFileMenu.setDisable(isEditing);
         saveAndRegCurrPhysConst.setDisable(!isEditing);
@@ -617,6 +627,7 @@ public class parametersManagerGUIController implements Initializable {
         editNewEmpPhysConst.setDisable(isEditing);
         editCopyOfCurrPhysConst.setDisable(isEditing);
         editCurrPhysConst.setDisable(!isEditable || isEditing);
+        physConstCB.setDisable(isEditing);
     }
 
     @FXML
@@ -626,14 +637,15 @@ public class parametersManagerGUIController implements Initializable {
         physConstCB.getSelectionModel().selectFirst();
         physConstEditable(false);
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
+        squidLabData.storeState();
     }
 
     @FXML
     private void physConstEditCurrMod(ActionEvent event) {
         physConstEditable(true);
         setUpPhysConstMenuItems(true, physConstModel.isEditable());
-    } 
-    
+    }
+
     @FXML
     private void physConstEditCopy(ActionEvent event) {
         physConstModel = physConstModel.clone();
@@ -724,6 +736,7 @@ public class parametersManagerGUIController implements Initializable {
         physConstEditable(false);
         setUpPhysConst();
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
+        squidLabData.storeState();
     }
 
     @FXML
@@ -795,12 +808,13 @@ public class parametersManagerGUIController implements Initializable {
 
         refMatModel.setReferences(refMatReferencesArea.getText());
         refMatModel.setComments(refMatCommentsArea.getText());
-        
+
         refMatModels.add(refMatModel);
         refMatCB.getItems().add(refMatModel.getModelName() + "v." + refMatModel.getVersion());
         refMatCB.getSelectionModel().selectLast();
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
+        squidLabData.storeState();
     }
 
     @FXML
@@ -810,6 +824,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatCB.getSelectionModel().selectFirst();
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
+        squidLabData.storeState();
     }
 
     @FXML
@@ -868,6 +883,7 @@ public class parametersManagerGUIController implements Initializable {
         }
 
         return rhos;
+
     }
 
     public class DataModel {

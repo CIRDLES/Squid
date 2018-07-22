@@ -57,7 +57,7 @@ public class SquidLabData implements Serializable {
             File file = new File(File.separator + System.getProperty("user.home")
                     + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
-            this.serialize(file);
+            serialize(file);
         } catch (Exception e) {
             e.printStackTrace();
         }
