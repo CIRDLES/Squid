@@ -17,9 +17,9 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
-import static org.cirdles.ludwig.squid25.SquidConstants.lambda235;
-import static org.cirdles.ludwig.squid25.SquidConstants.lambda238;
-import static org.cirdles.ludwig.squid25.SquidConstants.uRatio;
+import static org.cirdles.squid.constants.Squid3Constants.lambda235;
+import static org.cirdles.squid.constants.Squid3Constants.lambda238;
+import static org.cirdles.squid.constants.Squid3Constants.uRatio;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;

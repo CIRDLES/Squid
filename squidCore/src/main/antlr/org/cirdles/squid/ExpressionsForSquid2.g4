@@ -109,9 +109,13 @@ FUNCTION :
     A G E P B '76' |
     A G E P B '76' E X P |
     A G E '7' C O R R W I T H E R R |
+    A G E '8' C O R R W I T H E R R |
     A G E '7' C O R R P B '8' T H '2' W I T H E R R |
+    R A D '8' C O R P B '7' U '5' W I T H E R R |
+    R A D '8' C O R C O N C R H O |
     P B '46' C O R '7' | 
     P B '46' C O R '8' |  
+    P B '206' U '238' R A D |
     S T D P B '86' R A D C O R '7' P E R |  
     P B '86' R A D C O R '7' P E R | 
     A N D |
