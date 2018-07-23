@@ -83,12 +83,12 @@ public class Rad8corConcRho extends Function {
             double[] totPb6U8 = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] totPb6U8per = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] radPb6U8 = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
-            double[] th2U8 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
-            double[] th2U8per = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
-            double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
-            double[] totPb76per = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
-            double[] totPb86 = convertObjectArrayToDoubles(childrenET.get(8).eval(shrimpFractions, task)[0]);
-            double[] totPb86per = convertObjectArrayToDoubles(childrenET.get(9).eval(shrimpFractions, task)[0]);
+            double[] th2U8 = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
+            double[] th2U8per = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
+            double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
+            double[] totPb76per = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
+            double[] totPb86 = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
+            double[] totPb86per = convertObjectArrayToDoubles(childrenET.get(8).eval(shrimpFractions, task)[0]);
             double[] rad8corConcRho = org.cirdles.ludwig.squid25.PbUTh_2.rad8corConcRho(
                     totPb6U8[0],
                     totPb6U8per[0],

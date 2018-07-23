@@ -107,7 +107,7 @@ fragment Z:('z'|'Z');
 
 FUNCTION : 
     A G E P B '76' |
-    A G E P B '76' E X P |
+    A G E P B '76' W I T H E R R |
     A G E '7' C O R R W I T H E R R |
     A G E '8' C O R R W I T H E R R |
     A G E '7' C O R R P B '8' T H '2' W I T H E R R |

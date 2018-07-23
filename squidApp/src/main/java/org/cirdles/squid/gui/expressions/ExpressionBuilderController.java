@@ -1970,8 +1970,8 @@ public class ExpressionBuilderController implements Initializable {
                 singleSpot.add(spot);
 
                 try {
-                    double[][] results = 
-                            Arrays.stream(ExpressionTreeInterface.convertObjectArrayToDoubles(exp.eval(singleSpot, null))).toArray(double[][]::new);
+                    double[][] results
+                            = Arrays.stream(ExpressionTreeInterface.convertObjectArrayToDoubles(exp.eval(singleSpot, null))).toArray(double[][]::new);
                     for (int i = 0; i < results[0].length; i++) {
                         try {
                             sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
@@ -2006,8 +2006,8 @@ public class ExpressionBuilderController implements Initializable {
             if (((ExpressionTree) exp).getLeftET() instanceof ShrimpSpeciesNode) {
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                    double[][] results = 
-                            Arrays.stream(spot.getIsotopicRatioValuesByStringName(exp.getName())).toArray(double[][]::new);
+                    double[][] results
+                            = Arrays.stream(spot.getIsotopicRatioValuesByStringName(exp.getName())).toArray(double[][]::new);
                     if (results[0].length == 2 && forcePercentUn) {
                         results[0][1] = (results[0][1] / results[0][0]) * 100;
                     }
@@ -2296,7 +2296,7 @@ public class ExpressionBuilderController implements Initializable {
             }
         } else {
             if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                String peekString = "FUCK";//createPeekRM(ex, forcePercentUn);
+                String peekString = createPeekRM(ex, forcePercentUn);
                 int lineNumber = 0;
                 for (int n = 0; n < peekString.length(); n++) {
                     if (peekString.charAt(n) == '\n') {
@@ -2314,7 +2314,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (ex.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation() || ex.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     peek += "\n";
                 }
-                String peekString = "FUCK";//createPeekUN(ex, forcePercentUn);
+                String peekString = createPeekUN(ex, forcePercentUn);
                 int lineNumber = 0;
                 for (int n = 0; n < peekString.length(); n++) {
                     if (peekString.charAt(n) == '\n') {
@@ -2433,7 +2433,7 @@ public class ExpressionBuilderController implements Initializable {
                         exname = text.replaceAll("(^\\[(%)?(±)?\")|(\"\\]$)", "");
                         if (text.contains("[%\"")) {
                             uncertainty = "1 \u03C3 % uncertainty\n\n";
-                            forcePercentUn = true;
+                            forcePercentUn = false;//true;
                         } else if (text.contains("[±\"")) {
                             uncertainty = "1 \u03C3 ± uncertainty\n\n";
                         }
@@ -3264,7 +3264,12 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         setText(operationOrFunction);
-                        Tooltip t = createFloatingTooltip(getText().replaceAll("(:.*|\\(.*\\))$", "").trim().replaceAll("Tab", VISIBLETABPLACEHOLDER).replaceAll("New line", VISIBLENEWLINEPLACEHOLDER).replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
+                        Tooltip t
+                                = createFloatingTooltip(getText()
+                                        .replaceAll("(:.*|\\(.*\\))$", "").trim()
+                                        .replaceAll("Tab", VISIBLETABPLACEHOLDER)
+                                        .replaceAll("New line", VISIBLENEWLINEPLACEHOLDER)
+                                        .replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });

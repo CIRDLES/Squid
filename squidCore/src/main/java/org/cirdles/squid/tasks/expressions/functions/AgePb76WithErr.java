@@ -31,9 +31,9 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class AgePb76exp extends Function {
+public class AgePb76WithErr extends Function {
 
-    private static final long serialVersionUID = -6711265919551953531L;
+    //private static final long serialVersionUID = -6711265919551953531L;
 
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and
@@ -45,9 +45,9 @@ public class AgePb76exp extends Function {
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
-    public AgePb76exp() {
+    public AgePb76WithErr() {
 
-        name = "AgePb76exp";
+        name = "AgePb76WithErr";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
@@ -57,7 +57,7 @@ public class AgePb76exp extends Function {
     }
 
     /**
-     * The "exp" suffix refers to "explicit" specification of ratio and unct.
+     *
      * Requires that child 0 is a VariableNode that evaluates to a double array
      * with column 1 representing the 207/206 IsotopicRatio and that child 1
      * evaluates to a double array with column 1 containing the 1sigma abs unct

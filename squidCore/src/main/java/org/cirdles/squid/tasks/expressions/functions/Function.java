@@ -87,7 +87,7 @@ public abstract class Function
     static {
 
         SQUID_FUNCTIONS_MAP.put("agePb76", "agePb76");
-        SQUID_FUNCTIONS_MAP.put("agePb76exp", "agePb76exp");
+        SQUID_FUNCTIONS_MAP.put("agePb76WithErr", "agePb76WithErr");
         SQUID_FUNCTIONS_MAP.put("age7corrWithErr", "age7corrWithErr");
         SQUID_FUNCTIONS_MAP.put("age8corrWithErr", "age8corrWithErr");
         SQUID_FUNCTIONS_MAP.put("age7CorrPb8Th2WithErr", "age7CorrPb8Th2WithErr");
@@ -190,8 +190,8 @@ public abstract class Function
      *
      * @return
      */
-    public static OperationOrFunctionInterface agePb76exp() {
-        return new AgePb76exp();
+    public static OperationOrFunctionInterface agePb76WithErr() {
+        return new AgePb76WithErr();
     }
 
     /**

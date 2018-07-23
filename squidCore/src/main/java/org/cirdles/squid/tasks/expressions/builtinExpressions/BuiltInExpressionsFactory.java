@@ -30,6 +30,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.sComm0_86;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -94,7 +95,10 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", Squid3Constants.sComm0_84);//          37.5933995);
         parameters.put(sComm_84.getName(), sComm_84);
 
-        ExpressionTreeInterface sComm_68 = new ConstantNode("sComm_68", 1.0 / 2.1095);
+        ExpressionTreeInterface sComm_86 = new ConstantNode("sComm_86", sComm0_86);
+        parameters.put(sComm_86.getName(), sComm_86);
+
+        ExpressionTreeInterface sComm_68 = new ConstantNode("sComm_68", 1.0 / sComm0_86);
         parameters.put(sComm_68.getName(), sComm_68);
 
         ExpressionTreeInterface sComm_76 = new ConstantNode("sComm_76", 0.8741);
@@ -716,7 +720,7 @@ public abstract class BuiltInExpressionsFactory {
         overCountMeansRefMaterials.add(expression4corr207Pb206PbPCTerr);
 
         Expression expression4corr207Pb206PbAge = buildExpression("4-corr207Pb/206Pbage",
-                "AgePb76exp( [\"4-corr207Pb/206Pb\"],"
+                "AgePb76WithErr( [\"4-corr207Pb/206Pb\"],"
                 + "([\"4-corr207Pb/206Pb\"] * [\"4-corr207Pb/206Pb%err\"] / 100 ))", true, false, false);
         overCountMeansRefMaterials.add(expression4corr207Pb206PbAge);
 
@@ -807,7 +811,7 @@ public abstract class BuiltInExpressionsFactory {
         samRadiogenicCols.add(expressionGamma);
 
         Expression expressionNetGamma = buildExpression("NetGamma",
-                "Gamma - sComm_68", false, true, false);
+                "Gamma - sComm_84", false, true, false);
         samRadiogenicCols.add(expressionNetGamma);
 
         Expression expressionRadd6 = buildExpression("radd6",
@@ -1000,9 +1004,6 @@ public abstract class BuiltInExpressionsFactory {
                 "[\"207/206\"]", false, true, false);
         samRadiogenicCols.add(expressionTotal238U206Pb);
 
-//        Expression expressionTotal238U206PbPctErr = buildExpression("Total 207Pb/206PbS %err",
-//                "[%\"207/206\"]", false, true, false);
-//        samRadiogenicCols.add(expressionTotal238U206PbPctErr);
         Expression expression4corr207206 = buildExpression("4-corr 207*/206*",
                 "ABS( NetBeta / NetAlpha )", false, true, false);
         samRadiogenicCols.add(expression4corr207206);
@@ -1016,7 +1017,7 @@ public abstract class BuiltInExpressionsFactory {
         samRadiogenicCols.add(expression4corr207206PctErr);
 
         Expression expression204corr207P206PbAge = buildExpression("204corr 207Pb/206Pb Age",
-                "AgePb76exp( [\"4-corr 207*/206*\"], "
+                "AgePb76WithErr( [\"4-corr 207*/206*\"], "
                 + "([\"4-corr 207*/206*\"] * [\"4-corr 207*/206* %err\"] / 100))", false, true, false);
         samRadiogenicCols.add(expression204corr207P206PbAge);
 
@@ -1062,8 +1063,8 @@ public abstract class BuiltInExpressionsFactory {
         samRadiogenicCols.add(expression204corr208Pb232ThAge);
 
         Expression expression204corr208Pb232ThAge1SigmaErr = buildExpression("204corr 208Pb/232Th Age 1serr",
-                "(1 +[\"4-corr 208*/232\"] ) / Lambda232 / \n"
-                + " (1 + [\"4-corr 208*/232\"] ) * [\"4-corr 208*/232 %err\"] / 100 ", false, true, false);
+                "[\"4-corr 208*/232\"] / lambda232 / "
+                + "(1 + [\"4-corr 208*/232\"]) * [\"4-corr 208*/232 %err\"] / 100  ", false, true, false);
         samRadiogenicCols.add(expression204corr208Pb232ThAge1SigmaErr);
 
         Expression expression7corr206238 = buildExpression("7-corr 206*/238",
@@ -1128,10 +1129,6 @@ public abstract class BuiltInExpressionsFactory {
                 + "[%\"208/206\"])", false, true, false);
         samRadiogenicCols.add(expression8corr207235);
 
-        Expression expression8corr207235PctErr = buildExpression("8-corr 207*/235 %err",
-                "[%\"8-corr 207*/235\"]", false, true, false);
-        samRadiogenicCols.add(expression8corr207235PctErr);
-
         Expression expression8correrrcorr = buildExpression("8-corr err corr",
                 "Rad8corConcRho( "
                 + "[\"8-corrTotal 206Pb/238US\"], "
@@ -1144,6 +1141,25 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"208/206\"],"
                 + "[%\"208/206\"])", false, true, false);
         samRadiogenicCols.add(expression8correrrcorr);
+
+        Expression expression8corr207206 = buildExpression("8-corr 207*/206*",
+                "[\"8-corr 207*/235\"] / [\"8-corr 206*/238\"] / r238_235s ", false, true, false);
+        samRadiogenicCols.add(expression8corr207206);
+
+        Expression expression8corr207206PctErr = buildExpression("8-corr 207*/206* %err",
+                "SQRT([%\"8-corr 207*/235\"]^2 + [\"8-corr 206*/238 %err\"]^2 -\n"
+                + " 2 * [%\"8-corr 207*/235\"] * [\"8-corr 206*/238 %err\"] * [\"8-corr err corr\"] )", false, true, false);
+        samRadiogenicCols.add(expression8corr207206PctErr);
+
+        Expression expression208corr207Pb206PbAge = buildExpression("208corr 207Pb/206Pb Age",
+                "AgePb76WithErr( [\"8-corr 207*/206*\"], "
+                + "([\"8-corr 207*/206*\"] * [\"8-corr 207*/206* %err\"] / 100))", false, true, false);
+        samRadiogenicCols.add(expression208corr207Pb206PbAge);
+
+        R68i = "(EXP(lambda238 * [\"208corr 207Pb/206Pb Age\"] ) - 1)";
+        Expression expression208corrDiscordance = buildExpression("208corr Discordance",
+                "100 * ( 1 - [\"8-corr 206*/238\"] / " + R68i + ")", false, true, false);
+        samRadiogenicCols.add(expression208corrDiscordance);
 
         return samRadiogenicCols;
     }
