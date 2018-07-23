@@ -87,9 +87,15 @@ public abstract class Function
     static {
 
         SQUID_FUNCTIONS_MAP.put("agePb76", "agePb76");
-        SQUID_FUNCTIONS_MAP.put("agePb76exp", "agePb76exp");
+        SQUID_FUNCTIONS_MAP.put("agePb76WithErr", "agePb76WithErr");
+        SQUID_FUNCTIONS_MAP.put("age7corrWithErr", "age7corrWithErr");
+        SQUID_FUNCTIONS_MAP.put("age8corrWithErr", "age8corrWithErr");
+        SQUID_FUNCTIONS_MAP.put("age7CorrPb8Th2WithErr", "age7CorrPb8Th2WithErr");
+        SQUID_FUNCTIONS_MAP.put("rad8corPb7U5WithErr", "rad8corPb7U5WithErr");
+        SQUID_FUNCTIONS_MAP.put("rad8corConcRho","rad8corConcRho");
         SQUID_FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
         SQUID_FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
+        SQUID_FUNCTIONS_MAP.put("pb206U238rad", "pb206U238rad");
         SQUID_FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
         SQUID_FUNCTIONS_MAP.put("stdPb86radCor7per", "stdPb86radCor7per");
         SQUID_FUNCTIONS_MAP.put("pb86radCor7per", "pb86radCor7per");
@@ -184,10 +190,48 @@ public abstract class Function
      *
      * @return
      */
-    public static OperationOrFunctionInterface agePb76exp() {
-        return new AgePb76exp();
+    public static OperationOrFunctionInterface agePb76WithErr() {
+        return new AgePb76WithErr();
     }
 
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface age7corrWithErr() {
+        return new Age7corrWithErr();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface age8corrWithErr() {
+        return new Age8corrWithErr();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface age7CorrPb8Th2WithErr() {
+        return new Age7CorrPb8Th2WithErr();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface rad8corPb7U5WithErr() {
+        return new Rad8corPb7U5WithErr();
+    }
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface rad8corConcRho() {
+        return new Rad8corConcRho();
+    }
     /**
      *
      * @return
@@ -202,6 +246,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface pb46cor8() {
         return new Pb46cor8();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface pb206U238rad() {
+        return new Pb206U238rad();
     }
 
     /**

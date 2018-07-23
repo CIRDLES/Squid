@@ -25,16 +25,15 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 
 /**
  *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class ConcordiaTW extends Function {
+public class AgePb76WithErr extends Function {
 
-    private static final long serialVersionUID = -1637184737851510733L;
+    //private static final long serialVersionUID = -6711265919551953531L;
 
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and
@@ -46,25 +45,29 @@ public class ConcordiaTW extends Function {
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
-    public ConcordiaTW() {
-        name = "concordiaTW";
+    public AgePb76WithErr() {
+
+        name = "AgePb76WithErr";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
-        colCount = 4;
-        labelsForOutputValues = new String[][]{{"Raw Conc Age", "1-sigma abs", "MSWD Conc", "Prob Conc"}};
-        labelsForInputValues = new String[]{"ratioXAndUnct","ratioYAndUnct"};
+        colCount = 2;
+        labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
+        labelsForInputValues = new String[]{"207/206 Ratio, 207/206 1SigmaUnct"};
     }
 
     /**
-     * Requires that child 0 and 1 each is VariableNode that evaluates to a
-     * double array with one column representing an IsotopicRatio and a row for
-     * each member of shrimpFractions.
      *
-     * @param childrenET list containing child 0 and 1
+     * Requires that child 0 is a VariableNode that evaluates to a double array
+     * with column 1 representing the 207/206 IsotopicRatio and that child 1
+     * evaluates to a double array with column 1 containing the 1sigma abs unct
+     * with a row for each member of shrimpFractions.
+     *
+     * @param childrenET list containing child 0
      * @param shrimpFractions a list of shrimpFractions
      * @param task
-     * @return the double[1][4]{Raw Conc Age, 1-sigma abs, MSWD Conc, Prob Conc}
+     * @return the double[1][2] array of age, ageErr
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
     public Object[][] eval(
@@ -72,14 +75,15 @@ public class ConcordiaTW extends Function {
 
         Object[][] retVal;
         try {
-            double[] ratioXAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
-            double[] ratioYAndUnct = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
-            double[] concordiaTW
-                    = org.cirdles.ludwig.isoplot3.Pub.concordiaTW(ratioXAndUnct[0], 
-                            ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1],lambda235, lambda238, uRatio);
-            retVal = new Object[][]{convertArrayToObjects(concordiaTW)};
-        } catch (ArithmeticException | NullPointerException e) {
-            retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0}};
+            double[] pb207_206Ratio = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
+            double[] pb207_206Unct1Sigma = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
+            double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(
+                    pb207_206Ratio[0],
+                    pb207_206Unct1Sigma[0],
+                    lambda235, lambda238, uRatio);
+            retVal = new Object[][]{{agePb76[0], agePb76[1]}};
+        } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
+            retVal = new Object[][]{{0.0, 0.0}};
         }
 
         return retVal;
@@ -92,17 +96,18 @@ public class ConcordiaTW extends Function {
      */
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        String retVal
-                = "<mrow>"
-                + "<mi>" + name + "</mi>"
-                + "<mfenced>";
 
+        StringBuilder retVal = new StringBuilder();
+        retVal.append("<mrow>");
+        retVal.append("<mi>").append(name).append("</mi>");
+        retVal.append("<mfenced>");
         for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
+            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
         }
 
-        retVal += "</mfenced></mrow>\n";
+        retVal.append("</mfenced></mrow>\n");
 
-        return retVal;
+        return retVal.toString();
     }
+
 }

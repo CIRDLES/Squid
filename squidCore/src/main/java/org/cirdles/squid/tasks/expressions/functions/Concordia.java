@@ -17,6 +17,8 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import static org.cirdles.squid.constants.Squid3Constants.lambda235;
+import static org.cirdles.squid.constants.Squid3Constants.lambda238;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -74,7 +76,8 @@ public class Concordia extends Function {
             double[] ratioYAndUnct = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] rho = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
             double[] concordia
-                    = org.cirdles.ludwig.isoplot3.Pub.concordia(ratioXAndUnct[0], ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1], rho[0]);
+                    = org.cirdles.ludwig.isoplot3.Pub.concordia(
+                            ratioXAndUnct[0], ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1], rho[0],lambda235, lambda238);
             retVal = new Object[][]{convertArrayToObjects(concordia)};
         } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0}};
