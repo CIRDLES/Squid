@@ -194,21 +194,21 @@ public abstract class BuiltInExpressionsFactory {
 
             // for samples
             Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME_S,
-                    "[\"208/206\"] * [\"4-corrTotal 206Pb/238U\"] / [\"4-corrTotal 208Pb/232Th\"]", false, true, false);
+                    "[\"208/206\"] * [\"4-corrTotal 206Pb/238US\"] / [\"4-corrTotal 208Pb/232ThS\"]", false, true, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAMEs);
 
             Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME_S,
-                    "[\"208/206\"] * [\"7-corrTotal 206Pb/238U\"] / [\"7-corrTotal 208Pb/232Th\"]", false, true, false);
+                    "[\"208/206\"] * [\"7-corrTotal 206Pb/238US\"] / [\"7-corrTotal 208Pb/232ThS\"]", false, true, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAMEs);
 
             Expression expression4corrSQUID_TH_U_EQN_NAMEsPerr = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME_S + " %err",
-                    "SQRT( [%\"208/206\"]^2 + [\"4-corrTotal 206Pb/238U %err\"]^2 + \n"
-                    + "[\"4-corrTotal 208Pb/232Th %err\"]^2 )", false, true, false);
+                    "SQRT( [%\"208/206\"]^2 + [\"4-corrTotal 206Pb/238US %err\"]^2 + \n"
+                    + "[\"4-corrTotal 208Pb/232ThS %err\"]^2 )", false, true, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAMEsPerr);
 
             Expression expression7corrSQUID_TH_U_EQN_NAMEsPerr = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME_S + " %err",
-                    "SQRT( [%\"208/206\"]^2 + [\"7-corrTotal 206Pb/238U %err\"]^2 + \n"
-                    + "[\"7-corrTotal 208Pb/232Th %err\"]^2 )", false, true, false);
+                    "SQRT( [%\"208/206\"]^2 + [\"7-corrTotal 206Pb/238US %err\"]^2 + \n"
+                    + "[\"7-corrTotal 208Pb/232ThS %err\"]^2 )", false, true, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAMEsPerr);
 
             // placeholder expressions
@@ -236,22 +236,22 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> pbIsotopeCorrectionsForU = new TreeSet<>();
 
         // calculate 204 PbU flavor from Tot68_82_fromA
-        Expression expression4corrTotal206Pb238U = buildExpression("4-corrTotal 206Pb/238U",
+        Expression expression4corrTotal206Pb238U = buildExpression("4-corrTotal 206Pb/238US",
                 "[\"UncorrPb/Uconst\"] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
         pbIsotopeCorrectionsForU.add(expression4corrTotal206Pb238U);
 
         String t2 = "[\"4-corr206Pb/238Ucalibr.const WM\"][2] / [\"4-corr206Pb/238Ucalibr.const WM\"][0] * 100";
-        Expression expression4corrTotal206Pb238UpErr = buildExpression("4-corrTotal 206Pb/238U %err",
+        Expression expression4corrTotal206Pb238UpErr = buildExpression("4-corrTotal 206Pb/238US %err",
                 "SQRT( [%\"UncorrPb/Uconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
         pbIsotopeCorrectionsForU.add(expression4corrTotal206Pb238UpErr);
 
         // calculate 207 PbU flavor from Tot68_82_fromA
-        Expression expression7corrTotal206Pb238U = buildExpression("7-corrTotal 206Pb/238U",
+        Expression expression7corrTotal206Pb238U = buildExpression("7-corrTotal 206Pb/238US",
                 "[\"UncorrPb/Uconst\"] / [\"7-corr206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio", false, true, false);
         pbIsotopeCorrectionsForU.add(expression7corrTotal206Pb238U);
 
         t2 = "[\"7-corr206Pb/238Ucalibr.const WM\"][2] / [\"7-corr206Pb/238Ucalibr.const WM\"][0] * 100";
-        Expression expression7corrTotal206Pb238UpErr = buildExpression("7-corrTotal 206Pb/238U %err",
+        Expression expression7corrTotal206Pb238UpErr = buildExpression("7-corrTotal 206Pb/238US %err",
                 "SQRT( [%\"UncorrPb/Uconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
         pbIsotopeCorrectionsForU.add(expression7corrTotal206Pb238UpErr);
 
@@ -286,22 +286,22 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> pbIsotopeCorrectionsForTh = new TreeSet<>();
 
         // calculate 204 PbTh flavors from Tot68_82_fromA
-        Expression expression4corrTotal208Pb232Th = buildExpression("4-corrTotal 208Pb/232Th",
+        Expression expression4corrTotal208Pb232Th = buildExpression("4-corrTotal 208Pb/232ThS",
                 "[\"UncorrPb/Thconst\"] / [\"4-corr208Pb/232Thcalibr.const WM\"][0] * StdThPbRatio", false, true, false);
         pbIsotopeCorrectionsForTh.add(expression4corrTotal208Pb232Th);
 
         String t2 = "[\"4-corr208Pb/232Thcalibr.const WM\"][2] / [\"4-corr208Pb/232Thcalibr.const WM\"][0] * 100";
-        Expression expression4corrTotal208Pb232ThpErr = buildExpression("4-corrTotal 208Pb/232Th %err",
+        Expression expression4corrTotal208Pb232ThpErr = buildExpression("4-corrTotal 208Pb/232ThS %err",
                 "SQRT( [%\"UncorrPb/Thconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
         pbIsotopeCorrectionsForTh.add(expression4corrTotal208Pb232ThpErr);
 
         // calculate 207 PbTh flavors from Tot68_82_fromA
-        Expression expression7corrTotal208Pb232Th = buildExpression("7-corrTotal 208Pb/232Th",
+        Expression expression7corrTotal208Pb232Th = buildExpression("7-corrTotal 208Pb/232ThS",
                 "[\"UncorrPb/Thconst\"] / [\"7-corr208Pb/232Thcalibr.const WM\"][0] * StdThPbRatio", false, true, false);
         pbIsotopeCorrectionsForTh.add(expression7corrTotal208Pb232Th);
 
         t2 = "[\"7-corr208Pb/232Thcalibr.const WM\"][2] / [\"7-corr208Pb/232Thcalibr.const WM\"][0] * 100";
-        Expression expression7corrTotal208Pb232ThpErr = buildExpression("7-corrTotal 208Pb/232Th %err",
+        Expression expression7corrTotal208Pb232ThpErr = buildExpression("7-corrTotal 208Pb/232ThS %err",
                 "SQRT( [%\"UncorrPb/Thconst\"]^2 + (" + t2 + ")^2 )", false, true, false);
         pbIsotopeCorrectionsForTh.add(expression7corrTotal208Pb232ThpErr);
 

@@ -34,7 +34,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class Age7corrWithErr extends Function {
 
-    //private static final long serialVersionUID = -6711265919551953531L;
+    private static final long serialVersionUID = -8516207588649068367L;
+
     /**
      * Provides the functionality of Isoplot3's Age7corrWithErr by calling
      * pbPbAge and returning "Age" and "AgeErr" and encoding the labels for each
@@ -57,7 +58,7 @@ public class Age7corrWithErr extends Function {
     }
 
     /**
-     * 
+     *
      * Requires that children 0 -3 are VariableNodes that evaluate to a double
      * array with column 1 representing the values for Total 206/238, Total
      * 206/238 1SigmaUnct, Total 207/206, Total 207/206 1SigmaUnct with a row

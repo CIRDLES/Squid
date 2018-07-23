@@ -37,7 +37,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class Age7CorrPb8Th2WithErr extends Function {
 
-    //private static final long serialVersionUID = -6711265919551953531L;
+    private static final long serialVersionUID = 2008093860007266299L;
+
     /**
      * This method combines Ludwig's Age7CorrPb8Th2 and AgeErr7CorrPb8Th2.
      *
@@ -97,7 +98,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
             double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
             double[] totPb76percentErr = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
             double[] age7CorrPb8Th2WithErr = org.cirdles.ludwig.squid25.PbUTh_2.age7CorrPb8Th2WithErr(
-                    totPb206U238[0], 
+                    totPb206U238[0],
                     totPb206U238percentErr[0],
                     totPb208Th232[0],
                     totPb208Th232percentErr[0],
@@ -105,7 +106,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
                     totPb86percentErr[0],
                     totPb76[0],
                     totPb76percentErr[0],
-                    sComm0_64,sComm0_76,sComm0_86, lambda232, lambda235, lambda238, uRatio);
+                    sComm0_64, sComm0_76, sComm0_86, lambda232, lambda235, lambda238, uRatio);
             retVal = new Object[][]{{age7CorrPb8Th2WithErr[0], age7CorrPb8Th2WithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
