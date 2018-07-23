@@ -102,7 +102,7 @@ reader.moveDown();
 
         reader.moveDown();
         Map<String, BigDecimal> rhos = new HashMap<>();
-        rhos = (HashMap) context.convertAnother(rhos, Map.class);
+        rhos = (HashMap<String, BigDecimal>) context.convertAnother(rhos, Map.class);
         reader.moveUp();
         model.setRhos(rhos);
         
@@ -112,7 +112,7 @@ reader.moveDown();
         
         reader.moveDown();
         model.setMolarMasses(new HashMap<>());
-        model.setMolarMasses((HashMap) context.convertAnother(model.getMolarMasses(), HashMap.class));
+        model.setMolarMasses((HashMap<String, BigDecimal>) context.convertAnother(model.getMolarMasses(), HashMap.class));
         reader.moveUp();
 
         return model;

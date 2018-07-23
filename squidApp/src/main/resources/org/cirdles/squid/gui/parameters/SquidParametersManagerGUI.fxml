@@ -106,7 +106,7 @@
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
                                                         <TableView fx:id="physConstCorrTable" layoutY="25.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
-                                                        <Label fx:id="physConstCorrLabel" layoutX="42.0" layoutY="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
+                                                        <Label fx:id="physConstCorrLabel" layoutX="42.0" layoutY="5.0" text="Correlations | Note: correlation matrix is positive definite" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -116,7 +116,7 @@
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
                                                         <TableView fx:id="physConstCovTable" layoutX="8.0" layoutY="54.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
-                                                        <Label fx:id="physConstCovLabel" layoutX="39.0" layoutY="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
+                                                        <Label fx:id="physConstCovLabel" layoutX="39.0" layoutY="5.0" text="Covariances | Note: covariance matrix is positive definite" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -205,7 +205,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label fx:id="refMatCorrLabel" layoutX="14.0" layoutY="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
+                                                        <Label fx:id="refMatCorrLabel" layoutX="14.0" layoutY="5.0" text="Correlations | Note: correlations matrix is positive definite" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
                                                         <TableView fx:id="refMatCorrTable" layoutX="20.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                                     </children>
                                                 </AnchorPane>
@@ -215,7 +215,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label fx:id="refMatCovLabel" layoutX="30.0" layoutY="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
+                                                        <Label fx:id="refMatCovLabel" layoutX="30.0" layoutY="5.0" text="Covariances | Note: covariances matrix is positive definite" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
                                                         <TableView fx:id="refMatCovTable" layoutX="20.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                                     </children>
                                                 </AnchorPane>

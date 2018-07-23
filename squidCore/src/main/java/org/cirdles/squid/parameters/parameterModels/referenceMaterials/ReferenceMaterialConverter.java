@@ -106,7 +106,7 @@ public class ReferenceMaterialConverter implements Converter {
 
         reader.moveDown();
         Map<String, BigDecimal> rhos = new HashMap<>();
-        rhos = (HashMap) context.convertAnother(rhos, Map.class);
+        rhos = (HashMap<String, BigDecimal>) context.convertAnother(rhos, Map.class);
         reader.moveUp();
         model.setRhos(rhos);
         

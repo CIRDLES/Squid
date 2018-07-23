@@ -883,7 +883,6 @@ public class parametersManagerGUIController implements Initializable {
         }
 
         return rhos;
-
     }
 
     public class DataModel {
