@@ -237,16 +237,16 @@ public class SquidUIController implements Initializable {
     public void setUpParametersListViews() {
         setUpReferenceMaterialListViewItems();
         setUpPhysicalConstantsListViewItems();
-        parametersMenu.setOnAction(param -> {
+        parametersMenu.addEventHandler(MouseEvent.MOUSE_ENTERED, param -> {
             setUpReferenceMaterialListViewItems();
             setUpPhysicalConstantsListViewItems();
-        });
+        }); 
         setUpParametersSelections();
         parametersReferenceMaterialsListView.setCellFactory(param -> new ListCell<ReferenceMaterial>() {
             @Override
             protected void updateItem(ReferenceMaterial item, boolean empty) {
                 if (!empty) {
-                    setText(item.getModelName());
+                    setText(item.getModelName() + "v." + item.getVersion());
                 }
             }
         });
