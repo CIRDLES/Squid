@@ -70,14 +70,14 @@
                   </Menu>
               </items>
             </Menu>
-            <Menu fx:id="parametersMenu" mnemonicParsing="false" text="parameters">
+            <Menu fx:id="parametersMenu" mnemonicParsing="false" text="Parameters">
               <items>
                   <MenuItem mnemonicParsing="false" text="Physical Constants Model">
                      <graphic>
                         <ListView fx:id="parametersPhysicalConstantsListView" prefHeight="200.0" prefWidth="300.0" stylesheets="@css/parametersListView.css" />
                      </graphic>
                   </MenuItem>
-                <MenuItem mnemonicParsing="false" text="Reference Material">
+                <MenuItem mnemonicParsing="false" text="Reference Material Model">
                      <graphic>
                         <ListView fx:id="parametersReferenceMaterialsListView" prefHeight="200.0" prefWidth="300.0" stylesheets="@css/parametersListView.css" />
                      </graphic>
@@ -147,7 +147,7 @@
             <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="SquidLabData">
               <items>
                 <MenuItem fx:id="openParametersManagerPhysConstMenuItem" mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Manage Physical Constants" />
-                  <MenuItem fx:id="openParametersManagerRefMatMenuItem" mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Manage Reference Materials" />
+                  <MenuItem fx:id="openParametersManagerRefMatMenuItem" mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Manage Reference Material Models" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">

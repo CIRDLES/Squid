@@ -81,7 +81,7 @@ public class ReferenceMaterial extends ParametersModel {
     }
     
    public static ReferenceMaterial getDefaultModel() {
-       File refMatFile = new File("../squidCore/src/main/resources/org/cirdles/squid/referenceMaterials/Zircon-91500 v.1.0.xml");
+       File refMatFile = new File("SampleReferenceMaterials/Zircon-91500 v.1.0.xml");
         return ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
    }
 

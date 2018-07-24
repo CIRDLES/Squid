@@ -125,7 +125,7 @@ public class CalamariFileUtilities {
                     for (int i = 0; i < fileNames.size(); i++) {
                         // test for empty string
                         if (fileNames.get(i).trim().length() > 0) {
-                            File refMatResource = physConstResourceExtractor.extractResourceAsFile(fileNames.get(i));
+                            File refMatResource = refMatResourceExtractor.extractResourceAsFile(fileNames.get(i));
                             File refMatFile = new File(referenceMaterialsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
 
                             if (refMatResource.renameTo(refMatFile)) {

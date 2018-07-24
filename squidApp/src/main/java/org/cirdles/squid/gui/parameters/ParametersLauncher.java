@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 
 /**
  *
@@ -18,27 +19,27 @@ import javafx.stage.WindowEvent;
  */
 public class ParametersLauncher {
 
-    private Stage stage;
+    private Stage squidLabDataStage;
     private TabPane tabs;
 
     public ParametersLauncher() {
         try {
-            stage = new Stage();;
+            squidLabDataStage = new Stage();;
 
-            stage.setMinHeight(700);
-            stage.setMinWidth(800);
-
+            squidLabDataStage.setMinHeight(720);
+            squidLabDataStage.setMinWidth(800);
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
             Scene scene = new Scene(loader.load());
 
             Map<String, Object> obMap = loader.getNamespace();
             tabs = (TabPane) obMap.get("rootTabPane");
 
-            stage.setScene(scene);
-            stage.setTitle("Squid Parameters Manager");
+            squidLabDataStage.setScene(scene);
+            squidLabDataStage.setTitle("Squid Parameters Manager");
 
-            stage.setOnCloseRequest((WindowEvent e) -> {
-                stage.hide();
+            squidLabDataStage.setOnCloseRequest((WindowEvent e) -> {
+                squidLabDataStage.hide();
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,9 +49,13 @@ public class ParametersLauncher {
     public void launchParametersManager(boolean isRefMat) {
         if (isRefMat) {
             tabs.getSelectionModel().select(1);
+            squidLabDataStage.centerOnScreen();
+            squidLabDataStage.requestFocus();
         } else {
             tabs.getSelectionModel().select(0);
+            squidLabDataStage.centerOnScreen();
+            squidLabDataStage.requestFocus();
         }
-        stage.show();
+        squidLabDataStage.show();
     }
 }

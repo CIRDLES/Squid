@@ -246,7 +246,7 @@ public class SquidUIController implements Initializable {
             @Override
             protected void updateItem(ReferenceMaterial item, boolean empty) {
                 if (!empty) {
-                    setText(item.getModelName() + "v." + item.getVersion());
+                    setText(item.getModelName() + " v." + item.getVersion());
                 }
             }
         });
@@ -263,7 +263,7 @@ public class SquidUIController implements Initializable {
             @Override
             protected void updateItem(PhysicalConstantsModel item, boolean empty) {
                 if (!empty) {
-                    setText(item.getModelName());
+                    setText(item.getModelName() + " v." + item.getVersion());
                 }
             }
         });

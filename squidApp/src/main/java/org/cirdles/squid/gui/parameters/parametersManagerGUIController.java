@@ -321,7 +321,7 @@ public class parametersManagerGUIController implements Initializable {
             for (int i = 0; i < cols.size(); i++) {
                 TableColumn<ObservableList<String>, String> col = new TableColumn(cols.get(i));
                 final int colNum = i;
-                col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
+                col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(trimTrailingZeroes(param.getValue().get(colNum))));
                 col.setComparator(new StringComparer());
                 col.setCellFactory(TextFieldTableCell.<ObservableList<String>>forTableColumn());
                 table.getColumns().add(col);
@@ -923,6 +923,10 @@ public class parametersManagerGUIController implements Initializable {
         return rhos;
     }
 
+    public static String trimTrailingZeroes(String s) {
+        return s.indexOf(".") < 0 ? s : s.replaceAll("0*$", "").replaceAll("\\.$", "");
+    }
+
     public class DataModel {
 
         private SimpleStringProperty name;
@@ -933,9 +937,9 @@ public class parametersManagerGUIController implements Initializable {
         public DataModel(String name, BigDecimal value,
                 BigDecimal oneSigmaABS, BigDecimal oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
-            this.value = new SimpleStringProperty(value.toPlainString());
-            this.oneSigmaABS = new SimpleStringProperty(oneSigmaABS.toPlainString());
-            this.oneSigmaPCT = new SimpleStringProperty(oneSigmaPCT.toPlainString());
+            this.value = new SimpleStringProperty(trimTrailingZeroes(value.toPlainString()));
+            this.oneSigmaABS = new SimpleStringProperty(trimTrailingZeroes(oneSigmaABS.toPlainString()));
+            this.oneSigmaPCT = new SimpleStringProperty(trimTrailingZeroes(oneSigmaPCT.toPlainString()));
         }
 
         public String getName() {
