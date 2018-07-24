@@ -107,7 +107,7 @@ public class ReportColumn implements
 
         this.uncertaintyColumn = null;
         this.displayedWithArbitraryDigitCount = false;
-        this.countOfSignificantDigits = 2;
+        this.countOfSignificantDigits = 15;//2
     }
 
     /**

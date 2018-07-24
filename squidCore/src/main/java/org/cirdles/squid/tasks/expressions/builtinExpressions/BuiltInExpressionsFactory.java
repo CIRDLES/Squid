@@ -505,6 +505,10 @@ public abstract class BuiltInExpressionsFactory {
                 "100 * sComm_64 * [\"8-corr204Pb/206Pb\"]", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression8corCom206S);
 
+        Expression expression7corCom208S = buildExpression("7-corr%com208S",
+                "100 * sComm_84 / [\"208/206\"] * [\"7-corr204Pb/206Pb\"]", false, true, false);
+        perSpotPbCorrectionsOrdered.add(expression7corCom208S);
+
         // The next step is to calculate all the applicable radiogenic 208Pb/206Pb values. 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 4-corr208Pb*/206Pb*  *** Start
         Expression expression4corr208Pb206Pb = buildExpression("4-corr208Pb*/206Pb*",
@@ -1147,6 +1151,16 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"207/206\"], "
                 + "[%\"207/206\"]) ", false, true, false);
         samRadiogenicCols.add(expression207corr208Pb232ThAge);
+
+        Expression expression7corr208232 = buildExpression("7-corr 208*/232",
+                "EXP ( lambda232 * [\"207corr 208Pb/232Th Age\"] ) - 1", false, true, false);
+        samRadiogenicCols.add(expression7corr208232);
+        
+        Expression expression7corr208232PctErr = buildExpression("7-corr 208*/232 %err",
+                "lambda232 * EXP( lambda232 *\n"
+                + "[\"207corr 208Pb/232Th Age\"] ) *\n"
+                + "[±\"207corr 208Pb/232Th Age\"] / [\"7-corr 208*/232\"] * 100", false, true, false);
+        samRadiogenicCols.add(expression7corr208232PctErr);
 
         Expression expression208corr206Pb238UAge1SigmaErr = buildExpression("208corr 206Pb/238U Age",
                 "Age8corrWithErr( "

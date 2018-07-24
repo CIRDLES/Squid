@@ -95,7 +95,7 @@ public abstract class ReportSpecificationsAbstract {
      */
     public static final String[][] ReportCategory_CPS = new String[][]{
         {"", "", "", "", "", "getTotalCps", "<SPECIES_ARRAY>", "",
-            "", "", "", "", "", "", "", ""
+            "", "","true", "15", "", "", "", ""
         }
     };
 
@@ -108,7 +108,7 @@ public abstract class ReportSpecificationsAbstract {
      */
     public static final String[][] ReportCategory_RawRatios = new String[][]{
         {"", "", "", "", "", "getIsotopicRatioValuesByStringName", "<RATIOS_ARRAY>", "",
-            "", "", "", "", "", "", "", ""
+            "", "", "true", "15", "", "", "", ""
         }
     };
 
