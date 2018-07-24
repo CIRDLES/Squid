@@ -72,8 +72,8 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         getReportCategories().add(getFractionCategory());
         getReportCategories().add(getSpotFundamentalsCategory());
         getReportCategories().add(getCpsCategory());
-        if (referenceMaterial) {
-            getReportCategories().add(getRawRatiosCategory());
+        getReportCategories().add(getRawRatiosCategory());
+        if (referenceMaterial) {            
             getReportCategories().add(getCustomExpressionsCategory());
             getReportCategories().add(getCorrectionIndependentRMCategory());
             getReportCategories().add(getPb204CorrectedRMCategory());

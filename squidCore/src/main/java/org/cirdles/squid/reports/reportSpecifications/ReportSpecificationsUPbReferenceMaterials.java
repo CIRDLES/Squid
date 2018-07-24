@@ -30,18 +30,6 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
  */
 public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificationsAbstract {
 
-    // Report column order =
-    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
-    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
-    //     needsLead, needsUranium
-    /**
-     *
-     */
-    public static final String[][] ReportCategory_RawRatios = new String[][]{
-        {"", "", "", "", "", "getIsotopicRatioValuesByStringName", "<RATIOS_ARRAY>", "",
-            "", "", "", "", "", "", "", ""
-        }
-    };
 
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,

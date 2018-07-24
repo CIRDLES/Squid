@@ -42,7 +42,7 @@ public abstract class ReportSpecificationsAbstract {
             "", "false", "false", "0", "", "", "false", "false"
         }
     };
-    
+
     /**
      *
      */
@@ -51,9 +51,8 @@ public abstract class ReportSpecificationsAbstract {
             "", "true", "false", "0", "", "Fraction (customizable location)", "false", "false"
         }
     };
-    
-    
-        // Report column order =
+
+    // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
     //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
     //     needsLead, needsUranium
@@ -96,6 +95,19 @@ public abstract class ReportSpecificationsAbstract {
      */
     public static final String[][] ReportCategory_CPS = new String[][]{
         {"", "", "", "", "", "getTotalCps", "<SPECIES_ARRAY>", "",
+            "", "", "", "", "", "", "", ""
+        }
+    };
+
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_RawRatios = new String[][]{
+        {"", "", "", "", "", "getIsotopicRatioValuesByStringName", "<RATIOS_ARRAY>", "",
             "", "", "", "", "", "", "", ""
         }
     };

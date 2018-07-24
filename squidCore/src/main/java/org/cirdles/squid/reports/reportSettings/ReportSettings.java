@@ -121,13 +121,13 @@ public class ReportSettings implements
                 = new ReportCategory(
                         "CPS",
                         ReportSpecificationsAbstract.ReportCategory_CPS, true, task);
+        this.rawRatiosCategory
+                = new ReportCategory(
+                        "Raw Nuclide Ratios",
+                        ReportSpecificationsAbstract.ReportCategory_RawRatios, true, task);
 
         if (referenceMaterial) {
 
-            this.rawRatiosCategory
-                    = new ReportCategory(
-                            "Raw Nuclide Ratios",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_RawRatios, true, task);
             this.customExpressionsCategory
                     = new ReportCategory(
                             "Custom",

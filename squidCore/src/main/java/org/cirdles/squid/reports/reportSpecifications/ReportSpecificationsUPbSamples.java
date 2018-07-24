@@ -21,7 +21,11 @@ import java.util.HashMap;
 import java.util.Map;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH_S;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_TH;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_U;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
 
 /**
  * Modified from ET_Redux July 2018
@@ -38,19 +42,33 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      *
      */
     public static final String[][] ReportCategory_CorrectionIndependentData = new String[][]{
+        {"", "", "UncorrPb", "/Uconst", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PRIMARY_UTH_EQN_NAME_U, "PCT",
+            "", "true", "false", "6", "true", "", "false", "false"
+        },
+        {"", "", "UncorrPb", "/Thconst", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PRIMARY_UTH_EQN_NAME_TH, "PCT",
+            "", "true", "false", "6", "true", "", "false", "false"
+        },
         {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_U, "",
             "", "true", "false", "6", "", "concentration of U", "false", "false"
         },
         {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH_S, "",
             "", "true", "false", "6", "", "concentration of Th", "true", "false"
         },
-        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME_S, "",
-            "", "true", "false", "3", "true", "232/238 ratio", "false", "false"
+        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME_S, "PCT",
+            "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "", "204Pb", "/206Pb", "", "getIsotopicRatioValuesByStringName", "204/206", "",
-            "", "true", "false", "3", "true", "204/206 measured ratio", "false", "false"
-        }
-    };
+        {"", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME, "",
+            "", "true", "false", "6", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME + " %err", "",
+            "", "true", "false", "6", "", "", "false", "false"
+        },
+        {"", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME, "",
+            "", "true", "false", "6", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME + " %err", "",
+            "", "true", "false", "6", "", "", "false", "false"
+        },};
 
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
@@ -121,7 +139,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      *
      */
     public static final String[][] ReportCategory_208PbCorrected = new String[][]{
-            {"208cor", "Common", "206Pb", "(%)", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr%com206", "",
+        {"208cor", "Common", "206Pb", "(%)", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr%com206", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
         {"208cor", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "208corr206Pb/238UAge", "",
