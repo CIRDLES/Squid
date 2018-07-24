@@ -7,10 +7,13 @@ package org.cirdles.squid.parameters.parameterModels.physicalConstantsModels;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.cirdles.squid.parameters.ValueModel;
@@ -69,9 +72,24 @@ public class PhysicalConstantsModel extends ParametersModel {
         values[6] = new ValueModel("lambda238", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
-    public static PhysicalConstantsModel getDefaultModel() {
-        File physConstFile = new File("SamplePhysicalConstantsModels/EARTHTIME Physical Constants Model v.1.1.xml");
-        return PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
+    public static List<PhysicalConstantsModel> getDefaultModels() {
+        File folder = new File("SamplePhysicalConstantsModels/");
+        File[] files = folder.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                boolean retVal;
+                if (name.toLowerCase().endsWith(".xml")) {
+                    retVal = true;
+                } else {
+                    retVal = false;
+                }
+                return retVal;
+            }
+        });
+        List<PhysicalConstantsModel> models = new ArrayList<>();
+        for(int i = 0; i < files.length; i++) {
+            models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
+        }
+        return models;
     }
 
     public void setUpDefaultMolarMasses() {

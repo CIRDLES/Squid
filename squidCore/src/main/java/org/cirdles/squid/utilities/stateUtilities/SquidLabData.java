@@ -28,10 +28,8 @@ public class SquidLabData implements Serializable {
 
     public SquidLabData() {
         laboratoryName = "mystery lab";
-        referenceMaterials = new ArrayList<>();
-        referenceMaterials.add(ReferenceMaterial.getDefaultModel());
-        physicalConstantsModels = new ArrayList<>();
-        physicalConstantsModels.add(PhysicalConstantsModel.getDefaultModel());
+        referenceMaterials = ReferenceMaterial.getDefaultModels();
+        physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
     }
 
     public static SquidLabData getExistingSquidLabData() {

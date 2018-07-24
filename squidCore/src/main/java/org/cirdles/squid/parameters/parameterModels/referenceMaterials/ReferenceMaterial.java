@@ -7,14 +7,15 @@ package org.cirdles.squid.parameters.parameterModels.referenceMaterials;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.cirdles.squid.parameters.ValueModel;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.util.ReferenceMaterialEnum;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxRefMatConverter;
 
@@ -79,11 +80,26 @@ public class ReferenceMaterial extends ParametersModel {
 
         buildRhosMap();
     }
-    
-   public static ReferenceMaterial getDefaultModel() {
-       File refMatFile = new File("SampleReferenceMaterials/Zircon-91500 v.1.0.xml");
-        return ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
-   }
+
+    public static List<ReferenceMaterial> getDefaultModels() {
+        File folder = new File("SampleReferenceMaterials/");
+        File[] files = folder.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                boolean retVal;
+                if (name.toLowerCase().endsWith(".xml")) {
+                    retVal = true;
+                } else {
+                    retVal = false;
+                }
+                return retVal;
+            }
+        });
+        List<ReferenceMaterial> models = new ArrayList<>();
+        for (int i = 0; i < files.length; i++) {
+            models.add(ReferenceMaterial.getReferenceMaterialFromETReduxXML(files[i]));
+        }
+        return models;
+    }
 
     public ValueModel[] getConcentrations() {
         return concentrations;
