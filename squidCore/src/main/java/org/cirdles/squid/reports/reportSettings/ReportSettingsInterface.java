@@ -70,10 +70,9 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     public default void assembleReportCategories(boolean referenceMaterial) {
         setReportCategories(new ArrayList<>());
         getReportCategories().add(getFractionCategory());
-
+        getReportCategories().add(getSpotFundamentalsCategory());
+        getReportCategories().add(getCpsCategory());
         if (referenceMaterial) {
-            getReportCategories().add(getSpotFundamentalsCategory());
-            getReportCategories().add(getCpsCategory());
             getReportCategories().add(getRawRatiosCategory());
             getReportCategories().add(getCustomExpressionsCategory());
             getReportCategories().add(getCorrectionIndependentRMCategory());

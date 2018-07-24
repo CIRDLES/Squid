@@ -113,15 +113,17 @@ public class ReportSettings implements
                         "Fraction",
                         ReportSpecificationsAbstract.ReportCategory_Fraction2, true, task);
 
+        this.spotFundamentalsCategory
+                = new ReportCategory(
+                        "Spot Fundamentals",
+                        ReportSpecificationsAbstract.ReportCategory_SpotFundamentals, true, task);
+        this.cpsCategory
+                = new ReportCategory(
+                        "CPS",
+                        ReportSpecificationsAbstract.ReportCategory_CPS, true, task);
+
         if (referenceMaterial) {
-            this.spotFundamentalsCategory
-                    = new ReportCategory(
-                            "Spot Fundamentals",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_SpotFundamentals, true, task);
-            this.cpsCategory
-                    = new ReportCategory(
-                            "CPS",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CPS, true, task);
+
             this.rawRatiosCategory
                     = new ReportCategory(
                             "Raw Nuclide Ratios",
@@ -150,7 +152,7 @@ public class ReportSettings implements
                             ReportSpecificationsUPbReferenceMaterials.ReportCategory_208PbCorrected, true, task);
 
         } else {
-            this.correctionIndependentRMCategory
+            this.correctionIndependentCategory
                     = new ReportCategory(
                             "Correction-Independent Data",
                             ReportSpecificationsUPbSamples.ReportCategory_CorrectionIndependentData, true, task);

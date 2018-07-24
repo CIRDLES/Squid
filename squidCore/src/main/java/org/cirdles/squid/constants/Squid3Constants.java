@@ -114,9 +114,10 @@ public final class Squid3Constants {
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
     public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
+    public static final String SQUID_PPM_PARENT_EQN_NAME_TH_S = "ppmThS";
     
-    public static final String SQUID_TOTAL_206_238_NAME = "Total 206Pb/238U";
-    public static final String SQUID_TOTAL_208_232_NAME = "Total 208Pb/232Th";
+    public static final String SQUID_TOTAL_206_238_NAME = "Total 206Pb/238US";
+    public static final String SQUID_TOTAL_208_232_NAME = "Total 208Pb/232ThS";
 
     // holding spot until models are implemented
     public static final double lambda238 = 1.55125E-10;

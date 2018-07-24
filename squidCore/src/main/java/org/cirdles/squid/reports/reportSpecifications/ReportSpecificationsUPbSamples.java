@@ -19,9 +19,9 @@ package org.cirdles.squid.reports.reportSpecifications;
 
 import java.util.HashMap;
 import java.util.Map;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH_S;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
 
 /**
  * Modified from ET_Redux July 2018
@@ -41,10 +41,10 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_U, "",
             "", "true", "false", "6", "", "concentration of U", "false", "false"
         },
-        {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH, "",
+        {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH_S, "",
             "", "true", "false", "6", "", "concentration of Th", "true", "false"
         },
-        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME, "",
+        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME_S, "",
             "", "true", "false", "3", "true", "232/238 ratio", "false", "false"
         },
         {"", "", "204Pb", "/206Pb", "", "getIsotopicRatioValuesByStringName", "204/206", "",
