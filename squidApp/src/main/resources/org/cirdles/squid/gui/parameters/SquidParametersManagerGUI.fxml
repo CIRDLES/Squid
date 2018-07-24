@@ -13,7 +13,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="720.0" minWidth="900.0" prefHeight="720.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.parameters.parametersManagerGUIController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.parameters.parametersManagerGUIController">
     <children>
         <TabPane fx:id="rootTabPane" layoutX="2.0" layoutY="45.0" prefHeight="455.0" prefWidth="657.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="45.0">
             <tabs>
@@ -109,10 +109,10 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea fx:id="physConstReferencesArea" layoutX="7.0" layoutY="265.0" prefHeight="200.0" prefWidth="643.0" promptText="add references here" wrapText="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                                                        <TextArea fx:id="physConstCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="200.0" prefWidth="640.0" promptText="add comments here" wrapText="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0" />
+                                                        <TextArea fx:id="physConstReferencesArea" layoutX="430.0" prefHeight="200.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <TextArea fx:id="physConstCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="200.0" prefWidth="336.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
                                                         <Label layoutX="14.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
-                                                        <Label layoutX="15.0" layoutY="245.0" text="References" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                                                        <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -204,10 +204,10 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea fx:id="refMatReferencesArea" layoutX="7.0" layoutY="265.0" prefHeight="200.0" prefWidth="851.0" promptText="add references here" wrapText="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                                                        <TextArea fx:id="refMatCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="200.0" prefWidth="851.0" promptText="add comments here" wrapText="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0" />
+                                                        <TextArea fx:id="refMatReferencesArea" layoutX="430.0" prefHeight="200.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <TextArea fx:id="refMatCommentsArea" layoutX="10.0" layoutY="104.0" prefHeight="200.0" prefWidth="400.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
                                                         <Label layoutX="14.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
-                                                        <Label layoutX="15.0" layoutY="245.0" text="References" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                                                        <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>

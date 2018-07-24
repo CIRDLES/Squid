@@ -24,13 +24,13 @@ public class ParametersLauncher {
 
     public ParametersLauncher() {
         try {
-            squidLabDataStage = new Stage();;
-
-            squidLabDataStage.setMinHeight(720);
-            squidLabDataStage.setMinWidth(800);
+            squidLabDataStage = new Stage();
+            squidLabDataStage.setMinHeight(600);
+            squidLabDataStage.setMinWidth(900);
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
             Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add("src/main/resources/org/cirdles/squid/gui/css/projectManager.css");
 
             Map<String, Object> obMap = loader.getNamespace();
             tabs = (TabPane) obMap.get("rootTabPane");

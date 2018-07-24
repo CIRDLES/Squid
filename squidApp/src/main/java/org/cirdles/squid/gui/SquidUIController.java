@@ -26,11 +26,12 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,8 +39,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -48,7 +47,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -81,8 +79,10 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
+import org.cirdles.squid.gui.parameters.parametersManagerGUIController;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
@@ -167,11 +167,15 @@ public class SquidUIController implements Initializable {
     @FXML
     private Menu squidLabDataMenu;
     @FXML
-    private ListView<PhysicalConstantsModel> parametersPhysicalConstantsListView;
-    @FXML
-    private ListView<ReferenceMaterial> parametersReferenceMaterialsListView;
-    @FXML
     private Menu parametersMenu;
+    @FXML
+    private Menu referenceMaterialsMenu;
+    @FXML
+    private Menu physicalConstantsModelsMenu;
+    @FXML
+    private MenuItem openParametersManagerPhysConstMenuItem;
+    @FXML
+    private MenuItem openParametersManagerRefMatMenuItem;
 
     /**
      * Initializes the controller class.
@@ -226,7 +230,7 @@ public class SquidUIController implements Initializable {
         buildExpressionMenuMRU();
 
         squidParametersLauncher = new ParametersLauncher();
-        setUpParametersListViews();
+        setUpParametersMenu();
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
@@ -234,85 +238,63 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.initSampleParametersModels();
     }
 
-    public void setUpParametersListViews() {
-        setUpReferenceMaterialListViewItems();
-        setUpPhysicalConstantsListViewItems();
-        parametersMenu.addEventHandler(MouseEvent.MOUSE_ENTERED, param -> {
-            setUpReferenceMaterialListViewItems();
-            setUpPhysicalConstantsListViewItems();
-        }); 
-        setUpParametersSelections();
-        parametersReferenceMaterialsListView.setCellFactory(param -> new ListCell<ReferenceMaterial>() {
+    private void setUpParametersMenu() {
+        setUpPhysicalConstantsModelsMenuItems();
+        setUpReferenceMaterialsMenuItems();
+        parametersMenu.showingProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            protected void updateItem(ReferenceMaterial item, boolean empty) {
-                if (!empty) {
-                    setText(item.getModelName() + " v." + item.getVersion());
-                }
-            }
-        });
-        parametersReferenceMaterialsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                ReferenceMaterial refMat = parametersReferenceMaterialsListView.getSelectionModel().getSelectedItem();
-                if (refMat != null) {
-                    squidProject.getTask().setReferenceMaterial(refMat);
-                }
-            }
-        });
-        parametersPhysicalConstantsListView.setCellFactory(param -> new ListCell<PhysicalConstantsModel>() {
-            @Override
-            protected void updateItem(PhysicalConstantsModel item, boolean empty) {
-                if (!empty) {
-                    setText(item.getModelName() + " v." + item.getVersion());
-                }
-            }
-        });
-        parametersPhysicalConstantsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                PhysicalConstantsModel model = parametersPhysicalConstantsListView.getSelectionModel().getSelectedItem();
-                if (model != null) {
-                    squidProject.getTask().setPhysicalConstantsModel(model);
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+                if (newValue.booleanValue()) {
+                    setUpPhysicalConstantsModelsMenuItems();
+                    setUpReferenceMaterialsMenuItems();
                 }
             }
         });
     }
 
-    private void setUpParametersSelections() {
+    private void setUpPhysicalConstantsModelsMenuItems() {
+        List<PhysicalConstantsModel> models = squidLabData.getPhysicalConstantsModels();
+        ObservableList<MenuItem> items = FXCollections.observableArrayList();
+        physicalConstantsModelsMenu.getItems().clear();
+
+        for (PhysicalConstantsModel model : models) {
+            MenuItem item = new MenuItem(parametersManagerGUIController.getModVersionName(model));
+            item.setOnAction(param -> {
+                squidProject.getTask().setPhysicalConstantsModel(model);
+            });
+            items.add(item);
+        }
+        physicalConstantsModelsMenu.getItems().setAll(items);
+    }
+
+    private void setUpReferenceMaterialsMenuItems() {
+        List<ReferenceMaterial> models = squidLabData.getReferenceMaterials();
+        ObservableList<MenuItem> items = FXCollections.observableArrayList();
+        referenceMaterialsMenu.getItems().clear();
+
+        for (ReferenceMaterial model : models) {
+            MenuItem item = new MenuItem(parametersManagerGUIController.getModVersionName(model));
+            item.setOnAction(param -> {
+                squidProject.getTask().setReferenceMaterial(model);
+            });
+            items.add(item);
+        }
+        referenceMaterialsMenu.getItems().setAll(items);
+    }
+
+    private void verifySquidLabDataParameters() {
         if (squidProject != null && squidProject.getTask() != null) {
-            PhysicalConstantsModel physConst = squidProject.getTask().getPhysicalConstantsModel();
-            if (physConst != null) {
-                if (parametersPhysicalConstantsListView.getItems().contains(physConst)) {
-                    parametersPhysicalConstantsListView.getSelectionModel().select(physConst);
-                } else {
-                    squidLabData.getPhysicalConstantsModels().add(physConst);
-                    setUpPhysicalConstantsListViewItems();
-                    parametersPhysicalConstantsListView.getSelectionModel().select(physConst);
-                }
+            TaskInterface task = squidProject.getTask();
+            ReferenceMaterial refMat = task.getReferenceMaterial();
+            PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
+
+            if (physConst != null && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
+                squidLabData.addPhysicalConstantsModel(physConst);
             }
-            ReferenceMaterial refMat = squidProject.getTask().getReferenceMaterial();
-            if (refMat != null) {
-                if (parametersReferenceMaterialsListView.getItems().contains(refMat)) {
-                    parametersReferenceMaterialsListView.getSelectionModel().select(refMat);
-                } else {
-                    squidLabData.getReferenceMaterials().add(refMat);
-                    setUpReferenceMaterialListViewItems();
-                    parametersReferenceMaterialsListView.getSelectionModel().select(refMat);
-                }
+            if (refMat != null && !squidLabData.getReferenceMaterials().contains(refMat)) {
+                squidLabData.addReferenceMaterial(refMat);
             }
         }
-    }
-
-    private void setUpReferenceMaterialListViewItems() {
-        ObservableList<ReferenceMaterial> refMatList
-                = FXCollections.observableArrayList(squidLabData.getReferenceMaterials());
-        parametersReferenceMaterialsListView.setItems(refMatList);
-    }
-
-    private void setUpPhysicalConstantsListViewItems() {
-        ObservableList<PhysicalConstantsModel> physConstList
-                = FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels());
-        parametersPhysicalConstantsListView.setItems(physConstList);
     }
 
     private void buildProjectMenuMRU() {
@@ -716,8 +698,9 @@ public class SquidUIController implements Initializable {
             manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
-            
-            setUpParametersSelections();
+
+            verifySquidLabDataParameters();
+
         } catch (IOException | RuntimeException iOException) {
             System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
         }
@@ -1197,4 +1180,5 @@ public class SquidUIController implements Initializable {
     private void openParametersManagerRefMat(ActionEvent event) {
         squidParametersLauncher.launchParametersManager(true);
     }
+
 }

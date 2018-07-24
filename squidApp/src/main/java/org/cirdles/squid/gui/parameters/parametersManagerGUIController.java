@@ -506,7 +506,7 @@ public class parametersManagerGUIController implements Initializable {
         });
     }
 
-    private String getModVersionName(ParametersModel mod) {
+    public static String getModVersionName(ParametersModel mod) {
         return mod.getModelName() + " v." + mod.getVersion();
     }
 

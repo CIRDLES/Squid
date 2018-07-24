@@ -136,7 +136,7 @@ public class ParametersModel implements
 
     @Override
     public int compareTo(ParametersModel o) {
-        return modelName.compareTo(o.getModelName());
+        return (modelName + version).compareTo(o.getModelName() + o.getVersion());
     }
 
     public boolean equals(Object o) {
@@ -149,7 +149,6 @@ public class ParametersModel implements
     }
 
     public ValueModel getDatumByName(String datumName) {
-
         ValueModel retVal = new ValueModel(datumName);
         for (int i = 0; i < values.length; i++) {
             if (values[i].getName().equals(datumName)) {
