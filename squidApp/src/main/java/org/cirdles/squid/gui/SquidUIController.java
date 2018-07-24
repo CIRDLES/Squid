@@ -1041,6 +1041,19 @@ public class SquidUIController implements Initializable {
 //            System.out.println();
 //        }
 //        
+        writeAndOpenReportTableFiles(report, "ReferenceMaterialReportTable.csv");
+    }
+
+    @FXML
+    private void unknownsReportTableAction(ActionEvent event) throws IOException {
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
+
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
+
+        writeAndOpenReportTableFiles(report, "UnknownsReportTable.csv");
+    }
+
+    private void writeAndOpenReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
         // output a file
         File reportsFolderParent = squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports();
         String reportsPath
@@ -1053,24 +1066,11 @@ public class SquidUIController implements Initializable {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + "ReferenceMaterialReportTable.csv");
+        File reportTableFile = new File(reportsPath + baseReportTableName);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
-        File reportTableFileRaw = new File(reportsPath + "RAW_ReferenceMaterialReportTable.csv");
+        File reportTableFileRaw = new File(reportsPath + "RAW_" + baseReportTableName);
         ReportSerializerToCSV.writeCSVReport(true, reportTableFileRaw, report);
 
         org.cirdles.squid.gui.utilities.BrowserControl.showURI(reportTableFile.getCanonicalPath());
     }
-
-    @FXML
-    private void unknownsReportTableAction(ActionEvent event) {
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
-
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
-
-        try {
-            FileHandler.saveReportFileCSV(true, report, primaryStageWindow);
-        } catch (IOException iOException) {
-        }
-    }
-
 }

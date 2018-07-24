@@ -33,7 +33,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class Age8corrWithErr extends Function {
 
-    //private static final long serialVersionUID = -6711265919551953531L;
+    private static final long serialVersionUID = -5789418956709687251L;
+
     /**
      * This method combines Ludwig's Age8Corr and AgeEr8Corr.
      *

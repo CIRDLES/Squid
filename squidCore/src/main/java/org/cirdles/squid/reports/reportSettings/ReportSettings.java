@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsAbstract;
-import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbReferenceMaterials;
-import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples;
+import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbReferenceMaterials15Dig;
+import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples15Dig;
 import org.cirdles.squid.tasks.TaskInterface;
 
 /**
@@ -113,62 +113,64 @@ public class ReportSettings implements
                         "Fraction",
                         ReportSpecificationsAbstract.ReportCategory_Fraction2, true, task);
 
+        this.spotFundamentalsCategory
+                = new ReportCategory(
+                        "Spot Fundamentals",
+                        ReportSpecificationsAbstract.ReportCategory_SpotFundamentals, true, task);
+        this.cpsCategory
+                = new ReportCategory(
+                        "CPS",
+                        ReportSpecificationsAbstract.ReportCategory_CPS, true, task);
+        this.rawRatiosCategory
+                = new ReportCategory(
+                        "Raw Nuclide Ratios",
+                        ReportSpecificationsAbstract.ReportCategory_RawRatios, true, task);
+
         if (referenceMaterial) {
-            this.spotFundamentalsCategory
-                    = new ReportCategory(
-                            "Spot Fundamentals",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_SpotFundamentals, true, task);
-            this.cpsCategory
-                    = new ReportCategory(
-                            "CPS",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CPS, true, task);
-            this.rawRatiosCategory
-                    = new ReportCategory(
-                            "Raw Nuclide Ratios",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_RawRatios, true, task);
+
             this.customExpressionsCategory
                     = new ReportCategory(
                             "Custom",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CustomExpressions, true, task);
+                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_CustomExpressions, true, task);
             this.correctionIndependentRMCategory
                     = new ReportCategory(
                             "Correction-Independent Built-In",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_CorrectionIndependent, true, task);
+                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_CorrectionIndependent, true, task);
             this.pb204CorrectedRMCategory
                     = new ReportCategory(
                             "204Pb-Corrected",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_204PbCorrected, true, task);
+                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_204PbCorrected, true, task);
 
             this.pb207CorrectedRMCategory
                     = new ReportCategory(
                             "207Pb-Corrected",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_207PbCorrected, true, task);
+                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_207PbCorrected, true, task);
 
             this.pb208CorrectedRMCategory
                     = new ReportCategory(
                             "208Pb-Corrected",
-                            ReportSpecificationsUPbReferenceMaterials.ReportCategory_208PbCorrected, true, task);
+                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_208PbCorrected, true, task);
 
         } else {
-            this.correctionIndependentRMCategory
+            this.correctionIndependentCategory
                     = new ReportCategory(
                             "Correction-Independent Data",
-                            ReportSpecificationsUPbSamples.ReportCategory_CorrectionIndependentData, true, task);
+                            ReportSpecificationsUPbSamples15Dig.ReportCategory_CorrectionIndependentData, true, task);
 
             this.pb204CorrectedCategory
                     = new ReportCategory(
                             "204Pb-Corrected",
-                            ReportSpecificationsUPbSamples.ReportCategory_204PbCorrected, true, task);
+                            ReportSpecificationsUPbSamples15Dig.ReportCategory_204PbCorrected, true, task);
 
             this.pb207CorrectedCategory
                     = new ReportCategory(
                             "207Pb-Corrected",
-                            ReportSpecificationsUPbSamples.ReportCategory_207PbCorrected, true, task);
+                            ReportSpecificationsUPbSamples15Dig.ReportCategory_207PbCorrected, true, task);
 
             this.pb208CorrectedCategory
                     = new ReportCategory(
                             "208Pb-Corrected",
-                            ReportSpecificationsUPbSamples.ReportCategory_208PbCorrected, true, task);
+                            ReportSpecificationsUPbSamples15Dig.ReportCategory_208PbCorrected, true, task);
 
         }
 

@@ -77,6 +77,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateSampleDates;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePlaceholderExpressions;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.overCountMeans;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.samRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
@@ -248,6 +249,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void generateBuiltInExpressions() {
+        
+        SortedSet<Expression> generatePlaceholderExpressions = generatePlaceholderExpressions(parentNuclide, isDirectAltPD());
+        taskExpressionsOrdered.addAll(generatePlaceholderExpressions);
+   
         SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
 
@@ -273,7 +278,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         SortedSet<Expression> samRadiogenicCols = samRadiogenicCols(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(samRadiogenicCols);
-
+             
         Collections.sort(taskExpressionsOrdered);
     }
 
@@ -497,60 +502,70 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void reorderExpressions() {
         // cannot depend on comparator to do deep compares
-        if (directAltPD) {
+//        if (directAltPD) {
             for (Expression listedExp : taskExpressionsOrdered) {
                 // handle selected isotope-specific expressions
                 // TODO: Better logic - selfaware expressionTree or polymorphism
+                if (directAltPD) {
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME);
                 }
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S);
                 }
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME + " %err") == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + " %err" + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S);
                 }
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S + " %err") == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + " %err" + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S + " %err");
+                }
                 }
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_206_238_NAME) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_206_238_NAME + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    System.out.println("YES   " + SQUID_TOTAL_206_238_NAME);
                 }
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_206_238_NAME + " %err") == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_206_238_NAME + " %err" + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    System.out.println("YES   " + SQUID_TOTAL_206_238_NAME + " %err");
                 }
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_208_232_NAME) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_208_232_NAME + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    System.out.println("YES   " + SQUID_TOTAL_208_232_NAME);
                 }
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_208_232_NAME + " %err") == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_208_232_NAME + " %err" + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    System.out.println("YES   " + SQUID_TOTAL_208_232_NAME + " %err");
                 }
             }
-        }
+//        }
         try {
             Collections.sort(taskExpressionsOrdered);
         } catch (Exception e) {

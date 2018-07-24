@@ -117,7 +117,7 @@
                         <Menu mnemonicParsing="false" text="Unknowns">
                           <items>
                               <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
-                              <MenuItem disable="true" mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - beta" />
+                              <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - beta" />
                           </items>
                         </Menu>
                     </items>
