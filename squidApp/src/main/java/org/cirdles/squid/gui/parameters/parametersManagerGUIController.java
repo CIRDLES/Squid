@@ -609,8 +609,8 @@ public class parametersManagerGUIController implements Initializable {
         ObservableList<RefMatDataModel> refMatData = refMatDataTable.getItems();
         for (RefMatDataModel mod : refMatData) {
             if (!isEditable) {
-                mod.getIsMeasured().setStyle("-fx-opacity: 1");
                 mod.getIsMeasured().setDisable(true);
+                mod.getIsMeasured().setStyle("-fx-opacity: 1");
             } else {
                 mod.getIsMeasured().setDisable(false);
             }

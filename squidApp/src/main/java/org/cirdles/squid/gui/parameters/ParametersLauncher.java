@@ -30,7 +30,6 @@ public class ParametersLauncher {
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add("src/main/resources/org/cirdles/squid/gui/css/projectManager.css");
 
             Map<String, Object> obMap = loader.getNamespace();
             tabs = (TabPane) obMap.get("rootTabPane");

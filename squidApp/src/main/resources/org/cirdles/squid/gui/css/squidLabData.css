@@ -1,0 +1,38 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 24, 2018, 6:44:46 PM
+    Author     : ryanb
+*/
+
+.root {
+    -fx-background-color: #666666;
+}
+
+.tab-pane {
+    -fx-background-color: ghostwhite;
+}
+
+.tab-pane .tab-pane {
+    -fx-background-color: lightgray;
+}
+
+#physConstReferencesPane {
+    -fx-background-color: lightgray;
+}
+
+.tab:selected {
+    -fx-background-color: orangered;
+    -fx-font-weight: bold;
+}
+
+.tab { 
+    -fx-background-color: orange;
+}
+
+#labNameLabel {
+    -fx-text-fill: ghostwhite;
+}

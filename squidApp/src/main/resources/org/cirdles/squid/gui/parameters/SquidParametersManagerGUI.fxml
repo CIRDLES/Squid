@@ -6,6 +6,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.parameters.parametersManagerGUIController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/squidLabData.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.parameters.parametersManagerGUIController">
     <children>
         <TabPane fx:id="rootTabPane" layoutX="2.0" layoutY="45.0" prefHeight="455.0" prefWidth="657.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="45.0">
             <tabs>
@@ -31,12 +32,14 @@
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
                                             <items>
+                                                <MenuItem fx:id="saveAndRegCurrPhysConst" mnemonicParsing="false" onAction="#physConstSaveAndRegisterEdit" text="Save and Register Current Edit of Physical Constants Model" />
+                                                <MenuItem fx:id="cancelEditOfPhysConst" mnemonicParsing="false" onAction="#physConstCancelEdit" text="Cancel Edit of Physical Constants Model" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
                                                 <MenuItem fx:id="remCurrPhysConst" mnemonicParsing="false" onAction="#physConstRemoveCurrMod" text="Remove Current Physical Constants Model from Lab Data (for editable models only)" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
                                                 <MenuItem fx:id="editCurrPhysConst" mnemonicParsing="false" onAction="#physConstEditCurrMod" text="Edit Current Physical Constants Model (for editable models only)" />
                                                 <MenuItem fx:id="editCopyOfCurrPhysConst" mnemonicParsing="false" onAction="#physConstEditCopy" text="Edit Copy of Current Physical Constants Model" />
                                                 <MenuItem fx:id="editNewEmpPhysConst" mnemonicParsing="false" onAction="#physConstEditEmptyMod" text="Edit New Empty Physical Constants Model" />
-                                                <MenuItem fx:id="cancelEditOfPhysConst" mnemonicParsing="false" onAction="#physConstCancelEdit" text="Cancel Edit of Physical Constants Model" />
-                                                <MenuItem fx:id="saveAndRegCurrPhysConst" mnemonicParsing="false" onAction="#physConstSaveAndRegisterEdit" text="Save and Register Current Edit of Physical Constants Model" />
                                             </items>
                                         </Menu>
                                     </menus>
@@ -87,9 +90,9 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <ScrollPane layoutX="24.0" layoutY="5.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <ScrollPane id="physConstReferencesPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <content>
-                                                                <AnchorPane fx:id="referencesPane" prefHeight="200.0" prefWidth="200.0" />
+                                                                <AnchorPane  fx:id="referencesPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                             </content>
                                                         </ScrollPane>
                                                     </children>
@@ -111,7 +114,7 @@
                                                     <children>
                                                         <TextArea fx:id="physConstReferencesArea" layoutX="430.0" prefHeight="200.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
                                                         <TextArea fx:id="physConstCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="200.0" prefWidth="336.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
-                                                        <Label layoutX="14.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
+                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments" AnchorPane.topAnchor="0.0" />
                                                         <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
@@ -138,11 +141,13 @@
                                         <Menu mnemonicParsing="false" text="Edit">
                                             <items>
                                                 <MenuItem fx:id="saveAndRegCurrRefMat" mnemonicParsing="false" onAction="#refMatSaveAndRegisterEdit" text="Save and Register Current Edit of Reference Material Model" />
-                                                <MenuItem fx:id="remCurrRefMat" mnemonicParsing="false" onAction="#refMatRemoveCurrMod" text="Remove Current Reference Material Model (for editable models only)" />
                                                 <MenuItem fx:id="canEditOfRefMat" mnemonicParsing="false" onAction="#refMatCancelEdit" text="Cancel Edit of Reference Material Model" />
-                                                <MenuItem fx:id="editNewEmptyRefMat" mnemonicParsing="false" onAction="#refMateEditEmptyMod" text="Edit New Empty Reference Material Model" />
-                                                <MenuItem fx:id="editCopyOfCurrRefMat" mnemonicParsing="false" onAction="#refMatEditCopy" text="Edit Copy of Current Reference Material Model" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem fx:id="remCurrRefMat" mnemonicParsing="false" onAction="#refMatRemoveCurrMod" text="Remove Current Reference Material Model (for editable models only)" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
                                                 <MenuItem fx:id="editCurrRefMat" mnemonicParsing="false" onAction="#refMatEditCurrMod" text="Edit Current Reference Material Model (for editable models only)" />
+                                                <MenuItem fx:id="editCopyOfCurrRefMat" mnemonicParsing="false" onAction="#refMatEditCopy" text="Edit Copy of Current Reference Material Model" />
+                                                <MenuItem fx:id="editNewEmptyRefMat" mnemonicParsing="false" onAction="#refMateEditEmptyMod" text="Edit New Empty Reference Material Model" />
                                             </items>
                                         </Menu>
                                     </menus>
@@ -206,7 +211,7 @@
                                                     <children>
                                                         <TextArea fx:id="refMatReferencesArea" layoutX="430.0" prefHeight="200.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
                                                         <TextArea fx:id="refMatCommentsArea" layoutX="10.0" layoutY="104.0" prefHeight="200.0" prefWidth="400.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
-                                                        <Label layoutX="14.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
+                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
                                                         <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
@@ -222,6 +227,6 @@
             </tabs>
         </TabPane>
         <TextField fx:id="labNameTextField" layoutX="88.0" layoutY="2.0" prefHeight="26.0" prefWidth="562.0" AnchorPane.leftAnchor="88.0" AnchorPane.rightAnchor="6.600000000000023" AnchorPane.topAnchor="10.0" />
-        <Label layoutX="14.0" layoutY="5.0" prefHeight="18.0" prefWidth="74.0" text="Lab Name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="15.0" />
+        <Label id="labNameLabel" layoutX="14.0" layoutY="5.0" prefHeight="18.0" prefWidth="74.0" text="Lab Name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="15.0" />
     </children>
 </AnchorPane>
