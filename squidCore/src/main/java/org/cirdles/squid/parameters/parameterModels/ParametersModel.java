@@ -44,9 +44,9 @@ public class ParametersModel implements
     protected boolean isEditable;
 
     public ParametersModel() {
-        modelName = "";
-        labName = "";
-        version = "";
+        modelName = "new model";
+        labName = "unknown lab";
+        version = "1.0";
         dateCertified = DateHelper.getCurrentDate();
         comments = "";
         references = "";

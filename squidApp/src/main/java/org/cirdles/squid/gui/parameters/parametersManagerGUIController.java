@@ -125,17 +125,9 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private TableView<ObservableList<String>> physConstCorrTable;
     @FXML
-    private Label physConstCorrLabel;
-    @FXML
     private TableView<ObservableList<String>> physConstCovTable;
     @FXML
-    private Label physConstCovLabel;
-    @FXML
-    private Label refMatCorrLabel;
-    @FXML
     private TableView<ObservableList<String>> refMatCorrTable;
-    @FXML
-    private Label refMatCovLabel;
     @FXML
     private TableView<ObservableList<String>> refMatCovTable;
     @FXML
@@ -184,15 +176,6 @@ public class parametersManagerGUIController implements Initializable {
         setUpLaboratoryName();
     }
 
-    private void setUpPhysConstCovariancesAndCorrelations() {
-        physConstModel.initializeCorrelations();
-        physConstModel.generateCovariancesFromCorrelations();
-    }
-
-    private void setUpRefMatCovariancesAndCorrelations() {
-        refMatModel.initializeCorrelations();
-        refMatModel.generateCovariancesFromCorrelations();
-    }
 
     private void setUpPhysConst() {
         setUpPhysConstTextFields();
@@ -215,6 +198,16 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMatEditableLabel();
     }
 
+    private void setUpPhysConstCovariancesAndCorrelations() {
+        physConstModel.initializeCorrelations();
+        physConstModel.generateCovariancesFromCorrelations();
+    }
+
+    private void setUpRefMatCovariancesAndCorrelations() {
+        refMatModel.initializeCorrelations();
+        refMatModel.generateCovariancesFromCorrelations();
+    }
+    
     private void setUpPhysConstCB() {
         setUpPhysConstCBItems();
         physConstCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -238,6 +231,7 @@ public class parametersManagerGUIController implements Initializable {
             physConstModel = physConstModels.get(num);
             setUpPhysConst();
             setUpPhysConstMenuItems(false, physConstModel.isEditable());
+            physConstEditable(false);
         }
     }
 
@@ -264,6 +258,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatModel = refMatModels.get(num);
             setUpRefMat();
             setUpRefMatMenuItems(false, refMatModel.isEditable());
+            refMatEditable(false);
         }
     }
 
@@ -322,7 +317,7 @@ public class parametersManagerGUIController implements Initializable {
                 TableColumn<ObservableList<String>, String> col = new TableColumn(cols.get(i));
                 final int colNum = i;
                 col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(trimTrailingZeroes(param.getValue().get(colNum))));
-                col.setComparator(new StringComparer());
+                col.setSortable(false);
                 col.setCellFactory(TextFieldTableCell.<ObservableList<String>>forTableColumn());
                 table.getColumns().add(col);
             }
@@ -350,6 +345,7 @@ public class parametersManagerGUIController implements Initializable {
 
         TableColumn measuredCol = new TableColumn("measured");
         measuredCol.setCellValueFactory(new PropertyValueFactory("isMeasured"));
+        measuredCol.setSortable(false);
         refMatDataTable.getColumns().add(measuredCol);
 
         final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
@@ -380,25 +376,25 @@ public class parametersManagerGUIController implements Initializable {
 
         TableColumn nameCol = new TableColumn("name");
         nameCol.setCellValueFactory(new PropertyValueFactory("name"));
-        nameCol.setComparator(new StringComparer());
+        nameCol.setSortable(false);
         nameCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(nameCol);
 
         TableColumn valCol = new TableColumn("value");
         valCol.setCellValueFactory(new PropertyValueFactory("value"));
-        valCol.setComparator(new StringComparer());
+        valCol.setSortable(false);
         valCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(valCol);
 
         TableColumn absCol = new TableColumn("1σ ABS");
         absCol.setCellValueFactory(new PropertyValueFactory("oneSigmaABS"));
-        absCol.setComparator(new StringComparer());
+        absCol.setSortable(false);
         absCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(absCol);
 
         TableColumn pctCol = new TableColumn("1σ PCT");
         pctCol.setCellValueFactory(new PropertyValueFactory("oneSigmaPCT"));
-        pctCol.setComparator(new StringComparer());
+        pctCol.setSortable(false);
         pctCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(pctCol);
 
@@ -614,7 +610,6 @@ public class parametersManagerGUIController implements Initializable {
             } else {
                 mod.getIsMeasured().setDisable(false);
             }
-
         }
 
         refMatConcentrationsTable.setEditable(isEditable);

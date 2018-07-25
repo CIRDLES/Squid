@@ -12,6 +12,17 @@ and open the template in the editor.
     -fx-background-color: #666666;
 }
 
+.table-view .table-cell {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 11pt;
+    -fx-font-weight: bolder;
+}
+
+.table-view .column-header {
+    -fx-font-family: "Arial";
+    -fx-font-size: 11pt;
+}
+
 .tab-pane {
     -fx-background-color: ghostwhite;
 }
@@ -22,6 +33,10 @@ and open the template in the editor.
 
 #physConstReferencesPane {
     -fx-background-color: lightgray;
+}
+#laboratoryTextField {
+    -fx-font-family: "Arial";
+    -fx-font-size: 12pt;
 }
 
 .tab:selected {

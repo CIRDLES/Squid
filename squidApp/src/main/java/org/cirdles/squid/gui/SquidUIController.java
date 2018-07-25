@@ -290,9 +290,11 @@ public class SquidUIController implements Initializable {
 
             if (physConst != null && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
                 squidLabData.addPhysicalConstantsModel(physConst);
+                ParametersLauncher.setUpPhysConstCBItems();
             }
             if (refMat != null && !squidLabData.getReferenceMaterials().contains(refMat)) {
                 squidLabData.addReferenceMaterial(refMat);
+                ParametersLauncher.setUpRefMatCBItems();
             }
         }
     }
