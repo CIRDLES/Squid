@@ -158,9 +158,9 @@ public final class Squid3Constants {
 
     }
     
-    public static final int EXPRESSIONBUILDERDEFAULTFONTSIZE = 13;
-    public static final int EXPRESSIONBUILDERMINFONTSIZE = 11;
-    public static final int EXPRESSIONBUILDERMAXFONTSIZE = 18;
+    public static final int EXPRESSION_BUILDER_DEFAULT_FONTSIZE = 13;
+    public static final int EXPRESSION_BUILDER_MIN_FONTSIZE = 11;
+    public static final int EXPRESSION_BUILDER_MAX_FONTSIZE = 18;
     
         /**
      *

@@ -29,7 +29,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
       <SplitPane fx:id="leftSplitPane" dividerPositions="1.0" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
          <items>
@@ -66,6 +66,11 @@
                                           <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" text="Ratios with Uncertainties">
                                              <content>
                                                 <ListView fx:id="ratioExpressionsListView" />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" text="Reference Material Values">
+                                             <content>
+                                                <ListView fx:id="referenceMaterialsListView" />
                                              </content>
                                           </TitledPane>
                                        </panes>
@@ -113,16 +118,11 @@
                 </Tab>
               </tabs>
             </TabPane>
-            <VBox>
+            <VBox prefHeight="149.0" prefWidth="275.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Entities" />
                   <Accordion fx:id="othersAccordion">
                      <panes>
-                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" text="Reference Materials">
-                           <content>
-                              <ListView fx:id="referenceMaterialsListView" />
-                           </content>
-                        </TitledPane>
                         <TitledPane fx:id="constantsTitledPane" animated="false" text="Constants and Numbers">
                            <content>
                               <ListView fx:id="constantsListView" />

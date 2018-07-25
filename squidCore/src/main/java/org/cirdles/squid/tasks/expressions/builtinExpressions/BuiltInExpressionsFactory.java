@@ -75,9 +75,8 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface stdUPbRatio = new ConstantNode("StdUPbRatio", 0.0906025999827849); // Ref Mat Model
         parameters.put(stdUPbRatio.getName(), stdUPbRatio);
 
-        ExpressionTreeInterface stdPpmU = new ConstantNode("Std_ppmU", 903); // Ref Mat Model
-        parameters.put(stdPpmU.getName(), stdPpmU);
-
+////        ExpressionTreeInterface stdPpmU = new ConstantNode("Std_ppmU", 903); // Ref Mat Model
+////        parameters.put(stdPpmU.getName(), stdPpmU);
         ExpressionTreeInterface std_76 = new ConstantNode("Std_76", Squid3Constants.std_76);//    0.0587838486664528); // Ref Mat Model
         parameters.put(std_76.getName(), std_76);
 
@@ -118,6 +117,17 @@ public abstract class BuiltInExpressionsFactory {
         parameters.put("L859", L859);
 
         return parameters;
+    }
+
+    public static SortedSet<Expression> generateReferenceMaterialValues() {
+        SortedSet<Expression> referenceMaterialValues = new TreeSet<>();
+
+        Expression expressionStdUConcPpm = buildExpression("StdUConcPpm",
+                    "903", true, true, true);
+        expressionStdUConcPpm.setReferenceMaterialValue(true);
+        referenceMaterialValues.add(expressionStdUConcPpm);
+
+        return referenceMaterialValues;
     }
 
     public static SortedSet<Expression> generatePlaceholderExpressions(String parentNuclide, boolean isDirectAltPD) {
@@ -177,7 +187,7 @@ public abstract class BuiltInExpressionsFactory {
 
         // ppmU calcs belong to both cases of isDirectAltPD
         Expression expressionPpmU = buildExpression(SQUID_PPM_PARENT_EQN_NAME_U,
-                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * Std_ppmU", true, true, false);
+                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * StdUConcPpm", true, true, false);
         concentrationExpressionsOrdered.add(expressionPpmU);
 
         if (!isDirectAltPD) {
@@ -1155,7 +1165,7 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression7corr208232 = buildExpression("7-corr 208*/232",
                 "EXP ( lambda232 * [\"207corr 208Pb/232Th Age\"] ) - 1", false, true, false);
         samRadiogenicCols.add(expression7corr208232);
-        
+
         Expression expression7corr208232PctErr = buildExpression("7-corr 208*/232 %err",
                 "lambda232 * EXP( lambda232 *\n"
                 + "[\"207corr 208Pb/232Th Age\"] ) *\n"

@@ -119,7 +119,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                         reportCategorySpecs[0][5],
                         displayNameNoSpaces,
                         "PCT",
-                        "", "true", "true", "15", "true", "", "false", "false"
+                        "", "true", "false", "15", "true", "", "false", "false"
                     };
 
                     generatedReportCategorySpecsList.add(columnSpec);
@@ -152,7 +152,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                         reportCategorySpecs[0][5],
                         expressionName,
                         "PCT",
-                        "", "true", "true", "15", "true", "", "false", "false"
+                        "", "true", "false", "15", "true", "", "false", "false"
                     };
 
                     generatedReportCategorySpecsList.add(columnSpec);

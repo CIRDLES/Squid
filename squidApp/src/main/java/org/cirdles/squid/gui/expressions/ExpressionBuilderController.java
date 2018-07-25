@@ -104,9 +104,6 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSIONBUILDERDEFAULTFONTSIZE;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSIONBUILDERMAXFONTSIZE;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSIONBUILDERMINFONTSIZE;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
@@ -138,6 +135,9 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_DEFAULT_FONTSIZE;
+import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_MIN_FONTSIZE;
+import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_MAX_FONTSIZE;
 
 /**
  * FXML Controller class
@@ -200,7 +200,7 @@ public class ExpressionBuilderController implements Initializable {
     private Label modeLabel;
 
     {
-        expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSIONBUILDERDEFAULTFONTSIZE));
+        expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSION_BUILDER_DEFAULT_FONTSIZE));
     }
 
     //RADIOS
@@ -331,7 +331,7 @@ public class ExpressionBuilderController implements Initializable {
     private TitledPane presentationTitledPane;
 
     @FXML
-    private ListView<?> referenceMaterialsListView;
+    private ListView<Expression> referenceMaterialsListView;
     @FXML
     private TitledPane referenceMaterialsTitledPane;
 
@@ -384,7 +384,7 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private TabPane spotTabPane;
 
-    private static final String OPERATIONFLAGDELIMITER = " : ";
+    private static final String OPERATION_FLAG_DELIMITER = " : ";
     private static final String NUMBERSTRING = "NUMBER";
     private final BooleanProperty whiteSpaceVisible = new SimpleBooleanProperty(true);
     private static final String UNVISIBLENEWLINEPLACEHOLDER = " \n";
@@ -823,6 +823,23 @@ public class ExpressionBuilderController implements Initializable {
             }
         });
 
+        // REFERERENCE MATERIAL VALUES        
+        referenceMaterialsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        referenceMaterialsListView.setCellFactory(new ExpressionCellFactory());
+        referenceMaterialsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        referenceMaterialsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
+            @Override
+            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
+                        selectedExpressionIsEditable.set(true);
+                        selectedExpression.set(newValue);
+                    }
+                    selectInAllPanes(newValue, false);
+                }
+            }
+        });
+
         populateExpressionListViews();
 
         //RATIOS
@@ -834,7 +851,8 @@ public class ExpressionBuilderController implements Initializable {
             public void changed(ObservableValue<? extends SquidRatiosModel> observable, SquidRatiosModel oldValue, SquidRatiosModel newValue) {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
-                        Expression expr = new Expression(squidProject.getTask().getNamedExpressionsMap().get(newValue.getRatioName()), "[\"" + newValue.getRatioName() + "\"]", false);
+                        Expression expr = new Expression(
+                                squidProject.getTask().getNamedExpressionsMap().get(newValue.getRatioName()), "[\"" + newValue.getRatioName() + "\"]", false, false);
                         expr.getExpressionTree().setSquidSpecialUPbThExpression(true);
                         expr.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                         expr.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
@@ -851,12 +869,16 @@ public class ExpressionBuilderController implements Initializable {
         //OPERATIONS AND FUNCTIONS
         operationsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         operationsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
+
         mathFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         mathFunctionsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
+
         squidFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         squidFunctionsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
+
         logicFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         logicFunctionsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
+
         populateOperationOrFunctionListViews();
 
         //NUMBERS
@@ -1066,11 +1088,11 @@ public class ExpressionBuilderController implements Initializable {
                 success = true;
             } // if copying a node from the lists, insert depending of the type of node
             else if (db.hasString()) {
-                String content = db.getString().split(OPERATIONFLAGDELIMITER)[0];
-                if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(OPERATIONFLAGDELIMITER))) {
+                String content = db.getString().split(OPERATION_FLAG_DELIMITER)[0];
+                if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(OPERATION_FLAG_DELIMITER))) {
                     // case of function, make a series of objects
                     insertFunctionIntoExpressionTextFlow(content, ord);
-                } else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(OPERATIONFLAGDELIMITER))) {
+                } else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(OPERATION_FLAG_DELIMITER))) {
                     // case of operation
                     insertOperationIntoExpressionTextFlow(content, ord);
                 } else if ((dragNumberSource.get() != null) && content.contains(NUMBERSTRING)) {
@@ -1395,18 +1417,18 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void fontMinusAction(ActionEvent event) {
-        if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier > EXPRESSIONBUILDERMINFONTSIZE) {
+        if (EXPRESSION_BUILDER_DEFAULT_FONTSIZE + this.fontSizeModifier > EXPRESSION_BUILDER_MIN_FONTSIZE) {
             this.fontSizeModifier += -1;
-            expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSIONBUILDERDEFAULTFONTSIZE + fontSizeModifier));
+            expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSION_BUILDER_DEFAULT_FONTSIZE + fontSizeModifier));
             for (Node n : expressionTextFlow.getChildren()) {
                 if (n instanceof ExpressionTextNode) {
                     ((ExpressionTextNode) n).updateFontSize();
                 }
             }
-            if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier <= EXPRESSIONBUILDERMINFONTSIZE) {
+            if (EXPRESSION_BUILDER_DEFAULT_FONTSIZE + this.fontSizeModifier <= EXPRESSION_BUILDER_MIN_FONTSIZE) {
                 fontMinusBtn.setDisable(true);
             }
-            if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier < EXPRESSIONBUILDERMAXFONTSIZE) {
+            if (EXPRESSION_BUILDER_DEFAULT_FONTSIZE + this.fontSizeModifier < EXPRESSION_BUILDER_MAX_FONTSIZE) {
                 fontPlusBtn.setDisable(false);
             }
         }
@@ -1414,18 +1436,18 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void fontPlusAction(ActionEvent event) {
-        if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier < EXPRESSIONBUILDERMAXFONTSIZE) {
+        if (EXPRESSION_BUILDER_DEFAULT_FONTSIZE + this.fontSizeModifier < EXPRESSION_BUILDER_MAX_FONTSIZE) {
             this.fontSizeModifier += 1;
-            expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSIONBUILDERDEFAULTFONTSIZE + fontSizeModifier));
+            expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSION_BUILDER_DEFAULT_FONTSIZE + fontSizeModifier));
             for (Node n : expressionTextFlow.getChildren()) {
                 if (n instanceof ExpressionTextNode) {
                     ((ExpressionTextNode) n).updateFontSize();
                 }
             }
-            if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier >= EXPRESSIONBUILDERMAXFONTSIZE) {
+            if (EXPRESSION_BUILDER_DEFAULT_FONTSIZE + this.fontSizeModifier >= EXPRESSION_BUILDER_MAX_FONTSIZE) {
                 fontPlusBtn.setDisable(true);
             }
-            if (EXPRESSIONBUILDERDEFAULTFONTSIZE + this.fontSizeModifier > EXPRESSIONBUILDERMINFONTSIZE) {
+            if (EXPRESSION_BUILDER_DEFAULT_FONTSIZE + this.fontSizeModifier > EXPRESSION_BUILDER_MIN_FONTSIZE) {
                 fontMinusBtn.setDisable(false);
             }
         }
@@ -1457,10 +1479,13 @@ public class ExpressionBuilderController implements Initializable {
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
         List<Expression> sortedCustomExpressionsList = new ArrayList<>();
         List<Expression> sortedBrokenExpressionsList = new ArrayList<>();
+        List<Expression> sortedReferenceMaterialValuesList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
             if (exp.amHealthy() && exp.isSquidSwitchNU()) {
                 sortedNUSwitchedExpressionsList.add(exp);
+            } else if (exp.isReferenceMaterialValue() && exp.amHealthy()) {
+                sortedReferenceMaterialValuesList.add(exp);
             } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU()) {
                 sortedBuiltInExpressionsList.add(exp);
             } else if (exp.isCustom() && exp.amHealthy()) {
@@ -1500,6 +1525,13 @@ public class ExpressionBuilderController implements Initializable {
         });
         brokenExpressionsListView.setItems(null);
         brokenExpressionsListView.setItems(items);
+
+        items = FXCollections.observableArrayList(sortedReferenceMaterialValuesList);
+        items = items.sorted((Expression exp1, Expression exp2) -> {
+            return exp1.getName().compareToIgnoreCase(exp2.getName());
+        });
+        referenceMaterialsListView.setItems(null);
+        referenceMaterialsListView.setItems(items);
     }
 
     private void populateRatiosListView() {
@@ -1518,7 +1550,7 @@ public class ExpressionBuilderController implements Initializable {
         for (Map.Entry<String, String> op : OPERATIONS_MAP.entrySet()) {
             //Operator '$$' is not available to users
             if (!op.getKey().equals("$$")) {
-                operationStrings.add(op.getKey() + OPERATIONFLAGDELIMITER + op.getValue());
+                operationStrings.add(op.getKey() + OPERATION_FLAG_DELIMITER + op.getValue());
                 listOperators.add(op.getKey());
             }
         }
@@ -1583,14 +1615,14 @@ public class ExpressionBuilderController implements Initializable {
     private void populateNumberListViews() {
         // constants and numbers ===============================================
         List<String> constantStrings = new ArrayList<>();
-        constantStrings.add(NUMBERSTRING + OPERATIONFLAGDELIMITER + "placeholder for number");
+        constantStrings.add(NUMBERSTRING + OPERATION_FLAG_DELIMITER + "placeholder for number");
 
         for (Map.Entry<String, ExpressionTreeInterface> constant : squidProject.getTask().getNamedConstantsMap().entrySet()) {
-            constantStrings.add(constant.getKey() + OPERATIONFLAGDELIMITER + ((ConstantNode) constant.getValue()).getValue());
+            constantStrings.add(constant.getKey() + OPERATION_FLAG_DELIMITER + ((ConstantNode) constant.getValue()).getValue());
         }
 
         for (Map.Entry<String, ExpressionTreeInterface> constant : squidProject.getTask().getNamedParametersMap().entrySet()) {
-            constantStrings.add(constant.getKey() + OPERATIONFLAGDELIMITER + ((ConstantNode) constant.getValue()).getValue());
+            constantStrings.add(constant.getKey() + OPERATION_FLAG_DELIMITER + ((ConstantNode) constant.getValue()).getValue());
         }
 
         ObservableList<String> items = FXCollections.observableArrayList(constantStrings);
@@ -2464,7 +2496,8 @@ public class ExpressionBuilderController implements Initializable {
                     if (res == null) {
                         for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
                             if (exname.equalsIgnoreCase(r.getRatioName())) {
-                                Expression exp = new Expression(squidProject.getTask().getNamedExpressionsMap().get(r.getRatioName()), "[\"" + r.getRatioName() + "\"]", false);
+                                Expression exp = new Expression(
+                                        squidProject.getTask().getNamedExpressionsMap().get(r.getRatioName()), "[\"" + r.getRatioName() + "\"]", false, false);
                                 exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                                 exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                                 exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
@@ -3387,7 +3420,7 @@ public class ExpressionBuilderController implements Initializable {
 
         public PresentationTextNode(String text) {
             super(text);
-            this.fontSize = EXPRESSIONBUILDERDEFAULTFONTSIZE + 3;
+            this.fontSize = EXPRESSION_BUILDER_DEFAULT_FONTSIZE + 3;
             updateFontSize();
             if (text.equals(UNVISIBLEWHITESPACEPLACEHOLDER) || text.equals(VISIBLEWHITESPACEPLACEHOLDER)) {
                 this.isWhiteSpace = true;
@@ -3438,7 +3471,7 @@ public class ExpressionBuilderController implements Initializable {
             super(text);
             this.regularColor = Color.GREEN;
             setFill(regularColor);
-            this.fontSize = EXPRESSIONBUILDERDEFAULTFONTSIZE + 3;
+            this.fontSize = EXPRESSION_BUILDER_DEFAULT_FONTSIZE + 3;
             updateFontSize();
         }
     }
@@ -3500,7 +3533,7 @@ public class ExpressionBuilderController implements Initializable {
             this.text = text;
             this.popupShowing = false;
 
-            this.fontSize = EXPRESSIONBUILDERDEFAULTFONTSIZE;
+            this.fontSize = EXPRESSION_BUILDER_DEFAULT_FONTSIZE;
             updateFontSize();
 
             updateMode(currentMode.get());
@@ -3808,12 +3841,12 @@ public class ExpressionBuilderController implements Initializable {
                     success = true;
                 } //If copying a node from the lists
                 else if (db.hasString()) {
-                    String content = db.getString().split(OPERATIONFLAGDELIMITER)[0];
+                    String content = db.getString().split(OPERATION_FLAG_DELIMITER)[0];
                     //Insert the right type of node
-                    if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(OPERATIONFLAGDELIMITER))) {
+                    if ((dragOperationOrFunctionSource.get() != null) && (!db.getString().contains(OPERATION_FLAG_DELIMITER))) {
                         // case of function, make a series of objects
                         insertFunctionIntoExpressionTextFlow(content, ord);
-                    } else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(OPERATIONFLAGDELIMITER))) {
+                    } else if ((dragOperationOrFunctionSource.get() != null) && (db.getString().contains(OPERATION_FLAG_DELIMITER))) {
                         // case of operation
                         insertOperationIntoExpressionTextFlow(content, ord);
                     } else if ((dragNumberSource.get() != null) && content.contains(NUMBERSTRING)) {
