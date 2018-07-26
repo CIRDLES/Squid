@@ -189,7 +189,6 @@ public class SquidUIController implements Initializable {
 
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
-
         //Task menu
         newSquid3TaskMenuItem.setDisable(false);
         selectSquid3TaskFromLibraryMenu.setDisable(false);
@@ -967,15 +966,6 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
     }
 
-    @FXML
-    private void referenceMaterialTopsoilAction(ActionEvent event) {
-
-        mainPane.getChildren().remove(topsoilPlotUI);
-        squidProject.getTask().buildSquidSpeciesModelList();
-        launchVisualizations();
-        showUI(topsoilPlotUI);
-    }
-
     private void launchVisualizations() {
         try {
             topsoilPlotUI = FXMLLoader.load(getClass().getResource("plots/Plots.fxml"));
@@ -1031,25 +1021,14 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
-
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
-//
-//        for (int i = 0; i < report.length; i++) {
-//            for (int j = 0; j < report[0].length; j++) {
-//                System.out.print(report[i][j] + ",  ");
-//            }
-//            System.out.println();
-//        }
-//        
         writeAndOpenReportTableFiles(report, "ReferenceMaterialReportTable.csv");
     }
 
     @FXML
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
-
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
-
         writeAndOpenReportTableFiles(report, "UnknownsReportTable.csv");
     }
 
@@ -1072,5 +1051,24 @@ public class SquidUIController implements Initializable {
         ReportSerializerToCSV.writeCSVReport(true, reportTableFileRaw, report);
 
         org.cirdles.squid.gui.utilities.BrowserControl.showURI(reportTableFile.getCanonicalPath());
+    }
+
+    @FXML
+    private void referenceMaterialPlotsAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = PlotsController.FractionTypes.REFERENCE_MATERIAL;
+        launchPlots();
+    }
+
+    @FXML
+    private void unknownPlotsAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = PlotsController.FractionTypes.UNKNOWN;
+        launchPlots();
+    }
+
+    private void launchPlots() {
+        mainPane.getChildren().remove(topsoilPlotUI);
+        squidProject.getTask().buildSquidSpeciesModelList();
+        launchVisualizations();
+        showUI(topsoilPlotUI);
     }
 }

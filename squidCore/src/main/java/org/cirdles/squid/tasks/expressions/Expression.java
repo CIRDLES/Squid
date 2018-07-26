@@ -54,6 +54,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     private String notes;
     private String excelExpressionString;
     private boolean squidSwitchNU;
+    private boolean referenceMaterialValue;
     private ExpressionTreeInterface expressionTree;
     private String parsingStatusReport;
     private List<String> argumentAudit;
@@ -66,17 +67,18 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public Expression(String name, String excelExpressionString) {
-        this(new ExpressionTree(name), excelExpressionString, false);
+        this(new ExpressionTree(name), excelExpressionString, false, false);
     }
 
-    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU) {
-        this(expressionTree, excelExpressionString, squidSwitchNU, "");
+    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU, boolean referenceMaterialValue) {
+        this(expressionTree, excelExpressionString, squidSwitchNU, referenceMaterialValue, "");
     }
 
-    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU, String notes) {
+    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU, boolean referenceMaterialValue, String notes) {
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
         this.squidSwitchNU = squidSwitchNU;
+        this.referenceMaterialValue = referenceMaterialValue;
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
@@ -270,6 +272,20 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
      */
     public void setSquidSwitchNU(boolean squidSwitchNU) {
         this.squidSwitchNU = squidSwitchNU;
+    }
+
+    /**
+     * @return the referenceMaterialValue
+     */
+    public boolean isReferenceMaterialValue() {
+        return referenceMaterialValue;
+    }
+
+    /**
+     * @param referenceMaterialValue the referenceMaterialValue to set
+     */
+    public void setReferenceMaterialValue(boolean referenceMaterialValue) {
+        this.referenceMaterialValue = referenceMaterialValue;
     }
 
     /**

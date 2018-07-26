@@ -102,6 +102,19 @@ public class PlotsController implements Initializable {
         }
     }
 
+    public static FractionTypes fractionTypeSelected = FractionTypes.REFERENCE_MATERIAL;
+
+    public static enum FractionTypes {
+        REFERENCE_MATERIAL("REFERENCE_MATERIAL"),
+        UNKNOWN("UNKNOWN");
+
+        private String plotType;
+
+        private FractionTypes(String plotType) {
+            this.plotType = plotType;
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -116,12 +129,22 @@ public class PlotsController implements Initializable {
     }
 
     private void showConcordiaPlot() {
-        // get type of correction
+        // default is reference materials
+        List<ShrimpFractionExpressionInterface> shrimpFractionsDetails
+                = squidProject.getTask().getReferenceMaterialSpots();
+        boolean isUnknown = false;
+        
+        if (fractionTypeSelected.compareTo(FractionTypes.UNKNOWN) == 0) {
+            shrimpFractionsDetails = squidProject.getTask().getUnknownSpots();
+            isUnknown = true;
+        }
+
+        // get type of correctionList
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
 
         plot = new TopsoilPlotWetherill(
                 "Concordia of " + correction + " for " + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
-                squidProject.getTask().getReferenceMaterialSpots());
+                shrimpFractionsDetails);
 
         Node topsoilPlotNode = plot.displayPlotAsNode();
 
@@ -139,16 +162,14 @@ public class PlotsController implements Initializable {
         plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
         plotToolBar.setPadding(Insets.EMPTY);
 
-        List<ShrimpFractionExpressionInterface> shrimpFractionsDetails
-                = squidProject.getTask().getReferenceMaterialSpots();
         List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
         data = new ArrayList<>();
 
         for (int i = 0; i < shrimpFractionsDetails.size(); i++) {
             SampleTreeNodeInterface fractionNode
-                    = new ConcordiaFractionNode(shrimpFractionsDetails.get(i), correction);
+                    = new ConcordiaFractionNode(shrimpFractionsDetails.get(i), correction, isUnknown);
             fractionNodeDetails.add(fractionNode);
-            data.add(((ConcordiaFractionNode)fractionNode).getDatum());
+            data.add(((ConcordiaFractionNode) fractionNode).getDatum());
         }
         fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
         plot.setData(data);
@@ -227,7 +248,7 @@ public class PlotsController implements Initializable {
         }
 
         fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
-        
+
         CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
                 = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
         rootItem.setExpanded(true);
@@ -252,7 +273,7 @@ public class PlotsController implements Initializable {
             final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
                     = new CheckBoxTreeItem<>(fractionNodes.get(i));
             rootItem.getChildren().add(checkBoxTreeItem);
-            checkBoxTreeItem.setSelected(!((WeightedMeanFractionNode)fractionNodes.get(i)).getRejected(i));
+            checkBoxTreeItem.setSelected(!((WeightedMeanFractionNode) fractionNodes.get(i)).getRejected(i));
             checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 ((ConcordiaFractionNode) checkBoxTreeItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
                 plot.setData(data);
@@ -356,10 +377,10 @@ public class PlotsController implements Initializable {
         private Map<String, Object> datum;
         private SimpleBooleanProperty selectedProperty;
 
-        public ConcordiaFractionNode(ShrimpFractionExpressionInterface shrimpFraction, String correction) {
+        public ConcordiaFractionNode(ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
             this.shrimpFraction = shrimpFraction;
             this.selectedProperty = new SimpleBooleanProperty(shrimpFraction.isSelected());
-            this.datum = prepareWetherillDatum(shrimpFraction, correction);
+            this.datum = prepareWetherillDatum(shrimpFraction, correction, isUnknown);
             this.datum.put("Selected", shrimpFraction.isSelected());
         }
 

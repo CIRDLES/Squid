@@ -64,7 +64,7 @@ public abstract class ReportSpecificationsAbstract {
             "", "true", "false", "0", "", "", "false", "false"
         },
         {"", "", "", "Hours", "", "getHours", "<DOUBLE>", "",
-            "", "true", "true", "2", "", "", "false", "false"
+            "", "true", "true", "5", "", "", "false", "false"
         },
         {"", "", "Stage", "X", "", "getStageX", "<INT>", "",
             "", "true", "true", "0", "", "", "false", "false"
@@ -95,7 +95,7 @@ public abstract class ReportSpecificationsAbstract {
      */
     public static final String[][] ReportCategory_CPS = new String[][]{
         {"", "", "", "", "", "getTotalCps", "<SPECIES_ARRAY>", "",
-            "", "","true", "15", "", "", "", ""
+            "", "","false", "15", "", "", "", ""
         }
     };
 
@@ -108,7 +108,7 @@ public abstract class ReportSpecificationsAbstract {
      */
     public static final String[][] ReportCategory_RawRatios = new String[][]{
         {"", "", "", "", "", "getIsotopicRatioValuesByStringName", "<RATIOS_ARRAY>", "",
-            "", "", "true", "15", "", "", "", ""
+            "", "", "false", "15", "", "", "", ""
         }
     };
 
