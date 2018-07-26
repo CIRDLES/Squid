@@ -42,13 +42,73 @@ public abstract class ReportSpecificationsAbstract {
             "", "false", "false", "0", "", "", "false", "false"
         }
     };
-    
+
     /**
      *
      */
     public static final String[][] ReportCategory_Fraction2 = new String[][]{
         {"", "", "", "Fraction  ", "", "getFractionID", "", "",
             "", "true", "false", "0", "", "Fraction (customizable location)", "false", "false"
+        }
+    };
+
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_SpotFundamentals = new String[][]{
+        {"", "", "", "Date/Time", "", "getDateTimeMilliseconds", "<DATE>", "",
+            "", "true", "false", "0", "", "", "false", "false"
+        },
+        {"", "", "", "Hours", "", "getHours", "<DOUBLE>", "",
+            "", "true", "true", "5", "", "", "false", "false"
+        },
+        {"", "", "Stage", "X", "", "getStageX", "<INT>", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "", "Stage", "Y", "", "getStageY", "<INT>", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "", "Stage", "Z", "", "getStageZ", "<INT>", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "", "", "Qt1y", "", "getQtlY", "<INT>", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "", "", "Qt1z", "", "getQtlZ", "<INT>", "",
+            "", "true", "true", "0", "", "", "false", "false"
+        },
+        {"", "Primary", "beam", "(na)", "", "getPrimaryBeam", "<DOUBLE>", "",
+            "", "true", "true", "2", "", "", "false", "false"
+        }
+    };
+
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_CPS = new String[][]{
+        {"", "", "", "", "", "getTotalCps", "<SPECIES_ARRAY>", "",
+            "", "","false", "15", "", "", "", ""
+        }
+    };
+
+    // Report column order =
+    //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
+    //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
+    //     needsLead, needsUranium
+    /**
+     *
+     */
+    public static final String[][] ReportCategory_RawRatios = new String[][]{
+        {"", "", "", "", "", "getIsotopicRatioValuesByStringName", "<RATIOS_ARRAY>", "",
+            "", "", "false", "15", "", "", "", ""
         }
     };
 

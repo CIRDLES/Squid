@@ -32,7 +32,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NA
  *
  * @author James F. Bowring
  */
-public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract {
+public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbstract {
 
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
@@ -43,40 +43,40 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      */
     public static final String[][] ReportCategory_CorrectionIndependentData = new String[][]{
         {"", "", "UncorrPb", "/Uconst", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PRIMARY_UTH_EQN_NAME_U, "PCT",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "", "UncorrPb", "/Thconst", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PRIMARY_UTH_EQN_NAME_TH, "PCT",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_U, "",
-            "", "true", "false", "6", "", "concentration of U", "false", "false"
+            "", "true", "false", "20", "", "concentration of U", "false", "false"
         },
-        {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH_S, "",
-            "", "true", "false", "6", "", "concentration of Th", "true", "false"
+        {"", "", "Th", "alse\", \"6\"(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH_S, "",
+            "", "true", "false", "20", "", "concentration of Th", "true", "false"
         },
         {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME_S, "PCT",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME, "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME + " %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME, "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME + " %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "Total", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 207Pb/206PbS", "PCT",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         }
 
     };
@@ -90,73 +90,73 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      */
     public static final String[][] ReportCategory_204PbCorrected = new String[][]{
         {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr%com206", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr%com208", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb* %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr ppm 206*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr ppm 208*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"204corr", "206Pb", "/238U", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 206Pb/238U Age", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "1s", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 206Pb/238U Age 1serr", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"204corr", "207Pb", "/206Pb", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 207Pb/206Pb Age", "ABS",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"204corr", "208Pb", "/232Th", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 208Pb/232Th Age", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "1s", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 208Pb/232Th Age 1serr", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"%", "Dis-", "cor-", "dant", "", "getTaskExpressionsEvaluationsPerSpotByField", "204corr Discordance", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208*/232", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208*/232 %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 238/206", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 238/206 %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/206*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/206* %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/235", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/235 %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238 %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr err corr", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         }
     };
     // Report column order =
@@ -168,43 +168,43 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      */
     public static final String[][] ReportCategory_207PbCorrected = new String[][]{
         {"", "7-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr204Pb/206Pb", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr%com206S", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr%com208S", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb*S", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb*S %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "7-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr ppm 206*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "7-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr ppm 208*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"207corr", "206Pb", "/238U", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "207corr 206Pb/238U Age", "ABS",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"207corr", "208Pb", "/232Th", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "207corr 208Pb/232Th Age", "ABS",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238 %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208*/232", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208*/232 %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         }
     };
 
@@ -217,43 +217,43 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      */
     public static final String[][] ReportCategory_208PbCorrected = new String[][]{
         {"", "8-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr204Pb/206Pb", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr%com206S", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "8-corr", "ppm", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr ppm 206*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"208corr", "206Pb", "/238U", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "208corr 206Pb/238U Age", "ABS",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"208corr", "207Pb", "/206Pb", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "208corr 207Pb/206Pb Age", "ABS",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 238/206*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 238/206* %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/206* %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/235", "PCT",
-            "", "true", "false", "6", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238 %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr err corr", "",
-            "", "true", "false", "6", "", "", "false", "false"
+            "", "true", "false", "20", "", "", "false", "false"
         }
     };
 

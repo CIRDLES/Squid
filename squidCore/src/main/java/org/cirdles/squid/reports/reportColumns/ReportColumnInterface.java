@@ -489,10 +489,14 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                 // added July 2017 to disable uncert column effect if it is not visible (making it behave as if arbitrary)
                                 if (getUncertaintyColumn().isVisible() && !getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
                                     // uncertainty column is in sigfig mode
-                                    retVal[0] = formatValueFromOneSigmaForPublicationSigDigMode(//
-                                            vm[0], vm[1],
-                                            getUncertaintyType(), Squid3Constants.getUnitConversionMoveCount(getUnits()),//
-                                            getUncertaintyColumn().getCountOfSignificantDigits());
+                                    retVal[0] = "0";
+                                    try {
+                                        retVal[0] = formatValueFromOneSigmaForPublicationSigDigMode(//
+                                                vm[0], vm[1],
+                                                getUncertaintyType(), Squid3Constants.getUnitConversionMoveCount(getUnits()),//
+                                                getUncertaintyColumn().getCountOfSignificantDigits());
+                                    } catch (Exception e) {
+                                    }
                                 }
                             }
 //                            // in either case, we have a sigfig mode for the value

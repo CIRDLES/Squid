@@ -69,28 +69,40 @@ public class TopsoilDataFactory {
         return datumList;
     }
 
-    public static Map<String, Object> prepareWetherillDatum(ShrimpFractionExpressionInterface shrimpFraction, String correction) {
+    public static Map<String, Object> prepareWetherillDatum(
+            ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
+
         Map<String, Object> datum = new HashMap<>();
+        // default is for reference materials
+        String ratioBase75 = "207Pb/235U";
+        String ratioBase68 = "206Pb/238U";
+        String errCorr = "-errcorr";
+        if (isUnknown) {
+            ratioBase75 = " 207*/235";
+            ratioBase68 = " 206*/238";
+            errCorr = " err corr";
+        }
+
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
                     "getTaskExpressionsEvaluationsPerSpotByField",
                     new Class[]{String.class});
 
-            double r207_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + "207Pb/235U"}))[0].clone()[0];
+            double r207_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase75}))[0].clone()[0];
             datum.put(X.getName(), r207_235);
             double r207_235_1Sigmabs
-                    = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + "207Pb/235U %err"}))[0].clone()[0]
+                    = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase75 + " %err"}))[0].clone()[0]
                     * r207_235 / 100.0;
             datum.put(SIGMA_X.getName(), 2.0 * r207_235_1Sigmabs);
 
-            double r206_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + "206Pb/238U"}))[0].clone()[0];
+            double r206_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase68}))[0].clone()[0];
             datum.put(Y.getName(), r206_235);
             double r206_235_1Sigmabs
-                    = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + "206Pb/238U %err"}))[0].clone()[0]
+                    = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase68 + " %err"}))[0].clone()[0]
                     * r206_235 / 100.0;
             datum.put(SIGMA_Y.getName(), 2.0 * r206_235_1Sigmabs);
 
-            double rho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + "-errcorr"}))[0].clone()[0];
+            double rho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + errCorr}))[0].clone()[0];
             datum.put(RHO.getName(), rho);
             datum.put("Selected", true);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {

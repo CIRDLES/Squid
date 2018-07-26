@@ -62,12 +62,16 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
+import org.cirdles.squid.gui.parameters.ParametersLauncher;
+import org.cirdles.squid.gui.parameters.parametersManagerGUIController;
 import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -75,15 +79,10 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
-import org.cirdles.squid.gui.parameters.ParametersLauncher;
-import org.cirdles.squid.gui.parameters.parametersManagerGUIController;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
-import org.cirdles.squid.tasks.Task;
-import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
  * FXML Controller class
@@ -145,8 +144,8 @@ public class SquidUIController implements Initializable {
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
-
-    public static ParametersLauncher squidParametersLauncher;
+    
+    private static ParametersLauncher squidParametersLauncher;
 
     @FXML
     private MenuItem newSquid3TaskMenuItem;
@@ -214,20 +213,20 @@ public class SquidUIController implements Initializable {
 
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
-
         //Task menu
         newSquid3TaskMenuItem.setDisable(false);
         selectSquid3TaskFromLibraryMenu.setDisable(false);
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
+        parametersMenu.setDisable(true);
+
+        // Expression menu
+        buildExpressionMenuMRU();
 
         //Parameters Menu
         parametersMenu.setDisable(true);
         squidLabDataMenu.setDisable(false);
-
-        // Expression menu
-        buildExpressionMenuMRU();
 
         squidParametersLauncher = new ParametersLauncher();
         setUpParametersMenu();
@@ -236,67 +235,6 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
         CalamariFileUtilities.initSampleParametersModels();
-    }
-
-    private void setUpParametersMenu() {
-        setUpPhysicalConstantsModelsMenuItems();
-        setUpReferenceMaterialsMenuItems();
-        parametersMenu.showingProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-                if (newValue.booleanValue()) {
-                    setUpPhysicalConstantsModelsMenuItems();
-                    setUpReferenceMaterialsMenuItems();
-                }
-            }
-        });
-    }
-
-    private void setUpPhysicalConstantsModelsMenuItems() {
-        List<PhysicalConstantsModel> models = squidLabData.getPhysicalConstantsModels();
-        ObservableList<MenuItem> items = FXCollections.observableArrayList();
-        physicalConstantsModelsMenu.getItems().clear();
-
-        for (PhysicalConstantsModel model : models) {
-            MenuItem item = new MenuItem(parametersManagerGUIController.getModVersionName(model));
-            item.setOnAction(param -> {
-                squidProject.getTask().setPhysicalConstantsModel(model);
-            });
-            items.add(item);
-        }
-        physicalConstantsModelsMenu.getItems().setAll(items);
-    }
-
-    private void setUpReferenceMaterialsMenuItems() {
-        List<ReferenceMaterial> models = squidLabData.getReferenceMaterials();
-        ObservableList<MenuItem> items = FXCollections.observableArrayList();
-        referenceMaterialsMenu.getItems().clear();
-
-        for (ReferenceMaterial model : models) {
-            MenuItem item = new MenuItem(parametersManagerGUIController.getModVersionName(model));
-            item.setOnAction(param -> {
-                squidProject.getTask().setReferenceMaterial(model);
-            });
-            items.add(item);
-        }
-        referenceMaterialsMenu.getItems().setAll(items);
-    }
-
-    private void verifySquidLabDataParameters() {
-        if (squidProject != null && squidProject.getTask() != null) {
-            TaskInterface task = squidProject.getTask();
-            ReferenceMaterial refMat = task.getReferenceMaterial();
-            PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
-
-            if (physConst != null && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
-                squidLabData.addPhysicalConstantsModel(physConst);
-                ParametersLauncher.setUpPhysConstCBItems();
-            }
-            if (refMat != null && !squidLabData.getReferenceMaterials().contains(refMat)) {
-                squidLabData.addReferenceMaterial(refMat);
-                ParametersLauncher.setUpRefMatCBItems();
-            }
-        }
     }
 
     private void buildProjectMenuMRU() {
@@ -374,8 +312,6 @@ public class SquidUIController implements Initializable {
             closeSquidProjectMenuItem.setDisable(false);
             projectManagerMenuItem.setDisable(false);
 
-            parametersMenu.setDisable(false);
-
             managePrawnFileMenu.setDisable(false);
             buildTaskLibraryMenu();
             manageTasksMenu.setDisable(false);
@@ -383,6 +319,7 @@ public class SquidUIController implements Initializable {
             manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            parametersMenu.setDisable(false);
 
             // log prawnFileFolderMRU
             // squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
@@ -421,8 +358,6 @@ public class SquidUIController implements Initializable {
         closeSquidProjectMenuItem.setDisable(true);
         projectManagerMenuItem.setDisable(true);
 
-        parametersMenu.setDisable(true);
-
         manageExpressionsMenu.setDisable(true);
         managePrawnFileMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
@@ -430,6 +365,7 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
         manageVisualizationsMenu.setDisable(true);
+        parametersMenu.setDisable(true);
 
         // logo
         mainPane.getChildren().get(0).setVisible(true);
@@ -1067,15 +1003,6 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
     }
 
-    @FXML
-    private void referenceMaterialTopsoilAction(ActionEvent event) {
-
-        mainPane.getChildren().remove(topsoilPlotUI);
-        squidProject.getTask().buildSquidSpeciesModelList();
-        launchVisualizations();
-        showUI(topsoilPlotUI);
-    }
-
     private void launchVisualizations() {
         try {
             topsoilPlotUI = FXMLLoader.load(getClass().getResource("plots/Plots.fxml"));
@@ -1131,16 +1058,18 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
-
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
-//
-//        for (int i = 0; i < report.length; i++) {
-//            for (int j = 0; j < report[0].length; j++) {
-//                System.out.print(report[i][j] + ",  ");
-//            }
-//            System.out.println();
-//        }
-//        
+        writeAndOpenReportTableFiles(report, "ReferenceMaterialReportTable.csv");
+    }
+
+    @FXML
+    private void unknownsReportTableAction(ActionEvent event) throws IOException {
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
+        writeAndOpenReportTableFiles(report, "UnknownsReportTable.csv");
+    }
+
+    private void writeAndOpenReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
         // output a file
         File reportsFolderParent = squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports();
         String reportsPath
@@ -1153,24 +1082,31 @@ public class SquidUIController implements Initializable {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + "ReferenceMaterialReportTable.csv");
+        File reportTableFile = new File(reportsPath + baseReportTableName);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
-        File reportTableFileRaw = new File(reportsPath + "RAW_ReferenceMaterialReportTable.csv");
+        File reportTableFileRaw = new File(reportsPath + "RAW_" + baseReportTableName);
         ReportSerializerToCSV.writeCSVReport(true, reportTableFileRaw, report);
 
         org.cirdles.squid.gui.utilities.BrowserControl.showURI(reportTableFile.getCanonicalPath());
     }
 
     @FXML
-    private void unknownsReportTableAction(ActionEvent event) {
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
+    private void referenceMaterialPlotsAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = PlotsController.FractionTypes.REFERENCE_MATERIAL;
+        launchPlots();
+    }
 
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
+    @FXML
+    private void unknownPlotsAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = PlotsController.FractionTypes.UNKNOWN;
+        launchPlots();
+    }
 
-        try {
-            FileHandler.saveReportFileCSV(true, report, primaryStageWindow);
-        } catch (IOException iOException) {
-        }
+    private void launchPlots() {
+        mainPane.getChildren().remove(topsoilPlotUI);
+        squidProject.getTask().buildSquidSpeciesModelList();
+        launchVisualizations();
+        showUI(topsoilPlotUI);
     }
 
     @FXML
@@ -1181,6 +1117,67 @@ public class SquidUIController implements Initializable {
     @FXML
     private void openParametersManagerRefMat(ActionEvent event) {
         squidParametersLauncher.launchParametersManager(true);
+    }
+
+    private void setUpParametersMenu() {
+        setUpPhysicalConstantsModelsMenuItems();
+        setUpReferenceMaterialsMenuItems();
+        parametersMenu.showingProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+                if (newValue.booleanValue()) {
+                    setUpPhysicalConstantsModelsMenuItems();
+                    setUpReferenceMaterialsMenuItems();
+                }
+            }
+        });
+    }
+
+    private void setUpPhysicalConstantsModelsMenuItems() {
+        List<PhysicalConstantsModel> models = squidLabData.getPhysicalConstantsModels();
+        ObservableList<MenuItem> items = FXCollections.observableArrayList();
+        physicalConstantsModelsMenu.getItems().clear();
+
+        for (PhysicalConstantsModel model : models) {
+            MenuItem item = new MenuItem(parametersManagerGUIController.getModVersionName(model));
+            item.setOnAction(param -> {
+                squidProject.getTask().setPhysicalConstantsModel(model);
+            });
+            items.add(item);
+        }
+        physicalConstantsModelsMenu.getItems().setAll(items);
+    }
+
+    private void setUpReferenceMaterialsMenuItems() {
+        List<ReferenceMaterial> models = squidLabData.getReferenceMaterials();
+        ObservableList<MenuItem> items = FXCollections.observableArrayList();
+        referenceMaterialsMenu.getItems().clear();
+
+        for (ReferenceMaterial model : models) {
+            MenuItem item = new MenuItem(parametersManagerGUIController.getModVersionName(model));
+            item.setOnAction(param -> {
+                squidProject.getTask().setReferenceMaterial(model);
+            });
+            items.add(item);
+        }
+        referenceMaterialsMenu.getItems().setAll(items);
+    }
+
+    private void verifySquidLabDataParameters() {
+        if (squidProject != null && squidProject.getTask() != null) {
+            TaskInterface task = squidProject.getTask();
+            ReferenceMaterial refMat = task.getReferenceMaterial();
+            PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
+
+            if (physConst != null && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
+                squidLabData.addPhysicalConstantsModel(physConst);
+                ParametersLauncher.setUpPhysConstCBItems();
+            }
+            if (refMat != null && !squidLabData.getReferenceMaterials().contains(refMat)) {
+                squidLabData.addReferenceMaterial(refMat);
+                ParametersLauncher.setUpRefMatCBItems();
+            }
+        }
     }
 
 }

@@ -33,6 +33,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_N
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_TH;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_U;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 
 /**
@@ -165,6 +166,14 @@ public class TaskSquid25 implements Serializable {
                             prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
                             SQUID_TH_U_EQN_NAME,
                             true,
+                            false,
+                            false,
+                            true,
+                            true, false));
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
+                            SQUID_TH_U_EQN_NAME_S,
+                            false,
                             true,
                             false,
                             true,

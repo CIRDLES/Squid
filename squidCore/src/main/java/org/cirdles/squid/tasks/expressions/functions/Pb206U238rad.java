@@ -31,7 +31,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class Pb206U238rad extends Function {
 
-   // private static final long serialVersionUID = -6711265919551953531L;
+    private static final long serialVersionUID = -2586058958550228458L;
 
     /**
      * Provides the functionality of Squid's agePb76 by calling pbPbAge and
@@ -56,8 +56,8 @@ public class Pb206U238rad extends Function {
 
     /**
      * Requires that child 0 is a VariableNode that evaluates to a double array
-     * with column 1 representing the 206Pb/238U Age with a row for each member of
-     * shrimpFractions.
+     * with column 1 representing the 206Pb/238U Age with a row for each member
+     * of shrimpFractions.
      *
      * @param childrenET list containing child 0
      * @param shrimpFractions a list of shrimpFractions
@@ -73,9 +73,9 @@ public class Pb206U238rad extends Function {
         try {
             double[] age = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] pb206U238rad = org.cirdles.ludwig.squid25.PbUTh_2.pb206U238rad(
-                    age[0], 
+                    age[0],
                     lambda238);
-                    
+
             retVal = new Object[][]{{pb206U238rad[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0}};
