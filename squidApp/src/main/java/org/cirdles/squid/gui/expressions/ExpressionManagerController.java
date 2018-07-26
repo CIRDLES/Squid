@@ -408,7 +408,8 @@ public class ExpressionManagerController implements Initializable {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
                 expressionNameTextField.getText().length() == 0 ? "Anonymous" : expressionNameTextField.getText(),
                 expressionExcelTextArea.getText().trim().replace("\n", ""),
-                currentExpression.isSquidSwitchNU());
+                currentExpression.isSquidSwitchNU(), 
+                currentExpression.isReferenceMaterialValue());
 
         graphedExpressionTree = exp.getExpressionTree();
         // to detect ratios of interest

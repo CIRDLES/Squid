@@ -30,7 +30,6 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
  */
 public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecificationsAbstract {
 
-
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
     //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
@@ -85,7 +84,6 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "Uncorr", "Pb/U", "const", "", "getTaskExpressionsEvaluationsPerSpotByField", "UncorrPb/Uconst", "PCT",
             "", "true", "false", "20", "true", "232/238 ratio", "false", "false"
         }
-
     };
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
@@ -116,9 +114,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb* %err", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
-        
-        
-        {"4-corr", "207Pb", "206Pb", "age","Ma",  "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/206Pbage", "ABS",
+        {"4-corr", "207Pb", "206Pb", "age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/206Pbage", "ABS",
             "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "4-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/206Pb", "",

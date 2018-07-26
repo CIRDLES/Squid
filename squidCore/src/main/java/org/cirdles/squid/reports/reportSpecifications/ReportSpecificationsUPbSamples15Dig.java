@@ -68,7 +68,18 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME + " %err", "",
             "", "true", "false", "20", "", "", "false", "false"
-        },};
+        },
+        {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS", "",
+            "", "true", "false", "20", "", "", "false", "false"
+        },
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS %err", "",
+            "", "true", "false", "20", "", "", "false", "false"
+        },
+        {"", "Total", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 207Pb/206PbS", "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
+        }
+
+    };
 
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
@@ -209,6 +220,9 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
             "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr%com206S", "",
+            "", "true", "false", "20", "", "", "false", "false"
+        },
+        {"", "8-corr", "ppm", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr ppm 206*", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
         {"208corr", "206Pb", "/238U", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "208corr 206Pb/238U Age", "ABS",

@@ -92,7 +92,8 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("age8corrWithErr", "age8corrWithErr");
         SQUID_FUNCTIONS_MAP.put("age7CorrPb8Th2WithErr", "age7CorrPb8Th2WithErr");
         SQUID_FUNCTIONS_MAP.put("rad8corPb7U5WithErr", "rad8corPb7U5WithErr");
-        SQUID_FUNCTIONS_MAP.put("rad8corConcRho","rad8corConcRho");
+        SQUID_FUNCTIONS_MAP.put("rad8corConcRho", "rad8corConcRho");
+        SQUID_FUNCTIONS_MAP.put("pb76", "pb76");
         SQUID_FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
         SQUID_FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
         SQUID_FUNCTIONS_MAP.put("pb206U238rad", "pb206U238rad");
@@ -225,6 +226,7 @@ public abstract class Function
     public static OperationOrFunctionInterface rad8corPb7U5WithErr() {
         return new Rad8corPb7U5WithErr();
     }
+
     /**
      *
      * @return
@@ -232,6 +234,15 @@ public abstract class Function
     public static OperationOrFunctionInterface rad8corConcRho() {
         return new Rad8corConcRho();
     }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface pb76() {
+        return new Pb76();
+    }
+
     /**
      *
      * @return

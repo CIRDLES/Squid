@@ -2600,10 +2600,10 @@ public class ExpressionBuilderController implements Initializable {
 
         String fullText = expressionString.get();
 
-        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
-                expressionNameTextField.getText(),
+        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(expressionNameTextField.getText(),
                 fullText,
-                NUSwitchCheckBox.isSelected()
+                NUSwitchCheckBox.isSelected(), 
+                selectedExpression.get().isReferenceMaterialValue()
         );
 
         exp.setNotes(notesTextArea.getText());
@@ -2626,16 +2626,17 @@ public class ExpressionBuilderController implements Initializable {
 
     private Expression copySelectedExpression() {
 
-        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
-                selectedExpression.get().getName(),
+        Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(selectedExpression.get().getName(),
                 selectedExpression.get().getExcelExpressionString(),
-                selectedExpression.get().isSquidSwitchNU()
+                selectedExpression.get().isSquidSwitchNU(),
+                selectedExpression.get().isReferenceMaterialValue()
         );
 
         ExpressionTree expTreeCopy = (ExpressionTree) exp.getExpressionTree();
         ExpressionTree expTree = (ExpressionTree) selectedExpression.get().getExpressionTree();
 
         exp.setSquidSwitchNU(selectedExpression.get().isSquidSwitchNU());
+        exp.setReferenceMaterialValue(selectedExpression.get().isReferenceMaterialValue());
         copyTreeTags(expTree, expTreeCopy);
 
         return exp;
