@@ -43,7 +43,7 @@ public class ExpressionXMLConverterTest {
             LnUOU.setSquidSwitchSTReferenceMaterialCalculation(true);
             LnUOU.setSquidSwitchSAUnknownCalculation(true);
             
-            Expression initialExpression = new Expression(LnUOU, "ln([\"254/238\"])", true, false);
+            Expression initialExpression = new Expression(LnUOU, "ln([\"254/238\"])", true, false, false);
             
 
             SquidSpeciesModel sm1 = new SquidSpeciesModel(0, "254", "254", "Uranium", false, "", false);

@@ -25,7 +25,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import org.cirdles.squid.core.CalamariReportsEngine;
 
 /**
  *
@@ -43,7 +42,7 @@ public final class SquidUI extends Application {
     
     public static final int PIXEL_OFFSET_FOR_MENU = 38;
     public static Window primaryStageWindow;
-    public static CalamariReportsEngine.CalamariReportFlavors calamariReportFlavor;
+    public static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors calamariReportFlavor;
     
     protected static SquidAboutWindow squidAboutWindow;
     protected static Stage primaryStage;

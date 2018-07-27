@@ -21,9 +21,6 @@ import static org.cirdles.squid.constants.Squid3Constants.lambda235;
 import static org.cirdles.squid.constants.Squid3Constants.lambda238;
 import static org.cirdles.squid.constants.Squid3Constants.uRatio;
 import static org.cirdles.squid.constants.Squid3Constants.lambda232;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_64;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_76;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_86;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -58,7 +55,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
     public Age7CorrPb8Th2WithErr() {
 
         name = "Age7CorrPb8Th2WithErr";
-        argumentCount = 8;
+        argumentCount = 11;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
@@ -67,7 +64,8 @@ public class Age7CorrPb8Th2WithErr extends Function {
             "Total 206/238, Total 206/238 1%Unct,"
             + "Total 208/232, Total 208/232 1%Unct, "
             + "Total 208/206, Total 208/206 1%Unct,"
-            + "\"Total 207/206, Total 207/206 1%Unct"};
+            + "\"Total 207/206, Total 207/206 1%Unct,"
+                + "sComm_64, sComm_6476, sComm_86"};
     }
 
     /**
@@ -97,6 +95,10 @@ public class Age7CorrPb8Th2WithErr extends Function {
             double[] totPb86percentErr = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
             double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
             double[] totPb76percentErr = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
+            double[] sComm_64 = convertObjectArrayToDoubles(childrenET.get(8).eval(shrimpFractions, task)[0]);
+            double[] sComm_76 = convertObjectArrayToDoubles(childrenET.get(9).eval(shrimpFractions, task)[0]);
+            double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(10).eval(shrimpFractions, task)[0]);
+            
             double[] age7CorrPb8Th2WithErr = org.cirdles.ludwig.squid25.PbUTh_2.age7CorrPb8Th2WithErr(
                     totPb206U238[0],
                     totPb206U238percentErr[0],
@@ -106,7 +108,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
                     totPb86percentErr[0],
                     totPb76[0],
                     totPb76percentErr[0],
-                    sComm0_64, sComm0_76, sComm0_86, lambda232, lambda235, lambda238, uRatio);
+                    sComm_64[0], sComm_76[0], sComm_86[0], lambda232, lambda235, lambda238, uRatio);
             retVal = new Object[][]{{age7CorrPb8Th2WithErr[0], age7CorrPb8Th2WithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};

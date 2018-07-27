@@ -51,13 +51,15 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     private static final long serialVersionUID = 2614344042503810733L;
 
     private String name;
-    private String notes;
     private String excelExpressionString;
     private boolean squidSwitchNU;
     private boolean referenceMaterialValue;
+    private boolean parameterValue;
     private ExpressionTreeInterface expressionTree;
-    private String parsingStatusReport;
-    private List<String> argumentAudit;
+    private String notes;
+
+    private transient String parsingStatusReport;
+    private transient List<String> argumentAudit;
 
     /**
      * Needed for XML unmarshal
@@ -67,18 +69,31 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public Expression(String name, String excelExpressionString) {
-        this(new ExpressionTree(name), excelExpressionString, false, false);
+        this(new ExpressionTree(name), excelExpressionString, false, false, false);
     }
 
-    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU, boolean referenceMaterialValue) {
-        this(expressionTree, excelExpressionString, squidSwitchNU, referenceMaterialValue, "");
+    public Expression(
+            ExpressionTreeInterface expressionTree, 
+            String excelExpressionString, 
+            boolean squidSwitchNU, 
+            boolean referenceMaterialValue, 
+            boolean parameterValue) {
+        this(expressionTree, excelExpressionString, squidSwitchNU, referenceMaterialValue, parameterValue, "");
     }
 
-    public Expression(ExpressionTreeInterface expressionTree, String excelExpressionString, boolean squidSwitchNU, boolean referenceMaterialValue, String notes) {
+    public Expression(
+            ExpressionTreeInterface expressionTree,
+            String excelExpressionString, 
+            boolean squidSwitchNU, 
+            boolean referenceMaterialValue,
+            boolean parameterValue,
+            String notes) {
+        
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
         this.squidSwitchNU = squidSwitchNU;
         this.referenceMaterialValue = referenceMaterialValue;
+        this.parameterValue = parameterValue;
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
@@ -289,6 +304,20 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     /**
+     * @return the parameterValue
+     */
+    public boolean isParameterValue() {
+        return parameterValue;
+    }
+
+    /**
+     * @param parameterValue the parameterValue to set
+     */
+    public void setParameterValue(boolean parameterValue) {
+        this.parameterValue = parameterValue;
+    }
+
+    /**
      * @return the expressionTree
      */
     public ExpressionTreeInterface getExpressionTree() {
@@ -320,8 +349,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public String toString() {
         return name;
     }
-    
-    public boolean isCustom(){
+
+    public boolean isCustom() {
         return !getExpressionTree().isSquidSpecialUPbThExpression() && !isSquidSwitchNU();
     }
 }

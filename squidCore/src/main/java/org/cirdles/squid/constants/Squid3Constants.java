@@ -115,7 +115,7 @@ public final class Squid3Constants {
     public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
     public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
     public static final String SQUID_PPM_PARENT_EQN_NAME_TH_S = "ppmThS";
-    
+
     public static final String SQUID_TOTAL_206_238_NAME = "Total 206Pb/238US";
     public static final String SQUID_TOTAL_208_232_NAME = "Total 208Pb/232ThS";
 
@@ -125,11 +125,11 @@ public final class Squid3Constants {
     public static final double lambda232 = 4.9475E-11;
     public static final double uRatio = 137.88;
     public static final double badAge = -1.23456789;
-    public static final double sComm0_64 = 17.821;
-    public static final double sComm0_76 = 0.8741;
-    public static final double sComm0_86 = 2.1095;
-    public static final double sComm0_74 = 15.5773361;
-    public static final double sComm0_84 = 37.5933995;
+//    public static final double sComm0_64 = 17.821;
+//    public static final double sComm0_76 = 0.8741;
+////    public static final double sComm0_86 = 2.1095;
+//    public static final double sComm0_74 = 15.5773361;
+//    public static final double sComm0_84 = 37.5933995;
     public static final double PRESENT_238U235U = 137.88;
 
     public enum IndexIsoptopesEnum {
@@ -142,25 +142,25 @@ public final class Squid3Constants {
         private IndexIsoptopesEnum(String isotope) {
             this.isotope = isotope;
         }
-        
-                /**
+
+        /**
          * @return the isotope
          */
         public String getIsotope() {
             return isotope;
         }
 
-        public String getIsotopeCorrectionPrefixString(){
+        public String getIsotopeCorrectionPrefixString() {
             return isotope.substring(2, 3) + "-corr";
         }
 
     }
-    
+
     public static final int EXPRESSION_BUILDER_DEFAULT_FONTSIZE = 13;
     public static final int EXPRESSION_BUILDER_MIN_FONTSIZE = 11;
     public static final int EXPRESSION_BUILDER_MAX_FONTSIZE = 18;
-    
-        /**
+
+    /**
      *
      */
     private static final Map<String, Integer> UnitConversions = new HashMap<>();

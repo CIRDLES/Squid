@@ -1071,4 +1071,5 @@ public class SquidUIController implements Initializable {
         launchVisualizations();
         showUI(topsoilPlotUI);
     }
+
 }

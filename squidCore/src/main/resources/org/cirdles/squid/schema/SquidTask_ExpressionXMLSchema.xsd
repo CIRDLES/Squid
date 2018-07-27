@@ -27,6 +27,7 @@
             Created: December.2016
             Revised: September.2017
             Revised: May.2018 by Ryan Barrett
+            Revised: July.2018 by Bowring
             
         </xs:documentation>
     </xs:annotation> 
@@ -36,7 +37,9 @@
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
             <xs:element name="excelExpressionString" type="xs:string"></xs:element>
-            <xs:element name="squidSwitchNU" type="xs:string"></xs:element>
+            <xs:element name="squidSwitchNU" type="xs:boolean"></xs:element>
+            <xs:element name="referenceMaterialValue" type="xs:boolean"></xs:element>
+            <xs:element name="parameterValue" type="xs:boolean"></xs:element>
             <xs:element name="expressionTree" type="ExpressionTree"></xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -69,12 +72,12 @@
                 </xs:complexType>
             </xs:element>
                           
-            <xs:element type="xs:string" name="squidSwitchSCSummaryCalculation"/>
-            <xs:element type="xs:string" name="squidSwitchSTReferenceMaterialCalculation"/>
-            <xs:element type="xs:string" name="squidSwitchSAUnknownCalculation"/>
-            <xs:element type="xs:string" name="squidSpecialUPbThExpression"/>
-            <xs:element type="xs:string" name="rootExpressionTree"/>
-            <xs:element type="xs:string" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
+            <xs:element type="xs:boolean" name="squidSwitchSCSummaryCalculation"/>
+            <xs:element type="xs:boolean" name="squidSwitchSTReferenceMaterialCalculation"/>
+            <xs:element type="xs:boolean" name="squidSwitchSAUnknownCalculation"/>
+            <xs:element type="xs:boolean" name="squidSpecialUPbThExpression"/>
+            <xs:element type="xs:boolean" name="rootExpressionTree"/>
+            <xs:element type="xs:boolean" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
             <xs:element type="xs:string" name="uncertaintyDirective"/>
             <xs:element type="xs:integer" name="index"/>
             
@@ -95,7 +98,7 @@
             <xs:element name="massStationSpeciesName" type="xs:string"></xs:element>
             <xs:element name="isotopeName" type="xs:string"></xs:element>
             <xs:element name="elementName" type="xs:string"></xs:element>
-            <xs:element name="isBackground" type="xs:string"></xs:element>
+            <xs:element name="isBackground" type="xs:boolean"></xs:element>
         </xs:sequence>
     </xs:complexType>
     
