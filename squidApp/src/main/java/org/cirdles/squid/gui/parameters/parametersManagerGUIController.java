@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -49,7 +50,6 @@ import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
-import org.cirdles.squid.parameters.util.StringComparer;
 
 /**
  * FXML Controller class
@@ -123,13 +123,13 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private TableView<DataModel> refMatConcentrationsTable;
     @FXML
-    private TableView<ObservableList<String>> physConstCorrTable;
+    private TableView<ObservableList<SimpleStringProperty>> physConstCorrTable;
     @FXML
-    private TableView<ObservableList<String>> physConstCovTable;
+    private TableView<ObservableList<SimpleStringProperty>> physConstCovTable;
     @FXML
-    private TableView<ObservableList<String>> refMatCorrTable;
+    private TableView<ObservableList<SimpleStringProperty>> refMatCorrTable;
     @FXML
-    private TableView<ObservableList<String>> refMatCovTable;
+    private TableView<ObservableList<SimpleStringProperty>> refMatCovTable;
     @FXML
     private TabPane rootTabPane;
     @FXML
@@ -176,7 +176,6 @@ public class parametersManagerGUIController implements Initializable {
         setUpLaboratoryName();
     }
 
-
     private void setUpPhysConst() {
         setUpPhysConstTextFields();
         setUpPhysConstData();
@@ -207,7 +206,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel.initializeCorrelations();
         refMatModel.generateCovariancesFromCorrelations();
     }
-    
+
     private void setUpPhysConstCB() {
         setUpPhysConstCBItems();
         physConstCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -282,24 +281,24 @@ public class parametersManagerGUIController implements Initializable {
                 getObListFromMatrix(refMatModel.getCorrModel()));
     }
 
-    private static ObservableList<ObservableList<String>> getObListFromMatrix(AbstractMatrixModel matrix) {
-        ObservableList<ObservableList<String>> obList = FXCollections.observableArrayList();
+    private static ObservableList<ObservableList<SimpleStringProperty>> getObListFromMatrix(AbstractMatrixModel matrix) {
+        ObservableList<ObservableList<SimpleStringProperty>> obList = FXCollections.observableArrayList();
         if (matrix != null && matrix.getMatrix() != null) {
             Iterator<String> colIterator = matrix.getRows().values().iterator();
-            ObservableList<String> colList = FXCollections.observableArrayList();
-            colList.add("names ↓→");
+            ObservableList<SimpleStringProperty> colList = FXCollections.observableArrayList();
+            colList.add(new SimpleStringProperty("names ↓→"));
             while (colIterator.hasNext()) {
-                colList.add(colIterator.next());
+                colList.add(new SimpleStringProperty(colIterator.next()));
             }
             obList.add(colList);
 
             double[][] matrixArray = matrix.getMatrix().getArray();
             Iterator<Entry<Integer, String>> rowIterator = matrix.getRows().entrySet().iterator();
             for (int i = 0; i < matrixArray.length; i++) {
-                ObservableList<String> row = FXCollections.observableArrayList();
-                row.add(rowIterator.next().getValue());
+                ObservableList<SimpleStringProperty> row = FXCollections.observableArrayList();
+                row.add(new SimpleStringProperty(rowIterator.next().getValue()));
                 for (int j = 0; j < matrixArray[0].length; j++) {
-                    row.add(Double.toString(matrixArray[i][j]));
+                    row.add(new SimpleStringProperty(Double.toString(matrixArray[i][j])));
                 }
                 obList.add(row);
             }
@@ -308,22 +307,67 @@ public class parametersManagerGUIController implements Initializable {
         return obList;
     }
 
-    private static void initializeTableWithObList(TableView<ObservableList<String>> table,
-            ObservableList<ObservableList<String>> obList) {
+    private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
+            ObservableList<ObservableList<SimpleStringProperty>> obList) {
         if (obList.size() > 0) {
-            ObservableList<String> cols = obList.remove(0);
+            ObservableList<SimpleStringProperty> cols = obList.remove(0);
             table.getColumns().clear();
             for (int i = 0; i < cols.size(); i++) {
-                TableColumn<ObservableList<String>, String> col = new TableColumn(cols.get(i));
+                TableColumn<ObservableList<SimpleStringProperty>, String> col = new TableColumn<>(cols.get(i).get());
                 final int colNum = i;
-                col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(trimTrailingZeroes(param.getValue().get(colNum))));
                 col.setSortable(false);
-                col.setCellFactory(TextFieldTableCell.<ObservableList<String>>forTableColumn());
+                col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());               
+                col.setCellValueFactory(param -> new SimpleStringObservableValue(param.getValue().get(colNum)));
+                col.setOnEditCommit(value -> {
+                    ObservableList<ObservableList<SimpleStringProperty>> items = value.getTableView().getItems();
+                    ObservableList<SimpleStringProperty> rows = items.get(value.getTablePosition().getRow());
+                    rows.set(value.getTablePosition().getColumn(), new SimpleStringProperty(value.getNewValue()));
+                });
                 table.getColumns().add(col);
             }
             table.setItems(obList);
             table.refresh();
         }
+    }
+    
+    public class SimpleStringObservableValue implements ObservableValue {
+        private SimpleStringProperty value;
+        
+        public SimpleStringObservableValue (SimpleStringProperty value) {
+            this.value = value;
+        }
+
+        @Override
+        public void addListener(ChangeListener listener) {
+            value.addListener(listener);
+        }
+
+        @Override
+        public void removeListener(ChangeListener listener) {
+            value.removeListener(listener);
+        }
+
+        @Override
+        public Object getValue() {
+            return value.get();
+        }
+        
+        public void setValue(Object ob) {
+            if(ob instanceof SimpleStringProperty) {
+                value = (SimpleStringProperty) ob;
+            }
+        }
+
+        @Override
+        public void addListener(InvalidationListener listener) {
+            value.addListener(listener);
+        }
+
+        @Override
+        public void removeListener(InvalidationListener listener) {
+            value.removeListener(listener);
+        }
+        
     }
 
     private void setUpPhysConstData() {
@@ -343,7 +387,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatDataTable.getColumns().add(col);
         }
 
-        TableColumn measuredCol = new TableColumn("measured");
+        TableColumn measuredCol = new TableColumn<>("measured");
         measuredCol.setCellValueFactory(new PropertyValueFactory("isMeasured"));
         measuredCol.setSortable(false);
         refMatDataTable.getColumns().add(measuredCol);
@@ -581,8 +625,7 @@ public class parametersManagerGUIController implements Initializable {
         physConstCorrTable.setEditable(isEditable);
         physConstCorrTable.getColumns().get(0).setEditable(false);
 
-        physConstCovTable.setEditable(isEditable);
-        physConstCovTable.getColumns().get(0).setEditable(false);
+        physConstCovTable.setEditable(false);
 
         molarMassesTextArea.setEditable(isEditable);
 
@@ -618,8 +661,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatCorrTable.setEditable(isEditable);
         refMatCorrTable.getColumns().get(0).setEditable(false);
 
-        refMatCovTable.setEditable(isEditable);
-        refMatCovTable.getColumns().get(0).setEditable(false);
+        refMatCovTable.setEditable(false);
 
         refMatCommentsArea.setEditable(isEditable);
         refMatReferencesArea.setEditable(isEditable);
@@ -761,7 +803,6 @@ public class parametersManagerGUIController implements Initializable {
         setUpPhysConstCBItems();
         physConstCB.getSelectionModel().select(getModVersionName(physConstModel));
         physConstEditable(false);
-        setUpPhysConst();
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
         squidLabData.storeState();
     }
@@ -804,6 +845,8 @@ public class parametersManagerGUIController implements Initializable {
         }
         refMatModel.setValues(values);
         refMatModel.setDataMeasured(isMeasures);
+
+        refMatModel.setRhos(getRhosFromTable(refMatCorrTable));
 
         ObservableList<DataModel> concentrationsData = refMatConcentrationsTable.getItems();
         ValueModel[] concentrations = new ValueModel[concentrationsData.size()];
@@ -889,26 +932,31 @@ public class parametersManagerGUIController implements Initializable {
         isEditingCurrRefMat = true;
     }
 
-    private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<String>> table) {
+    private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<SimpleStringProperty>> table) {
         Map<String, BigDecimal> rhos = new HashMap<>();
+        table.setEditable(false);
 
         if (table.getColumns().size() > 0) {
-            ObservableList<TableColumn<ObservableList<String>, ?>> colHeaders = table.getColumns();
-            ObservableList<ObservableList<String>> items = table.getItems();
+            ObservableList<TableColumn<ObservableList<SimpleStringProperty>, ?>> colHeaders = table.getColumns();
+            ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
             ObservableList<String> headerNames = FXCollections.observableArrayList();
             for (int i = 0; i < colHeaders.size(); i++) {
                 headerNames.add(colHeaders.get(i).getText());
             }
 
             for (int i = 0; i < items.size(); i++) {
-                ObservableList<String> currItem = items.get(i);
+                ObservableList<SimpleStringProperty> currItem = items.get(i);
                 for (int j = 1; j < currItem.size(); j++) {
-                    if (i + 1 > j) {
-                        String val = currItem.get(j);
+                    if (i + 1 != j) {
+                        String val = currItem.get(j).get();
                         if (Double.parseDouble(val) != 0) {
-                            String key = "rhoR" + headerNames.get(j).substring(1)
-                                    + "__" + currItem.get(0);
-                            rhos.put(key, new BigDecimal(val));
+                            String key = "rho" + headerNames.get(j).substring(0, 1).toUpperCase()
+                                    + headerNames.get(j).substring(1) + "__" + currItem.get(0).get();
+                            String reverseKey = "rho" + currItem.get(0).get().substring(0, 1).toUpperCase()
+                                    + currItem.get(0).get().substring(1) + "__" + headerNames.get(j);
+                            if (!rhos.containsKey(reverseKey)) {
+                                rhos.put(key, new BigDecimal(val));
+                            }
                         }
                     }
                 }
