@@ -26,6 +26,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
 
 /**
  * Modified from ET_Redux July 2018
@@ -231,11 +232,8 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"208corr", "207Pb", "/206Pb", "Age", "", "getTaskExpressionsEvaluationsPerSpotByField", "208corr 207Pb/206Pb Age", "ABS",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 238/206*", "",
-            "", "true", "false", "20", "", "", "false", "false"
-        },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 238/206* %err", "",
-            "", "true", "false", "20", "", "", "false", "false"
+        {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", EXP_8CORR_238_206_STAR, "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*", "",
             "", "true", "false", "20", "", "", "false", "false"

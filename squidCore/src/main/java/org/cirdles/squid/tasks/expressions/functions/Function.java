@@ -124,6 +124,8 @@ public abstract class Function
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(SQUID_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(LOGIC_FUNCTIONS_MAP);
+
+        FUNCTIONS_MAP.put("valueModel", "valueModel");
     }
 
     public Function() {
@@ -369,6 +371,14 @@ public abstract class Function
 
     public static OperationOrFunctionInterface wtdMeanACalc() {
         return new WtdMeanACalc();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface valueModel() {
+        return new ValueModel();
     }
 
     /**

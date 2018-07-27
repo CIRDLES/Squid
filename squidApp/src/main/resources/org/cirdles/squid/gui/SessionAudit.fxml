@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sessionVBox" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.SessionAuditController">
+<VBox fx:id="sessionVBox" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="20.0">
          <children>
-            <Label style="-fx-font-size: 14;" text="Session Audit: note that spot name duplicates are suffixed with '-DUP-n'" />
-            <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#duplicatesChecked" text="Display Duplicates Only" textFill="#ee3704">
+            <Label style="-fx-font-size: 14;" text="Session Spot Name Audit" />
+            <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#duplicatesChecked" text="Display Duplicates Only: note that spot name duplicates are suffixed with '-DUP-n'" textFill="#ee3704">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>

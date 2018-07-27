@@ -19,7 +19,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.lambda232;
 import static org.cirdles.squid.constants.Squid3Constants.lambda238;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_86;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -52,7 +51,7 @@ public class Age8corrWithErr extends Function {
     public Age8corrWithErr() {
 
         name = "Age8corrWithErr";
-        argumentCount = 6;
+        argumentCount = 7;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
@@ -60,7 +59,7 @@ public class Age8corrWithErr extends Function {
         labelsForInputValues = new String[]{
             "Total 206/238, Total 206/238 1SigmaUnct, "
             + "Total 208/232, Total 208/232 1SigmaUnct,"
-            + "232/238, 232/238 1SigmaUnct"};
+            + "232/238, 232/238 1SigmaUnct, sComm_86"};
     }
 
     /**
@@ -88,6 +87,8 @@ public class Age8corrWithErr extends Function {
             double[] totPb8Th2err = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
             double[] th2U8 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
             double[] th2U8err = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
+            double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
+
             double[] age8corrWithErr = org.cirdles.ludwig.isoplot3.Pub.age8corrWithErr(
                     totPb6U8[0],
                     totPb6U8err[0],
@@ -95,7 +96,8 @@ public class Age8corrWithErr extends Function {
                     totPb8Th2err[0],
                     th2U8[0],
                     th2U8err[0],
-                    sComm0_86, lambda232, lambda238);
+                    sComm_86[0],
+                    lambda232, lambda238);
             retVal = new Object[][]{{age8corrWithErr[0], age8corrWithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};

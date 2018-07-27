@@ -20,8 +20,6 @@ import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.lambda238;
 import static org.cirdles.squid.constants.Squid3Constants.uRatio;
 import static org.cirdles.squid.constants.Squid3Constants.lambda232;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_76;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_86;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -48,7 +46,7 @@ public class Rad8corConcRho extends Function {
     public Rad8corConcRho() {
 
         name = "Rad8corConcRho";
-        argumentCount = 9;
+        argumentCount = 11;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
@@ -58,7 +56,8 @@ public class Rad8corConcRho extends Function {
             + "8-corr 206*/238,"
             + "Total 208/232, Total 208/232 1%Unct, "
             + "Total 207/206, Total 207/206 1%Unct,"
-            + "Total 208/206, Total 208/206 1%Unct"};
+            + "Total 208/206, Total 208/206 1%Unct,"
+                + "sComm_76, sComm_86"};
     }
 
     /**
@@ -89,6 +88,10 @@ public class Rad8corConcRho extends Function {
             double[] totPb76per = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
             double[] totPb86 = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
             double[] totPb86per = convertObjectArrayToDoubles(childrenET.get(8).eval(shrimpFractions, task)[0]);
+            double[] sComm_76 = convertObjectArrayToDoubles(childrenET.get(9).eval(shrimpFractions, task)[0]);
+            double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(10).eval(shrimpFractions, task)[0]);
+            
+            
             double[] rad8corConcRho = org.cirdles.ludwig.squid25.PbUTh_2.rad8corConcRho(
                     totPb6U8[0],
                     totPb6U8per[0],
@@ -99,7 +102,8 @@ public class Rad8corConcRho extends Function {
                     totPb76per[0],
                     totPb86[0],
                     totPb86per[0],
-                    sComm0_76, sComm0_86, uRatio, lambda232, lambda238);
+                    sComm_76[0], sComm_86[0], 
+                    uRatio, lambda232, lambda238);
             
             retVal = new Object[][]{{rad8corConcRho[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {

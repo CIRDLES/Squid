@@ -409,7 +409,8 @@ public class ExpressionManagerController implements Initializable {
                 expressionNameTextField.getText().length() == 0 ? "Anonymous" : expressionNameTextField.getText(),
                 expressionExcelTextArea.getText().trim().replace("\n", ""),
                 currentExpression.isSquidSwitchNU(), 
-                currentExpression.isReferenceMaterialValue());
+                currentExpression.isReferenceMaterialValue(), 
+                currentExpression.isParameterValue());
 
         graphedExpressionTree = exp.getExpressionTree();
         // to detect ratios of interest

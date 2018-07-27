@@ -136,7 +136,8 @@ FUNCTION :
     A V E R A G E | 
     C O U N T |
     C A L C U L A T E M E A N C O N C S T D |
-    W T D M E A N A C A L C
+    W T D M E A N A C A L C |
+    V A L U E M O D E L 
 ;
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT ']');       // array index like a[i]

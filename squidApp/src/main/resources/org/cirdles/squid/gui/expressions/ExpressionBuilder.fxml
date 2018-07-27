@@ -31,7 +31,7 @@
 
 <SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
-      <SplitPane fx:id="leftSplitPane" dividerPositions="1.0" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
+      <SplitPane fx:id="leftSplitPane" dividerPositions="0.75" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
          <items>
             <TabPane minHeight="250.0" style="-fx-tab-min-width: 114;" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="1000.0" tabMaxWidth="1000.0">
               <tabs>
@@ -41,26 +41,21 @@
                            <children>
                               <VBox alignment="TOP_CENTER" spacing="5.0" style="-fx-background-color: rgba(1,1,1,0.1);" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Accordion fx:id="expressionsAccordion" VBox.vgrow="NEVER">
+                                    <Accordion fx:id="expressionsAccordion" VBox.vgrow="SOMETIMES">
                                        <panes>
-                                          <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" text="Custom Expressions">
+                                          <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" text="Custom Expressions">
                                              <content>
                                                 <ListView fx:id="customExpressionsListView" />
                                              </content>
                                           </TitledPane>
-                                          <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" text="NU-switched Expressions with Uncts">
+                                          <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0" text="NU-switched Expressions with Uncts">
                                              <content>
                                                 <ListView fx:id="nuSwitchedExpressionsListView" />
                                              </content>
                                           </TitledPane>
-                                          <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" text="Built-In Expressions">
+                                          <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0" text="Built-In Expressions">
                                              <content>
                                                 <ListView fx:id="builtInExpressionsListView" />
-                                             </content>
-                                          </TitledPane>
-                                          <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" expanded="false" layoutX="10.0" layoutY="37.0" text="Unhealthy Expressions">
-                                             <content>
-                                                <ListView fx:id="brokenExpressionsListView" />
                                              </content>
                                           </TitledPane>
                                           <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" text="Ratios with Uncertainties">
@@ -68,9 +63,19 @@
                                                 <ListView fx:id="ratioExpressionsListView" />
                                              </content>
                                           </TitledPane>
-                                          <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" text="Reference Material Values">
+                                          <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" text="Reference Material Values">
                                              <content>
                                                 <ListView fx:id="referenceMaterialsListView" />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" text="Parameter Values">
+                                             <content>
+                                                <ListView fx:id="parametersListView" />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" text="Unhealthy Expressions">
+                                             <content>
+                                                <ListView fx:id="brokenExpressionsListView" />
                                              </content>
                                           </TitledPane>
                                        </panes>

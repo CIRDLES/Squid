@@ -336,6 +336,11 @@ public class ExpressionBuilderController implements Initializable {
     private TitledPane referenceMaterialsTitledPane;
 
     @FXML
+    private ListView<Expression> parametersListView;
+    @FXML
+    private TitledPane parametersTitledPane;
+
+    @FXML
     private ListView<Expression> globalListView;
 
     //MISC
@@ -839,6 +844,22 @@ public class ExpressionBuilderController implements Initializable {
                 }
             }
         });
+        // PARAMETER VALUES        
+        parametersListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        parametersListView.setCellFactory(new ExpressionCellFactory());
+        parametersListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        parametersListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
+            @Override
+            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
+                        selectedExpressionIsEditable.set(true);
+                        selectedExpression.set(newValue);
+                    }
+                    selectInAllPanes(newValue, false);
+                }
+            }
+        });
 
         populateExpressionListViews();
 
@@ -852,7 +873,8 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         Expression expr = new Expression(
-                                squidProject.getTask().getNamedExpressionsMap().get(newValue.getRatioName()), "[\"" + newValue.getRatioName() + "\"]", false, false);
+                                squidProject.getTask().getNamedExpressionsMap().get(newValue.getRatioName()),
+                                "[\"" + newValue.getRatioName() + "\"]", false, false, false);
                         expr.getExpressionTree().setSquidSpecialUPbThExpression(true);
                         expr.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                         expr.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
@@ -963,9 +985,40 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
 
+        if (referenceMaterialsListView.getSelectionModel().getSelectedItem() == null
+                || !referenceMaterialsListView.getSelectionModel().getSelectedItem().equals(exp)) {
+            referenceMaterialsListView.getSelectionModel().clearSelection();
+            if (referenceMaterialsListView.getItems().contains(exp)) {
+                referenceMaterialsListView.getSelectionModel().select(exp);
+                referenceMaterialsListView.scrollTo(exp);
+                expressionsAccordion.setExpandedPane(referenceMaterialsTitledPane);
+            }
+        } else {
+            found = true;
+            if (scrollIfAlreadySelected) {
+                referenceMaterialsListView.scrollTo(exp);
+                expressionsAccordion.setExpandedPane(referenceMaterialsTitledPane);
+            }
+        }
+
+        if (parametersListView.getSelectionModel().getSelectedItem() == null
+                || !parametersListView.getSelectionModel().getSelectedItem().equals(exp)) {
+            parametersListView.getSelectionModel().clearSelection();
+            if (parametersListView.getItems().contains(exp)) {
+                parametersListView.getSelectionModel().select(exp);
+                parametersListView.scrollTo(exp);
+                expressionsAccordion.setExpandedPane(parametersTitledPane);
+            }
+        } else {
+            found = true;
+            if (scrollIfAlreadySelected) {
+                parametersListView.scrollTo(exp);
+                expressionsAccordion.setExpandedPane(parametersTitledPane);
+            }
+        }
         if (found) {
             //If found in the expressions then it is not a ratio
-            ratioExpressionsListView.getSelectionModel().clearSelection();
+            parametersListView.getSelectionModel().clearSelection();
         }
 
         if (globalListView.getSelectionModel().getSelectedItem() == null
@@ -1480,12 +1533,15 @@ public class ExpressionBuilderController implements Initializable {
         List<Expression> sortedCustomExpressionsList = new ArrayList<>();
         List<Expression> sortedBrokenExpressionsList = new ArrayList<>();
         List<Expression> sortedReferenceMaterialValuesList = new ArrayList<>();
+        List<Expression> sortedParameterValuesList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
             if (exp.amHealthy() && exp.isSquidSwitchNU()) {
                 sortedNUSwitchedExpressionsList.add(exp);
             } else if (exp.isReferenceMaterialValue() && exp.amHealthy()) {
                 sortedReferenceMaterialValuesList.add(exp);
+            } else if (exp.isParameterValue() && exp.amHealthy()) {
+                sortedParameterValuesList.add(exp);
             } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU()) {
                 sortedBuiltInExpressionsList.add(exp);
             } else if (exp.isCustom() && exp.amHealthy()) {
@@ -1532,6 +1588,14 @@ public class ExpressionBuilderController implements Initializable {
         });
         referenceMaterialsListView.setItems(null);
         referenceMaterialsListView.setItems(items);
+
+        items = FXCollections.observableArrayList(sortedParameterValuesList);
+        items = items.sorted((Expression exp1, Expression exp2) -> {
+            return exp1.getName().compareToIgnoreCase(exp2.getName());
+        });
+        parametersListView.setItems(null);
+        parametersListView.setItems(items);
+
     }
 
     private void populateRatiosListView() {
@@ -2497,7 +2561,8 @@ public class ExpressionBuilderController implements Initializable {
                         for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
                             if (exname.equalsIgnoreCase(r.getRatioName())) {
                                 Expression exp = new Expression(
-                                        squidProject.getTask().getNamedExpressionsMap().get(r.getRatioName()), "[\"" + r.getRatioName() + "\"]", false, false);
+                                        squidProject.getTask().getNamedExpressionsMap().get(r.getRatioName()),
+                                        "[\"" + r.getRatioName() + "\"]", false, false, false);
                                 exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                                 exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                                 exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
@@ -2602,8 +2667,9 @@ public class ExpressionBuilderController implements Initializable {
 
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(expressionNameTextField.getText(),
                 fullText,
-                NUSwitchCheckBox.isSelected(), 
-                selectedExpression.get().isReferenceMaterialValue()
+                NUSwitchCheckBox.isSelected(),
+                selectedExpression.get().isReferenceMaterialValue(),
+                selectedExpression.get().isParameterValue()
         );
 
         exp.setNotes(notesTextArea.getText());
@@ -2629,7 +2695,8 @@ public class ExpressionBuilderController implements Initializable {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(selectedExpression.get().getName(),
                 selectedExpression.get().getExcelExpressionString(),
                 selectedExpression.get().isSquidSwitchNU(),
-                selectedExpression.get().isReferenceMaterialValue()
+                selectedExpression.get().isReferenceMaterialValue(),
+                selectedExpression.get().isParameterValue()
         );
 
         ExpressionTree expTreeCopy = (ExpressionTree) exp.getExpressionTree();

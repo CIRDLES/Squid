@@ -86,19 +86,27 @@ public class ExpressionXMLConverter implements Converter {
         writer.startNode("name");
         writer.setValue(expression.getName());
         writer.endNode();
-        
+
         writer.startNode("excelExpressionString");
         writer.setValue(expression.getExcelExpressionString());
         writer.endNode();
-        
+
         writer.startNode("squidSwitchNU");
         writer.setValue(String.valueOf(expression.isSquidSwitchNU()));
         writer.endNode();
-        
+
+        writer.startNode("referenceMaterialValue");
+        writer.setValue(String.valueOf(expression.isReferenceMaterialValue()));
+        writer.endNode();
+
+        writer.startNode("parameterValue");
+        writer.setValue(String.valueOf(expression.isParameterValue()));
+        writer.endNode();
+
         writer.startNode("expressionTree");
         context.convertAnother(expression.getExpressionTree());
         writer.endNode();
-        
+
         writer.startNode("notes");
         writer.setValue(expression.getNotes());
         writer.endNode();
@@ -129,17 +137,32 @@ public class ExpressionXMLConverter implements Converter {
         reader.moveDown();
         expression.setExcelExpressionString(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         expression.setSquidSwitchNU(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
-        
+
         reader.moveDown();
+
+        // July 2018 preserve backward compatible
+        if (reader.getNodeName().compareToIgnoreCase("referenceMaterialValue") == 0) {
+            expression.setReferenceMaterialValue(Boolean.parseBoolean(reader.getValue()));
+            reader.moveUp();
+            reader.moveDown();
+        }
+
+        // July 2018 preserve backward compatible
+        if (reader.getNodeName().compareToIgnoreCase("parameterValue") == 0) {
+            expression.setParameterValue(Boolean.parseBoolean(reader.getValue()));
+            reader.moveUp();
+            reader.moveDown();
+        }
+
         ExpressionTreeInterface expressionTree = new ExpressionTree();
         expressionTree = (ExpressionTreeInterface) context.convertAnother(expressionTree, ExpressionTree.class);
         expression.setExpressionTree(expressionTree);
         reader.moveUp();
-        
+
         reader.moveDown();
         expression.setNotes(reader.getValue());
         reader.moveUp();
