@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,7 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,6 +26,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -151,6 +152,16 @@ public class parametersManagerGUIController implements Initializable {
     private boolean isEditingCurrPhysConst;
     private boolean isEditingCurrRefMat;
 
+    private DecimalFormat physConstDataNotation;
+    private DecimalFormat refMatDataNotation;
+    private DecimalFormat refMatConcentrationsNotation;
+    @FXML
+    private Button physConstDataNotationButton;
+    @FXML
+    private Button refMatDataNotationButton;
+    @FXML
+    private Button refMatConcentrationsNotationButton;
+
     /**
      * Initializes the controller class.
      *
@@ -159,6 +170,10 @@ public class parametersManagerGUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        physConstDataNotation = getScientificNotationFormat();
+        refMatDataNotation = getScientificNotationFormat();
+        refMatConcentrationsNotation = getScientificNotationFormat();
+
         physConstModels = squidLabData.getPhysicalConstantsModels();
         physConstModel = physConstModels.get(0);
         setUpPhysConstCB();
@@ -303,7 +318,6 @@ public class parametersManagerGUIController implements Initializable {
                 obList.add(row);
             }
         }
-
         return obList;
     }
 
@@ -313,15 +327,23 @@ public class parametersManagerGUIController implements Initializable {
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
             table.getColumns().clear();
             for (int i = 0; i < cols.size(); i++) {
-                TableColumn<ObservableList<SimpleStringProperty>, String> col = new TableColumn<>(cols.get(i).get());
+                TableColumn<ObservableList<SimpleStringProperty>, String> col
+                        = new TableColumn<>(getRatioVisibleName(cols.get(i).get()));
                 final int colNum = i;
                 col.setSortable(false);
-                col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());               
-                col.setCellValueFactory(param -> new SimpleStringObservableValue(param.getValue().get(colNum)));
+                col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
+                col.setCellValueFactory(param
+                        -> new SimpleStringObservableValue(getRatioVisibleName(param.getValue().get(colNum).get())));
                 col.setOnEditCommit(value -> {
-                    ObservableList<ObservableList<SimpleStringProperty>> items = value.getTableView().getItems();
-                    ObservableList<SimpleStringProperty> rows = items.get(value.getTablePosition().getRow());
-                    rows.set(value.getTablePosition().getColumn(), new SimpleStringProperty(value.getNewValue()));
+                    if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1 && Double.parseDouble(value.getNewValue()) >= -1) {
+                        ObservableList<ObservableList<SimpleStringProperty>> items = value.getTableView().getItems();
+                        ObservableList<SimpleStringProperty> rows = items.get(value.getTablePosition().getRow());
+                        rows.set(value.getTablePosition().getColumn(), new SimpleStringProperty(value.getNewValue()));
+                    } else {
+                        SquidMessageDialog.showWarningDialog("Value Out of Range: Only values"
+                                + " in the range of [-1, 1] are allowed.", primaryStageWindow);
+                        table.refresh();
+                    }
                 });
                 table.getColumns().add(col);
             }
@@ -329,11 +351,94 @@ public class parametersManagerGUIController implements Initializable {
             table.refresh();
         }
     }
-    
+
+    @FXML
+    private void physConstDataNotationOnAction(ActionEvent event) {
+        if (physConstDataNotation.equals(getScientificNotationFormat())) {
+            physConstDataNotation = getStandardNotationFormat();
+            physConstDataNotationButton.setText("Standard Notation");
+        } else {
+            physConstDataNotation = getScientificNotationFormat();
+            physConstDataNotationButton.setText("Scientific Notation");
+        }
+        ObservableList<DataModel> models = physConstDataTable.getItems();
+        for (int i = 0; i < models.size(); i++) {
+            DataModel mod = models.get(i);
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(mod.getValue());
+            mod.setValue(physConstDataNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaABS());
+            mod.setOneSigmaABS(physConstDataNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaPCT());
+            mod.setOneSigmaPCT(physConstDataNotation.format(bigDec));
+        }
+        physConstDataTable.refresh();
+    }
+
+    @FXML
+    private void refMatDataNotationOnAction(ActionEvent event) {
+        if (refMatDataNotation.equals(getScientificNotationFormat())) {
+            refMatDataNotation = getStandardNotationFormat();
+            refMatDataNotationButton.setText("Standard Notation");
+        } else {
+            refMatDataNotation = getScientificNotationFormat();
+            refMatDataNotationButton.setText("Scientific Notation");
+        }
+        ObservableList<RefMatDataModel> models = refMatDataTable.getItems();
+        for (int i = 0; i < models.size(); i++) {
+            DataModel mod = models.get(i);
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(mod.getValue());
+            mod.setValue(refMatDataNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaABS());
+            mod.setOneSigmaABS(refMatDataNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaPCT());
+            mod.setOneSigmaPCT(refMatDataNotation.format(bigDec));
+        }
+        refMatDataTable.refresh();
+    }
+
+    @FXML
+    private void refMatConcentrationsNotationOnAction(ActionEvent event) {
+        if (refMatConcentrationsNotation.equals(getScientificNotationFormat())) {
+            refMatConcentrationsNotation = getStandardNotationFormat();
+            refMatConcentrationsNotationButton.setText("Standard Notation");
+        } else {
+            refMatConcentrationsNotation = getScientificNotationFormat();
+            refMatConcentrationsNotationButton.setText("Scientific Notation");
+        }
+        ObservableList<DataModel> models = refMatConcentrationsTable.getItems();
+        for (int i = 0; i < models.size(); i++) {
+            DataModel mod = models.get(i);
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(mod.getValue());
+            mod.setValue(refMatConcentrationsNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaABS());
+            mod.setOneSigmaABS(refMatConcentrationsNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaPCT());
+            mod.setOneSigmaPCT(refMatConcentrationsNotation.format(bigDec));
+        }
+        refMatConcentrationsTable.refresh();
+    }
+
     public class SimpleStringObservableValue implements ObservableValue {
+
         private SimpleStringProperty value;
-        
-        public SimpleStringObservableValue (SimpleStringProperty value) {
+
+        public SimpleStringObservableValue(String value) {
+            this.value = new SimpleStringProperty(value);
+        }
+
+        public SimpleStringObservableValue(SimpleStringProperty value) {
             this.value = value;
         }
 
@@ -351,9 +456,9 @@ public class parametersManagerGUIController implements Initializable {
         public Object getValue() {
             return value.get();
         }
-        
+
         public void setValue(Object ob) {
-            if(ob instanceof SimpleStringProperty) {
+            if (ob instanceof SimpleStringProperty) {
                 value = (SimpleStringProperty) ob;
             }
         }
@@ -367,7 +472,7 @@ public class parametersManagerGUIController implements Initializable {
         public void removeListener(InvalidationListener listener) {
             value.removeListener(listener);
         }
-        
+
     }
 
     private void setUpPhysConstData() {
@@ -376,7 +481,7 @@ public class parametersManagerGUIController implements Initializable {
         for (TableColumn col : columns) {
             physConstDataTable.getColumns().add(col);
         }
-        physConstDataTable.setItems(getDataModelObList(physConstModel.getValues()));
+        physConstDataTable.setItems(getDataModelObList(physConstModel.getValues(), physConstDataNotation));
         physConstDataTable.refresh();
     }
 
@@ -387,8 +492,8 @@ public class parametersManagerGUIController implements Initializable {
             refMatDataTable.getColumns().add(col);
         }
 
-        TableColumn measuredCol = new TableColumn<>("measured");
-        measuredCol.setCellValueFactory(new PropertyValueFactory("isMeasured"));
+        TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
+        measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
         measuredCol.setSortable(false);
         refMatDataTable.getColumns().add(measuredCol);
 
@@ -397,8 +502,11 @@ public class parametersManagerGUIController implements Initializable {
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
             Boolean isMeasured = refMatModel.getDataMeasured()[i];
-            RefMatDataModel mod = new RefMatDataModel(valMod.getName(), valMod.getValue(),
-                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT(), isMeasured);
+            String value = refMatDataNotation.format(valMod.getValue());
+            String oneSigmaABS = refMatDataNotation.format(valMod.getOneSigmaABS());
+            String oneSigmaPCT = refMatDataNotation.format(valMod.getOneSigmaPCT());
+            RefMatDataModel mod = new RefMatDataModel(getRatioVisibleName(valMod.getName()), value,
+                    oneSigmaABS, oneSigmaPCT, isMeasured);
             obList.add(mod);
         }
         refMatDataTable.setItems(obList);
@@ -408,49 +516,82 @@ public class parametersManagerGUIController implements Initializable {
     private void setUpConcentrations() {
         refMatConcentrationsTable.getColumns().clear();
         List<TableColumn> columns = getDataModelColumns();
-        for (TableColumn col : columns) {
+        for (TableColumn<DataModel, String> col : columns) {
             refMatConcentrationsTable.getColumns().add(col);
         }
-        refMatConcentrationsTable.setItems(getDataModelObList(refMatModel.getConcentrations()));
+        refMatConcentrationsTable.setItems(getDataModelObList(refMatModel.getConcentrations(), refMatConcentrationsNotation));
         refMatConcentrationsTable.refresh();
     }
 
     private static List<TableColumn> getDataModelColumns() {
         List<TableColumn> columns = new ArrayList<>();
 
-        TableColumn nameCol = new TableColumn("name");
-        nameCol.setCellValueFactory(new PropertyValueFactory("name"));
+        TableColumn<DataModel, String> nameCol = new TableColumn<>("name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("name"));
         nameCol.setSortable(false);
         nameCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
         columns.add(nameCol);
 
-        TableColumn valCol = new TableColumn("value");
-        valCol.setCellValueFactory(new PropertyValueFactory("value"));
+        TableColumn<DataModel, String> valCol = new TableColumn<>("value");
+        valCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("value"));
         valCol.setSortable(false);
         valCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
+        valCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<DataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setValue(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
         columns.add(valCol);
 
-        TableColumn absCol = new TableColumn("1σ ABS");
-        absCol.setCellValueFactory(new PropertyValueFactory("oneSigmaABS"));
+        TableColumn<DataModel, String> absCol = new TableColumn<>("1σ ABS");
+        absCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("oneSigmaABS"));
         absCol.setSortable(false);
         absCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
+        absCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<DataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setOneSigmaABS(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
         columns.add(absCol);
 
-        TableColumn pctCol = new TableColumn("1σ PCT");
-        pctCol.setCellValueFactory(new PropertyValueFactory("oneSigmaPCT"));
+        TableColumn<DataModel, String> pctCol = new TableColumn<>("1σ PCT");
+        pctCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("oneSigmaPCT"));
         pctCol.setSortable(false);
         pctCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
+        pctCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<DataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setOneSigmaPCT(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
         columns.add(pctCol);
 
         return columns;
     }
 
-    private ObservableList<DataModel> getDataModelObList(ValueModel[] values) {
+    private ObservableList<DataModel> getDataModelObList(ValueModel[] values, DecimalFormat numberFormat) {
         final ObservableList<DataModel> obList = FXCollections.observableArrayList();
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
-            DataModel mod = new DataModel(valMod.getName(), valMod.getValue(),
-                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT());
+            String value = numberFormat.format(valMod.getValue());
+            String oneSigmaABS = numberFormat.format(valMod.getOneSigmaABS());
+            String oneSigmaPCT = numberFormat.format(valMod.getOneSigmaPCT());
+            DataModel mod = new DataModel(getRatioVisibleName(valMod.getName()), value,
+                    oneSigmaABS, oneSigmaPCT);
             obList.add(mod);
         }
         return obList;
@@ -480,7 +621,7 @@ public class parametersManagerGUIController implements Initializable {
         for (int i = 0; i < models.length; i++) {
             ValueModel mod = models[i];
 
-            Label lab = new Label(mod.getName() + ":");
+            Label lab = new Label(getRatioVisibleName(mod.getName()) + ":");
             referencesPane.getChildren().add(lab);
             lab.setLayoutY(currHeight + 5);
             lab.setLayoutX(10);
@@ -548,6 +689,28 @@ public class parametersManagerGUIController implements Initializable {
 
     public static String getModVersionName(ParametersModel mod) {
         return mod.getModelName() + " v." + mod.getVersion();
+    }
+
+    private String getRatioVisibleName(String ratio) {
+        String retVal = ratio.replaceAll("lambda", "λ");
+        retVal = retVal.replaceAll("r206_207r", "206-Pb/207-Pb");
+        retVal = retVal.replaceAll("r206_208r", "206-Pb/208-Pb");
+        retVal = retVal.replaceAll("r206_238r", "206-Pb/238-U");
+        retVal = retVal.replaceAll("r208_232r", "208-Pb/232-Th");
+        retVal = retVal.replaceAll("r238_235s", "238-U/235-U");
+
+        return retVal;
+    }
+
+    private String getRatioHiddenName(String ratio) {
+        String retVal = ratio.replaceAll("λ", "lambda");
+        retVal = retVal.replaceAll("206-Pb/207-Pb", "r206_207r");
+        retVal = retVal.replaceAll("206-Pb/208-Pb", "r206_208r");
+        retVal = retVal.replaceAll("206-Pb/238-U", "r206_238r");
+        retVal = retVal.replaceAll("208-Pb/232-Th", "r208_232r");
+        retVal = retVal.replaceAll("238-U/235-U", "r238_235s");
+
+        return retVal;
     }
 
     @FXML
@@ -748,7 +911,7 @@ public class parametersManagerGUIController implements Initializable {
             DataModel mod = dataModels.get(i);
             ValueModel currVal = new ValueModel();
 
-            currVal.setName(mod.getName());
+            currVal.setName(getRatioHiddenName(mod.getName()));
 
             String currBigDec = mod.getValue();
             if (Double.parseDouble(currBigDec) == 0) {
@@ -822,7 +985,7 @@ public class parametersManagerGUIController implements Initializable {
             RefMatDataModel mod = dataModels.get(i);
             ValueModel currVal = new ValueModel();
 
-            currVal.setName(mod.getName());
+            currVal.setName(getRatioHiddenName(mod.getName()));
 
             String currBigDec = mod.getValue();
             if (Double.parseDouble(currBigDec) == 0) {
@@ -939,7 +1102,7 @@ public class parametersManagerGUIController implements Initializable {
         if (table.getColumns().size() > 0) {
             ObservableList<TableColumn<ObservableList<SimpleStringProperty>, ?>> colHeaders = table.getColumns();
             ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
-            ObservableList<String> headerNames = FXCollections.observableArrayList();
+            List<String> headerNames = new ArrayList<>();
             for (int i = 0; i < colHeaders.size(); i++) {
                 headerNames.add(colHeaders.get(i).getText());
             }
@@ -950,11 +1113,13 @@ public class parametersManagerGUIController implements Initializable {
                     if (i + 1 != j) {
                         String val = currItem.get(j).get();
                         if (Double.parseDouble(val) != 0) {
-                            String key = "rho" + headerNames.get(j).substring(0, 1).toUpperCase()
-                                    + headerNames.get(j).substring(1) + "__" + currItem.get(0).get();
-                            String reverseKey = "rho" + currItem.get(0).get().substring(0, 1).toUpperCase()
-                                    + currItem.get(0).get().substring(1) + "__" + headerNames.get(j);
+                            String colHeader = getRatioHiddenName(headerNames.get(j));
+                            String rowHeader = getRatioHiddenName(currItem.get(0).get());
+                            String reverseKey = "rho" + rowHeader.substring(0, 1).toUpperCase()
+                                    + rowHeader.substring(1) + "__" + colHeader;
                             if (!rhos.containsKey(reverseKey)) {
+                                String key = "rho" + colHeader.substring(0, 1).toUpperCase()
+                                        + colHeader.substring(1) + "__" + rowHeader;
                                 rhos.put(key, new BigDecimal(val));
                             }
                         }
@@ -967,7 +1132,36 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     public static String trimTrailingZeroes(String s) {
-        return s.indexOf(".") < 0 ? s : s.replaceAll("0*$", "").replaceAll("\\.$", "");
+        String retVal;
+        if (s.contains("E")) {
+            retVal = s;
+        } else {
+            retVal = s.indexOf(".") < 0 ? s : s.replaceAll("0*$", "").replaceAll("\\.$", "");
+        }
+        return retVal;
+    }
+
+    public static boolean isNumeric(String s) {
+        boolean retVal;
+        try {
+            Double.parseDouble(s);
+            retVal = true;
+        } catch (Exception e) {
+            retVal = false;
+        }
+        return retVal;
+    }
+
+    public static DecimalFormat getScientificNotationFormat() {
+        return new DecimalFormat("0.0#######################E0#############");
+    }
+
+    public static DecimalFormat getStandardNotationFormat() {
+        return new DecimalFormat("########################0.0################################");
+    }
+
+    public static void main(String[] args) {
+        System.out.print(trimTrailingZeroes("1.5E-10000"));
     }
 
     public class DataModel {
@@ -977,12 +1171,12 @@ public class parametersManagerGUIController implements Initializable {
         private SimpleStringProperty oneSigmaABS;
         private SimpleStringProperty oneSigmaPCT;
 
-        public DataModel(String name, BigDecimal value,
-                BigDecimal oneSigmaABS, BigDecimal oneSigmaPCT) {
+        public DataModel(String name, String value,
+                String oneSigmaABS, String oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
-            this.value = new SimpleStringProperty(trimTrailingZeroes(value.toPlainString()));
-            this.oneSigmaABS = new SimpleStringProperty(trimTrailingZeroes(oneSigmaABS.toPlainString()));
-            this.oneSigmaPCT = new SimpleStringProperty(trimTrailingZeroes(oneSigmaPCT.toPlainString()));
+            this.value = new SimpleStringProperty(trimTrailingZeroes(value));
+            this.oneSigmaABS = new SimpleStringProperty(trimTrailingZeroes(oneSigmaABS));
+            this.oneSigmaPCT = new SimpleStringProperty(trimTrailingZeroes(oneSigmaPCT));
         }
 
         public String getName() {
@@ -1002,19 +1196,19 @@ public class parametersManagerGUIController implements Initializable {
         }
 
         public void setName(String name) {
-            this.name.set(name);
+            this.name = new SimpleStringProperty(name);
         }
 
-        public void setValue(SimpleStringProperty value) {
-            this.value = value;
+        public void setValue(String value) {
+            this.value = new SimpleStringProperty(value);
         }
 
-        public void setOneSigmaABS(SimpleStringProperty oneSigmaABS) {
-            this.oneSigmaABS = oneSigmaABS;
+        public void setOneSigmaABS(String oneSigmaABS) {
+            this.oneSigmaABS = new SimpleStringProperty(oneSigmaABS);
         }
 
-        public void setOneSigmaPCT(SimpleStringProperty oneSigmaPCT) {
-            this.oneSigmaPCT = oneSigmaPCT;
+        public void setOneSigmaPCT(String oneSigmaPCT) {
+            this.oneSigmaPCT = new SimpleStringProperty(oneSigmaPCT);
         }
 
     }
@@ -1023,8 +1217,8 @@ public class parametersManagerGUIController implements Initializable {
 
         private CheckBox isMeasured;
 
-        public RefMatDataModel(String name, BigDecimal value,
-                BigDecimal oneSigmaABS, BigDecimal oneSigmaPCT,
+        public RefMatDataModel(String name, String value,
+                String oneSigmaABS, String oneSigmaPCT,
                 boolean isMeasured) {
             super(name, value, oneSigmaABS, oneSigmaPCT);
             this.isMeasured = new CheckBox();

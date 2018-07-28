@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -61,7 +62,8 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="physConstDataTable" layoutX="14.0" layoutY="32.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                        <TableView fx:id="physConstDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                          <Button fx:id="physConstDataNotationButton" layoutX="20.0" layoutY="2.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -169,7 +171,8 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                        <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                          <Button fx:id="refMatDataNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -198,7 +201,8 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatConcentrationsTable" layoutX="21.0" layoutY="5.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
+                                                        <TableView fx:id="refMatConcentrationsTable" layoutX="21.0" layoutY="5.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+                                          <Button fx:id="refMatConcentrationsNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatConcentrationsNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>

@@ -8,7 +8,6 @@ package org.cirdles.squid.utilities.stateUtilities;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
@@ -36,7 +35,7 @@ public class SquidLabData implements Serializable {
         SquidLabData retVal;
         try {
             File file = new File(File.separator + System.getProperty("user.home")
-                    + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator 
+                    + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
             if (file.exists() && !file.isDirectory()) {
                 retVal = SquidLabData.deserialize(file);
@@ -137,8 +136,8 @@ public class SquidLabData implements Serializable {
 
     public static void main(String[] args) {
         try {
-                SquidLabData data = getExistingSquidLabData();
-                data.storeState();
+            SquidLabData data = getExistingSquidLabData();
+            data.storeState();
         } catch (Exception e) {
             e.printStackTrace();
         }
