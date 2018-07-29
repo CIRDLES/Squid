@@ -161,11 +161,10 @@ public final class SquidProject implements Serializable {
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
-            Expression expression = this.task.generateExpressionFromRawExcelStyleText(
-                    task25Eqn.getEquationName(), 
+            Expression expression = this.task.generateExpressionFromRawExcelStyleText(task25Eqn.getEquationName(), 
                     task25Eqn.getExcelEquationString(), 
                     task25Eqn.isEqnSwitchNU(), 
-                    false);
+                    false, false);
 
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
 //            System.out.println(">>>>>   " + expressionTree.getName());

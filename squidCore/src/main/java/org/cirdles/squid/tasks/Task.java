@@ -78,6 +78,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateParameterValues;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePlaceholderExpressions;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateReferenceMaterialValues;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.overCountMeans;
@@ -254,9 +255,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void generateBuiltInExpressions() {
-        
+
         SortedSet<Expression> generateReferenceMaterialValues = generateReferenceMaterialValues();
         taskExpressionsOrdered.addAll(generateReferenceMaterialValues);
+
+        SortedSet<Expression> generateParameterValues = generateParameterValues();
+        taskExpressionsOrdered.addAll(generateParameterValues);
 
         SortedSet<Expression> generatePlaceholderExpressions = generatePlaceholderExpressions(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(generatePlaceholderExpressions);
@@ -397,10 +401,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU, boolean referenceMaterialValue) {
+    public Expression generateExpressionFromRawExcelStyleText(
+            String name,
+            String originalExpressionText,
+            boolean eqnSwitchNU,
+            boolean referenceMaterialValue,
+            boolean parameterValue) {
         Expression exp = new Expression(name, originalExpressionText);
         exp.setSquidSwitchNU(eqnSwitchNU);
         exp.setReferenceMaterialValue(referenceMaterialValue);
+        exp.setParameterValue(parameterValue);
+
         exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
         return exp;

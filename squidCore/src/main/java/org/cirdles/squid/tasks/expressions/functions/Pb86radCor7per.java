@@ -19,9 +19,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.lambda235;
 import static org.cirdles.squid.constants.Squid3Constants.lambda238;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_64;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_74;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_84;
 import static org.cirdles.squid.constants.Squid3Constants.uRatio;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -49,12 +46,14 @@ public class Pb86radCor7per extends Function {
     public Pb86radCor7per() {
 
         name = "pb86radCor7per";
-        argumentCount = 5;
+        argumentCount = 8;
         precedence = 10;
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb86radCor7per"}};
-        labelsForInputValues = new String[]{"208/206RatioAndUnct","207/206RatioAndUnct","Total206Pb/238U","Total206Pb/238U%err","207corr206Pb/238UAge"};
+        labelsForInputValues = new String[]{
+            "208/206RatioAndUnct","207/206RatioAndUnct","Total206Pb/238U","Total206Pb/238U%err","207corr206Pb/238UAge,"
+                + " sComm_64, sComm_74, sComm_84"};
     }
 
     /**
@@ -82,6 +81,9 @@ public class Pb86radCor7per extends Function {
             double[] pb6U8tot = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
             double[] pb6U8totPerr = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
             double[] age7corPb6U8 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
+            double[] sComm_64 = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
+            double[] sComm_74 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
+            double[] sComm_84 = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
 
             // convert uncertainties to percents for function call
             double pb208_206Unct = pb208_206RatioAndUnct[1] / pb208_206RatioAndUnct[0] * 100.0;
@@ -89,7 +91,8 @@ public class Pb86radCor7per extends Function {
 
             double[] pb86radCor7per = org.cirdles.ludwig.squid25.PbUTh_2.pb86radCor7per(
                     pb208_206RatioAndUnct[0], pb208_206Unct, pb207_206RatioAndUnct[0], pb207_206Unct,
-                    pb6U8tot[0], pb6U8totPerr[0], age7corPb6U8[0], sComm0_64, sComm0_74, sComm0_84,
+                    pb6U8tot[0], pb6U8totPerr[0], age7corPb6U8[0], 
+                    sComm_64[0], sComm_74[0], sComm_84[0],
                     lambda235, lambda238, uRatio);
 
             retVal = new Object[][]{{pb86radCor7per[0]}};

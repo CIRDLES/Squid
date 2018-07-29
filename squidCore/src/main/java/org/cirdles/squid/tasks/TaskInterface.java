@@ -40,7 +40,7 @@ public interface TaskInterface {
 
     public ExpressionTreeInterface findNamedExpression(String ratioName);
 
-    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU, boolean referenceMaterialValue);
+    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU, boolean referenceMaterialValue, boolean parameterValue);
 
     public void buildSquidSpeciesModelList();
 

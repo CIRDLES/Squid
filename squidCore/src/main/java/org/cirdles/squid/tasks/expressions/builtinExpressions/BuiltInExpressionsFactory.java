@@ -31,8 +31,8 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_86;
 import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -72,37 +72,73 @@ public abstract class BuiltInExpressionsFactory {
     public static Map<String, ExpressionTreeInterface> generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface sComm_74 = new ConstantNode("sComm_74", Squid3Constants.sComm0_74);//          15.5773361);
-        parameters.put(sComm_74.getName(), sComm_74);
-
-        ExpressionTreeInterface sComm_64 = new ConstantNode("sComm_64", Squid3Constants.sComm0_64);//          17.821);
-        parameters.put(sComm_64.getName(), sComm_64);
-
-        ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", Squid3Constants.sComm0_84);//          37.5933995);
-        parameters.put(sComm_84.getName(), sComm_84);
-
-        ExpressionTreeInterface sComm_86 = new ConstantNode("sComm_86", sComm0_86);
-        parameters.put(sComm_86.getName(), sComm_86);
-
-        ExpressionTreeInterface sComm_68 = new ConstantNode("sComm_68", 1.0 / sComm0_86);
-        parameters.put(sComm_68.getName(), sComm_68);
-
-        ExpressionTreeInterface sComm_76 = new ConstantNode("sComm_76", 0.8741);
-        parameters.put(sComm_76.getName(), sComm_76);
-
+//        ExpressionTreeInterface sComm_74 = new ConstantNode("sComm_74", Squid3Constants.sComm0_74);//          15.5773361);
+//        parameters.put(sComm_74.getName(), sComm_74);
+//        ExpressionTreeInterface sComm_76 = new ConstantNode("sComm_76", Squid3Constants.sComm0_76);//          
+//        parameters.put(sComm_76.getName(), sComm_76);
+//        ExpressionTreeInterface sComm_64 = new ConstantNode("sComm_64", Squid3Constants.sComm0_64);//          17.821);
+//        parameters.put(sComm_64.getName(), sComm_64);
+//        ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", Squid3Constants.sComm0_84);//          37.5933995);
+//        parameters.put(sComm_84.getName(), sComm_84);
+////        ExpressionTreeInterface sComm_86 = new ConstantNode("sComm_86", sComm0_86);
+////        parameters.put(sComm_86.getName(), sComm_86);
+//        ExpressionTreeInterface sComm_68 = new ConstantNode("sComm_68", 1.0 / sComm0_86);
+//        parameters.put(sComm_68.getName(), sComm_68);
         ExpressionTreeInterface lambda238 = new ConstantNode("lambda238", Squid3Constants.lambda238);
         parameters.put(lambda238.getName(), lambda238);
 
         ExpressionTreeInterface lambda232 = new ConstantNode("lambda232", Squid3Constants.lambda232);
         parameters.put(lambda232.getName(), lambda232);
 
-        ExpressionTreeInterface ExtPErr = new ConstantNode("ExtPErr", 0.75);
-        parameters.put("ExtPErr", ExtPErr);
+//        ExpressionTreeInterface ExtPErr = new ConstantNode("ExtPErr", 0.75);
+//        parameters.put("ExtPErr", ExtPErr);
 
         ExpressionTreeInterface L859 = new ConstantNode("L859", 0.859);
         parameters.put("L859", L859);
 
         return parameters;
+    }
+
+    public static SortedSet<Expression> generateParameterValues() {
+        SortedSet<Expression> parameterValues = new TreeSet<>();
+
+        Expression expressionsComm_64 = buildExpression("sComm_64",
+                "17.821", true, true, true);
+        expressionsComm_64.setParameterValue(true);
+        parameterValues.add(expressionsComm_64);
+
+        Expression expressionsComm_74 = buildExpression("sComm_74",
+                "15.5773361", true, true, true);
+        expressionsComm_74.setParameterValue(true);
+        parameterValues.add(expressionsComm_74);
+
+        Expression expressionsComm_84 = buildExpression("sComm_84",
+                "37.5933995", true, true, true);
+        expressionsComm_84.setParameterValue(true);
+        parameterValues.add(expressionsComm_84);
+
+        Expression expressionsComm_76 = buildExpression("sComm_76",
+                "0.8741", true, true, true);
+        expressionsComm_76.setParameterValue(true);
+        parameterValues.add(expressionsComm_76);
+
+        Expression expressionsComm_86 = buildExpression("sComm_86",
+                "2.1095", true, true, true);
+        expressionsComm_86.setParameterValue(true);
+        parameterValues.add(expressionsComm_86);
+
+        Expression expressionsComm_68 = buildExpression("sComm_68",
+                "1.0 / sComm_86", true, true, true);
+        expressionsComm_68.setParameterValue(true);
+        parameterValues.add(expressionsComm_68);
+
+        Expression expressionExtPErr  = buildExpression("ExtPErr",
+                "0.75", true, true, true);
+        expressionExtPErr.setParameterValue(true);
+        parameterValues.add(expressionExtPErr);
+
+        return parameterValues;
+
     }
 
     public static SortedSet<Expression> generateReferenceMaterialValues() {
@@ -422,11 +458,20 @@ public abstract class BuiltInExpressionsFactory {
 
         // Calculate a couple of "SampleData-only" columns:
         Expression expression7Corr46 = buildExpression("7-corr204Pb/206Pb",
-                "Pb46cor7( [\"207/206\"], [\"207corr 206Pb/238U Age\"] )", false, true, false);
+                "Pb46cor7( "
+                + "[\"207/206\"],"
+                + " [\"207corr 206Pb/238U Age\"],"
+                + "sComm_64,"
+                + "sComm_74 )", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression7Corr46);
 
         Expression expression8Corr46 = buildExpression("8-corr204Pb/206Pb",
-                "Pb46cor8( [\"208/206\"], [\"232Th/238US\"], [\"208corr 206Pb/238U Age\"] )", false, true, false);
+                "Pb46cor8( "
+                + "[\"208/206\"],"
+                + " [\"232Th/238US\"],"
+                + " [\"208corr 206Pb/238U Age\"],"
+                + "sComm_64,"
+                + "sComm_84 )", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression8Corr46);
 
         /**
@@ -501,15 +546,28 @@ public abstract class BuiltInExpressionsFactory {
 
         // ref material version
         Expression expression7corr208Pb206PbPctErr = buildExpression("7-corr208Pb*/206Pb* %err",
-                "StdPb86radCor7per([\"208/206\"], [\"207/206\"], "
-                + "[\"7-corr208Pb*/206Pb*\"], [\"204/206 (fr. 207)\"],"
-                + "Std_76)", true, false, false);
+                "StdPb86radCor7per("
+                + "[\"208/206\"], "
+                + "[\"207/206\"], "
+                + "[\"7-corr208Pb*/206Pb*\"], "
+                + "[\"204/206 (fr. 207)\"],"
+                + "Std_76,"
+                + "sComm_64,"
+                + "sComm_74,"
+                + "sComm_84)", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression7corr208Pb206PbPctErr);
 
         // sample material version
         Expression expression7corr208Pb206PbSPctErr = buildExpression("7-corr208Pb*/206Pb*S %err",
-                "Pb86radCor7per([\"208/206\"], [\"207/206\"], [\"Total 206Pb/238US\"], \n"
-                + "[\"Total 206Pb/238US %err\"],[\"207corr 206Pb/238U Age\"])", false, true, false);
+                "Pb86radCor7per("
+                + "[\"208/206\"], "
+                + "[\"207/206\"], "
+                + "[\"Total 206Pb/238US\"], "
+                + "[\"Total 206Pb/238US %err\"],"
+                + "[\"207corr 206Pb/238U Age\"],"
+                + "sComm_64,"
+                + "sComm_74,"
+                + "sComm_84)", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression7corr208Pb206PbSPctErr);
 
         return perSpotPbCorrectionsOrdered;
@@ -1073,7 +1131,8 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"Total 206Pb/238US\"],"
                 + "[\"Total 206Pb/238US %err\"] / 100 * [\"Total 206Pb/238US\"], "
                 + "[\"Total 207Pb/206PbS\"],"
-                + "[±\"Total 207Pb/206PbS\"])",
+                + "[±\"Total 207Pb/206PbS\"],"
+                + "sComm_76)",
                 false, true, false);
         samRadiogenicCols.add(expression207corr206Pb238UAgeWithErr);
 
@@ -1113,7 +1172,10 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"208/206\"], "
                 + "[%\"208/206\"], "
                 + "[\"207/206\"], "
-                + "[%\"207/206\"]) ", false, true, false);
+                + "[%\"207/206\"],"
+                + "sComm_64,"
+                + "sComm_76,"
+                + "sComm_86) ", false, true, false);
         samRadiogenicCols.add(expression207corr208Pb232ThAge);
 
         Expression expression7corr208232 = buildExpression("7-corr 208*/232",
@@ -1133,7 +1195,8 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"Total 208Pb/232ThS\"],"
                 + "[\"Total 208Pb/232ThS %err\"] / 100 * [\"Total 208Pb/232ThS\"],"
                 + "[\"232Th/238US\"], "
-                + "[±\"232Th/238US\"])", false, true, false);
+                + "[±\"232Th/238US\"],"
+                + "sComm_86)", false, true, false);
         samRadiogenicCols.add(expression208corr206Pb238UAge1SigmaErr);
 
         Expression expression8corr206238 = buildExpression("8-corr 206*/238",
@@ -1145,13 +1208,12 @@ public abstract class BuiltInExpressionsFactory {
                 + "[±\"208corr 206Pb/238U Age\"] * 100 / [\"8-corr 206*/238\"]", false, true, false);
         samRadiogenicCols.add(expression8corr206238PctErr);
 
-        Expression expression8corr238206 = buildExpression("8-corr 238/206*",
-                "1 / [\"8-corr 206*/238\"]", false, true, false);
-        samRadiogenicCols.add(expression8corr238206);
-
-        Expression expression8corr238206PctErr = buildExpression("8-corr 238/206* %err",
-                "[\"8-corr 206*/238 %err\"]", false, true, false);
-        samRadiogenicCols.add(expression8corr238206PctErr);
+        Expression expressionEXP_8CORR_238_206_STAR = buildExpression(EXP_8CORR_238_206_STAR,
+                "VALUEMODEL("
+                + "1 / [\"8-corr 206*/238\"],"
+                + "[\"8-corr 206*/238 %err\"],"
+                + "false)", false, true, false);
+        samRadiogenicCols.add(expressionEXP_8CORR_238_206_STAR);
 
         Expression expression8corr207235 = buildExpression("8-corr 207*/235",
                 "Rad8corPb7U5WithErr( "
@@ -1164,7 +1226,9 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"207/206\"],"
                 + "[%\"207/206\"],"
                 + "[\"208/206\"],"
-                + "[%\"208/206\"])", false, true, false);
+                + "[%\"208/206\"],"
+                + "sComm_76,"
+                + "sComm_86)", false, true, false);
         samRadiogenicCols.add(expression8corr207235);
 
         Expression expression8correrrcorr = buildExpression("8-corr err corr",
@@ -1177,7 +1241,9 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"207/206\"],"
                 + "[%\"207/206\"],"
                 + "[\"208/206\"],"
-                + "[%\"208/206\"])", false, true, false);
+                + "[%\"208/206\"],"
+                + "sComm_76,"
+                + "sComm_86)", false, true, false);
         samRadiogenicCols.add(expression8correrrcorr);
 
         Expression expression8corr207206 = buildExpression("8-corr 207*/206*",

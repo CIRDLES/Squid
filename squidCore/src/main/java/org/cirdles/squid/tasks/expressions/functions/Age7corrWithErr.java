@@ -20,7 +20,6 @@ import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.lambda235;
 import static org.cirdles.squid.constants.Squid3Constants.lambda238;
 import static org.cirdles.squid.constants.Squid3Constants.uRatio;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_76;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -49,12 +48,12 @@ public class Age7corrWithErr extends Function {
     public Age7corrWithErr() {
 
         name = "Age7corrWithErr";
-        argumentCount = 4;
+        argumentCount = 5;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
-        labelsForInputValues = new String[]{"Total 206/238, Total 206/238 1SigmaUnct, Total 207/206, Total 207/206 1SigmaUnct"};
+        labelsForInputValues = new String[]{"Total 206/238, Total 206/238 1SigmaUnct, Total 207/206, Total 207/206 1SigmaUnct, sComm_76"};
     }
 
     /**
@@ -80,12 +79,16 @@ public class Age7corrWithErr extends Function {
             double[] totPb6U8err = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
             double[] totPb76err = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
+            double[] sComm_76 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
+           
+            
             double[] age7corrWithErr = org.cirdles.ludwig.isoplot3.Pub.age7corrWithErr(
                     totPb6U8[0],
                     totPb6U8err[0],
                     totPb76[0],
                     totPb76err[0],
-                    sComm0_76, lambda235, lambda238, uRatio);
+                    sComm_76[0], 
+                    lambda235, lambda238, uRatio);
             retVal = new Object[][]{{age7corrWithErr[0], age7corrWithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};

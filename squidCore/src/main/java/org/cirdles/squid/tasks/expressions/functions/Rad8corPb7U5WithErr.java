@@ -20,8 +20,6 @@ import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.lambda238;
 import static org.cirdles.squid.constants.Squid3Constants.uRatio;
 import static org.cirdles.squid.constants.Squid3Constants.lambda232;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_76;
-import static org.cirdles.squid.constants.Squid3Constants.sComm0_86;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -53,7 +51,7 @@ public class Rad8corPb7U5WithErr extends Function {
     public Rad8corPb7U5WithErr() {
 
         name = "Rad8corPb7U5WithErr";
-        argumentCount = 10;
+        argumentCount = 12;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
@@ -64,7 +62,8 @@ public class Rad8corPb7U5WithErr extends Function {
             + "TotPb7U5,"
             + "Total 208/232, Total 208/232 1%Unct, "
             + "Total 207/206, Total 207/206 1%Unct,"
-            + "Total 208/206, Total 208/206 1%Unct"};
+            + "Total 208/206, Total 208/206 1%Unct,"
+                + "sComm_76, sComm_86"};
     }
 
     /**
@@ -96,6 +95,10 @@ public class Rad8corPb7U5WithErr extends Function {
             double[] totPb76per = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
             double[] totPb86 = convertObjectArrayToDoubles(childrenET.get(8).eval(shrimpFractions, task)[0]);
             double[] totPb86per = convertObjectArrayToDoubles(childrenET.get(9).eval(shrimpFractions, task)[0]);
+            double[] sComm_76 = convertObjectArrayToDoubles(childrenET.get(10).eval(shrimpFractions, task)[0]);
+            double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(11).eval(shrimpFractions, task)[0]);
+            
+            
             double[] rad8corPb7U5WithErr = org.cirdles.ludwig.squid25.PbUTh_2.rad8corPb7U5WithErr(
                     totPb6U8[0],
                     totPb6U8per[0],
@@ -107,7 +110,8 @@ public class Rad8corPb7U5WithErr extends Function {
                     totPb76per[0],
                     totPb86[0],
                     totPb86per[0],
-                    sComm0_76, sComm0_86, uRatio, lambda232, lambda238);
+                    sComm_76[0], sComm_86[0], 
+                    uRatio, lambda232, lambda238);
             retVal = new Object[][]{{rad8corPb7U5WithErr[0], rad8corPb7U5WithErr[1] * rad8corPb7U5WithErr[0] / 100.0}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
