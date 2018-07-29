@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
-import javafx.beans.InvalidationListener;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -141,6 +141,12 @@ public class parametersManagerGUIController implements Initializable {
     private MenuItem editCurrPhysConst;
     @FXML
     private MenuItem remCurrPhysConst;
+    @FXML
+    private Button physConstDataNotationButton;
+    @FXML
+    private Button refMatDataNotationButton;
+    @FXML
+    private Button refMatConcentrationsNotationButton;
 
     PhysicalConstantsModel physConstModel;
     ReferenceMaterial refMatModel;
@@ -155,12 +161,6 @@ public class parametersManagerGUIController implements Initializable {
     private DecimalFormat physConstDataNotation;
     private DecimalFormat refMatDataNotation;
     private DecimalFormat refMatConcentrationsNotation;
-    @FXML
-    private Button physConstDataNotationButton;
-    @FXML
-    private Button refMatDataNotationButton;
-    @FXML
-    private Button refMatConcentrationsNotationButton;
 
     /**
      * Initializes the controller class.
@@ -333,7 +333,7 @@ public class parametersManagerGUIController implements Initializable {
                 col.setSortable(false);
                 col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
                 col.setCellValueFactory(param
-                        -> new SimpleStringObservableValue(getRatioVisibleName(param.getValue().get(colNum).get())));
+                        -> new ReadOnlyObjectWrapper<String>(getRatioVisibleName(param.getValue().get(colNum).get())));
                 col.setOnEditCommit(value -> {
                     if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1 && Double.parseDouble(value.getNewValue()) >= -1) {
                         ObservableList<ObservableList<SimpleStringProperty>> items = value.getTableView().getItems();
@@ -430,55 +430,10 @@ public class parametersManagerGUIController implements Initializable {
         refMatConcentrationsTable.refresh();
     }
 
-    public class SimpleStringObservableValue implements ObservableValue {
-
-        private SimpleStringProperty value;
-
-        public SimpleStringObservableValue(String value) {
-            this.value = new SimpleStringProperty(value);
-        }
-
-        public SimpleStringObservableValue(SimpleStringProperty value) {
-            this.value = value;
-        }
-
-        @Override
-        public void addListener(ChangeListener listener) {
-            value.addListener(listener);
-        }
-
-        @Override
-        public void removeListener(ChangeListener listener) {
-            value.removeListener(listener);
-        }
-
-        @Override
-        public Object getValue() {
-            return value.get();
-        }
-
-        public void setValue(Object ob) {
-            if (ob instanceof SimpleStringProperty) {
-                value = (SimpleStringProperty) ob;
-            }
-        }
-
-        @Override
-        public void addListener(InvalidationListener listener) {
-            value.addListener(listener);
-        }
-
-        @Override
-        public void removeListener(InvalidationListener listener) {
-            value.removeListener(listener);
-        }
-
-    }
-
     private void setUpPhysConstData() {
         physConstDataTable.getColumns().clear();
-        List<TableColumn> columns = getDataModelColumns();
-        for (TableColumn col : columns) {
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        for (TableColumn<DataModel, String> col : columns) {
             physConstDataTable.getColumns().add(col);
         }
         physConstDataTable.setItems(getDataModelObList(physConstModel.getValues(), physConstDataNotation));
@@ -487,10 +442,61 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpRefMatData() {
         refMatDataTable.getColumns().clear();
-        List<TableColumn> columns = getDataModelColumns();
-        for (TableColumn col : columns) {
-            refMatDataTable.getColumns().add(col);
-        }
+
+        TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
+        nameCol.setSortable(false);
+        nameCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        refMatDataTable.getColumns().add(nameCol);
+
+        TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
+        valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
+        valCol.setSortable(false);
+        valCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        valCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setValue(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(valCol);
+
+        TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
+        absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
+        absCol.setSortable(false);
+        absCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        absCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setOneSigmaABS(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(absCol);
+
+        TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
+        pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
+        pctCol.setSortable(false);
+        pctCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        pctCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setOneSigmaPCT(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(pctCol);
+
 
         TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
         measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
@@ -515,7 +521,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpConcentrations() {
         refMatConcentrationsTable.getColumns().clear();
-        List<TableColumn> columns = getDataModelColumns();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
         for (TableColumn<DataModel, String> col : columns) {
             refMatConcentrationsTable.getColumns().add(col);
         }
@@ -523,8 +529,8 @@ public class parametersManagerGUIController implements Initializable {
         refMatConcentrationsTable.refresh();
     }
 
-    private static List<TableColumn> getDataModelColumns() {
-        List<TableColumn> columns = new ArrayList<>();
+    private static List<TableColumn<DataModel, String>> getDataModelColumns() {
+        List<TableColumn<DataModel, String>> columns = new ArrayList<>();
 
         TableColumn<DataModel, String> nameCol = new TableColumn<>("name");
         nameCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("name"));
@@ -724,7 +730,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             PhysicalConstantsModel importedMod = (PhysicalConstantsModel) physConstModel.readXMLObject(file.getAbsolutePath(), false);
             physConstModels.add(importedMod);
-            physConstCB.getItems().add(importedMod.getModelName() + " v." + importedMod.getVersion());
+            physConstCB.getItems().add(getModVersionName(importedMod));
             physConstCB.getSelectionModel().selectLast();
             physConstModel = importedMod;
             setUpPhysConst();
@@ -769,7 +775,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             ReferenceMaterial importedMod = (ReferenceMaterial) refMatModel.readXMLObject(file.getAbsolutePath(), false);
             refMatModels.add(importedMod);
-            refMatCB.getItems().add(importedMod.getModelName() + " v." + importedMod.getVersion());
+            refMatCB.getItems().add(getModVersionName(importedMod));
             refMatCB.getSelectionModel().selectLast();
             refMatModel = importedMod;
             squidLabData.storeState();
@@ -933,8 +939,7 @@ public class parametersManagerGUIController implements Initializable {
         }
         physConstModel.setValues(values);
 
-        Map<String, BigDecimal> masses = physConstModel.getMolarMasses();
-        masses.clear();
+        Map<String, BigDecimal> masses = new HashMap<>();
         try {
             String[] lines = molarMassesTextArea.getText().split("\n");
             for (int i = 0; i < lines.length; i++) {
@@ -949,8 +954,9 @@ public class parametersManagerGUIController implements Initializable {
                     }
                 }
             }
+            physConstModel.setMolarMasses(masses);
         } catch (Exception e) {
-            String message = "incorrect molar masses format: " + e.getMessage();
+            String message = "incorrect molar masses format";
             SquidMessageDialog.showWarningDialog(message, primaryStageWindow);
         }
 
