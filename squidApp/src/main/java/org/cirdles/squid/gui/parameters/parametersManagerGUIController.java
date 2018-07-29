@@ -375,6 +375,12 @@ public class parametersManagerGUIController implements Initializable {
             bigDec = new BigDecimal(mod.getOneSigmaPCT());
             mod.setOneSigmaPCT(physConstDataNotation.format(bigDec));
         }
+        physConstDataTable.getColumns().clear();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        for (TableColumn<DataModel, String> col : columns) {
+            physConstDataTable.getColumns().add(col);
+        }
+
         physConstDataTable.refresh();
     }
 
@@ -401,6 +407,67 @@ public class parametersManagerGUIController implements Initializable {
             bigDec = new BigDecimal(mod.getOneSigmaPCT());
             mod.setOneSigmaPCT(refMatDataNotation.format(bigDec));
         }
+        refMatDataTable.getColumns().clear();
+
+        TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
+        nameCol.setSortable(false);
+        nameCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        refMatDataTable.getColumns().add(nameCol);
+
+        TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
+        valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
+        valCol.setSortable(false);
+        valCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        valCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setValue(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(valCol);
+
+        TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
+        absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
+        absCol.setSortable(false);
+        absCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        absCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setOneSigmaABS(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(absCol);
+
+        TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
+        pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
+        pctCol.setSortable(false);
+        pctCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        pctCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setOneSigmaPCT(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(pctCol);
+
+        TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
+        measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
+        measuredCol.setSortable(false);
+        refMatDataTable.getColumns().add(measuredCol);
+
         refMatDataTable.refresh();
     }
 
@@ -427,6 +494,12 @@ public class parametersManagerGUIController implements Initializable {
             bigDec = new BigDecimal(mod.getOneSigmaPCT());
             mod.setOneSigmaPCT(refMatConcentrationsNotation.format(bigDec));
         }
+        refMatConcentrationsTable.getColumns().clear();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        for (TableColumn<DataModel, String> col : columns) {
+            refMatConcentrationsTable.getColumns().add(col);
+        }
+
         refMatConcentrationsTable.refresh();
     }
 
@@ -496,7 +569,6 @@ public class parametersManagerGUIController implements Initializable {
             }
         });
         refMatDataTable.getColumns().add(pctCol);
-
 
         TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
         measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
@@ -742,7 +814,7 @@ public class parametersManagerGUIController implements Initializable {
     private void physConstExpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSavePhysicalConstantsXMLFile(primaryStageWindow);
+            file = FileHandler.parametersManagerSavePhysicalConstantsXMLFile(physConstModel, primaryStageWindow);
         } catch (IOException e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
@@ -755,7 +827,7 @@ public class parametersManagerGUIController implements Initializable {
     private void refMatExpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSaveReferenceMaterialXMLFile(primaryStageWindow);
+            file = FileHandler.parametersManagerSaveReferenceMaterialXMLFile(refMatModel, primaryStageWindow);
         } catch (IOException e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }

@@ -27,6 +27,7 @@ import javafx.stage.Window;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
@@ -249,7 +250,7 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File saveReportFileCSV(boolean rawOutput , String[][] report, Window ownerWindow)
+    public static File saveReportFileCSV(boolean rawOutput, String[][] report, Window ownerWindow)
             throws IOException {
 
         File retVal = null;
@@ -281,10 +282,11 @@ public class FileHandler {
         return fileChooser.showOpenDialog(ownerWindow);
     }
 
-    public static File parametersManagerSavePhysicalConstantsXMLFile(Window ownerWindow) throws IOException {
+    public static File parametersManagerSavePhysicalConstantsXMLFile(ParametersModel model, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Squid Physical Constants xml File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+        fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
         return fileChooser.showSaveDialog(ownerWindow);
 
@@ -298,10 +300,11 @@ public class FileHandler {
         return fileChooser.showOpenDialog(ownerWindow);
     }
 
-    public static File parametersManagerSaveReferenceMaterialXMLFile(Window ownerWindow) throws IOException {
+    public static File parametersManagerSaveReferenceMaterialXMLFile(ParametersModel model, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Squid Reference Material xml File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+        fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
         return fileChooser.showSaveDialog(ownerWindow);
     }
