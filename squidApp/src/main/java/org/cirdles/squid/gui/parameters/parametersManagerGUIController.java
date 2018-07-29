@@ -1231,15 +1231,11 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     public static DecimalFormat getScientificNotationFormat() {
-        return new DecimalFormat("0.0#######################E0#############");
+        return new DecimalFormat("0.0##############################E0#############");
     }
 
     public static DecimalFormat getStandardNotationFormat() {
-        return new DecimalFormat("########################0.0################################");
-    }
-
-    public static void main(String[] args) {
-        System.out.print(trimTrailingZeroes("1.5E-10000"));
+        return new DecimalFormat("########################0.0######################################");
     }
 
     public class DataModel {
