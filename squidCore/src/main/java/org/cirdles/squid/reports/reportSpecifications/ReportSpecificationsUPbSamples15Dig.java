@@ -52,7 +52,7 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_U, "",
             "", "true", "false", "20", "", "concentration of U", "false", "false"
         },
-        {"", "", "Th", "alse\", \"6\"(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH_S, "",
+        {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH_S, "",
             "", "true", "false", "20", "", "concentration of Th", "true", "false"
         },
         {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME_S, "PCT",
