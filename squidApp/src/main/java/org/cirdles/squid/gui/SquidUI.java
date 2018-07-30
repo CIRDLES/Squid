@@ -57,23 +57,18 @@ public final class SquidUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
         primaryStage.setTitle("Squid 3.0 pre-release");
-
         // this produces non-null window after .show()
         primaryStageWindow = primaryStage.getScene().getWindow();
-
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
             Platform.exit();
             System.exit(0);
         });
-
         // postpone loading to allow for stage creation and use in controller
         scene.setRoot(FXMLLoader.load(getClass().getResource("SquidUIController.fxml")));
         primaryStage.show();
         primaryStage.setMinHeight(scene.getHeight() + 15);
         primaryStage.setMinWidth(scene.getWidth());
-
         squidAboutWindow = new SquidAboutWindow(primaryStage);
-
     }
 
     public static void updateStageTitle(String title) {
