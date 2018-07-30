@@ -451,4 +451,6 @@ public interface TaskInterface {
      * @param aShowQt1z the showQt1z to set
      */
     public void setShowQt1z(boolean aShowQt1z);
+
+    public boolean expressionIsNuSwitched(String expressionName);
 }

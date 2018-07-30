@@ -54,7 +54,7 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
 
         // April 2017 Rounding per Bodorkos
         int sigDigs = 12;
-
+////System.out.println("ROUNDING  " + expression.getName());
         this.expression = expression;
         this.ratEqVal = ratEqVal.clone();
         this.ratEqTime = ratEqTime.clone();

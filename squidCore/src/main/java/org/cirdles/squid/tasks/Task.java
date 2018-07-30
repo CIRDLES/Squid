@@ -1194,7 +1194,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 // update spotSummaryDetails
                 spotSummaryDetails.setExpressionTree(expressionTree);
 
-                // special case for WieghtedMean in which auto rejection is possible
+                // special case for WeightedMean in which auto rejection is possible
                 boolean noReject = false;
                 if (((ExpressionTree) expressionTree).getOperation() instanceof WtdMeanACalc) {
                     // discover what the flags say - repeats logic of WtdMeanACalc()
@@ -1989,4 +1989,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
     
     
+
+    @Override
+    public boolean expressionIsNuSwitched(String expressionName) {
+        boolean retVal = false;
+        for (Expression exp : taskExpressionsOrdered) {
+            if ((exp.getName().compareToIgnoreCase(expressionName) == 0)
+                    && (exp.isSquidSwitchNU())) {
+                retVal = true;
+                break;
+            }
+        }
+        return retVal;
+    }
 }

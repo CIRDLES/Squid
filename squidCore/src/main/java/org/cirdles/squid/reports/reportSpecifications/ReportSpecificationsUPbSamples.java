@@ -238,7 +238,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/206* %err", "",
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206* %err", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
         {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/235", "PCT",

@@ -113,10 +113,12 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                 double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0].clone();
                 if (values.length > 1) {
                     // to return uncertainty, copy index 1 to index 0
+                    // July 2018 force to 12 sig digs - abs value should be already
+                    // org.cirdles.ludwig.squid25.Utilities.roundedToSize(retVal, 12);
                     if (uncertaintyDirective.compareTo("%") == 0) {
-                        values[0] = values[1] / values[0] * 100;
+                        values[0] = org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1] / values[0] * 100, 12);
                     } else if (uncertaintyDirective.compareTo("±") == 0) {
-                        values[0] = values[1];
+                        values[0] = org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1], 12);
                     }
                 }
                 retVal[i] = convertArrayToObjects(values);
