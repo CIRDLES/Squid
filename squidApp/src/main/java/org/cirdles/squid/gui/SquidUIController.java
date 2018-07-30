@@ -1021,14 +1021,14 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
         writeAndOpenReportTableFiles(report, "ReferenceMaterialReportTable.csv");
     }
 
     @FXML
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), true);
         writeAndOpenReportTableFiles(report, "UnknownsReportTable.csv");
     }
 
