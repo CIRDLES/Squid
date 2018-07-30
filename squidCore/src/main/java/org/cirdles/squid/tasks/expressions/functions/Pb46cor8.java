@@ -47,7 +47,7 @@ public class Pb46cor8 extends Function {
     public Pb46cor8() {
 
         name = "pb46cor8";
-        argumentCount = 3;
+        argumentCount = 5;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
@@ -84,8 +84,10 @@ public class Pb46cor8 extends Function {
             double[] sComm_84 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
             
             double[] pb46cor8 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor8(
-                    pb208_206RatioAndUnct[0], thU[0], 
-                    sComm_64[0], sComm_84[0], 
+                    pb208_206RatioAndUnct[0], 
+                    thU[0], 
+                    sComm_64[0], 
+                    sComm_84[0], 
                     pb208corr206_238Age[0], lambda232, lambda238);
             retVal = new Object[][]{{pb46cor8[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {

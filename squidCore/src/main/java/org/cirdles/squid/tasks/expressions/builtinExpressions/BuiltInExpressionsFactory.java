@@ -72,26 +72,11 @@ public abstract class BuiltInExpressionsFactory {
     public static Map<String, ExpressionTreeInterface> generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-//        ExpressionTreeInterface sComm_74 = new ConstantNode("sComm_74", Squid3Constants.sComm0_74);//          15.5773361);
-//        parameters.put(sComm_74.getName(), sComm_74);
-//        ExpressionTreeInterface sComm_76 = new ConstantNode("sComm_76", Squid3Constants.sComm0_76);//          
-//        parameters.put(sComm_76.getName(), sComm_76);
-//        ExpressionTreeInterface sComm_64 = new ConstantNode("sComm_64", Squid3Constants.sComm0_64);//          17.821);
-//        parameters.put(sComm_64.getName(), sComm_64);
-//        ExpressionTreeInterface sComm_84 = new ConstantNode("sComm_84", Squid3Constants.sComm0_84);//          37.5933995);
-//        parameters.put(sComm_84.getName(), sComm_84);
-////        ExpressionTreeInterface sComm_86 = new ConstantNode("sComm_86", sComm0_86);
-////        parameters.put(sComm_86.getName(), sComm_86);
-//        ExpressionTreeInterface sComm_68 = new ConstantNode("sComm_68", 1.0 / sComm0_86);
-//        parameters.put(sComm_68.getName(), sComm_68);
         ExpressionTreeInterface lambda238 = new ConstantNode("lambda238", Squid3Constants.lambda238);
         parameters.put(lambda238.getName(), lambda238);
 
         ExpressionTreeInterface lambda232 = new ConstantNode("lambda232", Squid3Constants.lambda232);
         parameters.put(lambda232.getName(), lambda232);
-
-//        ExpressionTreeInterface ExtPErr = new ConstantNode("ExtPErr", 0.75);
-//        parameters.put("ExtPErr", ExtPErr);
 
         ExpressionTreeInterface L859 = new ConstantNode("L859", 0.859);
         parameters.put("L859", L859);
