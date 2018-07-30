@@ -22,13 +22,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
 /**
@@ -43,20 +47,20 @@ import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 public class SessionAuditController implements Initializable {
 
     @FXML
-    private TreeView<String> prawnAuditTree;
+    private TreeView<SampleNamePrefixInterface> prawnAuditTree;
     @FXML
     private VBox sessionVBox;
     @FXML
     private CheckBox checkbox;
-    
+
     private static char[] spaces = new char[100];
-    static{
-        for (int i = 0; i < 100; i ++){
+
+    static {
+        for (int i = 0; i < 100; i++) {
             spaces[i] = ' ';
         }
     }
-    
-    
+
     /**
      * Initializes the controller class.
      */
@@ -78,12 +82,35 @@ public class SessionAuditController implements Initializable {
     private void setUpPrawnFileAuditTreeView(boolean showDupesOnly) {
         prawnAuditTree.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
 
+//        prawnAuditTree.setCellFactory(new Callback<TreeView<SampleNamePrefixInterface>, TreeCell<SampleNamePrefixInterface>>() {
+//            @Override
+//            public TreeCell<SampleNamePrefixInterface> call(TreeView<SampleNamePrefixInterface> p) {
+//                return new SampleNamePrefixNode("XXX" + p.toString());
+//            }
+//        });
+//
+//        prawnAuditTree.setCellFactory(p -> new TreeCell<>(
+//                (TreeItem<SampleNamePrefixInterface> item) -> ((PlotsController.ConcordiaFractionNode) item.getValue()).getSelectedProperty(),
+//                new StringConverter<TreeItem<PlotsController.SampleNamePrefixInterface>>() {
+//
+//            @Override
+//            public String toString(TreeItem<SampleNamePrefixInterface> object) {
+//                PlotsController.SampleNamePrefixInterface item = object.getValue();
+//                return item.getNodeName();
+//            }
+//
+//            @Override
+//            public TreeItem<PlotsController.SampleNamePrefixInterface> fromString(String string) {
+//                throw new UnsupportedOperationException("Not supported yet.");
+//            }
+//        }));
+
         SquidPrefixTree spotPrefixTree = squidProject.getPrefixTree();
         String summaryStatsString = spotPrefixTree.buildSummaryDataString();
 
         boolean hasDuplicates = spotPrefixTree.getCountOfDups() > 0;
         checkbox.setVisible(hasDuplicates);
-        TreeItem<String> rootItem = customizeRootItem(summaryStatsString, hasDuplicates);
+        TreeItem<SampleNamePrefixInterface> rootItem = customizeRootItem(summaryStatsString, hasDuplicates);
         rootItem.setExpanded(true);
         prawnAuditTree.setRoot(rootItem);
 
@@ -99,15 +126,15 @@ public class SessionAuditController implements Initializable {
      * display
      * @return the root item depending on whether there are duplicates
      */
-    private TreeItem<String> customizeRootItem(String summaryStatsString, boolean hasDuplicates) {
-        TreeItem<String> rootItem = new TreeItem<>("Spots", null);
+    private TreeItem<SampleNamePrefixInterface> customizeRootItem(String summaryStatsString, boolean hasDuplicates) {
+        TreeItem<SampleNamePrefixInterface> rootItem = new TreeItem<>(new SampleNamePrefixNode("Spots"), null);
         if (hasDuplicates) {
             rootItem.setValue(
-                    "***This file has duplicate names. Change names of duplicates in PrawnFile > Manage Spots & "
-                    + "Choose Reference Materials***"
-                    + "\n\nSpots by prefix: " + summaryStatsString);
+                    new SampleNamePrefixNode("***This file has duplicate names. Change names of duplicates in PrawnFile > Manage Spots & "
+                            + "Choose Reference Materials***"
+                            + "\n\nSpots by prefix: " + summaryStatsString));
         } else {
-            rootItem.setValue("Spots by prefix:" + summaryStatsString);
+            rootItem.setValue(new SampleNamePrefixNode("Spots by prefix:" + summaryStatsString));
         }
         return rootItem;
     }
@@ -124,7 +151,7 @@ public class SessionAuditController implements Initializable {
      * @param depth the value of depth
      * @param doExpand the value of doExpand
      */
-    private void populatePrefixTreeView(TreeItem<String> parentItem, SquidPrefixTree squidPrefixTree, boolean showDupesOnly, int depth, boolean doExpand) {
+    private void populatePrefixTreeView(TreeItem<SampleNamePrefixInterface> parentItem, SquidPrefixTree squidPrefixTree, boolean showDupesOnly, int depth, boolean doExpand) {
 
         List<SquidPrefixTree> children = squidPrefixTree.getChildren();
 
@@ -134,17 +161,17 @@ public class SessionAuditController implements Initializable {
         }
 
         parentItem.setExpanded(endExpansion && doExpand);
-        parentItem.setValue(
-                parentItem.getValue() 
-                        + String.copyValueOf(spaces, 0, 100 - parentItem.getValue().length() - depth)
-                        + ((String) (!(endExpansion && doExpand) && parentItem.getParent().isExpanded() ? "SAMPLE" : "")));
+        parentItem.setValue(new SampleNamePrefixNode(
+                parentItem.getValue().getContents()
+                + String.copyValueOf(spaces, 0, 100 - parentItem.getValue().lengthOfContents() - depth)
+                + ((String) (!(endExpansion && doExpand) && parentItem.getParent().isExpanded() ? "SAMPLE" : ""))));
 
         for (int i = 0; i < children.size(); i++) {
             if (!children.get(i).isleaf()) {
-                TreeItem<String> childItem
-                        = new TreeItem<>(
+                TreeItem<SampleNamePrefixInterface> childItem
+                        = new TreeItem<>(new SampleNamePrefixNode(
                                 children.get(i).getStringValue()
-                                + children.get(i).buildSummaryDataString());
+                                + children.get(i).buildSummaryDataString()));
                 if (showDupesOnly) {
                     if (children.get(i).getCountOfDups() > 0) {
                         parentItem.getChildren().add(childItem);
@@ -158,12 +185,12 @@ public class SessionAuditController implements Initializable {
                 }
 
             } else {
-                parentItem.setValue(children.get(i).getParent().getStringValue()
+                parentItem.setValue(new SampleNamePrefixNode(children.get(i).getParent().getStringValue()
                         + " Dups=" + String.format("%1$ 2d", children.get(i).getParent().getCountOfDups())
                         + " Species=" + String.format("%1$ 2d", children.get(i).getCountOfSpecies())
                         + " Scans=" + String.format("%1$ 2d", children.get(i).getCountOfScans())
                         + ((String) (children.size() > 1 ? " ** see duplicates below **" : ""))
-                );
+                ));
             }
         }
     }
@@ -175,5 +202,32 @@ public class SessionAuditController implements Initializable {
      */
     private void duplicatesChecked(ActionEvent event) {
         setUpPrawnFileAuditTreeView(checkbox.isSelected());
+    }
+
+    private interface SampleNamePrefixInterface {
+
+        public int lengthOfContents();
+
+        public String getContents();
+    }
+
+    private class SampleNamePrefixNode extends TreeCell<SampleNamePrefixInterface> implements SampleNamePrefixInterface {
+
+        private String contents;
+
+        public SampleNamePrefixNode(String contents) {
+            this.contents = contents;
+        }
+
+        @Override
+        public String getContents() {
+            return contents;
+        }
+
+        @Override
+        public int lengthOfContents() {
+            return contents.length();
+        }
+
     }
 }
