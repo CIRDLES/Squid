@@ -136,6 +136,11 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                             // index should be 1 from constructor
                             values[1] = values[1] / values[0] * 100;
                         }
+                        
+                        // july 2018
+                        if (task.expressionIsNuSwitched(name)){
+                            values[1]= org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1], 12);
+                        }
 
                         if (index > 0) {
                             // we have a call to retrieve into [0] another output of this expression, such as 1-sigma abs

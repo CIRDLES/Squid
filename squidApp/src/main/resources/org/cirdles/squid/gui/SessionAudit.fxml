@@ -28,5 +28,10 @@
             <Insets />
          </opaqueInsets>
       </TreeView>
+      <TreeView fx:id="prawnAuditTree1" layoutX="10.0" layoutY="40.0" style="-fx-background-color: #f4f4f4;">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </TreeView>
    </children>
 </VBox>
