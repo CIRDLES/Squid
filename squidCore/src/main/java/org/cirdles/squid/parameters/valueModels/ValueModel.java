@@ -28,24 +28,24 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         this.name = "";
         uncertaintyType = "";
         reference = "";
-        value = null;
-        oneSigma = null;
+        value = BigDecimal.ZERO;
+        oneSigma = BigDecimal.ZERO;
     }
 
     public ValueModel(String name) {
         this.name = name;
         uncertaintyType = "";
         reference = "";
-        value = null;
-        oneSigma = null;
+        value = BigDecimal.ZERO;
+        oneSigma = BigDecimal.ZERO;
     }
 
     public ValueModel(String name, String uncertaintyType) {
         this.name = name;
         this.uncertaintyType = uncertaintyType;
         reference = "";
-        value = null;
-        oneSigma = null;
+        value = BigDecimal.ZERO;
+        oneSigma = BigDecimal.ZERO;
     }
 
     public ValueModel(String name, String uncertaintyType, BigDecimal value,
