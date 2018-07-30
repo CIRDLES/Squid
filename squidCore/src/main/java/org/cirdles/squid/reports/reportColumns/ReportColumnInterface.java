@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples;
@@ -428,7 +429,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                         double doubleValue = (double) meth.invoke(fraction, new Object[0]);
 
                         if (isNumeric) {
-                            retVal[0] = String.valueOf(doubleValue);
+                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, 15));//doubleValue);
                         } else if (isDisplayedWithArbitraryDigitCount()) {
                             retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
                                     new BigDecimal(doubleValue),
@@ -448,7 +449,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                         double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
 
                         if (isNumeric) {
-                            retVal[0] = String.valueOf(doubleValue);
+                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, 15));//doubleValue);
                         } else if (isDisplayedWithArbitraryDigitCount()) {
                             retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
                                     new BigDecimal(doubleValue),
@@ -466,7 +467,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                         double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
 
                         if (isNumeric) {
-                            retVal[0] = getValueInUnits(vm[0], getUnits()).toPlainString().trim();
+                            retVal[0] = String.valueOf(Utilities.roundedToSize(getValueInUnits(vm[0], getUnits()).doubleValue(), 15));//   .toPlainString().trim();
                         } else if (isDisplayedWithArbitraryDigitCount()) {
                             retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
                                     getValueInUnits(vm[0], getUnits()),
