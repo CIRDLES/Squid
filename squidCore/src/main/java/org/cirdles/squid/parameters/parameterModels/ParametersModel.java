@@ -12,8 +12,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.cirdles.squid.parameters.ValueModel;
-import org.cirdles.squid.parameters.ValueModelConverter;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
@@ -21,6 +19,8 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterialConverter;
 import org.cirdles.squid.parameters.util.DateHelper;
+import org.cirdles.squid.parameters.valueModels.ValueModel;
+import org.cirdles.squid.parameters.valueModels.ValueModelConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -150,9 +150,11 @@ public class ParametersModel implements
 
     public ValueModel getDatumByName(String datumName) {
         ValueModel retVal = new ValueModel(datumName);
-        for (int i = 0; i < values.length; i++) {
+        boolean found = false;
+        for (int i = 0; !found && i < values.length; i++) {
             if (values[i].getName().equals(datumName)) {
                 retVal = values[i];
+                found = true;
             }
         }
 
@@ -331,9 +333,6 @@ public class ParametersModel implements
 
     protected class DataValueModelNameComparator implements Comparator<ValueModel> {
 
-        /**
-         *
-         */
         public DataValueModelNameComparator() {
         }
 

@@ -221,7 +221,14 @@
                                                 </AnchorPane>
                                             </content>
                                         </Tab>
-                                        <Tab text="Apparent Dates" />
+                                        <Tab text="Apparent Dates">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <TextArea fx:id="apparentDatesTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content></Tab>
                                     </tabs>
                                 </TabPane>
                             </children>

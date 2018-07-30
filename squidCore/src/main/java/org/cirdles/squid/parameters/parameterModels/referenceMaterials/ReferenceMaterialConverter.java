@@ -13,8 +13,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import org.cirdles.squid.parameters.ValueModel;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
  *
@@ -106,7 +105,7 @@ public class ReferenceMaterialConverter implements Converter {
 
         reader.moveDown();
         Map<String, BigDecimal> rhos = new HashMap<>();
-        rhos = (HashMap<String, BigDecimal>) context.convertAnother(rhos, Map.class);
+        rhos = (HashMap<String, BigDecimal>) context.convertAnother(rhos, HashMap.class);
         reader.moveUp();
         model.setRhos(rhos);
         

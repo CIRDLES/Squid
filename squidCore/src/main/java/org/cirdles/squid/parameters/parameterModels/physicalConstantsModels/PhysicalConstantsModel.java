@@ -16,18 +16,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.cirdles.squid.parameters.ValueModel;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.util.DataDictionary;
+import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
  *
  * @author ryanb
  */
 public class PhysicalConstantsModel extends ParametersModel {
+    
+    public static PhysicalConstantsModel defaultPhysicalConstantsModel = new PhysicalConstantsModel();
 
     Map<String, BigDecimal> molarMasses;
 
@@ -88,6 +90,9 @@ public class PhysicalConstantsModel extends ParametersModel {
         List<PhysicalConstantsModel> models = new ArrayList<>();
         for(int i = 0; i < files.length; i++) {
             models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
+        }
+        if(models.size() > 0) {
+            defaultPhysicalConstantsModel = models.get(0);
         }
         return models;
     }

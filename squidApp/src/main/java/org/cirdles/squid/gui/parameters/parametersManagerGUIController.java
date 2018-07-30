@@ -46,11 +46,11 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.parameters.ValueModel;
 import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
  * FXML Controller class
@@ -161,6 +161,8 @@ public class parametersManagerGUIController implements Initializable {
     private DecimalFormat physConstDataNotation;
     private DecimalFormat refMatDataNotation;
     private DecimalFormat refMatConcentrationsNotation;
+    @FXML
+    private TextArea apparentDatesTextArea;
 
     /**
      * Initializes the controller class.
@@ -209,6 +211,7 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMatCovariancesAndCorrelations();
         setUpRefMatCov();
         setUpRefMatCorr();
+        setUpApparentDates();
         setUpRefMatEditableLabel();
     }
 
@@ -689,6 +692,11 @@ public class parametersManagerGUIController implements Initializable {
             molarMassesTextArea.appendText("\n" + curr.getKey() + " = "
                     + curr.getValue());
         }
+    }
+    
+    private void setUpApparentDates() {
+        refMatModel.calculateApparentDates();
+        apparentDatesTextArea.setText(refMatModel.listFormattedApparentDates());
     }
 
     private void setUpReferences() {
