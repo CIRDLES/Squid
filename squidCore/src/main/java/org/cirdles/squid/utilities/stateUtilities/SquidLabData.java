@@ -14,6 +14,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDE
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 
 /**
  *
@@ -29,6 +30,7 @@ public class SquidLabData implements Serializable {
         laboratoryName = "mystery lab";
         referenceMaterials = ReferenceMaterial.getDefaultModels();
         physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
+        storeState();
     }
 
     public static SquidLabData getExistingSquidLabData() {

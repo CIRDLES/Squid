@@ -5,7 +5,6 @@
  */
 package org.cirdles.squid.parameters.valueModels;
 
-import org.cirdles.squid.parameters.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -101,6 +100,10 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         return retVal;
     }
 
+    public boolean hasPositiveValue() {
+        return getValue().compareTo(BigDecimal.ZERO) > 0;
+    }
+
     public String formatValueAndTwoSigmaForPublicationSigDigMode(
             String uncertaintyType,
             int movePointRightCount,
@@ -181,8 +184,8 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
                     uncertaintySigDigits);
         }
     }
-    
-        public static String formatBigDecimalForPublicationSigDigMode(
+
+    public static String formatBigDecimalForPublicationSigDigMode(
             BigDecimal number,
             int uncertaintySigDigits) {
 

@@ -271,7 +271,7 @@ public class ReferenceMaterial extends ParametersModel {
         String retVal = "";
 
         for (int i = 0; i < apparentDates.length; i++) {
-            if (apparentDates[i].getValue().doubleValue() > 0) {
+            if (apparentDates[i].hasPositiveValue()) {
                 retVal += "<br>" //
                         + apparentDates[i].getName() + " : " + apparentDates[i].formatValueAndTwoSigmaForPublicationSigDigMode( //
                         "ABS", -6, 2) //
