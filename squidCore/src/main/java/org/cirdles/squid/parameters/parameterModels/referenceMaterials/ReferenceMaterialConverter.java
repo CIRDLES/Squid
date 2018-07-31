@@ -25,7 +25,7 @@ public class ReferenceMaterialConverter implements Converter {
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
         ReferenceMaterial model = (ReferenceMaterial) o;
 
- writer.startNode("modelName");
+        writer.startNode("modelName");
         writer.setValue(model.getModelName());
         writer.endNode();
 
@@ -56,11 +56,11 @@ public class ReferenceMaterialConverter implements Converter {
         writer.startNode("rhos");
         context.convertAnother(model.getRhos());
         writer.endNode();
-        
-       writer.startNode("isEditable");
-       writer.setValue(Boolean.toString(model.isEditable()));
-       writer.endNode();
-        
+
+        writer.startNode("isEditable");
+        writer.setValue(Boolean.toString(model.isEditable()));
+        writer.endNode();
+
         writer.startNode("concentrations");
         context.convertAnother(model.getConcentrations());
         writer.endNode();
@@ -103,16 +103,36 @@ public class ReferenceMaterialConverter implements Converter {
         model.setValues((ValueModel[]) context.convertAnother(model.getValues(), ValueModel[].class));
         reader.moveUp();
 
-        reader.moveDown();
         Map<String, BigDecimal> rhos = new HashMap<>();
-        rhos = (HashMap<String, BigDecimal>) context.convertAnother(rhos, HashMap.class);
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+
+            reader.moveDown();
+            String key = reader.getValue();
+            reader.moveUp();
+
+            reader.moveDown();
+            String currBigDec = reader.getValue();
+            BigDecimal value;
+            if (Double.parseDouble(currBigDec) == 0.0) {
+                value = BigDecimal.ZERO;
+            } else {
+                value = new BigDecimal(currBigDec);
+            }
+            reader.moveUp();
+
+            reader.moveUp();
+
+            rhos.put(key, value);
+        }
         reader.moveUp();
         model.setRhos(rhos);
-        
+
         reader.moveDown();
         model.setIsEditable(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
-        
+
         reader.moveDown();
         model.setConcentrations(new ValueModel[0]);
         model.setConcentrations((ValueModel[]) context.convertAnother(model.getConcentrations(), ValueModel[].class));

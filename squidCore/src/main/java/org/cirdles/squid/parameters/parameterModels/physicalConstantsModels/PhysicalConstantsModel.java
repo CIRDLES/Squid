@@ -65,13 +65,13 @@ public class PhysicalConstantsModel extends ParametersModel {
 
     private void generateDefaultValueModels() {
         values = new ValueModel[7];
-        values[0] = new ValueModel("lambda226", "ABS");
-        values[1] = new ValueModel("lambda230", "ABS");
-        values[2] = new ValueModel("lambda231", "ABS");
-        values[3] = new ValueModel("lambda232", "ABS");
-        values[4] = new ValueModel("lambda234", "ABS");
-        values[5] = new ValueModel("lambda235", "ABS");
-        values[6] = new ValueModel("lambda238", "ABS");
+        values[0] = new ValueModel("lambda226");
+        values[1] = new ValueModel("lambda230");
+        values[2] = new ValueModel("lambda231");
+        values[3] = new ValueModel("lambda232");
+        values[4] = new ValueModel("lambda234");
+        values[5] = new ValueModel("lambda235");
+        values[6] = new ValueModel("lambda238");
     }
 
     public static List<PhysicalConstantsModel> getDefaultModels() {

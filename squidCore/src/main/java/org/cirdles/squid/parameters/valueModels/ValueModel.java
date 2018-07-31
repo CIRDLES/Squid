@@ -25,7 +25,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
 
     public ValueModel() {
         this.name = "";
-        uncertaintyType = "";
+        uncertaintyType = "ABS";
         reference = "";
         value = BigDecimal.ZERO;
         oneSigma = BigDecimal.ZERO;
@@ -33,7 +33,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
 
     public ValueModel(String name) {
         this.name = name;
-        uncertaintyType = "";
+        uncertaintyType = "ABS";
         reference = "";
         value = BigDecimal.ZERO;
         oneSigma = BigDecimal.ZERO;

@@ -56,7 +56,7 @@ public class PhysicalConstantsModelConverter implements Converter {
         writer.startNode("rhos");
         context.convertAnother(model.getRhos());
         writer.endNode();
-        
+
         writer.startNode("isEditable");
         writer.setValue(Boolean.toString(model.isEditable()));
         writer.endNode();
@@ -70,7 +70,7 @@ public class PhysicalConstantsModelConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         PhysicalConstantsModel model = new PhysicalConstantsModel();
 
-reader.moveDown();
+        reader.moveDown();
         model.setModelName(reader.getValue());
         reader.moveUp();
 
@@ -99,20 +99,61 @@ reader.moveDown();
         model.setValues((ValueModel[]) context.convertAnother(model.getValues(), ValueModel[].class));
         reader.moveUp();
 
-        reader.moveDown();
         Map<String, BigDecimal> rhos = new HashMap<>();
-        rhos = (HashMap<String, BigDecimal>) context.convertAnother(rhos, HashMap.class);
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+
+            reader.moveDown();
+            String key = reader.getValue();
+            reader.moveUp();
+
+            reader.moveDown();
+            String currBigDec = reader.getValue();
+            BigDecimal value;
+            if (Double.parseDouble(currBigDec) == 0.0) {
+                value = BigDecimal.ZERO;
+            } else {
+                value = new BigDecimal(currBigDec);
+            }
+            reader.moveUp();
+
+            reader.moveUp();
+
+            rhos.put(key, value);
+        }
         reader.moveUp();
         model.setRhos(rhos);
-        
+
         reader.moveDown();
         model.setIsEditable(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
-        
+
+        Map<String, BigDecimal> molarMasses = new HashMap<>();
         reader.moveDown();
-        model.setMolarMasses(new HashMap<>());
-        model.setMolarMasses((HashMap<String, BigDecimal>) context.convertAnother(model.getMolarMasses(), HashMap.class));
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+
+            reader.moveDown();
+            String key = reader.getValue();
+            reader.moveUp();
+
+            reader.moveDown();
+            String currBigDec = reader.getValue();
+            BigDecimal value;
+            if (Double.parseDouble(currBigDec) == 0.0) {
+                value = BigDecimal.ZERO;
+            } else {
+                value = new BigDecimal(currBigDec);
+            }
+            reader.moveUp();
+
+            reader.moveUp();
+
+            molarMasses.put(key, value);
+        }
         reader.moveUp();
+        model.setMolarMasses(molarMasses);
 
         return model;
     }

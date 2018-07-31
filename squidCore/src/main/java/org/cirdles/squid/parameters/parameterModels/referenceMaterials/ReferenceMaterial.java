@@ -72,11 +72,11 @@ public class ReferenceMaterial extends ParametersModel {
 
     private void generateDefaultValueModels() {
         values = new ValueModel[5];
-        values[0] = new ValueModel("r206_207r", "ABS");
-        values[1] = new ValueModel("r206_208r", "ABS");
-        values[2] = new ValueModel("r206_238r", "ABS");
-        values[3] = new ValueModel("r208_232r", "ABS");
-        values[4] = new ValueModel("r238_235s", "ABS");
+        values[0] = new ValueModel("r206_207r");
+        values[1] = new ValueModel("r206_208r");
+        values[2] = new ValueModel("r206_238r");
+        values[3] = new ValueModel("r208_232r");
+        values[4] = new ValueModel("r238_235s");
         dataMeasured = new boolean[5];
         for (int i = 0; i < dataMeasured.length; i++) {
             dataMeasured[i] = false;
