@@ -911,6 +911,8 @@ public class parametersManagerGUIController implements Initializable {
         refMatCorrTable.getColumns().get(0).setEditable(false);
 
         refMatCovTable.setEditable(false);
+        
+        apparentDatesTextArea.setEditable(false);
 
         refMatCommentsArea.setEditable(isEditable);
         refMatReferencesArea.setEditable(isEditable);

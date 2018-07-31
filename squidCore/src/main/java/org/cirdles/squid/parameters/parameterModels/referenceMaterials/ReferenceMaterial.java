@@ -37,7 +37,7 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
  */
 public class ReferenceMaterial extends ParametersModel {
 
-    public static ReferenceMaterial defaultReferenceMaterial = new ReferenceMaterial();
+    public static ReferenceMaterial defaultReferenceMaterial = getDefaultModels().get(0);
 
     ValueModel[] concentrations;
     boolean[] dataMeasured;
@@ -72,11 +72,11 @@ public class ReferenceMaterial extends ParametersModel {
 
     private void generateDefaultValueModels() {
         values = new ValueModel[5];
-        values[0] = new ValueModel("r206_207r", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
-        values[1] = new ValueModel("r206_208r", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
-        values[2] = new ValueModel("r206_238r", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
-        values[3] = new ValueModel("r208_232r", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
-        values[4] = new ValueModel("r238_235s", "ABS", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        values[0] = new ValueModel("r206_207r", "ABS");
+        values[1] = new ValueModel("r206_208r", "ABS");
+        values[2] = new ValueModel("r206_238r", "ABS");
+        values[3] = new ValueModel("r208_232r", "ABS");
+        values[4] = new ValueModel("r238_235s", "ABS");
         dataMeasured = new boolean[5];
         for (int i = 0; i < dataMeasured.length; i++) {
             dataMeasured[i] = false;
@@ -272,10 +272,10 @@ public class ReferenceMaterial extends ParametersModel {
 
         for (int i = 0; i < apparentDates.length; i++) {
             if (apparentDates[i].hasPositiveValue()) {
-                retVal += "<br>" //
-                        + apparentDates[i].getName() + " : " + apparentDates[i].formatValueAndTwoSigmaForPublicationSigDigMode( //
+                retVal += apparentDates[i].getName() + " : " + 
+                        apparentDates[i].formatValueAndTwoSigmaForPublicationSigDigMode( //
                         "ABS", -6, 2) //
-                        + " (2\u03C3)  Ma";
+                        + " (2\u03C3)  Ma\n";
             }
         }
 
