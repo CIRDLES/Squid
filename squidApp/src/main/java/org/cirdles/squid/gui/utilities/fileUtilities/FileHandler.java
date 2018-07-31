@@ -277,7 +277,7 @@ public class FileHandler {
     public static File parametersManagerSelectPhysicalConstantsXMLFile(Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Squid Physical Constants xml File '.xml");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Physical Constants xml Files", "*.xml"));
 
         return fileChooser.showOpenDialog(ownerWindow);
     }
@@ -285,7 +285,7 @@ public class FileHandler {
     public static File parametersManagerSavePhysicalConstantsXMLFile(ParametersModel model, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Squid Physical Constants xml File '.xml");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Physical Constants xml Files", "*.xml"));
         fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
         return fileChooser.showSaveDialog(ownerWindow);
@@ -295,7 +295,7 @@ public class FileHandler {
     public static File parametersManagerSelectReferenceMaterialXMLFile(Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Squid Reference Material xml File '.xml");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Reference Material xml Files", "*.xml"));
 
         return fileChooser.showOpenDialog(ownerWindow);
     }
@@ -303,7 +303,7 @@ public class FileHandler {
     public static File parametersManagerSaveReferenceMaterialXMLFile(ParametersModel model, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Squid Reference Material xml File '.xml");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression xml Files", "*.xml"));
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Reference Material xml Files", "*.xml"));
         fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
         return fileChooser.showSaveDialog(ownerWindow);

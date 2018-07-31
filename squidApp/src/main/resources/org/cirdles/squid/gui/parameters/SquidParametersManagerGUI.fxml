@@ -55,7 +55,7 @@
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" textAlignment="RIGHT" AnchorPane.leftAnchor="16.0" />
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="397.0" layoutY="57.0" text="Version:" />
-                                <Label fx:id="physConstIsEditableLabel" layoutX="600.0" layoutY="45.0" />
+                                <Label fx:id="physConstIsEditableLabel" layoutX="600.0" layoutY="45.0" textFill="RED" />
                                 <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">
@@ -164,7 +164,7 @@
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" AnchorPane.leftAnchor="16.0" />
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="397.0" layoutY="57.0" text="Version:" />
-                                <Label fx:id="refMatIsEditableLabel" layoutX="600.0" layoutY="45.0" />
+                                <Label fx:id="refMatIsEditableLabel" layoutX="600.0" layoutY="45.0" textFill="RED" />
                                 <TabPane layoutX="14.0" layoutY="112.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">

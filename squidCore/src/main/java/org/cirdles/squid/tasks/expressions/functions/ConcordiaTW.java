@@ -53,7 +53,7 @@ public class ConcordiaTW extends Function {
         rowCount = 1;
         colCount = 4;
         labelsForOutputValues = new String[][]{{"Raw Conc Age", "1-sigma abs", "MSWD Conc", "Prob Conc"}};
-        labelsForInputValues = new String[]{"ratioXAndUnct","ratioYAndUnct"};
+        labelsForInputValues = new String[]{"ratioXAndUnct", "ratioYAndUnct"};
     }
 
     /**
@@ -75,8 +75,8 @@ public class ConcordiaTW extends Function {
             double[] ratioXAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] ratioYAndUnct = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] concordiaTW
-                    = org.cirdles.ludwig.isoplot3.Pub.concordiaTW(ratioXAndUnct[0], 
-                            ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1],lambda235, lambda238, uRatio);
+                    = org.cirdles.ludwig.isoplot3.Pub.concordiaTW(ratioXAndUnct[0],
+                            ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1], lambda235, lambda238, uRatio);
             retVal = new Object[][]{convertArrayToObjects(concordiaTW)};
         } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0}};

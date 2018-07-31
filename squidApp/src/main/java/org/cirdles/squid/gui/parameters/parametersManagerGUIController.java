@@ -45,6 +45,7 @@ import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
+import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -693,7 +694,7 @@ public class parametersManagerGUIController implements Initializable {
                     + curr.getValue());
         }
     }
-    
+
     private void setUpApparentDates() {
         refMatModel.calculateApparentDates();
         apparentDatesTextArea.setText(refMatModel.listFormattedApparentDates());
@@ -816,6 +817,7 @@ public class parametersManagerGUIController implements Initializable {
             setUpPhysConst();
             squidLabData.storeState();
         }
+        squidLabDataStage.requestFocus();
     }
 
     @FXML
@@ -829,6 +831,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             physConstModel.serializeXMLObject(file.getAbsolutePath());
         }
+        squidLabDataStage.requestFocus();
     }
 
     @FXML
@@ -842,6 +845,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             refMatModel.serializeXMLObject(file.getAbsolutePath());
         }
+        squidLabDataStage.requestFocus();
     }
 
     @FXML
@@ -860,6 +864,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatModel = importedMod;
             squidLabData.storeState();
         }
+        squidLabDataStage.requestFocus();
     }
 
     private void physConstEditable(boolean isEditable) {
@@ -911,7 +916,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatCorrTable.getColumns().get(0).setEditable(false);
 
         refMatCovTable.setEditable(false);
-        
+
         apparentDatesTextArea.setEditable(false);
 
         refMatCommentsArea.setEditable(isEditable);
@@ -1038,7 +1043,7 @@ public class parametersManagerGUIController implements Initializable {
             }
             physConstModel.setMolarMasses(masses);
         } catch (Exception e) {
-            String message = "incorrect molar masses format";
+            String message = "Incorrect molar masses format!";
             SquidMessageDialog.showWarningDialog(message, primaryStageWindow);
         }
 
