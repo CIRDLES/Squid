@@ -29,6 +29,8 @@
                                             <items>
                                                 <MenuItem mnemonicParsing="false" onAction="#physConstImpXMLAction" text="Import Physical Constants Model from XML File" />
                                                 <MenuItem mnemonicParsing="false" onAction="#physConstExpXMLAction" text="Export Physical Constants Model as XML File" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem mnemonicParsing="false" onAction="#importETReduxPhysicalConstantsModel" text="Import ETRedux Physical Constants Model" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
@@ -47,7 +49,7 @@
                                 </MenuBar>
                                 <Label layoutX="148.0" layoutY="6.0" text="Choose Physical Constants Model:" AnchorPane.leftAnchor="148.0" AnchorPane.topAnchor="6.0" />
                                 <ChoiceBox fx:id="physConstCB" layoutX="384.0" layoutY="2.0" prefWidth="380.0" AnchorPane.leftAnchor="384.0" AnchorPane.topAnchor="2.0" />
-                                <TextField fx:id="physConstModelName" layoutX="100.0" layoutY="53.0" prefHeight="26.0" prefWidth="258.0" />
+                                <TextField fx:id="physConstModelName" layoutX="100.0" layoutY="53.0" prefHeight="26.0" prefWidth="277.0" />
                                 <TextField fx:id="physConstLabName" layoutX="100.0" layoutY="86.0" />
                                 <TextField fx:id="physConstVersion" layoutX="457.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
                                 <TextField fx:id="physConstDateCertified" layoutX="400.0" layoutY="86.0" />
@@ -136,8 +138,10 @@
                                     <menus>
                                         <Menu fx:id="refMatFileMenu" mnemonicParsing="false" text="File">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#refMatExpXMLAction" text="Export Reference Material Model as XML File" />
                                                 <MenuItem mnemonicParsing="false" onAction="#refMatImpXMLAction" text="Import Reference Material Model from XML File" />
+                                                <MenuItem mnemonicParsing="false" onAction="#refMatExpXMLAction" text="Export Reference Material Model as XML File" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem mnemonicParsing="false" onAction="#importETReduxReferenceMaterial" text="Import ETRedux Reference Material Model" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
@@ -156,7 +160,7 @@
                                 </MenuBar>
                                 <Label layoutX="152.0" layoutY="5.0" text="Choose Reference Material Model:" />
                                 <ChoiceBox fx:id="refMatCB" layoutX="385.0" layoutY="1.0" prefWidth="380.0" />
-                                <TextField fx:id="refMatModelName" layoutX="100.0" layoutY="53.0" prefHeight="26.0" prefWidth="258.0" />
+                                <TextField fx:id="refMatModelName" layoutX="100.0" layoutY="53.0" prefHeight="26.0" prefWidth="277.0" />
                                 <TextField fx:id="refMatLabName" layoutX="100.0" layoutY="86.0" />
                                 <TextField fx:id="refMatVersion" layoutX="457.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
                                 <TextField fx:id="refMatDateCertified" layoutX="400.0" layoutY="86.0" />
