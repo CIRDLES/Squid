@@ -387,6 +387,7 @@ public class PlotsController implements Initializable {
         /**
          * @return the shrimpFraction
          */
+        @Override
         public ShrimpFractionExpressionInterface getShrimpFraction() {
             return shrimpFraction;
         }

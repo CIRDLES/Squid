@@ -2,13 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sessionVBox" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
+<VBox fx:id="sessionVBox" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" prefWidth="1200.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="20.0">
          <children>
@@ -23,12 +24,17 @@
             <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
          </padding>
       </HBox>
-      <TreeView fx:id="prawnAuditTree" style="-fx-background-color: #f4f4f4;" VBox.vgrow="ALWAYS">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </TreeView>
-      <TreeView fx:id="prawnAuditTree1" layoutX="10.0" layoutY="40.0" style="-fx-background-color: #f4f4f4;">
+      <HBox>
+         <children>
+            <Label prefHeight="28.0" prefWidth="289.0" style="-fx-font-size: 14;" text="     Select Name Delimeter OR # Chars:  " />
+            <ComboBox fx:id="delimeterComboBox" prefHeight="28.0" prefWidth="65.0" style="-fx-font-size: 14; -fx-font-weight: bold;" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets left="-5.0" right="-5.0" />
+               </HBox.margin></ComboBox>
+            <Label fx:id="summaryLabel" prefHeight="28.0" prefWidth="864.0" style="-fx-font-size: 14;" text="   Summary:" />
+         </children>
+      </HBox>
+      <TreeView fx:id="prawnAuditTreeCheckBox" layoutX="10.0" layoutY="40.0" prefHeight="582.0" prefWidth="1197.0" style="-fx-background-color: #f4f4f4;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>

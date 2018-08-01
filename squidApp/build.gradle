@@ -30,6 +30,8 @@ repositories {
 dependencies {
     compile project(":squidCore")
     compile 'com.github.cirdles.topsoil:app:master-SNAPSHOT'
+     //implementation 'com.github.marottajb:topsoil:Dev-SNAPSHOT'
+	
     //compile group: 'com.proudapes', name: 'jlatexmathfx', version: '0.3.3'
     //compile 'com.github.bitstormGER:jlatexmathfx:-SNAPSHOT'
     //compile 'com.github.bitstormGER:jlatexmathfx:0.3.3'

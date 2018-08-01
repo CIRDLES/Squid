@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -115,6 +116,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean directAltPD;
     protected String filterForRefMatSpotNames;
     protected String filterForConcRefMatSpotNames;
+    protected Map<String, Integer> filtersForUnknownNames;
 
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
@@ -190,6 +192,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.dateRevised = 0l;
         this.filterForRefMatSpotNames = "";
         this.filterForConcRefMatSpotNames = "";
+        this.filtersForUnknownNames = new HashMap<>();
         this.useSBM = true;
         this.userLinFits = false;
         this.indexOfBackgroundSpecies = -1;
@@ -295,6 +298,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         if (filterForConcRefMatSpotNames == null) {
             filterForConcRefMatSpotNames = "";
+        }
+        if (filtersForUnknownNames == null){
+            filtersForUnknownNames = new HashMap<>();
         }
 
         StringBuilder summary = new StringBuilder();
@@ -1514,6 +1520,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
     }
 
+    @Override
+    public void setFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames) {
+        this.filtersForUnknownNames = filtersForUnknownNames;
+    }
+
+    public Map<String, Integer> getFiltersForUnknownNames() {
+        if (filtersForUnknownNames == null){
+            filtersForUnknownNames = new HashMap<>();
+        }
+        return new HashMap<>(filtersForUnknownNames);
+    }
+
+    
     /**
      * @return the useSBM
      */

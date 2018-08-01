@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +40,7 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -75,7 +78,7 @@ public final class SquidProject implements Serializable {
         this.filterForConcRefMatSpotNames = "";
 
         this.sessionDurationHours = 0.0;
-        
+
         projectChanged = false;
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
@@ -161,9 +164,9 @@ public final class SquidProject implements Serializable {
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
-            Expression expression = this.task.generateExpressionFromRawExcelStyleText(task25Eqn.getEquationName(), 
-                    task25Eqn.getExcelEquationString(), 
-                    task25Eqn.isEqnSwitchNU(), 
+            Expression expression = this.task.generateExpressionFromRawExcelStyleText(task25Eqn.getEquationName(),
+                    task25Eqn.getExcelEquationString(),
+                    task25Eqn.isEqnSwitchNU(),
                     false, false);
 
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
@@ -195,8 +198,8 @@ public final class SquidProject implements Serializable {
         prawnXMLFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
-        task.setPrawnFile(prawnFile);   
-        ((Task)task).setupSquidSessionSkeleton();
+        task.setPrawnFile(prawnFile);
+        ((Task) task).setupSquidSessionSkeleton();
     }
 
     public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
@@ -332,11 +335,16 @@ public final class SquidProject implements Serializable {
 
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
         prefixTree = new SquidPrefixTree();
+        
+        List<Run> copyOfRuns = new ArrayList<Run>(prawnFile.getRun());
+        Comparator<String> intuitiveString = new IntuitiveStringComparator<>();
+        Collections.sort(copyOfRuns, (Run pt1, Run pt2)
+                -> (intuitiveString.compare(pt1.getPar().get(0).getValue(), pt2.getPar().get(0).getValue())));
 
-        for (int i = 0; i < prawnFile.getRun().size(); i++) {
-            SquidPrefixTree leafParent = prefixTree.insert(prawnFile.getRun().get(i).getPar().get(0).getValue());
-            leafParent.getChildren().get(0).setCountOfSpecies(Integer.parseInt(prawnFile.getRun().get(i).getPar().get(2).getValue()));
-            leafParent.getChildren().get(0).setCountOfScans(Integer.parseInt(prawnFile.getRun().get(i).getPar().get(3).getValue()));
+        for (int i = 0; i < copyOfRuns.size(); i++) {
+            SquidPrefixTree leafParent = prefixTree.insert(copyOfRuns.get(i).getPar().get(0).getValue());
+            leafParent.getChildren().get(0).setCountOfSpecies(Integer.parseInt(copyOfRuns.get(i).getPar().get(2).getValue()));
+            leafParent.getChildren().get(0).setCountOfScans(Integer.parseInt(copyOfRuns.get(i).getPar().get(3).getValue()));
         }
 
         prefixTree.prepareStatistics();

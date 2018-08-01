@@ -37,8 +37,8 @@
             <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="PrawnFile">
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Choose Reference Materials" />
-                <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Audit Session" />
-                  <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Masses" />
+                <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Manage Sample Naming" />
+                  <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Prawn File as ..." />
               </items>
