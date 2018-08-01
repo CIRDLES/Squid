@@ -29,8 +29,8 @@
                                             <items>
                                                 <MenuItem mnemonicParsing="false" onAction="#physConstImpXMLAction" text="Import Physical Constants Model from XML File" />
                                                 <MenuItem mnemonicParsing="false" onAction="#physConstExpXMLAction" text="Export Physical Constants Model as XML File" />
-                                    <SeparatorMenuItem mnemonicParsing="false" />
-                                    <MenuItem mnemonicParsing="false" onAction="#importETReduxPhysicalConstantsModel" text="Import ETRedux Physical Constants Model" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem mnemonicParsing="false" onAction="#importETReduxPhysicalConstantsModel" text="Import ETRedux Physical Constants Model" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
@@ -65,7 +65,7 @@
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
                                                         <TableView fx:id="physConstDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
-                                          <Button fx:id="physConstDataNotationButton" layoutX="20.0" layoutY="2.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" AnchorPane.topAnchor="0.0" />
+                                                        <Button fx:id="physConstDataNotationButton" layoutX="20.0" layoutY="2.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -140,8 +140,8 @@
                                             <items>
                                                 <MenuItem mnemonicParsing="false" onAction="#refMatImpXMLAction" text="Import Reference Material Model from XML File" />
                                                 <MenuItem mnemonicParsing="false" onAction="#refMatExpXMLAction" text="Export Reference Material Model as XML File" />
-                                    <SeparatorMenuItem mnemonicParsing="false" />
-                                    <MenuItem mnemonicParsing="false" onAction="#importETReduxReferenceMaterial" text="Import ETRedux Reference Material Model" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem mnemonicParsing="false" onAction="#importETReduxReferenceMaterial" text="Import ETRedux Reference Material Model" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
@@ -176,7 +176,7 @@
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
                                                         <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
-                                          <Button fx:id="refMatDataNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
+                                                        <Button fx:id="refMatDataNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -205,8 +205,8 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatConcentrationsTable" layoutX="21.0" layoutY="5.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
-                                          <Button fx:id="refMatConcentrationsNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatConcentrationsNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" AnchorPane.topAnchor="0.0" />
+                                                        <TableView fx:id="refMatConcentrationsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+                                                        <Button fx:id="refMatConcentrationsNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatConcentrationsNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -217,7 +217,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea fx:id="refMatReferencesArea" layoutX="430.0" prefHeight="200.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <TextArea fx:id="refMatReferencesArea" layoutX="430.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
                                                         <TextArea fx:id="refMatCommentsArea" layoutX="10.0" layoutY="104.0" prefHeight="200.0" prefWidth="400.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
                                                         <Label layoutX="10.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
                                                         <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
@@ -226,13 +226,14 @@
                                             </content>
                                         </Tab>
                                         <Tab text="Apparent Dates">
-                                 <content>
-                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                       <children>
-                                          <TextArea fx:id="apparentDatesTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
-                                       </children>
-                                    </AnchorPane>
-                                 </content></Tab>
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TextArea fx:id="apparentDatesTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
                                     </tabs>
                                 </TabPane>
                             </children>

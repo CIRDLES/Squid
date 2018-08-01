@@ -922,7 +922,6 @@ public class parametersManagerGUIController implements Initializable {
     private void physConstEditable(boolean isEditable) {
         if (isEditable) {
             physConstIsEditableLabel.setText("editing");
-            isEditingCurrPhysConst = true;
         }
 
         physConstModelName.setEditable(isEditable);
@@ -951,7 +950,6 @@ public class parametersManagerGUIController implements Initializable {
     private void refMatEditable(boolean isEditable) {
         if (isEditable) {
             refMatIsEditableLabel.setText("editing");
-            isEditingCurrRefMat = true;
         }
 
         refMatModelName.setEditable(isEditable);
@@ -1094,9 +1092,9 @@ public class parametersManagerGUIController implements Initializable {
             String[] lines = molarMassesTextArea.getText().split("\n");
             for (int i = 0; i < lines.length; i++) {
                 if (!lines[i].trim().equals("")) {
-                    String[] currLine = lines[i].split(" = ");
-                    String key = currLine[0];
-                    String bigDec = currLine[1];
+                    String[] currLine = lines[i].split("=");
+                    String key = currLine[0].trim();
+                    String bigDec = currLine[1].trim();
                     if (Double.parseDouble(bigDec) == 0) {
                         masses.put(key, BigDecimal.ZERO);
                     } else {
