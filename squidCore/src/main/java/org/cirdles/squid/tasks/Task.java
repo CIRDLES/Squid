@@ -120,7 +120,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected String filterForConcRefMatSpotNames;
     protected Map<String, Integer> filtersForUnknownNames;
 
-
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
     protected Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
@@ -292,20 +291,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         Collections.sort(taskExpressionsOrdered);
     }
-    
-    
+
     private void generateMapOfUnknownsBySampleNames() {
         mapOfUnknownsBySampleNames = new HashMap<>();
         // walk chosen sample names (excluding reference materials) and get list of spots belonging to each
         for (String sampleName : filtersForUnknownNames.keySet()) {
-            List<ShrimpFractionExpressionInterface> filteredList =
-                    unknownSpots.stream()
-                    .filter(spot -> spot.getFractionID().startsWith(sampleName))
-                    .collect(Collectors.toList());
-            mapOfUnknownsBySampleNames.put(sampleName, filteredList);
+            List<ShrimpFractionExpressionInterface> filteredList
+                    = unknownSpots.stream()
+                            .filter(spot -> spot.getFractionID().startsWith(sampleName))
+                            .collect(Collectors.toList());
+            if (filteredList.size() > 0) {
+                mapOfUnknownsBySampleNames.put(sampleName, filteredList);
+            }
         }
     }
-
 
     @Override
     public String printTaskAudit() {
@@ -1123,7 +1122,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
             ((ShrimpFraction) spot).calculateSpotHours(baseTimeOfFirstRefMatForCalcHoursField);
         }
-        
+
         generateMapOfUnknownsBySampleNames();
 
         return shrimpFractions;
