@@ -8,6 +8,7 @@ package org.cirdles.squid.parameters.parameterModels.physicalConstantsModels;
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.Map.Entry;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
@@ -28,6 +30,8 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
  * @author ryanb
  */
 public class PhysicalConstantsModel extends ParametersModel {
+
+    private static long serialVersionUID = 6711139902976873456L;
 
     public static PhysicalConstantsModel defaultPhysicalConstantsModel = getDefaultModels().get(0);
 
@@ -91,9 +95,7 @@ public class PhysicalConstantsModel extends ParametersModel {
         for (int i = 0; i < files.length; i++) {
             models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
         }
-        if (models.size() > 0) {
-            defaultPhysicalConstantsModel = models.get(0);
-        }
+
         return models;
     }
 
@@ -147,4 +149,9 @@ public class PhysicalConstantsModel extends ParametersModel {
 
     }
 
+    public static void main(String[] args) {
+        ObjectStreamClass stream = ObjectStreamClass.lookup(PhysicalConstantsModel.class);
+        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
+    }
+    
 }

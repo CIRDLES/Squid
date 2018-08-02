@@ -25,6 +25,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -42,6 +43,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.control.Menu;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -149,6 +151,8 @@ public class parametersManagerGUIController implements Initializable {
     private Button refMatDataNotationButton;
     @FXML
     private Button refMatConcentrationsNotationButton;
+    @FXML
+    private TextArea apparentDatesTextArea;
 
     PhysicalConstantsModel physConstModel;
     ReferenceMaterial refMatModel;
@@ -163,8 +167,6 @@ public class parametersManagerGUIController implements Initializable {
     private DecimalFormat physConstDataNotation;
     private DecimalFormat refMatDataNotation;
     private DecimalFormat refMatConcentrationsNotation;
-    @FXML
-    private TextArea apparentDatesTextArea;
 
     /**
      * Initializes the controller class.
@@ -186,6 +188,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel = refMatModels.get(0);
         setUpRefMatCB();
 
+        setUpMassesProofer();
         disableTableColumReordering();
         setUpLaboratoryName();
     }
@@ -340,7 +343,7 @@ public class parametersManagerGUIController implements Initializable {
                         ObservableList<SimpleStringProperty> rows = items.get(value.getTablePosition().getRow());
                         rows.set(value.getTablePosition().getColumn(), new SimpleStringProperty(value.getNewValue()));
                     } else {
-                        SquidMessageDialog.showWarningDialog("Value Out of Range: Only values"
+                        SquidMessageDialog.showWarningDialog("Value Out of Range or Invalid: Only values"
                                 + " in the range of [-1, 1] are allowed.", primaryStageWindow);
                         table.refresh();
                     }
@@ -690,6 +693,29 @@ public class parametersManagerGUIController implements Initializable {
         }
     }
 
+    private void setUpMassesProofer() {
+        molarMassesTextArea.focusedProperty().addListener((obV, ov, nv) -> {
+            if (!nv) {
+                Map<String, BigDecimal> masses = new HashMap<>();
+                try {
+                    String[] lines = molarMassesTextArea.getText().split("\n");
+                    for (int i = 0; i < lines.length; i++) {
+                        if (!lines[i].trim().equals("")) {
+                            String[] currLine = lines[i].split("=");
+                            String key = currLine[0].trim();
+                            String bigDec = currLine[1].trim();
+                            Double.parseDouble(bigDec);
+                        }
+                    }
+                } catch (Exception e) {
+                    String message = "Incorrect molar masses format!\n"
+                            + "Enter in format: ratio = mass";
+                    SquidMessageDialog.showWarningDialog(message, primaryStageWindow);
+                }
+            }
+        });
+    }
+
     private void setUpApparentDates() {
         refMatModel.calculateApparentDates();
         apparentDatesTextArea.setText(refMatModel.listFormattedApparentDates());
@@ -759,11 +785,9 @@ public class parametersManagerGUIController implements Initializable {
         labNameTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-                if (!newPropertyValue) {
-                    if (!squidLabData.getLaboratoryName().equals(labNameTextField.getText())) {
-                        squidLabData.setLaboratoryName(labNameTextField.getText());
-                        squidLabData.storeState();
-                    }
+                if (!newPropertyValue && !squidLabData.getLaboratoryName().equals(labNameTextField.getText())) {
+                    squidLabData.setLaboratoryName(labNameTextField.getText());
+                    squidLabData.storeState();
                 }
             }
         });
@@ -890,6 +914,7 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             PhysicalConstantsModel importedMod = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(file);
+            importedMod.setIsEditable(true);
             physConstModels.add(importedMod);
             physConstCB.getItems().add(getModVersionName(importedMod));
             physConstCB.getSelectionModel().selectLast();
@@ -910,6 +935,7 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             ReferenceMaterial importedMod = ReferenceMaterial.getReferenceMaterialFromETReduxXML(file);
+            importedMod.setIsEditable(true);
             refMatModels.add(importedMod);
             refMatCB.getItems().add(getModVersionName(importedMod));
             refMatCB.getSelectionModel().selectLast();

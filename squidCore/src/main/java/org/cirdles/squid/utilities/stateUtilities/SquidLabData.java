@@ -7,6 +7,7 @@ package org.cirdles.squid.utilities.stateUtilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
@@ -14,7 +15,6 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDE
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
-import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 
 /**
  *
@@ -22,9 +22,11 @@ import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
  */
 public class SquidLabData implements Serializable {
 
-    List<ReferenceMaterial> referenceMaterials;
-    List<PhysicalConstantsModel> physicalConstantsModels;
-    String laboratoryName;
+    private static long serialVersionUID = 2042394065348785942L;
+    
+    private List<ReferenceMaterial> referenceMaterials;
+    private List<PhysicalConstantsModel> physicalConstantsModels;
+    private String laboratoryName;
 
     public SquidLabData() {
         laboratoryName = "mystery lab";
@@ -135,14 +137,9 @@ public class SquidLabData implements Serializable {
     public boolean equals(Object o) {
         return o instanceof SquidLabData && this.compareTo(((SquidLabData) o)) == 0;
     }
-
+    
     public static void main(String[] args) {
-        try {
-            SquidLabData data = getExistingSquidLabData();
-            data.storeState();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ObjectStreamClass stream = ObjectStreamClass.lookup(SquidLabData.class);
+        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
     }
-
 }
