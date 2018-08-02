@@ -125,11 +125,6 @@ public final class Squid3Constants {
     public static final double lambda232 = 4.9475E-11;
     public static final double uRatio = 137.88;
     public static final double badAge = -1.23456789;
-//    public static final double sComm0_64 = 17.821;
-//    public static final double sComm0_76 = 0.8741;
-////    public static final double sComm0_86 = 2.1095;
-//    public static final double sComm0_74 = 15.5773361;
-//    public static final double sComm0_84 = 37.5933995;
     public static final double PRESENT_238U235U = 137.88;
 
     public enum IndexIsoptopesEnum {
@@ -212,6 +207,52 @@ public final class Squid3Constants {
      */
     static public int getUnitConversionMoveCount(String unit) {
         return UnitConversions.get(unit);
+    }
+    
+    
+    public static enum SampleNameDelimetersEnum {
+
+        HYPHEN("-"),
+        DOT("."),
+        UNDERSCORE("_"),
+        COLON(":"),
+        ONE("1"),
+        TWO("2"),
+        THREE("3"),
+        FOUR("4"),
+        FIVE("5"),
+        SIX("6"),
+        SEVEN("7"),
+        EIGHT("8"),
+        NINE("9");
+
+        private final String name;
+
+        private SampleNameDelimetersEnum(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static String[] names() {
+            String[] names = new String[values().length];
+            for (int i = 0; i < names.length; i++) {
+                names[i] = " " + values()[i].getName();
+            }
+            return names;
+        }
+
+        public static SampleNameDelimetersEnum getByName(String name) {
+            SampleNameDelimetersEnum retVal = null;
+            for (SampleNameDelimetersEnum delim : SampleNameDelimetersEnum.values()) {
+                if (delim.name.equals(name)) {
+                    retVal = delim;
+                }
+            }
+            return retVal;
+        }
     }
 
 }

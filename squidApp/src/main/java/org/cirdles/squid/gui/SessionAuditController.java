@@ -38,6 +38,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -90,17 +91,18 @@ public class SessionAuditController implements Initializable {
 
         ObservableList<String> delimetersList = FXCollections.observableArrayList(SampleNameDelimetersEnum.names());
         delimeterComboBox.setItems(delimetersList);
+        // set value before adding listener
+        delimeterComboBox.getSelectionModel().select(squidProject.getDelimiterForUnknownNames());
         delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                     final String oldvalue, final String newvalue) {
                 sampleNameDelimeter = newvalue.trim();
-                squidProject.getTask().setFiltersForUnknownNames(new HashMap<>());
+                squidProject.updateFiltersForUnknownNames(new HashMap<>());
+                squidProject.setDelimiterForUnknownNames(newvalue);
                 setUpPrawnAuditTreeView(false);
                 refreshView();
             }
         });
-
-        delimeterComboBox.getSelectionModel().select(0);
 
     }
 
@@ -162,11 +164,11 @@ public class SessionAuditController implements Initializable {
         }));
 
         List<SampleNameTreeNodeInterface> sampleNameNodes = new ArrayList<>();
-        workingListOfSelectedNames = squidProject.getTask().getFiltersForUnknownNames();
+        workingListOfSelectedNames = squidProject.getFiltersForUnknownNames();
 
         populatePrefixTreeView(sampleNameNodes, rootItem, spotPrefixTree, showDupesOnly, 0, true);
 
-        squidProject.getTask().setFiltersForUnknownNames(workingListOfSelectedNames);
+        squidProject.updateFiltersForUnknownNames(workingListOfSelectedNames);
         nameNodes = FXCollections.observableArrayList(sampleNameNodes);
     }
 
@@ -214,7 +216,7 @@ public class SessionAuditController implements Initializable {
 
         boolean continueExpansion = false;
         if (children.size() > 0) {
-            if (squidProject.getTask().getFiltersForUnknownNames().isEmpty()) {
+            if (squidProject.getFiltersForUnknownNames().isEmpty()) {
                 int countOfLetters = 0;
                 if (sampleNameDelimeter.matches("\\d")) {
                     countOfLetters = Integer.parseInt(sampleNameDelimeter);
@@ -465,50 +467,6 @@ public class SessionAuditController implements Initializable {
             return countOfIncludedSpots;
         }
 
-    }
-
-    public enum SampleNameDelimetersEnum {
-
-        HYPHEN("-"),
-        DOT("."),
-        UNDERSCORE("_"),
-        COLON(":"),
-        ONE("1"),
-        TWO("2"),
-        THREE("3"),
-        FOUR("4"),
-        FIVE("5"),
-        SIX("6"),
-        SEVEN("7"),
-        EIGHT("8"),
-        NINE("9");
-
-        private final String name;
-
-        private SampleNameDelimetersEnum(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public static String[] names() {
-            String[] names = new String[values().length];
-            for (int i = 0; i < names.length; i++) {
-                names[i] = " " + values()[i].getName();
-            }
-            return names;
-        }
-
-        public static SampleNameDelimetersEnum getByName(String name) {
-            for (SampleNameDelimetersEnum delim : SampleNameDelimetersEnum.values()) {
-                if (delim.name.equals(name)) {
-                    return delim;
-                }
-            }
-            return null;
-        }
     }
 
 }

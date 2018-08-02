@@ -266,9 +266,10 @@ public interface TaskInterface {
      */
     public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
 
+    /**
+     * @param filtersForUnknownNames the filtersForUnknownNames to set
+     */
     public void setFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames);
-
-    public Map<String, Integer> getFiltersForUnknownNames();
 
     /**
      * @return the useSBM

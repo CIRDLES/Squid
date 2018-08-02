@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
@@ -38,6 +39,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
+import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -118,6 +120,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected String filterForConcRefMatSpotNames;
     protected Map<String, Integer> filtersForUnknownNames;
 
+
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
     protected Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
@@ -140,6 +143,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
     protected List<ShrimpFractionExpressionInterface> concentrationReferenceMaterialSpots;
     protected List<ShrimpFractionExpressionInterface> unknownSpots;
+    protected Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames;
 
     /**
      *
@@ -179,7 +183,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @param name
      * @param prawnFile
-     * @param filterForRefMatSpotNames
      * @param reportsEngine
      */
     public Task(String name, PrawnFile prawnFile, CalamariReportsEngine reportsEngine) {
@@ -193,6 +196,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.filterForRefMatSpotNames = "";
         this.filterForConcRefMatSpotNames = "";
         this.filtersForUnknownNames = new HashMap<>();
+
         this.useSBM = true;
         this.userLinFits = false;
         this.indexOfBackgroundSpecies = -1;
@@ -288,6 +292,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         Collections.sort(taskExpressionsOrdered);
     }
+    
+    
+    private void generateMapOfUnknownsBySampleNames() {
+        mapOfUnknownsBySampleNames = new HashMap<>();
+        // walk chosen sample names (excluding reference materials) and get list of spots belonging to each
+        for (String sampleName : filtersForUnknownNames.keySet()) {
+            List<ShrimpFractionExpressionInterface> filteredList =
+                    unknownSpots.stream()
+                    .filter(spot -> spot.getFractionID().startsWith(sampleName))
+                    .collect(Collectors.toList());
+            mapOfUnknownsBySampleNames.put(sampleName, filteredList);
+        }
+    }
+
 
     @Override
     public String printTaskAudit() {
@@ -298,9 +316,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         if (filterForConcRefMatSpotNames == null) {
             filterForConcRefMatSpotNames = "";
-        }
-        if (filtersForUnknownNames == null){
-            filtersForUnknownNames = new HashMap<>();
         }
 
         StringBuilder summary = new StringBuilder();
@@ -1108,6 +1123,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
             ((ShrimpFraction) spot).calculateSpotHours(baseTimeOfFirstRefMatForCalcHoursField);
         }
+        
+        generateMapOfUnknownsBySampleNames();
 
         return shrimpFractions;
     }
@@ -1520,19 +1537,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
     }
 
-    @Override
+    /**
+     * @param filtersForUnknownNames the filtersForUnknownNames to set
+     */
     public void setFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames) {
         this.filtersForUnknownNames = filtersForUnknownNames;
     }
 
-    public Map<String, Integer> getFiltersForUnknownNames() {
-        if (filtersForUnknownNames == null){
-            filtersForUnknownNames = new HashMap<>();
-        }
-        return new HashMap<>(filtersForUnknownNames);
-    }
-
-    
     /**
      * @return the useSBM
      */
@@ -1994,4 +2005,5 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         return retVal;
     }
+
 }
