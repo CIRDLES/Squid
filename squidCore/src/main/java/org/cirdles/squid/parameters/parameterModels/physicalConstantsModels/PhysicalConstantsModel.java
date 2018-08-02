@@ -20,7 +20,6 @@ import java.util.Map.Entry;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
@@ -33,7 +32,7 @@ public class PhysicalConstantsModel extends ParametersModel {
 
     private static long serialVersionUID = 6711139902976873456L;
 
-    public static PhysicalConstantsModel defaultPhysicalConstantsModel = getDefaultModels().get(0);
+    public static PhysicalConstantsModel defaultPhysicalConstantsModel = getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
 
     Map<String, BigDecimal> molarMasses;
 
@@ -99,6 +98,20 @@ public class PhysicalConstantsModel extends ParametersModel {
         return models;
     }
 
+    public static PhysicalConstantsModel getDefaultModel(String modelName, String version) {
+        PhysicalConstantsModel retVal = null;
+        List<PhysicalConstantsModel> models = getDefaultModels();
+        for (int i = 0; i < models.size() && retVal == null; i++) {
+            if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
+                retVal = models.get(i);
+            }
+        }
+        if (retVal == null) {
+            retVal = new PhysicalConstantsModel();
+        }
+        return retVal;
+    }
+
     public void setUpDefaultMolarMasses() {
         String[][] masses = DataDictionary.AtomicMolarMasses;
         for (int i = 0; i < masses.length; i++) {
@@ -153,5 +166,5 @@ public class PhysicalConstantsModel extends ParametersModel {
         ObjectStreamClass stream = ObjectStreamClass.lookup(PhysicalConstantsModel.class);
         System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
     }
-    
+
 }

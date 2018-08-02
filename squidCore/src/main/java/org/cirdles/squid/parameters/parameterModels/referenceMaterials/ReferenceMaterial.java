@@ -38,10 +38,10 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
  * @author ryanb
  */
 public class ReferenceMaterial extends ParametersModel {
-    
+
     private static long serialVersionUID = 1513337897720796891L;
 
-    private static ReferenceMaterial defaultReferenceMaterial = getDefaultModels().get(1);
+    private static ReferenceMaterial defaultReferenceMaterial = getDefaultModel("Zircon-91500", "1.0");
 
     ValueModel[] concentrations;
     boolean[] dataMeasured;
@@ -122,6 +122,20 @@ public class ReferenceMaterial extends ParametersModel {
         }
 
         return models;
+    }
+
+    public static ReferenceMaterial getDefaultModel(String modelName, String version) {
+        ReferenceMaterial retVal = null;
+        List<ReferenceMaterial> models = getDefaultModels();
+        for (int i = 0; i < models.size() && retVal == null; i++) {
+            if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
+                retVal = models.get(i);
+            }
+        }
+        if (retVal == null) {
+            retVal = new ReferenceMaterial();
+        }
+        return retVal;
     }
 
     public void calculateApparentDates() {
