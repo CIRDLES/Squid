@@ -582,7 +582,7 @@ public final class SquidProject implements Serializable {
      */
     public String getDelimiterForUnknownNames() {
         if (delimiterForUnknownNames == null) {
-            delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.DOT.getName();
+            delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
         }
         return delimiterForUnknownNames;
     }

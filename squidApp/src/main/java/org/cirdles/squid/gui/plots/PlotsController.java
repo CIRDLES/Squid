@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -247,19 +248,27 @@ public class PlotsController implements Initializable {
         fractionsTreeView1.setRoot(rootItem);
         fractionsTreeView1.setShowRoot(true);
 
+        dataSets = new TreeMap<>();
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfUnknownsBySampleNames.entrySet()) {
             CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem
-                = new CheckBoxTreeItem<>(new SampleNode(entry.getKey()));
+                    = new CheckBoxTreeItem<>(new SampleNode(entry.getKey()));
             rootItem.getChildren().add(sampleItem);
+
+            List<Map<String, Object>> myData = new ArrayList<>();
+            dataSets.put(entry.getKey(), myData);
+            for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
+                SampleTreeNodeInterface fractionNode
+                        = new ConcordiaFractionNode(spot, correction, true);
+                fractionNodeDetails.add(fractionNode);
+                CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
+                        = new CheckBoxTreeItem<>(fractionNode);
+                sampleItem.getChildren().add(checkBoxTreeItem);
+
+                myData.add(((ConcordiaFractionNode) fractionNode).getDatum());
+            }
         }
 
-//        for (int i = 0; i < shrimpFractionsDetails.size(); i++) {
-//            SampleTreeNodeInterface fractionNode
-//                    = new ConcordiaFractionNode(shrimpFractionsDetails.get(i), correction, true);
-//            fractionNodeDetails.add(fractionNode);
-//            data.add(((ConcordiaFractionNode) fractionNode).getDatum());
-//        }
-//        fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
+        fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
 //        plot.setData(data);
 //
         fractionsTreeView1.setCellFactory(p -> new CheckBoxTreeCell<>(

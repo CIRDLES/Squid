@@ -208,8 +208,7 @@ public final class Squid3Constants {
     static public int getUnitConversionMoveCount(String unit) {
         return UnitConversions.get(unit);
     }
-    
-    
+
     public static enum SampleNameDelimetersEnum {
 
         HYPHEN("-"),
@@ -254,5 +253,15 @@ public final class Squid3Constants {
             return retVal;
         }
     }
-
+    
+    public static final String STYLE_MANAGER_TITLE
+            = "     -fx-padding: 0 0 0 0;   \n"
+            + "    -fx-border-width: 1;\n"
+            + "    -fx-border-color: black;\n"
+            + "    -fx-background-radius: 0;\n"
+            + "    -fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+            + "    -fx-font-weight: bold;\n"
+            + "    -fx-font-size: 14pt;\n"
+            + "    -fx-text-fill: White;/*  #d8d8d8;*/\n"
+            + "    -fx-background-color: #3c77c9;\n";
 }

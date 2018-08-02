@@ -38,6 +38,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -84,7 +85,7 @@ public class SessionAuditController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        sampleNameDelimeter = "-";
+        sampleNameDelimeter = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName().trim();
         prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         setUpPrawnAuditTreeView(false);
@@ -93,12 +94,14 @@ public class SessionAuditController implements Initializable {
         delimeterComboBox.setItems(delimetersList);
         // set value before adding listener
         delimeterComboBox.getSelectionModel().select(squidProject.getDelimiterForUnknownNames());
+        
         delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                     final String oldvalue, final String newvalue) {
                 sampleNameDelimeter = newvalue.trim();
                 squidProject.updateFiltersForUnknownNames(new HashMap<>());
                 squidProject.setDelimiterForUnknownNames(newvalue);
+                squidProject.getTask().setChanged(true);
                 setUpPrawnAuditTreeView(false);
                 refreshView();
             }

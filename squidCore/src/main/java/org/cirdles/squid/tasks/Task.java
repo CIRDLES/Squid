@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,6 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
-import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -86,6 +86,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.samRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
 import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 /**
  *
@@ -293,7 +294,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void generateMapOfUnknownsBySampleNames() {
-        mapOfUnknownsBySampleNames = new HashMap<>();
+        Comparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+        mapOfUnknownsBySampleNames = new TreeMap<>(intuitiveStringComparator);
         // walk chosen sample names (excluding reference materials) and get list of spots belonging to each
         for (String sampleName : filtersForUnknownNames.keySet()) {
             List<ShrimpFractionExpressionInterface> filteredList
@@ -379,7 +381,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         summary.append("\n ")
                 .append(String.valueOf(unknownSpots.size()))
-                .append(" Unknown Spots.");
+                .append(" Unknown Spots");
+        
+        if (mapOfUnknownsBySampleNames.isEmpty()){
+            summary.append(". Individual samples not yet identified - see PrawnFile Menu");
+        } else {
+            summary.append(", organized into these samples:");
+        }
+        
+        for (String sampleName : mapOfUnknownsBySampleNames.keySet()){
+            summary.append("\n\t")
+                    .append("\"")
+                    .append(sampleName)
+                    .append("\"")
+                    .append("\t with ")
+                    .append(mapOfUnknownsBySampleNames.get(sampleName).size())
+                    .append(" spot" + (mapOfUnknownsBySampleNames.get(sampleName).size() > 1 ? "s" : ""));
+        }
 
         int count = 0;
         for (Expression exp : taskExpressionsOrdered) {
@@ -460,6 +478,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
             }
 
+            generateMapOfUnknownsBySampleNames();
+            
             processAndSortExpressions();
 
             evaluateTaskExpressions();
@@ -2003,6 +2023,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         }
         return retVal;
+    }
+
+    /**
+     * @return the mapOfUnknownsBySampleNames
+     */
+    public Map<String, List<ShrimpFractionExpressionInterface>> getMapOfUnknownsBySampleNames() {
+        if (mapOfUnknownsBySampleNames == null){
+            mapOfUnknownsBySampleNames = new TreeMap<>();
+        }
+        return mapOfUnknownsBySampleNames;
     }
 
 }

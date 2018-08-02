@@ -103,6 +103,9 @@ public class SquidPrefixTreeTest {
                 + "        2345. >>> . = 1\n"
                 + "          2345.4 >>> 4 = 1\n"
                 + "5 >>> 5 = 2\n"
+                + "  54 >>> 4 = 1\n"
+                + "    544 >>> 4 = 1\n"
+                + "      5443 >>> 3 = 1\n"
                 + "  5. >>> . = 1\n"
                 + "    5.3 >>> 3 = 1\n"
                 + "      5.3. >>> . = 1\n"
@@ -111,9 +114,7 @@ public class SquidPrefixTreeTest {
                 + "            5.3.FSD >>> D = 1\n"
                 + "              5.3.FSDG >>> G = 1\n"
                 + "                5.3.FSDG-DUP- >>> -DUP- = 1\n"
-                + "  54 >>> 4 = 1\n"
-                + "    544 >>> 4 = 1\n"
-                + "      5443 >>> 3 = 1\n";
+                + "";
 
         assertEquals(expResult, result);
 

@@ -136,7 +136,7 @@ public interface TaskInterface {
      */
     List<MassStationDetail> makeListOfMassStationDetails();
 
-    String printTaskAudit();
+    public String printTaskAudit();
 
     public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
@@ -452,4 +452,9 @@ public interface TaskInterface {
     public void setShowQt1z(boolean aShowQt1z);
 
     public boolean expressionIsNuSwitched(String expressionName);
+    
+        /**
+     * @return the mapOfUnknownsBySampleNames
+     */
+    public Map<String, List<ShrimpFractionExpressionInterface>> getMapOfUnknownsBySampleNames();
 }
