@@ -40,7 +40,8 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
  */
 public class RatiosManagerController implements Initializable {
 
-    private static final String STYLE_RATIO = "-fx-padding: 0 0 0 0;   \n"
+    private static final String STYLE_RATIO = 
+            "-fx-padding: 0 0 0 0;   \n"
             + "    -fx-border-width: 1;\n"
             + "    -fx-border-color: black;\n"
             + "    -fx-background-radius: 0;\n"

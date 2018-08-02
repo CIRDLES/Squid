@@ -67,6 +67,7 @@ public class PlotsController implements Initializable {
 
     private static ObservableList<SampleTreeNodeInterface> fractionNodes;
     private static List<Map<String, Object>> data;
+    private static Map<String, List<Map<String, Object>>> dataSets;
     @FXML
     private VBox plotVBox;
     @FXML
@@ -125,7 +126,7 @@ public class PlotsController implements Initializable {
         corr7_RadioButton.setUserData("7-corr");
         corr8_RadioButton.setUserData("8-corr");
 
-        showConcordiaPlot();
+        showConcordiaPlotUnknowns();
     }
 
     private void showConcordiaPlot() {
@@ -133,7 +134,7 @@ public class PlotsController implements Initializable {
         List<ShrimpFractionExpressionInterface> shrimpFractionsDetails
                 = squidProject.getTask().getReferenceMaterialSpots();
         boolean isUnknown = false;
-        
+
         if (fractionTypeSelected.compareTo(FractionTypes.UNKNOWN) == 0) {
             shrimpFractionsDetails = squidProject.getTask().getUnknownSpots();
             isUnknown = true;
@@ -206,6 +207,88 @@ public class PlotsController implements Initializable {
         }
         fractionsTreeView1.setRoot(rootItem);
         fractionsTreeView1.setShowRoot(true);
+    }
+
+    private void showConcordiaPlotUnknowns() {
+        List<ShrimpFractionExpressionInterface> shrimpFractionsDetails
+                = squidProject.getTask().getUnknownSpots();
+
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames
+                = squidProject.getTask().getMapOfUnknownsBySampleNames();
+
+        // initialize plot ********************************************  BEGIN
+        plot = new TopsoilPlotWetherill();
+        Node topsoilPlotNode = plot.displayPlotAsNode();
+        plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
+        AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
+        AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
+        AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
+        AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+
+        VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
+        VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
+        VBox.setVgrow(plotVBox, Priority.ALWAYS);
+
+        plotToolBar.getItems().clear();
+        plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
+        plotToolBar.setPadding(Insets.EMPTY);
+
+        List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
+        data = new ArrayList<>();
+
+        // get type of correctionList
+        String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
+        // initialize plot *********************************************** END
+
+        // build out set of data for samples
+        CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
+                = new CheckBoxTreeItem<>(new SampleNode("UNKNOWNS"));
+        rootItem.setExpanded(true);
+        fractionsTreeView1.setRoot(rootItem);
+        fractionsTreeView1.setShowRoot(true);
+
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfUnknownsBySampleNames.entrySet()) {
+            CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem
+                = new CheckBoxTreeItem<>(new SampleNode(entry.getKey()));
+            rootItem.getChildren().add(sampleItem);
+        }
+
+//        for (int i = 0; i < shrimpFractionsDetails.size(); i++) {
+//            SampleTreeNodeInterface fractionNode
+//                    = new ConcordiaFractionNode(shrimpFractionsDetails.get(i), correction, true);
+//            fractionNodeDetails.add(fractionNode);
+//            data.add(((ConcordiaFractionNode) fractionNode).getDatum());
+//        }
+//        fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
+//        plot.setData(data);
+//
+        fractionsTreeView1.setCellFactory(p -> new CheckBoxTreeCell<>(
+                (TreeItem<SampleTreeNodeInterface> item) -> ((ConcordiaFractionNode) item.getValue()).getSelectedProperty(),
+                new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
+
+            @Override
+            public String toString(TreeItem<SampleTreeNodeInterface> object) {
+                SampleTreeNodeInterface item = object.getValue();
+                return item.getNodeName();
+            }
+
+            @Override
+            public TreeItem<SampleTreeNodeInterface> fromString(String string) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }));
+//
+//        for (int i = 0; i < fractionNodes.size(); i++) {
+//            final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
+//                    = new CheckBoxTreeItem<>(fractionNodes.get(i));
+//            rootItem.getChildren().add(checkBoxTreeItem);
+//            checkBoxTreeItem.setSelected(fractionNodes.get(i).getShrimpFraction().isSelected());
+//            checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+//                ((ConcordiaFractionNode) checkBoxTreeItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+//                plot.setData(data);
+//            });
+//        }
+
     }
 
     private void showWeightedMeanPlot() {

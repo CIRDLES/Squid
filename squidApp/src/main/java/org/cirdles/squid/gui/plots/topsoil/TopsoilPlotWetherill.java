@@ -50,9 +50,13 @@ import static org.cirdles.topsoil.plot.base.BasePlotProperties.Y_AXIS;
  */
 public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
+    public TopsoilPlotWetherill() {
+        this("placeholder");
+    }
+
     public TopsoilPlotWetherill(String title) {
         plot = IsotopeType.UPb.getPlots()[0].getPlot();
-        plot.setData(TopsoilDataFactory.prepareWetherillData(EXAMPLE_CM2_DATASET));
+        //plot.setData(TopsoilDataFactory.prepareWetherillData(EXAMPLE_CM2_DATASET));
         setupPlot(title);
     }
 

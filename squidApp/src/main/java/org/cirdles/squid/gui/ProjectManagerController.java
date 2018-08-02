@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
@@ -55,6 +56,8 @@ public class ProjectManagerController implements Initializable {
     private TextArea projectNotesText;
     @FXML
     private Label loginCommentLabel;
+    @FXML
+    private Label titleLabel;
 
 
     /**
@@ -74,6 +77,8 @@ public class ProjectManagerController implements Initializable {
         if (squidProject.prawnFileExists()) {
             setUpPrawnFile();
         }
+        
+        titleLabel.setStyle(STYLE_MANAGER_TITLE);
     }
 
     private void setupListeners() {

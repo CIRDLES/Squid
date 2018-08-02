@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -30,6 +31,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.TaskInterface;
 
@@ -83,6 +85,8 @@ public class TaskManagerController implements Initializable {
     private RadioButton pb207RadioButton;
     @FXML
     private RadioButton pb208RadioButton;
+    @FXML
+    private Label titleLabel;
 
     /**
      * Initializes the controller class.
@@ -99,6 +103,8 @@ public class TaskManagerController implements Initializable {
         } else {
             taskAuditTextArea.setText("No Task information available");
         }
+        
+        titleLabel.setStyle(STYLE_MANAGER_TITLE);
     }
 
     private void populateTaskFields() {
