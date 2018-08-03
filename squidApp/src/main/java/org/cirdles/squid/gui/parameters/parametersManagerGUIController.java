@@ -5,7 +5,7 @@
  */
 package org.cirdles.squid.gui.parameters;
 
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
+//import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -23,9 +23,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -43,7 +43,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.control.Menu;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -189,7 +188,7 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMatCB();
 
         setUpMassesProofer();
-        disableTableColumReordering();
+//        disableTableColumReordering();
         setUpLaboratoryName();
     }
 
@@ -819,23 +818,23 @@ public class parametersManagerGUIController implements Initializable {
         return retVal;
     }
 
-    private void disableTableColumReordering() {
-        disableColumnReordering(physConstDataTable);
-        disableColumnReordering(physConstCorrTable);
-        disableColumnReordering(physConstCovTable);
-
-        disableColumnReordering(refMatDataTable);
-        disableColumnReordering(refMatCorrTable);
-        disableColumnReordering(refMatCovTable);
-        disableColumnReordering(refMatConcentrationsTable);
-    }
-
-    private void disableColumnReordering(TableView table) {
-        table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
-            final TableHeaderRow header = (TableHeaderRow) table.lookup("TableHeaderRow");
-            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
-        });
-    }
+//    private void disableTableColumReordering() {
+//        disableColumnReordering(physConstDataTable);
+//        disableColumnReordering(physConstCorrTable);
+//        disableColumnReordering(physConstCovTable);
+//
+//        disableColumnReordering(refMatDataTable);
+//        disableColumnReordering(refMatCorrTable);
+//        disableColumnReordering(refMatCovTable);
+//        disableColumnReordering(refMatConcentrationsTable);
+//    }
+//
+//    private void disableColumnReordering(TableView table) {
+//        table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+//            final TableHeaderRow header = (TableHeaderRow) table.lookup("TableHeaderRow");
+//            header.reorderingProperty().addListener(val -> {header.setReordering(false);});
+//        });
+//    }
 
     @FXML
     private void physConstImpXMLAction(ActionEvent event) {
