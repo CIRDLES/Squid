@@ -152,6 +152,14 @@ public class parametersManagerGUIController implements Initializable {
     private Button refMatConcentrationsNotationButton;
     @FXML
     private TextArea apparentDatesTextArea;
+    @FXML
+    private Button physConstCorrNotationButton;
+    @FXML
+    private Button physConstCovNotationButton;
+    @FXML
+    private Button refMatCorrNotationButton;
+    @FXML
+    private Button refMatCovNotationButton;
 
     PhysicalConstantsModel physConstModel;
     ReferenceMaterial refMatModel;
@@ -164,8 +172,13 @@ public class parametersManagerGUIController implements Initializable {
     private boolean isEditingCurrRefMat;
 
     private DecimalFormat physConstDataNotation;
+    private DecimalFormat physConstCorrNotation;
+    private DecimalFormat physConstCovNotation;
+
     private DecimalFormat refMatDataNotation;
     private DecimalFormat refMatConcentrationsNotation;
+    private DecimalFormat refMatCorrNotation;
+    private DecimalFormat refMatCovNotation;
 
     /**
      * Initializes the controller class.
@@ -176,8 +189,13 @@ public class parametersManagerGUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         physConstDataNotation = getScientificNotationFormat();
+        physConstCorrNotation = getScientificNotationFormat();
+        physConstCovNotation = getScientificNotationFormat();
+
         refMatDataNotation = getScientificNotationFormat();
         refMatConcentrationsNotation = getScientificNotationFormat();
+        refMatCorrNotation = getScientificNotationFormat();
+        refMatCovNotation = getScientificNotationFormat();
 
         physConstModels = squidLabData.getPhysicalConstantsModels();
         physConstModel = physConstModels.get(0);
@@ -198,8 +216,6 @@ public class parametersManagerGUIController implements Initializable {
         setUpMolarMasses();
         setUpReferences();
         setUpPhysConstCovariancesAndCorrelations();
-        setUpPhysConstCov();
-        setUpPhysConstCorr();
         setUpPhysConstEditableLabel();
     }
 
@@ -208,8 +224,6 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMatData();
         setUpConcentrations();
         setUpRefMatCovariancesAndCorrelations();
-        setUpRefMatCov();
-        setUpRefMatCorr();
         setUpApparentDates();
         setUpRefMatEditableLabel();
     }
@@ -217,11 +231,15 @@ public class parametersManagerGUIController implements Initializable {
     private void setUpPhysConstCovariancesAndCorrelations() {
         physConstModel.initializeCorrelations();
         physConstModel.generateCovariancesFromCorrelations();
+        setUpPhysConstCov();
+        setUpPhysConstCorr();
     }
 
     private void setUpRefMatCovariancesAndCorrelations() {
         refMatModel.initializeCorrelations();
         refMatModel.generateCovariancesFromCorrelations();
+        setUpRefMatCov();
+        setUpRefMatCorr();
     }
 
     private void setUpPhysConstCB() {
@@ -280,22 +298,22 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstCov() {
         initializeTableWithObList(physConstCovTable,
-                getObListFromMatrix(physConstModel.getCovModel()));
+                getObListFromMatrix(physConstModel.getCovModel()), physConstCovNotation);
     }
 
     private void setUpPhysConstCorr() {
         initializeTableWithObList(physConstCorrTable,
-                getObListFromMatrix(physConstModel.getCorrModel()));
+                getObListFromMatrix(physConstModel.getCorrModel()), physConstCorrNotation);
     }
 
     private void setUpRefMatCov() {
         initializeTableWithObList(refMatCovTable,
-                getObListFromMatrix(refMatModel.getCovModel()));
+                getObListFromMatrix(refMatModel.getCovModel()), refMatCovNotation);
     }
 
     private void setUpRefMatCorr() {
         initializeTableWithObList(refMatCorrTable,
-                getObListFromMatrix(refMatModel.getCorrModel()));
+                getObListFromMatrix(refMatModel.getCorrModel()), refMatCorrNotation);
     }
 
     private static ObservableList<ObservableList<SimpleStringProperty>> getObListFromMatrix(AbstractMatrixModel matrix) {
@@ -324,18 +342,26 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
-            ObservableList<ObservableList<SimpleStringProperty>> obList) {
+            ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format) {
         if (obList.size() > 0) {
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
             table.getColumns().clear();
-            for (int i = 0; i < cols.size(); i++) {
+            TableColumn<ObservableList<SimpleStringProperty>, String> rowHead
+                        = new TableColumn<>(getRatioVisibleName(cols.get(0).get()));
+                final int rowHeadNum = 0;
+                rowHead.setSortable(false);
+                rowHead.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
+                rowHead.setCellValueFactory(param
+                        -> new ReadOnlyObjectWrapper<String>(getRatioVisibleName(param.getValue().get(rowHeadNum).get())));
+                table.getColumns().add(rowHead);
+            for (int i = 1; i < cols.size(); i++) {
                 TableColumn<ObservableList<SimpleStringProperty>, String> col
                         = new TableColumn<>(getRatioVisibleName(cols.get(i).get()));
                 final int colNum = i;
                 col.setSortable(false);
                 col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
                 col.setCellValueFactory(param
-                        -> new ReadOnlyObjectWrapper<String>(getRatioVisibleName(param.getValue().get(colNum).get())));
+                        -> new ReadOnlyObjectWrapper<String>(format.format(new BigDecimal(param.getValue().get(colNum).get()))));
                 col.setOnEditCommit(value -> {
                     if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1 && Double.parseDouble(value.getNewValue()) >= -1) {
                         ObservableList<ObservableList<SimpleStringProperty>> items = value.getTableView().getItems();
@@ -352,156 +378,6 @@ public class parametersManagerGUIController implements Initializable {
             table.setItems(obList);
             table.refresh();
         }
-    }
-
-    @FXML
-    private void physConstDataNotationOnAction(ActionEvent event) {
-        if (physConstDataNotation.equals(getScientificNotationFormat())) {
-            physConstDataNotation = getStandardNotationFormat();
-            physConstDataNotationButton.setText("Standard Notation");
-        } else {
-            physConstDataNotation = getScientificNotationFormat();
-            physConstDataNotationButton.setText("Scientific Notation");
-        }
-        ObservableList<DataModel> models = physConstDataTable.getItems();
-        for (int i = 0; i < models.size(); i++) {
-            DataModel mod = models.get(i);
-            BigDecimal bigDec;
-
-            bigDec = new BigDecimal(mod.getValue());
-            mod.setValue(physConstDataNotation.format(bigDec));
-
-            bigDec = new BigDecimal(mod.getOneSigmaABS());
-            mod.setOneSigmaABS(physConstDataNotation.format(bigDec));
-
-            bigDec = new BigDecimal(mod.getOneSigmaPCT());
-            mod.setOneSigmaPCT(physConstDataNotation.format(bigDec));
-        }
-        physConstDataTable.getColumns().clear();
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
-        for (TableColumn<DataModel, String> col : columns) {
-            physConstDataTable.getColumns().add(col);
-        }
-        physConstDataTable.refresh();
-    }
-
-    @FXML
-    private void refMatDataNotationOnAction(ActionEvent event) {
-        if (refMatDataNotation.equals(getScientificNotationFormat())) {
-            refMatDataNotation = getStandardNotationFormat();
-            refMatDataNotationButton.setText("Standard Notation");
-        } else {
-            refMatDataNotation = getScientificNotationFormat();
-            refMatDataNotationButton.setText("Scientific Notation");
-        }
-        ObservableList<RefMatDataModel> models = refMatDataTable.getItems();
-        for (int i = 0; i < models.size(); i++) {
-            DataModel mod = models.get(i);
-            BigDecimal bigDec;
-
-            bigDec = new BigDecimal(mod.getValue());
-            mod.setValue(refMatDataNotation.format(bigDec));
-
-            bigDec = new BigDecimal(mod.getOneSigmaABS());
-            mod.setOneSigmaABS(refMatDataNotation.format(bigDec));
-
-            bigDec = new BigDecimal(mod.getOneSigmaPCT());
-            mod.setOneSigmaPCT(refMatDataNotation.format(bigDec));
-        }
-        refMatDataTable.getColumns().clear();
-
-        TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
-        nameCol.setSortable(false);
-        nameCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        refMatDataTable.getColumns().add(nameCol);
-
-        TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
-        valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
-        valCol.setSortable(false);
-        valCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        valCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setValue(value.getNewValue());
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(valCol);
-
-        TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
-        absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
-        absCol.setSortable(false);
-        absCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        absCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setOneSigmaABS(value.getNewValue());
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(absCol);
-
-        TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
-        pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
-        pctCol.setSortable(false);
-        pctCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        pctCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setOneSigmaPCT(value.getNewValue());
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(pctCol);
-
-        TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
-        measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
-        measuredCol.setSortable(false);
-        refMatDataTable.getColumns().add(measuredCol);
-
-        refMatDataTable.refresh();
-    }
-
-    @FXML
-    private void refMatConcentrationsNotationOnAction(ActionEvent event) {
-        if (refMatConcentrationsNotation.equals(getScientificNotationFormat())) {
-            refMatConcentrationsNotation = getStandardNotationFormat();
-            refMatConcentrationsNotationButton.setText("Standard Notation");
-        } else {
-            refMatConcentrationsNotation = getScientificNotationFormat();
-            refMatConcentrationsNotationButton.setText("Scientific Notation");
-        }
-        ObservableList<DataModel> models = refMatConcentrationsTable.getItems();
-        for (int i = 0; i < models.size(); i++) {
-            DataModel mod = models.get(i);
-            BigDecimal bigDec;
-
-            bigDec = new BigDecimal(mod.getValue());
-            mod.setValue(refMatConcentrationsNotation.format(bigDec));
-
-            bigDec = new BigDecimal(mod.getOneSigmaABS());
-            mod.setOneSigmaABS(refMatConcentrationsNotation.format(bigDec));
-
-            bigDec = new BigDecimal(mod.getOneSigmaPCT());
-            mod.setOneSigmaPCT(refMatConcentrationsNotation.format(bigDec));
-        }
-        refMatConcentrationsTable.getColumns().clear();
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
-        for (TableColumn<DataModel, String> col : columns) {
-            refMatConcentrationsTable.getColumns().add(col);
-        }
-
-        refMatConcentrationsTable.refresh();
     }
 
     private void setUpPhysConstData() {
@@ -835,7 +711,6 @@ public class parametersManagerGUIController implements Initializable {
 //            header.reorderingProperty().addListener(val -> {header.setReordering(false);});
 //        });
 //    }
-
     @FXML
     private void physConstImpXMLAction(ActionEvent event) {
         File file = null;
@@ -960,8 +835,6 @@ public class parametersManagerGUIController implements Initializable {
         physConstCorrTable.setEditable(isEditable);
         physConstCorrTable.getColumns().get(0).setEditable(false);
 
-        physConstCovTable.setEditable(false);
-
         molarMassesTextArea.setEditable(isEditable);
 
         for (int i = 0; i < physConstReferences.size(); i++) {
@@ -999,10 +872,6 @@ public class parametersManagerGUIController implements Initializable {
 
         refMatCorrTable.setEditable(isEditable);
         refMatCorrTable.getColumns().get(0).setEditable(false);
-
-        refMatCovTable.setEditable(false);
-
-        apparentDatesTextArea.setEditable(false);
 
         refMatCommentsArea.setEditable(isEditable);
         refMatReferencesArea.setEditable(isEditable);
@@ -1342,6 +1211,219 @@ public class parametersManagerGUIController implements Initializable {
 
     public static DecimalFormat getStandardNotationFormat() {
         return new DecimalFormat("########################0.0######################################");
+    }
+
+    @FXML
+    private void physConstDataNotationOnAction(ActionEvent event) {
+        if (physConstDataNotation.equals(getScientificNotationFormat())) {
+            physConstDataNotation = getStandardNotationFormat();
+            physConstDataNotationButton.setText("Standard Notation");
+        } else {
+            physConstDataNotation = getScientificNotationFormat();
+            physConstDataNotationButton.setText("Scientific Notation");
+        }
+        ObservableList<DataModel> models = physConstDataTable.getItems();
+        for (int i = 0; i < models.size(); i++) {
+            DataModel mod = models.get(i);
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(mod.getValue());
+            mod.setValue(physConstDataNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaABS());
+            mod.setOneSigmaABS(physConstDataNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaPCT());
+            mod.setOneSigmaPCT(physConstDataNotation.format(bigDec));
+        }
+        physConstDataTable.getColumns().clear();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        for (TableColumn<DataModel, String> col : columns) {
+            physConstDataTable.getColumns().add(col);
+        }
+        physConstDataTable.refresh();
+    }
+
+    @FXML
+    private void refMatDataNotationOnAction(ActionEvent event) {
+        if (refMatDataNotation.equals(getScientificNotationFormat())) {
+            refMatDataNotation = getStandardNotationFormat();
+            refMatDataNotationButton.setText("Standard Notation");
+        } else {
+            refMatDataNotation = getScientificNotationFormat();
+            refMatDataNotationButton.setText("Scientific Notation");
+        }
+        ObservableList<RefMatDataModel> models = refMatDataTable.getItems();
+        for (int i = 0; i < models.size(); i++) {
+            DataModel mod = models.get(i);
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(mod.getValue());
+            mod.setValue(refMatDataNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaABS());
+            mod.setOneSigmaABS(refMatDataNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaPCT());
+            mod.setOneSigmaPCT(refMatDataNotation.format(bigDec));
+        }
+        refMatDataTable.getColumns().clear();
+
+        TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
+        nameCol.setSortable(false);
+        nameCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        refMatDataTable.getColumns().add(nameCol);
+
+        TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
+        valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
+        valCol.setSortable(false);
+        valCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        valCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setValue(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(valCol);
+
+        TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
+        absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
+        absCol.setSortable(false);
+        absCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        absCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setOneSigmaABS(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(absCol);
+
+        TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
+        pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
+        pctCol.setSortable(false);
+        pctCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        pctCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                mod.setOneSigmaPCT(value.getNewValue());
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(pctCol);
+
+        TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
+        measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
+        measuredCol.setSortable(false);
+        refMatDataTable.getColumns().add(measuredCol);
+
+        refMatDataTable.refresh();
+    }
+
+    @FXML
+    private void refMatConcentrationsNotationOnAction(ActionEvent event) {
+        if (refMatConcentrationsNotation.equals(getScientificNotationFormat())) {
+            refMatConcentrationsNotation = getStandardNotationFormat();
+            refMatConcentrationsNotationButton.setText("Standard Notation");
+        } else {
+            refMatConcentrationsNotation = getScientificNotationFormat();
+            refMatConcentrationsNotationButton.setText("Scientific Notation");
+        }
+        ObservableList<DataModel> models = refMatConcentrationsTable.getItems();
+        for (int i = 0; i < models.size(); i++) {
+            DataModel mod = models.get(i);
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(mod.getValue());
+            mod.setValue(refMatConcentrationsNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaABS());
+            mod.setOneSigmaABS(refMatConcentrationsNotation.format(bigDec));
+
+            bigDec = new BigDecimal(mod.getOneSigmaPCT());
+            mod.setOneSigmaPCT(refMatConcentrationsNotation.format(bigDec));
+        }
+        refMatConcentrationsTable.getColumns().clear();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        for (TableColumn<DataModel, String> col : columns) {
+            refMatConcentrationsTable.getColumns().add(col);
+        }
+
+        refMatConcentrationsTable.refresh();
+    }
+
+    @FXML
+    private void physConstCorrNotationOnAction(ActionEvent event) {
+        if (physConstCorrNotation.equals(getScientificNotationFormat())) {
+            physConstCorrNotation = getStandardNotationFormat();
+            physConstCorrNotationButton.setText("Standard Notation");
+        } else {
+            physConstCorrNotation = getScientificNotationFormat();
+            physConstCorrNotationButton.setText("Scientific Notation");
+        }
+        swapCovCorrNotation(physConstCorrNotation, physConstCorrTable);
+        physConstCorrTable.refresh();
+    }
+
+    @FXML
+    private void physConstCovNotationOnAction(ActionEvent event) {
+        if (physConstCovNotation.equals(getScientificNotationFormat())) {
+            physConstCovNotation = getStandardNotationFormat();
+            physConstCovNotationButton.setText("Standard Notation");
+        } else {
+            physConstCovNotation = getScientificNotationFormat();
+            physConstCovNotationButton.setText("Scientific Notation");
+        }
+        swapCovCorrNotation(physConstCovNotation, physConstCovTable);
+        physConstCovTable.refresh();
+    }
+
+    @FXML
+    private void refMatCorrNotationOnAction(ActionEvent event) {
+        if (refMatCorrNotation.equals(getScientificNotationFormat())) {
+            refMatCorrNotation = getStandardNotationFormat();
+            refMatCorrNotationButton.setText("Standard Notation");
+        } else {
+            refMatCorrNotation = getScientificNotationFormat();
+            refMatCorrNotationButton.setText("Scientific Notation");
+        }
+        swapCovCorrNotation(refMatCorrNotation, refMatCorrTable);
+        refMatCorrTable.refresh();
+    }
+
+    @FXML
+    private void refMatCovNotationOnAction(ActionEvent event) {
+        if (refMatCovNotation.equals(getScientificNotationFormat())) {
+            refMatCovNotation = getStandardNotationFormat();
+            refMatCovNotationButton.setText("Standard Notation");
+        } else {
+            refMatCovNotation = getScientificNotationFormat();
+            refMatCovNotationButton.setText("Scientific Notation");
+        }
+        swapCovCorrNotation(refMatCovNotation, refMatCovTable);
+        refMatCovTable.refresh();
+    }
+
+    private void swapCovCorrNotation(DecimalFormat format, TableView<ObservableList<SimpleStringProperty>> table) {
+        ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
+        ObservableList<SimpleStringProperty> cols =  FXCollections.observableArrayList();
+        for(int i = 0; i < table.getColumns().size(); i++) {
+            cols.add(new SimpleStringProperty(table.getColumns().get(i).getText()));
+        }
+
+        items.add(0, cols);
+        initializeTableWithObList(table, items, format);
     }
 
     public class DataModel {
