@@ -452,9 +452,14 @@ public interface TaskInterface {
     public void setShowQt1z(boolean aShowQt1z);
 
     public boolean expressionIsNuSwitched(String expressionName);
-    
-        /**
+
+    /**
      * @return the mapOfUnknownsBySampleNames
      */
     public Map<String, List<ShrimpFractionExpressionInterface>> getMapOfUnknownsBySampleNames();
+
+    /**
+     * @param prawnChanged the prawnChanged to set
+     */
+    public void setPrawnChanged(boolean prawnChanged);
 }

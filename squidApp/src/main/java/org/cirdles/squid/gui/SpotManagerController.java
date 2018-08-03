@@ -396,6 +396,9 @@ public class SpotManagerController implements Initializable {
 
             // refresh textbox in case "DUP" is removed or created
             selectedSpotNameText.setText(((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).getValue());
+            
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setPrawnChanged(true);
         }
     }
 }

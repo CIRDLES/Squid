@@ -88,7 +88,7 @@ public final class SquidProject implements Serializable {
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
 
         this.filtersForUnknownNames = new HashMap<>();
-        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.DOT.getName();
+        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {

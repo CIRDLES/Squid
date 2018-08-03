@@ -360,6 +360,8 @@ public class SessionAuditController implements Initializable {
                     + prawnAuditTreeCheckBox.getRoot().getValue().getCountOfIncludedSpots()
                     + " spots");
         }
+        
+        squidProject.getTask().setChanged(true);
     }
 
     // classes to support tree with checkboxes

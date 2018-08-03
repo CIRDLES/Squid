@@ -144,6 +144,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<ShrimpFractionExpressionInterface> concentrationReferenceMaterialSpots;
     protected List<ShrimpFractionExpressionInterface> unknownSpots;
     protected Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames;
+    
+    protected boolean prawnChanged;
 
     /**
      *
@@ -240,6 +242,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.showPrimaryBeam = false;
         this.showQt1y = false;
         this.showQt1z = false;
+        
+        this.prawnChanged = false;
 
         generateConstants();
         generateParameters();
@@ -382,14 +386,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n ")
                 .append(String.valueOf(unknownSpots.size()))
                 .append(" Unknown Spots");
-        
-        if (mapOfUnknownsBySampleNames.isEmpty()){
+
+        if (mapOfUnknownsBySampleNames.isEmpty()) {
             summary.append(". Individual samples not yet identified - see PrawnFile Menu");
         } else {
             summary.append(", organized into these samples:");
         }
-        
-        for (String sampleName : mapOfUnknownsBySampleNames.keySet()){
+
+        for (String sampleName : mapOfUnknownsBySampleNames.keySet()) {
             summary.append("\n\t")
                     .append("\"")
                     .append(sampleName)
@@ -454,7 +458,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setupSquidSessionSpecsAndReduceAndReport() {
 
         if (changed) {
-//            reorderExpressions();
 
             buildSquidSpeciesModelList();
 
@@ -465,12 +468,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             boolean requiresChanges = true;
             if (squidSessionModel != null) {
                 requiresChanges = squidSessionModel.updateFields(
-                        squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
+                        squidSpeciesModelList, 
+                        squidRatiosModelList, 
+                        true, 
+                        false, 
+                        indexOfBackgroundSpecies, 
+                        filterForRefMatSpotNames, 
+                        filterForConcRefMatSpotNames, 
+                        filtersForUnknownNames);
             }
 
-            if (requiresChanges) {
-                squidSessionModel = new SquidSessionModel(
-                        squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
+            if (requiresChanges || prawnChanged) {
+                squidSessionModel
+                        = new SquidSessionModel(
+                                squidSpeciesModelList,
+                                squidRatiosModelList,
+                                true,
+                                false,
+                                indexOfBackgroundSpecies,
+                                filterForRefMatSpotNames,
+                                filterForConcRefMatSpotNames,
+                                filtersForUnknownNames);
 
                 try {
                     shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
@@ -479,13 +497,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
 
             generateMapOfUnknownsBySampleNames();
-            
+
             processAndSortExpressions();
 
             evaluateTaskExpressions();
 
             reportsEngine.clearReports();
 
+            prawnChanged = false;
             changed = false;
         }
     }
@@ -499,7 +518,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         buildSquidSpeciesModelList();
 
         squidSessionModel = new SquidSessionModel(
-                squidSpeciesModelList, squidRatiosModelList, true, false, indexOfBackgroundSpecies, filterForRefMatSpotNames, filterForConcRefMatSpotNames);
+                squidSpeciesModelList, 
+                squidRatiosModelList, 
+                true, 
+                false, 
+                indexOfBackgroundSpecies, 
+                filterForRefMatSpotNames, 
+                filterForConcRefMatSpotNames, 
+                filtersForUnknownNames);
 
         try {
             shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
@@ -2029,10 +2055,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the mapOfUnknownsBySampleNames
      */
     public Map<String, List<ShrimpFractionExpressionInterface>> getMapOfUnknownsBySampleNames() {
-        if (mapOfUnknownsBySampleNames == null){
+        if (mapOfUnknownsBySampleNames == null) {
             mapOfUnknownsBySampleNames = new TreeMap<>();
         }
         return mapOfUnknownsBySampleNames;
+    }
+
+    /**
+     * @param prawnChanged the prawnChanged to set
+     */
+    public void setPrawnChanged(boolean prawnChanged) {
+        this.prawnChanged = prawnChanged;
     }
 
 }
