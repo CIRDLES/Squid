@@ -113,6 +113,7 @@ public class PhysicalConstantsModel extends ParametersModel {
     }
 
     public void setUpDefaultMolarMasses() {
+        molarMasses.clear();
         String[][] masses = DataDictionary.AtomicMolarMasses;
         for (int i = 0; i < masses.length; i++) {
             molarMasses.put(masses[i][0], new BigDecimal(masses[i][1]));

@@ -5,7 +5,6 @@
  */
 package org.cirdles.squid.gui.parameters;
 
-//import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -23,6 +22,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -209,7 +209,6 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel = refMatModels.get(0);
         setUpRefMatCB();
 
-//        disableTableColumReordering();
         setUpLaboratoryName();
     }
 
@@ -347,6 +346,7 @@ public class parametersManagerGUIController implements Initializable {
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
             ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format, ParametersModel model) {
         if (obList.size() > 0) {
+            List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns = new ArrayList<>();
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
             table.getColumns().clear();
             TableColumn<ObservableList<SimpleStringProperty>, String> rowHead
@@ -356,7 +356,7 @@ public class parametersManagerGUIController implements Initializable {
             rowHead.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
             rowHead.setCellValueFactory(param
                     -> new ReadOnlyObjectWrapper<String>(getRatioVisibleName(param.getValue().get(rowHeadNum).get())));
-            table.getColumns().add(rowHead);
+            columns.add(rowHead);
             for (int i = 1; i < cols.size(); i++) {
                 TableColumn<ObservableList<SimpleStringProperty>, String> col
                         = new TableColumn<>(getRatioVisibleName(cols.get(i).get()));
@@ -395,13 +395,31 @@ public class parametersManagerGUIController implements Initializable {
                         }
                     });
                 }
-                table.getColumns().add(col);
+                columns.add(col);
             }
+            table.getColumns().addAll(columns);
+            disableColumnReorder(table, columns);
             table.setItems(obList);
             table.refresh();
         }
     }
 
+       public static void disableColumnReorder(TableView<ObservableList<SimpleStringProperty>> table, List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns) {
+        table.getColumns().addListener(new ListChangeListener<Object>() {
+            public boolean suspended;
+
+            @Override
+            public void onChanged(ListChangeListener.Change change) {
+                change.next();
+                if (change.wasReplaced() && !suspended) {
+                    this.suspended = true;
+                    table.getColumns().setAll(columns);
+                    this.suspended = false;
+                }
+            }
+        });
+    } 
+    
     private void setUpPhysConstData() {
         physConstDataTable.getColumns().clear();
         List<TableColumn<DataModel, String>> columns = getDataModelColumns(physConstDataTable, physConstDataNotation);
@@ -801,23 +819,6 @@ public class parametersManagerGUIController implements Initializable {
         return retVal;
     }
 
-//    private void disableTableColumReordering() {
-//        disableColumnReordering(physConstDataTable);
-//        disableColumnReordering(physConstCorrTable);
-//        disableColumnReordering(physConstCovTable);
-//
-//        disableColumnReordering(refMatDataTable);
-//        disableColumnReordering(refMatCorrTable);
-//        disableColumnReordering(refMatCovTable);
-//        disableColumnReordering(refMatConcentrationsTable);
-//    }
-//
-//    private void disableColumnReordering(TableView table) {
-//        table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
-//            final TableHeaderRow header = (TableHeaderRow) table.lookup("TableHeaderRow");
-//            header.reorderingProperty().addListener(val -> {header.setReordering(false);});
-//        });
-//    }
     @FXML
     private void physConstImpXMLAction(ActionEvent event) {
         File file = null;
@@ -1477,6 +1478,10 @@ public class parametersManagerGUIController implements Initializable {
         refMatDataTable.getColumns().add(measuredCol);
 
         refMatDataTable.refresh();
+    }
+    
+    public static BigDecimal round(BigDecimal val, int precision) {
+        return new BigDecimal(org.cirdles.ludwig.squid25.Utilities.roundedToSize(val.doubleValue(), 12));
     }
 
     @FXML
