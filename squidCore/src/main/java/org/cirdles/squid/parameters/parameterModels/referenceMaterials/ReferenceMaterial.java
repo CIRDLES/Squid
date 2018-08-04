@@ -86,6 +86,18 @@ public class ReferenceMaterial extends ParametersModel {
             dataMeasured[i] = false;
         }
     }
+    
+    public ValueModel getConcentrationByName(String name) {
+        ValueModel retVal = new ValueModel(name);
+        boolean found = false;
+        for(int i = 0; i < concentrations.length && !found; i++) {
+            if(concentrations[i].getName().equals(name)) {
+                retVal = concentrations[i];
+                found = true;
+            }
+        }
+        return retVal;
+    }
 
     public final void initializeNewRatiosAndRhos() {
         ArrayList<ValueModel> holdRatios = new ArrayList<>();

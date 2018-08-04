@@ -23,7 +23,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -159,9 +158,14 @@ public class parametersManagerGUIController implements Initializable {
     private Button refMatCorrNotationButton;
     @FXML
     private Button refMatCovNotationButton;
-
+    @FXML
+    private AnchorPane molarMassesPane;
     PhysicalConstantsModel physConstModel;
+    PhysicalConstantsModel physConstHolder;
+
     ReferenceMaterial refMatModel;
+    ReferenceMaterial refMatHolder;
+
     List<PhysicalConstantsModel> physConstModels;
     List<ReferenceMaterial> refMatModels;
 
@@ -179,8 +183,6 @@ public class parametersManagerGUIController implements Initializable {
     private DecimalFormat refMatConcentrationsNotation;
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
-    @FXML
-    private AnchorPane molarMassesPane;
 
     /**
      * Initializes the controller class.
@@ -299,22 +301,22 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstCov() {
         initializeTableWithObList(physConstCovTable,
-                getObListFromMatrix(physConstModel.getCovModel()), physConstCovNotation);
+                getObListFromMatrix(physConstModel.getCovModel()), physConstCovNotation, physConstModel);
     }
 
     private void setUpPhysConstCorr() {
         initializeTableWithObList(physConstCorrTable,
-                getObListFromMatrix(physConstModel.getCorrModel()), physConstCorrNotation);
+                getObListFromMatrix(physConstModel.getCorrModel()), physConstCorrNotation, physConstModel);
     }
 
     private void setUpRefMatCov() {
         initializeTableWithObList(refMatCovTable,
-                getObListFromMatrix(refMatModel.getCovModel()), refMatCovNotation);
+                getObListFromMatrix(refMatModel.getCovModel()), refMatCovNotation, refMatModel);
     }
 
     private void setUpRefMatCorr() {
         initializeTableWithObList(refMatCorrTable,
-                getObListFromMatrix(refMatModel.getCorrModel()), refMatCorrNotation);
+                getObListFromMatrix(refMatModel.getCorrModel()), refMatCorrNotation, refMatModel);
     }
 
     private static ObservableList<ObservableList<SimpleStringProperty>> getObListFromMatrix(AbstractMatrixModel matrix) {
@@ -343,7 +345,7 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
-            ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format) {
+            ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format, ParametersModel model) {
         if (obList.size() > 0) {
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
             table.getColumns().clear();
@@ -360,20 +362,39 @@ public class parametersManagerGUIController implements Initializable {
                         = new TableColumn<>(getRatioVisibleName(cols.get(i).get()));
                 final int colNum = i;
                 col.setSortable(false);
-                col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
                 col.setCellValueFactory(param
                         -> new ReadOnlyObjectWrapper<String>(format.format(new BigDecimal(param.getValue().get(colNum).get()))));
-                col.setOnEditCommit(value -> {
-                    if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1 && Double.parseDouble(value.getNewValue()) >= -1) {
-                        ObservableList<ObservableList<SimpleStringProperty>> items = value.getTableView().getItems();
-                        ObservableList<SimpleStringProperty> rows = items.get(value.getTablePosition().getRow());
-                        rows.set(value.getTablePosition().getColumn(), new SimpleStringProperty(value.getNewValue()));
-                    } else {
-                        SquidMessageDialog.showWarningDialog("Value Out of Range or Invalid: Only values"
-                                + " in the range of [-1, 1] are allowed.", primaryStageWindow);
-                        table.refresh();
-                    }
-                });
+
+                if (table.equals(physConstCorrTable) || table.equals(refMatCorrTable)) {
+                    col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
+                    col.setOnEditCommit(value -> {
+                        if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1
+                                && Double.parseDouble(value.getNewValue()) >= -1) {
+                            int rowNum = value.getTablePosition().getRow();
+                            BigDecimal newValue = new BigDecimal(value.getNewValue());
+                            ObservableList<ObservableList<SimpleStringProperty>> items = value.getTableView().getItems();
+                            items.get(rowNum).set(colNum, new SimpleStringProperty(format.format(newValue)));
+                            items.get(colNum - 1).set(rowNum + 1, new SimpleStringProperty(format.format(newValue)));
+                            String colRatio = getRatioHiddenName(value.getTableColumn().getText());
+                            String rowRatio = getRatioHiddenName(items.get(rowNum).get(0).get());
+                            String key = "rho" + colRatio.substring(0, 1).toUpperCase() + colRatio.substring(1) + "__" + rowRatio;
+                            model.getRhos().put(key, newValue);
+                            model.initializeCorrelations();
+                            model.generateCovariancesFromCorrelations();
+                            if (table.equals(physConstCorrTable)) {
+                                setUpPhysConstCov();
+                            }
+                            if (table.equals(refMatCorrTable)) {
+                                setUpRefMatCov();
+                            }
+                            table.refresh();
+                        } else {
+                            SquidMessageDialog.showWarningDialog("Value Out of Range or Invalid: Only values"
+                                    + " in the range of [-1, 1] are allowed.", primaryStageWindow);
+                            table.refresh();
+                        }
+                    });
+                }
                 table.getColumns().add(col);
             }
             table.setItems(obList);
@@ -383,7 +404,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstData() {
         physConstDataTable.getColumns().clear();
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns(physConstDataTable, physConstDataNotation);
         for (TableColumn<DataModel, String> col : columns) {
             physConstDataTable.getColumns().add(col);
         }
@@ -408,7 +429,18 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setValue(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setValue(newValue);
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -424,7 +456,19 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setOneSigmaABS(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setOneSigma(newValue);
+                valMod.setUncertaintyType("ABS");
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -440,7 +484,19 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setOneSigmaPCT(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setOneSigma(newValue);
+                valMod.setUncertaintyType("PCT");
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -471,7 +527,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpConcentrations() {
         refMatConcentrationsTable.getColumns().clear();
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation);
         for (TableColumn<DataModel, String> col : columns) {
             refMatConcentrationsTable.getColumns().add(col);
         }
@@ -479,7 +535,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatConcentrationsTable.refresh();
     }
 
-    private static List<TableColumn<DataModel, String>> getDataModelColumns() {
+    private List<TableColumn<DataModel, String>> getDataModelColumns(TableView<DataModel> table, DecimalFormat format) {
         List<TableColumn<DataModel, String>> columns = new ArrayList<>();
 
         TableColumn<DataModel, String> nameCol = new TableColumn<>("name");
@@ -496,7 +552,26 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setValue(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = new ValueModel(ratioName);
+                if (table.equals(physConstDataTable)) {
+                    valMod = physConstModel.getDatumByName(ratioName);
+                }
+                if (table.equals(refMatConcentrationsTable)) {
+                    valMod = refMatModel.getConcentrationByName(ratioName);
+                }
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setValue(newValue);
+                mod.setValue(format.format(valMod.getValue()));
+                mod.setOneSigmaABS(format.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(format.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                if (table.equals(physConstDataTable)) {
+                    setUpPhysConstCovariancesAndCorrelations();
+                }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -512,7 +587,27 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setOneSigmaABS(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = new ValueModel(ratioName);
+                if (table.equals(physConstDataTable)) {
+                    valMod = physConstModel.getDatumByName(ratioName);
+                }
+                if (table.equals(refMatConcentrationsTable)) {
+                    valMod = refMatModel.getConcentrationByName(ratioName);
+                }
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setOneSigma(newValue);
+                valMod.setUncertaintyType("ABS");
+                mod.setValue(format.format(valMod.getValue()));
+                mod.setOneSigmaABS(format.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(format.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                if (table.equals(physConstDataTable)) {
+                    setUpPhysConstCovariancesAndCorrelations();
+                }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -528,7 +623,27 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setOneSigmaPCT(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = new ValueModel(ratioName);
+                if (table.equals(physConstDataTable)) {
+                    valMod = physConstModel.getDatumByName(ratioName);
+                }
+                if (table.equals(refMatConcentrationsTable)) {
+                    valMod = refMatModel.getConcentrationByName(ratioName);
+                }
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setOneSigma(newValue);
+                valMod.setUncertaintyType("PCT");
+                mod.setValue(format.format(valMod.getValue()));
+                mod.setOneSigmaABS(format.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(format.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                if (table.equals(physConstDataTable)) {
+                    setUpPhysConstCovariancesAndCorrelations();
+                }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -560,7 +675,7 @@ public class parametersManagerGUIController implements Initializable {
         String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
         int currY = 0;
         for (String[] mass : defaultMasses) {
-            Label lab = new Label(mass[0]);
+            Label lab = new Label(mass[0] + ":");
             molarMassesPane.getChildren().add(lab);
             lab.setLayoutY(currY + 5);
             lab.setLayoutX(10);
@@ -573,7 +688,7 @@ public class parametersManagerGUIController implements Initializable {
             text.setLayoutX(80 + lab.getLayoutX());
             text.setPrefWidth(600);
             text.focusedProperty().addListener((obV, ov, nv) -> {
-                if ( !nv && !isNumeric(text.getText())) {
+                if (!nv && !isNumeric(text.getText())) {
                     SquidMessageDialog.showWarningDialog("Invalid Molar Mass: must be numeric", primaryStageWindow);
                     text.setText(masses.get(mass[0]).toPlainString());
                 }
@@ -664,7 +779,7 @@ public class parametersManagerGUIController implements Initializable {
         return mod.getModelName() + " v." + mod.getVersion();
     }
 
-    private String getRatioVisibleName(String ratio) {
+    private static String getRatioVisibleName(String ratio) {
         String retVal = ratio.replaceAll("lambda", "λ");
         retVal = retVal.replaceAll("r206_207r", "206-Pb/207-Pb");
         retVal = retVal.replaceAll("r206_208r", "206-Pb/208-Pb");
@@ -675,7 +790,7 @@ public class parametersManagerGUIController implements Initializable {
         return retVal;
     }
 
-    private String getRatioHiddenName(String ratio) {
+    private static String getRatioHiddenName(String ratio) {
         String retVal = ratio.replaceAll("λ", "lambda");
         retVal = retVal.replaceAll("206-Pb/207-Pb", "r206_207r");
         retVal = retVal.replaceAll("206-Pb/208-Pb", "r206_208r");
@@ -905,6 +1020,7 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstEditCurrMod(ActionEvent event) {
+        physConstHolder = physConstModel.clone();
         physConstEditable(true);
         setUpPhysConstMenuItems(true, physConstModel.isEditable());
         isEditingCurrPhysConst = true;
@@ -928,6 +1044,9 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstCancelEdit(ActionEvent event) {
+        if (isEditingCurrPhysConst) {
+            physConstModel = physConstHolder;
+        }
         if (physConstCB.getSelectionModel().getSelectedIndex() != 0) {
             physConstCB.getSelectionModel().selectFirst();
         } else {
@@ -996,6 +1115,7 @@ public class parametersManagerGUIController implements Initializable {
             physConstModels.add(physConstModel);
         } else {
             isEditingCurrPhysConst = false;
+            physConstHolder = null;
         }
         setUpPhysConstCBItems();
         physConstCB.getSelectionModel().select(getModVersionName(physConstModel));
@@ -1080,6 +1200,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatModels.add(refMatModel);
         } else {
             isEditingCurrRefMat = false;
+            refMatHolder = null;
         }
         setUpRefMatCBItems();
         refMatCB.getSelectionModel().select(getModVersionName(refMatModel));
@@ -1100,6 +1221,11 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatCancelEdit(ActionEvent event) {
+        if (isEditingCurrRefMat) {
+            isEditingCurrRefMat = false;
+            refMatModel = refMatHolder;
+        }
+
         if (refMatCB.getSelectionModel().getSelectedIndex() != 0) {
             refMatCB.getSelectionModel().selectFirst();
         } else {
@@ -1129,6 +1255,7 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatEditCurrMod(ActionEvent event) {
+        refMatHolder = refMatModel.clone();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
         isEditingCurrRefMat = true;
@@ -1223,7 +1350,7 @@ public class parametersManagerGUIController implements Initializable {
             mod.setOneSigmaPCT(physConstDataNotation.format(bigDec));
         }
         physConstDataTable.getColumns().clear();
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns(physConstDataTable, physConstDataNotation);
         for (TableColumn<DataModel, String> col : columns) {
             physConstDataTable.getColumns().add(col);
         }
@@ -1269,7 +1396,18 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setValue(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setValue(newValue);
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -1285,7 +1423,19 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setOneSigmaABS(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setOneSigma(newValue);
+                valMod.setUncertaintyType("ABS");
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -1301,7 +1451,19 @@ public class parametersManagerGUIController implements Initializable {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
-                mod.setOneSigmaPCT(value.getNewValue());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setOneSigma(newValue);
+                valMod.setUncertaintyType("PCT");
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
@@ -1341,7 +1503,7 @@ public class parametersManagerGUIController implements Initializable {
             mod.setOneSigmaPCT(refMatConcentrationsNotation.format(bigDec));
         }
         refMatConcentrationsTable.getColumns().clear();
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns();
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation);
         for (TableColumn<DataModel, String> col : columns) {
             refMatConcentrationsTable.getColumns().add(col);
         }
@@ -1358,7 +1520,7 @@ public class parametersManagerGUIController implements Initializable {
             physConstCorrNotation = getScientificNotationFormat();
             physConstCorrNotationButton.setText("Scientific Notation");
         }
-        swapCovCorrNotation(physConstCorrNotation, physConstCorrTable);
+        swapCovCorrNotation(physConstCorrNotation, physConstCorrTable, physConstModel);
         physConstCorrTable.refresh();
     }
 
@@ -1371,7 +1533,7 @@ public class parametersManagerGUIController implements Initializable {
             physConstCovNotation = getScientificNotationFormat();
             physConstCovNotationButton.setText("Scientific Notation");
         }
-        swapCovCorrNotation(physConstCovNotation, physConstCovTable);
+        swapCovCorrNotation(physConstCovNotation, physConstCovTable, physConstModel);
         physConstCovTable.refresh();
     }
 
@@ -1384,7 +1546,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatCorrNotation = getScientificNotationFormat();
             refMatCorrNotationButton.setText("Scientific Notation");
         }
-        swapCovCorrNotation(refMatCorrNotation, refMatCorrTable);
+        swapCovCorrNotation(refMatCorrNotation, refMatCorrTable, refMatModel);
         refMatCorrTable.refresh();
     }
 
@@ -1397,11 +1559,11 @@ public class parametersManagerGUIController implements Initializable {
             refMatCovNotation = getScientificNotationFormat();
             refMatCovNotationButton.setText("Scientific Notation");
         }
-        swapCovCorrNotation(refMatCovNotation, refMatCovTable);
+        swapCovCorrNotation(refMatCovNotation, refMatCovTable, refMatModel);
         refMatCovTable.refresh();
     }
 
-    private void swapCovCorrNotation(DecimalFormat format, TableView<ObservableList<SimpleStringProperty>> table) {
+    private void swapCovCorrNotation(DecimalFormat format, TableView<ObservableList<SimpleStringProperty>> table, ParametersModel model) {
         ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
         ObservableList<SimpleStringProperty> cols = FXCollections.observableArrayList();
         for (int i = 0; i < table.getColumns().size(); i++) {
@@ -1409,7 +1571,7 @@ public class parametersManagerGUIController implements Initializable {
         }
 
         items.add(0, cols);
-        initializeTableWithObList(table, items, format);
+        initializeTableWithObList(table, items, format, model);
     }
 
     public class DataModel {
