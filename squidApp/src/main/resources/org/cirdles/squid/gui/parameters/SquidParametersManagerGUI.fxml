@@ -98,7 +98,7 @@
                                                     <children>
                                                         <ScrollPane id="physConstReferencesPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <content>
-                                                                <AnchorPane fx:id="referencesPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                <AnchorPane fx:id="referencesPane" prefHeight="357.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                             </content>
                                                         </ScrollPane>
                                                     </children>
@@ -107,9 +107,13 @@
                                         </Tab>
                                         <Tab text="Atomic Molar Masses">
                                             <content>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea fx:id="molarMassesTextArea" layoutX="42.0" layoutY="5.0" prefHeight="200.0" prefWidth="478.0" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
+                                                        <ScrollPane id="physConstReferencesPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <content>
+                                                                <AnchorPane fx:id="molarMassesPane" prefHeight="357.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            </content>
+                                                        </ScrollPane>
                                                     </children>
                                                 </AnchorPane>
                                             </content>

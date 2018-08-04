@@ -53,6 +53,7 @@ import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
@@ -121,8 +122,6 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private TableView<RefMatDataModel> refMatDataTable;
     @FXML
-    private TextArea molarMassesTextArea;
-    @FXML
     private AnchorPane referencesPane;
     @FXML
     private TableView<DataModel> refMatConcentrationsTable;
@@ -167,6 +166,7 @@ public class parametersManagerGUIController implements Initializable {
     List<ReferenceMaterial> refMatModels;
 
     List<TextField> physConstReferences;
+    List<TextField> molarMasses;
 
     private boolean isEditingCurrPhysConst;
     private boolean isEditingCurrRefMat;
@@ -179,6 +179,8 @@ public class parametersManagerGUIController implements Initializable {
     private DecimalFormat refMatConcentrationsNotation;
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
+    @FXML
+    private AnchorPane molarMassesPane;
 
     /**
      * Initializes the controller class.
@@ -205,7 +207,6 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel = refMatModels.get(0);
         setUpRefMatCB();
 
-        setUpMassesProofer();
 //        disableTableColumReordering();
         setUpLaboratoryName();
     }
@@ -347,13 +348,13 @@ public class parametersManagerGUIController implements Initializable {
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
             table.getColumns().clear();
             TableColumn<ObservableList<SimpleStringProperty>, String> rowHead
-                        = new TableColumn<>(getRatioVisibleName(cols.get(0).get()));
-                final int rowHeadNum = 0;
-                rowHead.setSortable(false);
-                rowHead.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
-                rowHead.setCellValueFactory(param
-                        -> new ReadOnlyObjectWrapper<String>(getRatioVisibleName(param.getValue().get(rowHeadNum).get())));
-                table.getColumns().add(rowHead);
+                    = new TableColumn<>(getRatioVisibleName(cols.get(0).get()));
+            final int rowHeadNum = 0;
+            rowHead.setSortable(false);
+            rowHead.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
+            rowHead.setCellValueFactory(param
+                    -> new ReadOnlyObjectWrapper<String>(getRatioVisibleName(param.getValue().get(rowHeadNum).get())));
+            table.getColumns().add(rowHead);
             for (int i = 1; i < cols.size(); i++) {
                 TableColumn<ObservableList<SimpleStringProperty>, String> col
                         = new TableColumn<>(getRatioVisibleName(cols.get(i).get()));
@@ -553,42 +554,34 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpMolarMasses() {
-        molarMassesTextArea.clear();
-        Iterator<Entry<String, BigDecimal>> molarMassesIterator
-                = physConstModel.getMolarMasses().entrySet().iterator();
-        Entry<String, BigDecimal> curr;
-        if (molarMassesIterator.hasNext()) {
-            curr = molarMassesIterator.next();
-            molarMassesTextArea.appendText(curr.getKey() + " = " + curr.getValue());
-        }
-        while (molarMassesIterator.hasNext()) {
-            curr = molarMassesIterator.next();
-            molarMassesTextArea.appendText("\n" + curr.getKey() + " = "
-                    + curr.getValue());
-        }
-    }
+        molarMassesPane.getChildren().clear();
+        molarMasses = new ArrayList<>();
+        Map<String, BigDecimal> masses = physConstModel.getMolarMasses();
+        String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
+        int currY = 0;
+        for (String[] mass : defaultMasses) {
+            Label lab = new Label(mass[0]);
+            molarMassesPane.getChildren().add(lab);
+            lab.setLayoutY(currY + 5);
+            lab.setLayoutX(10);
+            lab.setTextAlignment(TextAlignment.RIGHT);
+            lab.setPrefWidth(Region.USE_COMPUTED_SIZE);
 
-    private void setUpMassesProofer() {
-        molarMassesTextArea.focusedProperty().addListener((obV, ov, nv) -> {
-            if (!nv) {
-                Map<String, BigDecimal> masses = new HashMap<>();
-                try {
-                    String[] lines = molarMassesTextArea.getText().split("\n");
-                    for (int i = 0; i < lines.length; i++) {
-                        if (!lines[i].trim().equals("")) {
-                            String[] currLine = lines[i].split("=");
-                            String key = currLine[0].trim();
-                            String bigDec = currLine[1].trim();
-                            Double.parseDouble(bigDec);
-                        }
-                    }
-                } catch (Exception e) {
-                    String message = "Incorrect molar masses format!\n"
-                            + "Enter in format: ratio = mass";
-                    SquidMessageDialog.showWarningDialog(message, primaryStageWindow);
+            TextField text = new TextField(masses.get(mass[0]).toPlainString());
+            molarMassesPane.getChildren().add(text);
+            text.setLayoutY(currY);
+            text.setLayoutX(80 + lab.getLayoutX());
+            text.setPrefWidth(600);
+            text.focusedProperty().addListener((obV, ov, nv) -> {
+                if ( !nv && !isNumeric(text.getText())) {
+                    SquidMessageDialog.showWarningDialog("Invalid Molar Mass: must be numeric", primaryStageWindow);
+                    text.setText(masses.get(mass[0]).toPlainString());
                 }
-            }
-        });
+            });
+
+            molarMasses.add(text);
+            currY += 40;
+        }
     }
 
     private void setUpApparentDates() {
@@ -600,6 +593,8 @@ public class parametersManagerGUIController implements Initializable {
         referencesPane.getChildren().clear();
         ValueModel[] models = physConstModel.getValues();
         physConstReferences = new ArrayList<>();
+        AnchorPane.setRightAnchor(referencesPane, 0.0);
+        AnchorPane.setBottomAnchor(referencesPane, 0.0);
         int currHeight = 0;
         for (int i = 0; i < models.length; i++) {
             ValueModel mod = models[i];
@@ -614,11 +609,8 @@ public class parametersManagerGUIController implements Initializable {
             TextField text = new TextField(mod.getReference());
             referencesPane.getChildren().add(text);
             text.setLayoutY(currHeight);
-            text.setLayoutX(lab.getLayoutX() + 100);
-            text.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            text.setOnKeyReleased(value -> {
-                mod.setReference(text.getText());
-            });
+            text.setLayoutX(lab.getLayoutX() + 40);
+            text.setPrefWidth(600);
 
             physConstReferences.add(text);
             currHeight += 40;
@@ -835,7 +827,9 @@ public class parametersManagerGUIController implements Initializable {
         physConstCorrTable.setEditable(isEditable);
         physConstCorrTable.getColumns().get(0).setEditable(false);
 
-        molarMassesTextArea.setEditable(isEditable);
+        for (TextField text : molarMasses) {
+            text.setEditable(isEditable);
+        }
 
         for (int i = 0; i < physConstReferences.size(); i++) {
             physConstReferences.get(i).setEditable(isEditable);
@@ -982,24 +976,16 @@ public class parametersManagerGUIController implements Initializable {
         physConstModel.setValues(values);
 
         Map<String, BigDecimal> masses = new HashMap<>();
-        try {
-            String[] lines = molarMassesTextArea.getText().split("\n");
-            for (int i = 0; i < lines.length; i++) {
-                if (!lines[i].trim().equals("")) {
-                    String[] currLine = lines[i].split("=");
-                    String key = currLine[0].trim();
-                    String bigDec = currLine[1].trim();
-                    if (Double.parseDouble(bigDec) == 0) {
-                        masses.put(key, BigDecimal.ZERO);
-                    } else {
-                        masses.put(key, new BigDecimal(bigDec));
-                    }
+        String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
+        for (int i = 0; i < defaultMasses.length; i++) {
+            String[] defaultMass = defaultMasses[i];
+            try {
+                if (Double.parseDouble(defaultMass[1]) != 0) {
+                    masses.put(defaultMass[0], new BigDecimal(molarMasses.get(i).getText()));
                 }
+            } catch (Exception e) {
+                masses.put(defaultMass[0], new BigDecimal(defaultMass[1]));
             }
-            physConstModel.setMolarMasses(masses);
-        } catch (Exception e) {
-            String message = "Incorrect molar masses format!";
-            SquidMessageDialog.showWarningDialog(message, primaryStageWindow);
         }
 
         physConstModel.setReferences(physConstReferencesArea.getText());
@@ -1417,8 +1403,8 @@ public class parametersManagerGUIController implements Initializable {
 
     private void swapCovCorrNotation(DecimalFormat format, TableView<ObservableList<SimpleStringProperty>> table) {
         ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
-        ObservableList<SimpleStringProperty> cols =  FXCollections.observableArrayList();
-        for(int i = 0; i < table.getColumns().size(); i++) {
+        ObservableList<SimpleStringProperty> cols = FXCollections.observableArrayList();
+        for (int i = 0; i < table.getColumns().size(); i++) {
             cols.add(new SimpleStringProperty(table.getColumns().get(i).getText()));
         }
 
