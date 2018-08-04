@@ -13,7 +13,7 @@
    <children>
       <HBox translateY="-8.0">
          <children>
-            <Label fx:id="titleLabel" text="Project Manager  &gt;&gt; Manage Prawn File" />
+            <Label fx:id="titleLabel" text="Project Manager &gt; Prawn File/Manage Spots and Reference Materials &gt; Prawn File/Manage Sample Naming" />
          </children>
       </HBox>
       <HBox spacing="10.0">

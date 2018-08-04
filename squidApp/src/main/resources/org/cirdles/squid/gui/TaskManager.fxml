@@ -63,12 +63,14 @@
           <RowConstraints vgrow="NEVER" />
           <RowConstraints vgrow="NEVER" />
             <RowConstraints vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
             <Label text="Normalise Ion Counts for SBM?" />
             <Label text="Ratio Calculation Method:" GridPane.rowIndex="1" />
             <Label text="Parent Concentration:" GridPane.rowIndex="2" />
             <Label text="Preferred index isotope:" GridPane.rowIndex="3" />
+            <Label layoutX="10.0" layoutY="94.0" text="Weighted Means of Red Mat:" GridPane.rowIndex="4" />
             <HBox alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <RadioButton fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
@@ -101,13 +103,18 @@
                </children>
             </HBox>
             <CheckBox fx:id="calcMeanConcetrationCheckBox" mnemonicParsing="false" onAction="#calcMeanConcetrationCheckBoxAction" opacity="0.95" text="Use calculated Mean Concentration of Parent from concentration reference materials" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <children>
+                  <CheckBox fx:id="autoExcludeSpotsCheckBox" disable="true" mnemonicParsing="false" selected="true" text="Auto-exclude spots?" />
+               </children>
+            </HBox>
          </children>
       </GridPane>
       <Label text="Audit:" GridPane.rowIndex="6" />
       <TextArea fx:id="taskAuditTextArea" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <HBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
-            <Label fx:id="titleLabel" text="Task Manager &gt;&gt; Manage Ratios" />
+            <Label fx:id="titleLabel" text="Task Manager &gt; Isotopes &amp; Ratios/Manage Isotopes &gt; Isotopes &amp; Ratios/Manage Ratios" />
          </children>
       </HBox>
    </children>

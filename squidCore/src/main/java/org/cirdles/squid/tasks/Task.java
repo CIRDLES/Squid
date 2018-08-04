@@ -366,9 +366,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         summary.append("\n\n ")
                 .append(String.valueOf(referenceMaterialSpots.size()))
-                .append(" Reference Material Spots extracted by filter: ' ")
+                .append(" Reference Material Spots extracted by filter: \"")
                 .append(filterForRefMatSpotNames)
-                .append(" '.");
+                .append("\".");
 
         String meanConcValue = "Not Calculated";
         if (taskExpressionsEvaluationsPerSpotSet.get(SQUID_MEAN_PPM_PARENT_NAME) != null) {

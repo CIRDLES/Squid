@@ -87,6 +87,8 @@ public class TaskManagerController implements Initializable {
     private RadioButton pb208RadioButton;
     @FXML
     private Label titleLabel;
+    @FXML
+    private CheckBox autoExcludeSpotsCheckBox;
 
     /**
      * Initializes the controller class.
@@ -98,6 +100,7 @@ public class TaskManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         if (squidProject.getTask() != null) {
             task = squidProject.getTask();
+            task.setupSquidSessionSpecsAndReduceAndReport();
             populateTaskFields();
             setupListeners();
         } else {
