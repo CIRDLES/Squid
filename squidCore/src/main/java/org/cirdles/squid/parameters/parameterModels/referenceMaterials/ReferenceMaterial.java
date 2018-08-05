@@ -31,7 +31,6 @@ import org.cirdles.squid.parameters.valueModels.Age207_206r;
 import org.cirdles.squid.parameters.valueModels.Age207_235r;
 import org.cirdles.squid.parameters.valueModels.Age208_232r;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
-import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
  *
@@ -59,7 +58,8 @@ public class ReferenceMaterial extends ParametersModel {
     public ReferenceMaterial clone() {
         ReferenceMaterial model = new ReferenceMaterial();
 
-        model.setModelName(modelName + " - copy");
+        model.setModelName(modelName);
+        model.setIsEditable(isEditable);
         model.setLabName(labName);
         model.setVersion(version);
         model.setDateCertified(dateCertified);

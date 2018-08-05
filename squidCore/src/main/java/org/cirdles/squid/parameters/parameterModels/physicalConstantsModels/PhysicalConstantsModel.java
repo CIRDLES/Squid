@@ -45,7 +45,8 @@ public class PhysicalConstantsModel extends ParametersModel {
 
     public PhysicalConstantsModel clone() {
         PhysicalConstantsModel model = new PhysicalConstantsModel();
-        model.setModelName(modelName + " - copy");
+        model.setModelName(modelName);
+        model.setIsEditable(isEditable);
         model.setLabName(labName);
         model.setVersion(version);
         model.setDateCertified(dateCertified);

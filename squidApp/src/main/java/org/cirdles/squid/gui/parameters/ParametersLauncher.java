@@ -71,22 +71,26 @@ public class ParametersLauncher {
     }
 
     public static void setUpPhysConstCBItems() {
-        final ObservableList<String> cbList = FXCollections.observableArrayList();
-        String selected = (String) physConstCB.getSelectionModel().getSelectedItem();
-        for (PhysicalConstantsModel mod : squidLabData.getPhysicalConstantsModels()) {
-            cbList.add(getModVersionName(mod));
+        if (!parametersManagerGUIController.isEditingPhysConst) {
+            final ObservableList<String> cbList = FXCollections.observableArrayList();
+            String selected = (String) physConstCB.getSelectionModel().getSelectedItem();
+            for (PhysicalConstantsModel mod : squidLabData.getPhysicalConstantsModels()) {
+                cbList.add(getModVersionName(mod));
+            }
+            physConstCB.setItems(cbList);
+            physConstCB.getSelectionModel().select(selected);
         }
-        physConstCB.setItems(cbList);
-        physConstCB.getSelectionModel().select(selected);
     }
 
     public static void setUpRefMatCBItems() {
-        final ObservableList<String> cbList = FXCollections.observableArrayList();
-        String selected = (String) refMatCB.getSelectionModel().getSelectedItem();
-        for (ReferenceMaterial mod : squidLabData.getReferenceMaterials()) {
-            cbList.add(getModVersionName(mod));
+        if (!parametersManagerGUIController.isEditingRefMat) {
+            final ObservableList<String> cbList = FXCollections.observableArrayList();
+            String selected = (String) refMatCB.getSelectionModel().getSelectedItem();
+            for (ReferenceMaterial mod : squidLabData.getReferenceMaterials()) {
+                cbList.add(getModVersionName(mod));
+            }
+            refMatCB.setItems(cbList);
+            refMatCB.getSelectionModel().select(selected);
         }
-        refMatCB.setItems(cbList);
-        refMatCB.getSelectionModel().select(selected);
     }
 }

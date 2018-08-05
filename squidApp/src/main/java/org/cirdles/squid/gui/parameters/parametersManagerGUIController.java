@@ -184,6 +184,9 @@ public class parametersManagerGUIController implements Initializable {
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
 
+    public static boolean isEditingPhysConst = false;
+    public static boolean isEditingRefMat = false;
+
     /**
      * Initializes the controller class.
      *
@@ -404,7 +407,7 @@ public class parametersManagerGUIController implements Initializable {
         }
     }
 
-       public static void disableColumnReorder(TableView<ObservableList<SimpleStringProperty>> table, List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns) {
+    public static void disableColumnReorder(TableView<ObservableList<SimpleStringProperty>> table, List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns) {
         table.getColumns().addListener(new ListChangeListener<Object>() {
             public boolean suspended;
 
@@ -418,8 +421,8 @@ public class parametersManagerGUIController implements Initializable {
                 }
             }
         });
-    } 
-    
+    }
+
     private void setUpPhysConstData() {
         physConstDataTable.getColumns().clear();
         List<TableColumn<DataModel, String>> columns = getDataModelColumns(physConstDataTable, physConstDataNotation);
@@ -1025,14 +1028,17 @@ public class parametersManagerGUIController implements Initializable {
         physConstEditable(true);
         setUpPhysConstMenuItems(true, physConstModel.isEditable());
         isEditingCurrPhysConst = true;
+        isEditingPhysConst = true;
     }
 
     @FXML
     private void physConstEditCopy(ActionEvent event) {
         physConstModel = physConstModel.clone();
+        physConstModel.setModelName(physConstModel.getModelName() + " - copy");
         setUpPhysConst();
         physConstEditable(true);
         setUpPhysConstMenuItems(true, true);
+        isEditingPhysConst = true;
     }
 
     @FXML
@@ -1041,22 +1047,22 @@ public class parametersManagerGUIController implements Initializable {
         setUpPhysConst();
         physConstEditable(true);
         setUpPhysConstMenuItems(true, true);
+        isEditingPhysConst = true;
     }
 
     @FXML
     private void physConstCancelEdit(ActionEvent event) {
         if (isEditingCurrPhysConst) {
+            isEditingCurrPhysConst = false;
             physConstModel = physConstHolder;
+            physConstHolder = null;
         }
-        if (physConstCB.getSelectionModel().getSelectedIndex() != 0) {
-            physConstCB.getSelectionModel().selectFirst();
-        } else {
-            physConstModel = physConstModels.get(0);
-            setUpPhysConst();
-        }
-
+        String selected = physConstCB.getSelectionModel().getSelectedItem();
+        setUpPhysConstCBItems();
+        physConstCB.getSelectionModel().select(selected);
         physConstEditable(false);
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
+        isEditingPhysConst = false;
     }
 
     @FXML
@@ -1123,6 +1129,7 @@ public class parametersManagerGUIController implements Initializable {
         physConstEditable(false);
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
         squidLabData.storeState();
+        isEditingPhysConst = false;
     }
 
     @FXML
@@ -1208,6 +1215,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
         squidLabData.storeState();
+        isEditingRefMat = false;
     }
 
     @FXML
@@ -1225,17 +1233,14 @@ public class parametersManagerGUIController implements Initializable {
         if (isEditingCurrRefMat) {
             isEditingCurrRefMat = false;
             refMatModel = refMatHolder;
+            refMatHolder = null;
         }
-
-        if (refMatCB.getSelectionModel().getSelectedIndex() != 0) {
-            refMatCB.getSelectionModel().selectFirst();
-        } else {
-            refMatModel = refMatModels.get(0);
-            setUpRefMat();
-        }
-
+        String selected = refMatCB.getSelectionModel().getSelectedItem();
+        setUpRefMatCBItems();
+        refMatCB.getSelectionModel().select(selected);
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
+        isEditingRefMat = false;
     }
 
     @FXML
@@ -1244,14 +1249,17 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMat();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
+        isEditingRefMat = true;
     }
 
     @FXML
     private void refMatEditCopy(ActionEvent event) {
         refMatModel = refMatModel.clone();
+        refMatModel.setModelName(refMatModel.getModelName() + " - copy");
         setUpRefMat();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
+        isEditingRefMat = true;
     }
 
     @FXML
@@ -1260,6 +1268,7 @@ public class parametersManagerGUIController implements Initializable {
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
         isEditingCurrRefMat = true;
+        isEditingRefMat = true;
     }
 
     private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<SimpleStringProperty>> table) {
@@ -1479,7 +1488,7 @@ public class parametersManagerGUIController implements Initializable {
 
         refMatDataTable.refresh();
     }
-    
+
     public static BigDecimal round(BigDecimal val, int precision) {
         return new BigDecimal(org.cirdles.ludwig.squid25.Utilities.roundedToSize(val.doubleValue(), 12));
     }
