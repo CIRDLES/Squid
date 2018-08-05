@@ -183,6 +183,8 @@
                                                     <children>
                                                         <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                                         <Button fx:id="refMatDataNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatDataNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" />
+                                          <TextField fx:id="refMatDataSigFigs" layoutX="279.0" layoutY="2.0" prefHeight="26.0" prefWidth="50.0" />
+                                          <Label layoutX="220.0" layoutY="7.0" text="Sig Figs:" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -191,7 +193,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label layoutX="14.0" layoutY="5.0" text="Correlations | Note: correlations matrix is positive definite" AnchorPane.leftAnchor="220.0" AnchorPane.topAnchor="5.0" />
+                                                        <Label layoutX="319.0" layoutY="6.0" text="Correlations | Note: correlations matrix is positive definite" AnchorPane.leftAnchor="319.0" AnchorPane.topAnchor="6.0" />
                                                         <TableView fx:id="refMatCorrTable" layoutX="20.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                           <Button fx:id="refMatCorrNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatCorrNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" />
                                                     </children>

@@ -160,6 +160,9 @@ public class parametersManagerGUIController implements Initializable {
     private Button refMatCovNotationButton;
     @FXML
     private AnchorPane molarMassesPane;
+    @FXML
+    private TextField refMatDataSigFigs;
+
     PhysicalConstantsModel physConstModel;
     PhysicalConstantsModel physConstHolder;
 
@@ -213,6 +216,7 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMatCB();
 
         setUpLaboratoryName();
+        setUpSigFigTextFields();
     }
 
     private void setUpPhysConst() {
@@ -374,20 +378,23 @@ public class parametersManagerGUIController implements Initializable {
                         if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1
                                 && Double.parseDouble(value.getNewValue()) >= -1) {
                             int rowNum = value.getTablePosition().getRow();
-                            BigDecimal newValue = new BigDecimal(value.getNewValue());
-                            ObservableList<ObservableList<SimpleStringProperty>> items = value.getTableView().getItems();
-                            items.get(rowNum).set(colNum, new SimpleStringProperty(format.format(newValue)));
-                            items.get(colNum - 1).set(rowNum + 1, new SimpleStringProperty(format.format(newValue)));
                             String colRatio = getRatioHiddenName(value.getTableColumn().getText());
-                            String rowRatio = getRatioHiddenName(items.get(rowNum).get(0).get());
+                            String rowRatio = getRatioHiddenName(value.getRowValue().get(0).get());
                             String key = "rho" + colRatio.substring(0, 1).toUpperCase() + colRatio.substring(1) + "__" + rowRatio;
-                            model.getRhos().put(key, newValue);
+                            if(Double.parseDouble(value.getOldValue()) != 0) {
+                                model.getRhos().remove(key);
+                            }
+                            if(Double.parseDouble(value.getNewValue()) != 0) {
+                             model.getRhos().put(key, new BigDecimal(value.getNewValue()));
+                            }
                             model.initializeCorrelations();
                             model.generateCovariancesFromCorrelations();
                             if (table.equals(physConstCorrTable)) {
+                                setUpPhysConstCorr();
                                 setUpPhysConstCov();
                             }
                             if (table.equals(refMatCorrTable)) {
+                                setUpRefMatCorr();
                                 setUpRefMatCov();
                             }
                             table.refresh();
@@ -434,101 +441,7 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpRefMatData() {
-        refMatDataTable.getColumns().clear();
-
-        TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
-        nameCol.setSortable(false);
-        nameCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        refMatDataTable.getColumns().add(nameCol);
-
-        TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
-        valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
-        valCol.setSortable(false);
-        valCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        valCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setValue(newValue);
-                mod.setValue(refMatDataNotation.format(valMod.getValue()));
-                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
-                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(valCol);
-
-        TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
-        absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
-        absCol.setSortable(false);
-        absCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        absCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setOneSigma(newValue);
-                valMod.setUncertaintyType("ABS");
-                mod.setValue(refMatDataNotation.format(valMod.getValue()));
-                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
-                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(absCol);
-
-        TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
-        pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
-        pctCol.setSortable(false);
-        pctCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        pctCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setOneSigma(newValue);
-                valMod.setUncertaintyType("PCT");
-                mod.setValue(refMatDataNotation.format(valMod.getValue()));
-                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
-                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(pctCol);
-
-        TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
-        measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
-        measuredCol.setSortable(false);
-        refMatDataTable.getColumns().add(measuredCol);
+        setUpRefMatDataModelColumns();
 
         final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
         ValueModel[] values = refMatModel.getValues();
@@ -673,6 +586,104 @@ public class parametersManagerGUIController implements Initializable {
         columns.add(pctCol);
 
         return columns;
+    }
+
+    private void setUpRefMatDataModelColumns() {
+        refMatDataTable.getColumns().clear();
+        
+        TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
+        nameCol.setSortable(false);
+        nameCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        refMatDataTable.getColumns().add(nameCol);
+
+        TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
+        valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
+        valCol.setSortable(false);
+        valCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        valCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setValue(newValue);
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(valCol);
+
+        TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
+        absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
+        absCol.setSortable(false);
+        absCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        absCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setOneSigma(newValue);
+                valMod.setUncertaintyType("ABS");
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(absCol);
+
+        TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
+        pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
+        pctCol.setSortable(false);
+        pctCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        pctCol.setOnEditCommit(value -> {
+            if (isNumeric(value.getNewValue())) {
+                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+                DataModel mod = items.get(value.getTablePosition().getRow());
+                String ratioName = getRatioHiddenName(mod.getName());
+                ValueModel valMod = refMatModel.getDatumByName(ratioName);
+                BigDecimal newValue = BigDecimal.ZERO;
+                if (Double.parseDouble(value.getNewValue()) != 0) {
+                    newValue = new BigDecimal(value.getNewValue());
+                }
+                valMod.setOneSigma(newValue);
+                valMod.setUncertaintyType("PCT");
+                mod.setValue(refMatDataNotation.format(valMod.getValue()));
+                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
+                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
+                value.getTableView().refresh();
+                setUpRefMatCovariancesAndCorrelations();
+            } else {
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                value.getTableView().refresh();
+            }
+        });
+        refMatDataTable.getColumns().add(pctCol);
+
+        TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
+        measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
+        measuredCol.setSortable(false);
+        refMatDataTable.getColumns().add(measuredCol);
     }
 
     private ObservableList<DataModel> getDataModelObList(ValueModel[] values, DecimalFormat numberFormat) {
@@ -1390,101 +1401,7 @@ public class parametersManagerGUIController implements Initializable {
             bigDec = new BigDecimal(mod.getOneSigmaPCT());
             mod.setOneSigmaPCT(refMatDataNotation.format(bigDec));
         }
-        refMatDataTable.getColumns().clear();
-
-        TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
-        nameCol.setSortable(false);
-        nameCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        refMatDataTable.getColumns().add(nameCol);
-
-        TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
-        valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
-        valCol.setSortable(false);
-        valCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        valCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setValue(newValue);
-                mod.setValue(refMatDataNotation.format(valMod.getValue()));
-                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
-                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(valCol);
-
-        TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
-        absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
-        absCol.setSortable(false);
-        absCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        absCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setOneSigma(newValue);
-                valMod.setUncertaintyType("ABS");
-                mod.setValue(refMatDataNotation.format(valMod.getValue()));
-                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
-                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(absCol);
-
-        TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
-        pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
-        pctCol.setSortable(false);
-        pctCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
-        pctCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setOneSigma(newValue);
-                valMod.setUncertaintyType("PCT");
-                mod.setValue(refMatDataNotation.format(valMod.getValue()));
-                mod.setOneSigmaABS(refMatDataNotation.format(valMod.getOneSigmaABS()));
-                mod.setOneSigmaPCT(refMatDataNotation.format(valMod.getOneSigmaPCT()));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
-                value.getTableView().refresh();
-            }
-        });
-        refMatDataTable.getColumns().add(pctCol);
-
-        TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
-        measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
-        measuredCol.setSortable(false);
-        refMatDataTable.getColumns().add(measuredCol);
+        setUpRefMatDataModelColumns();
 
         refMatDataTable.refresh();
     }
@@ -1586,6 +1503,12 @@ public class parametersManagerGUIController implements Initializable {
 
         items.add(0, cols);
         initializeTableWithObList(table, items, format, model);
+    }
+
+    private void setUpSigFigTextFields() {
+        refMatDataSigFigs.setOnKeyReleased(value -> {
+            ObservableList<RefMatDataModel> items = refMatDataTable.getItems();
+        });
     }
 
     public class DataModel {
