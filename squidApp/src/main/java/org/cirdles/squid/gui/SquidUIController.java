@@ -64,6 +64,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.parameters.parametersManagerGUIController;
+import static org.cirdles.squid.gui.parameters.parametersManagerGUIController.getModVersionName;
 import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.projects.SquidProject;
@@ -1167,16 +1168,25 @@ public class SquidUIController implements Initializable {
             TaskInterface task = squidProject.getTask();
             ReferenceMaterial refMat = task.getReferenceMaterial();
             PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
-
             if (physConst != null && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
-                squidLabData.addPhysicalConstantsModel(physConst);
-                ParametersLauncher.setUpPhysConstCBItems();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to add " + getModVersionName(physConst) + " to your squid lab data?");
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        squidLabData.addPhysicalConstantsModel(physConst);
+                        ParametersLauncher.setUpPhysConstCBItems();
+                    }
+                });
+
             }
             if (refMat != null && !squidLabData.getReferenceMaterials().contains(refMat)) {
-                squidLabData.addReferenceMaterial(refMat);
-                ParametersLauncher.setUpRefMatCBItems();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to add " + getModVersionName(refMat) + " to your squid lab data?");
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        squidLabData.addReferenceMaterial(refMat);
+                        ParametersLauncher.setUpRefMatCBItems();
+                    }
+                });
             }
         }
     }
-
 }
