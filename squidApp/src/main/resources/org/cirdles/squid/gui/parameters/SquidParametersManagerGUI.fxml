@@ -47,12 +47,12 @@
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <Label layoutX="148.0" layoutY="6.0" text="Choose Physical Constants Model:" AnchorPane.leftAnchor="148.0" AnchorPane.topAnchor="6.0" />
+                                <Label layoutX="190.0" layoutY="6.0" text="Choose Physical Constants Model:" AnchorPane.leftAnchor="190.0" AnchorPane.topAnchor="6.0" />
                                 <ChoiceBox fx:id="physConstCB" layoutX="384.0" layoutY="2.0" prefWidth="380.0" AnchorPane.leftAnchor="384.0" AnchorPane.topAnchor="2.0" />
-                                <TextField fx:id="physConstModelName" layoutX="100.0" layoutY="53.0" prefHeight="26.0" prefWidth="400.0" />
-                                <TextField fx:id="physConstLabName" layoutX="100.0" layoutY="86.0" />
-                                <TextField fx:id="physConstVersion" layoutX="580.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
-                                <TextField fx:id="physConstDateCertified" layoutX="400.0" layoutY="86.0" />
+                                <TextField fx:id="physConstModelName" layoutX="85.0" layoutY="53.0" prefHeight="26.0" prefWidth="400.0" />
+                                <TextField fx:id="physConstLabName" layoutX="85.0" layoutY="86.0" />
+                                <TextField fx:id="physConstVersion" layoutX="570.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
+                                <TextField fx:id="physConstDateCertified" layoutX="390.0" layoutY="86.0" />
                                 <Label layoutX="1.0" layoutY="57.0" text="Model Name:" textAlignment="RIGHT" AnchorPane.leftAnchor="1.0" />
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" textAlignment="RIGHT" AnchorPane.leftAnchor="16.0" />
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
@@ -164,12 +164,12 @@
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <Label layoutX="152.0" layoutY="5.0" text="Choose Reference Material Model:" />
-                                <ChoiceBox fx:id="refMatCB" layoutX="385.0" layoutY="1.0" prefWidth="380.0" />
-                                <TextField fx:id="refMatModelName" layoutX="100.0" layoutY="53.0" prefHeight="26.0" prefWidth="400.0" />
-                                <TextField fx:id="refMatLabName" layoutX="100.0" layoutY="86.0" />
-                                <TextField fx:id="refMatVersion" layoutX="580.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
-                                <TextField fx:id="refMatDateCertified" layoutX="400.0" layoutY="86.0" />
+                                <Label layoutX="190.0" layoutY="5.0" text="Choose Reference Material Model:" />
+                                <ChoiceBox fx:id="refMatCB" layoutX="384.0" layoutY="1.0" prefWidth="380.0" />
+                                <TextField fx:id="refMatModelName" layoutX="85.0" layoutY="53.0" prefHeight="26.0" prefWidth="400.0" />
+                                <TextField fx:id="refMatLabName" layoutX="85.0" layoutY="86.0" />
+                                <TextField fx:id="refMatVersion" layoutX="570.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
+                                <TextField fx:id="refMatDateCertified" layoutX="390.0" layoutY="86.0" />
                                 <Label layoutX="1.0" layoutY="57.0" text="Model Name:" AnchorPane.leftAnchor="1.0" />
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" AnchorPane.leftAnchor="16.0" />
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />

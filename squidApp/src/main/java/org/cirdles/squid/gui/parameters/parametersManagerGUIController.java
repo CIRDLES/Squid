@@ -381,11 +381,9 @@ public class parametersManagerGUIController implements Initializable {
                             String colRatio = getRatioHiddenName(value.getTableColumn().getText());
                             String rowRatio = getRatioHiddenName(value.getRowValue().get(0).get());
                             String key = "rho" + colRatio.substring(0, 1).toUpperCase() + colRatio.substring(1) + "__" + rowRatio;
-                            if(Double.parseDouble(value.getOldValue()) != 0) {
-                                model.getRhos().remove(key);
-                            }
-                            if(Double.parseDouble(value.getNewValue()) != 0) {
-                             model.getRhos().put(key, new BigDecimal(value.getNewValue()));
+                            model.getRhos().remove(key);
+                            if (Double.parseDouble(value.getNewValue()) != 0) {
+                                model.getRhos().put(key, new BigDecimal(value.getNewValue()));
                             }
                             model.initializeCorrelations();
                             model.generateCovariancesFromCorrelations();
@@ -590,7 +588,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpRefMatDataModelColumns() {
         refMatDataTable.getColumns().clear();
-        
+
         TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
         nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
         nameCol.setSortable(false);
