@@ -693,7 +693,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "(1 - [\"204/206\"] / [\"208/206\"] * sComm_84) * [\"UncorrPb/Thconst\"],"
                 + "sqrt([%\"UncorrPb/Thconst\"]^2 + \n"
                 + "( sComm_84 / ( [\"208/206\"] / [\"204/206\"] - sComm_84 ) )^2 * [%\"204/206\"]^2 ),"
-                + "false", true, false, false);
+                + "false)", true, false, false);
         meansAndAgesForRefMaterials.add(expression4corr208Pb232Thcalibrconst);
 
         // weighted mean
@@ -724,7 +724,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "sqrt([%\"UncorrPb/Thconst\"]^2 +  \n"
                 + "( sComm_84 / ( [\"208/206\"] / [\"204/206 (fr. 207)\"] - sComm_84 ) )^2 * \n"
                 + "( [%\"208/206\"]^2 + [\"204/206 (fr. 207) %err\"]^2 )),"
-                + "false", true, false, false);
+                + "false)", true, false, false);
         meansAndAgesForRefMaterials.add(expression7corr208Pb232Thcalibrconst);
 
         // weighted mean
