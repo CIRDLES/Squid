@@ -11,9 +11,9 @@
 
 <VBox fx:id="mainProjectManagerPane" minHeight="640.0" minWidth="1000.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
    <children>
-      <HBox translateY="-8.0">
+      <HBox translateY="-9.0">
          <children>
-            <Label fx:id="titleLabel" text="Project Manager &gt; Prawn File/Manage Spots and Reference Materials &gt; Prawn File/Manage Sample Naming" />
+            <Label fx:id="titleLabel" text="Project &gt; PrawnFile/Manage Spots and Reference Materials &gt; PrawnFile/Manage Sample Naming" />
          </children>
       </HBox>
       <HBox spacing="10.0">

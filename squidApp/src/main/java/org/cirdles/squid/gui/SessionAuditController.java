@@ -39,6 +39,7 @@ import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -72,6 +73,8 @@ public class SessionAuditController implements Initializable {
     private boolean hasDuplicates;
     @FXML
     private ComboBox<String> delimeterComboBox;
+    @FXML
+    private Label titleLabel;
 
     public SessionAuditController() {
     }
@@ -94,7 +97,7 @@ public class SessionAuditController implements Initializable {
         delimeterComboBox.setItems(delimetersList);
         // set value before adding listener
         delimeterComboBox.getSelectionModel().select(squidProject.getDelimiterForUnknownNames());
-        
+
         delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                     final String oldvalue, final String newvalue) {
@@ -106,6 +109,8 @@ public class SessionAuditController implements Initializable {
                 refreshView();
             }
         });
+
+        titleLabel.setStyle(STYLE_MANAGER_TITLE);
 
     }
 
@@ -360,7 +365,7 @@ public class SessionAuditController implements Initializable {
                     + prawnAuditTreeCheckBox.getRoot().getValue().getCountOfIncludedSpots()
                     + " spots");
         }
-        
+
         squidProject.getTask().setChanged(true);
     }
 
