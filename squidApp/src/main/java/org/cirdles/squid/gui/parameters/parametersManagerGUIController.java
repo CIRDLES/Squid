@@ -443,8 +443,8 @@ public class parametersManagerGUIController implements Initializable {
             ValueModel valMod = values[i];
             Boolean isMeasured = refMatModel.getDataMeasured()[i];
             String value = refMatDataNotation.format(round(valMod.getValue(), precision));
-            String oneSigmaABS = refMatDataNotation.format(round(valMod.getValue(), precision));
-            String oneSigmaPCT = refMatDataNotation.format(round(valMod.getValue(), precision));
+            String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
+            String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));
             RefMatDataModel mod = new RefMatDataModel(getRatioVisibleName(valMod.getName()), value,
                     oneSigmaABS, oneSigmaPCT, isMeasured);
             obList.add(mod);
@@ -687,8 +687,8 @@ public class parametersManagerGUIController implements Initializable {
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
             String value = numberFormat.format(round(valMod.getValue(), precision));
-            String oneSigmaABS = numberFormat.format(round(valMod.getValue(), precision));
-            String oneSigmaPCT = numberFormat.format(round(valMod.getValue(), precision));
+            String oneSigmaABS = numberFormat.format(round(valMod.getOneSigmaABS(), precision));
+            String oneSigmaPCT = numberFormat.format(round(valMod.getOneSigmaPCT(), precision));
             DataModel mod = new DataModel(getRatioVisibleName(valMod.getName()), value,
                     oneSigmaABS, oneSigmaPCT);
             obList.add(mod);
