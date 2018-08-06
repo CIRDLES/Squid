@@ -40,6 +40,8 @@ public interface TaskInterface {
 
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU, boolean referenceMaterialValue, boolean parameterValue);
 
+    public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots);
+
     public void buildSquidSpeciesModelList();
 
     /**
@@ -462,4 +464,9 @@ public interface TaskInterface {
      * @param prawnChanged the prawnChanged to set
      */
     public void setPrawnChanged(boolean prawnChanged);
+
+    /**
+     * @return the squidAllowsAutoExclusionOfSpots
+     */
+    public boolean isSquidAllowsAutoExclusionOfSpots();
 }

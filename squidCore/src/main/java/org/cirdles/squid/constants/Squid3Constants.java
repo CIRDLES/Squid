@@ -127,6 +127,9 @@ public final class Squid3Constants {
     public static final double badAge = -1.23456789;
     public static final double PRESENT_238U235U = 137.88;
 
+    public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";
+    public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
+
     public enum IndexIsoptopesEnum {
         PB_204("204"),
         PB_207("207"),
@@ -253,7 +256,7 @@ public final class Squid3Constants {
             return retVal;
         }
     }
-    
+
     public static final String STYLE_MANAGER_TITLE
             = "     -fx-padding: 0 0 0 0;   \n"
             + "    -fx-border-width: 1;\n"

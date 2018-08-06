@@ -24,20 +24,21 @@
                   <ToolBar fx:id="plotToolBar" prefHeight="40.0" style="-fx-background-color: #67ccff;" VBox.vgrow="NEVER" />
                   <ToolBar prefHeight="40.0">
                     <items>
-                        <Label prefHeight="17.0" prefWidth="191.0" text="Choose Plot:    " />
+                        <Label text="Correction:    " />
                         <RadioButton fx:id="corr4_RadioButton" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="100.0" selected="true" text="4-corr">
                            <toggleGroup>
                               <ToggleGroup fx:id="correctionToggleGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="corr7_RadioButton" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="100.0" text="7-corr" toggleGroup="$correctionToggleGroup" visible="false" />
-                        <RadioButton fx:id="corr8_RadioButton" disable="true" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="100.0" text="8-corr" toggleGroup="$correctionToggleGroup" />
-                        <RadioButton fx:id="wetherillRadioButton" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="175.0" selected="true" text="Wetherill Concordia">
+                        <RadioButton fx:id="corr7_RadioButton" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="100.0" text="7-corr" toggleGroup="$correctionToggleGroup" />
+                        <RadioButton fx:id="corr8_RadioButton" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="100.0" text="8-corr" toggleGroup="$correctionToggleGroup" />
+                        <Label layoutX="10.0" layoutY="10.0" text="Flavor:    " />
+                        <RadioButton fx:id="plotFlavorOneRadioButton" mnemonicParsing="false" onAction="#plotChooserAction" selected="true" text="Plot Flavor One">
                            <toggleGroup>
-                              <ToggleGroup fx:id="plotToggleGroup" />
+                              <ToggleGroup fx:id="plotFlavorToggleGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="terWasserburgRadioButton" disable="true" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="175.0" text="Tera-Wasserburg" toggleGroup="$plotToggleGroup" />
+                        <RadioButton fx:id="plotFlavorTwoRadioButton" mnemonicParsing="false" onAction="#plotChooserAction" text="PlotFlavor Two" toggleGroup="$plotFlavorToggleGroup" />
                     </items>
                   </ToolBar>
                </children>

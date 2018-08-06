@@ -603,7 +603,7 @@ public class SquidUIController implements Initializable {
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
+            System.out.println("TaskManager >>>>   " + iOException.getMessage());
         }
     }
 

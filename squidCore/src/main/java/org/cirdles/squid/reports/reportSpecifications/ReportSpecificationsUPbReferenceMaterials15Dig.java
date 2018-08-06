@@ -93,11 +93,11 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      *
      */
     public static final String[][] ReportCategory_204PbCorrected = new String[][]{
-        {"4-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238Ucalibr.const", "",
-            "", "true", "false", "20", "", "", "false", "false"
+        {"4-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238Ucalibr.const", "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238Ucalibr.const %err", "",
-            "", "true", "false", "20", "", "", "false", "false"
+        {"4-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb/232Thcalibr.const", "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr206Pb/238U Age", "",
             "", "true", "false", "20", "", "", "false", "false"
@@ -148,11 +148,11 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      *
      */
     public static final String[][] ReportCategory_207PbCorrected = new String[][]{
-        {"7-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr206Pb/238Ucalibr.const", "",
-            "", "true", "false", "20", "", "", "false", "false"
+        {"7-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr206Pb/238Ucalibr.const", "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr206Pb/238Ucalibr.const %err", "",
-            "", "true", "false", "20", "", "", "false", "false"
+        {"7-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb/232Thcalibr.const", "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr206Pb/238U Age", "",
             "", "true", "false", "20", "", "", "false", "false"
@@ -169,7 +169,6 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb* %err", "",
             "", "true", "false", "20", "", "", "false", "false"
         }
-
     };
 
     // Report column order =
@@ -195,7 +194,6 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr%com206", "",
             "", "true", "false", "20", "", "", "false", "false"
         }
-
     };
 
     /**

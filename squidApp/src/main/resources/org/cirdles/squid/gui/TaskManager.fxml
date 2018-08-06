@@ -4,6 +4,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -55,8 +56,8 @@
       <Label text="Parameters:" GridPane.rowIndex="5" />
       <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
         <columnConstraints>
-          <ColumnConstraints hgrow="NEVER" />
-          <ColumnConstraints hgrow="ALWAYS" />
+          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="259.0" minWidth="243.0" prefWidth="259.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="598.0" minWidth="582.0" prefWidth="582.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="NEVER" />
@@ -68,9 +69,8 @@
          <children>
             <Label text="Normalise Ion Counts for SBM?" />
             <Label text="Ratio Calculation Method:" GridPane.rowIndex="1" />
-            <Label text="Parent Concentration:" GridPane.rowIndex="2" />
             <Label text="Preferred index isotope:" GridPane.rowIndex="3" />
-            <Label layoutX="10.0" layoutY="94.0" text="Weighted Means of Red Mat:" GridPane.rowIndex="4" />
+            <Label layoutX="10.0" layoutY="94.0" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
             <HBox alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <RadioButton fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
@@ -102,10 +102,11 @@
                   <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false" onAction="#spotAverageRatioCalcRadioButtonAction" opacity="0.98" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
                </children>
             </HBox>
-            <CheckBox fx:id="calcMeanConcetrationCheckBox" mnemonicParsing="false" onAction="#calcMeanConcetrationCheckBoxAction" opacity="0.95" text="Use calculated Mean Concentration of Parent from concentration reference materials" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <CheckBox fx:id="autoExcludeSpotsCheckBox" disable="true" mnemonicParsing="false" selected="true" text="Auto-exclude spots?" />
+                  <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned Pb/U external 1sigma % err:" translateX="20.0" />
+                  <Spinner fx:id="assignedExternalErrSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
                </children>
             </HBox>
          </children>

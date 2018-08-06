@@ -25,6 +25,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -76,8 +77,6 @@ public class TaskManagerController implements Initializable {
     @FXML
     private TextArea taskAuditTextArea;
     @FXML
-    private CheckBox calcMeanConcetrationCheckBox;
-    @FXML
     private RadioButton pb204RadioButton;
     @FXML
     private ToggleGroup toggleGroupIsotope;
@@ -89,6 +88,8 @@ public class TaskManagerController implements Initializable {
     private Label titleLabel;
     @FXML
     private CheckBox autoExcludeSpotsCheckBox;
+    @FXML
+    private Spinner<?> assignedExternalErrSpinner;
 
     /**
      * Initializes the controller class.
@@ -136,14 +137,6 @@ public class TaskManagerController implements Initializable {
             spotAverageRatioCalcRadioButton.setSelected(true);
         }
 
-        boolean hasZeroMeanConc = false;
-        try {
-            hasZeroMeanConc = (task.getTaskExpressionsEvaluationsPerSpotSet().get(SQUID_MEAN_PPM_PARENT_NAME).getValues()[0][0] == 0.0);
-        } catch (Exception e) {
-        }
-        calcMeanConcetrationCheckBox.setDisable(hasZeroMeanConc);
-        calcMeanConcetrationCheckBox.setSelected((!hasZeroMeanConc) && task.isUseCalculated_pdMeanParentEleA());
-
         taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
 
         // set Pb208 Isotope selector visible or not
@@ -160,6 +153,8 @@ public class TaskManagerController implements Initializable {
                 pb208RadioButton.setSelected(true);
                 break;
         }
+        
+        autoExcludeSpotsCheckBox.setSelected(task.isSquidAllowsAutoExclusionOfSpots());
     }
 
     private void setupListeners() {
@@ -237,11 +232,6 @@ public class TaskManagerController implements Initializable {
     }
 
     @FXML
-    private void calcMeanConcetrationCheckBoxAction(ActionEvent event) {
-        task.setUseCalculated_pdMeanParentEleA(calcMeanConcetrationCheckBox.isSelected());
-    }
-
-    @FXML
     private void pb204RadioButtonAction(ActionEvent event) {
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         task.setChanged(true);
@@ -257,6 +247,12 @@ public class TaskManagerController implements Initializable {
     private void pb208RadioButtonAction(ActionEvent event) {
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         task.setChanged(true);
+    }
+
+    @FXML
+    private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
+        // this will cause weighted mean expressions to be changed with boolean flag
+        task.updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
     }
 
 }

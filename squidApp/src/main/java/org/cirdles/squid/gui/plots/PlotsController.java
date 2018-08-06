@@ -18,7 +18,6 @@ package org.cirdles.squid.gui.plots;
 import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotWetherill;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -43,6 +42,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
+import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -51,11 +53,6 @@ import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillD
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import static org.cirdles.topsoil.app.plot.variable.Variables.RHO;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_Y;
-import static org.cirdles.topsoil.app.plot.variable.Variables.X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.Y;
 
 /**
  *
@@ -89,17 +86,16 @@ public class PlotsController implements Initializable {
     @FXML
     private RadioButton corr8_RadioButton;
     @FXML
-    private RadioButton wetherillRadioButton;
-    @FXML
-    private ToggleGroup plotToggleGroup;
-    @FXML
-    private RadioButton terWasserburgRadioButton;
-    @FXML
     private RadioButton corr7_RadioButton;
     @FXML
     private AnchorPane plotAndConfigAnchorPane;
 
-    public static PlotTypes plotTypeSelected = PlotTypes.CONCORDIA;
+    @FXML
+    private RadioButton plotFlavorOneRadioButton;
+    @FXML
+    private RadioButton plotFlavorTwoRadioButton;
+    @FXML
+    private ToggleGroup plotFlavorToggleGroup;
 
     public static enum PlotTypes {
         CONCORDIA("CONCORDIA"),
@@ -112,8 +108,7 @@ public class PlotsController implements Initializable {
             this.plotType = plotType;
         }
     }
-
-    public static SpotTypes fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
+    public static PlotTypes plotTypeSelected = PlotTypes.CONCORDIA;
 
     public static enum SpotTypes {
         REFERENCE_MATERIAL("REFERENCE MATERIALS"),
@@ -128,8 +123,8 @@ public class PlotsController implements Initializable {
         public String getPlotType() {
             return plotType;
         }
-
     }
+    public static SpotTypes fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -289,14 +284,19 @@ public class PlotsController implements Initializable {
     private void showWeightedMeanPlot() {
         // get type of correction
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
+        // flavor of plot
+        String calibrConstAgeBaseName = (String) plotFlavorToggleGroup.getSelectedToggle().getUserData();
         // get details
-        SpotSummaryDetails spotSummaryDetails = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction + "206Pb/238Ucalibr.const WM");
+        SpotSummaryDetails spotSummaryDetails
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction
+                        + calibrConstAgeBaseName + "calibr.const WM");
         plot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
-                "Weighted Mean of " + correction + " for " + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
+                correction + " " + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
+                + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + "206Pb/238U Age",
-                559.1 * 1e6);
+                correction + calibrConstAgeBaseName + " Age",
+                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get("StdAgeUPb").getValues()[0][0]);//559.1 * 1e6);
 
         Node plotNode = plot.displayPlotAsNode();
 
@@ -366,22 +366,48 @@ public class PlotsController implements Initializable {
     private void plotChooserAction(ActionEvent event) {
         customizePlotChooserToolbarAndInvokePlotter();
     }
-    
-    private void customizePlotChooserToolbarAndInvokePlotter(){
+
+    private void customizePlotChooserToolbarAndInvokePlotter() {
+
         switch (plotTypeSelected) {
             case CONCORDIA:
             case TERA_WASSERBURG:
+                plotFlavorOneRadioButton.setText("Wetherill Concordia");
+                plotFlavorTwoRadioButton.setText("Tera-Wasserburg");
+                plotFlavorOneRadioButton.setDisable(false);
+                plotFlavorTwoRadioButton.setDisable(false);
+
                 corr7_RadioButton.setVisible(false);
                 corr8_RadioButton.setDisable(true);
-                wetherillRadioButton.setVisible(true);
-                terWasserburgRadioButton.setVisible(true);
+                corr8_RadioButton.setVisible(true);
+
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
+                plotFlavorOneRadioButton.setText(Squid3Constants.SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM");
+                plotFlavorTwoRadioButton.setText(Squid3Constants.SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM");
+                plotFlavorOneRadioButton.setUserData(SQUID_CALIB_CONST_AGE_206_238_BASENAME);
+                plotFlavorTwoRadioButton.setUserData(SQUID_CALIB_CONST_AGE_208_232_BASENAME);
+
+                boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
+                boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
+
+                corr8_RadioButton.setVisible(false);
+                if (!isDirectAltPD && !has232) { // perm1
+                    plotFlavorOneRadioButton.setSelected(true);
+                    plotFlavorTwoRadioButton.setDisable(true);
+                    corr8_RadioButton.setVisible(true);
+                    corr8_RadioButton.setDisable(false);
+                } else if (!isDirectAltPD && has232) {// perm3
+                    plotFlavorOneRadioButton.setDisable(true);
+                    plotFlavorTwoRadioButton.setSelected(true);
+                } else {
+                    plotFlavorOneRadioButton.setDisable(false);
+                    plotFlavorTwoRadioButton.setDisable(false);
+                }
+
                 corr7_RadioButton.setVisible(true);
-                corr8_RadioButton.setDisable(false);
-                wetherillRadioButton.setVisible(false);
-                terWasserburgRadioButton.setVisible(false);
+
                 showWeightedMeanPlot();
         }
     }
