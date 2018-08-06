@@ -28,12 +28,12 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_TH;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_U;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 
 /**

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1000.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1100.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
   <columnConstraints>
     <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
     <ColumnConstraints hgrow="ALWAYS" />
@@ -105,7 +105,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
-                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned Pb/U external 1sigma % err:" translateX="20.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned Pb/U external 1sigma % err  (ExtPErr):" translateX="20.0" />
                   <Spinner fx:id="assignedExternalErrSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
                </children>
             </HBox>

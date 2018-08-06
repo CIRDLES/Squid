@@ -34,14 +34,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -55,6 +48,13 @@ import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
@@ -173,6 +173,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected boolean squidAllowsAutoExclusionOfSpots;
 
+    protected double extPErr;
+
     public Task() {
         this("New Task", null, null);
     }
@@ -250,6 +252,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.prawnChanged = false;
 
         this.squidAllowsAutoExclusionOfSpots = true;
+
+        this.extPErr = 0.75;
 
         generateConstants();
         generateParameters();
@@ -431,7 +435,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             summary.append(" No constants supplied.");
         }
 
-        summary.append("\n Task Parameters (currently hard-coded): \n");
+        summary.append("\n Task Parameters (currently hard-coded, except ExtPErr, which is set above.): \n");
         if (namedParametersMap.size() > 0) {
             for (Map.Entry<String, ExpressionTreeInterface> entry : namedParametersMap.entrySet()) {
                 summary.append("\t").append(entry.getKey()).append(" = ").append((double) ((ConstantNode) entry.getValue()).getValue()).append("\n");
@@ -2134,8 +2138,30 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the squidAllowsAutoExclusionOfSpots
      */
+    @Override
     public boolean isSquidAllowsAutoExclusionOfSpots() {
         return squidAllowsAutoExclusionOfSpots;
+    }
+
+    /**
+     * @param extPErr the extPErr to set
+     */
+    @Override
+    public void setExtPErr(double extPErr) {
+        this.extPErr = extPErr;
+        if (namedParametersMap.containsKey("ExtPErr")) {
+            ExpressionTreeInterface constant = namedParametersMap.get("ExtPErr");
+            ((ConstantNode) constant).setValue(extPErr);
+        }
+        this.changed = true;
+    }
+
+    /**
+     * @return the extPErr
+     */
+    @Override
+    public double getExtPErr() {
+        return extPErr;
     }
 
 }

@@ -20,19 +20,20 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_TH_S;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PPM_PARENT_EQN_NAME_U;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_TH;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_PRIMARY_UTH_EQN_NAME_U;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TH_U_EQN_NAME_S;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_206_238_NAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TOTAL_208_232_NAME;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH_S;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -81,6 +82,9 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface L859 = new ConstantNode("L859", 0.859);
         parameters.put("L859", L859);
 
+        ExpressionTreeInterface extPErr = new ConstantNode(SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, 0.75);
+        parameters.put(SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, extPErr);
+
         return parameters;
     }
 
@@ -117,11 +121,10 @@ public abstract class BuiltInExpressionsFactory {
         expressionsComm_68.setParameterValue(true);
         parameterValues.add(expressionsComm_68);
 
-        Expression expressionExtPErr = buildExpression("ExtPErr",
-                "0.75", true, true, true);
-        expressionExtPErr.setParameterValue(true);
-        parameterValues.add(expressionExtPErr);
-
+//        Expression expressionExtPErr = buildExpression("ExtPErr",
+//                "0.75", true, true, true);
+//        expressionExtPErr.setParameterValue(true);
+//        parameterValues.add(expressionExtPErr);
         return parameterValues;
 
     }

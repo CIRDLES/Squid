@@ -469,4 +469,13 @@ public interface TaskInterface {
      * @return the squidAllowsAutoExclusionOfSpots
      */
     public boolean isSquidAllowsAutoExclusionOfSpots();
+
+    /**
+     * @param extPErr the extPErr to set
+     */
+    public void setExtPErr(double extPErr);
+      /**
+     * @return the extPErr
+     */
+    public double getExtPErr() ;
 }

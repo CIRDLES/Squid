@@ -42,9 +42,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
-import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -52,6 +49,8 @@ import org.cirdles.squid.gui.plots.squid.WeightedMeanPlot;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 
 /**
@@ -384,8 +383,8 @@ public class PlotsController implements Initializable {
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
-                plotFlavorOneRadioButton.setText(Squid3Constants.SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM");
-                plotFlavorTwoRadioButton.setText(Squid3Constants.SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM");
+                plotFlavorOneRadioButton.setText(SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM");
+                plotFlavorTwoRadioButton.setText(SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM");
                 plotFlavorOneRadioButton.setUserData(SQUID_CALIB_CONST_AGE_206_238_BASENAME);
                 plotFlavorTwoRadioButton.setUserData(SQUID_CALIB_CONST_AGE_208_232_BASENAME);
 

@@ -26,12 +26,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -89,7 +89,7 @@ public class TaskManagerController implements Initializable {
     @FXML
     private CheckBox autoExcludeSpotsCheckBox;
     @FXML
-    private Spinner<?> assignedExternalErrSpinner;
+    private Spinner<Double> assignedExternalErrSpinner;
 
     /**
      * Initializes the controller class.
@@ -107,7 +107,7 @@ public class TaskManagerController implements Initializable {
         } else {
             taskAuditTextArea.setText("No Task information available");
         }
-        
+
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
     }
 
@@ -153,8 +153,21 @@ public class TaskManagerController implements Initializable {
                 pb208RadioButton.setSelected(true);
                 break;
         }
-        
+
         autoExcludeSpotsCheckBox.setSelected(task.isSquidAllowsAutoExclusionOfSpots());
+
+        SpinnerValueFactory<Double> valueFactory
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErr(), 0.05);
+        assignedExternalErrSpinner.setValueFactory(valueFactory);
+        assignedExternalErrSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Double> observable,//
+                    Double oldValue, Double newValue) {
+                    task.setExtPErr(assignedExternalErrSpinner.getValue());
+                    taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
+            }
+        });
     }
 
     private void setupListeners() {
