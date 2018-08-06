@@ -50,14 +50,14 @@
                                 <Label layoutX="190.0" layoutY="6.0" text="Choose Physical Constants Model:" AnchorPane.leftAnchor="190.0" AnchorPane.topAnchor="6.0" />
                                 <ChoiceBox fx:id="physConstCB" layoutX="384.0" layoutY="2.0" prefWidth="380.0" AnchorPane.leftAnchor="384.0" AnchorPane.topAnchor="2.0" />
                                 <TextField fx:id="physConstModelName" layoutX="85.0" layoutY="53.0" prefHeight="26.0" prefWidth="400.0" />
-                                <TextField fx:id="physConstLabName" layoutX="85.0" layoutY="86.0" prefHeight="26.0" prefWidth="200.0" />
+                                <TextField fx:id="physConstLabName" layoutX="85.0" layoutY="86.0" prefHeight="26.0" prefWidth="250.0" />
                                 <TextField fx:id="physConstVersion" layoutX="570.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
-                                <TextField fx:id="physConstDateCertified" layoutX="390.0" layoutY="86.0" />
+                                <TextField fx:id="physConstDateCertified" layoutX="440.0" layoutY="86.0" />
                                 <Label layoutX="1.0" layoutY="57.0" text="Model Name:" textAlignment="RIGHT" AnchorPane.leftAnchor="1.0" />
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" textAlignment="RIGHT" AnchorPane.leftAnchor="16.0" />
-                                <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
+                                <Label layoutX="352.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="520.0" layoutY="57.0" text="Version:" />
-                                <Label fx:id="physConstIsEditableLabel" layoutX="600.0" layoutY="86.0" textFill="RED" />
+                                <Label fx:id="physConstIsEditableLabel" layoutX="650.0" layoutY="86.0" textFill="RED" />
                                 <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">
@@ -173,14 +173,14 @@
                                 <Label layoutX="190.0" layoutY="5.0" text="Choose Reference Material Model:" />
                                 <ChoiceBox fx:id="refMatCB" layoutX="384.0" layoutY="1.0" prefWidth="380.0" />
                                 <TextField fx:id="refMatModelName" layoutX="85.0" layoutY="53.0" prefHeight="26.0" prefWidth="400.0" />
-                                <TextField fx:id="refMatLabName" layoutX="85.0" layoutY="86.0" prefWidth="200.0" />
+                                <TextField fx:id="refMatLabName" layoutX="85.0" layoutY="86.0" prefWidth="250.0" />
                                 <TextField fx:id="refMatVersion" layoutX="570.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
-                                <TextField fx:id="refMatDateCertified" layoutX="390.0" layoutY="86.0" />
+                                <TextField fx:id="refMatDateCertified" layoutX="440.0" layoutY="86.0" />
                                 <Label layoutX="1.0" layoutY="57.0" text="Model Name:" AnchorPane.leftAnchor="1.0" />
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" AnchorPane.leftAnchor="16.0" />
-                                <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
+                                <Label layoutX="352.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="520.0" layoutY="57.0" text="Version:" />
-                                <Label fx:id="refMatIsEditableLabel" layoutX="600.0" layoutY="86.0" textFill="RED" />
+                                <Label fx:id="refMatIsEditableLabel" layoutX="650.0" layoutY="86.0" textFill="RED" />
                                 <TabPane layoutX="14.0" layoutY="112.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">

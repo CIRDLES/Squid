@@ -15,12 +15,11 @@ and open the template in the editor.
 .table-view .table-cell {
     -fx-font-family: "Courier New";
     -fx-font-size: 11pt;
-    -fx-font-weight: bolder;
 }
 
 .table-view .column-header {
     -fx-font-family: "Arial";
-    -fx-font-size: 11pt;
+    -fx-font-size: 9pt;
 }
 
 .tab-pane {

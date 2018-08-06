@@ -418,26 +418,9 @@ public class parametersManagerGUIController implements Initializable {
                 columns.add(col);
             }
             table.getColumns().addAll(columns);
-            disableColumnReorder(table, columns);
             table.setItems(obList);
             table.refresh();
         }
-    }
-
-    public static void disableColumnReorder(TableView<ObservableList<SimpleStringProperty>> table, List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns) {
-        table.getColumns().addListener(new ListChangeListener<Object>() {
-            public boolean suspended;
-
-            @Override
-            public void onChanged(ListChangeListener.Change change) {
-                change.next();
-                if (change.wasReplaced() && !suspended) {
-                    this.suspended = true;
-                    table.getColumns().setAll(columns);
-                    this.suspended = false;
-                }
-            }
-        });
     }
 
     private void setUpPhysConstData() {
