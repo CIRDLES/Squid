@@ -42,4 +42,6 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";
     public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
+    
+    public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
 }

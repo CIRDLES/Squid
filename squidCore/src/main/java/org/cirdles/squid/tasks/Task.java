@@ -48,6 +48,7 @@ import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
@@ -2149,8 +2150,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setExtPErr(double extPErr) {
         this.extPErr = extPErr;
-        if (namedParametersMap.containsKey("ExtPErr")) {
-            ExpressionTreeInterface constant = namedParametersMap.get("ExtPErr");
+        if (namedParametersMap.containsKey(SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR)) {
+            ExpressionTreeInterface constant = namedParametersMap.get(SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR);
             ((ConstantNode) constant).setValue(extPErr);
         }
         this.changed = true;
