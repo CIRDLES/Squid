@@ -70,7 +70,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         hours = new ArrayList<>();
         for (ShrimpFractionExpressionInterface sf : shrimpFractions) {
             ages.add(sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0]);
-            ageTwoSigma.add(2.0 * sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString + " 1sigma")[0][0]);
+            ageTwoSigma.add(2.0 * sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][1]);
             hours.add(sf.getHours());
         }
 

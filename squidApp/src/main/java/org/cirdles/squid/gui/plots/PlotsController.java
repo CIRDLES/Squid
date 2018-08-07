@@ -145,8 +145,11 @@ public class PlotsController implements Initializable {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
         if (fractionTypeSelected.compareTo(SpotTypes.UNKNOWN) == 0) {
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getUnknownSpots();
-
             mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
+            // case of no sample names chosen
+            if (mapOfSpotsBySampleNames.size() == 0){
+                mapOfSpotsBySampleNames.put("Super Sample", allUnknownOrRefMatShrimpFractions);
+            }
         } else {
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getReferenceMaterialSpots();
             mapOfSpotsBySampleNames = new TreeMap<>();
@@ -288,13 +291,13 @@ public class PlotsController implements Initializable {
         // get details
         SpotSummaryDetails spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction
-                        + calibrConstAgeBaseName + "calibr.const WM");
+                        + " " + calibrConstAgeBaseName + "calibr.const WM");
         plot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
                 correction + " " + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + calibrConstAgeBaseName + " Age",
+                correction + " " + calibrConstAgeBaseName + " Age",
                 squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get("StdAgeUPb").getValues()[0][0]);//559.1 * 1e6);
 
         Node plotNode = plot.displayPlotAsNode();

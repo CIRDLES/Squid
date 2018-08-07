@@ -819,32 +819,32 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         String xCorr208232Name = "-corr" + SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM";
         for (Expression listedExp : taskExpressionsOrdered) {
             if (listedExp.getName().compareToIgnoreCase("4" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"4-corr206Pb/238Ucalibr.const\"], "
-                        + "[%\"4-corr206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"4-corr 206Pb/238Ucalibr.const\"], "
+                        + "[%\"4-corr 206Pb/238Ucalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("7" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"7-corr206Pb/238Ucalibr.const\"], "
-                        + "[%\"7-corr206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"7-corr 206Pb/238Ucalibr.const\"], "
+                        + "[%\"7-corr 206Pb/238Ucalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("8" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"8-corr206Pb/238Ucalibr.const\"], "
-                        + "[\"8-corr206Pb/238Ucalibr.const %err\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"8-corr 206Pb/238Ucalibr.const\"], "
+                        + "[%\"8-corr 206Pb/238Ucalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("4" + xCorr208232Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"4-corr208Pb/232Thcalibr.const\"], "
-                        + "[%\"4-corr208Pb/232Thcalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"4-corr 208Pb/232Thcalibr.const\"], "
+                        + "[%\"4-corr 208Pb/232Thcalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("7" + xCorr208232Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"7-corr208Pb/232Thcalibr.const\"], "
-                        + "[%\"7-corr208Pb/232Thcalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"7-corr 208Pb/232Thcalibr.const\"], "
+                        + "[%\"7-corr 208Pb/232Thcalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
