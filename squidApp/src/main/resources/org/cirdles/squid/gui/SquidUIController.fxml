@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Rectangle2D?>
@@ -68,12 +67,6 @@
                         <MenuItem disable="true" mnemonicParsing="false" text="11 Species" />
                     </items>
                   </Menu>
-              </items>
-            </Menu>
-            <Menu disable="true" mnemonicParsing="false" text="Parameters">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Manage Physical Constants" />
-                  <MenuItem mnemonicParsing="false" text="Manage Reference Materials" />
               </items>
             </Menu>
             <Menu fx:id="parametersMenu" mnemonicParsing="false" text="Parameters">

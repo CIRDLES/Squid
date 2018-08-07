@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -348,10 +347,10 @@ public class parametersManagerGUIController implements Initializable {
             obList.add(colList);
 
             double[][] matrixArray = matrix.getMatrix().getArray();
-            Iterator<Entry<Integer, String>> rowIterator = matrix.getRows().entrySet().iterator();
+            Iterator<String> rowIterator = matrix.getRows().values().iterator();
             for (int i = 0; i < matrixArray.length; i++) {
                 ObservableList<SimpleStringProperty> row = FXCollections.observableArrayList();
-                row.add(new SimpleStringProperty(rowIterator.next().getValue()));
+                row.add(new SimpleStringProperty(rowIterator.next()));
                 for (int j = 0; j < matrixArray[0].length; j++) {
                     row.add(new SimpleStringProperty(Double.toString(matrixArray[i][j])));
                 }
