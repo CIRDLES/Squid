@@ -30,9 +30,15 @@ and open the template in the editor.
     -fx-background-color: lightgray;
 }
 
+#apparentDates *.label {
+    -fx-text-alignment: center;
+    -fx-vertical-alignment: middle;
+}
+
 #physConstReferencesPane {
     -fx-background-color: lightgray;
 }
+
 #laboratoryTextField {
     -fx-font-family: "Arial";
     -fx-font-size: 12pt;

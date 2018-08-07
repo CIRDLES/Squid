@@ -50,14 +50,14 @@
                                 <Label layoutX="190.0" layoutY="6.0" text="Choose Physical Constants Model:" AnchorPane.leftAnchor="190.0" AnchorPane.topAnchor="6.0" />
                                 <ChoiceBox fx:id="physConstCB" layoutX="384.0" layoutY="2.0" prefWidth="380.0" AnchorPane.leftAnchor="384.0" AnchorPane.topAnchor="2.0" />
                                 <TextField fx:id="physConstModelName" layoutX="85.0" layoutY="53.0" prefHeight="26.0" prefWidth="400.0" />
-                                <TextField fx:id="physConstLabName" layoutX="85.0" layoutY="86.0" prefHeight="26.0" prefWidth="250.0" />
+                                <TextField fx:id="physConstLabName" layoutX="85.0" layoutY="86.0" prefHeight="26.0" prefWidth="360.0" />
                                 <TextField fx:id="physConstVersion" layoutX="570.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
-                                <TextField fx:id="physConstDateCertified" layoutX="440.0" layoutY="86.0" />
+                                <TextField fx:id="physConstDateCertified" layoutX="570.0" layoutY="86.0" />
                                 <Label layoutX="1.0" layoutY="57.0" text="Model Name:" textAlignment="RIGHT" AnchorPane.leftAnchor="1.0" />
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" textAlignment="RIGHT" AnchorPane.leftAnchor="16.0" />
-                                <Label layoutX="352.0" layoutY="90.0" text="Date Certified:" />
+                                <Label layoutX="486.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="520.0" layoutY="57.0" text="Version:" />
-                                <Label fx:id="physConstIsEditableLabel" layoutX="650.0" layoutY="86.0" textFill="RED" />
+                                <Label fx:id="physConstIsEditableLabel" layoutX="680.0" layoutY="60.0" textFill="RED" />
                                 <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">
@@ -67,7 +67,7 @@
                                                         <TableView fx:id="physConstDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                                         <Button fx:id="physConstDataNotationButton" layoutX="20.0" layoutY="2.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstDataNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" AnchorPane.topAnchor="0.0" />
                                                         <Label layoutX="220.0" layoutY="7.0" text="SigFigs:" />
-                                                        <TextField fx:id="physConstDataSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="12" />
+                                                        <TextField fx:id="physConstDataSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="6" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -80,7 +80,7 @@
                                                         <Label layoutX="320.0" layoutY="5.0" text="Correlations | Note: correlation matrix is positive definite" />
                                                         <Button fx:id="physConstCorrNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstCorrNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" />
                                                         <Label layoutX="220.0" layoutY="6.0" text="SigFigs:" />
-                                                        <TextField fx:id="physConstCorrSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="12" />
+                                                        <TextField fx:id="physConstCorrSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="6" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -93,7 +93,7 @@
                                                         <Label layoutX="320" layoutY="5.0" text="Covariances | Note: covariance matrix is positive definite" />
                                                         <Button fx:id="physConstCovNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstCovNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" />
                                                         <Label layoutX="220.0" layoutY="6.0" text="SigFigs:" />
-                                                        <TextField fx:id="physConstCovSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="12" />
+                                                        <TextField fx:id="physConstCovSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="6" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -170,17 +170,17 @@
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <Label layoutX="190.0" layoutY="5.0" text="Choose Reference Material Model:" />
-                                <ChoiceBox fx:id="refMatCB" layoutX="384.0" layoutY="1.0" prefWidth="380.0" />
+                                <Label layoutX="190.0" layoutY="5.0" text="Choose Reference Material Model:" AnchorPane.topAnchor="6.0" />
+                                <ChoiceBox fx:id="refMatCB" layoutX="384.0" layoutY="1.0" prefWidth="380.0" AnchorPane.topAnchor="2.0" />
                                 <TextField fx:id="refMatModelName" layoutX="85.0" layoutY="53.0" prefHeight="26.0" prefWidth="400.0" />
-                                <TextField fx:id="refMatLabName" layoutX="85.0" layoutY="86.0" prefWidth="250.0" />
+                                <TextField fx:id="refMatLabName" layoutX="85.0" layoutY="86.0" prefHeight="26.0" prefWidth="360.0" />
                                 <TextField fx:id="refMatVersion" layoutX="570.0" layoutY="53.0" prefHeight="26.0" prefWidth="92.0" />
-                                <TextField fx:id="refMatDateCertified" layoutX="440.0" layoutY="86.0" />
+                                <TextField fx:id="refMatDateCertified" layoutX="570.0" layoutY="86.0" />
                                 <Label layoutX="1.0" layoutY="57.0" text="Model Name:" AnchorPane.leftAnchor="1.0" />
                                 <Label layoutX="16.0" layoutY="90.0" text="Lab Name:" AnchorPane.leftAnchor="16.0" />
-                                <Label layoutX="352.0" layoutY="90.0" text="Date Certified:" />
+                                <Label layoutX="486.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="520.0" layoutY="57.0" text="Version:" />
-                                <Label fx:id="refMatIsEditableLabel" layoutX="650.0" layoutY="86.0" textFill="RED" />
+                                <Label fx:id="refMatIsEditableLabel" layoutX="680.0" layoutY="60.0" textFill="RED" />
                                 <TabPane layoutX="14.0" layoutY="112.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">
@@ -189,7 +189,7 @@
                                                     <children>
                                                         <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                                         <Button fx:id="refMatDataNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatDataNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" />
-                                                        <TextField fx:id="refMatDataSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="12" />
+                                                        <TextField fx:id="refMatDataSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="6" />
                                                         <Label layoutX="220.0" layoutY="7.0" text="Sig Figs:" />
                                                     </children>
                                                 </AnchorPane>
@@ -203,7 +203,7 @@
                                                         <TableView fx:id="refMatCorrTable" layoutX="20.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                                         <Button fx:id="refMatCorrNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatCorrNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" />
                                                         <Label layoutX="220.0" layoutY="6.0" text="SigFigs:" />
-                                                        <TextField fx:id="refMatCorrSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="12" />
+                                                        <TextField fx:id="refMatCorrSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="6" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -216,7 +216,7 @@
                                                         <TableView fx:id="refMatCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                                         <Button fx:id="refMatCovNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatCovNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" />
                                                         <Label layoutX="220.0" layoutY="6.0" text="SigFigs:" />
-                                                        <TextField fx:id="refMatCovSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="12" />
+                                                        <TextField fx:id="refMatCovSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="6" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -228,7 +228,7 @@
                                                         <TableView fx:id="refMatConcentrationsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
                                                         <Button fx:id="refMatConcentrationsNotationButton" layoutX="20.0" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatConcentrationsNotationOnAction" prefHeight="30.0" prefWidth="188.0" text="Scientific/Standard Notation" AnchorPane.topAnchor="0.0" />
                                                         <Label layoutX="220.0" layoutY="6.0" text="SigFigs:" />
-                                                        <TextField fx:id="refMatConcSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="12" />
+                                                        <TextField fx:id="refMatConcSigFigs" layoutX="270.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="6" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -251,7 +251,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea fx:id="apparentDatesTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                        <TextArea id="apparentDates" fx:id="apparentDatesTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>

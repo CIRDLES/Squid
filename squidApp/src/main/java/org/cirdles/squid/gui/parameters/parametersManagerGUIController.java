@@ -22,7 +22,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -424,12 +423,8 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpPhysConstData() {
-        physConstDataTable.getColumns().clear();
         int precision = getPrecisionValue(physConstDataSigFigs.getText());
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns(physConstDataTable, physConstDataNotation, precision);
-        for (TableColumn<DataModel, String> col : columns) {
-            physConstDataTable.getColumns().add(col);
-        }
+        physConstDataTable.getColumns().setAll(getDataModelColumns(physConstDataTable, physConstDataNotation, precision));
         physConstDataTable.setItems(getDataModelObList(physConstModel.getValues(), physConstDataNotation, precision));
         physConstDataTable.refresh();
     }
@@ -454,12 +449,8 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpConcentrations() {
-        refMatConcentrationsTable.getColumns().clear();
         int precision = getPrecisionValue(refMatConcSigFigs.getText());
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision);
-        for (TableColumn<DataModel, String> col : columns) {
-            refMatConcentrationsTable.getColumns().add(col);
-        }
+        refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision));
         refMatConcentrationsTable.setItems(getDataModelObList(refMatModel.getConcentrations(), refMatConcentrationsNotation, precision));
         refMatConcentrationsTable.refresh();
     }
@@ -1596,7 +1587,7 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private int getPrecisionValue(String text) {
-        int retVal = 12;
+        int retVal = 6;
         if (!text.trim().isEmpty() && isNumeric(text)) {
             retVal = Integer.parseInt(text);
         }
