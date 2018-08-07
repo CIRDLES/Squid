@@ -102,35 +102,16 @@ public final class Squid3Constants {
 
     public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
 
-    // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
-    public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "UncorrPb/Uconst";
-    public static final String SQUID_PRIMARY_UTH_EQN_NAME_TH = "UncorrPb/Thconst";
-    // Squid2.5 Th/U equation (-3)
-    public static final String SQUID_TH_U_EQN_NAME = "232Th/238U";
-    public static final String SQUID_TH_U_EQN_NAME_S = "232Th/238US";
-    // name for Squid2.5 Ppm parent eqn(-4) 
-    public static final String SQUID_PPM_PARENT_EQN_NAME = "Ppm Parent Eqn";
-    public static final String SQUID_MEAN_PPM_PARENT_NAME = "pdMeanParentEleA";
-    // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
-    public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
-    public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
-    public static final String SQUID_PPM_PARENT_EQN_NAME_TH_S = "ppmThS";
-
-    public static final String SQUID_TOTAL_206_238_NAME = "Total 206Pb/238US";
-    public static final String SQUID_TOTAL_208_232_NAME = "Total 208Pb/232ThS";
-
     // holding spot until models are implemented
     public static final double lambda238 = 1.55125E-10;
     public static final double lambda235 = 9.8485E-10;
     public static final double lambda232 = 4.9475E-11;
     public static final double uRatio = 137.88;
     public static final double badAge = -1.23456789;
-//    public static final double sComm0_64 = 17.821;
-//    public static final double sComm0_76 = 0.8741;
-////    public static final double sComm0_86 = 2.1095;
-//    public static final double sComm0_74 = 15.5773361;
-//    public static final double sComm0_84 = 37.5933995;
     public static final double PRESENT_238U235U = 137.88;
+
+//    public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";
+//    public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
 
     public enum IndexIsoptopesEnum {
         PB_204("204"),
@@ -214,4 +195,59 @@ public final class Squid3Constants {
         return UnitConversions.get(unit);
     }
 
+    public static enum SampleNameDelimetersEnum {
+
+        HYPHEN("-"),
+        DOT("."),
+        UNDERSCORE("_"),
+        COLON(":"),
+        ONE("1"),
+        TWO("2"),
+        THREE("3"),
+        FOUR("4"),
+        FIVE("5"),
+        SIX("6"),
+        SEVEN("7"),
+        EIGHT("8"),
+        NINE("9");
+
+        private final String name;
+
+        private SampleNameDelimetersEnum(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static String[] names() {
+            String[] names = new String[values().length];
+            for (int i = 0; i < names.length; i++) {
+                names[i] = " " + values()[i].getName();
+            }
+            return names;
+        }
+
+        public static SampleNameDelimetersEnum getByName(String name) {
+            SampleNameDelimetersEnum retVal = null;
+            for (SampleNameDelimetersEnum delim : SampleNameDelimetersEnum.values()) {
+                if (delim.name.equals(name)) {
+                    retVal = delim;
+                }
+            }
+            return retVal;
+        }
+    }
+
+    public static final String STYLE_MANAGER_TITLE
+            = "     -fx-padding: 0 0 0 0;   \n"
+            + "    -fx-border-width: 1;\n"
+            + "    -fx-border-color: black;\n"
+            + "    -fx-background-radius: 0;\n"
+            + "    -fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+            + "    -fx-font-weight: bold;\n"
+            + "    -fx-font-size: 14pt;\n"
+            + "    -fx-text-fill: White;/*  #d8d8d8;*/\n"
+            + "    -fx-background-color: #3c77c9;\n";
 }

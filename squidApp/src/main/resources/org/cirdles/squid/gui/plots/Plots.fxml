@@ -7,58 +7,43 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vboxMaster" minHeight="640.0" minWidth="1200.0" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.plots.PlotsController">
+<VBox fx:id="vboxMaster" minHeight="640.0" minWidth="1200.0" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.plots.PlotsController">
    <children>
       <SplitPane dividerPositions="0.2003338898163606" VBox.vgrow="ALWAYS">
          <items>
             <VBox>
                <children>
-                  <TreeView fx:id="fractionsTreeView1" VBox.vgrow="ALWAYS" />
+                  <TreeView fx:id="spotsTreeView" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
             <VBox fx:id="plotVBox">
                <children>
                   <AnchorPane fx:id="plotAndConfigAnchorPane" VBox.vgrow="ALWAYS" />
                   <ToolBar fx:id="plotToolBar" prefHeight="40.0" style="-fx-background-color: #67ccff;" VBox.vgrow="NEVER" />
-               </children>
-            </VBox>
-         </items>
-      </SplitPane>
-      <ToolBar prefHeight="40.0" VBox.vgrow="NEVER">
-         <items>
-            <HBox alignment="CENTER" prefHeight="40.0">
-               <children>
                   <ToolBar prefHeight="40.0">
                     <items>
-                        <Label prefHeight="17.0" prefWidth="191.0" text="Choose Correction:    " />
-                        <RadioButton fx:id="corr4_RadioButton" mnemonicParsing="false" onAction="#corr4_RadioButtonAction" prefWidth="100.0" selected="true" text="4-corr">
+                        <Label text="Correction:    " />
+                        <RadioButton fx:id="corr4_RadioButton" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="100.0" selected="true" text="4-corr">
                            <toggleGroup>
                               <ToggleGroup fx:id="correctionToggleGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="corr7_RadioButton" mnemonicParsing="false" onAction="#corr7_RadioButtonAction" prefWidth="100.0" text="7-corr" toggleGroup="$correctionToggleGroup" />
-                        <RadioButton fx:id="corr8_RadioButton" mnemonicParsing="false" onAction="#corr8_RadioButtonAction" prefWidth="100.0" text="8-corr" toggleGroup="$correctionToggleGroup" />
-                    </items>
-                  </ToolBar>
-                  <ToolBar prefHeight="40.0" prefWidth="40.0" />
-                  <ToolBar prefHeight="40.0">
-                     <items>
-                        <Label prefHeight="17.0" prefWidth="123.0" text="Choose Plot:    " textAlignment="RIGHT" />
-                        <RadioButton fx:id="wetherillRadioButton" mnemonicParsing="false" onAction="#wetherillRadioButtonAction" prefWidth="175.0" selected="true" text="Wetherill Concordia">
+                        <RadioButton fx:id="corr7_RadioButton" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="100.0" text="7-corr" toggleGroup="$correctionToggleGroup" />
+                        <RadioButton fx:id="corr8_RadioButton" mnemonicParsing="false" onAction="#plotChooserAction" prefWidth="100.0" text="8-corr" toggleGroup="$correctionToggleGroup" />
+                        <Label layoutX="10.0" layoutY="10.0" text="Flavor:    " />
+                        <RadioButton fx:id="plotFlavorOneRadioButton" mnemonicParsing="false" onAction="#plotChooserAction" selected="true" text="Plot Flavor One">
                            <toggleGroup>
-                              <ToggleGroup fx:id="plotToggleGroup" />
+                              <ToggleGroup fx:id="plotFlavorToggleGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="terWasserburgRadioButton" disable="true" mnemonicParsing="false" onAction="#terWasserburgRadioButtonAction" prefWidth="175.0" text="Tera-Wasserburg" toggleGroup="$plotToggleGroup" />
-                        <RadioButton fx:id="weightedMeanRadioButton" mnemonicParsing="false" onAction="#weightedMeanRadioButtonAction" text="Weighted Mean" toggleGroup="$plotToggleGroup" />
-                     </items>
+                        <RadioButton fx:id="plotFlavorTwoRadioButton" mnemonicParsing="false" onAction="#plotChooserAction" text="PlotFlavor Two" toggleGroup="$plotFlavorToggleGroup" />
+                    </items>
                   </ToolBar>
                </children>
-            </HBox>
+            </VBox>
          </items>
-      </ToolBar>
+      </SplitPane>
    </children>
 </VBox>

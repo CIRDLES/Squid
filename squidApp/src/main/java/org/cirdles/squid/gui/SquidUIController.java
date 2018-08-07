@@ -168,7 +168,7 @@ public class SquidUIController implements Initializable {
             AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitWidth() / 2.0);
         });
 
-        PlotsController.plotSelected = PlotTypes.CONCORDIA;
+        PlotsController.plotTypeSelected = PlotTypes.CONCORDIA;
 
         managePrawnFileMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
@@ -603,7 +603,7 @@ public class SquidUIController implements Initializable {
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
+            System.out.println("TaskManager >>>>   " + iOException.getMessage());
         }
     }
 
@@ -1053,23 +1053,32 @@ public class SquidUIController implements Initializable {
         org.cirdles.squid.gui.utilities.BrowserControl.showURI(reportTableFile.getCanonicalPath());
     }
 
-    @FXML
-    private void referenceMaterialPlotsAction(ActionEvent event) {
-        PlotsController.fractionTypeSelected = PlotsController.FractionTypes.REFERENCE_MATERIAL;
-        launchPlots();
-    }
-
-    @FXML
-    private void unknownPlotsAction(ActionEvent event) {
-        PlotsController.fractionTypeSelected = PlotsController.FractionTypes.UNKNOWN;
-        launchPlots();
-    }
-
     private void launchPlots() {
         mainPane.getChildren().remove(topsoilPlotUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         launchVisualizations();
         showUI(topsoilPlotUI);
+    }
+
+    @FXML
+    private void referenceMaterialConcordiaAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = PlotsController.SpotTypes.REFERENCE_MATERIAL;
+        PlotsController.plotTypeSelected = PlotsController.PlotTypes.CONCORDIA;
+        launchPlots();
+    }
+
+    @FXML
+    private void referenceMaterialWMAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = PlotsController.SpotTypes.REFERENCE_MATERIAL;
+        PlotsController.plotTypeSelected = PlotsController.PlotTypes.WEIGHTED_MEAN;
+        launchPlots();
+    }
+
+    @FXML
+    private void unknownConcordiaAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = PlotsController.SpotTypes.UNKNOWN;
+        PlotsController.plotTypeSelected = PlotsController.PlotTypes.CONCORDIA;
+        launchPlots();
     }
 
 }

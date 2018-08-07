@@ -34,6 +34,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -92,6 +93,8 @@ public class SpotManagerController implements Initializable {
     private Label concrmFilterLabel;
     @FXML
     private Label concrmCountLabel;
+    @FXML
+    private Label titleLabel;
 
     /**
      * Initializes the controller class.
@@ -106,6 +109,8 @@ public class SpotManagerController implements Initializable {
         setFilteredSpotsAsRefMatButton.setDisable(true);
         setFilteredSpotsAsConcRefMatButton.setDisable(true);
 
+        titleLabel.setStyle(STYLE_MANAGER_TITLE);
+        
         try {
             setUpPrawnFile();
         } catch (SquidException squidException) {
@@ -396,6 +401,9 @@ public class SpotManagerController implements Initializable {
 
             // refresh textbox in case "DUP" is removed or created
             selectedSpotNameText.setText(((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).getValue());
+            
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setPrawnChanged(true);
         }
     }
 }

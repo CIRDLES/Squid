@@ -20,12 +20,15 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
+import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
@@ -38,6 +41,7 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -63,6 +67,9 @@ public final class SquidProject implements Serializable {
     private double sessionDurationHours;
     private TaskInterface task;
 
+    private Map<String, Integer> filtersForUnknownNames;
+    private String delimiterForUnknownNames;
+
     private static boolean projectChanged;
 
     public SquidProject() {
@@ -75,10 +82,13 @@ public final class SquidProject implements Serializable {
         this.filterForConcRefMatSpotNames = "";
 
         this.sessionDurationHours = 0.0;
-        
+
         projectChanged = false;
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
+
+        this.filtersForUnknownNames = new HashMap<>();
+        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -93,6 +103,7 @@ public final class SquidProject implements Serializable {
         this.task.setReportsEngine(prawnFileHandler.getReportsEngine());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
         this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        this.task.setFiltersForUnknownNames(filtersForUnknownNames);
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
@@ -107,6 +118,7 @@ public final class SquidProject implements Serializable {
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+            this.task.setFiltersForUnknownNames(filtersForUnknownNames);
             // four passes needed for percolating results
             task.updateAllExpressions();
             task.setChanged(true);
@@ -142,6 +154,7 @@ public final class SquidProject implements Serializable {
         this.task.setRatioNames(taskSquid25.getRatioNames());
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
         this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        this.task.setFiltersForUnknownNames(filtersForUnknownNames);
         this.task.setParentNuclide(taskSquid25.getParentNuclide());
         this.task.setDirectAltPD(taskSquid25.isDirectAltPD());
 
@@ -161,9 +174,9 @@ public final class SquidProject implements Serializable {
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
-            Expression expression = this.task.generateExpressionFromRawExcelStyleText(task25Eqn.getEquationName(), 
-                    task25Eqn.getExcelEquationString(), 
-                    task25Eqn.isEqnSwitchNU(), 
+            Expression expression = this.task.generateExpressionFromRawExcelStyleText(task25Eqn.getEquationName(),
+                    task25Eqn.getExcelEquationString(),
+                    task25Eqn.isEqnSwitchNU(),
                     false, false);
 
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
@@ -195,8 +208,8 @@ public final class SquidProject implements Serializable {
         prawnXMLFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
-        task.setPrawnFile(prawnFile);   
-        ((Task)task).setupSquidSessionSkeleton();
+        task.setPrawnFile(prawnFile);
+        ((Task) task).setupSquidSessionSkeleton();
     }
 
     public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
@@ -333,10 +346,15 @@ public final class SquidProject implements Serializable {
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
         prefixTree = new SquidPrefixTree();
 
-        for (int i = 0; i < prawnFile.getRun().size(); i++) {
-            SquidPrefixTree leafParent = prefixTree.insert(prawnFile.getRun().get(i).getPar().get(0).getValue());
-            leafParent.getChildren().get(0).setCountOfSpecies(Integer.parseInt(prawnFile.getRun().get(i).getPar().get(2).getValue()));
-            leafParent.getChildren().get(0).setCountOfScans(Integer.parseInt(prawnFile.getRun().get(i).getPar().get(3).getValue()));
+        List<Run> copyOfRuns = new ArrayList<Run>(prawnFile.getRun());
+        Comparator<String> intuitiveString = new IntuitiveStringComparator<>();
+        Collections.sort(copyOfRuns, (Run pt1, Run pt2)
+                -> (intuitiveString.compare(pt1.getPar().get(0).getValue(), pt2.getPar().get(0).getValue())));
+
+        for (int i = 0; i < copyOfRuns.size(); i++) {
+            SquidPrefixTree leafParent = prefixTree.insert(copyOfRuns.get(i).getPar().get(0).getValue());
+            leafParent.getChildren().get(0).setCountOfSpecies(Integer.parseInt(copyOfRuns.get(i).getPar().get(2).getValue()));
+            leafParent.getChildren().get(0).setCountOfScans(Integer.parseInt(copyOfRuns.get(i).getPar().get(3).getValue()));
         }
 
         prefixTree.prepareStatistics();
@@ -486,24 +504,12 @@ public final class SquidProject implements Serializable {
         return filterForRefMatSpotNames;
     }
 
-    /**
-     * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
-     */
-    public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
-        this.filterForRefMatSpotNames = filterForRefMatSpotNames;
-    }
-
     public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
         if (task != null) {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
         }
     }
-
-    public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
-        this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
-    }
-
     public String getFilterForConcRefMatSpotNames() {
         return filterForConcRefMatSpotNames;
     }
@@ -512,6 +518,20 @@ public final class SquidProject implements Serializable {
         this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
         if (task != null) {
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        }
+    }
+
+    public Map<String, Integer> getFiltersForUnknownNames() {
+        if (filtersForUnknownNames == null) {
+            filtersForUnknownNames = new HashMap<>();
+        }
+        return new HashMap<>(filtersForUnknownNames);
+    }
+
+    public void updateFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames) {
+        this.filtersForUnknownNames = filtersForUnknownNames;
+        if (task != null) {
+            task.setFiltersForUnknownNames(filtersForUnknownNames);
         }
     }
 
@@ -555,6 +575,23 @@ public final class SquidProject implements Serializable {
      */
     public static void setProjectChanged(boolean aProjectChanged) {
         projectChanged = aProjectChanged;
+    }
+
+    /**
+     * @return the delimiterForUnknownNames
+     */
+    public String getDelimiterForUnknownNames() {
+        if (delimiterForUnknownNames == null) {
+            delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
+        }
+        return delimiterForUnknownNames;
+    }
+
+    /**
+     * @param delimiterForUnknownNames the delimiterForUnknownNames to set
+     */
+    public void setDelimiterForUnknownNames(String delimiterForUnknownNames) {
+        this.delimiterForUnknownNames = delimiterForUnknownNames;
     }
 
 }

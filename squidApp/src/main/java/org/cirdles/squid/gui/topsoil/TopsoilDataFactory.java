@@ -74,8 +74,8 @@ public class TopsoilDataFactory {
 
         Map<String, Object> datum = new HashMap<>();
         // default is for reference materials
-        String ratioBase75 = "207Pb/235U";
-        String ratioBase68 = "206Pb/238U";
+        String ratioBase75 = " 207Pb/235U";
+        String ratioBase68 = " 206Pb/238U";
         String errCorr = "-errcorr";
         if (isUnknown) {
             ratioBase75 = " 207*/235";
@@ -88,19 +88,13 @@ public class TopsoilDataFactory {
                     "getTaskExpressionsEvaluationsPerSpotByField",
                     new Class[]{String.class});
 
-            double r207_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase75}))[0].clone()[0];
-            datum.put(X.getName(), r207_235);
-            double r207_235_1Sigmabs
-                    = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase75 + " %err"}))[0].clone()[0]
-                    * r207_235 / 100.0;
-            datum.put(SIGMA_X.getName(), 2.0 * r207_235_1Sigmabs);
+            double[] r207_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase75}))[0].clone();
+            datum.put(X.getName(), r207_235[0]);
+            datum.put(SIGMA_X.getName(), 2.0 * r207_235[1]);
 
-            double r206_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase68}))[0].clone()[0];
-            datum.put(Y.getName(), r206_235);
-            double r206_235_1Sigmabs
-                    = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase68 + " %err"}))[0].clone()[0]
-                    * r206_235 / 100.0;
-            datum.put(SIGMA_Y.getName(), 2.0 * r206_235_1Sigmabs);
+            double[] r206_235 = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + ratioBase68}))[0].clone();
+            datum.put(Y.getName(), r206_235[0]);
+            datum.put(SIGMA_Y.getName(), 2.0 * r206_235[1]);
 
             double rho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + errCorr}))[0].clone()[0];
             datum.put(RHO.getName(), rho);
