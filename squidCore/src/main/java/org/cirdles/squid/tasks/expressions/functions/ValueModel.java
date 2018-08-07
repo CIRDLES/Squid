@@ -49,7 +49,7 @@ public class ValueModel extends Function {
     /**
      *
      * @param childrenET the value of childrenET where child 0 is the value,
-     * child 1 is the 1 sigma uncertainty and child 3 is the flag "%" or "±".
+     * child 1 is the 1 sigma uncertainty and child 3 is true for ABS and false for PCT uncertainty.
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the double[][]

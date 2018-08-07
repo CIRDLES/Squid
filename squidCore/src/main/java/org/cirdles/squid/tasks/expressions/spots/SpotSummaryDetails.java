@@ -132,6 +132,10 @@ public class SpotSummaryDetails implements Serializable {
         this.rejectedIndices = rejectedIndices;
     }
     
+    public void resetRejectedIndices(){
+        rejectedIndices = new boolean[selectedSpots.size()];
+    }
+    
     public boolean[] getRejectedIndices(){
         return this.rejectedIndices.clone();
     }

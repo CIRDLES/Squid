@@ -9,8 +9,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainProjectManagerPane" minHeight="640.0" minWidth="1000.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+<VBox fx:id="mainProjectManagerPane" minHeight="640.0" minWidth="1000.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
    <children>
+      <HBox translateY="-9.0">
+         <children>
+            <Label fx:id="titleLabel" text="Project &gt; PrawnFile/Manage Spots and Reference Materials &gt; PrawnFile/Manage Sample Naming" />
+         </children>
+      </HBox>
       <HBox spacing="10.0">
          <children>
             <Label text="Project Name:" />

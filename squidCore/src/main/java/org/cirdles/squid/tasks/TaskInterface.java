@@ -42,6 +42,8 @@ public interface TaskInterface {
 
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU, boolean referenceMaterialValue, boolean parameterValue);
 
+    public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots);
+
     public void buildSquidSpeciesModelList();
 
     /**
@@ -138,7 +140,7 @@ public interface TaskInterface {
      */
     List<MassStationDetail> makeListOfMassStationDetails();
 
-    String printTaskAudit();
+    public String printTaskAudit();
 
     public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
@@ -268,9 +270,15 @@ public interface TaskInterface {
     public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
 
     /**
+     * @param filterForConcRefMatSpotNames
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
     public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
+
+    /**
+     * @param filtersForUnknownNames the filtersForUnknownNames to set
+     */
+    public void setFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames);
 
     /**
      * @return the useSBM
@@ -453,4 +461,28 @@ public interface TaskInterface {
     public void setShowQt1z(boolean aShowQt1z);
 
     public boolean expressionIsNuSwitched(String expressionName);
+
+    /**
+     * @return the mapOfUnknownsBySampleNames
+     */
+    public Map<String, List<ShrimpFractionExpressionInterface>> getMapOfUnknownsBySampleNames();
+
+    /**
+     * @param prawnChanged the prawnChanged to set
+     */
+    public void setPrawnChanged(boolean prawnChanged);
+
+    /**
+     * @return the squidAllowsAutoExclusionOfSpots
+     */
+    public boolean isSquidAllowsAutoExclusionOfSpots();
+
+    /**
+     * @param extPErr the extPErr to set
+     */
+    public void setExtPErr(double extPErr);
+      /**
+     * @return the extPErr
+     */
+    public double getExtPErr() ;
 }

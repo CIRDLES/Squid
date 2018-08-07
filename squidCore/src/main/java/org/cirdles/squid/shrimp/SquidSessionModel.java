@@ -18,6 +18,7 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -36,14 +37,16 @@ public class SquidSessionModel implements Serializable {
     private int indexOfBackgroundSpecies;
     private String referenceMaterialNameFilter;
     private String concentrationReferenceMaterialNameFilter;
+    private Map<String, Integer> filtersForUnknownNames;
 
     public SquidSessionModel(
-            List<SquidSpeciesModel> squidSpeciesSpecsList,
-            List<SquidRatiosModel> squidRatiosSpecsList,
-            boolean useSBM, boolean userLinFits,
+            List<SquidSpeciesModel> squidSpeciesSpecsList, 
+            List<SquidRatiosModel> squidRatiosSpecsList, 
+            boolean useSBM, boolean userLinFits, 
             int indexOfBackgroundSpecies,
-            String referenceMaterialNameFilter,
-            String concentrationReferenceMaterialNameFilter) {
+            String referenceMaterialNameFilter, 
+            String concentrationReferenceMaterialNameFilter, 
+            Map<String, Integer> filtersForUnknownNames) {
         this.squidSpeciesModelList = squidSpeciesSpecsList == null ? new ArrayList<>() : squidSpeciesSpecsList;
         this.squidRatiosModelList = squidRatiosSpecsList == null ? new ArrayList<>() : squidRatiosSpecsList;
         this.useSBM = useSBM;
@@ -51,15 +54,18 @@ public class SquidSessionModel implements Serializable {
         this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
         this.referenceMaterialNameFilter = referenceMaterialNameFilter;
         this.concentrationReferenceMaterialNameFilter = concentrationReferenceMaterialNameFilter;
+        this.filtersForUnknownNames = filtersForUnknownNames;
     }
 
     public boolean updateFields(
-            List<SquidSpeciesModel> squidSpeciesSpecsList,
-            List<SquidRatiosModel> squidRatiosSpecsList,
-            boolean useSBM, boolean userLinFits,
-            int indexOfBackgroundSpecies,
-            String referenceMaterialNameFilter,
-            String concentrationReferenceMaterialNameFilter) {
+            List<SquidSpeciesModel> squidSpeciesSpecsList, 
+            List<SquidRatiosModel> squidRatiosSpecsList, 
+            boolean useSBM, 
+            boolean userLinFits, 
+            int indexOfBackgroundSpecies, 
+            String referenceMaterialNameFilter, 
+            String concentrationReferenceMaterialNameFilter, 
+            Map<String, Integer> filtersForUnknownNames) {
 
         boolean retVal = false;
 
@@ -81,6 +87,9 @@ public class SquidSessionModel implements Serializable {
         }
         if (!retVal) {
             retVal = !(this.concentrationReferenceMaterialNameFilter.compareToIgnoreCase(concentrationReferenceMaterialNameFilter) == 0);
+        }
+        if (!retVal) {
+            retVal = !(this.filtersForUnknownNames.keySet().equals(filtersForUnknownNames.keySet()));
         }
 
         return retVal;

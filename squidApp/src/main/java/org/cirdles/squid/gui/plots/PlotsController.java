@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,6 +49,8 @@ import org.cirdles.squid.gui.plots.squid.WeightedMeanPlot;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 
 /**
@@ -57,16 +60,22 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 public class PlotsController implements Initializable {
 
     public static PlotDisplayInterface plot;
+    private static Node topsoilPlotNode;
 
     @FXML
     private VBox vboxMaster;
     @FXML
     private ToolBar plotToolBar;
     @FXML
-    private TreeView<SampleTreeNodeInterface> fractionsTreeView1;
+    private TreeView<SampleTreeNodeInterface> spotsTreeView;
 
     private static ObservableList<SampleTreeNodeInterface> fractionNodes;
-    private static List<Map<String, Object>> data;
+    private static PlotDisplayInterface rootPlot;
+    private static List<Map<String, Object>> rootData;
+    private static Map<String, List<Map<String, Object>>> dataSets;
+    private static Map<String, PlotDisplayInterface> mapOfPlotsOfSpotSets;
+    private static CheckBoxTreeItem<SampleTreeNodeInterface> chosenSample;
+
     @FXML
     private VBox plotVBox;
     @FXML
@@ -76,19 +85,16 @@ public class PlotsController implements Initializable {
     @FXML
     private RadioButton corr8_RadioButton;
     @FXML
-    private RadioButton wetherillRadioButton;
-    @FXML
-    private ToggleGroup plotToggleGroup;
-    @FXML
-    private RadioButton terWasserburgRadioButton;
-    @FXML
-    private RadioButton weightedMeanRadioButton;
-    @FXML
     private RadioButton corr7_RadioButton;
     @FXML
     private AnchorPane plotAndConfigAnchorPane;
 
-    public static PlotTypes plotSelected = PlotTypes.CONCORDIA;
+    @FXML
+    private RadioButton plotFlavorOneRadioButton;
+    @FXML
+    private RadioButton plotFlavorTwoRadioButton;
+    @FXML
+    private ToggleGroup plotFlavorToggleGroup;
 
     public static enum PlotTypes {
         CONCORDIA("CONCORDIA"),
@@ -101,22 +107,28 @@ public class PlotsController implements Initializable {
             this.plotType = plotType;
         }
     }
+    public static PlotTypes plotTypeSelected = PlotTypes.CONCORDIA;
 
-    public static FractionTypes fractionTypeSelected = FractionTypes.REFERENCE_MATERIAL;
-
-    public static enum FractionTypes {
-        REFERENCE_MATERIAL("REFERENCE_MATERIAL"),
-        UNKNOWN("UNKNOWN");
+    public static enum SpotTypes {
+        REFERENCE_MATERIAL("REFERENCE MATERIALS"),
+        UNKNOWN("UNKNOWNS");
 
         private String plotType;
 
-        private FractionTypes(String plotType) {
+        private SpotTypes(String plotType) {
             this.plotType = plotType;
         }
+
+        public String getPlotType() {
+            return plotType;
+        }
     }
+    public static SpotTypes fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // update 
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
 
         vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
@@ -125,60 +137,114 @@ public class PlotsController implements Initializable {
         corr7_RadioButton.setUserData("7-corr");
         corr8_RadioButton.setUserData("8-corr");
 
-        showConcordiaPlot();
+        customizePlotChooserToolbarAndInvokePlotter();
     }
 
-    private void showConcordiaPlot() {
-        // default is reference materials
-        List<ShrimpFractionExpressionInterface> shrimpFractionsDetails
-                = squidProject.getTask().getReferenceMaterialSpots();
-        boolean isUnknown = false;
-        
-        if (fractionTypeSelected.compareTo(FractionTypes.UNKNOWN) == 0) {
-            shrimpFractionsDetails = squidProject.getTask().getUnknownSpots();
-            isUnknown = true;
+    private void showConcordiaPlotsOfUnknownsOrRefMat() {
+        final List<ShrimpFractionExpressionInterface> allUnknownOrRefMatShrimpFractions;
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
+        if (fractionTypeSelected.compareTo(SpotTypes.UNKNOWN) == 0) {
+            allUnknownOrRefMatShrimpFractions = squidProject.getTask().getUnknownSpots();
+            mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
+            // case of no sample names chosen
+            if (mapOfSpotsBySampleNames.size() == 0){
+                mapOfSpotsBySampleNames.put("Super Sample", allUnknownOrRefMatShrimpFractions);
+            }
+        } else {
+            allUnknownOrRefMatShrimpFractions = squidProject.getTask().getReferenceMaterialSpots();
+            mapOfSpotsBySampleNames = new TreeMap<>();
+            mapOfSpotsBySampleNames.put("Reference Mat", squidProject.getTask().getReferenceMaterialSpots());
+            mapOfSpotsBySampleNames.put("Concentration Ref Mat", squidProject.getTask().getConcentrationReferenceMaterialSpots());
         }
-
         // get type of correctionList
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
 
-        plot = new TopsoilPlotWetherill(
-                "Concordia of " + correction + " for " + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
-                shrimpFractionsDetails);
-
-        Node topsoilPlotNode = plot.displayPlotAsNode();
-
-        plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
-        AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
-
-        VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
-        VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
-        VBox.setVgrow(plotVBox, Priority.ALWAYS);
-
-        plotToolBar.getItems().clear();
-        plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
-        plotToolBar.setPadding(Insets.EMPTY);
+        rootPlot = new TopsoilPlotWetherill(
+                "Concordia of " + correction + " for " + fractionTypeSelected.getPlotType(),
+                allUnknownOrRefMatShrimpFractions);
+        rootData = new ArrayList<>();
 
         List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
-        data = new ArrayList<>();
 
-        for (int i = 0; i < shrimpFractionsDetails.size(); i++) {
-            SampleTreeNodeInterface fractionNode
-                    = new ConcordiaFractionNode(shrimpFractionsDetails.get(i), correction, isUnknown);
-            fractionNodeDetails.add(fractionNode);
-            data.add(((ConcordiaFractionNode) fractionNode).getDatum());
-        }
-        fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
-        plot.setData(data);
-
+        // build out set of rootData for samples
         CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
-                = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
-        rootItem.setExpanded(true);
+                = new CheckBoxTreeItem<>(new SampleNode(fractionTypeSelected.getPlotType()));
+        chosenSample = rootItem;
+        rootItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            ((SampleNode) rootItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+            if (newValue) {
+                if (chosenSample != rootItem) {
+                    chosenSample.setSelected(false);
+                    chosenSample = rootItem;
+                }
+                // plot all samples
+                plot = rootPlot;
+                plot.setData(rootData);
+                refreshConcordiaPlot();
+            }
+            refreshConcordiaPlot();
+        });
 
-        fractionsTreeView1.setCellFactory(p -> new CheckBoxTreeCell<>(
+        rootItem.setExpanded(true);
+        rootItem.setIndependent(true);
+        rootItem.setSelected(true);
+        spotsTreeView.setRoot(rootItem);
+        spotsTreeView.setShowRoot(true);
+
+        dataSets = new TreeMap<>();
+        mapOfPlotsOfSpotSets = new TreeMap<>();
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
+            CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem
+                    = new CheckBoxTreeItem<>(new SampleNode(entry.getKey()));
+            rootItem.getChildren().add(sampleItem);
+
+            List<Map<String, Object>> myData = new ArrayList<>();
+            dataSets.put(entry.getKey(), myData);
+
+            PlotDisplayInterface myPlot = new TopsoilPlotWetherill(
+                    "Concordia of " + correction + " for " + entry.getKey(),
+                    entry.getValue());
+            mapOfPlotsOfSpotSets.put(sampleItem.getValue().getNodeName(), myPlot);
+            myPlot.setData(myData);
+
+            for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
+                SampleTreeNodeInterface fractionNode
+                        = new ConcordiaFractionNode(spot, correction);
+                fractionNodeDetails.add(fractionNode);
+                CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
+                        = new CheckBoxTreeItem<>(fractionNode);
+                checkBoxTreeItem.setSelected(true);
+                sampleItem.getChildren().add(checkBoxTreeItem);
+
+                checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    ((ConcordiaFractionNode) checkBoxTreeItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+                    myPlot.setData(myData);
+                });
+
+                myData.add(((ConcordiaFractionNode) fractionNode).getDatum());
+                // this is for overall of all at the tree top
+                rootData.add(((ConcordiaFractionNode) fractionNode).getDatum());
+                checkBoxTreeItem.setIndependent(true);
+            }
+
+            sampleItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                ((SampleNode) sampleItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+                if (newValue) {
+                    if (chosenSample != sampleItem) {
+                        chosenSample.setSelected(false);
+                        chosenSample = sampleItem;
+                    }
+                    plot = mapOfPlotsOfSpotSets.get(sampleItem.getValue().getNodeName());
+                    refreshConcordiaPlot();
+                }
+                refreshConcordiaPlot();
+            });
+            sampleItem.setIndependent(true);
+        }
+
+        fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
+
+        spotsTreeView.setCellFactory(p -> new CheckBoxTreeCell<>(
                 (TreeItem<SampleTreeNodeInterface> item) -> ((ConcordiaFractionNode) item.getValue()).getSelectedProperty(),
                 new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
 
@@ -193,32 +259,46 @@ public class PlotsController implements Initializable {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         }));
+    }
 
-        for (int i = 0; i < fractionNodes.size(); i++) {
-            final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
-                    = new CheckBoxTreeItem<>(fractionNodes.get(i));
-            rootItem.getChildren().add(checkBoxTreeItem);
-            checkBoxTreeItem.setSelected(fractionNodes.get(i).getShrimpFraction().isSelected());
-            checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                ((ConcordiaFractionNode) checkBoxTreeItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
-                plot.setData(data);
-            });
+    private void refreshConcordiaPlot() {
+
+        if (chosenSample.isSelected()) {
+            topsoilPlotNode = plot.displayPlotAsNode();
+            plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
+            AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+
+            VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
+            VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
+            VBox.setVgrow(plotVBox, Priority.ALWAYS);
+
+            plotToolBar.getItems().clear();
+            plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
+            plotToolBar.setPadding(Insets.EMPTY);
+        } else {
+            plotAndConfigAnchorPane.getChildren().clear();
         }
-        fractionsTreeView1.setRoot(rootItem);
-        fractionsTreeView1.setShowRoot(true);
     }
 
     private void showWeightedMeanPlot() {
         // get type of correction
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
+        // flavor of plot
+        String calibrConstAgeBaseName = (String) plotFlavorToggleGroup.getSelectedToggle().getUserData();
         // get details
-        SpotSummaryDetails spotSummaryDetails = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction + "206Pb/238Ucalibr.const WM");
+        SpotSummaryDetails spotSummaryDetails
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction
+                        + " " + calibrConstAgeBaseName + "calibr.const WM");
         plot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
-                "Weighted Mean of " + correction + " for " + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
+                correction + " " + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
+                + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + "206Pb/238U Age",
-                559.1 * 1e6);
+                correction + " " + calibrConstAgeBaseName + " Age",
+                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get("StdAgeUPb").getValues()[0][0]);//559.1 * 1e6);
 
         Node plotNode = plot.displayPlotAsNode();
 
@@ -239,7 +319,7 @@ public class PlotsController implements Initializable {
         List<ShrimpFractionExpressionInterface> shrimpFractionsDetails
                 = spotSummaryDetails.getSelectedSpots();
         List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
-        data = new ArrayList<>();
+        rootData = new ArrayList<>();
 
         for (int i = 0; i < shrimpFractionsDetails.size(); i++) {
             WeightedMeanFractionNode fractionNode
@@ -253,7 +333,7 @@ public class PlotsController implements Initializable {
                 = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
         rootItem.setExpanded(true);
 
-        fractionsTreeView1.setCellFactory(p -> new CheckBoxTreeCell<>(
+        spotsTreeView.setCellFactory(p -> new CheckBoxTreeCell<>(
                 (TreeItem<SampleTreeNodeInterface> item) -> ((WeightedMeanFractionNode) item.getValue()).getSelectedProperty(),
                 new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
 
@@ -273,76 +353,65 @@ public class PlotsController implements Initializable {
             final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
                     = new CheckBoxTreeItem<>(fractionNodes.get(i));
             rootItem.getChildren().add(checkBoxTreeItem);
+
             checkBoxTreeItem.setSelected(!((WeightedMeanFractionNode) fractionNodes.get(i)).getRejected(i));
             checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 ((ConcordiaFractionNode) checkBoxTreeItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
-                plot.setData(data);
+                plot.setData(rootData);
             });
         }
-        fractionsTreeView1.setRoot(rootItem);
-        fractionsTreeView1.setShowRoot(true);
+        spotsTreeView.setRoot(rootItem);
+        spotsTreeView.setShowRoot(true);
     }
 
     @FXML
-    private void corr4_RadioButtonAction(ActionEvent event) {
-        toggleToolBarButtonsDisabled(false, false, false, false, false);
-        if (weightedMeanRadioButton.isSelected()) {
-            showWeightedMeanPlot();
-        }
-        if (wetherillRadioButton.isSelected()) {
-            showConcordiaPlot();
-        }
+    private void plotChooserAction(ActionEvent event) {
+        customizePlotChooserToolbarAndInvokePlotter();
     }
 
-    @FXML
-    private void corr7_RadioButtonAction(ActionEvent event) {
-        toggleToolBarButtonsDisabled(false, false, true, true, false);
-        weightedMeanRadioButton.setSelected(true);
-        if (weightedMeanRadioButton.isSelected()) {
-            showWeightedMeanPlot();
+    private void customizePlotChooserToolbarAndInvokePlotter() {
+
+        switch (plotTypeSelected) {
+            case CONCORDIA:
+            case TERA_WASSERBURG:
+                plotFlavorOneRadioButton.setText("Wetherill Concordia");
+                plotFlavorTwoRadioButton.setText("Tera-Wasserburg");
+                plotFlavorOneRadioButton.setDisable(false);
+                plotFlavorTwoRadioButton.setDisable(false);
+
+                corr7_RadioButton.setVisible(false);
+                corr8_RadioButton.setDisable(true);
+                corr8_RadioButton.setVisible(true);
+
+                showConcordiaPlotsOfUnknownsOrRefMat();
+                break;
+            case WEIGHTED_MEAN:
+                plotFlavorOneRadioButton.setText(SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM");
+                plotFlavorTwoRadioButton.setText(SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM");
+                plotFlavorOneRadioButton.setUserData(SQUID_CALIB_CONST_AGE_206_238_BASENAME);
+                plotFlavorTwoRadioButton.setUserData(SQUID_CALIB_CONST_AGE_208_232_BASENAME);
+
+                boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
+                boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
+
+                corr8_RadioButton.setVisible(false);
+                if (!isDirectAltPD && !has232) { // perm1
+                    plotFlavorOneRadioButton.setSelected(true);
+                    plotFlavorTwoRadioButton.setDisable(true);
+                    corr8_RadioButton.setVisible(true);
+                    corr8_RadioButton.setDisable(false);
+                } else if (!isDirectAltPD && has232) {// perm3
+                    plotFlavorOneRadioButton.setDisable(true);
+                    plotFlavorTwoRadioButton.setSelected(true);
+                } else {
+                    plotFlavorOneRadioButton.setDisable(false);
+                    plotFlavorTwoRadioButton.setDisable(false);
+                }
+
+                corr7_RadioButton.setVisible(true);
+
+                showWeightedMeanPlot();
         }
-        if (wetherillRadioButton.isSelected()) {
-            showConcordiaPlot();
-        }
-    }
-
-    @FXML
-    private void corr8_RadioButtonAction(ActionEvent event) {
-        toggleToolBarButtonsDisabled(false, false, false, false, false);
-        if (weightedMeanRadioButton.isSelected()) {
-            showWeightedMeanPlot();
-        }
-        if (wetherillRadioButton.isSelected()) {
-            showConcordiaPlot();
-        }
-    }
-
-    @FXML
-    private void wetherillRadioButtonAction(ActionEvent event) {
-        toggleToolBarButtonsDisabled(true, false, false, false, false);
-        plotSelected = PlotTypes.CONCORDIA;
-        showConcordiaPlot();
-    }
-
-    @FXML
-    private void terWasserburgRadioButtonAction(ActionEvent event) {
-        toggleToolBarButtonsDisabled(true, false, false, false, false);
-    }
-
-    @FXML
-    private void weightedMeanRadioButtonAction(ActionEvent event) {
-        toggleToolBarButtonsDisabled(false, false, false, false, false);
-        plotSelected = PlotTypes.WEIGHTED_MEAN;
-        showWeightedMeanPlot();
-    }
-
-    private void toggleToolBarButtonsDisabled(boolean corr7, boolean corr8, boolean concordia, boolean TW, boolean WM) {
-        corr7_RadioButton.setDisable(corr7);
-        corr8_RadioButton.setDisable(corr8);
-        wetherillRadioButton.setDisable(concordia);
-        terWasserburgRadioButton.setDisable(TW);
-        weightedMeanRadioButton.setDisable(WM);
-
     }
 
     private interface SampleTreeNodeInterface {
@@ -350,14 +419,26 @@ public class PlotsController implements Initializable {
         public String getNodeName();
 
         public ShrimpFractionExpressionInterface getShrimpFraction();
+
+        /**
+         * @return the selectedProperty
+         */
+        public SimpleBooleanProperty getSelectedProperty();
+
+        /**
+         * @param selectedProperty the selectedProperty to set
+         */
+        public void setSelectedProperty(SimpleBooleanProperty selectedProperty);
     }
 
     private class SampleNode implements SampleTreeNodeInterface {
 
-        private String sampleName;
+        private final String sampleName;
+        private SimpleBooleanProperty selectedProperty;
 
         public SampleNode(String sampleName) {
             this.sampleName = sampleName;
+            this.selectedProperty = new SimpleBooleanProperty(false);
         }
 
         @Override
@@ -369,24 +450,35 @@ public class PlotsController implements Initializable {
         public ShrimpFractionExpressionInterface getShrimpFraction() {
             return null;
         }
+
+        @Override
+        public SimpleBooleanProperty getSelectedProperty() {
+            return selectedProperty;
+        }
+
+        @Override
+        public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
+            this.selectedProperty = selectedProperty;
+        }
     }
 
     private class ConcordiaFractionNode implements SampleTreeNodeInterface {
 
-        private ShrimpFractionExpressionInterface shrimpFraction;
-        private Map<String, Object> datum;
+        private final ShrimpFractionExpressionInterface shrimpFraction;
+        private final Map<String, Object> datum;
         private SimpleBooleanProperty selectedProperty;
 
-        public ConcordiaFractionNode(ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
+        public ConcordiaFractionNode(ShrimpFractionExpressionInterface shrimpFraction, String correction) {
             this.shrimpFraction = shrimpFraction;
             this.selectedProperty = new SimpleBooleanProperty(shrimpFraction.isSelected());
-            this.datum = prepareWetherillDatum(shrimpFraction, correction, isUnknown);
+            this.datum = prepareWetherillDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
             this.datum.put("Selected", shrimpFraction.isSelected());
         }
 
         /**
          * @return the shrimpFraction
          */
+        @Override
         public ShrimpFractionExpressionInterface getShrimpFraction() {
             return shrimpFraction;
         }

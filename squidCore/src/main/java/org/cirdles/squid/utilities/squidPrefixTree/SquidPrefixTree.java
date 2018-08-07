@@ -17,6 +17,7 @@ package org.cirdles.squid.utilities.squidPrefixTree;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 /**
  *
@@ -63,7 +65,7 @@ public class SquidPrefixTree {
     }
 
     /**
-     * 
+     *
      * @param myWord
      * @return SquidPrefixTree with inserted word
      */
@@ -90,7 +92,7 @@ public class SquidPrefixTree {
 
                 if (matcher.matches()) {
                     currentNode = new SquidPrefixTreeNode(remainingString.substring(0, 5));
-                    i = i + DUPLICATE_STRING.length()-1;
+                    i = i + DUPLICATE_STRING.length() - 1;
                 } else {
                     currentNode = new SquidPrefixTreeNode(word.charAt(i));
                 }
@@ -120,7 +122,7 @@ public class SquidPrefixTree {
     }
 
     /**
-     * 
+     *
      * @param node
      * @return target SquidPrefixTree
      */
@@ -142,7 +144,7 @@ public class SquidPrefixTree {
     }
 
     /**
-     * 
+     *
      * @param prefix
      * @return target SquidPrefixTree
      */
@@ -157,8 +159,8 @@ public class SquidPrefixTree {
     }
 
     /**
-     * Prepares statistics for internal methods. 
-     * Must be called before any statistical methods for accurate representation.
+     * Prepares statistics for internal methods. Must be called before any
+     * statistical methods for accurate representation.
      */
     public void prepareStatistics() {
         sort();
@@ -178,8 +180,10 @@ public class SquidPrefixTree {
     }
 
     private void sortChildren(List<SquidPrefixTree> children) {
+        Comparator<String> intuitiveString = new IntuitiveStringComparator<>();
+        
         Collections.sort(children, (SquidPrefixTree pt1, SquidPrefixTree pt2)
-                -> (pt1.getNode().getValue().compareTo(pt2.getNode().getValue())));
+                -> (intuitiveString.compare(pt1.getNode().getValue(), pt2.getNode().getValue())));
     }
 
     private int countAnalysisLeaves() {
@@ -259,7 +263,9 @@ public class SquidPrefixTree {
     }
 
     /**
-     * Builds string to return all relevant statistical data for current SquidPrefixTree
+     * Builds string to return all relevant statistical data for current
+     * SquidPrefixTree
+     *
      * @return string containing statistical data
      */
     public String buildSummaryDataString() {
@@ -275,17 +281,17 @@ public class SquidPrefixTree {
             scansCountsBuffer.append("[").append(String.format("%1$ 2d", count)).append(" in ").append(String.format("%1$ 3d", mapOfScansFrequencies.get(count))).append("]");
         });
         String scansCounts = scansCountsBuffer.toString();
-        
+
         String summary = " Analyses =" + String.format("%1$ 3d", countOfLeaves)
                 + "; Dups =" + String.format("%1$ 3d", countOfDups)
                 + "; Species:" + speciesCounts
-                + "; Scans:" +   scansCounts;
+                + "; Scans:" + scansCounts;
 
         return summary;
     }
 
     /**
-     * 
+     *
      * @return Whether the current SquidPrefixTree has children
      */
     public boolean hasChildren() {
@@ -293,7 +299,7 @@ public class SquidPrefixTree {
     }
 
     /**
-     * 
+     *
      * @return Whether the current SquidPrefixTree is a leaf node
      */
     public boolean isleaf() {
@@ -400,6 +406,7 @@ public class SquidPrefixTree {
 
     /**
      * Displays the entire SquidPrefixTree in a hierarchical fashion.
+     *
      * @return the string to display the current SquidPrefixTree
      */
     public StringBuilder prettyPrint() {
@@ -414,7 +421,7 @@ public class SquidPrefixTree {
             if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) != 0) {
                 for (int j = 0; j < depth; j++) {
                     string.append("  ");
-                } 
+                }
                 string.append(children.get(i).stringValue).append(" >>> ").append(children.get(i).getNode().getValue()).append(" = ").append(children.get(i).countAnalysisLeaves()).append("\n");
                 children.get(i).prettyPrint(depth + 1, string);
             }

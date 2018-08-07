@@ -18,6 +18,7 @@ package org.cirdles.squid.prawn;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.SortedSet;
@@ -91,7 +92,7 @@ public class PrawnFileRunFractionParser {
      */
     public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, int indexOfBackgroundSpecies, String referenceMaterialLetter) {
         SquidSessionModel squidSessionSpecs = new SquidSessionModel(
-                null, null, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter, "");
+                null, null, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter, "", new HashMap<>());
 
         return processRunFraction(runFraction, squidSessionSpecs);
     }

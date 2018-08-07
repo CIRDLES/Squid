@@ -17,8 +17,13 @@ package org.cirdles.squid.gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,9 +31,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckBoxTreeItem;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
+import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
+import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -46,37 +58,60 @@ import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 public class SessionAuditController implements Initializable {
 
     @FXML
-    private TreeView<String> prawnAuditTree;
-    @FXML
     private VBox sessionVBox;
     @FXML
     private CheckBox checkbox;
 
-    private static char[] spaces = new char[100];
-
-    static {
-        for (int i = 0; i < 100; i++) {
-            spaces[i] = ' ';
-        }
-    }
-    @FXML
-    private TreeView<SampleNameTreeNodeInterface> prawnAuditTree1;
-
     private static ObservableList<SampleNameTreeNodeInterface> nameNodes;
+    @FXML
+    private TreeView<SampleNameTreeNodeInterface> prawnAuditTreeCheckBox;
+
+    private static Map<String, Integer> workingListOfSelectedNames = new HashMap<>();
+    @FXML
+    private Label summaryLabel;
+
+    private boolean hasDuplicates;
+    @FXML
+    private ComboBox<String> delimeterComboBox;
+    @FXML
+    private Label titleLabel;
+
+    public SessionAuditController() {
+    }
+    private String sampleNameDelimeter;
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        sampleNameDelimeter = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName().trim();
+        prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
+        setUpPrawnAuditTreeView(false);
 
-        prawnAuditTree.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        prawnAuditTree.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-        setUpPrawnFileAuditTreeView(false);
+        ObservableList<String> delimetersList = FXCollections.observableArrayList(SampleNameDelimetersEnum.names());
+        delimeterComboBox.setItems(delimetersList);
+        // set value before adding listener
+        delimeterComboBox.getSelectionModel().select(squidProject.getDelimiterForUnknownNames());
 
-        prawnAuditTree1.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        prawnAuditTree1.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-        setUpPrawnFileAuditTree1View(false);
+        delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> ov,
+                    final String oldvalue, final String newvalue) {
+                sampleNameDelimeter = newvalue.trim();
+                squidProject.updateFiltersForUnknownNames(new HashMap<>());
+                squidProject.setDelimiterForUnknownNames(newvalue);
+                squidProject.getTask().setChanged(true);
+                setUpPrawnAuditTreeView(false);
+                refreshView();
+            }
+        });
+
+        titleLabel.setStyle(STYLE_MANAGER_TITLE);
+
     }
 
     /**
@@ -85,36 +120,63 @@ public class SessionAuditController implements Initializable {
      * @param showDupesOnly determines whether the duplicate CheckBox has been
      * checked
      */
-    private void setUpPrawnFileAuditTreeView(boolean showDupesOnly) {
-        prawnAuditTree.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
+    private void setUpPrawnAuditTreeView(boolean showDupesOnly) {
+        prawnAuditTreeCheckBox.setRoot(null);
+        prawnAuditTreeCheckBox.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
 
         SquidPrefixTree spotPrefixTree = squidProject.getPrefixTree();
         String summaryStatsString = spotPrefixTree.buildSummaryDataString();
 
-        boolean hasDuplicates = spotPrefixTree.getCountOfDups() > 0;
+        hasDuplicates = spotPrefixTree.getCountOfDups() > 0;
         checkbox.setVisible(hasDuplicates);
-        TreeItem<String> rootItem = customizeRootItem(summaryStatsString, hasDuplicates);
-        rootItem.setExpanded(true);
-        prawnAuditTree.setRoot(rootItem);
-
-        populatePrefixTreeView(rootItem, spotPrefixTree, showDupesOnly, 0, true);
-    }
-
-    private void setUpPrawnFileAuditTree1View(boolean showDupesOnly) {
-        prawnAuditTree1.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
-
-        SquidPrefixTree spotPrefixTree = squidProject.getPrefixTree();
-        String summaryStatsString = spotPrefixTree.buildSummaryDataString();
-
-        boolean hasDuplicates = spotPrefixTree.getCountOfDups() > 0;
-//        checkbox.setVisible(hasDuplicates); 
 
         CheckBoxTreeItem<SampleNameTreeNodeInterface> rootItem
-                = customizeRootItem1(summaryStatsString, hasDuplicates);
-        rootItem.setExpanded(true);
-        prawnAuditTree1.setRoot(rootItem);
+                = customizeRootItem(spotPrefixTree.getCountOfLeaves(), summaryStatsString, hasDuplicates);
+        prawnAuditTreeCheckBox.setRoot(rootItem);
+
+        prawnAuditTreeCheckBox.setCellFactory(p -> new CheckBoxTreeCell<SampleNameTreeNodeInterface>(
+                (TreeItem<SampleNameTreeNodeInterface> item) -> ((SampleNameNode) item.getValue()).getSelectedProperty(),
+                new StringConverter<TreeItem<SampleNameTreeNodeInterface>>() {
+
+            @Override
+            public String toString(TreeItem<SampleNameTreeNodeInterface> sampleNameTreeNode) {
+                SampleNameTreeNodeInterface item = sampleNameTreeNode.getValue();
+                String retVal = "";
+                String referenceMaterialFilter = squidProject.getFilterForRefMatSpotNames();
+                String concentrationReferenceMaterialFilter = squidProject.getFilterForConcRefMatSpotNames();
+                if (item.getSampleName().compareTo(referenceMaterialFilter) == 0) {
+                    ((CheckBoxTreeItem<SampleNameTreeNodeInterface>) sampleNameTreeNode)
+                            .setSelected(!sampleNameTreeNode.getValue().isLockedForRefMat());
+                    lockParentsForRefMat((CheckBoxTreeItem<SampleNameTreeNodeInterface>) sampleNameTreeNode);
+                    retVal = item.getSampleContents()
+                            + "    REFERENCE MATERIAL Name Selected = " + item.prettyPrintInfo();
+                } else if (item.getSampleName().compareTo(concentrationReferenceMaterialFilter) == 0) {
+                    ((CheckBoxTreeItem<SampleNameTreeNodeInterface>) sampleNameTreeNode)
+                            .setSelected(!sampleNameTreeNode.getValue().isLockedForRefMat());
+                    lockParentsForRefMat((CheckBoxTreeItem<SampleNameTreeNodeInterface>) sampleNameTreeNode);
+                    retVal = item.getSampleContents()
+                            + "    CONC REFERENCE MATERIAL Name Selected = " + item.prettyPrintInfo();
+                } else {
+                    retVal = item.getSampleContents()
+                            + ((String) ((item.getSelectedProperty().get() && !item.isLockedForRefMat())
+                            ? "    Sample Name Selected = " + item.prettyPrintInfo()
+                            : ""));
+                }
+                return retVal;
+            }
+
+            @Override
+            public TreeItem<SampleNameTreeNodeInterface> fromString(String string) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }));
+
         List<SampleNameTreeNodeInterface> sampleNameNodes = new ArrayList<>();
-        populatePrefixTreeView1(sampleNameNodes, rootItem, spotPrefixTree, showDupesOnly, 0, true);
+        workingListOfSelectedNames = squidProject.getFiltersForUnknownNames();
+
+        populatePrefixTreeView(sampleNameNodes, rootItem, spotPrefixTree, showDupesOnly, 0, true);
+
+        squidProject.updateFiltersForUnknownNames(workingListOfSelectedNames);
         nameNodes = FXCollections.observableArrayList(sampleNameNodes);
     }
 
@@ -127,30 +189,14 @@ public class SessionAuditController implements Initializable {
      * display
      * @return the root item depending on whether there are duplicates
      */
-    private TreeItem<String> customizeRootItem(String summaryStatsString, boolean hasDuplicates) {
-        TreeItem<String> rootItem = new TreeItem<>("Spots", null);
-        if (hasDuplicates) {
-            rootItem.setValue(
-                    "***This file has duplicate names. Change names of duplicates in PrawnFile > Manage Spots & "
-                    + "Choose Reference Materials***"
-                    + "\n\nSpots by prefix: " + summaryStatsString);
-        } else {
-            rootItem.setValue("Spots by prefix:" + summaryStatsString);
-        }
-        return rootItem;
-    }
-
-    private CheckBoxTreeItem<SampleNameTreeNodeInterface> customizeRootItem1(String summaryStatsString, boolean hasDuplicates) {
+    private CheckBoxTreeItem<SampleNameTreeNodeInterface> customizeRootItem(
+            int countOfLeaves, String summaryStatsString, boolean hasDuplicates) {
         CheckBoxTreeItem<SampleNameTreeNodeInterface> rootItem
-                = new CheckBoxTreeItem<>(new SampleNameNode("Spots"), null);
-        if (hasDuplicates) {
-            rootItem.setValue(new SampleNameNode(
-                    "***This file has duplicate names. Change names of duplicates in PrawnFile > Manage Spots & "
-                    + "Choose Reference Materials***"
-                    + "\n\nSpots by prefix: " + summaryStatsString));
-        } else {
-            rootItem.setValue(new SampleNameNode("Spots by prefix:" + summaryStatsString));
-        }
+                = new CheckBoxTreeItem<>();
+
+        rootItem.setValue(new SampleNameNode("Spots by prefix:" + summaryStatsString, "ALL", countOfLeaves));
+        rootItem.setExpanded(true);
+        rootItem.setIndependent(true);
         return rootItem;
     }
 
@@ -166,51 +212,7 @@ public class SessionAuditController implements Initializable {
      * @param depth the value of depth
      * @param doExpand the value of doExpand
      */
-    private void populatePrefixTreeView(TreeItem<String> parentItem, SquidPrefixTree squidPrefixTree, boolean showDupesOnly, int depth, boolean doExpand) {
-
-        List<SquidPrefixTree> children = squidPrefixTree.getChildren();
-
-        boolean endExpansion = false;
-        if (children.size() > 0) {
-            endExpansion = children.get(0).getNode().getValue().compareTo("-") != 0;
-        }
-
-        parentItem.setExpanded(endExpansion && doExpand);
-        parentItem.setValue(
-                parentItem.getValue()
-                + String.copyValueOf(spaces, 0, 100 - parentItem.getValue().length() - depth)
-                + ((String) (!(endExpansion && doExpand) && parentItem.getParent().isExpanded() ? "SAMPLE" : "")));
-
-        for (int i = 0; i < children.size(); i++) {
-            if (!children.get(i).isleaf()) {
-                TreeItem<String> childItem
-                        = new TreeItem<>(
-                                children.get(i).getStringValue()
-                                + children.get(i).buildSummaryDataString());
-                if (showDupesOnly) {
-                    if (children.get(i).getCountOfDups() > 0) {
-                        parentItem.getChildren().add(childItem);
-                    }
-                } else {
-                    parentItem.getChildren().add(childItem);
-                }
-
-                if (children.get(i).hasChildren()) {
-                    populatePrefixTreeView(childItem, children.get(i), showDupesOnly, depth + 1, endExpansion && doExpand);
-                }
-
-            } else {
-                parentItem.setValue(children.get(i).getParent().getStringValue()
-                        + " Dups=" + String.format("%1$ 2d", children.get(i).getParent().getCountOfDups())
-                        + " Species=" + String.format("%1$ 2d", children.get(i).getCountOfSpecies())
-                        + " Scans=" + String.format("%1$ 2d", children.get(i).getCountOfScans())
-                        + ((String) (children.size() > 1 ? " ** see duplicates below **" : ""))
-                );
-            }
-        }
-    }
-
-    private void populatePrefixTreeView1(
+    private void populatePrefixTreeView(
             List<SampleNameTreeNodeInterface> sampleNameNodes,
             CheckBoxTreeItem<SampleNameTreeNodeInterface> parentItem,
             SquidPrefixTree squidPrefixTree,
@@ -220,27 +222,65 @@ public class SessionAuditController implements Initializable {
 
         List<SquidPrefixTree> children = squidPrefixTree.getChildren();
 
-        boolean endExpansion = false;
+        boolean continueExpansion = false;
         if (children.size() > 0) {
-            endExpansion = children.get(0).getNode().getValue().compareTo("-") != 0;
+            if (squidProject.getFiltersForUnknownNames().isEmpty()) {
+                int countOfLetters = 0;
+                if (sampleNameDelimeter.matches("\\d")) {
+                    countOfLetters = Integer.parseInt(sampleNameDelimeter);
+                    continueExpansion = (children.get(0).getStringValue().length() <= countOfLetters);
+                } else {
+                    continueExpansion = (children.get(0).getNode().getValue().compareTo(sampleNameDelimeter) != 0);
+                }
+                for (int i = 0; i < children.size(); i++) {
+                    if (squidProject.getFilterForRefMatSpotNames().startsWith(children.get(i).getStringValue())) {
+                        continueExpansion = true;
+                    }
+                }
+            } else {
+                continueExpansion = !workingListOfSelectedNames.containsKey(squidPrefixTree.getStringValue());
+            }
         }
 
-        parentItem.setExpanded(endExpansion && doExpand);
+        parentItem.setExpanded(continueExpansion && doExpand);
+
+        boolean selectedAsSampleName = false;
+        try {
+            selectedAsSampleName = !(continueExpansion && doExpand) && parentItem.getParent().isExpanded();
+        } catch (Exception e) {
+        }
 
         SampleNameTreeNodeInterface parentNode = new SampleNameNode(
-                parentItem.getValue().getSampleContents()
-                + String.copyValueOf(spaces, 0, 100 - parentItem.getValue().getContentsLength() - depth)
-                + ((String) (!(endExpansion && doExpand) && parentItem.getParent().isExpanded() ? "SAMPLE" : "")));
+                parentItem.getValue().getSampleContents(),
+                squidPrefixTree.getStringValue(),
+                squidPrefixTree.getCountOfLeaves());
+
         sampleNameNodes.add(parentNode);
         parentItem.setValue(parentNode);
+        parentItem.setSelected(selectedAsSampleName);
 
         for (int i = 0; i < children.size(); i++) {
             if (!children.get(i).isleaf()) {
                 SampleNameTreeNodeInterface childNode = new SampleNameNode(
                         children.get(i).getStringValue()
-                        + children.get(i).buildSummaryDataString());
+                        + children.get(i).buildSummaryDataString(),
+                        children.get(i).getStringValue(),
+                        children.get(i).getCountOfLeaves());
+
                 CheckBoxTreeItem<SampleNameTreeNodeInterface> childItem
                         = new CheckBoxTreeItem<>(childNode);
+                childItem.setIndependent(true);
+                childItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    ((SampleNameNode) childItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+                    workingListOfSelectedNames.remove(childItem.getValue().getSampleName());
+                    if (newValue) {
+                        workingListOfSelectedNames.put(childItem.getValue().getSampleName(), childNode.getCountOfIncludedSpots());
+                        clearAllChildrenOf(childItem);
+                        clearAllParentsOf(childItem);
+                    }
+                    refreshView();
+                });
+
                 sampleNameNodes.add(childNode);
                 if (showDupesOnly) {
                     if (children.get(i).getCountOfDups() > 0) {
@@ -251,7 +291,7 @@ public class SessionAuditController implements Initializable {
                 }
 
                 if (children.get(i).hasChildren()) {
-                    populatePrefixTreeView1(sampleNameNodes, childItem, children.get(i), showDupesOnly, depth + 1, endExpansion && doExpand);
+                    populatePrefixTreeView(sampleNameNodes, childItem, children.get(i), showDupesOnly, depth + 1, continueExpansion && doExpand);
                 }
 
             } else {
@@ -259,11 +299,41 @@ public class SessionAuditController implements Initializable {
                         + " Dups=" + String.format("%1$ 2d", children.get(i).getParent().getCountOfDups())
                         + " Species=" + String.format("%1$ 2d", children.get(i).getCountOfSpecies())
                         + " Scans=" + String.format("%1$ 2d", children.get(i).getCountOfScans())
-                        + ((String) (children.size() > 1 ? " ** see duplicates below **" : ""))
+                        + ((String) (children.size() > 1 ? " ** see duplicates below **" : "")),
+                        children.get(i).getParent().getStringValue(),
+                        children.get(i).getCountOfLeaves()
                 );
                 sampleNameNodes.add(parentNode);
                 parentItem.setValue(parentNode);
             }
+        }
+    }
+
+    private void clearAllChildrenOf(CheckBoxTreeItem<SampleNameTreeNodeInterface> childItem) {
+        ObservableList<TreeItem<SampleNameTreeNodeInterface>> childChildren = childItem.getChildren();
+        for (int j = 0; j < childChildren.size(); j++) {
+            ((CheckBoxTreeItem<SampleNameTreeNodeInterface>) childChildren.get(j)).setSelected(false);
+            workingListOfSelectedNames.remove(childChildren.get(j).getValue().getSampleName());
+            clearAllChildrenOf(((CheckBoxTreeItem<SampleNameTreeNodeInterface>) childChildren.get(j)));
+        }
+    }
+
+    private void clearAllParentsOf(CheckBoxTreeItem<SampleNameTreeNodeInterface> childItem) {
+        CheckBoxTreeItem<SampleNameTreeNodeInterface> parent
+                = ((CheckBoxTreeItem<SampleNameTreeNodeInterface>) ((CheckBoxTreeItem<SampleNameTreeNodeInterface>) childItem).getParent());
+        if (parent != null) {
+            parent.setSelected(false);
+            workingListOfSelectedNames.remove(parent.getValue().getSampleName());
+            clearAllParentsOf(parent);
+        }
+    }
+
+    private void lockParentsForRefMat(CheckBoxTreeItem<SampleNameTreeNodeInterface> childItem) {
+        CheckBoxTreeItem<SampleNameTreeNodeInterface> parent
+                = ((CheckBoxTreeItem<SampleNameTreeNodeInterface>) ((CheckBoxTreeItem<SampleNameTreeNodeInterface>) childItem).getParent());
+        if (parent != null) {
+            parent.getValue().setLockedForRefMat(true);
+            lockParentsForRefMat(parent);
         }
     }
 
@@ -273,7 +343,30 @@ public class SessionAuditController implements Initializable {
      * CheckBox
      */
     private void duplicatesChecked(ActionEvent event) {
-        setUpPrawnFileAuditTreeView(checkbox.isSelected());
+        //setUpPrawnFileAuditTreeView(checkbox.isSelected());
+        setUpPrawnAuditTreeView(checkbox.isSelected());
+    }
+
+    private void refreshView() {
+        prawnAuditTreeCheckBox.refresh();
+        if (hasDuplicates) {
+            summaryLabel.setText("  Please remove duplicate spot names");
+        } else {
+            int totalCount = 0;
+            for (String name : workingListOfSelectedNames.keySet()) {
+                totalCount += workingListOfSelectedNames.get(name);
+            }
+            summaryLabel.setText(
+                    "  Sample count = "
+                    + workingListOfSelectedNames.size()
+                    + "  Covering "
+                    + totalCount
+                    + " of "
+                    + prawnAuditTreeCheckBox.getRoot().getValue().getCountOfIncludedSpots()
+                    + " spots");
+        }
+
+        squidProject.getTask().setChanged(true);
     }
 
     // classes to support tree with checkboxes
@@ -282,19 +375,57 @@ public class SessionAuditController implements Initializable {
         public String getSampleContents();
 
         public int getContentsLength();
+
+        public String getSampleName();
+
+        public String prettyPrintInfo();
+
+        public SimpleBooleanProperty getSelectedProperty();
+
+        public boolean isLockedForRefMat();
+
+        /**
+         * @param lockedForRefMat the lockedForRefMat to set
+         */
+        public void setLockedForRefMat(boolean lockedForRefMat);
+
+        /**
+         * @return the countOfIncludedSpots
+         */
+        public int getCountOfIncludedSpots();
+
     }
 
     private class SampleNameNode implements SampleNameTreeNodeInterface {
 
-        private String sampleContents;
+        private final String sampleContents;
+        private String sampleName;
+        private SimpleBooleanProperty selectedProperty;
+        private boolean lockedForRefMat;
+        private int countOfIncludedSpots;
 
-        public SampleNameNode(String sampleContents) {
+        public SampleNameNode(String sampleContents, String sampleName, int countOfIncludedSpots) {
             this.sampleContents = sampleContents;
+            this.sampleName = sampleName;
+            this.countOfIncludedSpots = countOfIncludedSpots;
+
+            this.selectedProperty = new SimpleBooleanProperty(false);
+            this.lockedForRefMat = false;
+        }
+
+        @Override
+        public String prettyPrintInfo() {
+            return "\"" + sampleName + "\" with " + countOfIncludedSpots + " spots";
         }
 
         @Override
         public String getSampleContents() {
             return sampleContents;
+        }
+
+        @Override
+        public String getSampleName() {
+            return sampleName;
         }
 
         @Override
@@ -305,6 +436,45 @@ public class SessionAuditController implements Initializable {
         @Override
         public String toString() {
             return sampleContents;
+        }
+
+        /**
+         * @return the selectedProperty
+         */
+        @Override
+        public SimpleBooleanProperty getSelectedProperty() {
+            return selectedProperty;
+        }
+
+        /**
+         * @param selectedProperty the selectedProperty to set
+         */
+        public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
+            this.selectedProperty = selectedProperty;
+        }
+
+        /**
+         * @return the lockedForRefMat
+         */
+        @Override
+        public boolean isLockedForRefMat() {
+            return lockedForRefMat;
+        }
+
+        /**
+         * @param lockedForRefMat the lockedForRefMat to set
+         */
+        @Override
+        public void setLockedForRefMat(boolean lockedForRefMat) {
+            this.lockedForRefMat = lockedForRefMat;
+        }
+
+        /**
+         * @return the countOfIncludedSpots
+         */
+        @Override
+        public int getCountOfIncludedSpots() {
+            return countOfIncludedSpots;
         }
 
     }
