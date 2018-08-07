@@ -102,23 +102,6 @@ public final class Squid3Constants {
 
     public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
 
-//    // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
-//    public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "UncorrPb/Uconst";
-//    public static final String SQUID_PRIMARY_UTH_EQN_NAME_TH = "UncorrPb/Thconst";
-//    // Squid2.5 Th/U equation (-3)
-//    public static final String SQUID_TH_U_EQN_NAME = "232Th/238U";
-//    public static final String SQUID_TH_U_EQN_NAME_S = "232Th/238US";
-//    // name for Squid2.5 Ppm parent eqn(-4) 
-//    public static final String SQUID_PPM_PARENT_EQN_NAME = "Ppm Parent Eqn";
-//    public static final String SQUID_MEAN_PPM_PARENT_NAME = "pdMeanParentEleA";
-//    // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
-//    public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
-//    public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
-//    public static final String SQUID_PPM_PARENT_EQN_NAME_TH_S = "ppmThS";
-//
-//    public static final String SQUID_TOTAL_206_238_NAME = "Total 206Pb/238US";
-//    public static final String SQUID_TOTAL_208_232_NAME = "Total 208Pb/232ThS";
-
     // holding spot until models are implemented
     public static final double lambda238 = 1.55125E-10;
     public static final double lambda235 = 9.8485E-10;

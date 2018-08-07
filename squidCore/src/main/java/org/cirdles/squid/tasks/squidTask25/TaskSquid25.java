@@ -61,9 +61,11 @@ public class TaskSquid25 implements Serializable {
     private List<String> constantNames;
     private List<String> constantValues;
 
+    private static TaskSquid25 taskSquid25;
+
     public static TaskSquid25 importSquidTaskFile(File squidTaskFile) {
 
-        TaskSquid25 taskSquid25 = null;
+        taskSquid25 = null;
 
         try {
             InputStream inp = new FileInputStream(squidTaskFile);
@@ -78,6 +80,8 @@ public class TaskSquid25 implements Serializable {
             boolean isSquid2_20 = false;
             if (lines[0].startsWith("Created by SQUID")) {
                 taskSquid25 = new TaskSquid25();
+                taskSquid25.constantNames = new ArrayList<>();
+                taskSquid25.constantValues = new ArrayList<>();
 
                 taskSquid25.squidVersion = lines[0].split("\t")[1];
                 // July 2018 detect if version 2.20
@@ -227,6 +231,21 @@ public class TaskSquid25 implements Serializable {
 
                 String[] switchNU = lines[firstRow + 32].split("\t");
 
+                // run constants first so can detect in equations
+                String[] constantNamesSource = lines[firstRow + 40].split("\t");
+                String[] constantValuesSource = lines[firstRow + 41].split("\t");
+
+                int countOfConstants = 0;
+                if (constantNamesSource.length > 1) {
+                    countOfConstants = Integer.valueOf(constantNamesSource[1]);
+                }
+//                taskSquid25.constantNames = new ArrayList<>();
+//                taskSquid25.constantValues = new ArrayList<>();
+                for (int i = 0; i < countOfConstants; i++) {
+                    taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
+                    taskSquid25.constantValues.add(constantValuesSource[i + 2]);
+                }
+
                 for (int i = 0; i < countOfEquations; i++) {
                     // handle backwards logic of Squid25 where both ST, SA false, means both True
                     boolean switchRM = Boolean.parseBoolean(switchST[i + (isSquid2_20 ? 1 : 2)]);
@@ -248,20 +267,19 @@ public class TaskSquid25 implements Serializable {
                     }
                 }
 
-                String[] constantNamesSource = lines[firstRow + 40].split("\t");
-                String[] constantValuesSource = lines[firstRow + 41].split("\t");
-
-                int countOfConstants = 0;
-                if (constantNamesSource.length > 1) {
-                    countOfConstants = Integer.valueOf(constantNamesSource[1]);
-                }
-                taskSquid25.constantNames = new ArrayList<>();
-                taskSquid25.constantValues = new ArrayList<>();
-                for (int i = 0; i < countOfConstants; i++) {
-                    taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
-                    taskSquid25.constantValues.add(constantValuesSource[i + 2]);
-                }
-
+//                String[] constantNamesSource = lines[firstRow + 40].split("\t");
+//                String[] constantValuesSource = lines[firstRow + 41].split("\t");
+//
+//                int countOfConstants = 0;
+//                if (constantNamesSource.length > 1) {
+//                    countOfConstants = Integer.valueOf(constantNamesSource[1]);
+//                }
+//                taskSquid25.constantNames = new ArrayList<>();
+//                taskSquid25.constantValues = new ArrayList<>();
+//                for (int i = 0; i < countOfConstants; i++) {
+//                    taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
+//                    taskSquid25.constantValues.add(constantValuesSource[i + 2]);
+//                }
             }
         } catch (IOException iOException) {
         }
@@ -365,15 +383,40 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("100*", "");
 
         // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
-        if (!excelString.contains("(") && !excelString.contains("[")) {
-            if (!ShuntingYard.isNumber(excelString)) {
-                retVal = "";
+        // unless already noted as constant
+        if (!taskSquid25.constantNames.contains(retVal)) {
+            if (!excelString.contains("(") && !excelString.contains("[")) {
+                if (!ShuntingYard.isNumber(excelString)) {
+                    retVal = "";
+                }
             }
         }
 
         // do not include calls to error functions of Age as in AgeErPb76 etc
         if (excelString.toUpperCase(Locale.US).contains("AGEER")) {
             retVal = "";
+        }
+
+        // misc edits
+        if (retVal.matches("^.*(?i)corr\\S.*")) {
+            if (!retVal.contains("corr.")) {
+                retVal = retVal.replace("corr", "corr ");
+            }
+            retVal = retVal.replace("corr2", "corr 2");
+        }
+        if (retVal.matches("^.*\\S(?i)age.*")) {
+            retVal = retVal.replace("Age", " Age");
+            retVal = retVal.replace("age", " Age");
+        }
+
+        if (retVal.contains("\"4corr")) {
+            retVal = retVal.replace("\"4corr", "\"4-corr");
+        }
+        if (retVal.contains("\"7corr")) {
+            retVal = retVal.replace("\"7corr", "\"7-corr");
+        }
+        if (retVal.contains("\"8corr")) {
+            retVal = retVal.replace("\"8corr", "\"8-corr");
         }
 
         return retVal;
@@ -390,6 +433,9 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("100*", "");
         // remove spaces
         retVal = retVal.replace(" ", "");
+        
+        // expression customizeradds this space
+        retVal = retVal.replace("Age", " Age");
 
         return retVal;
     }
