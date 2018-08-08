@@ -25,8 +25,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME_S;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME_S;
 
 /**
  * Modified from ET_Redux July 2018
@@ -58,24 +58,24 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME_S, "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME, "",
-            "", "true", "false", "20", "", "", "false", "false"
+        {"", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME_S, "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME + " %err", "",
-            "", "true", "false", "20", "", "", "false", "false"
+//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME_S + " %err", "",
+//            "", "true", "false", "20", "", "", "false", "false"
+//        },
+        {"", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME_S, "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME, "",
-            "", "true", "false", "20", "", "", "false", "false"
+//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME_S + " %err", "",
+//            "", "true", "false", "20", "", "", "false", "false"
+//        },
+        {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS", "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME + " %err", "",
-            "", "true", "false", "20", "", "", "false", "false"
-        },
-        {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS", "",
-            "", "true", "false", "20", "", "", "false", "false"
-        },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS %err", "",
-            "", "true", "false", "20", "", "", "false", "false"
-        },
+//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS %err", "",
+//            "", "true", "false", "20", "", "", "false", "false"
+//        },
         {"", "Total", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 207Pb/206PbS", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         }
@@ -111,51 +111,30 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"204corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 206Pb/238U Age", "ABS",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "1s", "err", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 206Pb/238U Age 1serr", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"204corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 207Pb/206Pb Age", "ABS",
             "", "true", "false", "20", "true", "", "false", "false"
         },
         {"204corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 208Pb/232Th Age", "ABS",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "1s", "err", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "204corr 208Pb/232Th Age 1serr", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"%", "Dis-", "cor-", "dant", "", "getTaskExpressionsEvaluationsPerSpotByField", "204corr Discordance", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "4-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208*/232", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208*/232 %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "4-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 238/206", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 238/206 %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "4-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/206*", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/206* %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "4-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/235", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/235 %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "4-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238 %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr err corr", "",
             "", "true", "false", "20", "", "", "false", "false"
         }
@@ -244,12 +223,12 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/235S", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238S", "",
-            "", "true", "false", "20", "", "", "false", "false"
+        {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238S", "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238S %err", "",
-            "", "true", "false", "20", "", "", "false", "false"
-        },
+//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238S %err", "",
+//            "", "true", "false", "20", "", "", "false", "false"
+//        },
         {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr err corr", "",
             "", "true", "false", "20", "", "", "false", "false"
         }
