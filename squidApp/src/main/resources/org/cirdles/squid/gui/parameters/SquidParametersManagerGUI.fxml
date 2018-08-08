@@ -19,6 +19,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/squidLabData.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.parameters.parametersManagerGUIController">
     <children>
+        <TextField id="laboratoryTextField" fx:id="labNameTextField" prefHeight="26.0" prefWidth="562.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
         <TabPane fx:id="rootTabPane" layoutX="2.0" layoutY="45.0" prefHeight="455.0" prefWidth="657.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="45.0">
             <tabs>
                 <Tab text="Physical Constants Models">
@@ -296,7 +297,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatConcentrationsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+                                                        <TableView fx:id="refMatConcentrationsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
                                           <HBox alignment="CENTER_LEFT" layoutX="-56.0" layoutY="-35.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                               <Button fx:id="refMatConcentrationsNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatConcentrationsNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -382,9 +383,161 @@
                         </AnchorPane>
                     </content>
                 </Tab>
+            <Tab text="Pb Blank IC Models">
+               <content>
+                  <AnchorPane prefHeight="416.0" prefWidth="658.0">
+                     <children>
+                        <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <menus>
+                              <Menu fx:id="pbBlankICFileMenu" mnemonicParsing="false" text="File">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICImpXMLAction" text="Import Pb Blank IC Model from XML File" />
+                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICExpXMLAction" text="Export Pb Blank IC Model as XML File" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICImpETReduxXMLAction" text="Import ETRedux Pb Blank IC Model" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Edit">
+                                 <items>
+                                    <MenuItem fx:id="saveAndRegCurrBlankICIsEditableMenuItem" mnemonicParsing="false" onAction="#pbBlankICSaveAndRegisterEdit" text="Save and Register Current Edit of Pb Blank IC Model" />
+                                    <MenuItem fx:id="cancelEditOfPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICCancelEdit" text="Cancel Edit of Pb Blank IC Model" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem fx:id="remCurrPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICRemoveCurrMod" text="Remove Current Pb Blank IC Model from Lab Data (for editable models only)" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem fx:id="editCurrPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditCurrMod" text="Edit Current Pb Blank IC Model (for editable models only)" />
+                                    <MenuItem fx:id="editCopyOfPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditCopy" text="Edit Copy of Current Pb Blank IC Model" />
+                                    <MenuItem fx:id="editNewEmptyPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditEmptyMod" text="Edit New Empty Pb Blank IC Model" />
+                                 </items>
+                              </Menu>
+                           </menus>
+                        </MenuBar>
+                        <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
+                           <tabs>
+                              <Tab text="Data">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView fx:id="pbBlankICDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                          <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="-34.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Button fx:id="pbBlankICDataNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#pbBlankICDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
+                                                <HBox alignment="CENTER" spacing="5.0">
+                                                   <children>
+                                                      <Label text="SigFigs:" />
+                                                      <TextField fx:id="pbBlankICDataSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab text="Correlations">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView fx:id="pbBlankICCorrTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                          <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Button fx:id="pbBlankICCorrNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#pbBlankICCorrNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
+                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                   <children>
+                                                      <Label text="SigFigs:" />
+                                                      <TextField fx:id="pbBlankICCorrSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                   </children>
+                                                </HBox>
+                                                <Label text="Correlations | Note: correlation matrix is positive definite" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab text="Covariances">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView fx:id="pbBlankICCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                          <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <Button fx:id="pbBlankICCovNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#pbBlankICCovNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
+                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                   <children>
+                                                      <Label text="SigFigs:" />
+                                                      <TextField fx:id="pbBlankICCovSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                   </children>
+                                                </HBox>
+                                                <Label text="Covariances | Note: covariance matrix is positive definite" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab text="Ref and Comment">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <TextArea fx:id="pbBlankICReferencesArea" layoutX="430.0" prefHeight="200.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                          <TextArea fx:id="pbBlankICCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="200.0" prefWidth="336.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                          <Label layoutX="10.0" layoutY="5.0" text="Comments" AnchorPane.topAnchor="0.0" />
+                                          <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                           </tabs>
+                        </TabPane>
+                        <VBox prefWidth="100.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                       <children>
+                                          <Label text="Model Name:" textAlignment="RIGHT" />
+                                          <TextField fx:id="pbBlankICModelName" prefHeight="26.0" prefWidth="400.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                       <children>
+                                          <Label text="          Version:" textAlignment="RIGHT" />
+                                          <TextField fx:id="pbBlankICVersion" prefHeight="26.0" prefWidth="75.0" />
+                                       </children>
+                                    </HBox>
+                                    <Label fx:id="pbBlankICIsEditableLabel" textFill="RED" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                       <children>
+                                          <Label text="    Lab Name:" textAlignment="RIGHT" />
+                                          <TextField fx:id="pbBlankICLabName" prefHeight="26.0" prefWidth="400.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                       <children>
+                                          <Label text="Date Certified:" textAlignment="RIGHT" />
+                                          <TextField fx:id="pbBlankICDateCertified" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
+                           <children>
+                              <Label text="Choose Pb Blank IC Model:" />
+                              <ChoiceBox fx:id="pbBlankICCB" prefWidth="380.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
             </tabs>
         </TabPane>
-        <Label id="labNameLabel" layoutX="14.0" layoutY="5.0" prefHeight="18.0" prefWidth="74.0" text="Lab Name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="15.0" />
-        <TextField id="laboratoryTextField" fx:id="labNameTextField" layoutX="88.0" layoutY="2.0" prefHeight="26.0" prefWidth="562.0" AnchorPane.leftAnchor="88.0" AnchorPane.rightAnchor="6.600000000000023" AnchorPane.topAnchor="10.0" />
+        <Label id="labNameLabel" prefHeight="18.0" prefWidth="74.0" text="Lab Name:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
     </children>
 </AnchorPane>

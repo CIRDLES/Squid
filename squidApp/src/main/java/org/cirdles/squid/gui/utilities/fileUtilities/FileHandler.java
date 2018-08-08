@@ -308,4 +308,21 @@ public class FileHandler {
 
         return fileChooser.showSaveDialog(ownerWindow);
     }
+
+    public static File parametersManagerSelectPbBlankICModelXMLFile(Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Squid Pb Blank IC Model xml File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Pb Blank IC Model xml Files", "*.xml"));
+
+        return fileChooser.showOpenDialog(ownerWindow);
+    }
+
+    public static File parametersManagerSavePbBlankICModelXMLFile(ParametersModel model, Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Squid Pb Blank IC Model xml File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Pb Blank IC Model xml Files", "*.xml"));
+        fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
+
+        return fileChooser.showSaveDialog(ownerWindow);
+    }
 }

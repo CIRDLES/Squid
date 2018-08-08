@@ -13,6 +13,7 @@ import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 
@@ -23,15 +24,17 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterials.Reference
 public class SquidLabData implements Serializable {
 
     private static long serialVersionUID = 2042394065348785942L;
-    
+
     private List<ReferenceMaterial> referenceMaterials;
     private List<PhysicalConstantsModel> physicalConstantsModels;
+    private List<PbBlankICModel> pbBlankICModels;
     private String laboratoryName;
 
     public SquidLabData() {
         laboratoryName = "mystery lab";
         referenceMaterials = ReferenceMaterial.getDefaultModels();
         physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
+        pbBlankICModels = PbBlankICModel.getDefaultModels();
         storeState();
     }
 
@@ -80,6 +83,14 @@ public class SquidLabData implements Serializable {
         this.physicalConstantsModels = physicalConstantsModels;
     }
 
+    public List<PbBlankICModel> getPbBlankICModels() {
+        return pbBlankICModels;
+    }
+
+    public void setPbBlankICModels(List<PbBlankICModel> pbBlankICModels) {
+        this.pbBlankICModels = pbBlankICModels;
+    }
+
     public String getLaboratoryName() {
         return laboratoryName;
     }
@@ -104,6 +115,10 @@ public class SquidLabData implements Serializable {
         physicalConstantsModels.remove(model);
     }
 
+    public void removePbBlankICModel(PbBlankICModel model) {
+        pbBlankICModels.remove(model);
+    }
+
     public void addReferenceMaterial(ReferenceMaterial refMat) {
         referenceMaterials.add(refMat);
     }
@@ -112,12 +127,20 @@ public class SquidLabData implements Serializable {
         physicalConstantsModels.add(model);
     }
 
+    public void addPbBlankICModel(PbBlankICModel model) {
+        pbBlankICModels.add(model);
+    }
+
     public ReferenceMaterial getReferenceMaterial(int i) {
         return referenceMaterials.get(i);
     }
 
     public PhysicalConstantsModel getPhysicalConstantsModel(int i) {
         return physicalConstantsModels.get(i);
+    }
+
+    public PbBlankICModel getPbBlankICModel(int i) {
+        return pbBlankICModels.get(i);
     }
 
     public int compareTo(SquidLabData data) {
@@ -130,6 +153,9 @@ public class SquidLabData implements Serializable {
         for (int i = 0; difference == 0 && i < physicalConstantsModels.size(); i++) {
             difference = physicalConstantsModels.get(i).compareTo(data.getPhysicalConstantsModel(i));
         }
+        for (int i = 0; difference == 0 && i < pbBlankICModels.size(); i++) {
+            difference = pbBlankICModels.get(i).compareTo(data.getPbBlankICModel(i));
+        }
 
         return difference;
     }
@@ -137,7 +163,7 @@ public class SquidLabData implements Serializable {
     public boolean equals(Object o) {
         return o instanceof SquidLabData && this.compareTo(((SquidLabData) o)) == 0;
     }
-    
+
     public static void main(String[] args) {
         ObjectStreamClass stream = ObjectStreamClass.lookup(SquidLabData.class);
         System.out.println("serialVersionUID: " + stream.getSerialVersionUID());

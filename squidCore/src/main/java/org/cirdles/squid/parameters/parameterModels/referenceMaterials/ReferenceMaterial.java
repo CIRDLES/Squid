@@ -15,8 +15,11 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
@@ -66,26 +69,34 @@ public class ReferenceMaterial extends ParametersModel {
         model.setDateCertified(dateCertified);
         model.setComments(comments);
         model.setReferences(references);
-        
+
         ValueModel[] vals = new ValueModel[values.length];
-        for(int i = 0; i < vals.length; i++) {
+        for (int i = 0; i < vals.length; i++) {
             ValueModel curr = values[i];
             vals[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
-            curr.getValue(), curr.getOneSigma());
+                    curr.getValue(), curr.getOneSigma());
         }
         model.setValues(vals);
 
         model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
         model.setCovModel((CovarianceMatrixModel) covModel.copy());
 
-         ValueModel[] concs = new ValueModel[concentrations.length];
-        for(int i = 0; i < concs.length; i++) {
+        Map<String, BigDecimal> newRhos = new HashMap<>();
+        model.setRhos(newRhos);
+        Iterator<Entry<String, BigDecimal>> rhosIterator = rhos.entrySet().iterator();
+        while (rhosIterator.hasNext()) {
+            Entry<String, BigDecimal> entry = rhosIterator.next();
+            newRhos.put(entry.getKey(), entry.getValue());
+        }
+
+        ValueModel[] concs = new ValueModel[concentrations.length];
+        for (int i = 0; i < concs.length; i++) {
             ValueModel curr = concentrations[i];
             concs[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
-            curr.getValue(), curr.getOneSigma());
+                    curr.getValue(), curr.getOneSigma());
         }
         model.setConcentrations(concs);
-        
+
         model.setDataMeasured(dataMeasured.clone());
 
         return model;
@@ -103,12 +114,12 @@ public class ReferenceMaterial extends ParametersModel {
             dataMeasured[i] = false;
         }
     }
-    
+
     public ValueModel getConcentrationByName(String name) {
         ValueModel retVal = new ValueModel(name);
         boolean found = false;
-        for(int i = 0; i < concentrations.length && !found; i++) {
-            if(concentrations[i].getName().equals(name)) {
+        for (int i = 0; i < concentrations.length && !found; i++) {
+            if (concentrations[i].getName().equals(name)) {
                 retVal = concentrations[i];
                 found = true;
             }

@@ -11,7 +11,6 @@ import java.io.FilenameFilter;
 import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -53,18 +52,26 @@ public class PhysicalConstantsModel extends ParametersModel {
         model.setDateCertified(dateCertified);
         model.setComments(comments);
         model.setReferences(references);
-        
+
         ValueModel[] vals = new ValueModel[values.length];
-        for(int i = 0; i < vals.length; i++) {
+        for (int i = 0; i < vals.length; i++) {
             ValueModel curr = values[i];
             vals[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
-            curr.getValue(), curr.getOneSigma());
+                    curr.getValue(), curr.getOneSigma());
         }
-        
+
         model.setValues(vals);
-        
+
         model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
         model.setCovModel((CovarianceMatrixModel) covModel.copy());
+
+        Map<String, BigDecimal> newRhos = new HashMap<>();
+        model.setRhos(newRhos);
+        Iterator<Entry<String, BigDecimal>> rhosIterator = rhos.entrySet().iterator();
+        while (rhosIterator.hasNext()) {
+            Entry<String, BigDecimal> entry = rhosIterator.next();
+            newRhos.put(entry.getKey(), entry.getValue());
+        }
 
         Map<String, BigDecimal> masses = model.getMolarMasses();
         Iterator<Entry<String, BigDecimal>> massesIterator = molarMasses.entrySet().iterator();
@@ -156,22 +163,6 @@ public class PhysicalConstantsModel extends ParametersModel {
         xstream.registerConverter(new ETReduxPhysConstConverter());
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
         return xstream;
-    }
-
-    public final void initializeNewRatiosAndRhos() {
-
-        this.values = new ValueModel[DataDictionary.MeasuredConstants.length];
-        for (int i = 0; i < DataDictionary.MeasuredConstants.length; i++) {
-            this.values[i]
-                    = new ValueModel(
-                            DataDictionary.MeasuredConstants[i][0],
-                            "PCT", "", BigDecimal.ZERO, BigDecimal.ZERO);
-        }
-
-        Arrays.sort(values, new DataValueModelNameComparator());
-
-        buildRhosMap();
-
     }
 
     public static void main(String[] args) {

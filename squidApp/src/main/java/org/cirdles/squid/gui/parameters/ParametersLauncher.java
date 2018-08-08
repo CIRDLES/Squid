@@ -58,12 +58,13 @@ public class ParametersLauncher {
         }
     }
 
-    public void launchParametersManager(boolean isRefMat) {
-        if (isRefMat) {
-            tabs.getSelectionModel().select(1);
-        } else {
+    public void launchParametersManager(ParametersTab tab) {
+        if (tab.equals(ParametersTab.physConst)) {
             tabs.getSelectionModel().select(0);
-
+        } else if (tab.equals(ParametersTab.refMat)){
+            tabs.getSelectionModel().select(1);
+        } else if(tab.equals(ParametersTab.pbBlankIC)) {
+            tabs.getSelectionModel().select(2);
         }
         squidLabDataStage.centerOnScreen();
         squidLabDataStage.requestFocus();
@@ -94,4 +95,8 @@ public class ParametersLauncher {
         }
     }
 
+    
+    public enum ParametersTab {
+        physConst, refMat, pbBlankIC
+    }
 }

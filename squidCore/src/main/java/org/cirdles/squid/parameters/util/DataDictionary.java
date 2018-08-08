@@ -22,16 +22,8 @@ package org.cirdles.squid.parameters.util;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author James F. Bowring
- */
 public final class DataDictionary {
 
-    // Physical Constants
-    /**
-     *
-     */
     public final static String[][] AtomicMolarMasses = new String[][]{
         {"gmol204", "203.973028"},
         {"gmol205", "204.9737"},
@@ -41,10 +33,9 @@ public final class DataDictionary {
         {"gmol230", "230.033128"},
         {"gmol232", "232.038051"},
         {"gmol235", "235.043922"},
-        {"gmol238", "238.050785"}};
-    /**
-     *
-     */
+        {"gmol238", "238.050785"}
+    };
+
     public final static String[][] MeasuredConstants = new String[][]{
         {Lambdas.lambda226.getName(), "0.0004335", "0.0000011", "Holden 1990"},
         {Lambdas.lambda230.getName(), "0.00000912516", "0.15244", "Cheng et al. 2000"},
@@ -54,4 +45,11 @@ public final class DataDictionary {
         {Lambdas.lambda235.getName(), "0.00000000098485", "0.068031", "Jaffey et al. 1971"},
         {Lambdas.lambda238.getName(), "0.000000000155125", "0.053505", "Jaffey et al. 1971"}
     };
+
+    public final static String[] earthTimePbBlankICRatioNames = new String[]{
+        "r206_204b",
+        "r207_204b",
+        "r208_204b"
+    };
+    
 }

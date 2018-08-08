@@ -62,6 +62,7 @@ Schema/
 
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterials/*
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/physicalConstantsModels/*
+!squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/pbBlankICModels/*
 
 
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
