@@ -160,6 +160,32 @@ public class ParametersModel implements
 
         return retVal;
     }
+    
+    public ParametersModel clone() {
+        ParametersModel model = new ParametersModel();
+        
+        model.setModelName(modelName);
+        model.setIsEditable(isEditable);
+        model.setLabName(labName);
+        model.setVersion(version);
+        model.setDateCertified(dateCertified);
+        model.setComments(comments);
+        model.setReferences(references);
+        
+        ValueModel[] vals = new ValueModel[values.length];
+        for(int i = 0; i < vals.length; i++) {
+            ValueModel curr = values[i];
+            vals[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
+            curr.getValue(), curr.getOneSigma());
+        }
+        
+        model.setValues(vals);
+        
+        model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
+        model.setCovModel((CovarianceMatrixModel) covModel.copy());
+        
+        return model;
+    }
 
     public void generateCorrelationsFromCovariances() {
         Iterator<String> colNames;

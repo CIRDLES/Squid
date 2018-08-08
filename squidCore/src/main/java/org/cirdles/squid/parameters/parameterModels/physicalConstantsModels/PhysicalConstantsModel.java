@@ -43,6 +43,7 @@ public class PhysicalConstantsModel extends ParametersModel {
         setUpDefaultMolarMasses();
     }
 
+    @Override
     public PhysicalConstantsModel clone() {
         PhysicalConstantsModel model = new PhysicalConstantsModel();
         model.setModelName(modelName);
@@ -52,7 +53,16 @@ public class PhysicalConstantsModel extends ParametersModel {
         model.setDateCertified(dateCertified);
         model.setComments(comments);
         model.setReferences(references);
-        model.setValues(values.clone());
+        
+        ValueModel[] vals = new ValueModel[values.length];
+        for(int i = 0; i < vals.length; i++) {
+            ValueModel curr = values[i];
+            vals[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
+            curr.getValue(), curr.getOneSigma());
+        }
+        
+        model.setValues(vals);
+        
         model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
         model.setCovModel((CovarianceMatrixModel) covModel.copy());
 

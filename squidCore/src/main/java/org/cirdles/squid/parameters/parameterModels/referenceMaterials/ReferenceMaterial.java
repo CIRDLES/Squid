@@ -55,6 +55,7 @@ public class ReferenceMaterial extends ParametersModel {
         concentrations = new ValueModel[0];
     }
 
+    @Override
     public ReferenceMaterial clone() {
         ReferenceMaterial model = new ReferenceMaterial();
 
@@ -65,10 +66,26 @@ public class ReferenceMaterial extends ParametersModel {
         model.setDateCertified(dateCertified);
         model.setComments(comments);
         model.setReferences(references);
-        model.setValues(values.clone());
+        
+        ValueModel[] vals = new ValueModel[values.length];
+        for(int i = 0; i < vals.length; i++) {
+            ValueModel curr = values[i];
+            vals[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
+            curr.getValue(), curr.getOneSigma());
+        }
+        model.setValues(vals);
+
         model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
         model.setCovModel((CovarianceMatrixModel) covModel.copy());
-        model.setConcentrations(concentrations.clone());
+
+         ValueModel[] concs = new ValueModel[concentrations.length];
+        for(int i = 0; i < concs.length; i++) {
+            ValueModel curr = concentrations[i];
+            concs[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
+            curr.getValue(), curr.getOneSigma());
+        }
+        model.setConcentrations(concs);
+        
         model.setDataMeasured(dataMeasured.clone());
 
         return model;

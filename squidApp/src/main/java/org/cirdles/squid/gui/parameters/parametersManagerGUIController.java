@@ -1070,34 +1070,6 @@ public class parametersManagerGUIController implements Initializable {
         physConstModel.setDateCertified(physConstDateCertified.getText());
         physConstModel.setLabName(physConstLabName.getText());
 
-        ObservableList<DataModel> dataModels = physConstDataTable.getItems();
-        ValueModel[] values = new ValueModel[dataModels.size()];
-        for (int i = 0; i < values.length; i++) {
-            DataModel mod = dataModels.get(i);
-            ValueModel currVal = new ValueModel();
-
-            currVal.setName(getRatioHiddenName(mod.getName()));
-
-            String currBigDec = mod.getValue();
-            if (Double.parseDouble(currBigDec) == 0) {
-                currVal.setValue(BigDecimal.ZERO);
-            } else {
-                currVal.setValue(new BigDecimal(currBigDec));
-            }
-
-            currBigDec = mod.getOneSigmaABS();
-            if (Double.parseDouble(currBigDec) == 0) {
-                currVal.setOneSigma(BigDecimal.ZERO);
-            } else {
-                currVal.setOneSigma(new BigDecimal(currBigDec));
-            }
-
-            currVal.setReference(physConstReferences.get(i).getText());
-            currVal.setUncertaintyType("ABS");
-            values[i] = currVal;
-        }
-        physConstModel.setValues(values);
-
         Map<String, BigDecimal> masses = new HashMap<>();
         String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
         for (int i = 0; i < defaultMasses.length; i++) {
@@ -1113,7 +1085,6 @@ public class parametersManagerGUIController implements Initializable {
 
         physConstModel.setReferences(physConstReferencesArea.getText());
         physConstModel.setComments(physConstCommentsArea.getText());
-        physConstModel.setRhos(getRhosFromTable(physConstCorrTable));
 
         if (!isEditingCurrPhysConst) {
             physConstModels.add(physConstModel);
@@ -1138,65 +1109,12 @@ public class parametersManagerGUIController implements Initializable {
         refMatModel.setDateCertified(refMatDateCertified.getText());
 
         ObservableList<RefMatDataModel> dataModels = refMatDataTable.getItems();
-        ValueModel[] values = new ValueModel[dataModels.size()];
         boolean[] isMeasures = new boolean[dataModels.size()];
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < isMeasures.length; i++) {
             RefMatDataModel mod = dataModels.get(i);
-            ValueModel currVal = new ValueModel();
-
-            currVal.setName(getRatioHiddenName(mod.getName()));
-
-            String currBigDec = mod.getValue();
-            if (Double.parseDouble(currBigDec) == 0) {
-                currVal.setValue(BigDecimal.ZERO);
-            } else {
-                currVal.setValue(new BigDecimal(currBigDec));
-            }
-
-            currBigDec = mod.getOneSigmaABS();
-            if (Double.parseDouble(currBigDec) == 0) {
-                currVal.setOneSigma(BigDecimal.ZERO);
-            } else {
-                currVal.setOneSigma(new BigDecimal(currBigDec));
-            }
-
             isMeasures[i] = mod.getIsMeasured().isSelected();
-
-            currVal.setUncertaintyType("ABS");
-            values[i] = currVal;
         }
-        refMatModel.setValues(values);
         refMatModel.setDataMeasured(isMeasures);
-
-        refMatModel.setRhos(getRhosFromTable(refMatCorrTable));
-
-        ObservableList<DataModel> concentrationsData = refMatConcentrationsTable.getItems();
-        ValueModel[] concentrations = new ValueModel[concentrationsData.size()];
-        for (int i = 0; i < concentrations.length; i++) {
-            DataModel mod = concentrationsData.get(i);
-            ValueModel currVal = new ValueModel();
-
-            currVal.setName(mod.getName());
-
-            String currBigDec = mod.getValue();
-            if (Double.parseDouble(currBigDec) == 0) {
-                currVal.setValue(BigDecimal.ZERO);
-            } else {
-                currVal.setValue(new BigDecimal(currBigDec));
-            }
-
-            currBigDec = mod.getOneSigmaABS();
-            if (Double.parseDouble(currBigDec) == 0) {
-                currVal.setOneSigma(BigDecimal.ZERO);
-            } else {
-                currVal.setOneSigma(new BigDecimal(currBigDec));
-            }
-
-            currVal.setReference(physConstReferences.get(i).getText());
-            currVal.setUncertaintyType("ABS");
-            concentrations[i] = currVal;
-        }
-        refMatModel.setConcentrations(concentrations);
 
         refMatModel.setReferences(refMatReferencesArea.getText());
         refMatModel.setComments(refMatCommentsArea.getText());
@@ -1268,41 +1186,41 @@ public class parametersManagerGUIController implements Initializable {
         isEditingRefMat = true;
     }
 
-    private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<SimpleStringProperty>> table) {
-        Map<String, BigDecimal> rhos = new HashMap<>();
-        table.setEditable(false);
-
-        if (table.getColumns().size() > 0) {
-            ObservableList<TableColumn<ObservableList<SimpleStringProperty>, ?>> colHeaders = table.getColumns();
-            ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
-            List<String> headerNames = new ArrayList<>();
-            for (int i = 0; i < colHeaders.size(); i++) {
-                headerNames.add(colHeaders.get(i).getText());
-            }
-
-            for (int i = 0; i < items.size(); i++) {
-                ObservableList<SimpleStringProperty> currItem = items.get(i);
-                for (int j = 1; j < currItem.size(); j++) {
-                    if (i + 1 != j) {
-                        String val = currItem.get(j).get();
-                        if (Double.parseDouble(val) != 0) {
-                            String colHeader = getRatioHiddenName(headerNames.get(j));
-                            String rowHeader = getRatioHiddenName(currItem.get(0).get());
-                            String reverseKey = "rho" + rowHeader.substring(0, 1).toUpperCase()
-                                    + rowHeader.substring(1) + "__" + colHeader;
-                            if (!rhos.containsKey(reverseKey)) {
-                                String key = "rho" + colHeader.substring(0, 1).toUpperCase()
-                                        + colHeader.substring(1) + "__" + rowHeader;
-                                rhos.put(key, new BigDecimal(val));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return rhos;
-    }
+//    private Map<String, BigDecimal> getRhosFromTable(TableView<ObservableList<SimpleStringProperty>> table) {
+//        Map<String, BigDecimal> rhos = new HashMap<>();
+//        table.setEditable(false);
+//
+//        if (table.getColumns().size() > 0) {
+//            ObservableList<TableColumn<ObservableList<SimpleStringProperty>, ?>> colHeaders = table.getColumns();
+//            ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
+//            List<String> headerNames = new ArrayList<>();
+//            for (int i = 0; i < colHeaders.size(); i++) {
+//                headerNames.add(colHeaders.get(i).getText());
+//            }
+//
+//            for (int i = 0; i < items.size(); i++) {
+//                ObservableList<SimpleStringProperty> currItem = items.get(i);
+//                for (int j = 1; j < currItem.size(); j++) {
+//                    if (i + 1 != j) {
+//                        String val = currItem.get(j).get();
+//                        if (Double.parseDouble(val) != 0) {
+//                            String colHeader = getRatioHiddenName(headerNames.get(j));
+//                            String rowHeader = getRatioHiddenName(currItem.get(0).get());
+//                            String reverseKey = "rho" + rowHeader.substring(0, 1).toUpperCase()
+//                                    + rowHeader.substring(1) + "__" + colHeader;
+//                            if (!rhos.containsKey(reverseKey)) {
+//                                String key = "rho" + colHeader.substring(0, 1).toUpperCase()
+//                                        + colHeader.substring(1) + "__" + rowHeader;
+//                                rhos.put(key, new BigDecimal(val));
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return rhos;
+//    }
 
     public static String trimTrailingZeroes(String s) {
         String retVal;
