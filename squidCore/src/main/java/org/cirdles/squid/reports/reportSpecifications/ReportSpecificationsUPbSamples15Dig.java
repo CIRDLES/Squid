@@ -61,25 +61,15 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME_S, "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME_S + " %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME_S, "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_208_232_NAME_S + " %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "Total", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 207Pb/206PbS", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         }
-
     };
 
     // Report column order =
@@ -96,8 +86,8 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com208", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
-        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb*", "",
-            "", "true", "false", "20", "", "", "false", "false"
+        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb*", "PCT",
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb* %err", "",
             "", "true", "false", "20", "", "", "false", "false"
@@ -129,10 +119,10 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "4-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/206*", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "4-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/235", "PCT",
+        {"", "4-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/235S", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "4-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238", "PCT",
+        {"", "4-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238S", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr err corr", "",
@@ -214,10 +204,10 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", EXP_8CORR_238_206_STAR, "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*", "",
+        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*S", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206* %err", "",
+        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*S %err", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/235S", "PCT",
@@ -226,9 +216,6 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238S", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-//        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238S %err", "",
-//            "", "true", "false", "20", "", "", "false", "false"
-//        },
         {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr err corr", "",
             "", "true", "false", "20", "", "", "false", "false"
         }

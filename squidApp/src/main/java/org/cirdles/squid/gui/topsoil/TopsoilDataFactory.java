@@ -74,12 +74,12 @@ public class TopsoilDataFactory {
 
         Map<String, Object> datum = new HashMap<>();
         // default is for reference materials
-        String ratioBase75 = " 207Pb/235U";
-        String ratioBase68 = " 206Pb/238U";
+        String ratioBase75 = " 207*/235";
+        String ratioBase68 = " 206*/238";
         String errCorr = "-errcorr";
         if (isUnknown) {
-            ratioBase75 = " 207*/235";
-            ratioBase68 = " 206*/238";
+            ratioBase75 = " 207*/235S";
+            ratioBase68 = " 206*/238S";
             errCorr = " err corr";
         }
 

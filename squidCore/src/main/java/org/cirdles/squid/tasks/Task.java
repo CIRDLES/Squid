@@ -612,20 +612,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
 //                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S);
                 }
-                if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME + " %err") == 0) {
-                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + " %err" + "\"]");
-                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                    listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-//                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S);
-                }
-                if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S + " %err") == 0) {
-                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + " %err" + "\"]");
-                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                    listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-//                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S + " %err");
-                }
+//                if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME + " %err") == 0) {
+//                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + " %err" + "\"]");
+//                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                    listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+////                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S);
+//                }
+//                if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S + " %err") == 0) {
+//                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + " %err" + "\"]");
+//                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+//                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+//                    listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+////                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S + " %err");
+//                }
             }
             if (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_206_238_NAME) == 0) {
                 listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_206_238_NAME + "\"]");
@@ -813,8 +813,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) {
-        String xCorr206238Name = "-corr" + SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM";
-        String xCorr208232Name = "-corr" + SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM";
+        String xCorr206238Name = "-corr " + SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM";
+        String xCorr208232Name = "-corr " + SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM";
         for (Expression listedExp : taskExpressionsOrdered) {
             if (listedExp.getName().compareToIgnoreCase("4" + xCorr206238Name) == 0) {
                 listedExp.setExcelExpressionString("WtdMeanACalc( [\"4-corr 206Pb/238Ucalibr.const\"], "
