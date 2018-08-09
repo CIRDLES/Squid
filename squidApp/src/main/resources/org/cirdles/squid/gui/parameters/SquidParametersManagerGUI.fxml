@@ -56,7 +56,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="physConstDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                        <TableView fx:id="physConstDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="-34.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                               <Button fx:id="physConstDataNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -76,7 +76,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="physConstCorrTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                        <TableView fx:id="physConstCorrTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                               <Button fx:id="physConstCorrNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstCorrNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -97,7 +97,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="physConstCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                        <TableView fx:id="physConstCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                               <Button fx:id="physConstCovNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstCovNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -235,8 +235,8 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
-                                          <HBox layoutX="290.0" layoutY="-25.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                          <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                               <Button fx:id="refMatDataNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
@@ -255,7 +255,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatCorrTable" layoutX="20.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                        <TableView fx:id="refMatCorrTable" layoutX="20.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                               <Button fx:id="refMatCorrNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatCorrNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -276,7 +276,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                        <TableView fx:id="refMatCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                               <Button fx:id="refMatCovNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatCovNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -297,7 +297,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatConcentrationsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                        <TableView fx:id="refMatConcentrationsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" layoutX="-56.0" layoutY="-35.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                               <Button fx:id="refMatConcentrationsNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatConcentrationsNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -383,7 +383,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-            <Tab text="Pb Blank IC Models">
+            <Tab text="Common Pb Models">
                <content>
                   <AnchorPane prefHeight="416.0" prefWidth="658.0">
                      <children>
@@ -417,7 +417,7 @@
                                  <content>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                          <TableView fx:id="pbBlankICDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                          <TableView fx:id="pbBlankICDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="-34.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                 <Button fx:id="pbBlankICDataNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#pbBlankICDataNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -437,7 +437,7 @@
                                  <content>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                          <TableView fx:id="pbBlankICCorrTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                          <TableView fx:id="pbBlankICCorrTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                 <Button fx:id="pbBlankICCorrNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#pbBlankICCorrNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -458,7 +458,7 @@
                                  <content>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                          <TableView fx:id="pbBlankICCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                          <TableView fx:id="pbBlankICCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
                                           <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                 <Button fx:id="pbBlankICCovNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#pbBlankICCovNotationOnAction" prefHeight="30.0" text="Scientific/Standard Notation" />
@@ -528,7 +528,7 @@
                         </VBox>
                         <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
                            <children>
-                              <Label text="Choose Pb Blank IC Model:" />
+                              <Label text="Choose Common Pb Model:" />
                               <ChoiceBox fx:id="pbBlankICCB" prefWidth="380.0" />
                            </children>
                         </HBox>

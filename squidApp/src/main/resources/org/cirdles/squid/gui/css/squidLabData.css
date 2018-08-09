@@ -30,9 +30,8 @@ and open the template in the editor.
     -fx-background-color: lightgray;
 }
 
-#apparentDates *.label {
-    -fx-text-alignment: center;
-    -fx-vertical-alignment: middle;
+#apparentDates *.text {
+    -fx-font-size: 10pt;
 }
 
 #physConstReferencesPane {
