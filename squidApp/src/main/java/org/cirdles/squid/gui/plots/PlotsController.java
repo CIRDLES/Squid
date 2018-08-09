@@ -377,10 +377,9 @@ public class PlotsController implements Initializable {
                 plotFlavorOneRadioButton.setText("Wetherill Concordia");
                 plotFlavorTwoRadioButton.setText("Tera-Wasserburg");
                 plotFlavorOneRadioButton.setDisable(false);
-                plotFlavorTwoRadioButton.setDisable(false);
+                plotFlavorTwoRadioButton.setDisable(true);
 
                 corr7_RadioButton.setVisible(false);
-                corr8_RadioButton.setDisable(true);
                 corr8_RadioButton.setVisible(true);
 
                 showConcordiaPlotsOfUnknownsOrRefMat();
@@ -399,7 +398,6 @@ public class PlotsController implements Initializable {
                     plotFlavorOneRadioButton.setSelected(true);
                     plotFlavorTwoRadioButton.setDisable(true);
                     corr8_RadioButton.setVisible(true);
-                    corr8_RadioButton.setDisable(false);
                 } else if (!isDirectAltPD && has232) {// perm3
                     plotFlavorOneRadioButton.setDisable(true);
                     plotFlavorTwoRadioButton.setSelected(true);
@@ -493,6 +491,7 @@ public class PlotsController implements Initializable {
         /**
          * @return the selectedProperty
          */
+        @Override
         public SimpleBooleanProperty getSelectedProperty() {
             return selectedProperty;
         }
@@ -500,6 +499,7 @@ public class PlotsController implements Initializable {
         /**
          * @param selectedProperty the selectedProperty to set
          */
+        @Override
         public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
             this.selectedProperty = selectedProperty;
             this.shrimpFraction.setSelected(selectedProperty.getValue());

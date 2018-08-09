@@ -528,7 +528,9 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private void produceGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry, VBox scrolledBox) {
 
         int heightOfMassPlot = 150;
-        int widthOfView = squidProject.getPrawnFileRuns().size() * 25 + 350;
+        // aug 2018 to manage large spot counts and pixels used
+        int customSpotWidth = (1000 - squidProject.getPrawnFileRuns().size()) / 25;//was just 25, then 15
+        int widthOfView = squidProject.getPrawnFileRuns().size() * customSpotWidth + 350;
 
         AbstractDataView canvas
                 = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
