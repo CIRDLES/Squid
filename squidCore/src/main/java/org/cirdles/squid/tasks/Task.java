@@ -38,6 +38,7 @@ import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -183,6 +184,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected PhysicalConstantsModel physicalConstantsModel;
     protected ReferenceMaterial referenceMaterial;
+    protected PbBlankICModel commonPbModel;
 
     public Task() {
         this("New Task", null, null);
@@ -264,6 +266,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.extPErr = 0.75;
 
+        this.physicalConstantsModel = new PhysicalConstantsModel();
+        this.referenceMaterial = new ReferenceMaterial();
+        this.commonPbModel = new PbBlankICModel();
+        
         generateConstants();
         generateParameters();
     }
@@ -2184,5 +2190,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public PhysicalConstantsModel getPhysicalConstantsModel() {
         return physicalConstantsModel;
     }
+
+    public PbBlankICModel getCommonPbModel() {
+        return commonPbModel;
+    }
+
+    public void setCommonPbModel(PbBlankICModel commonPbModel) {
+        this.commonPbModel = commonPbModel;
+    }
+    
 
 }

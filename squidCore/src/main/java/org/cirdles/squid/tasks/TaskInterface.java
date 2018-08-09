@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -200,6 +201,8 @@ public interface TaskInterface {
     public ReferenceMaterial getReferenceMaterial();
     public void setPhysicalConstantsModel(PhysicalConstantsModel physConst);
     public PhysicalConstantsModel getPhysicalConstantsModel();
+    public void setCommonPbModel(PbBlankICModel model);
+    public PbBlankICModel getCommonPbModel();
 
     /**
      * @param type the type to set
