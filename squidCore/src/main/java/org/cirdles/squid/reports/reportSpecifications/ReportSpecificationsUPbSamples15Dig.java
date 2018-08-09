@@ -89,9 +89,6 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb*", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb* %err", "",
-            "", "true", "false", "20", "", "", "false", "false"
-        },
         {"", "4-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr ppm 206*", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
