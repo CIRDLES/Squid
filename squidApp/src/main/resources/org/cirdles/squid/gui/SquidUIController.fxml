@@ -81,6 +81,11 @@
                       <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
                   </Menu>
+                  <Menu fx:id="commonPbModelsMenu" mnemonicParsing="false" text="Common Pb Models">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
                </items>
             </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">

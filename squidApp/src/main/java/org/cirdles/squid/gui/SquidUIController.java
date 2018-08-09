@@ -71,6 +71,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
@@ -176,6 +177,8 @@ public class SquidUIController implements Initializable {
     private MenuItem openParametersManagerPhysConstMenuItem;
     @FXML
     private MenuItem openParametersManagerRefMatMenuItem;
+    @FXML
+    private Menu commonPbModelsMenu;
 
     /**
      * Initializes the controller class.
@@ -622,6 +625,8 @@ public class SquidUIController implements Initializable {
     private void launchTaskManager() {
         mainPane.getChildren().remove(taskManagerUI);
         try {
+            verifySquidLabDataParameters();
+            
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
             taskManagerUI.setId("TaskManager");
             
@@ -636,9 +641,6 @@ public class SquidUIController implements Initializable {
             manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
-            
-            verifySquidLabDataParameters();
-            
         } catch (IOException | RuntimeException iOException) {
             System.out.println("TaskManager >>>>   " + iOException.getMessage());
         }
@@ -1136,6 +1138,7 @@ public class SquidUIController implements Initializable {
     private void setUpParametersMenu() {
         setUpPhysicalConstantsModelsMenuItems();
         setUpReferenceMaterialsMenuItems();
+        setUpCommonPbMenuItems();
         parametersMenu.showingProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
@@ -1177,12 +1180,27 @@ public class SquidUIController implements Initializable {
         referenceMaterialsMenu.getItems().setAll(items);
     }
     
+    private void setUpCommonPbMenuItems() {
+        List<PbBlankICModel> models = squidLabData.getPbBlankICModels();
+        ObservableList<MenuItem> items = FXCollections.observableArrayList();
+        commonPbModelsMenu.getItems().clear();
+        for (PbBlankICModel model : models) {
+            MenuItem item = new MenuItem(parametersManagerGUIController.getModVersionName(model));
+            item.setOnAction(param -> {
+                squidProject.getTask().setCommonPbModel(model);
+            });
+            items.add(item);
+        }
+        commonPbModelsMenu.getItems().setAll(items);
+    }
+    
     private void verifySquidLabDataParameters() {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
             ReferenceMaterial refMat = task.getReferenceMaterial();
             PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
-            if (physConst != null && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
+            PbBlankICModel commonPbModel = task.getCommonPbModel();
+            if (physConst != null && !physConst.equals(new PhysicalConstantsModel()) && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to add " + getModVersionName(physConst) + " to your squid lab data?");
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
@@ -1191,11 +1209,19 @@ public class SquidUIController implements Initializable {
                 });
                 
             }
-            if (refMat != null && !squidLabData.getReferenceMaterials().contains(refMat)) {
+            if (refMat != null && !refMat.equals(new ReferenceMaterial()) && !squidLabData.getReferenceMaterials().contains(refMat)) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to add " + getModVersionName(refMat) + " to your squid lab data?");
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         squidLabData.addReferenceMaterial(refMat);
+                    }
+                });
+            }
+            if (commonPbModel != null && !commonPbModel.equals(new PbBlankICModel()) && !squidLabData.getPbBlankICModels().contains(commonPbModel)) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to add " + getModVersionName(commonPbModel) + " to your squid lab data?");
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        squidLabData.addPbBlankICModel(commonPbModel);
                     }
                 });
             }
