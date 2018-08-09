@@ -57,7 +57,7 @@ public class PhysicalConstantsModel extends ParametersModel {
         for (int i = 0; i < vals.length; i++) {
             ValueModel curr = values[i];
             vals[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
-                    curr.getValue(), curr.getOneSigma());
+                    curr.getReference(), curr.getValue(), curr.getOneSigma());
         }
 
         model.setValues(vals);

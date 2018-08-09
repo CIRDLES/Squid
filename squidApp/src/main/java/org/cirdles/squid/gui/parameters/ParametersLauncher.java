@@ -28,9 +28,6 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterials.Reference
 public class ParametersLauncher {
 
     public static Stage squidLabDataStage;
-    public static TabPane tabs;
-    public static ChoiceBox<String> physConstCB;
-    public static ChoiceBox<String> refMatCB;
 
     public ParametersLauncher() {
         try {
@@ -43,9 +40,6 @@ public class ParametersLauncher {
             Scene scene = new Scene(loader.load());
 
             Map<String, Object> obMap = loader.getNamespace();
-            tabs = (TabPane) obMap.get("rootTabPane");
-            physConstCB = (ChoiceBox<String>) obMap.get("physConstCB");
-            refMatCB = (ChoiceBox<String>) obMap.get("refMatCB");
 
             squidLabDataStage.setScene(scene);
             squidLabDataStage.setTitle("Squid Parameters Manager");
@@ -59,43 +53,12 @@ public class ParametersLauncher {
     }
 
     public void launchParametersManager(ParametersTab tab) {
-        if (tab.equals(ParametersTab.physConst)) {
-            tabs.getSelectionModel().select(0);
-        } else if (tab.equals(ParametersTab.refMat)){
-            tabs.getSelectionModel().select(1);
-        } else if(tab.equals(ParametersTab.pbBlankIC)) {
-            tabs.getSelectionModel().select(2);
-        }
+        parametersManagerGUIController.chosenTab = tab;
         squidLabDataStage.centerOnScreen();
         squidLabDataStage.requestFocus();
         squidLabDataStage.show();
     }
 
-    public static void setUpPhysConstCBItems() {
-        if (!parametersManagerGUIController.isEditingPhysConst) {
-            final ObservableList<String> cbList = FXCollections.observableArrayList();
-            String selected = (String) physConstCB.getSelectionModel().getSelectedItem();
-            for (PhysicalConstantsModel mod : squidLabData.getPhysicalConstantsModels()) {
-                cbList.add(getModVersionName(mod));
-            }
-            physConstCB.setItems(cbList);
-            physConstCB.getSelectionModel().select(selected);
-        }
-    }
-
-    public static void setUpRefMatCBItems() {
-        if (!parametersManagerGUIController.isEditingRefMat) {
-            final ObservableList<String> cbList = FXCollections.observableArrayList();
-            String selected = (String) refMatCB.getSelectionModel().getSelectedItem();
-            for (ReferenceMaterial mod : squidLabData.getReferenceMaterials()) {
-                cbList.add(getModVersionName(mod));
-            }
-            refMatCB.setItems(cbList);
-            refMatCB.getSelectionModel().select(selected);
-        }
-    }
-
-    
     public enum ParametersTab {
         physConst, refMat, pbBlankIC
     }

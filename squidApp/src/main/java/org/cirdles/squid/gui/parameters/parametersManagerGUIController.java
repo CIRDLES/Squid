@@ -44,6 +44,7 @@ import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
+import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
 import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
@@ -255,8 +256,11 @@ public class parametersManagerGUIController implements Initializable {
     private DecimalFormat pbBlankICCorrNotation;
     private DecimalFormat pbBlankICCovNotation;
 
-    public static boolean isEditingPhysConst = false;
-    public static boolean isEditingRefMat = false;
+    public static boolean isEditingPhysConst;
+    public static boolean isEditingRefMat;
+    public static boolean isEditingPbBlankIC;
+
+    public static ParametersTab chosenTab = ParametersTab.physConst;
 
     /**
      * Initializes the controller class.
@@ -269,6 +273,9 @@ public class parametersManagerGUIController implements Initializable {
         isEditingCurrPbBlankICModel = false;
         isEditingCurrPhysConst = false;
         isEditingCurrRefMat = false;
+        isEditingPhysConst = false;
+        isEditingRefMat = false;
+        isEditingPbBlankIC = false;
 
         physConstDataNotation = getScientificNotationFormat();
         physConstCorrNotation = getScientificNotationFormat();
@@ -295,8 +302,39 @@ public class parametersManagerGUIController implements Initializable {
         pbBlankICModel = pbBlankICModels.get(0);
         setUpPbBlankICCB();
 
+        setUpTabs();
         setUpLaboratoryName();
         setUpSigFigTextFields();
+    }
+
+    private void setUpTabs() {
+        squidLabDataStage.focusedProperty().addListener(listener -> {
+            if (squidLabDataStage.isFocused()) {
+                if (chosenTab.equals(ParametersTab.physConst)) {
+                    rootTabPane.getSelectionModel().select(0);
+                } else if (chosenTab.equals(ParametersTab.refMat)) {
+                    rootTabPane.getSelectionModel().select(1);
+                } else if (chosenTab.equals(ParametersTab.pbBlankIC)) {
+                    rootTabPane.getSelectionModel().select(2);
+                }
+                String selected = "";
+                if (!isEditingPhysConst) {
+                    selected = physConstCB.getSelectionModel().getSelectedItem();
+                    setUpPhysConstCBItems();
+                    physConstCB.getSelectionModel().select(selected);
+                }
+                if (!isEditingRefMat) {
+                    selected = refMatCB.getSelectionModel().getSelectedItem();
+                    setUpRefMatCBItems();
+                    refMatCB.getSelectionModel().select(selected);
+                }
+                if (!isEditingPbBlankIC) {
+                    selected = pbBlankICCB.getSelectionModel().getSelectedItem();
+                    setUpPbBlankICCBItems();
+                    pbBlankICCB.getSelectionModel().select(selected);
+                }
+            }
+        });
     }
 
     private void setUpPhysConst() {
@@ -837,7 +875,7 @@ public class parametersManagerGUIController implements Initializable {
             molarMassesPane.getChildren().add(text);
             text.setLayoutY(currY);
             text.setLayoutX(80 + lab.getLayoutX());
-            text.setPrefWidth(600);
+            text.setPrefWidth(300);
             text.focusedProperty().addListener((obV, ov, nv) -> {
                 if (!nv && !isNumeric(text.getText())) {
                     SquidMessageDialog.showWarningDialog("Invalid Molar Mass: must be numeric", primaryStageWindow);
@@ -876,7 +914,7 @@ public class parametersManagerGUIController implements Initializable {
             referencesPane.getChildren().add(text);
             text.setLayoutY(currHeight);
             text.setLayoutX(lab.getLayoutX() + 40);
-            text.setPrefWidth(600);
+            text.setPrefWidth(300);
 
             physConstReferences.add(text);
             currHeight += 40;
@@ -1742,6 +1780,7 @@ public class parametersManagerGUIController implements Initializable {
             isEditingCurrPbBlankICModel = false;
             pbBlankICModelHolder = null;
         }
+        isEditingPbBlankIC = false;
         setUpPbBlankICCBItems();
         pbBlankICCB.getSelectionModel().select(getModVersionName(pbBlankICModel));
         pbBlankICModelEditable(false);
@@ -1756,6 +1795,7 @@ public class parametersManagerGUIController implements Initializable {
             pbBlankICModel = pbBlankICModelHolder;
             pbBlankICModelHolder = null;
         }
+        isEditingPbBlankIC = false;
         String selected = pbBlankICCB.getSelectionModel().getSelectedItem();
         setUpPbBlankICCBItems();
         pbBlankICCB.getSelectionModel().select(selected);
@@ -1775,6 +1815,7 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void pbBlankICEditCurrMod(ActionEvent event) {
+        isEditingPbBlankIC = true;
         pbBlankICModelHolder = pbBlankICModel.clone();
         pbBlankICModelEditable(true);
         setUpPbBlankICMenuItems(true, true);
@@ -1783,6 +1824,7 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void pbBlankICEditCopy(ActionEvent event) {
+        isEditingPbBlankIC = true;
         pbBlankICModel = pbBlankICModel.clone();
         pbBlankICModel.setModelName(pbBlankICModel.getModelName() + " - copy");
         setUpPbBlankIC();
@@ -1792,6 +1834,7 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void pbBlankICEditEmptyMod(ActionEvent event) {
+        isEditingPbBlankIC = true;
         pbBlankICModel = new PbBlankICModel();
         setUpPbBlankIC();
         pbBlankICModelEditable(true);

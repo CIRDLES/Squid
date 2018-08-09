@@ -1187,7 +1187,6 @@ public class SquidUIController implements Initializable {
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         squidLabData.addPhysicalConstantsModel(physConst);
-                        ParametersLauncher.setUpPhysConstCBItems();
                     }
                 });
                 
@@ -1197,7 +1196,6 @@ public class SquidUIController implements Initializable {
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         squidLabData.addReferenceMaterial(refMat);
-                        ParametersLauncher.setUpRefMatCBItems();
                     }
                 });
             }
