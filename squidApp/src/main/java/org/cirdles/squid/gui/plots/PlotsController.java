@@ -377,7 +377,7 @@ public class PlotsController implements Initializable {
                 plotFlavorOneRadioButton.setText("Wetherill Concordia");
                 plotFlavorTwoRadioButton.setText("Tera-Wasserburg");
                 plotFlavorOneRadioButton.setDisable(false);
-                plotFlavorTwoRadioButton.setDisable(false);
+                plotFlavorTwoRadioButton.setDisable(true);
 
                 corr7_RadioButton.setVisible(false);
                 corr8_RadioButton.setVisible(true);
