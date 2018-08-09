@@ -39,8 +39,6 @@ public class ParametersLauncher {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
             Scene scene = new Scene(loader.load());
 
-            Map<String, Object> obMap = loader.getNamespace();
-
             squidLabDataStage.setScene(scene);
             squidLabDataStage.setTitle("Squid Parameters Manager");
 

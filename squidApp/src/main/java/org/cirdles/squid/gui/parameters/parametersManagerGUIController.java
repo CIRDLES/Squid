@@ -291,15 +291,12 @@ public class parametersManagerGUIController implements Initializable {
         pbBlankICCovNotation = getScientificNotationFormat();
 
         physConstModels = squidLabData.getPhysicalConstantsModels();
-        physConstModel = physConstModels.get(0);
         setUpPhysConstCB();
 
         refMatModels = squidLabData.getReferenceMaterials();
-        refMatModel = refMatModels.get(0);
         setUpRefMatCB();
 
         pbBlankICModels = squidLabData.getPbBlankICModels();
-        pbBlankICModel = pbBlankICModels.get(0);
         setUpPbBlankICCB();
 
         setUpTabs();
