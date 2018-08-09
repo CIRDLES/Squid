@@ -31,6 +31,7 @@ import javax.xml.bind.JAXBException;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
@@ -136,6 +137,21 @@ public final class SquidProject implements Serializable {
     public void createTaskFromImportedSquid25Task(File squidTaskFile) {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
+
+        // if Task is ashort of nominal masses, add them
+        int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
+        if (prawnSpeciesCount != taskSquid25.getNominalMasses().size()) {
+            SquidMessageDialog.showWarningDialog(
+                    "The PrawnFile has "
+                    + prawnSpeciesCount
+                    + " mass stations and the Task has "
+                    + taskSquid25.getNominalMasses().size()
+                    + " masses - please confirm.",
+                    null);
+            for (int i = 0; i < (prawnSpeciesCount - taskSquid25.getNominalMasses().size()); i++) {
+                taskSquid25.getNominalMasses().add("DUMMY" + (i + 1));
+            }
+        }
 
         // need to remove stored expression results on fractions to clear the decks
         this.task.getShrimpFractions().forEach((spot) -> {
@@ -510,6 +526,7 @@ public final class SquidProject implements Serializable {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
         }
     }
+
     public String getFilterForConcRefMatSpotNames() {
         return filterForConcRefMatSpotNames;
     }

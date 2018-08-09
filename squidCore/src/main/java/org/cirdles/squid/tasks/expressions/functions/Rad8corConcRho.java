@@ -53,7 +53,7 @@ public class Rad8corConcRho extends Function {
         labelsForOutputValues = new String[][]{{"rho"}};
         labelsForInputValues = new String[]{
             "Total 206/238, Total 206/238 1%Unct,"
-            + "8-corr 206*/238S,"
+            + "8-corr 206*/238,"
             + "Total 208/232, Total 208/232 1%Unct, "
             + "Total 207/206, Total 207/206 1%Unct,"
             + "Total 208/206, Total 208/206 1%Unct,"
