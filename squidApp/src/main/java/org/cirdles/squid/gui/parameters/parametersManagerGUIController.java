@@ -31,6 +31,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -222,6 +223,8 @@ public class parametersManagerGUIController implements Initializable {
     private TextField pbBlankICCorrSigFigs;
     @FXML
     private ChoiceBox<String> pbBlankICCB;
+    @FXML
+    private Tab apparentDatesTab;
 
     PhysicalConstantsModel physConstModel;
     PhysicalConstantsModel physConstHolder;
@@ -300,6 +303,7 @@ public class parametersManagerGUIController implements Initializable {
         setUpPbBlankICCB();
 
         setUpTabs();
+        setUpApparentDatesTabSelection();
         setUpLaboratoryName();
         setUpSigFigTextFields();
     }
@@ -1913,6 +1917,14 @@ public class parametersManagerGUIController implements Initializable {
             squidLabData.storeState();
         }
         squidLabDataStage.requestFocus();
+    }
+    
+    private void setUpApparentDatesTabSelection() {
+        apparentDatesTab.setOnSelectionChanged(value -> {
+            if(apparentDatesTab.isSelected() && isEditingRefMat) {
+                setUpApparentDates();
+            }
+        });
     }
 
     public class DataModel {

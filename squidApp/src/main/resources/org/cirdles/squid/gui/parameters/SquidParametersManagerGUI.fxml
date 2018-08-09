@@ -325,7 +325,7 @@
                                                 </AnchorPane>
                                             </content>
                                         </Tab>
-                                        <Tab text="Apparent Dates">
+                                        <Tab fx:id="apparentDatesTab" text="Apparent Dates">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
