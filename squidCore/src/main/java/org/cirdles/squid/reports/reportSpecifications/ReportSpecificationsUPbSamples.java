@@ -87,7 +87,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com208", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb*", "PCT",
+        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb*/206Pb*", "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
         {"", "4-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr ppm 206*", "",
@@ -123,7 +123,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "4-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238S", "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr err corr", "",
+        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr errcorrS", "",
             "", "true", "false", "6", "", "", "false", "false"
         }
     };
@@ -135,7 +135,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      *
      */
     public static final String[][] ReportCategory_207PbCorrected = new String[][]{
-        {"", "7-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr204Pb/206Pb", "",
+        {"", "7-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 204Pb/206Pb", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
         {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com206S", "",
@@ -144,11 +144,8 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com208S", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb*S", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb*S %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb*/206Pb*S", "PCT",
+            "", "true", "false", "6", "true", "", "false", "false"
         },
         {"", "7-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr ppm 206*", "",
             "", "true", "false", "6", "", "", "false", "false"
@@ -162,17 +159,11 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"207corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "207corr 208Pb/232Th Age", "ABS",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238S", "",
-            "", "true", "false", "6", "", "", "false", "false"
+        {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238S", "PCT",
+            "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238S %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208*/232", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208*/232 %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+        {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208*/232S", "PCT",
+            "", "true", "false", "6", "true", "", "false", "false"
         }
     };
 
@@ -184,7 +175,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      *
      */
     public static final String[][] ReportCategory_208PbCorrected = new String[][]{
-        {"", "8-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr204Pb/206Pb", "",
+        {"", "8-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 204Pb/206Pb", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
         {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr %com206S", "",
@@ -202,11 +193,8 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", EXP_8CORR_238_206_STAR, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*S", "",
-            "", "true", "false", "6", "", "", "false", "false"
-        },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*S %err", "",
-            "", "true", "false", "6", "", "", "false", "false"
+        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*S", "PCT",
+            "", "true", "false", "6", "true", "", "false", "false"
         },
         {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/235S", "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
@@ -214,7 +202,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238S", "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr err corr", "",
+        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr errcorrS", "",
             "", "true", "false", "6", "", "", "false", "false"
         }
     };
