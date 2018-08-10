@@ -76,11 +76,11 @@ public class TopsoilDataFactory {
         // default is for reference materials
         String ratioBase75 = " 207*/235";
         String ratioBase68 = " 206*/238";
-        String errCorr = "-errcorr";
+        String errCorr = " errcorr";
         if (isUnknown) {
             ratioBase75 = " 207*/235S";
             ratioBase68 = " 206*/238S";
-            errCorr = " err corr";
+            errCorr = " errcorrS";
         }
 
         try {

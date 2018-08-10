@@ -100,7 +100,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             }
         } else if (reportCategorySpecs[0][6].compareToIgnoreCase("<RATIOS_ARRAY>") == 0) {
             // special case of generation
-            Iterator<SquidRatiosModel> squidRatiosIterator = ((ShrimpFraction) task.getReferenceMaterialSpots().get(0)).getIsotopicRatiosII().iterator();
+            Iterator<SquidRatiosModel> squidRatiosIterator = ((ShrimpFraction) task.getUnknownSpots().get(0)).getIsotopicRatiosII().iterator();
             List<String[]> generatedReportCategorySpecsList = new ArrayList<>();
             while (squidRatiosIterator.hasNext()) {
                 SquidRatiosModel entry = squidRatiosIterator.next();
@@ -132,7 +132,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else if (reportCategorySpecs[0][6].compareToIgnoreCase("<RM_EXPRESSIONS_ARRAY>") == 0) {
             // special case of generation
             List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated
-                    = ((ShrimpFraction) task.getReferenceMaterialSpots().get(0)).getTaskExpressionsForScansEvaluated();
+                    = ((ShrimpFraction) task.getUnknownSpots().get(0)).getTaskExpressionsForScansEvaluated();
             List<String[]> generatedReportCategorySpecsList = new ArrayList<>();
             for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
                 
