@@ -391,22 +391,22 @@
                            <menus>
                               <Menu fx:id="pbBlankICFileMenu" mnemonicParsing="false" text="File">
                                  <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICImpXMLAction" text="Import Pb Blank IC Model from XML File" />
-                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICExpXMLAction" text="Export Pb Blank IC Model as XML File" />
+                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICImpXMLAction" text="Import Common Pb Model from XML File" />
+                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICExpXMLAction" text="Export Common Pb Model as XML File" />
                                     <SeparatorMenuItem mnemonicParsing="false" />
-                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICImpETReduxXMLAction" text="Import ETRedux Pb Blank IC Model" />
+                                    <MenuItem mnemonicParsing="false" onAction="#pbBlankICImpETReduxXMLAction" text="Import ETRedux Common Pb Model (aka Pb Blank IC Model)" />
                                  </items>
                               </Menu>
                               <Menu mnemonicParsing="false" text="Edit">
                                  <items>
-                                    <MenuItem fx:id="saveAndRegCurrBlankICIsEditableMenuItem" mnemonicParsing="false" onAction="#pbBlankICSaveAndRegisterEdit" text="Save and Register Current Edit of Pb Blank IC Model" />
-                                    <MenuItem fx:id="cancelEditOfPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICCancelEdit" text="Cancel Edit of Pb Blank IC Model" />
+                                    <MenuItem fx:id="saveAndRegCurrBlankICIsEditableMenuItem" mnemonicParsing="false" onAction="#pbBlankICSaveAndRegisterEdit" text="Save and Register Current Edit of Common Pb Model" />
+                                    <MenuItem fx:id="cancelEditOfPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICCancelEdit" text="Cancel Edit of Common Pb Model" />
                                     <SeparatorMenuItem mnemonicParsing="false" />
-                                    <MenuItem fx:id="remCurrPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICRemoveCurrMod" text="Remove Current Pb Blank IC Model from Lab Data (for editable models only)" />
+                                    <MenuItem fx:id="remCurrPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICRemoveCurrMod" text="Remove Current Common Pb Model from Lab Data (for editable models only)" />
                                     <SeparatorMenuItem mnemonicParsing="false" />
-                                    <MenuItem fx:id="editCurrPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditCurrMod" text="Edit Current Pb Blank IC Model (for editable models only)" />
-                                    <MenuItem fx:id="editCopyOfPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditCopy" text="Edit Copy of Current Pb Blank IC Model" />
-                                    <MenuItem fx:id="editNewEmptyPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditEmptyMod" text="Edit New Empty Pb Blank IC Model" />
+                                    <MenuItem fx:id="editCurrPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditCurrMod" text="Edit Current Common Pb Model (for editable models only)" />
+                                    <MenuItem fx:id="editCopyOfPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditCopy" text="Edit Copy of Current Common Pb Model" />
+                                    <MenuItem fx:id="editNewEmptyPbBlankIC" mnemonicParsing="false" onAction="#pbBlankICEditEmptyMod" text="Edit New Empty Common Pb Model" />
                                  </items>
                               </Menu>
                            </menus>

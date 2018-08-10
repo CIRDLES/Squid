@@ -38,7 +38,8 @@ import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -184,7 +185,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected PhysicalConstantsModel physicalConstantsModel;
     protected ReferenceMaterial referenceMaterial;
-    protected PbBlankICModel commonPbModel;
+    protected CommonPbModel commonPbModel;
 
     public Task() {
         this("New Task", null, null);
@@ -268,8 +269,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.physicalConstantsModel = new PhysicalConstantsModel();
         this.referenceMaterial = new ReferenceMaterial();
-        this.commonPbModel = new PbBlankICModel();
-        
+        this.commonPbModel = new CommonPbModel();
+
         generateConstants();
         generateParameters();
     }
@@ -2175,29 +2176,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return extPErr;
     }
 
-    public void setReferenceMaterial(ReferenceMaterial refMat) {
-        referenceMaterial = refMat;
+    public void setReferenceMaterial(ParametersModel refMat) {
+        if (refMat instanceof ReferenceMaterial) {
+            referenceMaterial = (ReferenceMaterial) refMat;
+        }
     }
 
     public ReferenceMaterial getReferenceMaterial() {
         return referenceMaterial;
     }
 
-    public void setPhysicalConstantsModel(PhysicalConstantsModel physConst) {
-        physicalConstantsModel = physConst;
+    public void setPhysicalConstantsModel(ParametersModel physConst) {
+        if (physConst instanceof PhysicalConstantsModel) {
+            physicalConstantsModel = (PhysicalConstantsModel) physConst;
+        }
     }
 
     public PhysicalConstantsModel getPhysicalConstantsModel() {
         return physicalConstantsModel;
     }
 
-    public PbBlankICModel getCommonPbModel() {
-        return commonPbModel;
+    public void setCommonPbModel(ParametersModel commonPbModel) {
+        if (commonPbModel instanceof CommonPbModel) {
+            this.commonPbModel = (CommonPbModel) commonPbModel;
+        }
     }
 
-    public void setCommonPbModel(PbBlankICModel commonPbModel) {
-        this.commonPbModel = commonPbModel;
+    public CommonPbModel getCommonPbModel() {
+        return commonPbModel;
     }
-    
 
 }

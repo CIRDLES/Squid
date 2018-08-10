@@ -162,7 +162,7 @@
               <items>
                 <MenuItem fx:id="openParametersManagerPhysConstMenuItem" mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Manage Physical Constants" />
                   <MenuItem fx:id="openParametersManagerRefMatMenuItem" mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Manage Reference Material Models" />
-                  <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPbBlankICModels" text="Manage Pb Blank IC Models" />
+                  <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPbBlankICModels" text="Manage Common Pb Models" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">

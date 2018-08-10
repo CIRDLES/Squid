@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
@@ -28,7 +28,7 @@ public class ETReduxPbBlankICConverter implements Converter {
 
     @Override
     public boolean canConvert(Class type) {
-        return type.equals(PbBlankICModel.class);
+        return type.equals(CommonPbModel.class);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ETReduxPbBlankICConverter implements Converter {
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        PbBlankICModel model = new PbBlankICModel();
+        CommonPbModel model = new CommonPbModel();
 
         reader.moveDown();
         model.setModelName(reader.getValue());

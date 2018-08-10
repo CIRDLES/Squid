@@ -26,7 +26,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
@@ -144,7 +144,7 @@ public class CalamariFileUtilities {
 
         }
 
-        ResourceExtractor pbBlankICResourceExtractor = new ResourceExtractor(PbBlankICModel.class);
+        ResourceExtractor pbBlankICResourceExtractor = new ResourceExtractor(CommonPbModel.class);
 
         Path listOfPbBlankICModels = pbBlankICResourceExtractor.extractResourceAsPath("listOfSamplePbBlankICModels.txt");
         if (listOfPbBlankICModels != null) {

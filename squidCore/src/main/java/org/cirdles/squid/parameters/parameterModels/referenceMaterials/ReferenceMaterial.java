@@ -145,20 +145,23 @@ public class ReferenceMaterial extends ParametersModel {
 
     public static List<ReferenceMaterial> getDefaultModels() {
         File folder = new File("SampleReferenceMaterials/");
-        File[] files = folder.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                boolean retVal;
-                if (name.toLowerCase().endsWith(".xml")) {
-                    retVal = true;
-                } else {
-                    retVal = false;
-                }
-                return retVal;
-            }
-        });
+        File[] files = new File[0];
         List<ReferenceMaterial> models = new ArrayList<>();
-        for (int i = 0; i < files.length; i++) {
-            models.add(ReferenceMaterial.getReferenceMaterialFromETReduxXML(files[i]));
+        if (folder.exists()) {
+            files = folder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    boolean retVal;
+                    if (name.toLowerCase().endsWith(".xml")) {
+                        retVal = true;
+                    } else {
+                        retVal = false;
+                    }
+                    return retVal;
+                }
+            });
+            for (int i = 0; i < files.length; i++) {
+                models.add(ReferenceMaterial.getReferenceMaterialFromETReduxXML(files[i]));
+            }
         }
 
         return models;

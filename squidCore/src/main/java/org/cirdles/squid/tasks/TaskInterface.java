@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.prawn.PrawnFile;
@@ -197,12 +198,12 @@ public interface TaskInterface {
 
     public void addExpression(Expression exp);
     
-    public void setReferenceMaterial(ReferenceMaterial refMat);
+    public void setReferenceMaterial(ParametersModel refMat);
     public ReferenceMaterial getReferenceMaterial();
-    public void setPhysicalConstantsModel(PhysicalConstantsModel physConst);
+    public void setPhysicalConstantsModel(ParametersModel physConst);
     public PhysicalConstantsModel getPhysicalConstantsModel();
-    public void setCommonPbModel(PbBlankICModel model);
-    public PbBlankICModel getCommonPbModel();
+    public void setCommonPbModel(ParametersModel model);
+    public CommonPbModel getCommonPbModel();
 
     /**
      * @param type the type to set

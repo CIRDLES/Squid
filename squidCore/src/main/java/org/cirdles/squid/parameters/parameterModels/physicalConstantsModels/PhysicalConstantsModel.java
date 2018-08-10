@@ -8,7 +8,6 @@ package org.cirdles.squid.parameters.parameterModels.physicalConstantsModels;
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import java.util.Map.Entry;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
@@ -97,20 +97,23 @@ public class PhysicalConstantsModel extends ParametersModel {
 
     public static List<PhysicalConstantsModel> getDefaultModels() {
         File folder = new File("SamplePhysicalConstantsModels/");
-        File[] files = folder.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                boolean retVal;
-                if (name.toLowerCase().endsWith(".xml")) {
-                    retVal = true;
-                } else {
-                    retVal = false;
-                }
-                return retVal;
-            }
-        });
+        File[] files = new File[0];
         List<PhysicalConstantsModel> models = new ArrayList<>();
-        for (int i = 0; i < files.length; i++) {
-            models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
+        if (folder.exists()) {
+            files = folder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    boolean retVal;
+                    if (name.toLowerCase().endsWith(".xml")) {
+                        retVal = true;
+                    } else {
+                        retVal = false;
+                    }
+                    return retVal;
+                }
+            });
+            for (int i = 0; i < files.length; i++) {
+                models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
+            }
         }
 
         return models;
@@ -163,11 +166,6 @@ public class PhysicalConstantsModel extends ParametersModel {
         xstream.registerConverter(new ETReduxPhysConstConverter());
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
         return xstream;
-    }
-
-    public static void main(String[] args) {
-        ObjectStreamClass stream = ObjectStreamClass.lookup(PhysicalConstantsModel.class);
-        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
     }
 
 }

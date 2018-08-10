@@ -50,7 +50,7 @@ import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataSt
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.PbBlankICModel;
+import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.DataDictionary;
@@ -232,12 +232,12 @@ public class parametersManagerGUIController implements Initializable {
     ReferenceMaterial refMatModel;
     ReferenceMaterial refMatHolder;
 
-    PbBlankICModel pbBlankICModel;
-    PbBlankICModel pbBlankICModelHolder;
+    CommonPbModel pbBlankICModel;
+    CommonPbModel pbBlankICModelHolder;
 
     List<PhysicalConstantsModel> physConstModels;
     List<ReferenceMaterial> refMatModels;
-    List<PbBlankICModel> pbBlankICModels;
+    List<CommonPbModel> pbBlankICModels;
 
     List<TextField> physConstReferences;
     List<TextField> molarMasses;
@@ -459,7 +459,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpPbBlankICCBItems() {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
-        for (PbBlankICModel mod : pbBlankICModels) {
+        for (CommonPbModel mod : pbBlankICModels) {
             cbList.add(getModVersionName(mod));
         }
         pbBlankICCB.setItems(cbList);
@@ -650,6 +650,9 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = refMatModel.getConcentrationByName(ratioName);
                 }
+                if (table.equals(pbBlankICDataTable)) {
+                    valMod = pbBlankICModel.getDatumByName(ratioName);
+                }
                 BigDecimal newValue = BigDecimal.ZERO;
                 if (Double.parseDouble(value.getNewValue()) != 0) {
                     newValue = new BigDecimal(value.getNewValue());
@@ -661,6 +664,9 @@ public class parametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
+                }
+                if (table.equals(pbBlankICDataTable)) {
+                    setUpPbBlankICCovariancesAndCorrelations();
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
@@ -685,6 +691,9 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = refMatModel.getConcentrationByName(ratioName);
                 }
+                if (table.equals(pbBlankICDataTable)) {
+                    valMod = pbBlankICModel.getDatumByName(ratioName);
+                }
                 BigDecimal newValue = BigDecimal.ZERO;
                 if (Double.parseDouble(value.getNewValue()) != 0) {
                     newValue = new BigDecimal(value.getNewValue());
@@ -697,6 +706,9 @@ public class parametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
+                }
+                if (table.equals(pbBlankICDataTable)) {
+                    setUpPbBlankICCovariancesAndCorrelations();
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
@@ -721,6 +733,9 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = refMatModel.getConcentrationByName(ratioName);
                 }
+                if (table.equals(pbBlankICDataTable)) {
+                    valMod = pbBlankICModel.getDatumByName(ratioName);
+                }
                 BigDecimal newValue = BigDecimal.ZERO;
                 if (Double.parseDouble(value.getNewValue()) != 0) {
                     newValue = new BigDecimal(value.getNewValue());
@@ -733,6 +748,9 @@ public class parametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
+                }
+                if (table.equals(pbBlankICDataTable)) {
+                    setUpPbBlankICCovariancesAndCorrelations();
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
@@ -988,28 +1006,36 @@ public class parametersManagerGUIController implements Initializable {
 
     private static String getRatioVisibleName(String ratio) {
         String retVal = ratio.replaceAll("lambda", "λ");
+
         retVal = retVal.replaceAll("r206_207r", "206-Pb/207-Pb");
         retVal = retVal.replaceAll("r206_208r", "206-Pb/208-Pb");
         retVal = retVal.replaceAll("r206_238r", "206-Pb/238-U");
         retVal = retVal.replaceAll("r208_232r", "208-Pb/232-Th");
         retVal = retVal.replaceAll("r238_235s", "238-U/235-U");
+
         retVal = retVal.replaceAll("r206_204b", "206-Pb/204-Pb");
         retVal = retVal.replaceAll("r207_204b", "207-Pb/204-Pb");
+        retVal = retVal.replaceAll("r207_206b", "207-Pb/206-Pb");
         retVal = retVal.replaceAll("r208_204b", "208-Pb/204-Pb");
+        retVal = retVal.replaceAll("r208_206b", "208-Pb/206-Pb");
 
         return retVal;
     }
 
     private static String getRatioHiddenName(String ratio) {
         String retVal = ratio.replaceAll("λ", "lambda");
+
         retVal = retVal.replaceAll("206-Pb/207-Pb", "r206_207r");
         retVal = retVal.replaceAll("206-Pb/208-Pb", "r206_208r");
         retVal = retVal.replaceAll("206-Pb/238-U", "r206_238r");
         retVal = retVal.replaceAll("208-Pb/232-Th", "r208_232r");
         retVal = retVal.replaceAll("238-U/235-U", "r238_235s");
+
         retVal = retVal.replaceAll("206-Pb/204-Pb", "r206_204b");
         retVal = retVal.replaceAll("207-Pb/204-Pb", "r207_204b");
+        retVal = retVal.replaceAll("207-Pb/206-Pb", "r207_206b");
         retVal = retVal.replaceAll("208-Pb/204-Pb", "r208_204b");
+        retVal = retVal.replaceAll("208-Pb/206-Pb", "r208_206b");
 
         return retVal;
     }
@@ -1738,7 +1764,7 @@ public class parametersManagerGUIController implements Initializable {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
         if (file != null) {
-            PbBlankICModel importedMod = (PbBlankICModel) pbBlankICModel.readXMLObject(file.getAbsolutePath(), false);
+            CommonPbModel importedMod = (CommonPbModel) pbBlankICModel.readXMLObject(file.getAbsolutePath(), false);
             importedMod.setIsEditable(true);
             pbBlankICModels.add(importedMod);
             pbBlankICCB.getItems().add(getModVersionName(importedMod));
@@ -1836,7 +1862,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private void pbBlankICEditEmptyMod(ActionEvent event) {
         isEditingPbBlankIC = true;
-        pbBlankICModel = new PbBlankICModel();
+        pbBlankICModel = new CommonPbModel();
         setUpPbBlankIC();
         pbBlankICModelEditable(true);
         setUpPbBlankICMenuItems(true, true);
@@ -1907,7 +1933,7 @@ public class parametersManagerGUIController implements Initializable {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
         if (file != null) {
-            PbBlankICModel importedMod = PbBlankICModel.getPbBlankICModelFromETReduxXML(file);
+            CommonPbModel importedMod = CommonPbModel.getPbBlankICModelFromETReduxXML(file);
             importedMod.setIsEditable(true);
             pbBlankICModels.add(importedMod);
             pbBlankICCB.getItems().add(getModVersionName(importedMod));
@@ -1918,10 +1944,10 @@ public class parametersManagerGUIController implements Initializable {
         }
         squidLabDataStage.requestFocus();
     }
-    
+
     private void setUpApparentDatesTabSelection() {
         apparentDatesTab.setOnSelectionChanged(value -> {
-            if(apparentDatesTab.isSelected() && isEditingRefMat) {
+            if (apparentDatesTab.isSelected() && isEditingRefMat) {
                 setUpApparentDates();
             }
         });

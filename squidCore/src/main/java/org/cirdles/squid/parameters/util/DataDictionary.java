@@ -49,7 +49,9 @@ public final class DataDictionary {
     public final static String[] earthTimePbBlankICRatioNames = new String[]{
         "r206_204b",
         "r207_204b",
-        "r208_204b"
+        "r207_206b",
+        "r208_204b",
+        "r208_206b"
     };
-    
+
 }

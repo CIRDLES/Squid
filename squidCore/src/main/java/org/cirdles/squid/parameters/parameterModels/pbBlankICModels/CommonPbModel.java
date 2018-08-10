@@ -25,26 +25,28 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
  *
  * @author ryanb
  */
-public class PbBlankICModel extends ParametersModel {
+public class CommonPbModel extends ParametersModel {
 
     private static long serialVersionUID = -5054855251006560667L;
 
-    public static PbBlankICModel defaultPbBlankICModel = getDefaultModel("EARTHTIME Example Pb Blank IC", "3.0");
+    public static CommonPbModel defaultPbBlankICModel = getDefaultModel("EARTHTIME Example Pb Blank IC", "3.0");
 
-    public PbBlankICModel() {
+    public CommonPbModel() {
         super();
         generateDefaultValueModels();
     }
 
     private void generateDefaultValueModels() {
-        values = new ValueModel[3];
+        values = new ValueModel[5];
         values[0] = new ValueModel("r206_204b");
         values[1] = new ValueModel("r207_204b");
-        values[2] = new ValueModel("r208_204b");
+        values[2] = new ValueModel("r207_206b");
+        values[3] = new ValueModel("r208_204b");
+        values[4] = new ValueModel("r208_206b");
     }
 
-    public PbBlankICModel clone() {
-        PbBlankICModel model = new PbBlankICModel();
+    public CommonPbModel clone() {
+        CommonPbModel model = new CommonPbModel();
 
         model.setModelName(modelName);
         model.setIsEditable(isEditable);
@@ -76,62 +78,65 @@ public class PbBlankICModel extends ParametersModel {
         return model;
     }
 
-    public static List<PbBlankICModel> getDefaultModels() {
+    public static List<CommonPbModel> getDefaultModels() {
         File folder = new File("SamplePbBlankICModels/");
-        File[] files = folder.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                boolean retVal;
-                if (name.toLowerCase().endsWith(".xml")) {
-                    retVal = true;
-                } else {
-                    retVal = false;
+        List<CommonPbModel> models = new ArrayList<>();
+        File[] files = new File[0];
+        if (folder.exists()) {
+            files = folder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    boolean retVal;
+                    if (name.toLowerCase().endsWith(".xml")) {
+                        retVal = true;
+                    } else {
+                        retVal = false;
+                    }
+                    return retVal;
                 }
-                return retVal;
+            });
+            for (int i = 0; i < files.length; i++) {
+                models.add(CommonPbModel.getPbBlankICModelFromETReduxXML(files[i]));
             }
-        });
-        List<PbBlankICModel> models = new ArrayList<>();
-        for (int i = 0; i < files.length; i++) {
-            models.add(PbBlankICModel.getPbBlankICModelFromETReduxXML(files[i]));
         }
 
         return models;
     }
 
-    public static PbBlankICModel getDefaultModel(String modelName, String version) {
-        PbBlankICModel retVal = null;
-        List<PbBlankICModel> models = getDefaultModels();
+    public static CommonPbModel getDefaultModel(String modelName, String version) {
+        CommonPbModel retVal = null;
+        List<CommonPbModel> models = getDefaultModels();
         for (int i = 0; i < models.size() && retVal == null; i++) {
             if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
                 retVal = models.get(i);
             }
         }
         if (retVal == null) {
-            retVal = new PbBlankICModel();
+            retVal = new CommonPbModel();
         }
         return retVal;
     }
 
-    public static PbBlankICModel getPbBlankICModelFromETReduxXML(String input) {
+    public static CommonPbModel getPbBlankICModelFromETReduxXML(String input) {
         XStream xstream = getETReduxXStream();
-        PbBlankICModel model = (PbBlankICModel) xstream.fromXML(input);
+        CommonPbModel model = (CommonPbModel) xstream.fromXML(input);
         return model;
     }
 
-    public static PbBlankICModel getPbBlankICModelFromETReduxXML(File input) {
+    public static CommonPbModel getPbBlankICModelFromETReduxXML(File input) {
         XStream xstream = getETReduxXStream();
-        PbBlankICModel model = (PbBlankICModel) xstream.fromXML(input);
+        CommonPbModel model = (CommonPbModel) xstream.fromXML(input);
         return model;
     }
 
     public static XStream getETReduxXStream() {
         XStream xstream = new XStream();
         xstream.registerConverter(new ETReduxPbBlankICConverter());
-        xstream.alias("PbBlankICModel", PbBlankICModel.class);
+        xstream.alias("PbBlankICModel", CommonPbModel.class);
         return xstream;
     }
 
     public static void main(String[] args) {
-        ObjectStreamClass stream = ObjectStreamClass.lookup(PbBlankICModel.class);
+        ObjectStreamClass stream = ObjectStreamClass.lookup(CommonPbModel.class);
         System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
     }
 

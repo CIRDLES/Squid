@@ -20,11 +20,11 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
  *
  * @author ryanb
  */
-public class PbBlankICModelConverter implements Converter {
+public class CommonPbModelConverter implements Converter {
     
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
-        PbBlankICModel model = (PbBlankICModel) o;
+        CommonPbModel model = (CommonPbModel) o;
 
         writer.startNode("modelName");
         writer.setValue(model.getModelName());
@@ -65,7 +65,7 @@ public class PbBlankICModelConverter implements Converter {
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        PbBlankICModel model = new  PbBlankICModel();
+        CommonPbModel model = new  CommonPbModel();
 
         reader.moveDown();
         model.setModelName(reader.getValue());
@@ -131,6 +131,6 @@ public class PbBlankICModelConverter implements Converter {
 
     @Override
     public boolean canConvert(Class type) {
-        return type.equals(PbBlankICModel.class);
+        return type.equals(CommonPbModel.class);
     }
 }
