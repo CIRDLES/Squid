@@ -1060,8 +1060,14 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
-        writeAndOpenReportTableFiles(report, "ReferenceMaterialReportTable.csv");
+        if (squidProject.getTask().getReferenceMaterialSpots().size() > 0) {
+            String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
+            writeAndOpenReportTableFiles(report, "ReferenceMaterialReportTable.csv");
+        } else {
+            SquidMessageDialog.showWarningDialog(
+                    "There are no reference materials chosen.\n\n",
+                    primaryStageWindow);
+        }
     }
     
     @FXML

@@ -134,7 +134,7 @@ public final class Squid3Constants {
         }
 
         public String getIsotopeCorrectionPrefixString() {
-            return isotope.substring(2, 3) + "-corr";
+            return isotope.substring(2, 3) + "-corr ";
         }
 
     }

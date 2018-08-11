@@ -444,6 +444,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         // the first six (FRACTION_DATA_START_ROW) rows are provided for naming and formats
         String[][] retVal
                 = new String[fractions.size() + FRACTION_DATA_START_ROW][];
+        
         // column 0 will contain true for included fractions and false for rejected fractions
         // column 1 will contain aliquot name
 

@@ -74,10 +74,10 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"", "204", "/206", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204/206 (fr. 208)", "",
             "", "true", "true", "6", "true", "", "false", "false"
         },
-        {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corrPrimary calib const. delta%", "",
+        {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr Primary calib const. delta%", "",
             "", "true", "true", "3", "true", "", "false", "false"
         },
-        {"8-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corrPrimary calib const. delta%", "",
+        {"8-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr Primary calib const. delta%", "",
             "", "true", "true", "3", "true", "", "false", "false"
         },
         {"", "", "UncorrPb", "/Uconst", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PRIMARY_UTH_EQN_NAME_U, "PCT",
@@ -106,10 +106,10 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"4-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb/232Th Age", "ABS",
             "", "true", "false", "4", "true", "", "false", "false"
         },
-        {"4-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corrTotal 206Pb/238U", "PCT",
+        {"4-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr Total 206Pb/238U", "PCT",
             "", "true", "false", "4", "true", "", "false", "false"
         },
-        {"4-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corrTotal 208Pb/232Th", "PCT",
+        {"4-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr Total 208Pb/232Th", "PCT",
             "", "true", "false", "4", "true", "", "false", "false"
         },
         {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com206", "",
@@ -118,10 +118,10 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com208", "",
             "", "true", "false", "3", "", "", "false", "false"
         },
-        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr208Pb*/206Pb*", "PCT",
+        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb*/206Pb*", "PCT",
             "", "true", "false", "4", "true", "", "false", "false"
         },
-        {"4-corr", "207Pb", "206Pb", "age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr207Pb/206Pbage", "ABS",
+        {"4-corr", "207Pb", "206Pb", "age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207Pb/206Pb age", "ABS",
             "", "true", "false", "3", "true", "", "false", "false"
         },
         {"", "4-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207Pb/206Pb", "PCT",
@@ -133,7 +133,7 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"", "4-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238", "PCT",
             "", "true", "false", "4", "true", "", "false", "false"
         },
-        {"", "4-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr-errcorr", "",
+        {"", "4-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr errcorr", "",
             "", "true", "false", "3", "", "", "false", "false"
         }
     };
@@ -157,10 +157,10 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"7-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb/232Th Age", "ABS",
             "", "true", "false", "4", "true", "", "false", "false"
         },
-        {"7-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corrTotal 206Pb/238U", "PCT",
+        {"7-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr Total 206Pb/238U", "PCT",
             "", "true", "false", "4", "true", "", "false", "false"
         },
-        {"7-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corrTotal 208Pb/232Th", "PCT",
+        {"7-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr Total 208Pb/232Th", "PCT",
             "", "true", "false", "4", "true", "", "false", "false"
         },
         {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com206", "",
@@ -169,11 +169,8 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com208", "",
             "", "true", "false", "3", "", "", "false", "false"
         },
-        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb*", "",
-            "", "true", "false", "4", "", "", "false", "false"
-        },
-        {"", "", "%", "err", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr208Pb*/206Pb* %err", "",
-            "", "true", "false", "3", "", "", "false", "false"
+        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb*/206Pb*", "PCT",
+            "", "true", "false", "4", "true", "", "false", "false"
         },
         {"", "7-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238", "PCT",
             "", "true", "false", "4", "true", "", "false", "false"
@@ -194,7 +191,7 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206Pb/238U Age", "ABS",
             "", "true", "true", "0", "true", "", "false", "false"
         },
-        {"8-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corrTotal 206Pb/238U", "PCT",
+        {"8-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr Total 206Pb/238U", "PCT",
             "", "true", "false", "4", "true", "", "false", "false"
         },
         {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr %com206", "",
@@ -212,7 +209,7 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238", "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "8-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr-errcorr", "",
+        {"", "8-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr errcorr", "",
             "", "true", "false", "3", "", "", "false", "false"
         }
     };
