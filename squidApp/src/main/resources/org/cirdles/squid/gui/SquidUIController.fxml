@@ -71,12 +71,12 @@
             </Menu>
             <Menu fx:id="parametersMenu" mnemonicParsing="false" text="Parameters">
                <items>
-                  <Menu fx:id="referenceMaterialsMenu" mnemonicParsing="false" text="Reference Material Models">
+                  <Menu fx:id="physicalConstantsModelsMenu" mnemonicParsing="false" text="Physical Constants Models">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
                   </Menu>
-                  <Menu fx:id="physicalConstantsModelsMenu" mnemonicParsing="false" text="Physical Constants Models">
+                  <Menu fx:id="referenceMaterialsMenu" mnemonicParsing="false" text="Reference Material Models">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
