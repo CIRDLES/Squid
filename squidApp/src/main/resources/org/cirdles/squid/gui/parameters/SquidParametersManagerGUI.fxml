@@ -8,6 +8,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
@@ -63,7 +64,7 @@
                                                 <HBox alignment="CENTER" spacing="5.0">
                                                    <children>
                                                                     <Label text="SigFigs:" />
-                                                                    <TextField fx:id="physConstDataSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="physConstDataSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -83,7 +84,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                    <children>
                                                                     <Label text="SigFigs:" />
-                                                                    <TextField fx:id="physConstCorrSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="physConstCorrSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                                               <Label text="Correlations | Note: correlation matrix is positive definite" />
@@ -104,7 +105,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                    <children>
                                                                     <Label text="SigFigs:" />
-                                                                    <TextField fx:id="physConstCovSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="physConstCovSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                                               <Label text="Covariances | Note: covariance matrix is positive definite" />
@@ -242,7 +243,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                    <children>
                                                                     <Label text="Sig Figs:" />
-                                                                    <TextField fx:id="refMatDataSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="refMatDataSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -262,7 +263,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                    <children>
                                                                     <Label text="SigFigs:" />
-                                                                    <TextField fx:id="refMatCorrSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="refMatCorrSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                                               <Label text="Correlations | Note: correlations matrix is positive definite" />
@@ -283,7 +284,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                    <children>
                                                                     <Label text="SigFigs:" />
-                                                                    <TextField fx:id="refMatCovSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="refMatCovSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                                               <Label text="Covariances | Note: covariances matrix is positive definite" />
@@ -304,7 +305,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                    <children>
                                                                     <Label text="SigFigs:" />
-                                                                    <TextField fx:id="refMatConcSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="refMatConcSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -424,7 +425,7 @@
                                                 <HBox alignment="CENTER" spacing="5.0">
                                                    <children>
                                                       <Label text="SigFigs:" />
-                                                      <TextField fx:id="pbBlankICDataSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="pbBlankICDataSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -444,7 +445,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                    <children>
                                                       <Label text="SigFigs:" />
-                                                      <TextField fx:id="pbBlankICCorrSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="pbBlankICCorrSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                                 <Label text="Correlations | Note: correlation matrix is positive definite" />
@@ -465,7 +466,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                    <children>
                                                       <Label text="SigFigs:" />
-                                                      <TextField fx:id="pbBlankICCovSigFigs" prefHeight="26.0" prefWidth="40.0" text="6" />
+                                                      <Spinner fx:id="pbBlankICCovSigFigs" prefWidth="80.0" />
                                                    </children>
                                                 </HBox>
                                                 <Label text="Covariances | Note: covariance matrix is positive definite" />
