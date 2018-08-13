@@ -34,6 +34,7 @@ import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
@@ -41,7 +42,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -67,7 +70,7 @@ public class PlotsController implements Initializable {
     @FXML
     private ToolBar plotToolBar;
     @FXML
-    private TreeView<SampleTreeNodeInterface> spotsTreeView;
+    private TreeView<?> spotsTreeView;
 
     private static ObservableList<SampleTreeNodeInterface> fractionNodes;
     private static PlotDisplayInterface rootPlot;
@@ -147,7 +150,7 @@ public class PlotsController implements Initializable {
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getUnknownSpots();
             mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
             // case of no sample names chosen
-            if (mapOfSpotsBySampleNames.size() == 0){
+            if (mapOfSpotsBySampleNames.size() == 0) {
                 mapOfSpotsBySampleNames.put("Super Sample", allUnknownOrRefMatShrimpFractions);
             }
         } else {
@@ -188,7 +191,7 @@ public class PlotsController implements Initializable {
         rootItem.setExpanded(true);
         rootItem.setIndependent(true);
         rootItem.setSelected(true);
-        spotsTreeView.setRoot(rootItem);
+        ((TreeView<SampleTreeNodeInterface>) spotsTreeView).setRoot(rootItem);
         spotsTreeView.setShowRoot(true);
 
         dataSets = new TreeMap<>();
@@ -244,7 +247,7 @@ public class PlotsController implements Initializable {
 
         fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
 
-        spotsTreeView.setCellFactory(p -> new CheckBoxTreeCell<>(
+        ((TreeView<SampleTreeNodeInterface>) spotsTreeView).setCellFactory(p -> new CheckBoxTreeCell<>(
                 (TreeItem<SampleTreeNodeInterface> item) -> ((ConcordiaFractionNode) item.getValue()).getSelectedProperty(),
                 new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
 
@@ -262,25 +265,28 @@ public class PlotsController implements Initializable {
     }
 
     private void refreshConcordiaPlot() {
-
         if (chosenSample.isSelected()) {
-            topsoilPlotNode = plot.displayPlotAsNode();
-            plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
-            AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
-            AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
-            AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
-            AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
-
-            VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
-            VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
-            VBox.setVgrow(plotVBox, Priority.ALWAYS);
-
-            plotToolBar.getItems().clear();
-            plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
-            plotToolBar.setPadding(Insets.EMPTY);
+            refreshPlot();
         } else {
             plotAndConfigAnchorPane.getChildren().clear();
         }
+    }
+
+    private void refreshPlot() {
+        topsoilPlotNode = plot.displayPlotAsNode();
+        plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
+        AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
+        AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
+        AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
+        AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+
+        VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
+        VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
+        VBox.setVgrow(plotVBox, Priority.ALWAYS);
+
+        plotToolBar.getItems().clear();
+        plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
+        plotToolBar.setPadding(Insets.EMPTY);
     }
 
     private void showWeightedMeanPlot() {
@@ -300,67 +306,95 @@ public class PlotsController implements Initializable {
                 correction + " " + calibrConstAgeBaseName + " Age",
                 squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get("StdAgeUPb").getValues()[0][0]);//559.1 * 1e6);
 
-        Node plotNode = plot.displayPlotAsNode();
-
-        plotAndConfigAnchorPane.getChildren().setAll(plotNode);
-        AnchorPane.setLeftAnchor(plotNode, 0.0);
-        AnchorPane.setRightAnchor(plotNode, 0.0);
-        AnchorPane.setTopAnchor(plotNode, 0.0);
-        AnchorPane.setBottomAnchor(plotNode, 0.0);
-
-        VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
-        VBox.setVgrow(plotNode, Priority.ALWAYS);
-        VBox.setVgrow(plotVBox, Priority.ALWAYS);
-
-        plotToolBar.getItems().clear();
-        plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
-        plotToolBar.setPadding(Insets.EMPTY);
+        refreshPlot();
 
         List<ShrimpFractionExpressionInterface> shrimpFractionsDetails
                 = spotSummaryDetails.getSelectedSpots();
-        List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
+        List<SampleTreeNodeInterface> fractionNodeDetailsWM = new ArrayList<>();
         rootData = new ArrayList<>();
 
         for (int i = 0; i < shrimpFractionsDetails.size(); i++) {
-            WeightedMeanFractionNode fractionNode
-                    = new WeightedMeanFractionNode(shrimpFractionsDetails.get(i), spotSummaryDetails.getRejectedIndices());
-            fractionNodeDetails.add(fractionNode);
+            WeightedMeanFractionNode fractionNodeWM
+                    = new WeightedMeanFractionNode(shrimpFractionsDetails.get(i), i);
+            fractionNodeDetailsWM.add(fractionNodeWM);
         }
 
-        fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
+        fractionNodes = FXCollections.observableArrayList(fractionNodeDetailsWM);
 
-        CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
-                = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
-        rootItem.setExpanded(true);
+        TreeItem<?> rootItemWM;
+        if (spotSummaryDetails.isManualRejectionEnabled()) {
+            rootItemWM
+                    = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
 
-        spotsTreeView.setCellFactory(p -> new CheckBoxTreeCell<>(
-                (TreeItem<SampleTreeNodeInterface> item) -> ((WeightedMeanFractionNode) item.getValue()).getSelectedProperty(),
-                new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
+            ((TreeView<SampleTreeNodeInterface>) spotsTreeView).setCellFactory(p -> new CheckBoxTreeCell<>(
+                    (TreeItem<SampleTreeNodeInterface> item) -> ((WeightedMeanFractionNode) item.getValue()).getSelectedProperty(),
+                    new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
 
-            @Override
-            public String toString(TreeItem<SampleTreeNodeInterface> object) {
-                SampleTreeNodeInterface item = object.getValue();
-                return item.getNodeName();
-            }
+                @Override
+                public String toString(TreeItem<SampleTreeNodeInterface> object) {
+                    SampleTreeNodeInterface item = object.getValue();
+                    return item.getNodeName();
+                }
 
-            @Override
-            public TreeItem<SampleTreeNodeInterface> fromString(String string) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }));
+                @Override
+                public TreeItem<SampleTreeNodeInterface> fromString(String string) {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+            }));
+            ((TreeView<SampleTreeNodeInterface>) spotsTreeView).setRoot((CheckBoxTreeItem<SampleTreeNodeInterface>) rootItemWM);
+        } else {
+            rootItemWM
+                    = new TreeItem<String>(squidProject.getFilterForRefMatSpotNames());
+            ((TreeView<String>) spotsTreeView).setRoot((TreeItem<String>) rootItemWM);
 
-        for (int i = 0; i < fractionNodes.size(); i++) {
-            final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
-                    = new CheckBoxTreeItem<>(fractionNodes.get(i));
-            rootItem.getChildren().add(checkBoxTreeItem);
+            ((TreeView<String>) spotsTreeView).setCellFactory(tv -> new TreeCell<String>() {
 
-            checkBoxTreeItem.setSelected(!((WeightedMeanFractionNode) fractionNodes.get(i)).getRejected(i));
-            checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                ((ConcordiaFractionNode) checkBoxTreeItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
-                plot.setData(rootData);
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("");
+                        setStyle(null);
+                    } else {
+                        if (item.startsWith("*")) {
+                            setText(item.replaceFirst("\\*", ""));
+                            setStyle("-fx-background-color: #aeccff;");
+                        } else {
+                            setText(item);
+                            setStyle("-fx-background-color: #ffb1bd;");
+                        }
+                    }
+                }
+
             });
         }
-        spotsTreeView.setRoot(rootItem);
+        rootItemWM.setExpanded(true);
+
+        for (int i = 0; i < fractionNodes.size(); i++) {
+            if (spotSummaryDetails.isManualRejectionEnabled()) {
+                final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItemWM
+                        = new CheckBoxTreeItem<>(fractionNodes.get(i));
+                ((CheckBoxTreeItem<SampleTreeNodeInterface>) rootItemWM).getChildren().add(checkBoxTreeItemWM);
+
+                checkBoxTreeItemWM.setSelected(!spotSummaryDetails.getRejectedIndices()[i]);
+                checkBoxTreeItemWM.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    ((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+                    spotSummaryDetails.setIndexOfRejectedIndices(((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue())
+                            .getIndexInRejected(), !newValue);
+                    try {
+                        spotSummaryDetails.setValues(spotSummaryDetails.eval(squidProject.getTask()));
+                    } catch (SquidException squidException) {
+                    }
+                    refreshPlot();
+                });
+            } else {
+                boolean rejected = spotSummaryDetails.getRejectedIndices()[i];
+                final TreeItem<String> TreeItemWM
+                        = new TreeItem<>((rejected ? "*" : "") + fractionNodes.get(i).getNodeName());
+
+                ((TreeItem<String>) rootItemWM).getChildren().add(TreeItemWM);
+            }
+        }
         spotsTreeView.setShowRoot(true);
     }
 
@@ -515,26 +549,20 @@ public class PlotsController implements Initializable {
 
     private class WeightedMeanFractionNode implements SampleTreeNodeInterface {
 
-        /**
-         * @return the rejected
-         */
-        public boolean getRejected(int index) {
-            return rejected[index];
-        }
-
         private ShrimpFractionExpressionInterface shrimpFraction;
         private SimpleBooleanProperty selectedProperty;
-        private boolean[] rejected;
+        private int indexInRejected;
 
-        public WeightedMeanFractionNode(ShrimpFractionExpressionInterface shrimpFraction, boolean[] rejected) {
+        public WeightedMeanFractionNode(ShrimpFractionExpressionInterface shrimpFraction, int indexInRejected) {
             this.shrimpFraction = shrimpFraction;
             this.selectedProperty = new SimpleBooleanProperty(shrimpFraction.isSelected());
-            this.rejected = rejected;
+            this.indexInRejected = indexInRejected;
         }
 
         /**
          * @return the shrimpFraction
          */
+        @Override
         public ShrimpFractionExpressionInterface getShrimpFraction() {
             return shrimpFraction;
         }
@@ -542,6 +570,7 @@ public class PlotsController implements Initializable {
         /**
          * @return the selectedProperty
          */
+        @Override
         public SimpleBooleanProperty getSelectedProperty() {
             return selectedProperty;
         }
@@ -549,6 +578,7 @@ public class PlotsController implements Initializable {
         /**
          * @param selectedProperty the selectedProperty to set
          */
+        @Override
         public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
             this.selectedProperty = selectedProperty;
             this.shrimpFraction.setSelected(selectedProperty.getValue());
@@ -558,5 +588,10 @@ public class PlotsController implements Initializable {
         public String getNodeName() {
             return shrimpFraction.getFractionID();
         }
+
+        public int getIndexInRejected() {
+            return indexInRejected;
+        }
+
     }
 }
