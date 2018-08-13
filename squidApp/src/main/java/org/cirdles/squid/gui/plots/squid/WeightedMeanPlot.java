@@ -15,11 +15,15 @@
  */
 package org.cirdles.squid.gui.plots.squid;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -49,6 +53,8 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     private double standardAge;
 
+    private int indexOfSelectedSpot;
+
     public WeightedMeanPlot(Rectangle bounds, String plotTitle, SpotSummaryDetails spotSummaryDetails, String ageLookupString, double standardAge) {
         super(bounds, 0, 0);
         this.plotTitle = plotTitle;
@@ -57,8 +63,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         extractFractionDetails(ageLookupString);
 
         this.standardAge = standardAge;
-
+        this.indexOfSelectedSpot = -1;
         setOpacity(1.0);
+
+        this.setOnMouseClicked(new MouseClickEventHandler());
     }
 
     private void extractFractionDetails(String ageLookupString) {
@@ -75,6 +83,29 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         weightedMeanStats = spotSummaryDetails.getValues()[0];
+    }
+
+    private class MouseClickEventHandler implements EventHandler<MouseEvent> {
+
+        @Override
+        public void handle(MouseEvent mouseEvent) {
+            indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
+            repaint();
+        }
+    }
+
+    private int indexOfSpotFromMouseX(double x) {
+        double convertedX = convertMouseXToValue(x);
+        int index = -1;
+        // look up index
+        for (int i = 0; i < myOnPeakNormalizedAquireTimes.length; i++) {
+            if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[i]) < 0.5)) {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
     }
 
     /**
@@ -100,7 +131,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.fillText(plotTitle, 45, 45);
 
         g2d.setFill(Paint.valueOf("Blue"));
-        
+
         int rightOfText = 400;
         Text text = new Text("Wtd Mean of Ref Mat Pb/U calibr.");
         text.setFont(Font.font("Lucida Sans", 15));
@@ -227,7 +258,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         g2d.setFont(Font.font("Lucida Sans", 15));
-        
+
         // Y - label
         text.setText("Ref Mat Age (Ma)");
         g2d.rotate(-90);
@@ -238,6 +269,27 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         text.setText("Hours");
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 35);
+
+        // provide highlight and info about selected spot
+        g2d.setFont(Font.font("Lucida Sans", 12));
+        if (indexOfSelectedSpot >= 0) {
+            // gray spot rectangle
+            g2d.setFill(Color.rgb(0, 0, 0, 0.2));
+            g2d.fillRect(
+                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - 6,
+                    mapY(maxY) - 20,
+                    12,
+                    graphHeight + 40);
+            g2d.setFill(Paint.valueOf("BLACK"));
+            Text spotID = new Text(shrimpFractions.get(indexOfSelectedSpot).getFractionID());
+            spotID.applyCss();
+            g2d.fillText(
+                    shrimpFractions.get(indexOfSelectedSpot).getFractionID()
+                    + "  Age = " + new BigDecimal(myOnPeakData[indexOfSelectedSpot]).movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
+                    + " ±" + new BigDecimal(onPeakTwoSigma[indexOfSelectedSpot]).movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + " Ma",
+                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - spotID.getLayoutBounds().getWidth(),
+                    mapY(minY) + 35 + spotID.getLayoutBounds().getHeight());
+        }
 
     }
 
@@ -261,7 +313,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         minX = myOnPeakNormalizedAquireTimes[0];
         maxX = myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1];
         ticsX = TicGeneratorForAxes.generateTics(minX, maxX, (int) (graphWidth / 50.0));
-        double xMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minX, maxX, 0.005);
+        double xMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minX, maxX, 0.05);
         minX -= xMarginStretch;
         maxX += xMarginStretch;
 
@@ -283,76 +335,13 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     @Override
     public List<Node> toolbarControlsFactory() {
-        List<Node> controls = new ArrayList<>();//        super.toolbarControlsFactory();
-//
-//        CheckBox ellipsesCheckBox = new CheckBox("Ellipses");
-//        ellipsesCheckBox.setSelected(true);
-//        ellipsesCheckBox.setOnAction(mouseEvent -> {
-//            plot.setProperty(ELLIPSES, ellipsesCheckBox.isSelected());
-//        });
-//
-//        ChoiceBox<SigmaPresentationModes> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(SigmaPresentationModes.values()));
-//        uncertaintyChoiceBox.setValue(SigmaPresentationModes.TWO_SIGMA_ABSOLUTE);
-//        uncertaintyChoiceBox.setConverter(new StringConverter<SigmaPresentationModes>() {
-//            @Override
-//            public String toString(SigmaPresentationModes object) {
-//                return object.getDisplayName();
-//            }
-//
-//            @Override
-//            public SigmaPresentationModes fromString(String string) {
-//                return null;
-//            }
-//        });
-//        uncertaintyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SigmaPresentationModes>() {
-//            @Override
-//            public void changed(ObservableValue observable, SigmaPresentationModes oldValue, SigmaPresentationModes newValue) {
-//                plot.setProperty(UNCERTAINTY, newValue.getSigmaMultiplier());
-//            }
-//        });
-//
-//        ColorPicker ellipsesColorPicker = new ColorPicker(Color.RED);
-//        ellipsesColorPicker.setStyle(COLORPICKER_CSS_STYLE_SPECS);
-//        ellipsesColorPicker.setPrefWidth(100);
-//        ellipsesColorPicker.setOnAction(mouseEvent -> {
-//            // to satisfy D3
-//            plot.setProperty(ELLIPSE_FILL_COLOR, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
-//        });
-//
-//        CheckBox concordiaLineCheckBox = new CheckBox("Concordia");
-//        concordiaLineCheckBox.setSelected(true);
-//        concordiaLineCheckBox.setOnAction(mouseEvent -> {
-//            plot.setProperty(CONCORDIA_LINE, concordiaLineCheckBox.isSelected());
-//        });
-//
-//        CheckBox regressionUnctEnvelopeCheckBox = new CheckBox("2D Regression Unct");
-//        regressionUnctEnvelopeCheckBox.setSelected(false);
-//        regressionUnctEnvelopeCheckBox.setOnAction(mouseEvent -> {
-//            plot.setProperty(REGRESSION_ENVELOPE, regressionUnctEnvelopeCheckBox.isSelected());
-//        });
-//
-//        CheckBox regressionCheckBox = new CheckBox("2D Regression");
-//        regressionCheckBox.setSelected(false);
-//        regressionUnctEnvelopeCheckBox.setDisable(true);
-//        regressionCheckBox.setOnAction(mouseEvent -> {
-//            boolean isRegression = regressionCheckBox.isSelected();
-//            plot.setProperty(REGRESSION_LINE, isRegression);
-//            regressionUnctEnvelopeCheckBox.setDisable(!isRegression);
-//        });
-//
-//        controls.add(ellipsesCheckBox);
-//        controls.add(uncertaintyChoiceBox);
-//        controls.add(ellipsesColorPicker);
-//        controls.add(concordiaLineCheckBox);
-//        controls.add(regressionCheckBox);
-//        controls.add(regressionUnctEnvelopeCheckBox);
+        List<Node> controls = new ArrayList<>();
 
         return controls;
     }
 
     @Override
-    public void setData(List<Map<String, Object>> data
-    ) {
+    public void setData(List<Map<String, Object>> data) {
         //plot.setData(data);
     }
 
