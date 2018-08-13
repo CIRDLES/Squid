@@ -59,7 +59,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_TH, "",
             "", "true", "false", "20", "", "concentration of Th", "false", "false"
         },
-        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME, "PCT",
+        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "<SQUID_TH_U_EQN_NAME>", "PCT",
             "", "true", "false", "20", "true", "232/238 ratio", "false", "false"
         },
         {"204", "overcts", "/sec", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204 overcts/sec (fr. 207)", "",

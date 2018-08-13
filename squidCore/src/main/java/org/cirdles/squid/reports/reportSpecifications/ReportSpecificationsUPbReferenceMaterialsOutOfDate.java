@@ -30,7 +30,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  *
  * @author James F. Bowring
  */
-public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificationsAbstract {
+public class ReportSpecificationsUPbReferenceMaterialsOutOfDate extends ReportSpecificationsAbstract {
 
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,

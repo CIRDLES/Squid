@@ -269,7 +269,7 @@ public abstract class BuiltInExpressionsFactory {
             String exp238 = "( EXP ( Lambda238 * [\"4-corr 206Pb/238U Age\"] ) - 1 )";
             String exp232 = "( EXP ( Lambda232 * [\"4-corr 208Pb/232Th Age\"] ) - 1 )";
 
-            Expression expression4corrSQUID_TH_U_EQN_NAME = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME,
+            Expression expression4corrSQUID_TH_U_EQN_NAME = buildExpression("4-corr " + SQUID_TH_U_EQN_NAME,
                     "ValueModel("
                     + "[\"4-corr 208Pb*/206Pb*\"] * " + exp238 + " / " + exp232 + ","
                     + "SQRT( [%\"4-corr 208Pb*/206Pb*\"]^2 + \n"
@@ -282,7 +282,7 @@ public abstract class BuiltInExpressionsFactory {
             exp238 = "( EXP ( Lambda238 * [\"7-corr 206Pb/238U Age\"] ) - 1 )";
             exp232 = "( EXP ( Lambda232 * [\"7-corr 208Pb/232Th Age\"] ) - 1 )";
 
-            Expression expression7corrSQUID_TH_U_EQN_NAME = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME,
+            Expression expression7corrSQUID_TH_U_EQN_NAME = buildExpression("7-corr " + SQUID_TH_U_EQN_NAME,
                     "ValueModel([\"7-corr 208Pb*/206Pb*\"] * " + exp238 + " / " + exp232 + ","
                     + "SQRT( [%\"7-corr 208Pb*/206Pb*\"]^2 + \n"
                     + "[%\"7-corr 206Pb/238Ucalibr.const\"]^2 + \n"
@@ -291,7 +291,7 @@ public abstract class BuiltInExpressionsFactory {
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAME);
 
             // for samples
-            Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME_S,
+            Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression("4-corr " + SQUID_TH_U_EQN_NAME_S,
                     "ValueModel("
                     + "[\"208/206\"] * [\"4-corr Total 206Pb/238US\"] / [\"4-corr Total 208Pb/232ThS\"],"
                     + "SQRT( [%\"208/206\"]^2 + [%\"4-corr Total 206Pb/238US\"]^2 + \n"
@@ -299,7 +299,7 @@ public abstract class BuiltInExpressionsFactory {
                     + "false)", false, true, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAMEs);
 
-            Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME_S,
+            Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression("7-corr " + SQUID_TH_U_EQN_NAME_S,
                     "ValueModel("
                     + "[\"208/206\"] * [\"7-corr Total 206Pb/238US\"] / [\"7-corr Total 208Pb/232ThS\"],"
                     + "SQRT( [%\"208/206\"]^2 + [%\"7-corr Total 206Pb/238US\"]^2 + \n"

@@ -30,6 +30,7 @@ import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 
 /**
  *
@@ -135,7 +136,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                     = ((ShrimpFraction) task.getUnknownSpots().get(0)).getTaskExpressionsForScansEvaluated();
             List<String[]> generatedReportCategorySpecsList = new ArrayList<>();
             for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
-                
+
                 if ((!taskExpressionEval.getExpression().isSquidSpecialUPbThExpression())
                         && (taskExpressionEval.getExpression().isSquidSwitchSTReferenceMaterialCalculation())) {
                     // Report column order =
@@ -164,10 +165,105 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                 categoryColumns[i] = SetupReportColumn(i, generatedReportCategorySpecsList.get(i));
             }
         } else {
-            categoryColumns = new ReportColumn[reportCategorySpecs.length];
-            for (int i = 0; i < categoryColumns.length; i++) {
-                categoryColumns[i] = SetupReportColumn(i, reportCategorySpecs[i]);
+
+            List<ReportColumnInterface> categoryColumnList = new ArrayList<>();
+            int colIndex = 0;
+
+            for (int specIndex = 0; specIndex < reportCategorySpecs.length; specIndex++) {
+
+                if (reportCategorySpecs[specIndex][6].compareToIgnoreCase("<SQUID_TH_U_EQN_NAME>") == 0) {
+                    // special case of generation
+                    boolean has232 = task.getParentNuclide().contains("232");
+                    boolean isDirect = task.isDirectAltPD();
+                    String[] columnSpec;
+                    // perm1 and 3
+                    if (!isDirect) {
+                        columnSpec = new String[]{
+                            "",
+                            "204corr",
+                            "232Th",
+                            "/238U",
+                            "",
+                            reportCategorySpecs[specIndex][5],
+                            SQUID_TH_U_EQN_NAME,
+                            "PCT",
+                            "", "true", "false", "20", "true", "232/238 ratio", "false", "false"
+                        };
+                        categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                        colIndex++;
+
+                        columnSpec = new String[]{
+                            "",
+                            "207corr",
+                            "232Th",
+                            "/238U",
+                            "",
+                            reportCategorySpecs[specIndex][5],
+                            SQUID_TH_U_EQN_NAME,
+                            "PCT",
+                            "", "true", "false", "20", "true", "232/238 ratio", "false", "false"
+                        };
+                        categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                        colIndex++;
+
+                        // perm 1 only
+                        if (!has232) {
+                            columnSpec = new String[]{
+                                "",
+                                "208corr",
+                                "232Th",
+                                "/238U",
+                                "",
+                                reportCategorySpecs[specIndex][5],
+                                SQUID_TH_U_EQN_NAME,
+                                "PCT",
+                                "", "true", "false", "20", "true", "232/238 ratio", "false", "false"
+                            };
+                            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                            colIndex++;
+                        }
+                    } else {
+                        // perm2 and 4
+                        columnSpec = new String[]{
+                            "",
+                            "204corr",
+                            "232Th",
+                            "/238U",
+                            "",
+                            reportCategorySpecs[specIndex][5],
+                            "4-corr " + SQUID_TH_U_EQN_NAME,
+                            "PCT",
+                            "", "true", "false", "20", "true", "232/238 ratio", "false", "false"
+                        };
+                        categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                        colIndex++;
+
+                        columnSpec = new String[]{
+                            "",
+                            "207corr",
+                            "232Th",
+                            "/238U",
+                            "",
+                            reportCategorySpecs[specIndex][5],
+                            "7-corr " + SQUID_TH_U_EQN_NAME,
+                            "PCT",
+                            "", "true", "false", "20", "true", "232/238 ratio", "false", "false"
+                        };
+                        categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                        colIndex++;
+
+                    }
+
+                } else {
+                    categoryColumnList.add(SetupReportColumn(colIndex, reportCategorySpecs[specIndex]));
+                    colIndex++;
+                }
             }
+            categoryColumns = new ReportColumn[categoryColumnList.size()];
+            for (int i = 0; i < categoryColumnList.size(); i++) {
+                categoryColumns[i] = categoryColumnList.get(i);
+            }
+
         }
 
         this.categoryColor = Color.WHITE;
