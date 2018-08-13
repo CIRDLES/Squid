@@ -1057,13 +1057,16 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             PhysicalConstantsModel importedMod = (PhysicalConstantsModel) physConstModel.readXMLObject(file.getAbsolutePath(), false);
-            physConstModels.add(importedMod);
-            physConstCB.getItems().add(getModVersionName(importedMod));
-            physConstCB.getSelectionModel().selectLast();
-            physConstModel = importedMod;
-            setUpPhysConst();
-            squidLabData.storeState();
+            if (!physConstModels.contains(importedMod)) {
+                physConstModels.add(importedMod);
+                physConstCB.getItems().add(getModVersionName(importedMod));
+                physConstCB.getSelectionModel().selectLast();
+                physConstModel = importedMod;
+                setUpPhysConst();
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.physConst;
         squidLabDataStage.requestFocus();
     }
 
@@ -1078,6 +1081,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             physConstModel.serializeXMLObject(file.getAbsolutePath());
         }
+        chosenTab = ParametersTab.physConst;
         squidLabDataStage.requestFocus();
     }
 
@@ -1092,6 +1096,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             refMatModel.serializeXMLObject(file.getAbsolutePath());
         }
+        chosenTab = ParametersTab.refMat;
         squidLabDataStage.requestFocus();
     }
 
@@ -1105,12 +1110,15 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             ReferenceMaterial importedMod = (ReferenceMaterial) refMatModel.readXMLObject(file.getAbsolutePath(), false);
-            refMatModels.add(importedMod);
-            refMatCB.getItems().add(getModVersionName(importedMod));
-            refMatCB.getSelectionModel().selectLast();
-            refMatModel = importedMod;
-            squidLabData.storeState();
+            if (!refMatModels.contains(importedMod)) {
+                refMatModels.add(importedMod);
+                refMatCB.getItems().add(getModVersionName(importedMod));
+                refMatCB.getSelectionModel().selectLast();
+                refMatModel = importedMod;
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.refMat;
         squidLabDataStage.requestFocus();
     }
 
@@ -1124,14 +1132,17 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             PhysicalConstantsModel importedMod = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(file);
-            importedMod.setIsEditable(true);
-            physConstModels.add(importedMod);
-            physConstCB.getItems().add(getModVersionName(importedMod));
-            physConstCB.getSelectionModel().selectLast();
-            physConstModel = importedMod;
-            setUpPhysConst();
-            squidLabData.storeState();
+            if (!physConstModels.contains(importedMod)) {
+                importedMod.setIsEditable(true);
+                physConstModels.add(importedMod);
+                physConstCB.getItems().add(getModVersionName(importedMod));
+                physConstCB.getSelectionModel().selectLast();
+                physConstModel = importedMod;
+                setUpPhysConst();
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.physConst;
         squidLabDataStage.requestFocus();
     }
 
@@ -1145,13 +1156,16 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             ReferenceMaterial importedMod = ReferenceMaterial.getReferenceMaterialFromETReduxXML(file);
-            importedMod.setIsEditable(true);
-            refMatModels.add(importedMod);
-            refMatCB.getItems().add(getModVersionName(importedMod));
-            refMatCB.getSelectionModel().selectLast();
-            refMatModel = importedMod;
-            squidLabData.storeState();
+            if (!refMatModels.contains(importedMod)) {
+                importedMod.setIsEditable(true);
+                refMatModels.add(importedMod);
+                refMatCB.getItems().add(getModVersionName(importedMod));
+                refMatCB.getSelectionModel().selectLast();
+                refMatModel = importedMod;
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.refMat;
         squidLabDataStage.requestFocus();
     }
 
@@ -1627,7 +1641,7 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpSigFigSpinners() {
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
 
         refMatDataSigFigs.setValueFactory(valueFactory);
         refMatDataSigFigs.valueProperty().addListener(value -> {
@@ -1643,7 +1657,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatDataTable.refresh();
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatConcSigFigs.setValueFactory(valueFactory);
         refMatConcSigFigs.valueProperty().addListener(value -> {
             int precision = refMatConcSigFigs.getValue();
@@ -1658,7 +1672,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatConcentrationsTable.refresh();
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstDataSigFigs.setValueFactory(valueFactory);
         physConstDataSigFigs.valueProperty().addListener(value -> {
             int precision = physConstDataSigFigs.getValue();
@@ -1673,35 +1687,35 @@ public class parametersManagerGUIController implements Initializable {
             physConstDataTable.refresh();
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstCorrSigFigs.setValueFactory(valueFactory);
         physConstCorrSigFigs.valueProperty().addListener(value -> {
             int precision = physConstCorrSigFigs.getValue();
             corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, precision, physConstCorrNotation);
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstCovSigFigs.setValueFactory(valueFactory);
         physConstCovSigFigs.valueProperty().addListener(value -> {
             int precision = physConstCovSigFigs.getValue();
             corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, precision, physConstCovNotation);
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatCorrSigFigs.setValueFactory(valueFactory);
         refMatCorrSigFigs.valueProperty().addListener(value -> {
             int precision = refMatCorrSigFigs.getValue();
             corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, precision, refMatCorrNotation);
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatCovSigFigs.setValueFactory(valueFactory);
         refMatCovSigFigs.valueProperty().addListener(value -> {
             int precision = refMatCovSigFigs.getValue();
             corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, precision, refMatCovNotation);
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         pbBlankICDataSigFigs.setValueFactory(valueFactory);
         pbBlankICDataSigFigs.valueProperty().addListener(value -> {
             int precision = pbBlankICDataSigFigs.getValue();
@@ -1716,14 +1730,14 @@ public class parametersManagerGUIController implements Initializable {
             pbBlankICDataTable.refresh();
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         pbBlankICCorrSigFigs.setValueFactory(valueFactory);
         pbBlankICCorrSigFigs.valueProperty().addListener(value -> {
             int precision = pbBlankICCorrSigFigs.getValue();
             corrCovPrecisionOrNotationAction(pbBlankICModel, pbBlankICCorrTable, precision, pbBlankICCorrNotation);
         });
 
-        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 6);
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         pbBlankICCovSigFigs.setValueFactory(valueFactory);
         pbBlankICCovSigFigs.valueProperty().addListener(value -> {
             int precision = pbBlankICCovSigFigs.getValue();
@@ -1755,14 +1769,17 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             CommonPbModel importedMod = (CommonPbModel) pbBlankICModel.readXMLObject(file.getAbsolutePath(), false);
-            importedMod.setIsEditable(true);
-            pbBlankICModels.add(importedMod);
-            pbBlankICCB.getItems().add(getModVersionName(importedMod));
-            pbBlankICCB.getSelectionModel().selectLast();
-            pbBlankICModel = importedMod;
-            setUpPbBlankIC();
-            squidLabData.storeState();
+            if (!pbBlankICModels.contains(importedMod)) {
+                importedMod.setIsEditable(true);
+                pbBlankICModels.add(importedMod);
+                pbBlankICCB.getItems().add(getModVersionName(importedMod));
+                pbBlankICCB.getSelectionModel().selectLast();
+                pbBlankICModel = importedMod;
+                setUpPbBlankIC();
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.pbBlankIC;
         squidLabDataStage.requestFocus();
     }
 
@@ -1777,6 +1794,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             pbBlankICModel.serializeXMLObject(file.getAbsolutePath());
         }
+        chosenTab = ParametersTab.pbBlankIC;
         squidLabDataStage.requestFocus();
     }
 
@@ -1924,14 +1942,17 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             CommonPbModel importedMod = CommonPbModel.getPbBlankICModelFromETReduxXML(file);
-            importedMod.setIsEditable(true);
-            pbBlankICModels.add(importedMod);
-            pbBlankICCB.getItems().add(getModVersionName(importedMod));
-            pbBlankICCB.getSelectionModel().selectLast();
-            pbBlankICModel = importedMod;
-            setUpPbBlankIC();
-            squidLabData.storeState();
+            if (!pbBlankICModels.contains(importedMod)) {
+                importedMod.setIsEditable(true);
+                pbBlankICModels.add(importedMod);
+                pbBlankICCB.getItems().add(getModVersionName(importedMod));
+                pbBlankICCB.getSelectionModel().selectLast();
+                pbBlankICModel = importedMod;
+                setUpPbBlankIC();
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.pbBlankIC;
         squidLabDataStage.requestFocus();
     }
 

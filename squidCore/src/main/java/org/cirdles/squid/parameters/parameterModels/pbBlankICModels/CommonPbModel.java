@@ -95,7 +95,11 @@ public class CommonPbModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add(CommonPbModel.getPbBlankICModelFromETReduxXML(files[i]));
+                try {
+                    models.add(CommonPbModel.getPbBlankICModelFromETReduxXML(files[i]));
+                } catch (Exception e) {
+                    models.add((CommonPbModel) defaultPbBlankICModel.readXMLObject(files[i].getAbsolutePath(), false));
+                }
             }
         }
 

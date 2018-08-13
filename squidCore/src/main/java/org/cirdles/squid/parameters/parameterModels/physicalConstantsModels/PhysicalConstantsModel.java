@@ -18,7 +18,6 @@ import java.util.Map.Entry;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
@@ -112,7 +111,11 @@ public class PhysicalConstantsModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
+                try {
+                    models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
+                } catch (Exception e) {
+                    models.add((PhysicalConstantsModel) defaultPhysicalConstantsModel.readXMLObject(files[i].getAbsolutePath(), false));
+                }
             }
         }
 

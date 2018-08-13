@@ -160,7 +160,11 @@ public class ReferenceMaterial extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add(ReferenceMaterial.getReferenceMaterialFromETReduxXML(files[i]));
+                try {
+                    models.add(ReferenceMaterial.getReferenceMaterialFromETReduxXML(files[i]));
+                } catch (Exception e) {
+                    models.add((ReferenceMaterial) defaultReferenceMaterial.readXMLObject(files[i].getAbsolutePath(), false));
+                }
             }
         }
 
