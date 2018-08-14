@@ -139,6 +139,10 @@ public class SpotSummaryDetails implements Serializable {
     public boolean[] getRejectedIndices(){
         return this.rejectedIndices.clone();
     }
+    
+    public void setIndexOfRejectedIndices(int index, boolean value){
+        rejectedIndices[index] = value;
+    }
 
     /**
      * @return the manualRejectionEnabled

@@ -48,10 +48,14 @@ import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME;
@@ -284,7 +288,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> generatePlaceholderExpressions = generatePlaceholderExpressions(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(generatePlaceholderExpressions);
 
-        SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions();
+        SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions(isDirectAltPD());
         taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
 
         SortedSet<Expression> experimentalExpressions = generateExperimentalExpressions();
@@ -603,29 +607,39 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-//                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME);
                 }
                 if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-//                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S);
                 }
-//                if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME + " %err") == 0) {
-//                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + " %err" + "\"]");
-//                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-//                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-//                    listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-////                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S);
-//                }
-//                if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S + " %err") == 0) {
-//                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + " %err" + "\"]");
-//                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-//                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-//                    listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-////                    System.out.println("YES   " + SQUID_TH_U_EQN_NAME_S + " %err");
-//                }
+                if (listedExp.getName().compareToIgnoreCase(SQUID_PPM_PARENT_EQN_NAME_TH) == 0) {
+                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_PPM_PARENT_EQN_NAME_TH + "\"]");
+                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                }   
+                if (listedExp.getName().compareToIgnoreCase(OVER_COUNT_4_6_8) == 0) {
+                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + OVER_COUNT_4_6_8 + "\"]");
+                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                }
+
+                if (listedExp.getName().compareToIgnoreCase(OVER_COUNTS_PERSEC_4_8) == 0) {
+                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + OVER_COUNTS_PERSEC_4_8 + "\"]");
+                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                }
+                if (listedExp.getName().compareToIgnoreCase(CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA) == 0) {
+                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA + "\"]");
+                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                }
+
             }
             if (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_206_238_NAME) == 0) {
                 listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_206_238_NAME + "\"]");
@@ -638,7 +652,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                 listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                 listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-//                System.out.println("YES   " + SQUID_TOTAL_206_238_NAME_S);
             }
             if (listedExp.getName().compareToIgnoreCase(SQUID_TOTAL_208_232_NAME) == 0) {
                 listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TOTAL_208_232_NAME + "\"]");
@@ -651,7 +664,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                 listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                 listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-//                System.out.println("YES   " + SQUID_TOTAL_208_232_NAME_S);
             }
         }
         try {
