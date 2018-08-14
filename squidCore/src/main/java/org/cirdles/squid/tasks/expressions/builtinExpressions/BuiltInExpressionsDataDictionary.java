@@ -47,4 +47,8 @@ public class BuiltInExpressionsDataDictionary {
     public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
 
     public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
+    
+    public static final String OVER_COUNT_4_6_8 = "204/206 (fr. 208)";
+    public static final String OVER_COUNTS_PERSEC_4_8 = "204 overcts/sec (fr. 208)";
+    public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
 }
