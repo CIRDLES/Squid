@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.parameters.parameterModels.pbBlankICModels;
+package org.cirdles.squid.parameters.parameterModels.commonPbModels;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -13,7 +13,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**

@@ -13,7 +13,7 @@ import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 
@@ -27,14 +27,14 @@ public class SquidLabData implements Serializable {
 
     private List<ReferenceMaterial> referenceMaterials;
     private List<PhysicalConstantsModel> physicalConstantsModels;
-    private List<CommonPbModel> pbBlankICModels;
+    private List<CommonPbModel> commonPbModels;
     private String laboratoryName;
 
     public SquidLabData() {
         laboratoryName = "mystery lab";
         referenceMaterials = ReferenceMaterial.getDefaultModels();
         physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
-        pbBlankICModels = CommonPbModel.getDefaultModels();
+        commonPbModels = CommonPbModel.getDefaultModels();
         storeState();
     }
 
@@ -83,12 +83,12 @@ public class SquidLabData implements Serializable {
         this.physicalConstantsModels = physicalConstantsModels;
     }
 
-    public List<CommonPbModel> getPbBlankICModels() {
-        return pbBlankICModels;
+    public List<CommonPbModel> getcommonPbModels() {
+        return commonPbModels;
     }
 
-    public void setPbBlankICModels(List<CommonPbModel> pbBlankICModels) {
-        this.pbBlankICModels = pbBlankICModels;
+    public void setcommonPbModels(List<CommonPbModel> commonPbModels) {
+        this.commonPbModels = commonPbModels;
     }
 
     public String getLaboratoryName() {
@@ -115,8 +115,8 @@ public class SquidLabData implements Serializable {
         physicalConstantsModels.remove(model);
     }
 
-    public void removePbBlankICModel(CommonPbModel model) {
-        pbBlankICModels.remove(model);
+    public void removecommonPbModel(CommonPbModel model) {
+        commonPbModels.remove(model);
     }
 
     public void addReferenceMaterial(ReferenceMaterial refMat) {
@@ -127,8 +127,8 @@ public class SquidLabData implements Serializable {
         physicalConstantsModels.add(model);
     }
 
-    public void addPbBlankICModel(CommonPbModel model) {
-        pbBlankICModels.add(model);
+    public void addcommonPbModel(CommonPbModel model) {
+        commonPbModels.add(model);
     }
 
     public ReferenceMaterial getReferenceMaterial(int i) {
@@ -139,8 +139,8 @@ public class SquidLabData implements Serializable {
         return physicalConstantsModels.get(i);
     }
 
-    public CommonPbModel getPbBlankICModel(int i) {
-        return pbBlankICModels.get(i);
+    public CommonPbModel getcommonPbModel(int i) {
+        return commonPbModels.get(i);
     }
 
     public int compareTo(SquidLabData data) {
@@ -153,8 +153,8 @@ public class SquidLabData implements Serializable {
         for (int i = 0; difference == 0 && i < physicalConstantsModels.size(); i++) {
             difference = physicalConstantsModels.get(i).compareTo(data.getPhysicalConstantsModel(i));
         }
-        for (int i = 0; difference == 0 && i < pbBlankICModels.size(); i++) {
-            difference = pbBlankICModels.get(i).compareTo(data.getPbBlankICModel(i));
+        for (int i = 0; difference == 0 && i < commonPbModels.size(); i++) {
+            difference = commonPbModels.get(i).compareTo(data.getcommonPbModel(i));
         }
 
         return difference;

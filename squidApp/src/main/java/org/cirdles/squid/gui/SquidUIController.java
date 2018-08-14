@@ -71,7 +71,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
@@ -1138,7 +1138,7 @@ public class SquidUIController implements Initializable {
     
     @FXML
     private void openParametersManagerPbBlankICModels(ActionEvent event) {
-        squidParametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.pbBlankIC);
+        squidParametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.commonPb);
     }
     
     private void setUpParametersMenu() {
@@ -1187,7 +1187,7 @@ public class SquidUIController implements Initializable {
     }
     
     private void setUpCommonPbMenuItems() {
-        List<CommonPbModel> models = squidLabData.getPbBlankICModels();
+        List<CommonPbModel> models = squidLabData.getcommonPbModels();
         ObservableList<MenuItem> items = FXCollections.observableArrayList();
         commonPbModelsMenu.getItems().clear();
         for (CommonPbModel model : models) {
@@ -1223,11 +1223,11 @@ public class SquidUIController implements Initializable {
                     }
                 });
             }
-            if (commonPbModel != null && !commonPbModel.equals(new CommonPbModel()) && !squidLabData.getPbBlankICModels().contains(commonPbModel)) {
+            if (commonPbModel != null && !commonPbModel.equals(new CommonPbModel()) && !squidLabData.getcommonPbModels().contains(commonPbModel)) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to add " + getModVersionName(commonPbModel) + " to your squid lab data?");
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
-                        squidLabData.addPbBlankICModel(commonPbModel);
+                        squidLabData.addcommonPbModel(commonPbModel);
                     }
                 });
             }

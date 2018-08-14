@@ -5,17 +5,6 @@
  */
 package org.cirdles.squid.gui.parameters;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -25,36 +14,33 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
-import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
+
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.*;
+
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidLabData;
+import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
 
 /**
  * FXML Controller class
@@ -178,51 +164,51 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private MenuItem saveAndRegCurrBlankICIsEditableMenuItem;
     @FXML
-    private MenuItem cancelEditOfPbBlankIC;
+    private MenuItem cancelEditOfCommonPb;
     @FXML
-    private MenuItem remCurrPbBlankIC;
+    private MenuItem remCurrCommonPb;
     @FXML
-    private MenuItem editCurrPbBlankIC;
+    private MenuItem editCurrCommonPb;
     @FXML
-    private MenuItem editCopyOfPbBlankIC;
+    private MenuItem editCopyOfCommonPb;
     @FXML
-    private MenuItem editNewEmptyPbBlankIC;
+    private MenuItem editNewEmptyCommonPb;
     @FXML
-    private TableView<DataModel> pbBlankICDataTable;
+    private TableView<DataModel> commonPbDataTable;
     @FXML
-    private Button pbBlankICDataNotationButton;
+    private Button commonPbDataNotationButton;
     @FXML
-    private TextField pbBlankICDataSigFigs;
+    private TextField commonPbDataSigFigs;
     @FXML
-    private TableView<ObservableList<SimpleStringProperty>> pbBlankICCorrTable;
+    private TableView<ObservableList<SimpleStringProperty>> commonPbCorrTable;
     @FXML
-    private Button pbBlankICCorrNotationButton;
+    private Button commonPbCorrNotationButton;
     @FXML
-    private TableView<ObservableList<SimpleStringProperty>> pbBlankICCovTable;
+    private TableView<ObservableList<SimpleStringProperty>> commonPbCovTable;
     @FXML
-    private Button pbBlankICCovNotationButton;
+    private Button commonPbCovNotationButton;
     @FXML
-    private TextField pbBlankICCovSigFigs;
+    private TextField commonPbCovSigFigs;
     @FXML
-    private TextArea pbBlankICReferencesArea;
+    private TextArea commonPbReferencesArea;
     @FXML
-    private TextArea pbBlankICCommentsArea;
+    private TextArea commonPbCommentsArea;
     @FXML
-    private TextField pbBlankICModelName;
+    private TextField commonPbModelName;
     @FXML
-    private TextField pbBlankICVersion;
+    private TextField commonPbVersion;
     @FXML
-    private Label pbBlankICIsEditableLabel;
+    private Label commonPbIsEditableLabel;
     @FXML
-    private TextField pbBlankICLabName;
+    private TextField commonPbLabName;
     @FXML
-    private TextField pbBlankICDateCertified;
+    private TextField commonPbDateCertified;
     @FXML
-    private Menu pbBlankICFileMenu;
+    private Menu commonPbFileMenu;
     @FXML
-    private TextField pbBlankICCorrSigFigs;
+    private TextField commonPbCorrSigFigs;
     @FXML
-    private ChoiceBox<String> pbBlankICCB;
+    private ChoiceBox<String> commonPbCB;
     @FXML
     private Tab apparentDatesTab;
 
@@ -232,19 +218,19 @@ public class parametersManagerGUIController implements Initializable {
     ReferenceMaterial refMatModel;
     ReferenceMaterial refMatHolder;
 
-    CommonPbModel pbBlankICModel;
-    CommonPbModel pbBlankICModelHolder;
+    CommonPbModel commonPbModel;
+    CommonPbModel commonPbModelHolder;
 
     List<PhysicalConstantsModel> physConstModels;
     List<ReferenceMaterial> refMatModels;
-    List<CommonPbModel> pbBlankICModels;
+    List<CommonPbModel> commonPbModels;
 
     List<TextField> physConstReferences;
     List<TextField> molarMasses;
 
     private boolean isEditingCurrPhysConst;
     private boolean isEditingCurrRefMat;
-    private boolean isEditingCurrPbBlankICModel;
+    private boolean isEditingCurrcommonPbModel;
 
     private DecimalFormat physConstDataNotation;
     private DecimalFormat physConstCorrNotation;
@@ -255,13 +241,13 @@ public class parametersManagerGUIController implements Initializable {
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
 
-    private DecimalFormat pbBlankICDataNotation;
-    private DecimalFormat pbBlankICCorrNotation;
-    private DecimalFormat pbBlankICCovNotation;
+    private DecimalFormat commonPbDataNotation;
+    private DecimalFormat commonPbCorrNotation;
+    private DecimalFormat commonPbCovNotation;
 
     public static boolean isEditingPhysConst;
     public static boolean isEditingRefMat;
-    public static boolean isEditingPbBlankIC;
+    public static boolean isEditingcommonPb;
 
     public static ParametersTab chosenTab = ParametersTab.physConst;
 
@@ -273,12 +259,12 @@ public class parametersManagerGUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        isEditingCurrPbBlankICModel = false;
+        isEditingCurrcommonPbModel = false;
         isEditingCurrPhysConst = false;
         isEditingCurrRefMat = false;
         isEditingPhysConst = false;
         isEditingRefMat = false;
-        isEditingPbBlankIC = false;
+        isEditingcommonPb = false;
 
         physConstDataNotation = getScientificNotationFormat();
         physConstCorrNotation = getScientificNotationFormat();
@@ -289,9 +275,9 @@ public class parametersManagerGUIController implements Initializable {
         refMatCorrNotation = getScientificNotationFormat();
         refMatCovNotation = getScientificNotationFormat();
 
-        pbBlankICDataNotation = getScientificNotationFormat();
-        pbBlankICCorrNotation = getScientificNotationFormat();
-        pbBlankICCovNotation = getScientificNotationFormat();
+        commonPbDataNotation = getScientificNotationFormat();
+        commonPbCorrNotation = getScientificNotationFormat();
+        commonPbCovNotation = getScientificNotationFormat();
 
         physConstModels = squidLabData.getPhysicalConstantsModels();
         setUpPhysConstCB();
@@ -299,8 +285,8 @@ public class parametersManagerGUIController implements Initializable {
         refMatModels = squidLabData.getReferenceMaterials();
         setUpRefMatCB();
 
-        pbBlankICModels = squidLabData.getPbBlankICModels();
-        setUpPbBlankICCB();
+        commonPbModels = squidLabData.getcommonPbModels();
+        setUpCommonPbCB();
 
         setUpTabs();
         setUpApparentDatesTabSelection();
@@ -315,7 +301,7 @@ public class parametersManagerGUIController implements Initializable {
                     rootTabPane.getSelectionModel().select(0);
                 } else if (chosenTab.equals(ParametersTab.refMat)) {
                     rootTabPane.getSelectionModel().select(1);
-                } else if (chosenTab.equals(ParametersTab.pbBlankIC)) {
+                } else if (chosenTab.equals(ParametersTab.commonPb)) {
                     rootTabPane.getSelectionModel().select(2);
                 }
                 String selected = "";
@@ -329,10 +315,10 @@ public class parametersManagerGUIController implements Initializable {
                     setUpRefMatCBItems();
                     refMatCB.getSelectionModel().select(selected);
                 }
-                if (!isEditingPbBlankIC) {
-                    selected = pbBlankICCB.getSelectionModel().getSelectedItem();
-                    setUpPbBlankICCBItems();
-                    pbBlankICCB.getSelectionModel().select(selected);
+                if (!isEditingcommonPb) {
+                    selected = commonPbCB.getSelectionModel().getSelectedItem();
+                    setUpCommonPbCBItems();
+                    commonPbCB.getSelectionModel().select(selected);
                 }
             }
         });
@@ -356,11 +342,11 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMatEditableLabel();
     }
 
-    private void setUpPbBlankIC() {
-        setUpPbBlankICTextFields();
-        setUpPbBlankICData();
-        setUpPbBlankICCovariancesAndCorrelations();
-        setUpPbBlankICEditableLabel();
+    private void setUpCommonPb() {
+        setUpCommonPbTextFields();
+        setUpCommonPbData();
+        setUpCommonPbCovariancesAndCorrelations();
+        setUpCommonPbEditableLabel();
     }
 
     private void setUpPhysConstCovariancesAndCorrelations() {
@@ -377,11 +363,11 @@ public class parametersManagerGUIController implements Initializable {
         setUpRefMatCorr();
     }
 
-    private void setUpPbBlankICCovariancesAndCorrelations() {
-        pbBlankICModel.initializeCorrelations();
-        pbBlankICModel.generateCovariancesFromCorrelations();
-        setUpPbBlankICCov();
-        setUpPbBlankICCorr();
+    private void setUpCommonPbCovariancesAndCorrelations() {
+        commonPbModel.initializeCorrelations();
+        commonPbModel.generateCovariancesFromCorrelations();
+        setUpCommonPbCov();
+        setUpCommonPbCorr();
     }
 
     private void setUpPhysConstCB() {
@@ -438,31 +424,31 @@ public class parametersManagerGUIController implements Initializable {
         }
     }
 
-    private void setUpPbBlankICCB() {
-        setUpPbBlankICCBItems();
-        pbBlankICCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+    private void setUpCommonPbCB() {
+        setUpCommonPbCBItems();
+        commonPbCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue val, Number ov, Number nv) {
-                setPbBlankICModel(nv.intValue());
+                setCommonPbModel(nv.intValue());
             }
         });
-        pbBlankICCB.getSelectionModel().selectFirst();
+        commonPbCB.getSelectionModel().selectFirst();
     }
 
-    private void setPbBlankICModel(int num) {
-        if (num > -1 && num < pbBlankICModels.size()) {
-            pbBlankICModel = pbBlankICModels.get(num);
-            setUpPbBlankIC();
-            setUpPbBlankICMenuItems(false, pbBlankICModel.isEditable());
-            pbBlankICModelEditable(false);
+    private void setCommonPbModel(int num) {
+        if (num > -1 && num < commonPbModels.size()) {
+            commonPbModel = commonPbModels.get(num);
+            setUpCommonPb();
+            setUpCommonPbMenuItems(false, commonPbModel.isEditable());
+            commonPbModelEditable(false);
         }
     }
 
-    private void setUpPbBlankICCBItems() {
+    private void setUpCommonPbCBItems() {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
-        for (CommonPbModel mod : pbBlankICModels) {
+        for (CommonPbModel mod : commonPbModels) {
             cbList.add(getModVersionName(mod));
         }
-        pbBlankICCB.setItems(cbList);
+        commonPbCB.setItems(cbList);
     }
 
     private void setUpPhysConstCov() {
@@ -485,14 +471,14 @@ public class parametersManagerGUIController implements Initializable {
                 refMatCorrNotation, refMatModel, getPrecisionValue(refMatCorrSigFigs.getText()));
     }
 
-    private void setUpPbBlankICCov() {
-        initializeTableWithObList(pbBlankICCovTable, getObListFromMatrix(pbBlankICModel.getCovModel()),
-                pbBlankICCovNotation, pbBlankICModel, getPrecisionValue(pbBlankICCovSigFigs.getText()));
+    private void setUpCommonPbCov() {
+        initializeTableWithObList(commonPbCovTable, getObListFromMatrix(commonPbModel.getCovModel()),
+                commonPbCovNotation, commonPbModel, getPrecisionValue(commonPbCovSigFigs.getText()));
     }
 
-    private void setUpPbBlankICCorr() {
-        initializeTableWithObList(pbBlankICCorrTable, getObListFromMatrix(pbBlankICModel.getCorrModel()),
-                pbBlankICCorrNotation, pbBlankICModel, getPrecisionValue(pbBlankICCorrSigFigs.getText()));
+    private void setUpCommonPbCorr() {
+        initializeTableWithObList(commonPbCorrTable, getObListFromMatrix(commonPbModel.getCorrModel()),
+                commonPbCorrNotation, commonPbModel, getPrecisionValue(commonPbCorrSigFigs.getText()));
     }
 
     private static ObservableList<ObservableList<SimpleStringProperty>> getObListFromMatrix(AbstractMatrixModel matrix) {
@@ -521,7 +507,7 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
-            ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format, ParametersModel model, int precision) {
+                                           ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format, ParametersModel model, int precision) {
         if (obList.size() > 0) {
             List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns = new ArrayList<>();
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
@@ -543,7 +529,7 @@ public class parametersManagerGUIController implements Initializable {
                 col.setCellValueFactory(param
                         -> new ReadOnlyObjectWrapper<String>(format.format(round(new BigDecimal(param.getValue().get(colNum).get()), precision))));
 
-                if (table.equals(physConstCorrTable) || table.equals(refMatCorrTable) || table.equals(pbBlankICCorrTable)) {
+                if (table.equals(physConstCorrTable) || table.equals(refMatCorrTable) || table.equals(commonPbCorrTable)) {
                     col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
                     col.setOnEditCommit(value -> {
                         if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1
@@ -564,9 +550,9 @@ public class parametersManagerGUIController implements Initializable {
                             } else if (table.equals(refMatCorrTable)) {
                                 setUpRefMatCorr();
                                 setUpRefMatCov();
-                            } else if (table.equals(pbBlankICCorrTable)) {
-                                setUpPbBlankICCorr();
-                                setUpPbBlankICCov();
+                            } else if (table.equals(commonPbCorrTable)) {
+                                setUpCommonPbCorr();
+                                setUpCommonPbCov();
                             }
                             table.refresh();
                         } else {
@@ -591,11 +577,11 @@ public class parametersManagerGUIController implements Initializable {
         physConstDataTable.refresh();
     }
 
-    private void setUpPbBlankICData() {
-        int precision = getPrecisionValue(pbBlankICDataSigFigs.getText());
-        pbBlankICDataTable.getColumns().setAll(getDataModelColumns(pbBlankICDataTable, pbBlankICDataNotation, precision));
-        pbBlankICDataTable.setItems(getDataModelObList(pbBlankICModel.getValues(), pbBlankICDataNotation, precision));
-        pbBlankICDataTable.refresh();
+    private void setUpCommonPbData() {
+        int precision = getPrecisionValue(commonPbDataSigFigs.getText());
+        commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation, precision));
+        commonPbDataTable.setItems(getDataModelObList(commonPbModel.getValues(), commonPbDataNotation, precision));
+        commonPbDataTable.refresh();
     }
 
     private void setUpRefMatData() {
@@ -650,8 +636,8 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = refMatModel.getConcentrationByName(ratioName);
                 }
-                if (table.equals(pbBlankICDataTable)) {
-                    valMod = pbBlankICModel.getDatumByName(ratioName);
+                if (table.equals(commonPbDataTable)) {
+                    valMod = commonPbModel.getDatumByName(ratioName);
                 }
                 BigDecimal newValue = BigDecimal.ZERO;
                 if (Double.parseDouble(value.getNewValue()) != 0) {
@@ -665,8 +651,8 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
                 }
-                if (table.equals(pbBlankICDataTable)) {
-                    setUpPbBlankICCovariancesAndCorrelations();
+                if (table.equals(commonPbDataTable)) {
+                    setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
@@ -691,8 +677,8 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = refMatModel.getConcentrationByName(ratioName);
                 }
-                if (table.equals(pbBlankICDataTable)) {
-                    valMod = pbBlankICModel.getDatumByName(ratioName);
+                if (table.equals(commonPbDataTable)) {
+                    valMod = commonPbModel.getDatumByName(ratioName);
                 }
                 BigDecimal newValue = BigDecimal.ZERO;
                 if (Double.parseDouble(value.getNewValue()) != 0) {
@@ -707,8 +693,8 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
                 }
-                if (table.equals(pbBlankICDataTable)) {
-                    setUpPbBlankICCovariancesAndCorrelations();
+                if (table.equals(commonPbDataTable)) {
+                    setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
@@ -733,8 +719,8 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = refMatModel.getConcentrationByName(ratioName);
                 }
-                if (table.equals(pbBlankICDataTable)) {
-                    valMod = pbBlankICModel.getDatumByName(ratioName);
+                if (table.equals(commonPbDataTable)) {
+                    valMod = commonPbModel.getDatumByName(ratioName);
                 }
                 BigDecimal newValue = BigDecimal.ZERO;
                 if (Double.parseDouble(value.getNewValue()) != 0) {
@@ -749,8 +735,8 @@ public class parametersManagerGUIController implements Initializable {
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
                 }
-                if (table.equals(pbBlankICDataTable)) {
-                    setUpPbBlankICCovariancesAndCorrelations();
+                if (table.equals(commonPbDataTable)) {
+                    setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
@@ -956,11 +942,11 @@ public class parametersManagerGUIController implements Initializable {
         }
     }
 
-    private void setUpPbBlankICEditableLabel() {
-        if (pbBlankICModel.isEditable()) {
-            pbBlankICIsEditableLabel.setText("editable");
+    private void setUpCommonPbEditableLabel() {
+        if (commonPbModel.isEditable()) {
+            commonPbIsEditableLabel.setText("editable");
         } else {
-            pbBlankICIsEditableLabel.setText("not editable");
+            commonPbIsEditableLabel.setText("not editable");
         }
     }
 
@@ -982,13 +968,13 @@ public class parametersManagerGUIController implements Initializable {
         refMatReferencesArea.setText(refMatModel.getReferences());
     }
 
-    private void setUpPbBlankICTextFields() {
-        pbBlankICModelName.setText(pbBlankICModel.getModelName());
-        pbBlankICLabName.setText(pbBlankICModel.getLabName());
-        pbBlankICVersion.setText(pbBlankICModel.getVersion());
-        pbBlankICDateCertified.setText(pbBlankICModel.getDateCertified());
-        pbBlankICCommentsArea.setText(pbBlankICModel.getComments());
-        pbBlankICReferencesArea.setText(pbBlankICModel.getReferences());
+    private void setUpCommonPbTextFields() {
+        commonPbModelName.setText(commonPbModel.getModelName());
+        commonPbLabName.setText(commonPbModel.getLabName());
+        commonPbVersion.setText(commonPbModel.getVersion());
+        commonPbDateCertified.setText(commonPbModel.getDateCertified());
+        commonPbCommentsArea.setText(commonPbModel.getComments());
+        commonPbReferencesArea.setText(commonPbModel.getReferences());
     }
 
     private void setUpLaboratoryName() {
@@ -1212,24 +1198,24 @@ public class parametersManagerGUIController implements Initializable {
         refMatReferencesArea.setEditable(isEditable);
     }
 
-    private void pbBlankICModelEditable(boolean isEditable) {
+    private void commonPbModelEditable(boolean isEditable) {
         if (isEditable) {
-            pbBlankICIsEditableLabel.setText("editing");
+            commonPbIsEditableLabel.setText("editing");
         }
 
-        pbBlankICModelName.setEditable(isEditable);
-        pbBlankICLabName.setEditable(isEditable);
-        pbBlankICVersion.setEditable(isEditable);
-        pbBlankICDateCertified.setEditable(isEditable);
+        commonPbModelName.setEditable(isEditable);
+        commonPbLabName.setEditable(isEditable);
+        commonPbVersion.setEditable(isEditable);
+        commonPbDateCertified.setEditable(isEditable);
 
-        pbBlankICDataTable.setEditable(isEditable);
-        pbBlankICDataTable.getColumns().get(0).setEditable(false);
+        commonPbDataTable.setEditable(isEditable);
+        commonPbDataTable.getColumns().get(0).setEditable(false);
 
-        pbBlankICCorrTable.setEditable(isEditable);
-        pbBlankICCorrTable.getColumns().get(0).setEditable(false);
+        commonPbCorrTable.setEditable(isEditable);
+        commonPbCorrTable.getColumns().get(0).setEditable(false);
 
-        pbBlankICCommentsArea.setEditable(isEditable);
-        pbBlankICReferencesArea.setEditable(isEditable);
+        commonPbCommentsArea.setEditable(isEditable);
+        commonPbReferencesArea.setEditable(isEditable);
     }
 
     private void setUpRefMatMenuItems(boolean isEditing, boolean isEditable) {
@@ -1254,15 +1240,15 @@ public class parametersManagerGUIController implements Initializable {
         physConstCB.setDisable(isEditing);
     }
 
-    private void setUpPbBlankICMenuItems(boolean isEditing, boolean isEditable) {
-        pbBlankICFileMenu.setDisable(isEditing);
+    private void setUpCommonPbMenuItems(boolean isEditing, boolean isEditable) {
+        commonPbFileMenu.setDisable(isEditing);
         saveAndRegCurrBlankICIsEditableMenuItem.setDisable(!isEditing);
-        remCurrPbBlankIC.setDisable(!isEditable || isEditing);
-        cancelEditOfPbBlankIC.setDisable(!isEditing);
-        editNewEmptyPbBlankIC.setDisable(isEditing);
-        editCopyOfPbBlankIC.setDisable(isEditing);
-        editCurrPbBlankIC.setDisable(!isEditable || isEditing);
-        pbBlankICCB.setDisable(isEditing);
+        remCurrCommonPb.setDisable(!isEditable || isEditing);
+        cancelEditOfCommonPb.setDisable(!isEditing);
+        editNewEmptyCommonPb.setDisable(isEditing);
+        editCopyOfCommonPb.setDisable(isEditing);
+        editCurrCommonPb.setDisable(!isEditable || isEditing);
+        commonPbCB.setDisable(isEditing);
     }
 
     @FXML
@@ -1718,47 +1704,47 @@ public class parametersManagerGUIController implements Initializable {
             }
         });
 
-        pbBlankICDataSigFigs.setOnKeyReleased(value -> {
-            String text = pbBlankICDataSigFigs.getText();
+        commonPbDataSigFigs.setOnKeyReleased(value -> {
+            String text = commonPbDataSigFigs.getText();
             if (!text.trim().isEmpty() && isNumeric(text)) {
                 int precision = getPrecisionValue(text);
                 if (precision > 0) {
-                    ObservableList<DataModel> items = pbBlankICDataTable.getItems();
+                    ObservableList<DataModel> items = commonPbDataTable.getItems();
                     for (DataModel mod : items) {
-                        ValueModel valMod = pbBlankICModel.getDatumByName(getRatioHiddenName(mod.getName()));
-                        mod.setOneSigmaABS(pbBlankICDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                        mod.setOneSigmaPCT(pbBlankICDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                        mod.setValue(pbBlankICDataNotation.format(round(valMod.getValue(), precision)));
+                        ValueModel valMod = commonPbModel.getDatumByName(getRatioHiddenName(mod.getName()));
+                        mod.setOneSigmaABS(commonPbDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+                        mod.setOneSigmaPCT(commonPbDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+                        mod.setValue(commonPbDataNotation.format(round(valMod.getValue(), precision)));
                     }
                 }
-                pbBlankICDataTable.getColumns().setAll(getDataModelColumns(pbBlankICDataTable, pbBlankICDataNotation, precision));
-                pbBlankICDataTable.refresh();
+                commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation, precision));
+                commonPbDataTable.refresh();
             }
         });
 
-        pbBlankICCorrSigFigs.setOnKeyReleased(value -> {
+        commonPbCorrSigFigs.setOnKeyReleased(value -> {
             String text = refMatCovSigFigs.getText();
             if (!text.trim().isEmpty() && isNumeric(text)) {
                 int precision = getPrecisionValue(text);
                 if (precision > 0) {
-                    corrCovPrecisionOrNotationAction(pbBlankICModel, pbBlankICCorrTable, precision, pbBlankICCorrNotation);
+                    corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, precision, commonPbCorrNotation);
                 }
             }
         });
 
-        pbBlankICCovSigFigs.setOnKeyReleased(value -> {
+        commonPbCovSigFigs.setOnKeyReleased(value -> {
             String text = refMatCovSigFigs.getText();
             if (!text.trim().isEmpty() && isNumeric(text)) {
                 int precision = getPrecisionValue(text);
                 if (precision > 0) {
-                    corrCovPrecisionOrNotationAction(pbBlankICModel, pbBlankICCovTable, precision, pbBlankICCovNotation);
+                    corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, precision, commonPbCovNotation);
                 }
             }
         });
     }
 
     private void corrCovPrecisionOrNotationAction(ParametersModel model,
-            TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
+                                                  TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
 
         ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
 
@@ -1780,193 +1766,172 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void pbBlankICImpXMLAction(ActionEvent event) {
+    private void commonPbImpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSelectPbBlankICModelXMLFile(primaryStageWindow);
+            file = FileHandler.parametersManagerSelectCommonPbModelXMLFile(primaryStageWindow);
         } catch (IOException e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
         if (file != null) {
-            CommonPbModel importedMod = (CommonPbModel) pbBlankICModel.readXMLObject(file.getAbsolutePath(), false);
+            CommonPbModel importedMod = (CommonPbModel) commonPbModel.readXMLObject(file.getAbsolutePath(), false);
             importedMod.setIsEditable(true);
-            pbBlankICModels.add(importedMod);
-            pbBlankICCB.getItems().add(getModVersionName(importedMod));
-            pbBlankICCB.getSelectionModel().selectLast();
-            pbBlankICModel = importedMod;
-            setUpPbBlankIC();
+            commonPbModels.add(importedMod);
+            commonPbCB.getItems().add(getModVersionName(importedMod));
+            commonPbCB.getSelectionModel().selectLast();
+            commonPbModel = importedMod;
+            setUpCommonPb();
             squidLabData.storeState();
         }
         squidLabDataStage.requestFocus();
     }
 
     @FXML
-    private void pbBlankICExpXMLAction(ActionEvent event) {
+    private void commonPbExpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSavePbBlankICModelXMLFile(pbBlankICModel, primaryStageWindow);
+            file = FileHandler.parametersManagerSaveCommonPbModelXMLFile(commonPbModel, primaryStageWindow);
         } catch (IOException e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
         if (file != null) {
-            pbBlankICModel.serializeXMLObject(file.getAbsolutePath());
+            commonPbModel.serializeXMLObject(file.getAbsolutePath());
         }
         squidLabDataStage.requestFocus();
     }
 
     @FXML
-    private void pbBlankICSaveAndRegisterEdit(ActionEvent event) {
-        pbBlankICModel.setIsEditable(true);
-        pbBlankICModel.setModelName(pbBlankICModelName.getText());
-        pbBlankICModel.setLabName(pbBlankICLabName.getText());
-        pbBlankICModel.setVersion(pbBlankICVersion.getText());
-        pbBlankICModel.setDateCertified(pbBlankICDateCertified.getText());
+    private void commonPbSaveAndRegisterEdit(ActionEvent event) {
+        commonPbModel.setIsEditable(true);
+        commonPbModel.setModelName(commonPbModelName.getText());
+        commonPbModel.setLabName(commonPbLabName.getText());
+        commonPbModel.setVersion(commonPbVersion.getText());
+        commonPbModel.setDateCertified(commonPbDateCertified.getText());
 
-        pbBlankICModel.setReferences(pbBlankICReferencesArea.getText());
-        pbBlankICModel.setComments(pbBlankICCommentsArea.getText());
+        commonPbModel.setReferences(commonPbReferencesArea.getText());
+        commonPbModel.setComments(commonPbCommentsArea.getText());
 
-        if (!isEditingCurrPbBlankICModel) {
-            pbBlankICModels.add(pbBlankICModel);
+        if (!isEditingCurrcommonPbModel) {
+            commonPbModels.add(commonPbModel);
         } else {
-            isEditingCurrPbBlankICModel = false;
-            pbBlankICModelHolder = null;
+            isEditingCurrcommonPbModel = false;
+            commonPbModelHolder = null;
         }
-        isEditingPbBlankIC = false;
-        setUpPbBlankICCBItems();
-        pbBlankICCB.getSelectionModel().select(getModVersionName(pbBlankICModel));
-        pbBlankICModelEditable(false);
-        setUpPbBlankICMenuItems(false, pbBlankICModel.isEditable());
+        isEditingcommonPb = false;
+        setUpCommonPbCBItems();
+        commonPbCB.getSelectionModel().select(getModVersionName(commonPbModel));
+        commonPbModelEditable(false);
+        setUpCommonPbMenuItems(false, commonPbModel.isEditable());
         squidLabData.storeState();
     }
 
     @FXML
-    private void pbBlankICCancelEdit(ActionEvent event) {
-        if (isEditingCurrPbBlankICModel) {
-            isEditingCurrPbBlankICModel = false;
-            pbBlankICModel = pbBlankICModelHolder;
-            pbBlankICModelHolder = null;
+    private void commonPbCancelEdit(ActionEvent event) {
+        if (isEditingCurrcommonPbModel) {
+            isEditingCurrcommonPbModel = false;
+            commonPbModel = commonPbModelHolder;
+            commonPbModelHolder = null;
         }
-        isEditingPbBlankIC = false;
-        String selected = pbBlankICCB.getSelectionModel().getSelectedItem();
-        setUpPbBlankICCBItems();
-        pbBlankICCB.getSelectionModel().select(selected);
-        pbBlankICModelEditable(false);
-        setUpPbBlankICMenuItems(false, pbBlankICModel.isEditable());
+        isEditingcommonPb = false;
+        String selected = commonPbCB.getSelectionModel().getSelectedItem();
+        setUpCommonPbCBItems();
+        commonPbCB.getSelectionModel().select(selected);
+        commonPbModelEditable(false);
+        setUpCommonPbMenuItems(false, commonPbModel.isEditable());
     }
 
     @FXML
-    private void pbBlankICRemoveCurrMod(ActionEvent event) {
-        pbBlankICModels.remove(pbBlankICModel);
-        setUpPbBlankICCBItems();
-        pbBlankICCB.getSelectionModel().selectFirst();
-        pbBlankICModelEditable(false);
-        setUpPbBlankICMenuItems(false, pbBlankICModel.isEditable());
+    private void commonPbRemoveCurrMod(ActionEvent event) {
+        commonPbModels.remove(commonPbModel);
+        setUpCommonPbCBItems();
+        commonPbCB.getSelectionModel().selectFirst();
+        commonPbModelEditable(false);
+        setUpCommonPbMenuItems(false, commonPbModel.isEditable());
         squidLabData.storeState();
     }
 
     @FXML
-    private void pbBlankICEditCurrMod(ActionEvent event) {
-        isEditingPbBlankIC = true;
-        pbBlankICModelHolder = pbBlankICModel.clone();
-        pbBlankICModelEditable(true);
-        setUpPbBlankICMenuItems(true, true);
-        isEditingCurrPbBlankICModel = true;
+    private void commonPbEditCurrMod(ActionEvent event) {
+        isEditingcommonPb = true;
+        commonPbModelHolder = commonPbModel.clone();
+        commonPbModelEditable(true);
+        setUpCommonPbMenuItems(true, true);
+        isEditingCurrcommonPbModel = true;
     }
 
     @FXML
-    private void pbBlankICEditCopy(ActionEvent event) {
-        isEditingPbBlankIC = true;
-        pbBlankICModel = pbBlankICModel.clone();
-        pbBlankICModel.setModelName(pbBlankICModel.getModelName() + " - copy");
-        setUpPbBlankIC();
-        pbBlankICModelEditable(true);
-        setUpPbBlankICMenuItems(true, true);
+    private void commonPbEditCopy(ActionEvent event) {
+        isEditingcommonPb = true;
+        commonPbModel = commonPbModel.clone();
+        commonPbModel.setModelName(commonPbModel.getModelName() + " - copy");
+        setUpCommonPb();
+        commonPbModelEditable(true);
+        setUpCommonPbMenuItems(true, true);
     }
 
     @FXML
-    private void pbBlankICEditEmptyMod(ActionEvent event) {
-        isEditingPbBlankIC = true;
-        pbBlankICModel = new CommonPbModel();
-        setUpPbBlankIC();
-        pbBlankICModelEditable(true);
-        setUpPbBlankICMenuItems(true, true);
+    private void commonPbEditEmptyMod(ActionEvent event) {
+        isEditingcommonPb = true;
+        commonPbModel = new CommonPbModel();
+        setUpCommonPb();
+        commonPbModelEditable(true);
+        setUpCommonPbMenuItems(true, true);
     }
 
     @FXML
-    private void pbBlankICDataNotationOnAction(ActionEvent event) {
-        if (pbBlankICDataNotation.equals(getScientificNotationFormat())) {
-            pbBlankICDataNotation = getStandardNotationFormat();
-            pbBlankICDataNotationButton.setText("Standard Notation");
+    private void commonPbDataNotationOnAction(ActionEvent event) {
+        if (commonPbDataNotation.equals(getScientificNotationFormat())) {
+            commonPbDataNotation = getStandardNotationFormat();
+            commonPbDataNotationButton.setText("Standard Notation");
         } else {
-            pbBlankICDataNotation = getScientificNotationFormat();
-            pbBlankICDataNotationButton.setText("Scientific Notation");
+            commonPbDataNotation = getScientificNotationFormat();
+            commonPbDataNotationButton.setText("Scientific Notation");
         }
-        ObservableList<DataModel> models = pbBlankICDataTable.getItems();
+        ObservableList<DataModel> models = commonPbDataTable.getItems();
         for (int i = 0; i < models.size(); i++) {
             DataModel mod = models.get(i);
             BigDecimal bigDec;
-            int precision = getPrecisionValue(pbBlankICDataSigFigs.getText());
+            int precision = getPrecisionValue(commonPbDataSigFigs.getText());
 
             bigDec = new BigDecimal(mod.getValue());
-            mod.setValue(pbBlankICDataNotation.format(round(bigDec, precision)));
+            mod.setValue(commonPbDataNotation.format(round(bigDec, precision)));
 
             bigDec = new BigDecimal(mod.getOneSigmaABS());
-            mod.setOneSigmaABS(pbBlankICDataNotation.format(round(bigDec, precision)));
+            mod.setOneSigmaABS(commonPbDataNotation.format(round(bigDec, precision)));
 
             bigDec = new BigDecimal(mod.getOneSigmaPCT());
-            mod.setOneSigmaPCT(pbBlankICDataNotation.format(round(bigDec, precision)));
+            mod.setOneSigmaPCT(commonPbDataNotation.format(round(bigDec, precision)));
         }
-        pbBlankICDataTable.getColumns().setAll(getDataModelColumns(pbBlankICDataTable, pbBlankICDataNotation,
-                getPrecisionValue(pbBlankICDataSigFigs.getText())));
+        commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation,
+                getPrecisionValue(commonPbDataSigFigs.getText())));
 
-        pbBlankICDataTable.refresh();
+        commonPbDataTable.refresh();
     }
 
     @FXML
-    private void pbBlankICCorrNotationOnAction(ActionEvent event) {
-        if (pbBlankICCorrNotation.equals(getScientificNotationFormat())) {
-            pbBlankICCorrNotation = getStandardNotationFormat();
-            pbBlankICCorrNotationButton.setText("Standard Notation");
+    private void commonPbCorrNotationOnAction(ActionEvent event) {
+        if (commonPbCorrNotation.equals(getScientificNotationFormat())) {
+            commonPbCorrNotation = getStandardNotationFormat();
+            commonPbCorrNotationButton.setText("Standard Notation");
         } else {
-            pbBlankICCorrNotation = getScientificNotationFormat();
-            pbBlankICCorrNotationButton.setText("Scientific Notation");
+            commonPbCorrNotation = getScientificNotationFormat();
+            commonPbCorrNotationButton.setText("Scientific Notation");
         }
-        int precision = getPrecisionValue(pbBlankICCorrSigFigs.getText());
-        corrCovPrecisionOrNotationAction(pbBlankICModel, pbBlankICCorrTable, precision, pbBlankICCorrNotation);
+        int precision = getPrecisionValue(commonPbCorrSigFigs.getText());
+        corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, precision, commonPbCorrNotation);
     }
 
     @FXML
-    private void pbBlankICCovNotationOnAction(ActionEvent event) {
-        if (pbBlankICCovNotation.equals(getScientificNotationFormat())) {
-            pbBlankICCovNotation = getStandardNotationFormat();
-            pbBlankICCovNotationButton.setText("Standard Notation");
+    private void commonPbCovNotationOnAction(ActionEvent event) {
+        if (commonPbCovNotation.equals(getScientificNotationFormat())) {
+            commonPbCovNotation = getStandardNotationFormat();
+            commonPbCovNotationButton.setText("Standard Notation");
         } else {
-            pbBlankICCovNotation = getScientificNotationFormat();
-            pbBlankICCovNotationButton.setText("Scientific Notation");
+            commonPbCovNotation = getScientificNotationFormat();
+            commonPbCovNotationButton.setText("Scientific Notation");
         }
-        int precision = getPrecisionValue(pbBlankICCovSigFigs.getText());
-        corrCovPrecisionOrNotationAction(pbBlankICModel, pbBlankICCovTable, precision, pbBlankICCovNotation);
-    }
-
-    @FXML
-    private void pbBlankICImpETReduxXMLAction(ActionEvent event) {
-        File file = null;
-        try {
-            file = FileHandler.parametersManagerSelectPbBlankICModelXMLFile(primaryStageWindow);
-        } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
-        }
-        if (file != null) {
-            CommonPbModel importedMod = CommonPbModel.getPbBlankICModelFromETReduxXML(file);
-            importedMod.setIsEditable(true);
-            pbBlankICModels.add(importedMod);
-            pbBlankICCB.getItems().add(getModVersionName(importedMod));
-            pbBlankICCB.getSelectionModel().selectLast();
-            pbBlankICModel = importedMod;
-            setUpPbBlankIC();
-            squidLabData.storeState();
-        }
-        squidLabDataStage.requestFocus();
+        int precision = getPrecisionValue(commonPbCovSigFigs.getText());
+        corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, precision, commonPbCovNotation);
     }
 
     private void setUpApparentDatesTabSelection() {
@@ -1985,7 +1950,7 @@ public class parametersManagerGUIController implements Initializable {
         private SimpleStringProperty oneSigmaPCT;
 
         public DataModel(String name, String value,
-                String oneSigmaABS, String oneSigmaPCT) {
+                         String oneSigmaABS, String oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
             this.value = new SimpleStringProperty(trimTrailingZeroes(value));
             this.oneSigmaABS = new SimpleStringProperty(trimTrailingZeroes(oneSigmaABS));
@@ -2031,8 +1996,8 @@ public class parametersManagerGUIController implements Initializable {
         private CheckBox isMeasured;
 
         public RefMatDataModel(String name, String value,
-                String oneSigmaABS, String oneSigmaPCT,
-                boolean isMeasured) {
+                               String oneSigmaABS, String oneSigmaPCT,
+                               boolean isMeasured) {
             super(name, value, oneSigmaABS, oneSigmaPCT);
             this.isMeasured = new CheckBox();
             this.isMeasured.setSelected(isMeasured);

@@ -39,7 +39,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROU
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.prawn.PrawnFile;

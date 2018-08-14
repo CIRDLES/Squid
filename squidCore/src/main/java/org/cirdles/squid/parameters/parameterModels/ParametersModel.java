@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModelConverter;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModelConverter;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
@@ -283,6 +285,9 @@ public class ParametersModel implements
 
         xstream.registerConverter(new PhysicalConstantsModelConverter());
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
+
+        xstream.registerConverter(new CommonPbModelConverter());
+        xstream.alias("CommonPbModel", CommonPbModel.class);
     }
 
     public String getComments() {

@@ -5,24 +5,16 @@
  */
 package org.cirdles.squid.gui.parameters;
 
-import java.util.Map;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
-import static org.cirdles.squid.gui.SquidUIController.squidLabData;
-import static org.cirdles.squid.gui.parameters.parametersManagerGUIController.getModVersionName;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 
 /**
- *
  * @author ryanb
  */
 public class ParametersLauncher {
@@ -35,6 +27,7 @@ public class ParametersLauncher {
             squidLabDataStage.setMinHeight(600);
             squidLabDataStage.setMinWidth(900);
             squidLabDataStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
+            squidLabDataStage.initOwner(primaryStageWindow);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
             Scene scene = new Scene(loader.load());
@@ -58,6 +51,6 @@ public class ParametersLauncher {
     }
 
     public enum ParametersTab {
-        physConst, refMat, pbBlankIC
+        physConst, refMat, commonPb
     }
 }

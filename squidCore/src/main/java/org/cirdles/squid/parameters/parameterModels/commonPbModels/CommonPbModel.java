@@ -3,33 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.parameters.parameterModels.pbBlankICModels;
+package org.cirdles.squid.parameters.parameterModels.commonPbModels;
 
+import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
+import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.valueModels.ValueModel;
 import com.thoughtworks.xstream.XStream;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
-import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPbBlankICConverter;
-import org.cirdles.squid.parameters.valueModels.ValueModel;
+import java.util.*;
 
 /**
- *
  * @author ryanb
  */
 public class CommonPbModel extends ParametersModel {
 
     private static long serialVersionUID = -5054855251006560667L;
 
-    public static CommonPbModel defaultPbBlankICModel = getDefaultModel("EARTHTIME Example Pb Blank IC", "3.0");
+    public static CommonPbModel defaultCommonPbModel = getDefaultModel("blank placeholder", "1.0");
 
     public CommonPbModel() {
         super();
@@ -79,11 +74,10 @@ public class CommonPbModel extends ParametersModel {
     }
 
     public static List<CommonPbModel> getDefaultModels() {
-        File folder = new File("SamplePbBlankICModels/");
+        File folder = new File("SampleCommonPbModels/");
         List<CommonPbModel> models = new ArrayList<>();
-        File[] files = new File[0];
         if (folder.exists()) {
-            files = folder.listFiles(new FilenameFilter() {
+            File[] files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     boolean retVal;
                     if (name.toLowerCase().endsWith(".xml")) {
@@ -95,7 +89,10 @@ public class CommonPbModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add(CommonPbModel.getPbBlankICModelFromETReduxXML(files[i]));
+                CommonPbModel mod = new CommonPbModel();
+                XStream xstream = new XStream();
+                mod.customizeXstream(xstream);
+                models.add((CommonPbModel) xstream.fromXML(files[i]));
             }
         }
 
@@ -114,25 +111,6 @@ public class CommonPbModel extends ParametersModel {
             retVal = new CommonPbModel();
         }
         return retVal;
-    }
-
-    public static CommonPbModel getPbBlankICModelFromETReduxXML(String input) {
-        XStream xstream = getETReduxXStream();
-        CommonPbModel model = (CommonPbModel) xstream.fromXML(input);
-        return model;
-    }
-
-    public static CommonPbModel getPbBlankICModelFromETReduxXML(File input) {
-        XStream xstream = getETReduxXStream();
-        CommonPbModel model = (CommonPbModel) xstream.fromXML(input);
-        return model;
-    }
-
-    public static XStream getETReduxXStream() {
-        XStream xstream = new XStream();
-        xstream.registerConverter(new ETReduxPbBlankICConverter());
-        xstream.alias("PbBlankICModel", CommonPbModel.class);
-        return xstream;
     }
 
     public static void main(String[] args) {

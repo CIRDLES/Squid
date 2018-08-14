@@ -26,7 +26,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
-import org.cirdles.squid.parameters.parameterModels.pbBlankICModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
@@ -42,7 +42,7 @@ public class CalamariFileUtilities {
     public static File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
     private static File physicalConstantsFolder;
     private static File referenceMaterialsFolder;
-    private static File pbBlankICModelsFolder;
+    private static File commonPbModelsFolder;
 
     /**
      * Provides a clean copy of two example Prawn XML files every time Squid
@@ -144,27 +144,27 @@ public class CalamariFileUtilities {
 
         }
 
-        ResourceExtractor pbBlankICResourceExtractor = new ResourceExtractor(CommonPbModel.class);
+        ResourceExtractor commonPbResourceExtractor = new ResourceExtractor(CommonPbModel.class);
 
-        Path listOfPbBlankICModels = pbBlankICResourceExtractor.extractResourceAsPath("listOfSamplePbBlankICModels.txt");
-        if (listOfPbBlankICModels != null) {
-            pbBlankICModelsFolder = new File("SamplePbBlankICModels");
+        Path listOfCommonPbModels = commonPbResourceExtractor.extractResourceAsPath("listOfSampleCommonPbModels.txt");
+        if (listOfCommonPbModels != null) {
+            commonPbModelsFolder = new File("SampleCommonPbModels");
             try {
-                if (pbBlankICModelsFolder.exists()) {
-                    FileUtilities.recursiveDelete(pbBlankICModelsFolder.toPath());
+                if (commonPbModelsFolder.exists()) {
+                    FileUtilities.recursiveDelete(commonPbModelsFolder.toPath());
                 }
-                if (pbBlankICModelsFolder.mkdir()) {
-                    List<String> fileNames = Files.readAllLines(listOfPbBlankICModels, ISO_8859_1);
+                if (commonPbModelsFolder.mkdir()) {
+                    List<String> fileNames = Files.readAllLines(listOfCommonPbModels, ISO_8859_1);
                     for (int i = 0; i < fileNames.size(); i++) {
                         // test for empty string
                         if (fileNames.get(i).trim().length() > 0) {
-                            File pbBlankICResource = pbBlankICResourceExtractor.extractResourceAsFile(fileNames.get(i));
-                            File pbBlankICFile = new File(pbBlankICModelsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+                            File commonPbResource = commonPbResourceExtractor.extractResourceAsFile(fileNames.get(i));
+                            File commonPbFile = new File(commonPbModelsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
 
-                            if (pbBlankICResource.renameTo(pbBlankICFile)) {
-                                System.out.println("PbBlankICModel added: " + fileNames.get(i));
+                            if (commonPbResource.renameTo(commonPbFile)) {
+                                System.out.println("Common Pb Model added: " + fileNames.get(i));
                             } else {
-                                System.out.println("PbBlankICModel failed to add: " + fileNames.get(i));
+                                System.out.println("Common Pb Model failed to add: " + fileNames.get(i));
                             }
                         }
                     }
