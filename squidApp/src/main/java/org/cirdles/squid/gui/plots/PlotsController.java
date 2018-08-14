@@ -358,10 +358,10 @@ public class PlotsController implements Initializable {
                     } else {
                         if (item.startsWith("*")) {
                             setText(item.replaceFirst("\\*", ""));
-                            setStyle("-fx-background-color: #aeccff;");
+                            setStyle("-fx-text-fill: blue;");
                         } else {
                             setText(item);
-                            setStyle("-fx-background-color: #ffb1bd;");
+                            setStyle("-fx-text-fill: red;");
                         }
                     }
                 }
