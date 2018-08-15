@@ -42,7 +42,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInterface {
 
     private String plotTitle = "NONE";
-    private SpotSummaryDetails spotSummaryDetails;
+    private final SpotSummaryDetails spotSummaryDetails;
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<Double> ages;
     private List<Double> ageTwoSigma;
@@ -50,7 +50,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private double[] weightedMeanStats;
     private double[] onPeakTwoSigma;
     private boolean[] rejectedIndices;
-    private String ageLookupString;
+    private final String ageLookupString;
 
     private double standardAge;
 
@@ -135,7 +135,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         g2d.setFill(Paint.valueOf("Red"));
 
-        int rightOfText = 400;
+        int rightOfText = 450;
         Text text = new Text("Wtd Mean of Ref Mat Pb/U calibr.");
         text.setFont(Font.font("Lucida Sans", 15));
 
@@ -273,6 +273,21 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 55);
 
+        // legend
+        text.setText("Legend:");
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        g2d.fillText(text.getText(), leftMargin + 225, topMargin + graphHeight + 80);
+
+        g2d.setFill(Paint.valueOf("RED"));
+        text.setText("Included");
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        g2d.fillText(text.getText(), leftMargin + 325, topMargin + graphHeight + 80);
+
+        g2d.setFill(Paint.valueOf("BLUE"));
+        text.setText("Excluded");
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        g2d.fillText(text.getText(), leftMargin + 425, topMargin + graphHeight + 80);
+
         // provide highlight and info about selected spot
         g2d.setFont(Font.font("Lucida Sans", 12));
         if (indexOfSelectedSpot >= 0) {
@@ -283,7 +298,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     mapY(maxY) - 20,
                     12,
                     graphHeight + 20);
-            g2d.setFill(Paint.valueOf("BLACK"));
+            if (rejectedIndices[indexOfSelectedSpot]) {
+                g2d.setFill(Paint.valueOf("Blue"));
+            } else {
+                g2d.setFill(Paint.valueOf("Red"));
+            }
+            
             Text spotID = new Text(shrimpFractions.get(indexOfSelectedSpot).getFractionID());
             spotID.applyCss();
             g2d.fillText(

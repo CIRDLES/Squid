@@ -250,7 +250,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
-        this.showTimeNormalized = false;
+        this.showTimeNormalized = true; // in honor of Nicole Rayner's normal work flow
 
         this.showPrimaryBeam = false;
         this.showQt1y = false;

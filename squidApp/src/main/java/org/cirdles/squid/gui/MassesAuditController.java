@@ -529,7 +529,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
         int heightOfMassPlot = 150;
         // aug 2018 to manage large spot counts and pixels used
-        int customSpotWidth = (1000 - squidProject.getPrawnFileRuns().size()) / 25;//was just 25, then 15
+        int customSpotWidth = (1000 - squidProject.getPrawnFileRuns().size()) / 30;//was just 25, then 15
         int widthOfView = squidProject.getPrawnFileRuns().size() * customSpotWidth + 350;
 
         AbstractDataView canvas
