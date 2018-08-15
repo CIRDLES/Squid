@@ -42,7 +42,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInterface {
 
     private String plotTitle = "NONE";
-    private SpotSummaryDetails spotSummaryDetails;
+    private final SpotSummaryDetails spotSummaryDetails;
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<Double> ages;
     private List<Double> ageTwoSigma;
@@ -50,6 +50,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private double[] weightedMeanStats;
     private double[] onPeakTwoSigma;
     private boolean[] rejectedIndices;
+    private final String ageLookupString;
 
     private double standardAge;
 
@@ -57,10 +58,17 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     public WeightedMeanPlot(Rectangle bounds, String plotTitle, SpotSummaryDetails spotSummaryDetails, String ageLookupString, double standardAge) {
         super(bounds, 0, 0);
+
+        graphWidth = 700;
+        graphHeight = 300;
+        leftMargin = 150;
+        topMargin = 200;
+
         this.plotTitle = plotTitle;
         this.spotSummaryDetails = spotSummaryDetails;
         // extract needed values
-        extractFractionDetails(ageLookupString);
+        this.ageLookupString = ageLookupString;
+        extractFractionDetails();
 
         this.standardAge = standardAge;
         this.indexOfSelectedSpot = -1;
@@ -69,7 +77,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         this.setOnMouseClicked(new MouseClickEventHandler());
     }
 
-    private void extractFractionDetails(String ageLookupString) {
+    private void extractFractionDetails() {
         shrimpFractions = spotSummaryDetails.getSelectedSpots();
         rejectedIndices = spotSummaryDetails.getRejectedIndices();
 
@@ -116,11 +124,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     public void paint(GraphicsContext g2d) {
         super.paint(g2d);
 
-        graphWidth = 700;
-        graphHeight = 300;
-        leftMargin = 150;
-        topMargin = 200;
-
         g2d.setFont(Font.font("Lucida Sans", 15));
 
         g2d.setStroke(Paint.valueOf("BLACK"));
@@ -130,9 +133,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         g2d.fillText(plotTitle, 45, 45);
 
-        g2d.setFill(Paint.valueOf("Blue"));
+        g2d.setFill(Paint.valueOf("Red"));
 
-        int rightOfText = 400;
+        int rightOfText = 450;
         Text text = new Text("Wtd Mean of Ref Mat Pb/U calibr.");
         text.setFont(Font.font("Lucida Sans", 15));
 
@@ -216,7 +219,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setFill(Paint.valueOf("Black"));
         text.setText("2\u03C3 error bars");
         textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin - 10);
+        g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin - 25);
 
         // ticsY         
         float verticalTextShift = 3.2f;
@@ -268,7 +271,22 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         // X- label
         text.setText("Hours");
         textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 35);
+        g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 55);
+
+        // legend
+        text.setText("Legend:");
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        g2d.fillText(text.getText(), leftMargin + 225, topMargin + graphHeight + 80);
+
+        g2d.setFill(Paint.valueOf("RED"));
+        text.setText("Included");
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        g2d.fillText(text.getText(), leftMargin + 325, topMargin + graphHeight + 80);
+
+        g2d.setFill(Paint.valueOf("BLUE"));
+        text.setText("Excluded");
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        g2d.fillText(text.getText(), leftMargin + 425, topMargin + graphHeight + 80);
 
         // provide highlight and info about selected spot
         g2d.setFont(Font.font("Lucida Sans", 12));
@@ -279,8 +297,13 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - 6,
                     mapY(maxY) - 20,
                     12,
-                    graphHeight + 40);
-            g2d.setFill(Paint.valueOf("BLACK"));
+                    graphHeight + 20);
+            if (rejectedIndices[indexOfSelectedSpot]) {
+                g2d.setFill(Paint.valueOf("Blue"));
+            } else {
+                g2d.setFill(Paint.valueOf("Red"));
+            }
+            
             Text spotID = new Text(shrimpFractions.get(indexOfSelectedSpot).getFractionID());
             spotID.applyCss();
             g2d.fillText(
@@ -288,7 +311,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     + "  Age = " + new BigDecimal(myOnPeakData[indexOfSelectedSpot]).movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
                     + " ±" + new BigDecimal(onPeakTwoSigma[indexOfSelectedSpot]).movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + " Ma",
                     mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - spotID.getLayoutBounds().getWidth(),
-                    mapY(minY) + 35 + spotID.getLayoutBounds().getHeight());
+                    mapY(minY) + 0 + spotID.getLayoutBounds().getHeight());
         }
 
     }
@@ -305,8 +328,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         myOnPeakNormalizedAquireTimes = hours.stream().mapToDouble(Double::doubleValue).toArray();
         onPeakTwoSigma = ageTwoSigma.stream().mapToDouble(Double::doubleValue).toArray();
 
-        setDisplayOffsetY(0.0);
+        minY = Double.MAX_VALUE;
+        maxY = -Double.MAX_VALUE;
+        minX = Double.MAX_VALUE;
+        maxX = -Double.MAX_VALUE;
 
+        setDisplayOffsetY(0.0);
         setDisplayOffsetX(0.0);
 
         // X-axis is hours
@@ -342,11 +369,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     @Override
     public void setData(List<Map<String, Object>> data) {
-        //plot.setData(data);
+        // do nothing
     }
 
     @Override
     public Node displayPlotAsNode() {
+        extractFractionDetails();
         preparePanel();
         this.repaint();
         return this;

@@ -21,7 +21,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
@@ -189,6 +192,21 @@ public abstract class BuiltInExpressionsFactory {
             Expression expressionSQUID_TH_U_EQN_NAMEs = buildExpression(SQUID_TH_U_EQN_NAME_S,
                     "1", false, true, false);
             placeholderExpressions.add(expressionSQUID_TH_U_EQN_NAMEs);
+
+            Expression expressionSQUID_PPM_PARENT_EQN_NAME_TH = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
+                    "1", true, false, false);
+            placeholderExpressions.add(expressionSQUID_PPM_PARENT_EQN_NAME_TH);
+
+            Expression expressionOVER_COUNT_4_6_8 = buildExpression(OVER_COUNT_4_6_8,
+                    "1", true, false, false);
+            placeholderExpressions.add(expressionOVER_COUNT_4_6_8);
+            Expression expressionOVER_COUNTS_PERSEC_4_8 = buildExpression(OVER_COUNTS_PERSEC_4_8,
+                    "1", true, false, false);
+            placeholderExpressions.add(expressionOVER_COUNTS_PERSEC_4_8);
+            Expression expressionCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = buildExpression(CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
+                    "1", true, false, false);
+            placeholderExpressions.add(expressionCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA);
+
         }
 
         // placeholder expressions
@@ -253,14 +271,6 @@ public abstract class BuiltInExpressionsFactory {
             // this code for ppmTh comes from SQ2.50 Procedral Framework: Part 5
             // see: https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-5
 
-            Expression expressionPpmTh = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
-                    "[\"232Th/238U\"] * [\"ppmU\"] * 0.9678", true, false, false);
-            concentrationExpressionsOrdered.add(expressionPpmTh);
-
-            Expression expressionPpmThS = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH_S,
-                    "[\"232Th/238US\"] * [\"ppmU\"] * 0.9678", false, true, false);
-            concentrationExpressionsOrdered.add(expressionPpmThS);
-
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsU());
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsTh());
 
@@ -269,7 +279,7 @@ public abstract class BuiltInExpressionsFactory {
             String exp238 = "( EXP ( Lambda238 * [\"4-corr 206Pb/238U Age\"] ) - 1 )";
             String exp232 = "( EXP ( Lambda232 * [\"4-corr 208Pb/232Th Age\"] ) - 1 )";
 
-            Expression expression4corrSQUID_TH_U_EQN_NAME = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME,
+            Expression expression4corrSQUID_TH_U_EQN_NAME = buildExpression("4-corr " + SQUID_TH_U_EQN_NAME,
                     "ValueModel("
                     + "[\"4-corr 208Pb*/206Pb*\"] * " + exp238 + " / " + exp232 + ","
                     + "SQRT( [%\"4-corr 208Pb*/206Pb*\"]^2 + \n"
@@ -278,11 +288,15 @@ public abstract class BuiltInExpressionsFactory {
                     + "false)", true, false, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAME);
 
+            Expression expression4corrPpmTh = buildExpression("4-corr " + SQUID_PPM_PARENT_EQN_NAME_TH,
+                    "[\"4-corr 232Th/238U\"] * [\"ppmU\"] * 0.9678", true, false, false);
+            concentrationExpressionsOrdered.add(expression4corrPpmTh);
+
             // for 207Pb ref material
             exp238 = "( EXP ( Lambda238 * [\"7-corr 206Pb/238U Age\"] ) - 1 )";
             exp232 = "( EXP ( Lambda232 * [\"7-corr 208Pb/232Th Age\"] ) - 1 )";
 
-            Expression expression7corrSQUID_TH_U_EQN_NAME = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME,
+            Expression expression7corrSQUID_TH_U_EQN_NAME = buildExpression("7-corr " + SQUID_TH_U_EQN_NAME,
                     "ValueModel([\"7-corr 208Pb*/206Pb*\"] * " + exp238 + " / " + exp232 + ","
                     + "SQRT( [%\"7-corr 208Pb*/206Pb*\"]^2 + \n"
                     + "[%\"7-corr 206Pb/238Ucalibr.const\"]^2 + \n"
@@ -290,8 +304,16 @@ public abstract class BuiltInExpressionsFactory {
                     + "false)", true, false, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAME);
 
+            Expression expression7corrPpmTh = buildExpression("7-corr " + SQUID_PPM_PARENT_EQN_NAME_TH,
+                    "[\"7-corr 232Th/238U\"] * [\"ppmU\"] * 0.9678", true, false, false);
+            concentrationExpressionsOrdered.add(expression7corrPpmTh);
+
             // for samples
-            Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression("4-corr" + SQUID_TH_U_EQN_NAME_S,
+            Expression expressionPpmThS = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH_S,
+                    "[\"232Th/238US\"] * [\"ppmU\"] * 0.9678", false, true, false);
+            concentrationExpressionsOrdered.add(expressionPpmThS);
+
+            Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression("4-corr " + SQUID_TH_U_EQN_NAME_S,
                     "ValueModel("
                     + "[\"208/206\"] * [\"4-corr Total 206Pb/238US\"] / [\"4-corr Total 208Pb/232ThS\"],"
                     + "SQRT( [%\"208/206\"]^2 + [%\"4-corr Total 206Pb/238US\"]^2 + \n"
@@ -299,7 +321,7 @@ public abstract class BuiltInExpressionsFactory {
                     + "false)", false, true, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAMEs);
 
-            Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression("7-corr" + SQUID_TH_U_EQN_NAME_S,
+            Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression("7-corr " + SQUID_TH_U_EQN_NAME_S,
                     "ValueModel("
                     + "[\"208/206\"] * [\"7-corr Total 206Pb/238US\"] / [\"7-corr Total 208Pb/232ThS\"],"
                     + "SQRT( [%\"208/206\"]^2 + [%\"7-corr Total 206Pb/238US\"]^2 + \n"
@@ -351,7 +373,7 @@ public abstract class BuiltInExpressionsFactory {
      *
      * @return
      */
-    public static SortedSet<Expression> generateOverCountExpressions() {
+    public static SortedSet<Expression> generateOverCountExpressions(boolean isDirectAltPD) {
         SortedSet<Expression> overCountExpressionsOrdered = new TreeSet<>();
 
         Expression expressionOverCount4_6_7 = buildExpression("204/206 (fr. 207)",
@@ -361,25 +383,58 @@ public abstract class BuiltInExpressionsFactory {
                 + "false)", true, false, false);
         overCountExpressionsOrdered.add(expressionOverCount4_6_7);
 
-        Expression expressionOverCount4_6_8 = buildExpression("204/206 (fr. 208)",
-                "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) / (sComm_84 - StdRad86fact * [\"232Th/238U\"] * sComm_64 )", true, false, false);
-        overCountExpressionsOrdered.add(expressionOverCount4_6_8);
-
         Expression expressionOverCountPerSec4_7 = buildExpression("204 overcts/sec (fr. 207)",
                 "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"204/206 (fr. 207)\"] * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
         overCountExpressionsOrdered.add(expressionOverCountPerSec4_7);
-
-        Expression expressionOverCountPerSec4_8 = buildExpression("204 overcts/sec (fr. 208)",
-                "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"204/206 (fr. 208)\"] * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
-        overCountExpressionsOrdered.add(expressionOverCountPerSec4_8);
 
         Expression expressionOverCount7CorrCalib = buildExpression("7-corr Primary calib const. delta%",
                 "100 * ( (1 - sComm_64 * [\"204/206\"]) / (1 - sComm_64 * [\"204/206 (fr. 207)\"]) - 1 )", true, false, false);
         overCountExpressionsOrdered.add(expressionOverCount7CorrCalib);
 
-        Expression expressionOverCount8CorrCalib = buildExpression("8-corr Primary calib const. delta%",
-                "100 * ( (1 - sComm_64 * [\"204/206\"]) / (1 - sComm_64 * [\"204/206 (fr. 208)\"]) - 1 ) ", true, false, false);
-        overCountExpressionsOrdered.add(expressionOverCount8CorrCalib);
+        // new section to accoommodate reporting corrections per Bodorkos 13 Aug 2018
+        if (!isDirectAltPD) {
+            Expression expressionOverCount4_6_8 = buildExpression(OVER_COUNT_4_6_8,
+                    "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) / (sComm_84 - StdRad86fact * [\"232Th/238U\"] * sComm_64 )", true, false, false);
+            overCountExpressionsOrdered.add(expressionOverCount4_6_8);
+
+            Expression expressionOverCountPerSec4_8 = buildExpression(OVER_COUNTS_PERSEC_4_8,
+                    "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"204/206 (fr. 208)\"] * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
+            overCountExpressionsOrdered.add(expressionOverCountPerSec4_8);
+
+            Expression expressionOverCount8CorrCalib = buildExpression(CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
+                    "100 * ( (1 - sComm_64 * [\"204/206\"]) / (1 - sComm_64 * [\"204/206 (fr. 208)\"]) - 1 ) ", true, false, false);
+            overCountExpressionsOrdered.add(expressionOverCount8CorrCalib);
+
+        } else {
+            // isDirectAltPD true
+            Expression expression4CorrOverCount4_6_8 = buildExpression("4-corr " + OVER_COUNT_4_6_8,
+                    "( [\"208/206\"] - StdRad86fact * [\"4-corr 232Th/238U\"] ) "
+                    + "/ (sComm_84 - StdRad86fact * [\"4-corr 232Th/238U\"] * sComm_64 )", true, false, false);
+            overCountExpressionsOrdered.add(expression4CorrOverCount4_6_8);
+
+            Expression expression4CorrOverCountPerSec4_8 = buildExpression("4-corr " + OVER_COUNTS_PERSEC_4_8,
+                    "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"4-corr 204/206 (fr. 208)\"]"
+                    + " * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
+            overCountExpressionsOrdered.add(expression4CorrOverCountPerSec4_8);
+
+            Expression expression4CorrOverCount8CorrCalib = buildExpression("4-corr " + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
+                    "100 * ( (1 - sComm_64 * [\"204/206\"]) / (1 - sComm_64 * [\"4-corr 204/206 (fr. 208)\"]) - 1 ) ", true, false, false);
+            overCountExpressionsOrdered.add(expression4CorrOverCount8CorrCalib);
+
+            Expression expression7CorrOverCount4_6_8 = buildExpression("7-corr " + OVER_COUNT_4_6_8,
+                    "( [\"208/206\"] - StdRad86fact * [\"7-corr 232Th/238U\"] ) "
+                    + "/ (sComm_84 - StdRad86fact * [\"7-corr 232Th/238U\"] * sComm_64 )", true, false, false);
+            overCountExpressionsOrdered.add(expression7CorrOverCount4_6_8);
+
+            Expression expression7CorrOverCountPerSec4_8 = buildExpression("7-corr " + OVER_COUNTS_PERSEC_4_8,
+                    "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"7-corr 204/206 (fr. 208)\"]"
+                    + " * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
+            overCountExpressionsOrdered.add(expression7CorrOverCountPerSec4_8);
+
+            Expression expression7CorrOverCount8CorrCalib = buildExpression("7-corr " + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
+                    "100 * ( (1 - sComm_64 * [\"204/206\"]) / (1 - sComm_64 * [\"7-corr 204/206 (fr. 208)\"]) - 1 ) ", true, false, false);
+            overCountExpressionsOrdered.add(expression7CorrOverCount8CorrCalib);
+        }
 
         return overCountExpressionsOrdered;
     }

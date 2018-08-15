@@ -19,6 +19,9 @@ package org.cirdles.squid.reports.reportSpecifications;
 
 import java.util.HashMap;
 import java.util.Map;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
@@ -30,7 +33,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  *
  * @author James F. Bowring
  */
-public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificationsAbstract {
+public class ReportSpecificationsUPbReferenceMaterialsOutOfDate extends ReportSpecificationsAbstract {
 
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
@@ -65,19 +68,19 @@ public class ReportSpecificationsUPbReferenceMaterials extends ReportSpecificati
         {"204", "overcts", "/sec", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204 overcts/sec (fr. 207)", "",
             "", "true", "false", "3", "", "", "false", "false"
         },
-        {"204", "overcts", "/sec", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204 overcts/sec (fr. 208)", "",
+        {"204", "overcts", "/sec", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", OVER_COUNTS_PERSEC_4_8, "",
             "", "true", "false", "3", "", "", "false", "false"
         },
         {"", "204", "/206", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204/206 (fr. 207)", "PCT",
             "", "true", "true", "6", "true", "", "false", "false"
         },
-        {"", "204", "/206", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204/206 (fr. 208)", "",
+        {"", "204", "/206", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", OVER_COUNT_4_6_8, "",
             "", "true", "true", "6", "true", "", "false", "false"
         },
         {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr Primary calib const. delta%", "",
             "", "true", "true", "3", "true", "", "false", "false"
         },
-        {"8-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr Primary calib const. delta%", "",
+        {"8-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA, "",
             "", "true", "true", "3", "true", "", "false", "false"
         },
         {"", "", "UncorrPb", "/Uconst", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PRIMARY_UTH_EQN_NAME_U, "PCT",

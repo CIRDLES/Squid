@@ -81,7 +81,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * @param showTimeNormalized
      * @param massAuditRefreshInterface the value of massAuditRefreshInterface
      */
-    public MassStationAuditViewForShrimp(///
+    public MassStationAuditViewForShrimp(
             Rectangle bounds,
             String plotTitle,
             List<Double> measuredTrimMasses,
@@ -252,14 +252,14 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             g2d.fillRect(
                     mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans]),
                     0,
-                    Math.abs(mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans + 5]) - mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans])),
+                    Math.abs(mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans + 4]) - mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans])),
                     height);
             g2d.setFill(Paint.valueOf("BLACK"));
             Text text = new Text(prawnFileRuns.get(indexOfSelectedSpot).getPar().get(0).getValue());
             text.applyCss();
             g2d.fillText(
                     prawnFileRuns.get(indexOfSelectedSpot).getPar().get(0).getValue(),
-                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans + 5]) - text.getLayoutBounds().getWidth(),
+                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans + 4]) - text.getLayoutBounds().getWidth(),
                     20);
         }
 
@@ -280,8 +280,11 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                     g2d.strokeLine(runX, 0, runX, height);
                 }
 
-                g2d.setFont(Font.font("Lucida Sans", 8));
-                g2d.fillText(String.valueOf(runIndices[i]), mapX(myOnPeakNormalizedAquireTimes[i]) - 15f, height - 1.5);
+                g2d.setFont(Font.font("Lucida Sans", 7));
+                Text text = new Text(String.valueOf(runIndices[i]));
+                text.setFont(Font.font("Lucida Sans", 7)); //       applyCss();
+                g2d.setFill(Paint.valueOf("BLACK"));
+                g2d.fillText(String.valueOf(runIndices[i]), mapX(myOnPeakNormalizedAquireTimes[i]) - text.getLayoutBounds().getWidth() + 2.0f, height - 1.5);
                 g2d.setStroke(Paint.valueOf("BLACK"));
                 g2d.setLineWidth(0.5);
             }
@@ -345,6 +348,11 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         myOnPeakData = measuredTrimMasses.stream().mapToDouble(Double::doubleValue).toArray();
 
         myOnPeakNormalizedAquireTimes = timesOfMeasuredTrimMasses.stream().mapToDouble(Double::doubleValue).toArray();
+
+        double normalizer = myOnPeakNormalizedAquireTimes[0];
+        for (int i = 0; i < myOnPeakNormalizedAquireTimes.length; i++) {
+            myOnPeakNormalizedAquireTimes[i] -= normalizer;
+        }
 
         if (showTimeNormalized) {
             for (int i = 0; i < myOnPeakNormalizedAquireTimes.length; i++) {
