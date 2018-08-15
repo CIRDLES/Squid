@@ -15,20 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
@@ -44,7 +30,6 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -176,7 +161,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private Spinner<Integer> refMatConcSigFigs;
     @FXML
-    private MenuItem saveAndRegCurrBlankICIsEditableMenuItem;
+    private MenuItem saveAndRegCommonPbMenuItem;
     @FXML
     private MenuItem cancelEditOfCommonPb;
     @FXML
@@ -1271,7 +1256,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpCommonPbMenuItems(boolean isEditing, boolean isEditable) {
         commonPbFileMenu.setDisable(isEditing);
-        saveAndRegCurrBlankICIsEditableMenuItem.setDisable(!isEditing);
+        saveAndRegCommonPbMenuItem.setDisable(!isEditing);
         remCurrCommonPb.setDisable(!isEditable || isEditing);
         cancelEditOfCommonPb.setDisable(!isEditing);
         editNewEmptyCommonPb.setDisable(isEditing);
@@ -1767,15 +1752,15 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             CommonPbModel importedMod = (CommonPbModel) commonPbModel.readXMLObject(file.getAbsolutePath(), false);
-                if(!commonPbModels.contains(importedMod)) {
-                    importedMod.setIsEditable(true);
-                    commonPbModels.add(importedMod);
-                    commonPbCB.getItems().add(getModVersionName(importedMod));
-                    commonPbCB.getSelectionModel().selectLast();
-                    commonPbModel = importedMod;
-                    setUpCommonPb();
-                    squidLabData.storeState();
-                }
+            if (!commonPbModels.contains(importedMod)) {
+                importedMod.setIsEditable(true);
+                commonPbModels.add(importedMod);
+                commonPbCB.getItems().add(getModVersionName(importedMod));
+                commonPbCB.getSelectionModel().selectLast();
+                commonPbModel = importedMod;
+                setUpCommonPb();
+                squidLabData.storeState();
+            }
         }
         chosenTab = ParametersTab.commonPb;
         squidLabDataStage.requestFocus();
