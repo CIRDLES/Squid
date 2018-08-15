@@ -10,7 +10,6 @@ import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 import com.thoughtworks.xstream.XStream;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.ObjectStreamClass;

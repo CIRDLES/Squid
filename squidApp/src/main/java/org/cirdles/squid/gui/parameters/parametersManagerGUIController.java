@@ -15,6 +15,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
@@ -148,19 +162,19 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private AnchorPane molarMassesPane;
     @FXML
-    private TextField refMatDataSigFigs;
+    private Spinner<Integer> refMatDataSigFigs;
     @FXML
-    private TextField physConstDataSigFigs;
+    private Spinner<Integer> physConstDataSigFigs;
     @FXML
-    private TextField physConstCorrSigFigs;
+    private Spinner<Integer> physConstCorrSigFigs;
     @FXML
-    private TextField physConstCovSigFigs;
+    private Spinner<Integer> physConstCovSigFigs;
     @FXML
-    private TextField refMatCorrSigFigs;
+    private Spinner<Integer> refMatCorrSigFigs;
     @FXML
-    private TextField refMatCovSigFigs;
+    private Spinner<Integer> refMatCovSigFigs;
     @FXML
-    private TextField refMatConcSigFigs;
+    private Spinner<Integer> refMatConcSigFigs;
     @FXML
     private MenuItem saveAndRegCurrBlankICIsEditableMenuItem;
     @FXML
@@ -178,7 +192,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private Button commonPbDataNotationButton;
     @FXML
-    private TextField commonPbDataSigFigs;
+    private Spinner<Integer> commonPbDataSigFigs;
     @FXML
     private TableView<ObservableList<SimpleStringProperty>> commonPbCorrTable;
     @FXML
@@ -188,7 +202,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private Button commonPbCovNotationButton;
     @FXML
-    private TextField commonPbCovSigFigs;
+    private Spinner<Integer> commonPbCovSigFigs;
     @FXML
     private TextArea commonPbReferencesArea;
     @FXML
@@ -206,7 +220,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private Menu commonPbFileMenu;
     @FXML
-    private TextField commonPbCorrSigFigs;
+    private Spinner<Integer> commonPbCorrSigFigs;
     @FXML
     private ChoiceBox<String> commonPbCB;
     @FXML
@@ -230,7 +244,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private boolean isEditingCurrPhysConst;
     private boolean isEditingCurrRefMat;
-    private boolean isEditingCurrcommonPbModel;
+    private boolean isEditingCurrCommonPbModel;
 
     private DecimalFormat physConstDataNotation;
     private DecimalFormat physConstCorrNotation;
@@ -247,7 +261,7 @@ public class parametersManagerGUIController implements Initializable {
 
     public static boolean isEditingPhysConst;
     public static boolean isEditingRefMat;
-    public static boolean isEditingcommonPb;
+    public static boolean isEditingCommonPb;
 
     public static ParametersTab chosenTab = ParametersTab.physConst;
 
@@ -259,12 +273,14 @@ public class parametersManagerGUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        isEditingCurrcommonPbModel = false;
+        setUpSigFigSpinners();
+
+        isEditingCurrCommonPbModel = false;
         isEditingCurrPhysConst = false;
         isEditingCurrRefMat = false;
         isEditingPhysConst = false;
         isEditingRefMat = false;
-        isEditingcommonPb = false;
+        isEditingCommonPb = false;
 
         physConstDataNotation = getScientificNotationFormat();
         physConstCorrNotation = getScientificNotationFormat();
@@ -291,7 +307,6 @@ public class parametersManagerGUIController implements Initializable {
         setUpTabs();
         setUpApparentDatesTabSelection();
         setUpLaboratoryName();
-        setUpSigFigTextFields();
     }
 
     private void setUpTabs() {
@@ -315,7 +330,7 @@ public class parametersManagerGUIController implements Initializable {
                     setUpRefMatCBItems();
                     refMatCB.getSelectionModel().select(selected);
                 }
-                if (!isEditingcommonPb) {
+                if (!isEditingCommonPb) {
                     selected = commonPbCB.getSelectionModel().getSelectedItem();
                     setUpCommonPbCBItems();
                     commonPbCB.getSelectionModel().select(selected);
@@ -453,32 +468,32 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstCov() {
         initializeTableWithObList(physConstCovTable, getObListFromMatrix(physConstModel.getCovModel()),
-                physConstCovNotation, physConstModel, getPrecisionValue(physConstCovSigFigs.getText()));
+                physConstCovNotation, physConstModel, physConstCovSigFigs.getValue());
     }
 
     private void setUpPhysConstCorr() {
         initializeTableWithObList(physConstCorrTable, getObListFromMatrix(physConstModel.getCorrModel()),
-                physConstCorrNotation, physConstModel, getPrecisionValue(physConstCorrSigFigs.getText()));
+                physConstCorrNotation, physConstModel, physConstCorrSigFigs.getValue());
     }
 
     private void setUpRefMatCov() {
         initializeTableWithObList(refMatCovTable, getObListFromMatrix(refMatModel.getCovModel()),
-                refMatCovNotation, refMatModel, getPrecisionValue(refMatCovSigFigs.getText()));
+                refMatCovNotation, refMatModel, refMatCovSigFigs.getValue());
     }
 
     private void setUpRefMatCorr() {
         initializeTableWithObList(refMatCorrTable, getObListFromMatrix(refMatModel.getCorrModel()),
-                refMatCorrNotation, refMatModel, getPrecisionValue(refMatCorrSigFigs.getText()));
+                refMatCorrNotation, refMatModel, refMatCorrSigFigs.getValue());
     }
 
     private void setUpCommonPbCov() {
         initializeTableWithObList(commonPbCovTable, getObListFromMatrix(commonPbModel.getCovModel()),
-                commonPbCovNotation, commonPbModel, getPrecisionValue(commonPbCovSigFigs.getText()));
+                commonPbCovNotation, commonPbModel, commonPbCovSigFigs.getValue());
     }
 
     private void setUpCommonPbCorr() {
         initializeTableWithObList(commonPbCorrTable, getObListFromMatrix(commonPbModel.getCorrModel()),
-                commonPbCorrNotation, commonPbModel, getPrecisionValue(commonPbCorrSigFigs.getText()));
+                commonPbCorrNotation, commonPbModel, commonPbCorrSigFigs.getValue());
     }
 
     private static ObservableList<ObservableList<SimpleStringProperty>> getObListFromMatrix(AbstractMatrixModel matrix) {
@@ -507,7 +522,8 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
-                                           ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format, ParametersModel model, int precision) {
+                                           ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
+                                           ParametersModel model, int precision) {
         if (obList.size() > 0) {
             List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns = new ArrayList<>();
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
@@ -571,14 +587,14 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpPhysConstData() {
-        int precision = getPrecisionValue(physConstDataSigFigs.getText());
+        int precision = physConstDataSigFigs.getValue();
         physConstDataTable.getColumns().setAll(getDataModelColumns(physConstDataTable, physConstDataNotation, precision));
         physConstDataTable.setItems(getDataModelObList(physConstModel.getValues(), physConstDataNotation, precision));
         physConstDataTable.refresh();
     }
 
     private void setUpCommonPbData() {
-        int precision = getPrecisionValue(commonPbDataSigFigs.getText());
+        int precision = commonPbDataSigFigs.getValue();
         commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation, precision));
         commonPbDataTable.setItems(getDataModelObList(commonPbModel.getValues(), commonPbDataNotation, precision));
         commonPbDataTable.refresh();
@@ -586,7 +602,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpRefMatData() {
         setUpRefMatDataModelColumns();
-        int precision = getPrecisionValue(refMatDataSigFigs.getText());
+        int precision = refMatDataSigFigs.getValue();
         final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
         ValueModel[] values = refMatModel.getValues();
         for (int i = 0; i < values.length; i++) {
@@ -604,7 +620,7 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpConcentrations() {
-        int precision = getPrecisionValue(refMatConcSigFigs.getText());
+        int precision = refMatConcSigFigs.getValue();
         refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision));
         refMatConcentrationsTable.setItems(getDataModelObList(refMatModel.getConcentrations(), refMatConcentrationsNotation, precision));
         refMatConcentrationsTable.refresh();
@@ -650,8 +666,7 @@ public class parametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
-                }
-                if (table.equals(commonPbDataTable)) {
+                } else if (table.equals(commonPbDataTable)) {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
@@ -750,7 +765,7 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpRefMatDataModelColumns() {
         refMatDataTable.getColumns().clear();
-        int precision = getPrecisionValue(refMatDataSigFigs.getText());
+        int precision = refMatDataSigFigs.getValue();
 
         TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
         nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
@@ -919,7 +934,7 @@ public class parametersManagerGUIController implements Initializable {
             referencesPane.getChildren().add(text);
             text.setLayoutY(currHeight);
             text.setLayoutX(lab.getLayoutX() + 40);
-            text.setPrefWidth(300);
+            text.setPrefWidth(500);
 
             physConstReferences.add(text);
             currHeight += 40;
@@ -1040,13 +1055,16 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             PhysicalConstantsModel importedMod = (PhysicalConstantsModel) physConstModel.readXMLObject(file.getAbsolutePath(), false);
-            physConstModels.add(importedMod);
-            physConstCB.getItems().add(getModVersionName(importedMod));
-            physConstCB.getSelectionModel().selectLast();
-            physConstModel = importedMod;
-            setUpPhysConst();
-            squidLabData.storeState();
+            if (!physConstModels.contains(importedMod)) {
+                physConstModels.add(importedMod);
+                physConstCB.getItems().add(getModVersionName(importedMod));
+                physConstCB.getSelectionModel().selectLast();
+                physConstModel = importedMod;
+                setUpPhysConst();
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.physConst;
         squidLabDataStage.requestFocus();
     }
 
@@ -1061,6 +1079,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             physConstModel.serializeXMLObject(file.getAbsolutePath());
         }
+        chosenTab = ParametersTab.physConst;
         squidLabDataStage.requestFocus();
     }
 
@@ -1075,6 +1094,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             refMatModel.serializeXMLObject(file.getAbsolutePath());
         }
+        chosenTab = ParametersTab.refMat;
         squidLabDataStage.requestFocus();
     }
 
@@ -1088,12 +1108,15 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             ReferenceMaterial importedMod = (ReferenceMaterial) refMatModel.readXMLObject(file.getAbsolutePath(), false);
-            refMatModels.add(importedMod);
-            refMatCB.getItems().add(getModVersionName(importedMod));
-            refMatCB.getSelectionModel().selectLast();
-            refMatModel = importedMod;
-            squidLabData.storeState();
+            if (!refMatModels.contains(importedMod)) {
+                refMatModels.add(importedMod);
+                refMatCB.getItems().add(getModVersionName(importedMod));
+                refMatCB.getSelectionModel().selectLast();
+                refMatModel = importedMod;
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.refMat;
         squidLabDataStage.requestFocus();
     }
 
@@ -1107,14 +1130,17 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             PhysicalConstantsModel importedMod = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(file);
-            importedMod.setIsEditable(true);
-            physConstModels.add(importedMod);
-            physConstCB.getItems().add(getModVersionName(importedMod));
-            physConstCB.getSelectionModel().selectLast();
-            physConstModel = importedMod;
-            setUpPhysConst();
-            squidLabData.storeState();
+            if (!physConstModels.contains(importedMod)) {
+                importedMod.setIsEditable(true);
+                physConstModels.add(importedMod);
+                physConstCB.getItems().add(getModVersionName(importedMod));
+                physConstCB.getSelectionModel().selectLast();
+                physConstModel = importedMod;
+                setUpPhysConst();
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.physConst;
         squidLabDataStage.requestFocus();
     }
 
@@ -1128,13 +1154,16 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             ReferenceMaterial importedMod = ReferenceMaterial.getReferenceMaterialFromETReduxXML(file);
-            importedMod.setIsEditable(true);
-            refMatModels.add(importedMod);
-            refMatCB.getItems().add(getModVersionName(importedMod));
-            refMatCB.getSelectionModel().selectLast();
-            refMatModel = importedMod;
-            squidLabData.storeState();
+            if (!refMatModels.contains(importedMod)) {
+                importedMod.setIsEditable(true);
+                refMatModels.add(importedMod);
+                refMatCB.getItems().add(getModVersionName(importedMod));
+                refMatCB.getSelectionModel().selectLast();
+                refMatModel = importedMod;
+                squidLabData.storeState();
+            }
         }
+        chosenTab = ParametersTab.refMat;
         squidLabDataStage.requestFocus();
     }
 
@@ -1470,7 +1499,7 @@ public class parametersManagerGUIController implements Initializable {
         for (int i = 0; i < models.size(); i++) {
             DataModel mod = models.get(i);
             BigDecimal bigDec;
-            int precision = getPrecisionValue(physConstDataSigFigs.getText());
+            int precision = physConstDataSigFigs.getValue();
 
             bigDec = new BigDecimal(mod.getValue());
             mod.setValue(physConstDataNotation.format(round(bigDec, precision)));
@@ -1483,7 +1512,7 @@ public class parametersManagerGUIController implements Initializable {
         }
         physConstDataTable.getColumns().clear();
         List<TableColumn<DataModel, String>> columns = getDataModelColumns(physConstDataTable, physConstDataNotation,
-                getPrecisionValue(physConstDataSigFigs.getText()));
+                physConstDataSigFigs.getValue());
         for (TableColumn<DataModel, String> col : columns) {
             physConstDataTable.getColumns().add(col);
         }
@@ -1503,7 +1532,7 @@ public class parametersManagerGUIController implements Initializable {
         for (int i = 0; i < models.size(); i++) {
             DataModel mod = models.get(i);
             BigDecimal bigDec;
-            int precision = getPrecisionValue(refMatDataSigFigs.getText());
+            int precision = refMatDataSigFigs.getValue();
 
             bigDec = new BigDecimal(mod.getValue());
             mod.setValue(refMatDataNotation.format(round(bigDec, precision)));
@@ -1540,7 +1569,7 @@ public class parametersManagerGUIController implements Initializable {
         for (int i = 0; i < models.size(); i++) {
             DataModel mod = models.get(i);
             BigDecimal bigDec;
-            int precision = getPrecisionValue(refMatConcSigFigs.getText());
+            int precision = refMatConcSigFigs.getValue();
 
             bigDec = new BigDecimal(mod.getValue());
             mod.setValue(refMatConcentrationsNotation.format(round(bigDec, precision)));
@@ -1552,7 +1581,7 @@ public class parametersManagerGUIController implements Initializable {
             mod.setOneSigmaPCT(refMatConcentrationsNotation.format(round(bigDec, precision)));
         }
         refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation,
-                getPrecisionValue(refMatConcSigFigs.getText())));
+                refMatConcSigFigs.getValue()));
 
         refMatConcentrationsTable.refresh();
     }
@@ -1566,7 +1595,7 @@ public class parametersManagerGUIController implements Initializable {
             physConstCorrNotation = getScientificNotationFormat();
             physConstCorrNotationButton.setText("Scientific Notation");
         }
-        int precision = getPrecisionValue(physConstCorrSigFigs.getText());
+        int precision = physConstCorrSigFigs.getValue();
         corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, precision, physConstCorrNotation);
     }
 
@@ -1579,7 +1608,7 @@ public class parametersManagerGUIController implements Initializable {
             physConstCovNotation = getScientificNotationFormat();
             physConstCovNotationButton.setText("Scientific Notation");
         }
-        int precision = getPrecisionValue(physConstCovSigFigs.getText());
+        int precision = physConstCovSigFigs.getValue();
         corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, precision, physConstCovNotation);
     }
 
@@ -1592,7 +1621,7 @@ public class parametersManagerGUIController implements Initializable {
             refMatCorrNotation = getScientificNotationFormat();
             refMatCorrNotationButton.setText("Scientific Notation");
         }
-        int precision = getPrecisionValue(refMatCorrSigFigs.getText());
+        int precision = refMatCorrSigFigs.getValue();
         corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, precision, refMatCorrNotation);
     }
 
@@ -1605,141 +1634,112 @@ public class parametersManagerGUIController implements Initializable {
             refMatCovNotation = getScientificNotationFormat();
             refMatCovNotationButton.setText("Scientific Notation");
         }
-        int precision = getPrecisionValue(refMatCovSigFigs.getText());
+        int precision = refMatCovSigFigs.getValue();
         corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, precision, refMatCovNotation);
     }
 
-    private void setUpSigFigTextFields() {
-        refMatDataSigFigs.setOnKeyReleased(value -> {
-            String text = refMatDataSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    ObservableList<RefMatDataModel> items = refMatDataTable.getItems();
-                    for (RefMatDataModel mod : items) {
-                        ValueModel valMod = refMatModel.getDatumByName(getRatioHiddenName(mod.getName()));
-                        mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                        mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                        mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-                    }
-                    setUpRefMatDataModelColumns();
-                    refMatDataTable.refresh();
-                }
+    private void setUpSigFigSpinners() {
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+
+        refMatDataSigFigs.setValueFactory(valueFactory);
+        refMatDataSigFigs.valueProperty().addListener(value -> {
+            int precision = refMatDataSigFigs.getValue();
+            ObservableList<RefMatDataModel> items = refMatDataTable.getItems();
+            for (RefMatDataModel mod : items) {
+                ValueModel valMod = refMatModel.getDatumByName(getRatioHiddenName(mod.getName()));
+                mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+                mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+                mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
             }
+            setUpRefMatDataModelColumns();
+            refMatDataTable.refresh();
         });
 
-        refMatConcSigFigs.setOnKeyReleased(value -> {
-            String text = refMatConcSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    ObservableList<DataModel> items = refMatConcentrationsTable.getItems();
-                    for (DataModel mod : items) {
-                        ValueModel valMod = refMatModel.getConcentrationByName(getRatioHiddenName(mod.getName()));
-                        mod.setOneSigmaABS(refMatConcentrationsNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                        mod.setOneSigmaPCT(refMatConcentrationsNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                        mod.setValue(refMatConcentrationsNotation.format(round(valMod.getValue(), precision)));
-                    }
-                    refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision));
-                    refMatConcentrationsTable.refresh();
-                }
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        refMatConcSigFigs.setValueFactory(valueFactory);
+        refMatConcSigFigs.valueProperty().addListener(value -> {
+            int precision = refMatConcSigFigs.getValue();
+            ObservableList<DataModel> items = refMatConcentrationsTable.getItems();
+            for (DataModel mod : items) {
+                ValueModel valMod = refMatModel.getConcentrationByName(getRatioHiddenName(mod.getName()));
+                mod.setOneSigmaABS(refMatConcentrationsNotation.format(round(valMod.getOneSigmaABS(), precision)));
+                mod.setOneSigmaPCT(refMatConcentrationsNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+                mod.setValue(refMatConcentrationsNotation.format(round(valMod.getValue(), precision)));
             }
+            refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision));
+            refMatConcentrationsTable.refresh();
         });
 
-        physConstDataSigFigs.setOnKeyReleased(value -> {
-            String text = physConstDataSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    ObservableList<DataModel> items = physConstDataTable.getItems();
-                    for (DataModel mod : items) {
-                        ValueModel valMod = physConstModel.getDatumByName(getRatioHiddenName(mod.getName()));
-                        mod.setOneSigmaABS(physConstDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                        mod.setOneSigmaPCT(physConstDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                        mod.setValue(physConstDataNotation.format(round(valMod.getValue(), precision)));
-                    }
-                    physConstDataTable.getColumns().setAll(getDataModelColumns(physConstDataTable, physConstDataNotation, precision));
-                    physConstDataTable.refresh();
-                }
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        physConstDataSigFigs.setValueFactory(valueFactory);
+        physConstDataSigFigs.valueProperty().addListener(value -> {
+            int precision = physConstDataSigFigs.getValue();
+            ObservableList<DataModel> items = physConstDataTable.getItems();
+            for (DataModel mod : items) {
+                ValueModel valMod = physConstModel.getDatumByName(getRatioHiddenName(mod.getName()));
+                mod.setOneSigmaABS(physConstDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+                mod.setOneSigmaPCT(physConstDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+                mod.setValue(physConstDataNotation.format(round(valMod.getValue(), precision)));
             }
+            physConstDataTable.getColumns().setAll(getDataModelColumns(physConstDataTable, physConstDataNotation, precision));
+            physConstDataTable.refresh();
         });
 
-        physConstCorrSigFigs.setOnKeyReleased(value -> {
-            String text = physConstCorrSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, precision, physConstCorrNotation);
-                }
-            }
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        physConstCorrSigFigs.setValueFactory(valueFactory);
+        physConstCorrSigFigs.valueProperty().addListener(value -> {
+            int precision = physConstCorrSigFigs.getValue();
+            corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, precision, physConstCorrNotation);
         });
 
-        physConstCovSigFigs.setOnKeyReleased(value -> {
-            String text = physConstCovSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, precision, physConstCovNotation);
-                }
-            }
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        physConstCovSigFigs.setValueFactory(valueFactory);
+        physConstCovSigFigs.valueProperty().addListener(value -> {
+            int precision = physConstCovSigFigs.getValue();
+            corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, precision, physConstCovNotation);
         });
 
-        refMatCorrSigFigs.setOnKeyReleased(value -> {
-            String text = refMatCorrSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, precision, refMatCorrNotation);
-                }
-            }
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        refMatCorrSigFigs.setValueFactory(valueFactory);
+        refMatCorrSigFigs.valueProperty().addListener(value -> {
+            int precision = refMatCorrSigFigs.getValue();
+            corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, precision, refMatCorrNotation);
         });
 
-        refMatCovSigFigs.setOnKeyReleased(value -> {
-            String text = refMatCovSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, precision, refMatCovNotation);
-                }
-            }
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        refMatCovSigFigs.setValueFactory(valueFactory);
+        refMatCovSigFigs.valueProperty().addListener(value -> {
+            int precision = refMatCovSigFigs.getValue();
+            corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, precision, refMatCovNotation);
         });
 
-        commonPbDataSigFigs.setOnKeyReleased(value -> {
-            String text = commonPbDataSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    ObservableList<DataModel> items = commonPbDataTable.getItems();
-                    for (DataModel mod : items) {
-                        ValueModel valMod = commonPbModel.getDatumByName(getRatioHiddenName(mod.getName()));
-                        mod.setOneSigmaABS(commonPbDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                        mod.setOneSigmaPCT(commonPbDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                        mod.setValue(commonPbDataNotation.format(round(valMod.getValue(), precision)));
-                    }
-                }
-                commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation, precision));
-                commonPbDataTable.refresh();
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        commonPbDataSigFigs.setValueFactory(valueFactory);
+        commonPbDataSigFigs.valueProperty().addListener(value -> {
+            int precision = commonPbDataSigFigs.getValue();
+            ObservableList<DataModel> items = commonPbDataTable.getItems();
+            for (DataModel mod : items) {
+                ValueModel valMod = commonPbModel.getDatumByName(getRatioHiddenName(mod.getName()));
+                mod.setOneSigmaABS(commonPbDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+                mod.setOneSigmaPCT(commonPbDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+                mod.setValue(commonPbDataNotation.format(round(valMod.getValue(), precision)));
             }
+            commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation, precision));
+            commonPbDataTable.refresh();
         });
 
-        commonPbCorrSigFigs.setOnKeyReleased(value -> {
-            String text = refMatCovSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, precision, commonPbCorrNotation);
-                }
-            }
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        commonPbCorrSigFigs.setValueFactory(valueFactory);
+        commonPbCorrSigFigs.valueProperty().addListener(value -> {
+            int precision = commonPbCorrSigFigs.getValue();
+            corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, precision, commonPbCorrNotation);
         });
 
-        commonPbCovSigFigs.setOnKeyReleased(value -> {
-            String text = refMatCovSigFigs.getText();
-            if (!text.trim().isEmpty() && isNumeric(text)) {
-                int precision = getPrecisionValue(text);
-                if (precision > 0) {
-                    corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, precision, commonPbCovNotation);
-                }
-            }
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        commonPbCovSigFigs.setValueFactory(valueFactory);
+        commonPbCovSigFigs.valueProperty().addListener(value -> {
+            int precision = commonPbCovSigFigs.getValue();
+            corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, precision, commonPbCovNotation);
         });
     }
 
@@ -1757,14 +1757,6 @@ public class parametersManagerGUIController implements Initializable {
         initializeTableWithObList(table, items, format, model, precision);
     }
 
-    private int getPrecisionValue(String text) {
-        int retVal = 6;
-        if (!text.trim().isEmpty() && isNumeric(text)) {
-            retVal = Integer.parseInt(text);
-        }
-        return retVal;
-    }
-
     @FXML
     private void commonPbImpXMLAction(ActionEvent event) {
         File file = null;
@@ -1775,14 +1767,17 @@ public class parametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             CommonPbModel importedMod = (CommonPbModel) commonPbModel.readXMLObject(file.getAbsolutePath(), false);
-            importedMod.setIsEditable(true);
-            commonPbModels.add(importedMod);
-            commonPbCB.getItems().add(getModVersionName(importedMod));
-            commonPbCB.getSelectionModel().selectLast();
-            commonPbModel = importedMod;
-            setUpCommonPb();
-            squidLabData.storeState();
+                if(!commonPbModels.contains(importedMod)) {
+                    importedMod.setIsEditable(true);
+                    commonPbModels.add(importedMod);
+                    commonPbCB.getItems().add(getModVersionName(importedMod));
+                    commonPbCB.getSelectionModel().selectLast();
+                    commonPbModel = importedMod;
+                    setUpCommonPb();
+                    squidLabData.storeState();
+                }
         }
+        chosenTab = ParametersTab.commonPb;
         squidLabDataStage.requestFocus();
     }
 
@@ -1797,6 +1792,7 @@ public class parametersManagerGUIController implements Initializable {
         if (file != null) {
             commonPbModel.serializeXMLObject(file.getAbsolutePath());
         }
+        chosenTab = ParametersTab.commonPb;
         squidLabDataStage.requestFocus();
     }
 
@@ -1811,13 +1807,13 @@ public class parametersManagerGUIController implements Initializable {
         commonPbModel.setReferences(commonPbReferencesArea.getText());
         commonPbModel.setComments(commonPbCommentsArea.getText());
 
-        if (!isEditingCurrcommonPbModel) {
+        if (!isEditingCurrCommonPbModel) {
             commonPbModels.add(commonPbModel);
         } else {
-            isEditingCurrcommonPbModel = false;
+            isEditingCurrCommonPbModel = false;
             commonPbModelHolder = null;
         }
-        isEditingcommonPb = false;
+        isEditingCommonPb = false;
         setUpCommonPbCBItems();
         commonPbCB.getSelectionModel().select(getModVersionName(commonPbModel));
         commonPbModelEditable(false);
@@ -1827,12 +1823,12 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbCancelEdit(ActionEvent event) {
-        if (isEditingCurrcommonPbModel) {
-            isEditingCurrcommonPbModel = false;
+        if (isEditingCurrCommonPbModel) {
+            isEditingCurrCommonPbModel = false;
             commonPbModel = commonPbModelHolder;
             commonPbModelHolder = null;
         }
-        isEditingcommonPb = false;
+        isEditingCommonPb = false;
         String selected = commonPbCB.getSelectionModel().getSelectedItem();
         setUpCommonPbCBItems();
         commonPbCB.getSelectionModel().select(selected);
@@ -1852,16 +1848,16 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbEditCurrMod(ActionEvent event) {
-        isEditingcommonPb = true;
+        isEditingCommonPb = true;
         commonPbModelHolder = commonPbModel.clone();
         commonPbModelEditable(true);
         setUpCommonPbMenuItems(true, true);
-        isEditingCurrcommonPbModel = true;
+        isEditingCurrCommonPbModel = true;
     }
 
     @FXML
     private void commonPbEditCopy(ActionEvent event) {
-        isEditingcommonPb = true;
+        isEditingCommonPb = true;
         commonPbModel = commonPbModel.clone();
         commonPbModel.setModelName(commonPbModel.getModelName() + " - copy");
         setUpCommonPb();
@@ -1871,7 +1867,7 @@ public class parametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbEditEmptyMod(ActionEvent event) {
-        isEditingcommonPb = true;
+        isEditingCommonPb = true;
         commonPbModel = new CommonPbModel();
         setUpCommonPb();
         commonPbModelEditable(true);
@@ -1891,8 +1887,7 @@ public class parametersManagerGUIController implements Initializable {
         for (int i = 0; i < models.size(); i++) {
             DataModel mod = models.get(i);
             BigDecimal bigDec;
-            int precision = getPrecisionValue(commonPbDataSigFigs.getText());
-
+            int precision = commonPbDataSigFigs.getValue();
             bigDec = new BigDecimal(mod.getValue());
             mod.setValue(commonPbDataNotation.format(round(bigDec, precision)));
 
@@ -1903,7 +1898,7 @@ public class parametersManagerGUIController implements Initializable {
             mod.setOneSigmaPCT(commonPbDataNotation.format(round(bigDec, precision)));
         }
         commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation,
-                getPrecisionValue(commonPbDataSigFigs.getText())));
+                commonPbDataSigFigs.getValue()));
 
         commonPbDataTable.refresh();
     }
@@ -1917,7 +1912,7 @@ public class parametersManagerGUIController implements Initializable {
             commonPbCorrNotation = getScientificNotationFormat();
             commonPbCorrNotationButton.setText("Scientific Notation");
         }
-        int precision = getPrecisionValue(commonPbCorrSigFigs.getText());
+        int precision = commonPbCorrSigFigs.getValue();
         corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, precision, commonPbCorrNotation);
     }
 
@@ -1930,7 +1925,7 @@ public class parametersManagerGUIController implements Initializable {
             commonPbCovNotation = getScientificNotationFormat();
             commonPbCovNotationButton.setText("Scientific Notation");
         }
-        int precision = getPrecisionValue(commonPbCovSigFigs.getText());
+        int precision = commonPbCovSigFigs.getValue();
         corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, precision, commonPbCovNotation);
     }
 
