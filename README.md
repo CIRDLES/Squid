@@ -7,8 +7,6 @@ Squid 3
 
 Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
-#### NOTE: If you have used a previous version of Squid3, you may need to find and delete the file "SquidPersistentState.ser" to allow Squid3 v0.2.n to run.
-
 We encourage you to download
 and evaluate the latest release, the ".jar" file found <a href="https://github.com/CIRDLES/Squid/releases" target="_blank">here</a>.  
 Squid requires <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">Java 1.8</a>.
@@ -19,8 +17,9 @@ initializes a new GitHub issue for you - please use freely.
 
 **Request** The current version is only tested on a few 9-, 10-, and 11-species Prawn xml files.  We would like to have more examples of Prawn files and Squid2.5 tasks in Excel for testing.
 
-The current versions - Squid3-**0.3.n.jar** - prototype the development of the
-workflow support including project, task, and expression management features
+The current versions - Squid3-**0.4.n.jar** - prototype the development of the
+workflow support including project, task, and expression management, reporting,
+and visualization features
 of Squid.  Squid provides for creating and saving Squid Project files that have an
 extension of ".squid" and are intended to save the current state of work on a project.
 
@@ -31,15 +30,18 @@ We encourage you to
 use it to experiment with managing your Prawn XML files by merging, splitting,
 and editing them.  
 
-The PrawnFile menu provides 1) Audit Session, 2) Audit Masses, and 3) Edit Spots.
+The PrawnFile menu provides 1) Manage Spots and Reference Materials, 
+2) Manage Sample Naming, and 3) Audit Masses.
 These give a summary and in-depth look at spots, duplicate names for spots,
-species statistics, and scans statistics.  Edit Spots supports editing spot names,
-filtering spots by name, and setting both the project's reference material spots and concentration reference material spots by using the same
+species statistics, and scans statistics.  Manage Spots supports editing spot names,
+filtering spots by name, and setting both the project's reference material spots and 
+concentration reference material spots by using the same
 filtering feature.  The context menu on the left-side list is accessed by a
 right-mouse click and has items for removing a spot and
 splitting the Prawn file into two files.  Any modifications to the Prawn file can be saved
 to a new Prawn XML file if needed.  Note that saving the project preserves the changes to the
-Prawn XML data within the project file but without changing the source XML file.
+Prawn XML data within the project file but without changing the source XML file.  Manage Sample Naming automates with overrides the naming of samples basedon delimeters or leading character counts.  Audit masses provides 
+time-based views of masses and is configuable to show mass diferences as well.
 
 The Task management functionality provides for customization, parameter-setting, isotope-labeling,
 ratio-choosing, and expression management.  Squid supports importing tasks from Squid2.5 task files -
@@ -53,4 +55,4 @@ if needed to help convince you to participate and contribute.
 Additional features will appear over time and may not be documented here concurrently.
 Please be patient and contribute your ideas via the issues tracker.
 
-Updated 4 June 2018
+Updated 4 August 2018
