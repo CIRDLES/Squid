@@ -65,7 +65,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"204", "overcts", "/sec", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204 overcts/sec (fr. 207)", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
-        {"204", "overcts", "/sec", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", OVER_COUNTS_PERSEC_4_8, "",
+        {"204", "overcts", "/sec", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "<OVER_COUNTS_PERSEC_4_8>", "",
             "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "204", "/206", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204/206 (fr. 207)", "PCT",
@@ -170,7 +170,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
             "", "true", "false", "20", "", "", "false", "false"
         },
         {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb*/206Pb*", "PCT",
-            "", "true", "false", "20", "4", "true", "", "false", "false"
+            "", "true", "false", "20", "true", "", "false", "false"
         },
         {"", "7-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238", "PCT",
             "", "true", "false", "20", "true", "", "false", "false"
