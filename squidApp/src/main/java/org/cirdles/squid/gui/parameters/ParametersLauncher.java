@@ -27,7 +27,6 @@ public class ParametersLauncher {
             squidLabDataStage.setMinHeight(600);
             squidLabDataStage.setMinWidth(900);
             squidLabDataStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
-            squidLabDataStage.initOwner(primaryStageWindow);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
             Scene scene = new Scene(loader.load());
@@ -47,6 +46,7 @@ public class ParametersLauncher {
         parametersManagerGUIController.chosenTab = tab;
         squidLabDataStage.centerOnScreen();
         squidLabDataStage.requestFocus();
+        squidLabDataStage.initOwner(primaryStageWindow);
         squidLabDataStage.show();
     }
 

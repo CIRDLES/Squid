@@ -30,6 +30,7 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
+
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -39,6 +40,7 @@ import java.util.*;
 
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
 
 /**
@@ -1352,8 +1354,14 @@ public class parametersManagerGUIController implements Initializable {
         physConstCB.getSelectionModel().select(getModVersionName(physConstModel));
         physConstEditable(false);
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
-        squidLabData.storeState();
         isEditingPhysConst = false;
+
+        squidLabData.storeState();
+
+        if (squidProject != null && squidProject.getTask() != null) {
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        }
     }
 
     @FXML
@@ -1385,8 +1393,14 @@ public class parametersManagerGUIController implements Initializable {
         refMatCB.getSelectionModel().select(getModVersionName(refMatModel));
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
-        squidLabData.storeState();
         isEditingRefMat = false;
+
+        squidLabData.storeState();
+
+        if (squidProject != null && squidProject.getTask() != null) {
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        }
     }
 
     @FXML
@@ -1803,7 +1817,13 @@ public class parametersManagerGUIController implements Initializable {
         commonPbCB.getSelectionModel().select(getModVersionName(commonPbModel));
         commonPbModelEditable(false);
         setUpCommonPbMenuItems(false, commonPbModel.isEditable());
+
         squidLabData.storeState();
+
+        if (squidProject != null && squidProject.getTask() != null) {
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        }
     }
 
     @FXML
