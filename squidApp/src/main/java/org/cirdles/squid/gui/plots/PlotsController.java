@@ -42,13 +42,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.plots.squid.WeightedMeanPlot;
+import org.cirdles.squid.gui.plots.squid.WeightedMeanRefreshInterface;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
@@ -56,12 +56,13 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.controlsfx.control.CheckTreeView;
+import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
 
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class PlotsController implements Initializable {
+public class PlotsController implements Initializable, WeightedMeanRefreshInterface {
 
     public static PlotDisplayInterface plot;
     private static Node topsoilPlotNode;
@@ -80,6 +81,7 @@ public class PlotsController implements Initializable {
     private static Map<String, List<Map<String, Object>>> dataSets;
     private static Map<String, PlotDisplayInterface> mapOfPlotsOfSpotSets;
     private static CheckBoxTreeItem<SampleTreeNodeInterface> chosenSample;
+    private static SpotSummaryDetails spotSummaryDetails;
 
     @FXML
     private VBox plotVBox;
@@ -143,6 +145,9 @@ public class PlotsController implements Initializable {
         corr4_RadioButton.setUserData("4-corr");
         corr7_RadioButton.setUserData("7-corr");
         corr8_RadioButton.setUserData("8-corr");
+        
+        spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
+        spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
         customizePlotChooserToolbarAndInvokePlotter();
     }
@@ -283,7 +288,8 @@ public class PlotsController implements Initializable {
         }
     }
 
-    private void refreshPlot() {
+    @Override
+    public void refreshPlot() {
         topsoilPlotNode = plot.displayPlotAsNode();
         plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
         AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
@@ -300,13 +306,28 @@ public class PlotsController implements Initializable {
         plotToolBar.setPadding(Insets.EMPTY);
     }
 
+    @Override
+    public void toggleSpotExclusionWM(int index) {
+        ((CheckBoxTreeItem) spotsTreeViewCheckBox.getRoot().getChildren().get(index))
+                .setSelected(spotSummaryDetails.getRejectedIndices()[index]);
+    }
+
+    @Override
+
+    public void calculateWeightedMean() {
+        try {
+            spotSummaryDetails.setValues(spotSummaryDetails.eval(squidProject.getTask()));
+        } catch (SquidException squidException) {
+        }
+    }
+
     private void showWeightedMeanPlot() {
         // get type of correction
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
         // flavor of plot
         String calibrConstAgeBaseName = (String) plotFlavorToggleGroup.getSelectedToggle().getUserData();
         // get details
-        SpotSummaryDetails spotSummaryDetails
+        spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction
                         + " " + calibrConstAgeBaseName + "calibr.const WM");
         plot = new WeightedMeanPlot(
@@ -315,7 +336,8 @@ public class PlotsController implements Initializable {
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
                 correction + " " + calibrConstAgeBaseName + " Age",
-                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get("StdAgeUPb").getValues()[0][0]);//559.1 * 1e6);
+                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get("StdAgeUPb").getValues()[0][0],
+                this);//559.1 * 1e6);
 
         refreshPlot();
 
@@ -339,7 +361,7 @@ public class PlotsController implements Initializable {
             spotsTreeViewCheckBox.setCellFactory(p -> new CheckBoxTreeCell<>(
                     (TreeItem<SampleTreeNodeInterface> item) -> ((WeightedMeanFractionNode) item.getValue()).getSelectedProperty(),
                     new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
-
+                        
                 @Override
                 public String toString(TreeItem<SampleTreeNodeInterface> object) {
                     SampleTreeNodeInterface item = object.getValue();
@@ -364,7 +386,7 @@ public class PlotsController implements Initializable {
                 checkBoxTreeItemWM.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     ((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
                     spotSummaryDetails.setIndexOfRejectedIndices(((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue())
-                            .getIndexInRejected(), !newValue);
+                            .getIndexOfSpot(), !newValue);
                     try {
                         spotSummaryDetails.setValues(spotSummaryDetails.eval(squidProject.getTask()));
                     } catch (SquidException squidException) {
@@ -379,7 +401,7 @@ public class PlotsController implements Initializable {
             vboxTreeHolder.getChildren().add(spotsTreeViewCheckBox);
         } else {
             TreeItem<String> rootItemWM
-                    = new TreeItem<String>(squidProject.getFilterForRefMatSpotNames());
+                    = new TreeItem<>(squidProject.getFilterForRefMatSpotNames());
             spotsTreeViewString.setRoot(rootItemWM);
 
             spotsTreeViewString.setCellFactory(tv -> new TreeCell<String>() {
@@ -393,10 +415,10 @@ public class PlotsController implements Initializable {
                     } else {
                         if (item.startsWith("*")) {
                             setText(item.replaceFirst("\\*", ""));
-                            setStyle("-fx-text-fill: blue;");
+                            setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
                         } else {
                             setText(item);
-                            setStyle("-fx-text-fill: red;");
+                            setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: red;");
                         }
                     }
                 }
@@ -412,7 +434,7 @@ public class PlotsController implements Initializable {
                 final TreeItem<String> TreeItemWM
                         = new TreeItem<>((rejected ? "*" : "") + fractionNodes.get(i).getNodeName());
 
-                ((TreeItem<String>) rootItemWM).getChildren().add(TreeItemWM);
+                rootItemWM.getChildren().add(TreeItemWM);
             }
 
             vboxTreeHolder.getChildren().clear();
@@ -515,7 +537,7 @@ public class PlotsController implements Initializable {
         @Override
         public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
             this.selectedProperty = selectedProperty;
-        }
+        }      
     }
 
     private class ConcordiaFractionNode implements SampleTreeNodeInterface {
@@ -568,19 +590,18 @@ public class PlotsController implements Initializable {
         public String getNodeName() {
             return shrimpFraction.getFractionID();
         }
-
     }
 
     private class WeightedMeanFractionNode implements SampleTreeNodeInterface {
 
         private ShrimpFractionExpressionInterface shrimpFraction;
         private SimpleBooleanProperty selectedProperty;
-        private int indexInRejected;
+        private int indexOfSpot;
 
-        public WeightedMeanFractionNode(ShrimpFractionExpressionInterface shrimpFraction, int indexInRejected) {
+        public WeightedMeanFractionNode(ShrimpFractionExpressionInterface shrimpFraction, int indexOfSpot) {
             this.shrimpFraction = shrimpFraction;
             this.selectedProperty = new SimpleBooleanProperty(shrimpFraction.isSelected());
-            this.indexInRejected = indexInRejected;
+            this.indexOfSpot = indexOfSpot;
         }
 
         /**
@@ -610,12 +631,11 @@ public class PlotsController implements Initializable {
 
         @Override
         public String getNodeName() {
-            return shrimpFraction.getFractionID();
+            return shrimpFraction.getFractionID() + " " + plot.makeAgeString(indexOfSpot);
         }
 
-        public int getIndexInRejected() {
-            return indexInRejected;
+        public int getIndexOfSpot() {
+            return indexOfSpot;
         }
-
     }
 }

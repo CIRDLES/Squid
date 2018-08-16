@@ -1018,7 +1018,7 @@ public class ExpressionBuilderController implements Initializable {
         }
         if (found) {
             //If found in the expressions then it is not a ratio
-            parametersListView.getSelectionModel().clearSelection();
+            ratioExpressionsListView.getSelectionModel().clearSelection();
         }
 
         if (globalListView.getSelectionModel().getSelectedItem() == null

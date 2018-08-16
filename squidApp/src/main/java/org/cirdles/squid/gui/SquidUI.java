@@ -32,7 +32,6 @@ import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
  * @author James F. Bowring
  */
 public final class SquidUI extends Application {
-
     public static final String EXPRESSION_TOOLTIP_CSS_STYLE_SPECS = "-fx-background-color:cornsilk;-fx-border-width: 1;-fx-border-color: black;-fx-border-radius: 0;-fx-text-fill: black;-fx-effect:none;-fx-font-size:11px;-fx-font-weight:bold;-fx-font-family:'Courier New';";
     public static final String SPOT_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
     public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';-fx-fixed-cell-size: 20";
@@ -42,40 +41,46 @@ public final class SquidUI extends Application {
     public static final String COLORPICKER_CSS_STYLE_SPECS = "-fx-font-size: 8px; -fx-font-family: 'Courier New';";
     public static final String SQUID_LOGO_SANS_TEXT_URL = "org/cirdles/squid/gui/images/SquidLogoSansBg.png";
 
+    public static final String SPOT_TREEVIEW_CSS_STYLE_SPECS = "-fx-font-size: 10px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
+
+
     public static final int PIXEL_OFFSET_FOR_MENU = 38;
     public static Window primaryStageWindow;
     public static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors calamariReportFlavor;
-
+    
     protected static SquidAboutWindow squidAboutWindow;
     protected static Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        
         this.primaryStage = primaryStage;
         Parent root = new AnchorPane();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
         primaryStage.setTitle("Squid 3.0 pre-release");
+
         // this produces non-null window after .show()
         primaryStageWindow = primaryStage.getScene().getWindow();
+
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
             Platform.exit();
             System.exit(0);
         });
-        
+
         CalamariFileUtilities.initSampleParametersModels();
-        
+
         // postpone loading to allow for stage creation and use in controller
         scene.setRoot(FXMLLoader.load(getClass().getResource("SquidUIController.fxml")));
         primaryStage.show();
         primaryStage.setMinHeight(scene.getHeight() + 15);
         primaryStage.setMinWidth(scene.getWidth());
+
         squidAboutWindow = new SquidAboutWindow(primaryStage);
     }
-
-    public static void updateStageTitle(String title) {
+    
+    public static void updateStageTitle(String title){
         primaryStage.setTitle(title);
     }
 

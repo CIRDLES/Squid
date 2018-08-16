@@ -143,7 +143,7 @@ public class SpotSummaryDetails implements Serializable {
     public void setIndexOfRejectedIndices(int index, boolean value){
         rejectedIndices[index] = value;
     }
-
+    
     /**
      * @return the manualRejectionEnabled
      */

@@ -63,11 +63,11 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     private double[] peakTukeysMeanAndUnct;
 
     private int indexOfSelectedSpot;
-    private int countOfScans;
+    private final int countOfScans;
 
     private final MassAuditRefreshInterface massAuditRefreshInterface;
 
-    private ContextMenu spotContextMenu = new ContextMenu();
+    private final ContextMenu spotContextMenu = new ContextMenu();
 
     /**
      *
@@ -114,7 +114,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     }
 
     /**
-     * TODO: Adapted from SpotManagerCOntroller - should refactor to one
+     * TODO: Adapted from SpotManagerController - should refactor to one
      * implementation
      */
     private void setupSpotContextMenu() {
