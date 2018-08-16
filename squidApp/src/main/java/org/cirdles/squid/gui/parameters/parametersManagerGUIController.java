@@ -300,11 +300,11 @@ public class parametersManagerGUIController implements Initializable {
         squidLabDataStage.focusedProperty().addListener(listener -> {
             if (squidLabDataStage.isFocused()) {
                 if (chosenTab.equals(ParametersTab.physConst)) {
-                    rootTabPane.getSelectionModel().select(0);
-                } else if (chosenTab.equals(ParametersTab.refMat)) {
-                    rootTabPane.getSelectionModel().select(1);
-                } else if (chosenTab.equals(ParametersTab.commonPb)) {
                     rootTabPane.getSelectionModel().select(2);
+                } else if (chosenTab.equals(ParametersTab.refMat)) {
+                    rootTabPane.getSelectionModel().select(0);
+                } else if (chosenTab.equals(ParametersTab.commonPb)) {
+                    rootTabPane.getSelectionModel().select(1);
                 }
                 String selected = "";
                 if (!isEditingPhysConst) {
