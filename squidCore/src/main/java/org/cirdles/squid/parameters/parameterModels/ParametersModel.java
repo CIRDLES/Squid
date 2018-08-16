@@ -6,12 +6,6 @@
 package org.cirdles.squid.parameters.parameterModels;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
@@ -25,8 +19,14 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
 import org.cirdles.squid.parameters.valueModels.ValueModelConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
- *
  * @author ryanb
  */
 public class ParametersModel implements
@@ -46,83 +46,34 @@ public class ParametersModel implements
     protected boolean isEditable;
 
     public ParametersModel() {
-        modelName = "new model";
-        labName = "unknown lab";
-        version = "1.0";
-        dateCertified = DateHelper.getCurrentDate();
-        comments = "";
-        references = "";
-        values = new ValueModel[0];
-        corrModel = new CorrelationMatrixModel();
-        covModel = new CovarianceMatrixModel();
-        this.rhos = new HashMap<>();
-        isEditable = false;
+        this("new model");
     }
 
     public ParametersModel(String modelName) {
-        this.modelName = modelName;
-        this.labName = labName;
-        this.version = version;
-        this.dateCertified = dateCertified;
-        comments = "";
-        references = "";
-        values = new ValueModel[0];
-        corrModel = new CorrelationMatrixModel();
-        covModel = new CovarianceMatrixModel();
-        this.rhos = new HashMap<>();
-        isEditable = false;
+        this(modelName, "unknown lab", "1.0", DateHelper.getCurrentDate());
     }
 
     public ParametersModel(String modelName, String labName,
-            String version, String dateCertified) {
-        this.modelName = modelName;
-        this.labName = labName;
-        this.version = version;
-        this.dateCertified = dateCertified;
-        comments = "";
-        references = "";
-        values = new ValueModel[0];
-        corrModel = new CorrelationMatrixModel();
-        covModel = new CovarianceMatrixModel();
-        this.rhos = new HashMap<>();
-        isEditable = false;
+                           String version, String dateCertified) {
+        this(modelName, labName, version, dateCertified, "", "");
     }
 
     public ParametersModel(String modelName, String labName, String version,
-            String dateCertified, String comments, String references) {
-        this.modelName = modelName;
-        this.labName = labName;
-        this.version = version;
-        this.dateCertified = dateCertified;
-        this.comments = comments;
-        this.references = references;
-        values = new ValueModel[0];
-        corrModel = new CorrelationMatrixModel();
-        covModel = new CovarianceMatrixModel();
-        this.rhos = new HashMap<>();
-        isEditable = false;
+                           String dateCertified, String comments, String references) {
+        this(modelName, labName, version, dateCertified, "", "", new ValueModel[0]);
     }
 
     public ParametersModel(String modelName, String labName, String version,
-            String dateCertified, String comments, String references,
-            ValueModel[] values) {
-        this.modelName = modelName;
-        this.labName = labName;
-        this.version = version;
-        this.dateCertified = dateCertified;
-        this.comments = comments;
-        this.references = references;
-        this.values = values;
-        corrModel = new CorrelationMatrixModel();
-        covModel = new CovarianceMatrixModel();
-        this.rhos = new HashMap<>();
-        isEditable = false;
+                           String dateCertified, String comments, String references,
+                           ValueModel[] values) {
+        this(modelName, labName, version, dateCertified, "", "", new ValueModel[0], new CorrelationMatrixModel(),
+                new CovarianceMatrixModel(), new HashMap<>(), false);
     }
 
     public ParametersModel(String modelName, String labName, String version,
-            String dateCertified, String comments, String references, ValueModel[] values,
-            CorrelationMatrixModel corrModel, CovarianceMatrixModel covModel,
-            Map<String, BigDecimal> rhos, boolean isEditable) {
+                           String dateCertified, String comments, String references, ValueModel[] values,
+                           CorrelationMatrixModel corrModel, CovarianceMatrixModel covModel,
+                           Map<String, BigDecimal> rhos, boolean isEditable) {
         this.modelName = modelName;
         this.labName = labName;
         this.version = version;
@@ -162,10 +113,10 @@ public class ParametersModel implements
 
         return retVal;
     }
-    
+
     public ParametersModel clone() {
         ParametersModel model = new ParametersModel();
-        
+
         model.setModelName(modelName);
         model.setIsEditable(isEditable);
         model.setLabName(labName);
@@ -173,19 +124,19 @@ public class ParametersModel implements
         model.setDateCertified(dateCertified);
         model.setComments(comments);
         model.setReferences(references);
-        
+
         ValueModel[] vals = new ValueModel[values.length];
-        for(int i = 0; i < vals.length; i++) {
+        for (int i = 0; i < vals.length; i++) {
             ValueModel curr = values[i];
             vals[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
-            curr.getValue(), curr.getOneSigma());
+                    curr.getValue(), curr.getOneSigma());
         }
-        
+
         model.setValues(vals);
-        
+
         model.setCorrModel((CorrelationMatrixModel) corrModel.copy());
         model.setCovModel((CovarianceMatrixModel) covModel.copy());
-        
+
         return model;
     }
 
@@ -207,8 +158,8 @@ public class ParametersModel implements
                     double correlation
                             = //
                             covModel.getMatrix().get(row, col)//
-                            / rowData.getOneSigmaABS().doubleValue() //
-                            / colData.getOneSigmaABS().doubleValue();
+                                    / rowData.getOneSigmaABS().doubleValue() //
+                                    / colData.getOneSigmaABS().doubleValue();
                     corrModel.setValueAt(row, col, correlation);
                 }
             }
@@ -234,8 +185,8 @@ public class ParametersModel implements
                     double covariance
                             = //
                             corrModel.getMatrix().get(row, col)//
-                            * rowData.getOneSigmaABS().doubleValue() //
-                            * colData.getOneSigmaABS().doubleValue();
+                                    * rowData.getOneSigmaABS().doubleValue() //
+                                    * colData.getOneSigmaABS().doubleValue();
                     covModel.setValueAt(row, col, covariance);
                 }
             }
@@ -260,7 +211,7 @@ public class ParametersModel implements
 
         corrModel.initializeMatrix();
 
-        ((CorrelationMatrixModel) corrModel).initializeCorrelations(rhos);
+        corrModel.initializeCorrelations(rhos);
     }
 
     protected void buildRhosMap() {

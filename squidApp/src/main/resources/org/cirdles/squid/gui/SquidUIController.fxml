@@ -71,17 +71,17 @@
             </Menu>
             <Menu fx:id="parametersMenu" mnemonicParsing="false" text="Parameters">
                <items>
-                  <Menu fx:id="physicalConstantsModelsMenu" mnemonicParsing="false" text="Physical Constants Models">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
                   <Menu fx:id="referenceMaterialsMenu" mnemonicParsing="false" text="Reference Material Models">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
                   </Menu>
                   <Menu fx:id="commonPbModelsMenu" mnemonicParsing="false" text="Common Pb Models">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+                  <Menu fx:id="physicalConstantsModelsMenu" mnemonicParsing="false" text="Physical Constants Models">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
@@ -158,11 +158,11 @@
                 <MenuItem mnemonicParsing="false" text="Action 1" />
               </items>
             </Menu>
-            <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="SquidLabData">
+            <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Squid LabData">
               <items>
-                <MenuItem fx:id="openParametersManagerPhysConstMenuItem" mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Manage Physical Constants" />
                   <MenuItem fx:id="openParametersManagerRefMatMenuItem" mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Manage Reference Material Models" />
                   <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPbBlankICModels" text="Manage Common Pb Models" />
+                <MenuItem fx:id="openParametersManagerPhysConstMenuItem" mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Manage Physical Constants" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">
