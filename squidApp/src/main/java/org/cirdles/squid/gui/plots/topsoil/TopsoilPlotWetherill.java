@@ -164,4 +164,9 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
     public void setProperty(String key, Object datum) {
         plot.getProperties().put(key, datum);
     }
+
+    @Override
+    public String makeAgeString(int index) {
+        return "";
+    }
 }

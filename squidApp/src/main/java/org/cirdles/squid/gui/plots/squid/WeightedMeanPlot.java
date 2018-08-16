@@ -21,17 +21,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.plots.PlotDisplayInterface;
+import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 
@@ -52,11 +58,20 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private boolean[] rejectedIndices;
     private final String ageLookupString;
 
-    private double standardAge;
+    private final double standardAge;
 
     private int indexOfSelectedSpot;
+    private final WeightedMeanRefreshInterface weightedMeanRefreshInterface;
+    private final ContextMenu spotContextMenu = new ContextMenu();
 
-    public WeightedMeanPlot(Rectangle bounds, String plotTitle, SpotSummaryDetails spotSummaryDetails, String ageLookupString, double standardAge) {
+    public WeightedMeanPlot(
+            Rectangle bounds,
+            String plotTitle,
+            SpotSummaryDetails spotSummaryDetails,
+            String ageLookupString,
+            double standardAge,
+            WeightedMeanRefreshInterface weightedMeanRefreshInterface) {
+
         super(bounds, 0, 0);
 
         graphWidth = 700;
@@ -71,8 +86,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         extractFractionDetails();
 
         this.standardAge = standardAge;
+        this.weightedMeanRefreshInterface = weightedMeanRefreshInterface;
+
         this.indexOfSelectedSpot = -1;
         setOpacity(1.0);
+
+        setupSpotInWMContextMenu();
 
         this.setOnMouseClicked(new MouseClickEventHandler());
     }
@@ -98,6 +117,13 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         @Override
         public void handle(MouseEvent mouseEvent) {
             indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
+
+            spotContextMenu.hide();
+            if (spotSummaryDetails.isManualRejectionEnabled() && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
+                spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
+                        mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
+            }
+
             repaint();
         }
     }
@@ -288,6 +314,14 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), leftMargin + 425, topMargin + graphHeight + 80);
 
+        g2d.setFill(Paint.valueOf("BLACK"));
+        g2d.setFont(Font.font("Lucida Sans", 10));
+        g2d.fillText("Mouse:", leftMargin + 0, topMargin + graphHeight + 60);
+        g2d.fillText(" left = spot name", leftMargin + 0, topMargin + graphHeight + 70);
+        if (spotSummaryDetails.isManualRejectionEnabled()) {
+            g2d.fillText(" right = spot menu", leftMargin + 0, topMargin + graphHeight + 80);
+        }
+
         // provide highlight and info about selected spot
         g2d.setFont(Font.font("Lucida Sans", 12));
         if (indexOfSelectedSpot >= 0) {
@@ -303,17 +337,24 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             } else {
                 g2d.setFill(Paint.valueOf("Red"));
             }
-            
+
             Text spotID = new Text(shrimpFractions.get(indexOfSelectedSpot).getFractionID());
             spotID.applyCss();
             g2d.fillText(
                     shrimpFractions.get(indexOfSelectedSpot).getFractionID()
-                    + "  Age = " + new BigDecimal(myOnPeakData[indexOfSelectedSpot]).movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
-                    + " ±" + new BigDecimal(onPeakTwoSigma[indexOfSelectedSpot]).movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + " Ma",
+                    + "  Age = " + makeAgeString(indexOfSelectedSpot),
                     mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - spotID.getLayoutBounds().getWidth(),
                     mapY(minY) + 0 + spotID.getLayoutBounds().getHeight());
         }
 
+    }
+
+    @Override
+    public String makeAgeString(int index) {
+        return new BigDecimal(myOnPeakData[index])
+                .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
+                + " ±" + new BigDecimal(onPeakTwoSigma[index])
+                        .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + "Ma";
     }
 
     /**
@@ -360,6 +401,18 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         maxY += yMarginStretch;
     }
 
+    private void setupSpotInWMContextMenu() {
+        MenuItem menuItem1 = new MenuItem("Toggle Exclusion of this spot.");
+        menuItem1.setOnAction((evt) -> {
+            if (indexOfSelectedSpot > -1) {
+                weightedMeanRefreshInterface.toggleSpotExclusionWM(indexOfSelectedSpot);
+                weightedMeanRefreshInterface.calculateWeightedMean();
+                weightedMeanRefreshInterface.refreshPlot();
+            }
+        });
+        spotContextMenu.getItems().addAll(menuItem1);
+    }
+
     @Override
     public List<Node> toolbarControlsFactory() {
         List<Node> controls = new ArrayList<>();
@@ -381,14 +434,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
     @Override
-    public void setProperty(String key, Object datum
-    ) {
+    public void setProperty(String key, Object datum) {
         getProperties().put(key, datum);
     }
 
     @Override
-    public void setSelectedAllData(boolean selected
-    ) {
+    public void setSelectedAllData(boolean selected) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

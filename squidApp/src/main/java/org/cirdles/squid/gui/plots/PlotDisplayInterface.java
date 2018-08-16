@@ -37,6 +37,8 @@ public interface PlotDisplayInterface {
     void setProperty(String key, Object datum);
 
     List<Node> toolbarControlsFactory();  
+    
+    public String makeAgeString(int index);
 
     static enum SigmaPresentationModes {
         ONE_SIGMA_ABSOLUTE("1σ (abs)", 1.0),

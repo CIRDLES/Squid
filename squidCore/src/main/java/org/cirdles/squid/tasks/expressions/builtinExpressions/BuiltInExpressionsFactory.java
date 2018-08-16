@@ -200,9 +200,11 @@ public abstract class BuiltInExpressionsFactory {
             Expression expressionOVER_COUNT_4_6_8 = buildExpression(OVER_COUNT_4_6_8,
                     "1", true, false, false);
             placeholderExpressions.add(expressionOVER_COUNT_4_6_8);
+
             Expression expressionOVER_COUNTS_PERSEC_4_8 = buildExpression(OVER_COUNTS_PERSEC_4_8,
                     "1", true, false, false);
             placeholderExpressions.add(expressionOVER_COUNTS_PERSEC_4_8);
+
             Expression expressionCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = buildExpression(CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
                     "1", true, false, false);
             placeholderExpressions.add(expressionCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA);
@@ -654,18 +656,33 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> meansAndAgesForRefMaterials = new TreeSet<>();
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 8-corr  206/238  *** Start
-        String term2 = "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] "
-                + "/ (1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"])^2 ";
-        String term3 = "( [\"208/206\"] * [%\"208/206\"] / \n"
-                + "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) )^2 ";
-        String term4 = "1 / ( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) +  \n"
-                + "sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [\"232Th/238U\"] )";
-        String term6 = "((" + term4 + ")* StdRad86fact * [\"232Th/238U\"] * [%\"232Th/238U\"] )^2";
+//        String term2 = "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] "
+//                + "/ ((1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"]))^2 ";
+//        String term3 = "( [\"208/206\"] * [%\"208/206\"] / \n"
+//                + "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) )^2 ";
+//        String term4 = "1 / ( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) +  \n"
+//                + "sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [\"232Th/238U\"] )";
+//        String term6 = "((" + term4 + ")* StdRad86fact * [\"232Th/238U\"] * [%\"232Th/238U\"] )^2";
+//
+//        Expression expression8corr206Pb238Ucalibrconst = buildExpression("8-corr 206Pb/238Ucalibr.const",
+//                "ValueModel((1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"],"
+//                + "sqrt( [%\"UncorrPb/Uconst\"]^2 + ((" + term2 + ") * ((" + term3 + ") + (" + term6 + "))) ),"
+//                + "false)", true, false, false);
+//        meansAndAgesForRefMaterials.add(expression8corr206Pb238Ucalibrconst);
 
         Expression expression8corr206Pb238Ucalibrconst = buildExpression("8-corr 206Pb/238Ucalibr.const",
-                "ValueModel((1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"],"
-                + "sqrt( [%\"UncorrPb/Uconst\"]^2 + ((" + term2 + ") * ((" + term3 + ") + (" + term6 + "))) ),"
-                + "false)", true, false, false);
+                "ValueModel("
+                + "(1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"],"
+                + "SQRT( [%\"UncorrPb/Uconst\"]^2 + \n"
+                + "      ( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] / "
+                + "      ((1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"]) )^2 * \n"
+                + "      ( ( [\"208/206\"] * [%\"208/206\"] /( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) )^2 +\n"
+                + "        ( ( 1 /( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) + \n"
+                + "          sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [\"232Th/238U\"] ) ) *\n"
+                + "          StdRad86fact * [\"232Th/238U\"] * [%\"232Th/238U\"]\n"
+                + "        )^2\n"
+                + "      )\n"
+                + "    ), false)", true, false, false);
         meansAndAgesForRefMaterials.add(expression8corr206Pb238Ucalibrconst);
 
         // weighted mean
