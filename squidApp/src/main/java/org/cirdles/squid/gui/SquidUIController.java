@@ -1137,7 +1137,7 @@ public class SquidUIController implements Initializable {
     }
     
     @FXML
-    private void openParametersManagerPbBlankICModels(ActionEvent event) {
+    private void openParametersManagerCommonPbModels(ActionEvent event) {
         squidParametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.commonPb);
     }
     

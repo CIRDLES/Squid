@@ -911,7 +911,7 @@ public class parametersManagerGUIController implements Initializable {
             TextField text = new TextField(masses.get(mass[0]).toPlainString());
             molarMassesPane.getChildren().add(text);
             text.setLayoutY(currY);
-            text.setLayoutX(80 + lab.getLayoutX());
+            text.setLayoutX(70 + lab.getLayoutX());
             text.setPrefWidth(300);
             text.focusedProperty().addListener((obV, ov, nv) -> {
                 if (!nv && !isNumeric(text.getText())) {
