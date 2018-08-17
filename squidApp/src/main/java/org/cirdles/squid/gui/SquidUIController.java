@@ -1151,6 +1151,7 @@ public class SquidUIController implements Initializable {
                 if (newValue.booleanValue()) {
                     setUpPhysicalConstantsModelsMenuItems();
                     setUpReferenceMaterialsMenuItems();
+                    setUpCommonPbMenuItems();
                 }
             }
         });
