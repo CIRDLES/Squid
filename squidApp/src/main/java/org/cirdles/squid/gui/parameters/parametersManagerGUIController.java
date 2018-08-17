@@ -212,6 +212,12 @@ public class parametersManagerGUIController implements Initializable {
     private ChoiceBox<String> commonPbCB;
     @FXML
     private Tab apparentDatesTab;
+    @FXML
+    private Tab refMatTab;
+    @FXML
+    private Tab commonPbTab;
+    @FXML
+    private Tab physConstTab;
 
     PhysicalConstantsModel physConstModel;
     PhysicalConstantsModel physConstHolder;
@@ -297,14 +303,30 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpTabs() {
+        refMatTab.setOnSelectionChanged(val -> {
+            if(refMatTab.isSelected()) {
+                chosenTab = ParametersTab.refMat;
+            }
+        });
+        commonPbTab.setOnSelectionChanged(val -> {
+            if(commonPbTab.isSelected()) {
+                chosenTab = ParametersTab.commonPb;
+            }
+        });
+        physConstTab.setOnSelectionChanged(val -> {
+            if(physConstTab.isSelected()) {
+                chosenTab = ParametersTab.physConst;
+            }
+        });
+
         squidLabDataStage.focusedProperty().addListener(listener -> {
             if (squidLabDataStage.isFocused()) {
                 if (chosenTab.equals(ParametersTab.physConst)) {
-                    rootTabPane.getSelectionModel().select(2);
+                    rootTabPane.getSelectionModel().select(physConstTab);
                 } else if (chosenTab.equals(ParametersTab.refMat)) {
-                    rootTabPane.getSelectionModel().select(0);
+                    rootTabPane.getSelectionModel().select(refMatTab);
                 } else if (chosenTab.equals(ParametersTab.commonPb)) {
-                    rootTabPane.getSelectionModel().select(1);
+                    rootTabPane.getSelectionModel().select(commonPbTab);
                 }
                 String selected = "";
                 if (!isEditingPhysConst) {

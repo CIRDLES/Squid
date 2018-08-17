@@ -23,7 +23,7 @@
         <TextField id="laboratoryTextField" fx:id="labNameTextField" prefHeight="26.0" prefWidth="562.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
         <TabPane fx:id="rootTabPane" layoutX="2.0" layoutY="45.0" prefHeight="455.0" prefWidth="657.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="45.0">
             <tabs>
-                <Tab text="Reference Material Models">
+                <Tab fx:id="refMatTab" text="Reference Material Models">
                     <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                             <children>
@@ -205,7 +205,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Common Pb Models">
+                <Tab fx:id="commonPbTab" text="Common Pb Models">
                     <content>
                         <AnchorPane prefHeight="416.0" prefWidth="658.0">
                             <children>
@@ -356,7 +356,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Physical Constants Models">
+                <Tab fx:id="physConstTab" text="Physical Constants Models">
                     <content>
                         <AnchorPane prefHeight="416.0" prefWidth="658.0">
                             <children>
