@@ -304,17 +304,17 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpTabs() {
         refMatTab.setOnSelectionChanged(val -> {
-            if(refMatTab.isSelected()) {
+            if (refMatTab.isSelected()) {
                 chosenTab = ParametersTab.refMat;
             }
         });
         commonPbTab.setOnSelectionChanged(val -> {
-            if(commonPbTab.isSelected()) {
+            if (commonPbTab.isSelected()) {
                 chosenTab = ParametersTab.commonPb;
             }
         });
         physConstTab.setOnSelectionChanged(val -> {
-            if(physConstTab.isSelected()) {
+            if (physConstTab.isSelected()) {
                 chosenTab = ParametersTab.physConst;
             }
         });
@@ -558,12 +558,14 @@ public class parametersManagerGUIController implements Initializable {
                     col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
                     col.setOnEditCommit(value -> {
                         if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1
-                                && Double.parseDouble(value.getNewValue()) >= -1) {
-                            int rowNum = value.getTablePosition().getRow();
+                                && Double.parseDouble(value.getNewValue()) >= -1 &&
+                                value.getTablePosition().getColumn() != value.getTablePosition().getRow() + 1) {
                             String colRatio = getRatioHiddenName(value.getTableColumn().getText());
                             String rowRatio = getRatioHiddenName(value.getRowValue().get(0).get());
                             String key = "rho" + colRatio.substring(0, 1).toUpperCase() + colRatio.substring(1) + "__" + rowRatio;
+                            String reverseKey = "rho" + rowRatio.substring(0, 1).toUpperCase() + rowRatio.substring(1) + "__" + colRatio;
                             model.getRhos().remove(key);
+                            model.getRhos().remove(reverseKey);
                             if (Double.parseDouble(value.getNewValue()) != 0) {
                                 model.getRhos().put(key, new BigDecimal(value.getNewValue()));
                             }
@@ -682,6 +684,7 @@ public class parametersManagerGUIController implements Initializable {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
             }
+            table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(valCol);
 
@@ -724,6 +727,7 @@ public class parametersManagerGUIController implements Initializable {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
             }
+            table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(absCol);
 
@@ -766,6 +770,7 @@ public class parametersManagerGUIController implements Initializable {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
             }
+            table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(pctCol);
 
@@ -807,6 +812,7 @@ public class parametersManagerGUIController implements Initializable {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
             }
+            setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(valCol);
 
@@ -835,6 +841,7 @@ public class parametersManagerGUIController implements Initializable {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
             }
+            setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(absCol);
 
@@ -863,6 +870,7 @@ public class parametersManagerGUIController implements Initializable {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
                 value.getTableView().refresh();
             }
+            setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(pctCol);
 
