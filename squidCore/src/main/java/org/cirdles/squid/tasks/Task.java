@@ -271,9 +271,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.extPErr = 0.75;
 
-        this.physicalConstantsModel = new PhysicalConstantsModel();
-        this.referenceMaterial = new ReferenceMaterial();
-        this.commonPbModel = new CommonPbModel();
+        this.physicalConstantsModel = PhysicalConstantsModel.defaultPhysicalConstantsModel.clone();
+        this.referenceMaterial = ReferenceMaterial.defaultReferenceMaterial.clone();
+        this.commonPbModel = CommonPbModel.defaultCommonPbModel.clone();
 
         generateConstants();
         generateParameters();

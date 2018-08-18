@@ -43,7 +43,7 @@ public class ReferenceMaterial extends ParametersModel {
 
     private static long serialVersionUID = 1513337897720796891L;
 
-    private static ReferenceMaterial defaultReferenceMaterial = getDefaultModel("Zircon-91500", "1.0");
+    public static ReferenceMaterial defaultReferenceMaterial = getDefaultModel("Zircon-91500", "1.0");
 
     ValueModel[] concentrations;
     boolean[] dataMeasured;

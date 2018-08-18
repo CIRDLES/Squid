@@ -762,6 +762,32 @@
                         </AnchorPane>
                     </content>
                 </Tab>
+                <Tab text="Default Models" fx:id="defaultModelsTab">
+                    <content>
+                        <AnchorPane>
+                            <GridPane AnchorPane.leftAnchor="10" AnchorPane.topAnchor="10" hgap="10" vgap="50"
+                                      alignment="BASELINE_RIGHT">
+
+                                <Label text="Default Reference Material Model:" GridPane.halignment="RIGHT"
+                                       GridPane.columnIndex="0"
+                                       GridPane.rowIndex="0"/>
+                                <ChoiceBox fx:id="defaultRefMatCB" prefWidth="380" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="0"/>
+
+                                <Label text="Default Common Pb Model:" GridPane.halignment="RIGHT"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <ChoiceBox fx:id="defaultCommonPbCB" prefWidth="380" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="1"/>
+
+                                <Label text="Default Physical Constants Model:" GridPane.halignment="RIGHT"
+                                       GridPane.columnIndex="0"
+                                       GridPane.rowIndex="2"/>
+                                <ChoiceBox fx:id="defaultPhysConstCB" prefWidth="380" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="2"/>
+                            </GridPane>
+                        </AnchorPane>
+                    </content>
+                </Tab>
             </tabs>
         </TabPane>
         <Label id="labNameLabel" prefHeight="18.0" prefWidth="74.0" text="Lab Name:" AnchorPane.leftAnchor="10.0"

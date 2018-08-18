@@ -51,6 +51,6 @@ public class ParametersLauncher {
     }
 
     public enum ParametersTab {
-        physConst, refMat, commonPb
+        physConst, refMat, commonPb, defaultModels
     }
 }
