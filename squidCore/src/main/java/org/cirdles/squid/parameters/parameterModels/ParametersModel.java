@@ -89,13 +89,12 @@ public class ParametersModel implements
 
     @Override
     public int compareTo(ParametersModel o) {
-        return (modelName + version).compareTo(o.getModelName() + o.getVersion());
+        return (modelName).compareTo(o.getModelName()) + version.compareTo(o.getVersion());
     }
 
     public boolean equals(Object o) {
         boolean retVal = o instanceof ParametersModel;
-        if (retVal && ((ParametersModel) o).
-                getModelName().compareTo(modelName) != 0) {
+        if (retVal && ((ParametersModel) o).compareTo(this) != 0) {
             retVal = false;
         }
         return retVal;
