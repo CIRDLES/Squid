@@ -45,9 +45,11 @@ public class ParametersLauncher {
 
     public void launchParametersManager(ParametersTab tab) {
         parametersManagerGUIController.chosenTab = tab;
-        squidLabDataStage.centerOnScreen();
+        if (!squidLabDataStage.isShowing()) {
+            squidLabDataStage.centerOnScreen();
+            squidLabDataStage.show();
+        }
         squidLabDataStage.requestFocus();
-        squidLabDataStage.show();
     }
 
     public enum ParametersTab {

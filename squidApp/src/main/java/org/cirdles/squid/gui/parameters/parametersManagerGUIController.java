@@ -33,10 +33,8 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.Reference;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Ref;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -1023,54 +1021,51 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpPhysConstEditableLabel() {
-        if (physConstModel.isEditable()) {
-            physConstIsEditableLabel.setText("editable");
-        } else {
-            physConstIsEditableLabel.setText("not editable");
-        }
+        setUpIsEditableLabel(physConstIsEditableLabel, physConstModel.isEditable());
     }
 
     private void setUpRefMatEditableLabel() {
-        if (refMatModel.isEditable()) {
-            refMatIsEditableLabel.setText("editable");
-        } else {
-            refMatIsEditableLabel.setText("not editable");
-        }
+        setUpIsEditableLabel(refMatIsEditableLabel, refMatModel.isEditable());
     }
 
     private void setUpCommonPbEditableLabel() {
-        if (commonPbModel.isEditable()) {
-            commonPbIsEditableLabel.setText("editable");
+        setUpIsEditableLabel(commonPbIsEditableLabel, commonPbModel.isEditable());
+    }
+
+    private void setUpIsEditableLabel(Label lab, boolean isEditable) {
+        if(isEditable) {
+            lab.setText("editable");
         } else {
-            commonPbIsEditableLabel.setText("not editable");
+            lab.setText("not editable");
         }
     }
 
     private void setUpPhysConstTextFields() {
-        physConstModelName.setText(physConstModel.getModelName());
-        physConstLabName.setText(physConstModel.getLabName());
-        physConstVersion.setText(physConstModel.getVersion());
-        physConstDateCertified.setText(physConstModel.getDateCertified());
-        physConstReferencesArea.setText(physConstModel.getReferences());
-        physConstCommentsArea.setText(physConstModel.getComments());
+        setUpTextFields(physConstModelName, physConstModel.getModelName(), physConstLabName, physConstModel.getLabName(),
+                physConstVersion, physConstModel.getVersion(), physConstDateCertified, physConstModel.getDateCertified(),
+                physConstCommentsArea, physConstModel.getComments(), physConstReferencesArea, physConstModel.getReferences());
     }
 
     private void setUpRefMatTextFields() {
-        refMatModelName.setText(refMatModel.getModelName());
-        refMatLabName.setText(refMatModel.getLabName());
-        refMatVersion.setText(refMatModel.getVersion());
-        refMatDateCertified.setText(refMatModel.getDateCertified());
-        refMatCommentsArea.setText(refMatModel.getComments());
-        refMatReferencesArea.setText(refMatModel.getReferences());
+        setUpTextFields(refMatModelName, refMatModel.getModelName(), refMatLabName, refMatModel.getLabName(), refMatVersion,
+                refMatModel.getVersion(), refMatDateCertified, refMatModel.getDateCertified(), refMatCommentsArea,
+                refMatModel.getComments(), refMatReferencesArea, refMatModel.getReferences());
     }
 
     private void setUpCommonPbTextFields() {
-        commonPbModelName.setText(commonPbModel.getModelName());
-        commonPbLabName.setText(commonPbModel.getLabName());
-        commonPbVersion.setText(commonPbModel.getVersion());
-        commonPbDateCertified.setText(commonPbModel.getDateCertified());
-        commonPbCommentsArea.setText(commonPbModel.getComments());
-        commonPbReferencesArea.setText(commonPbModel.getReferences());
+        setUpTextFields(commonPbModelName, commonPbModel.getModelName(), commonPbLabName, commonPbModel.getLabName(),
+                commonPbVersion, commonPbModel.getVersion(), commonPbDateCertified, commonPbModel.getDateCertified(),
+                commonPbCommentsArea, commonPbModel.getComments(), commonPbReferencesArea, commonPbModel.getReferences());
+    }
+
+    private void setUpTextFields(TextField model, String modelName, TextField lab, String labName, TextField ver, String version,
+                                 TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
+        model.setText(modelName);
+        lab.setText(labName);
+        ver.setText(version);
+        date.setText(dateCertified);
+        com.setText(comments);
+        ref.setText(references);
     }
 
     private void setUpLaboratoryName() {
@@ -1329,37 +1324,33 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpRefMatMenuItems(boolean isEditing, boolean isEditable) {
-        refMatFileMenu.setDisable(isEditing);
-        saveAndRegCurrRefMat.setDisable(!isEditing);
-        remCurrRefMat.setDisable(!isEditable || isEditing);
-        canEditOfRefMat.setDisable(!isEditing);
-        editNewEmptyRefMat.setDisable(isEditing);
-        editCopyOfCurrRefMat.setDisable(isEditing);
-        editCurrRefMat.setDisable(!isEditable || isEditing);
-        refMatCB.setDisable(isEditing);
+        setUpMenuItems(isEditing, isEditable, refMatFileMenu, saveAndRegCurrRefMat, remCurrRefMat, canEditOfRefMat, editNewEmptyRefMat,
+                editCopyOfCurrRefMat, editCurrRefMat, refMatCB);
     }
 
     private void setUpPhysConstMenuItems(boolean isEditing, boolean isEditable) {
-        physConstFileMenu.setDisable(isEditing);
-        saveAndRegCurrPhysConst.setDisable(!isEditing);
-        remCurrPhysConst.setDisable(!isEditable || isEditing);
-        cancelEditOfPhysConst.setDisable(!isEditing);
-        editNewEmpPhysConst.setDisable(isEditing);
-        editCopyOfCurrPhysConst.setDisable(isEditing);
-        editCurrPhysConst.setDisable(!isEditable || isEditing);
-        physConstCB.setDisable(isEditing);
+        setUpMenuItems(isEditing, isEditable, physConstFileMenu, saveAndRegCurrPhysConst, remCurrPhysConst, cancelEditOfPhysConst,
+                editNewEmpPhysConst, editCopyOfCurrPhysConst, editCurrPhysConst, physConstCB);
     }
 
     private void setUpCommonPbMenuItems(boolean isEditing, boolean isEditable) {
-        commonPbFileMenu.setDisable(isEditing);
-        saveAndRegCommonPbMenuItem.setDisable(!isEditing);
-        remCurrCommonPb.setDisable(!isEditable || isEditing);
-        cancelEditOfCommonPb.setDisable(!isEditing);
-        editNewEmptyCommonPb.setDisable(isEditing);
-        editCopyOfCommonPb.setDisable(isEditing);
-        editCurrCommonPb.setDisable(!isEditable || isEditing);
-        commonPbCB.setDisable(isEditing);
+        setUpMenuItems(isEditing, isEditable, commonPbFileMenu, saveAndRegCommonPbMenuItem, remCurrCommonPb, cancelEditOfCommonPb,
+                editNewEmptyCommonPb, editCopyOfCommonPb, editCurrCommonPb, commonPbCB);
     }
+
+    private void setUpMenuItems(boolean isEditing, boolean isEditable, Menu fileMenu, MenuItem saveAndReg,
+                                MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
+                                MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
+        fileMenu.setDisable(isEditing);
+        saveAndReg.setDisable(!isEditing);
+        remCurr.setDisable(!isEditable || isEditing);
+        cancelEdit.setDisable(!isEditing);
+        editNewEmp.setDisable(isEditing);
+        editCopy.setDisable(isEditing);
+        editCurr.setDisable(!isEditable || isEditing);
+        cB.setDisable(isEditing);
+    }
+
 
     @FXML
     private void physConstRemoveCurrMod(ActionEvent event) {
@@ -1452,7 +1443,9 @@ public class parametersManagerGUIController implements Initializable {
 
         squidLabData.storeState();
 
-        if (squidProject != null && squidProject.getTask() != null) {
+        if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
+                && (squidProject.getTask().getPhysicalConstantsModel().equals(physConstModel) ||
+                squidProject.getTask().getPhysicalConstantsModel().equals(PhysicalConstantsModel.defaultPhysicalConstantsModel))) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -1491,7 +1484,9 @@ public class parametersManagerGUIController implements Initializable {
 
         squidLabData.storeState();
 
-        if (squidProject != null && squidProject.getTask() != null) {
+        if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
+                && (squidProject.getTask().getReferenceMaterial().equals(refMatModel) ||
+                squidProject.getTask().getReferenceMaterial().equals(ReferenceMaterial.defaultReferenceMaterial))) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -1914,7 +1909,9 @@ public class parametersManagerGUIController implements Initializable {
 
         squidLabData.storeState();
 
-        if (squidProject != null && squidProject.getTask() != null) {
+        if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getCommonPbModel() != null
+                && (squidProject.getTask().getCommonPbModel().equals(commonPbModel) ||
+                squidProject.getTask().getCommonPbModel().equals(CommonPbModel.defaultCommonPbModel))) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
