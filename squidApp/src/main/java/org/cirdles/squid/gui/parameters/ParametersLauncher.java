@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 
 /**
  * @author ryanb
@@ -20,33 +19,36 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 public class ParametersLauncher {
 
     public static Stage squidLabDataStage;
+    private static Stage primaryStage;
 
-    public ParametersLauncher() {
+    public ParametersLauncher(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        squidLabDataStage = new Stage();
+        squidLabDataStage.setMinHeight(450);
+        squidLabDataStage.setMinWidth(900);
+        squidLabDataStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
+        squidLabDataStage.setX(primaryStage.getX() + (primaryStage.getWidth() - squidLabDataStage.getWidth()) / 2);
+        squidLabDataStage.setY(primaryStage.getY() + (primaryStage.getHeight() - squidLabDataStage.getHeight()) / 2);
         try {
-            squidLabDataStage = new Stage();
-            squidLabDataStage.setMinHeight(600);
-            squidLabDataStage.setMinWidth(900);
-            squidLabDataStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
-            squidLabDataStage.initOwner(primaryStageWindow);
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
             Scene scene = new Scene(loader.load());
-
             squidLabDataStage.setScene(scene);
-            squidLabDataStage.setTitle("Squid Parameters Manager");
-
-            squidLabDataStage.setOnCloseRequest((WindowEvent e) -> {
-                squidLabDataStage.hide();
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
+        squidLabDataStage.setTitle("Squid Parameters Manager");
+
+        squidLabDataStage.setOnCloseRequest((WindowEvent e) -> {
+            squidLabDataStage.hide();
+            e.consume();
+        });
     }
 
     public void launchParametersManager(ParametersTab tab) {
         parametersManagerGUIController.chosenTab = tab;
         if (!squidLabDataStage.isShowing()) {
-            squidLabDataStage.centerOnScreen();
+            squidLabDataStage.setX(primaryStage.getX() + (primaryStage.getWidth() - squidLabDataStage.getWidth()) / 2);
+            squidLabDataStage.setY(primaryStage.getY() + (primaryStage.getHeight() - squidLabDataStage.getHeight()) / 2);
             squidLabDataStage.show();
         }
         squidLabDataStage.requestFocus();
@@ -55,4 +57,5 @@ public class ParametersLauncher {
     public enum ParametersTab {
         physConst, refMat, commonPb, defaultModels
     }
+
 }

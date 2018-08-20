@@ -53,6 +53,8 @@ import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
+
+import static org.cirdles.squid.gui.SquidUI.parametersLauncher;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
@@ -140,8 +142,6 @@ public class SquidUIController implements Initializable {
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
 
-    private static ParametersLauncher squidParametersLauncher;
-
     @FXML
     private MenuItem newSquid3TaskMenuItem;
     @FXML
@@ -221,7 +221,6 @@ public class SquidUIController implements Initializable {
         parametersMenu.setDisable(true);
         squidLabDataMenu.setDisable(false);
 
-        squidParametersLauncher = new ParametersLauncher();
         setUpParametersMenu();
 
         CalamariFileUtilities.initExamplePrawnFiles();
@@ -1117,22 +1116,22 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void openParametersManagerPhysConst(ActionEvent event) {
-        squidParametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.physConst);
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.physConst);
     }
 
     @FXML
     private void openParametersManagerRefMat(ActionEvent event) {
-        squidParametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
     }
 
     @FXML
     private void openParametersManagerCommonPbModels(ActionEvent event) {
-        squidParametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.commonPb);
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.commonPb);
     }
 
     @FXML
     private void openDefaultSquidLabDataModels() {
-        squidParametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
     }
 
     private void setUpParametersMenu() {
