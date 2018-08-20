@@ -24,7 +24,7 @@
                                                 <MenuItem mnemonicParsing="false" onAction="#refMatImpXMLAction"
                                                           text="Import Reference Material Model from XML File"/>
                                                 <MenuItem mnemonicParsing="false" onAction="#refMatExpXMLAction"
-                                                          text="Export Reference Material Model as XML File"/>
+                                                          text="Export Current Reference Material Model as XML File"/>
                                                 <SeparatorMenuItem mnemonicParsing="false"/>
                                                 <MenuItem mnemonicParsing="false"
                                                           onAction="#importETReduxReferenceMaterial"
@@ -289,7 +289,7 @@
                                                 <MenuItem mnemonicParsing="false" onAction="#commonPbImpXMLAction"
                                                           text="Import Common Pb Model from XML File"/>
                                                 <MenuItem mnemonicParsing="false" onAction="#commonPbExpXMLAction"
-                                                          text="Export Common Pb Model as XML File"/>
+                                                          text="Export Current Common Pb Model as XML File"/>
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
@@ -507,7 +507,7 @@
                                                 <MenuItem mnemonicParsing="false" onAction="#physConstImpXMLAction"
                                                           text="Import Physical Constants Model from XML File"/>
                                                 <MenuItem mnemonicParsing="false" onAction="#physConstExpXMLAction"
-                                                          text="Export Physical Constants Model as XML File"/>
+                                                          text="Export Current Physical Constants Model as XML File"/>
                                                 <SeparatorMenuItem mnemonicParsing="false"/>
                                                 <MenuItem mnemonicParsing="false"
                                                           onAction="#importETReduxPhysicalConstantsModel"

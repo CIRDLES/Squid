@@ -20,6 +20,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Callback;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
@@ -604,7 +605,7 @@ public class parametersManagerGUIController implements Initializable {
             final int rowHeadNum = 0;
             rowHead.setSortable(false);
             rowHead.setEditable(false);
-            rowHead.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
+            rowHead.setCellFactory(column -> EditCell.createStringEditCell());
             rowHead.setCellValueFactory(param
                     -> new ReadOnlyObjectWrapper<String>(getRatioVisibleName(param.getValue().get(rowHeadNum).get())));
             columns.add(rowHead);
@@ -617,7 +618,7 @@ public class parametersManagerGUIController implements Initializable {
                         -> new ReadOnlyObjectWrapper<String>(format.format(round(new BigDecimal(param.getValue().get(colNum).get()), precision))));
 
                 if (table.equals(physConstCorrTable) || table.equals(refMatCorrTable) || table.equals(commonPbCorrTable)) {
-                    col.setCellFactory(TextFieldTableCell.<ObservableList<SimpleStringProperty>>forTableColumn());
+                    col.setCellFactory(column -> EditCell.createStringEditCell());
                     col.setOnEditCommit(value -> {
                         if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1
                                 && Double.parseDouble(value.getNewValue()) >= -1 &&
@@ -706,13 +707,13 @@ public class parametersManagerGUIController implements Initializable {
         nameCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("name"));
         nameCol.setSortable(false);
         nameCol.setEditable(false);
-        nameCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
+        nameCol.setCellFactory(column -> EditCell.createStringEditCell());
         columns.add(nameCol);
 
         TableColumn<DataModel, String> valCol = new TableColumn<>("value");
         valCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("value"));
         valCol.setSortable(false);
-        valCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
+        valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
@@ -753,7 +754,7 @@ public class parametersManagerGUIController implements Initializable {
         TableColumn<DataModel, String> absCol = new TableColumn<>("1σ ABS");
         absCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("oneSigmaABS"));
         absCol.setSortable(false);
-        absCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
+        absCol.setCellFactory(column -> EditCell.createStringEditCell());
         absCol.setOnEditCommit(value -> {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
@@ -796,7 +797,7 @@ public class parametersManagerGUIController implements Initializable {
         TableColumn<DataModel, String> pctCol = new TableColumn<>("1σ PCT");
         pctCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("oneSigmaPCT"));
         pctCol.setSortable(false);
-        pctCol.setCellFactory(TextFieldTableCell.<DataModel>forTableColumn());
+        pctCol.setCellFactory(column -> EditCell.createStringEditCell());
         pctCol.setOnEditCommit(value -> {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
@@ -846,14 +847,14 @@ public class parametersManagerGUIController implements Initializable {
         TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
         nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
         nameCol.setSortable(false);
-        nameCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        nameCol.setCellFactory(column -> EditCell.createStringEditCell());
         nameCol.setEditable(false);
         refMatDataTable.getColumns().add(nameCol);
 
         TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
         valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
         valCol.setSortable(false);
-        valCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
@@ -881,7 +882,7 @@ public class parametersManagerGUIController implements Initializable {
         TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
         absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
         absCol.setSortable(false);
-        absCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        absCol.setCellFactory(column -> EditCell.createStringEditCell());
         absCol.setOnEditCommit(value -> {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
@@ -910,7 +911,7 @@ public class parametersManagerGUIController implements Initializable {
         TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
         pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
         pctCol.setSortable(false);
-        pctCol.setCellFactory(TextFieldTableCell.<RefMatDataModel>forTableColumn());
+        pctCol.setCellFactory(column -> EditCell.createStringEditCell());
         pctCol.setOnEditCommit(value -> {
             if (isNumeric(value.getNewValue())) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
