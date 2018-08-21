@@ -20,13 +20,6 @@ if (!hasProperty('mainClass')) {
 
 mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
-    mavenCentral()
-}
-
 dependencies {
     implementation project(":squidCore")
     //compile 'com.github.cirdles.topsoil:app:master-SNAPSHOT'
