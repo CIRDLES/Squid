@@ -190,6 +190,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected PhysicalConstantsModel physicalConstantsModel;
     protected ReferenceMaterial referenceMaterial;
     protected CommonPbModel commonPbModel;
+    protected ReferenceMaterial concentrationReferenceMaterial;
 
     public Task() {
         this("New Task", null, null);
@@ -273,6 +274,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.physicalConstantsModel = PhysicalConstantsModel.defaultPhysicalConstantsModel.clone();
         this.referenceMaterial = ReferenceMaterial.defaultReferenceMaterial.clone();
+        this.concentrationReferenceMaterial = ReferenceMaterial.defaultReferenceMaterial.clone();
         this.commonPbModel = CommonPbModel.defaultCommonPbModel.clone();
 
         generateConstants();
@@ -632,7 +634,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-                }   
+                }
                 if (listedExp.getName().compareToIgnoreCase(OVER_COUNT_4_6_8) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + OVER_COUNT_4_6_8 + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
@@ -2188,32 +2190,50 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return extPErr;
     }
 
+    @Override
     public void setReferenceMaterial(ParametersModel refMat) {
         if (refMat instanceof ReferenceMaterial) {
             referenceMaterial = (ReferenceMaterial) refMat;
         }
     }
 
+    @Override
     public ReferenceMaterial getReferenceMaterial() {
         return referenceMaterial;
     }
 
+    @Override
+    public void setConcentrationReferenceMaterial(ParametersModel refMat) {
+        if (refMat instanceof ReferenceMaterial) {
+            concentrationReferenceMaterial = (ReferenceMaterial) refMat;
+        }
+    }
+
+    @Override
+    public ReferenceMaterial getConcentrationReferenceMaterial() {
+            return concentrationReferenceMaterial;
+    }
+
+    @Override
     public void setPhysicalConstantsModel(ParametersModel physConst) {
         if (physConst instanceof PhysicalConstantsModel) {
             physicalConstantsModel = (PhysicalConstantsModel) physConst;
         }
     }
 
+    @Override
     public PhysicalConstantsModel getPhysicalConstantsModel() {
         return physicalConstantsModel;
     }
 
+    @Override
     public void setCommonPbModel(ParametersModel commonPbModel) {
         if (commonPbModel instanceof CommonPbModel) {
             this.commonPbModel = (CommonPbModel) commonPbModel;
         }
     }
 
+    @Override
     public CommonPbModel getCommonPbModel() {
         return commonPbModel;
     }

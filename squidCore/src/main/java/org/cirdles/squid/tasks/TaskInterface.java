@@ -204,6 +204,8 @@ public interface TaskInterface {
     public PhysicalConstantsModel getPhysicalConstantsModel();
     public void setCommonPbModel(ParametersModel model);
     public CommonPbModel getCommonPbModel();
+    public void setConcentrationReferenceMaterial(ParametersModel refMat);
+    public ReferenceMaterial getConcentrationReferenceMaterial();
 
     /**
      * @param type the type to set
