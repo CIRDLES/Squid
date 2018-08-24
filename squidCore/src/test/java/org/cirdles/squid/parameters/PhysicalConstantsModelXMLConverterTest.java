@@ -2,6 +2,7 @@ package org.cirdles.squid.parameters;
 
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.ElementComparer;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -13,22 +14,22 @@ import java.io.File;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ReferenceMaterialXMlConverterTest {
+public class PhysicalConstantsModelXMLConverterTest {
 
     @Test
-    public void testReferenceMaterialXMLConverter() {
+    public void testPhysicalConstantsXMLConverter() {
         try {
-            ResourceExtractor extractor = new ResourceExtractor(ReferenceMaterial.class);
+            ResourceExtractor extractor = new ResourceExtractor(PhysicalConstantsModel.class);
 
-            File initialFile = extractor.extractResourceAsFile("Zircon-91500 v.1.0.xml");
-            ReferenceMaterial model = ReferenceMaterial.getReferenceMaterialFromETReduxXML(initialFile);
+            File initialFile = extractor.extractResourceAsFile("EARTHTIME Physical Constants Model v.1.1.xml");
+            PhysicalConstantsModel model = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(initialFile);
 
-            File convertedFile = new File("zirconCopy.xml");
+            File convertedFile = new File("physicalConstantsCopy.xml");
             model.serializeXMLObject(convertedFile.getAbsolutePath());
 
-            model = (ReferenceMaterial) model.readXMLObject(convertedFile.getAbsolutePath(), false);
+            model = (PhysicalConstantsModel) model.readXMLObject(convertedFile.getAbsolutePath(), false);
 
-            File convertedConvertedFile = new File("zirconCopyOfCopy.xml");
+            File convertedConvertedFile = new File("physicalConstantsCopyOfCopy.xml");
             model.serializeXMLObject(convertedConvertedFile.getAbsolutePath());
 
             SAXBuilder builder = new SAXBuilder();
@@ -45,6 +46,7 @@ public class ReferenceMaterialXMlConverterTest {
             e.printStackTrace();
             fail(e.getMessage());
         }
+
     }
 
 }

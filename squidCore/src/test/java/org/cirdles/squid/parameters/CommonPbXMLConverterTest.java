@@ -2,7 +2,7 @@ package org.cirdles.squid.parameters;
 
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.ElementComparer;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -13,22 +13,23 @@ import java.io.File;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ReferenceMaterialXMlConverterTest {
+public class CommonPbXMLConverterTest {
 
     @Test
-    public void testReferenceMaterialXMLConverter() {
+    public void testCommonPbXMLConverter() {
         try {
-            ResourceExtractor extractor = new ResourceExtractor(ReferenceMaterial.class);
+            ResourceExtractor extractor = new ResourceExtractor(CommonPbModel.class);
 
-            File initialFile = extractor.extractResourceAsFile("Zircon-91500 v.1.0.xml");
-            ReferenceMaterial model = ReferenceMaterial.getReferenceMaterialFromETReduxXML(initialFile);
+            File initialFile = extractor.extractResourceAsFile("blank placeholder v.1.0.xml");
+            CommonPbModel model = new CommonPbModel();
+            model = (CommonPbModel) model.readXMLObject(initialFile.getAbsolutePath(), false);
 
-            File convertedFile = new File("zirconCopy.xml");
+            File convertedFile = new File("commonPbCopy.xml");
             model.serializeXMLObject(convertedFile.getAbsolutePath());
 
-            model = (ReferenceMaterial) model.readXMLObject(convertedFile.getAbsolutePath(), false);
+            model = (CommonPbModel) model.readXMLObject(convertedFile.getAbsolutePath(), false);
 
-            File convertedConvertedFile = new File("zirconCopyOfCopy.xml");
+            File convertedConvertedFile = new File("commonPbCopyOfCopy.xml");
             model.serializeXMLObject(convertedConvertedFile.getAbsolutePath());
 
             SAXBuilder builder = new SAXBuilder();
@@ -46,5 +47,4 @@ public class ReferenceMaterialXMlConverterTest {
             fail(e.getMessage());
         }
     }
-
 }
