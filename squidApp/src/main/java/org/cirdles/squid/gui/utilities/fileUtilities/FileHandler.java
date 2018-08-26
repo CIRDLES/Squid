@@ -276,7 +276,7 @@ public class FileHandler {
     }
 
     public static File getCustomExpressionFolder(Window ownerWindow) {
-        File retVal = null;
+        File retVal;
 
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
@@ -293,14 +293,16 @@ public class FileHandler {
     }
 
     public static File setCustomExpressionFolder(Window ownerWindow) {
-        File retVal = null;
+        File retVal;
 
-        FileChooser chooser = new FileChooser();
+        DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
         chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null ?
                 squidPersistentState.getCustomExpressionsFile() : new File(File.separator + System.getProperty("user.home")));
-        chooser.setInitialFileName("custom_expressions");
-        retVal = chooser.showSaveDialog(ownerWindow);
+
+        //directory chooser doesn't have an option to set initial folder name, find solution
+
+        retVal = chooser.showDialog(ownerWindow);
 
         if(retVal != null) {
             squidPersistentState.setCustomExpressionsFile(retVal);

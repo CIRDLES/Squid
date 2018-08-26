@@ -70,6 +70,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInte
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
+import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
@@ -2181,7 +2182,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             for(Expression expression : taskExpressionsOrdered) {
                 if(expression.isCustom()) {
                     try {
-                        expression.serializeXMLObject(folder.getAbsolutePath() + File.separator + expression.getName() + ".xml");
+                        expression.serializeXMLObject(folder.getAbsolutePath() + File.separator +
+                                FileNameFixer.fixFileName(expression.getName()) + ".xml");
                     } catch(Exception e) {
                         System.out.println(e.getMessage());
                     }
