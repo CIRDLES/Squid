@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.gui.SquidReportTable;
+package org.cirdles.squid.gui.squidReportTable;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -21,21 +21,17 @@ import java.io.IOException;
  *
  * @author ryanb
  */
-public class SquidReportTable extends Application {
+public class SquidReportTableLauncher {
 
-    public static Window primaryStageWindow;
-    public static Stage primaryStage;
+    private static Stage primaryStage;
 
-    @Override
-    public void start(Stage primaryStage) throws IOException {
-        this.primaryStage = primaryStage;
+    public SquidReportTableLauncher(Stage masterStage) throws IOException {
+        primaryStage = new Stage();
 
         Parent root = new AnchorPane();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Squid Report Table");
-
-        primaryStageWindow = primaryStage.getScene().getWindow();
 
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
             Platform.exit();
@@ -44,21 +40,19 @@ public class SquidReportTable extends Application {
         
         scene.setRoot(FXMLLoader.load(getClass().getResource("SquidReportTableGUI.fxml")));
 
-        primaryStage.show();
         primaryStage.setMinHeight(scene.getHeight());
         primaryStage.setMinWidth(scene.getWidth());
         primaryStage.setHeight(scene.getHeight() + 200);
         primaryStage.setWidth(scene.getWidth() + 400);
-
-//        Application.setUserAgentStylesheet(getClass().getResource("SquidReportTable.css").toExternalForm());      
-//        scene.getStylesheets().add(getClass().getResource("SquidReportTable.css").toExternalForm());
+        primaryStage.show();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
+    public void launch(ReportTableTab tab) {
+
+    }
+
+    public enum ReportTableTab {
+        refMat, unknown
     }
 
 }

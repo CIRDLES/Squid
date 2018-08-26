@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.gui.SquidReportTable.utilities;
+package org.cirdles.squid.gui.squidReportTable.utilities;
 
 import javafx.stage.FileChooser;
 
@@ -20,7 +20,7 @@ public class FileHandler {
         FileChooser fc = new FileChooser();
         fc.setTitle("CSV Selector");
         fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV Files", "*.csv", "*.CSV"));
-//        fc.setInitialDirectory(new File("src/main/resources/org/cirdles/SquidReportTable/"));
+//        fc.setInitialDirectory(new File("src/main/resources/org/cirdles/squidReportTable/"));
 
         File csvFile = fc.showOpenDialog(primaryStageWindow);
         

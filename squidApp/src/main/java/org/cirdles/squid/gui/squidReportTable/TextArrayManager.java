@@ -3,21 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.gui.SquidReportTable;
+package org.cirdles.squid.gui.squidReportTable;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.cirdles.SquidReportTable.utilities.StringComparer;
+import org.cirdles.squid.gui.squidReportTable.utilities.StringComparer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author ryanb
  */
 public class TextArrayManager {
@@ -66,46 +64,13 @@ public class TextArrayManager {
             columns.add(col);
             if (!array[0][i].equals(array[0][i + 1])) {
                 table.getColumns().add(header);
-                headers.add(header);            
-                columnReorder2(header, columns);
+                headers.add(header);
                 columns = new ArrayList<>();
             }
         }
-        columnReorder(table, headers);
         setUpBoundCol();
     }
 
-    public static void columnReorder(TableView table, List<TableColumn<ObservableList<String>, String>> columns) {
-        table.getColumns().addListener(new ListChangeListener() {
-            public boolean suspended;
-
-            @Override
-            public void onChanged(Change change) {
-                change.next();
-                if (change.wasReplaced() && !suspended) {
-                    this.suspended = true;
-                    table.getColumns().setAll(columns);
-                    this.suspended = false;
-                }
-            }
-        });
-    }
-
-    public static void columnReorder2(TableColumn col, List<TableColumn<ObservableList<String>, String>> columns) {
-        col.getColumns().addListener(new ListChangeListener() {
-            public boolean suspended;
-
-            @Override
-            public void onChanged(Change change) {
-                change.next();
-                if (change.wasReplaced() && !suspended) {
-                    this.suspended = true;
-                    col.getColumns().setAll(columns);
-                    this.suspended = false;
-                }
-            }
-        });
-    }
 
     public int getMaxColumnHeaderLength(String input) {
         int max = 0;

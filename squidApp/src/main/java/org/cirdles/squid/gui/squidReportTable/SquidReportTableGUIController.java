@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.gui.SquidReportTable;
+package org.cirdles.squid.gui.squidReportTable;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,8 +15,8 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import org.cirdles.SquidReportTable.utilities.CSVExtractor;
-import org.cirdles.SquidReportTable.utilities.FileHandler;
+import org.cirdles.squid.gui.squidReportTable.utilities.CSVExtractor;
+import org.cirdles.squid.gui.squidReportTable.utilities.FileHandler;
 
 import java.io.File;
 import java.net.URL;
@@ -29,7 +29,7 @@ import java.util.Set;
  *
  * @author ryanb
  */
-public class GuiController implements Initializable {
+public class SquidReportTableGUIController implements Initializable {
 
     @FXML
     private Button selectCSVButton;
