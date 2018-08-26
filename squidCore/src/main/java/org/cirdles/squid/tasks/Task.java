@@ -18,8 +18,8 @@ package org.cirdles.squid.tasks;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
-import java.io.IOException;
-import java.io.Serializable;
+
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -619,7 +619,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-                }   
+                }
                 if (listedExp.getName().compareToIgnoreCase(OVER_COUNT_4_6_8) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + OVER_COUNT_4_6_8 + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
@@ -2173,6 +2173,53 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public double getExtPErr() {
         return extPErr;
+    }
+
+    @Override
+    public void exportCustomExpressions(File folder) {
+        if(folder != null && folder.mkdirs()) {
+            for(Expression expression : taskExpressionsOrdered) {
+                if(expression.isCustom()) {
+                    try {
+                        expression.serializeXMLObject(folder.getAbsolutePath() + File.separator + expression.getName() + ".xml");
+                    } catch(Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+        } else {
+            System.out.println("custom expression folder not created");
+        }
+    }
+
+    @Override
+    public void importCustomExpressionFromFolder(File folder) {
+        if(folder != null && folder.exists()) {
+            File[] files = folder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    boolean retVal;
+                    if (name.toLowerCase().endsWith(".xml")) {
+                        retVal = true;
+                    } else {
+                        retVal = false;
+                    }
+                    return retVal;
+                }
+            });
+            for(int i = 0; i < files.length; i++) {
+                try{
+                    Expression exp = new Expression();
+                    exp = (Expression) exp.readXMLObject(files[i].getAbsolutePath(), false);
+                    if(!taskExpressionsOrdered.contains(exp)) {
+                        taskExpressionsOrdered.add(exp);
+                    }
+                } catch(Exception e) {
+                    System.out.println(files[i].getName() + " custom expression not added");
+                }
+            }
+        } else {
+            System.out.println("custom expressions folder does not exist");
+        }
     }
 
 }
