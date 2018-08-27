@@ -355,7 +355,7 @@ public class ExpressionManagerController implements Initializable {
             }
             );
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
 
         ObservableList<Expression> items
