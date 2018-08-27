@@ -196,7 +196,7 @@ public final class SquidProject implements Serializable {
                     false, false);
 
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
-//            System.out.println(">>>>>   " + expressionTree.getName());
+//            //System.out.println(">>>>>   " + expressionTree.getName());
             expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
             expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
             expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(task25Eqn.isEqnSwitchConcST());
@@ -357,6 +357,9 @@ public final class SquidProject implements Serializable {
 
         // save new count
         prawnFile.setRuns((short) prawnFile.getRun().size());
+        
+        // update fractions
+        ((Task) task).setupSquidSessionSkeleton();       
     }
 
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
