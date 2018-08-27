@@ -8,11 +8,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportTableGUIController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportTableUnknownsController">
     <children>
         <AnchorPane fx:id="root" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
-                <Button fx:id="selectCSVButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#selectCSVButton" prefHeight="27.0" prefWidth="281.0" text="Select CSV File" textAlignment="CENTER" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
                 <TableView fx:id="reportsTable" layoutX="173.0" layoutY="47.0" prefHeight="300.0" prefWidth="672.0" AnchorPane.bottomAnchor="252.0" AnchorPane.leftAnchor="173.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="47.0" />
                 <Button fx:id="fractionsButtons" layoutX="348.0" layoutY="14.0" mnemonicParsing="false" onAction="#acceptedRejectedAction" prefHeight="26.0" prefWidth="258.0" text="Accepted/Rejected Fractions" textAlignment="CENTER" />
                 <TextArea fx:id="footnoteText" layoutX="14.0" layoutY="347.0" prefHeight="162.0" prefWidth="846.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />

@@ -15,24 +15,23 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import org.cirdles.squid.gui.squidReportTable.utilities.CSVExtractor;
-import org.cirdles.squid.gui.squidReportTable.utilities.FileHandler;
+import org.cirdles.squid.reports.reportSettings.ReportSettings;
+import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 
-import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Set;
+
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
  * FXML Controller class
  *
  * @author ryanb
  */
-public class SquidReportTableGUIController implements Initializable {
+public class SquidReportTableReferenceMaterialController implements Initializable {
 
-    @FXML
-    private Button selectCSVButton;
     @FXML
     private TableView<ObservableList<String>> reportsTable;
     @FXML
@@ -64,24 +63,18 @@ public class SquidReportTableGUIController implements Initializable {
         reportsTable.setFixedCellSize(24);
         footnoteText.setEditable(false);
         setStyles();
-    }
-
-    @FXML
-    private void selectCSVButton(ActionEvent event) {
-        File fileName = FileHandler.getFile();
-        if (fileName != null) {
-            textArray = CSVExtractor.extractCSVFile(fileName);
-            tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
-            tableManager.setHeaders();
-            tableManager.setTableItems();
-            setTableItems();
-            FootnoteManager.setUpFootnotes(footnoteText, textArray);
-            setUpColFootnote();
-            setUpScroller();
-            setUpColFootnote();
-            reportsTable.refresh();
-            boundCol.refresh();
-        }
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
+        textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
+        tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
+        tableManager.setHeaders();
+        tableManager.setTableItems();
+        setTableItems();
+        FootnoteManager.setUpFootnotes(footnoteText, textArray);
+        setUpColFootnote();
+        setUpScroller();
+        setUpColFootnote();
+        reportsTable.refresh();
+        boundCol.refresh();
     }
 
     @FXML
@@ -121,7 +114,7 @@ public class SquidReportTableGUIController implements Initializable {
             }
         }
 
-        label.setPrefHeight(24);                    
+        label.setPrefHeight(24);
         label.setPrefWidth(160);
         rtHbar.setPrefHeight(24.0);
         rtHbar.visibleProperty().addListener(new ChangeListener<Boolean>() {
@@ -144,14 +137,10 @@ public class SquidReportTableGUIController implements Initializable {
     }
 
     private void setStyles() {
-        String tableStyle = ".table-view {"
-                + "-fx-font-family: \"Courier New\"; -fx-font-size: 15;}";
+        String tableStyle = "-fx-font-family: \"Courier New\"; -fx-font-size: 15;";
         reportsTable.setStyle(tableStyle);
         boundCol.setStyle(tableStyle);
         fractionsButtons.setStyle("-fx-background-color: orange;"
-                + "-fx-font-family: \"Times New Roman\";"
-                + "-fx-font-size: 18;");
-        selectCSVButton.setStyle("-fx-background-color: orange;"
                 + "-fx-font-family: \"Times New Roman\";"
                 + "-fx-font-size: 18;");
         root.setStyle("-fx-background-color: cadetblue");
