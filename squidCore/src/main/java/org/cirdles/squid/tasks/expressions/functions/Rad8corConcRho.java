@@ -17,14 +17,15 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
-import static org.cirdles.squid.constants.Squid3Constants.lambda238;
-import static org.cirdles.squid.constants.Squid3Constants.uRatio;
-import static org.cirdles.squid.constants.Squid3Constants.lambda232;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_232_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
 
 /**
  *
@@ -91,9 +92,11 @@ public class Rad8corConcRho extends Function {
             double[] sComm_76 = convertObjectArrayToDoubles(childrenET.get(9).eval(shrimpFractions, task)[0]);
             double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(10).eval(shrimpFractions, task)[0]);
             
-            
-            double[] rad8corConcRho = org.cirdles.ludwig.squid25.PbUTh_2.rad8corConcRho(
-                    totPb6U8[0],
+            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
+            double lambda232 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_232_NAME)).getValue();
+            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+
+            double[] rad8corConcRho = org.cirdles.ludwig.squid25.PbUTh_2.rad8corConcRho(totPb6U8[0],
                     totPb6U8per[0],
                     radPb6U8[0],
                     th2U8[0],
@@ -103,7 +106,7 @@ public class Rad8corConcRho extends Function {
                     totPb86[0],
                     totPb86per[0],
                     sComm_76[0], sComm_86[0], 
-                    uRatio, lambda232, lambda238);
+                    PRESENT_R238_235S, lambda232, lambda238);
             
             retVal = new Object[][]{{rad8corConcRho[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
