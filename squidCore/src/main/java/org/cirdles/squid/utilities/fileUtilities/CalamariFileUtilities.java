@@ -68,9 +68,9 @@ public class CalamariFileUtilities {
                             File prawnFile = new File(exampleFolder.getCanonicalPath() + File.separator + fileNames.get(i));
 
                             if (prawnFileResource.renameTo(prawnFile)) {
-                                System.out.println("PrawnFile added: " + fileNames.get(i));
+                                //System.out.println("PrawnFile added: " + fileNames.get(i));
                             } else {
-                                System.out.println("PrawnFile failed to add: " + fileNames.get(i));
+                                //System.out.println("PrawnFile failed to add: " + fileNames.get(i));
                             }
                         }
                     }
@@ -194,18 +194,18 @@ public class CalamariFileUtilities {
                 File shrimpPrawnFileSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SHRIMP_PRAWN.xsd");
 
                 if (shrimpPrawnFileSchemaResource.renameTo(shrimpPrawnFileSchema)) {
-                    System.out.println("SHRIMP_PRAWN.xsd added.");
+                    //System.out.println("SHRIMP_PRAWN.xsd added.");
                 } else {
-                    System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
+                    //System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
                 }
 
                 File shrimpExpressionSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidTask_ExpressionXMLSchema.xsd");
                 File shrimpExpressionSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd");
 
                 if (shrimpExpressionSchemaResource.renameTo(shrimpExpressionSchema)) {
-                    System.out.println("SquidTask_ExpressionXMLSchema.xsd added.");
+                    //System.out.println("SquidTask_ExpressionXMLSchema.xsd added.");
                 } else {
-                    System.out.println("Failed to add SquidTask_ExpressionXMLSchema.xsd.");
+                    //System.out.println("Failed to add SquidTask_ExpressionXMLSchema.xsd.");
                 }
             }
         } catch (IOException iOException) {
@@ -223,17 +223,17 @@ public class CalamariFileUtilities {
                 File ludwigLibraryJavadoc = new File(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc.jar");
 
                 if (ludwigLibraryJavadocResource.renameTo(ludwigLibraryJavadoc)) {
-                    System.out.println("LudwigLibraryJavadoc.jar added.");
+                    //System.out.println("LudwigLibraryJavadoc.jar added.");
                     try {
                         unpackZipFile(ludwigLibraryJavadoc, DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER);
                     } catch (IOException iOException) {
-                        System.out.println("HELP");
+                        //System.out.println("HELP");
                     }
                 } else {
-                    System.out.println("Failed to add LudwigLibraryJavadoc.jar.");
+                    //System.out.println("Failed to add LudwigLibraryJavadoc.jar.");
                 }
             } else {
-                System.out.println("Failed to make LudwigLibraryJavadoc folder.");
+                //System.out.println("Failed to make LudwigLibraryJavadoc folder.");
             }
         }
     }
