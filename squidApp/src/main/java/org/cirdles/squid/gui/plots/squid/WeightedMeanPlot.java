@@ -162,7 +162,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setFill(Paint.valueOf("Red"));
 
         int rightOfText = 450;
-        Text text = new Text("Wtd Mean of Ref Mat Pb/U calibr.");
+        Text text = new Text("Wtd Mean of Ref Mat Pb/" + ((String)(ageLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
         text.setFont(Font.font("Lucida Sans", 15));
 
         int textWidth = (int) text.getLayoutBounds().getWidth();

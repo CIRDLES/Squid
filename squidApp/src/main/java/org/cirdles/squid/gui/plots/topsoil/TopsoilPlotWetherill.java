@@ -29,18 +29,12 @@ import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.plots.PlotDisplayInterface.SigmaPresentationModes.TWO_SIGMA_ABSOLUTE;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+
 import org.cirdles.topsoil.app.isotope.IsotopeType;
-import org.cirdles.topsoil.plot.base.BasePlotDefaultProperties;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.CONCORDIA_LINE;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.ELLIPSES;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.ELLIPSE_FILL_COLOR;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.ISOTOPE_TYPE;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.REGRESSION_ENVELOPE;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.REGRESSION_LINE;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.TITLE;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.UNCERTAINTY;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.X_AXIS;
-import static org.cirdles.topsoil.plot.base.BasePlotProperties.Y_AXIS;
+import org.cirdles.topsoil.plot.DefaultProperties;
+import org.cirdles.topsoil.plot.PlotProperty;
+
+import static org.cirdles.topsoil.plot.PlotProperty.*;
 
 /**
  *
@@ -63,22 +57,24 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         setupPlot(title);
     }
 
-    private void setupPlot(String title) {   
-        plot.setProperties(new BasePlotDefaultProperties());
+    private void setupPlot(String title) {
+    	Map<PlotProperty, Object> properties = new DefaultProperties();
 
-        plot.setProperty(ISOTOPE_TYPE, IsotopeType.UPb.getName());
-        plot.setProperty(X_AXIS, IsotopeType.UPb.getHeaders()[0]);
-        plot.setProperty(Y_AXIS, IsotopeType.UPb.getHeaders()[1]);
+        properties.put(ISOTOPE_SYSTEM, IsotopeType.UPb.getName());
+	    properties.put(X_AXIS, IsotopeType.UPb.getHeaders()[0]);
+	    properties.put(Y_AXIS, IsotopeType.UPb.getHeaders()[1]);
 
-        plot.setProperty(TITLE, title);
-        plot.setProperty(CONCORDIA_LINE, true);
-        plot.setProperty(ELLIPSES, true);
-        plot.setProperty(ELLIPSE_FILL_COLOR, "red");
+	    properties.put(TITLE, title);
+	    properties.put(WETHERILL_LINE, true);
+	    properties.put(ELLIPSES, true);
+	    properties.put(ELLIPSES_FILL, "red");
 
-        plot.setProperty(REGRESSION_LINE, false);
-        plot.setProperty(REGRESSION_ENVELOPE, false);
-        
-        plot.setProperty(UNCERTAINTY, TWO_SIGMA_ABSOLUTE.getSigmaMultiplier());
+	    properties.put(MCLEAN_REGRESSION, false);
+	    properties.put(MCLEAN_REGRESSION_ENVELOPE, false);
+
+	    properties.put(UNCERTAINTY, TWO_SIGMA_ABSOLUTE.getSigmaMultiplier());
+
+	    plot.setProperties(properties);
     }
 
     @Override
@@ -116,19 +112,20 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         ellipsesColorPicker.setPrefWidth(100);
         ellipsesColorPicker.setOnAction(mouseEvent -> {
             // to satisfy D3
-            plot.setProperty(ELLIPSE_FILL_COLOR, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
+            plot.setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll
+		            ("0x", "#"));
         });
 
         CheckBox concordiaLineCheckBox = new CheckBox("Concordia");
         concordiaLineCheckBox.setSelected(true);
         concordiaLineCheckBox.setOnAction(mouseEvent -> {
-            plot.setProperty(CONCORDIA_LINE, concordiaLineCheckBox.isSelected());
+            plot.setProperty(WETHERILL_LINE, concordiaLineCheckBox.isSelected());
         });
 
         CheckBox regressionUnctEnvelopeCheckBox = new CheckBox("2D Regression Unct");
         regressionUnctEnvelopeCheckBox.setSelected(false);
         regressionUnctEnvelopeCheckBox.setOnAction(mouseEvent -> {
-            plot.setProperty(REGRESSION_ENVELOPE, regressionUnctEnvelopeCheckBox.isSelected());
+            plot.setProperty(MCLEAN_REGRESSION_ENVELOPE, regressionUnctEnvelopeCheckBox.isSelected());
         });
 
         CheckBox regressionCheckBox = new CheckBox("2D Regression");
@@ -136,7 +133,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         regressionUnctEnvelopeCheckBox.setDisable(true);
         regressionCheckBox.setOnAction(mouseEvent -> {
             boolean isRegression = regressionCheckBox.isSelected();
-            plot.setProperty(REGRESSION_LINE, isRegression);
+            plot.setProperty(MCLEAN_REGRESSION, isRegression);
             regressionUnctEnvelopeCheckBox.setDisable(!isRegression);
         });
 
@@ -162,7 +159,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
     @Override
     public void setProperty(String key, Object datum) {
-        plot.getProperties().put(key, datum);
+//        plot.getProperties().put(key, datum);
     }
 
     @Override

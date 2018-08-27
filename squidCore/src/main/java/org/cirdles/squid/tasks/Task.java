@@ -670,7 +670,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         try {
             Collections.sort(taskExpressionsOrdered);
         } catch (Exception e) {
-            System.out.println("V I O L A T I O N ??");
+            //System.out.println("V I O L A T I O N ??");
         }
         Expression[] expArray = taskExpressionsOrdered.toArray(new Expression[taskExpressionsOrdered.size()]);
         Expression saved;
@@ -701,10 +701,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         taskExpressionsOrdered.clear();
         for (Expression listedExp : expArray) {
-            System.out.println(listedExp.getName());
+            //System.out.println(listedExp.getName());
             taskExpressionsOrdered.add(listedExp);
         }
-        System.out.println("<>><<><>>>>>>>>>>>>>>>>\n\n");
+        //System.out.println("<>><<><>>>>>>>>>>>>>>>>\n\n");
     }
 
     public void processAndSortExpressions() {
@@ -956,7 +956,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             for (int i = 0; i < changelings.size(); i++) {
                 int index = changelings.get(i);
                 if (excelString.contains(nominalMasses.get(index))) {
-                    System.out.println("CHANGE " + exp.getName() + " >> " + excelString + " >> " + mapOfIndexToMassStationDetails.get(index).getIsotopeLabel());
+                    //System.out.println("CHANGE " + exp.getName() + " >> " + excelString + " >> " + mapOfIndexToMassStationDetails.get(index).getIsotopeLabel());
                     excelString = excelString.replaceAll(nominalMasses.get(index), mapOfIndexToMassStationDetails.get(index).getIsotopeLabel());
                     for (int r = 0; r < ratioNames.size(); r++) {
                         if (ratioNames.get(r).contains(nominalMasses.get(index))) {
@@ -1282,7 +1282,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 try {
                     evaluateExpressionForSpotSet(expression, spotsForExpression);
                 } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
-                    System.out.println("Out of bounds at evaluateTaskExpressions");
+                    //System.out.println("Out of bounds at evaluateTaskExpressions");
                 }
             }
         }
@@ -1419,7 +1419,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
                 spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
             } catch (SquidException squidException) {
-//                System.out.println(squidException.getMessage() + " while processing " + expressionTree.getName());
+//                //System.out.println(squidException.getMessage() + " while processing " + expressionTree.getName());
             }
         }
     }

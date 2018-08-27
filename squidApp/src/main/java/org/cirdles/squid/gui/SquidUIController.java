@@ -290,7 +290,7 @@ public class SquidUIController implements Initializable {
             // log prawnFileFolderMRU
             // squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("ProjectManager >>>>   " + iOException.getMessage());
+            //System.out.println("ProjectManager >>>>   " + iOException.getMessage());
         }
 
     }
@@ -546,7 +546,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(sessionAuditUI);
             sessionAuditUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("SessionAudit >>>>   " + iOException.getMessage());
+            //System.out.println("SessionAudit >>>>   " + iOException.getMessage());
         }
     }
 
@@ -563,7 +563,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(massesAuditUI);
             massesAuditUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("MassesAudit >>>>   " + iOException.getMessage());
+            //System.out.println("MassesAudit >>>>   " + iOException.getMessage());
         }
     }
 
@@ -580,7 +580,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(spotManagerUI);
             spotManagerUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("SpotManager >>>>   " + iOException.getMessage());
+            //System.out.println("SpotManager >>>>   " + iOException.getMessage());
         }
     }
 
@@ -603,7 +603,7 @@ public class SquidUIController implements Initializable {
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("TaskManager >>>>   " + iOException.getMessage());
+            //System.out.println("TaskManager >>>>   " + iOException.getMessage());
         }
     }
 
@@ -620,7 +620,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(isotopesManagerUI);
             isotopesManagerUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
+            //System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
         }
     }
 
@@ -644,7 +644,7 @@ public class SquidUIController implements Initializable {
             showUI(ratiosManagerUI);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("RatioManager >>>>   " + iOException.getMessage());
+            //System.out.println("RatioManager >>>>   " + iOException.getMessage());
         }
     }
 
@@ -681,7 +681,7 @@ public class SquidUIController implements Initializable {
             showUI(expressionManagerUI);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("expressionManagerUI >>>>   " + iOException.getMessage());
+            //System.out.println("expressionManagerUI >>>>   " + iOException.getMessage());
         }
     }
 
@@ -699,7 +699,7 @@ public class SquidUIController implements Initializable {
             reductionManagerUI.setVisible(false);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("ReductionManager >>>>   " + iOException.getMessage());
+            //System.out.println("ReductionManager >>>>   " + iOException.getMessage());
         }
     }
 
@@ -719,7 +719,7 @@ public class SquidUIController implements Initializable {
             showUI(reducedDataReportManagerUI);
 
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("reducedDataReportManagerUI >>>>   " + iOException.getMessage());
+            //System.out.println("reducedDataReportManagerUI >>>>   " + iOException.getMessage());
         }
     }
 
@@ -979,7 +979,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(topsoilPlotUI);
             topsoilPlotUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
+            //System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
         }
     }
 

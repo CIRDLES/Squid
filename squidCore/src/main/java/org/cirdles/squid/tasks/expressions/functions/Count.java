@@ -39,7 +39,7 @@ public class Count extends Function {
         stream.defaultReadObject();
         ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Count.class.getCanonicalName()));
         long theSUID = myObject.getSerialVersionUID();
-        System.out.println("Customized De-serialization of Count " + theSUID);
+        //System.out.println("Customized De-serialization of Count " + theSUID);
     }
 
     /**

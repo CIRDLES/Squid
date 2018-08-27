@@ -53,7 +53,7 @@ public class WtdMeanACalcTest {
      */
     @Test
     public void testWtdMeanAcalc() {
-        System.out.println("wtdMeanAcalc 4-corr 206Pb/238U calibr. const");
+        //System.out.println("wtdMeanAcalc 4-corr 206Pb/238U calibr. const");
         double[] values = new double[]{
             0.00884012768001511,
             0.00884482434708822,
@@ -116,7 +116,7 @@ public class WtdMeanACalcTest {
         assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
 
         // ========================================================================= wtdMeanAcalc 4-corr 206Pb/238U calibr. const END
-        System.out.println("wtdMeanAcalc 7-corr 206Pb/238U calibr. const");
+        //System.out.println("wtdMeanAcalc 7-corr 206Pb/238U calibr. const");
         values = new double[]{
             0.00884371071978141,
             0.00885316167050690,
@@ -179,7 +179,7 @@ public class WtdMeanACalcTest {
         assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
 
         // ========================================================================= wtdMeanAcalc 7-corr 206Pb/238U calibr. const END        
-        System.out.println("wtdMeanAcalc 8-corr 206Pb/238U calibr. const");
+        //System.out.println("wtdMeanAcalc 8-corr 206Pb/238U calibr. const");
         values = new double[]{
             0.00883888952884310,
             0.00884331196433504,
@@ -244,7 +244,7 @@ public class WtdMeanACalcTest {
         assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
 
         // ========================================================================= wtdMeanAcalc 8-corr 206Pb/238U calibr. const END
-        System.out.println("wtdMeanAcalc 4-corr 208Pb/232Th calibr. const");
+        //System.out.println("wtdMeanAcalc 4-corr 208Pb/232Th calibr. const");
         values = new double[]{
             0.0131044345958688,
             0.0130045206497664,
@@ -309,7 +309,7 @@ public class WtdMeanACalcTest {
         assertArrayEquals(expResult[2], result[2], SQUID_EPSILON);
         // ========================================================================= wtdMeanAcalc 4-corr 208Pb/232Th calibr. const END
 
-        System.out.println("wtdMeanAcalc 7-corr 208Pb/232Th calibr. const");
+        //System.out.println("wtdMeanAcalc 7-corr 208Pb/232Th calibr. const");
         values = new double[]{
             0.0132714624131130,
             0.0133882946295659,

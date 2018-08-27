@@ -22,13 +22,6 @@ if (!hasProperty('mainClass')) {
 
 apply plugin: 'antlr'
 
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
-    mavenCentral()
-}
-
 dependencies {
     compile 'com.github.cirdles:Commons:bc38781605'
     //compile "com.github.cirdles:Commons:-SNAPSHOT"
