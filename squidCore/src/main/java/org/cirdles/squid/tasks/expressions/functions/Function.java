@@ -397,7 +397,7 @@ public abstract class Function
                         new Class[0]);
                 retVal = (Function) method.invoke(null, new Object[0]);
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-                System.out.println(noSuchMethodException.getMessage());
+                //System.out.println(noSuchMethodException.getMessage());
             }
         }
         return retVal;
