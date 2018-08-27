@@ -112,7 +112,7 @@
          </children>
       </GridPane>
       <Label text="Audit:" GridPane.rowIndex="6" />
-      <TextArea fx:id="taskAuditTextArea" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <TextArea fx:id="taskAuditTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <HBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
             <Label fx:id="titleLabel" text="Task &gt; Isotopes &amp; Ratios/Manage Isotopes &gt; Isotopes &amp; Ratios/Manage Ratios" />

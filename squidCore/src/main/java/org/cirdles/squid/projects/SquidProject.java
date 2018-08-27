@@ -357,6 +357,9 @@ public final class SquidProject implements Serializable {
 
         // save new count
         prawnFile.setRuns((short) prawnFile.getRun().size());
+        
+        // update fractions
+        ((Task) task).setupSquidSessionSkeleton();       
     }
 
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
