@@ -2,11 +2,20 @@ import org.gradle.api.artifacts.*
 
 apply plugin: 'base' // To add "clean" task to the root project.
 
+allprojects {
+    repositories {
+        maven {
+            url "https://jitpack.io"
+        }
+        mavenCentral()
+    }
+}
+
 subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-task wrapper(type: Wrapper) {
+wrapper {
     gradleVersion = '4.9'
 }
 
