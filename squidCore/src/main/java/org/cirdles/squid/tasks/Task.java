@@ -70,7 +70,6 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInte
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
-import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
@@ -2174,54 +2173,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public double getExtPErr() {
         return extPErr;
-    }
-
-    @Override
-    public void exportCustomExpressions(File folder) {
-        if(folder != null && folder.mkdirs()) {
-            for(Expression expression : taskExpressionsOrdered) {
-                if(expression.isCustom()) {
-                    try {
-                        expression.serializeXMLObject(folder.getAbsolutePath() + File.separator +
-                                FileNameFixer.fixFileName(expression.getName()) + ".xml");
-                    } catch(Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-            }
-        } else {
-            System.out.println("custom expression folder not created");
-        }
-    }
-
-    @Override
-    public void importCustomExpressionFromFolder(File folder) {
-        if(folder != null && folder.exists()) {
-            File[] files = folder.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    boolean retVal;
-                    if (name.toLowerCase().endsWith(".xml")) {
-                        retVal = true;
-                    } else {
-                        retVal = false;
-                    }
-                    return retVal;
-                }
-            });
-            for(int i = 0; i < files.length; i++) {
-                try{
-                    Expression exp = new Expression();
-                    exp = (Expression) exp.readXMLObject(files[i].getAbsolutePath(), false);
-                    if(!taskExpressionsOrdered.contains(exp)) {
-                        taskExpressionsOrdered.add(exp);
-                    }
-                } catch(Exception e) {
-                    System.out.println(files[i].getName() + " custom expression not added");
-                }
-            }
-        } else {
-            System.out.println("custom expressions folder does not exist");
-        }
     }
 
 }

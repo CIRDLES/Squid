@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javax.xml.bind.JAXBException;
@@ -270,42 +269,6 @@ public class FileHandler {
             //squidPersistentState.updateExpressionListMRU(reportFileCSV);
 
             ReportSerializerToCSV.writeCSVReport(rawOutput, reportFileCSV, report);
-        }
-
-        return retVal;
-    }
-
-    public static File getCustomExpressionFolder(Window ownerWindow) {
-        File retVal;
-
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Select Custom Expressions Folder");
-        chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null ?
-                squidPersistentState.getCustomExpressionsFile() : new File(File.separator + System.getProperty("user.home")));
-
-        retVal = chooser.showDialog(ownerWindow);
-
-        if(retVal != null) {
-            squidPersistentState.setCustomExpressionsFile(retVal);
-        }
-
-        return retVal;
-    }
-
-    public static File setCustomExpressionFolder(Window ownerWindow) {
-        File retVal;
-
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Select Custom Expressions Folder");
-        chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null ?
-                squidPersistentState.getCustomExpressionsFile() : new File(File.separator + System.getProperty("user.home")));
-
-        //directory chooser doesn't have an option to set initial folder name, find solution
-
-        retVal = chooser.showDialog(ownerWindow);
-
-        if(retVal != null) {
-            squidPersistentState.setCustomExpressionsFile(retVal);
         }
 
         return retVal;

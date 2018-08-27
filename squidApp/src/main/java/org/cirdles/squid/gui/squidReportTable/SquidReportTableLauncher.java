@@ -10,7 +10,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
@@ -24,12 +27,20 @@ import java.io.IOException;
 public class SquidReportTableLauncher {
 
     private static Stage primaryStage;
+    private static Pane referenceMaterials;
+    private static Pane unknowns;
 
     public SquidReportTableLauncher(Stage masterStage) throws IOException {
         primaryStage = new Stage();
 
-        Parent root = new AnchorPane();
+        Parent root = new Pane();
         Scene scene = new Scene(root);
+
+        scene.setRoot(root);
+        TabPane tabPane = new TabPane();
+
+
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("Squid Report Table");
 
@@ -38,7 +49,8 @@ public class SquidReportTableLauncher {
             System.exit(0);
         });
         
-        scene.setRoot(FXMLLoader.load(getClass().getResource("SquidReportTableGUI.fxml")));
+        referenceMaterials = FXMLLoader.load(getClass().getResource("SquidReportTableGUI.fxml"));
+        unknowns = FXMLLoader.load(getClass().getResource("SquidReportTableGUI.fxml"));
 
         primaryStage.setMinHeight(scene.getHeight());
         primaryStage.setMinWidth(scene.getWidth());

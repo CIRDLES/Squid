@@ -9,10 +9,10 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
-import static org.cirdles.SquidReportTable.SquidReportTable.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+
 
 /**
- *
  * @author ryanb
  */
 public class FileHandler {
@@ -20,10 +20,9 @@ public class FileHandler {
         FileChooser fc = new FileChooser();
         fc.setTitle("CSV Selector");
         fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("CSV Files", "*.csv", "*.CSV"));
-//        fc.setInitialDirectory(new File("src/main/resources/org/cirdles/squidReportTable/"));
 
         File csvFile = fc.showOpenDialog(primaryStageWindow);
-        
+
         return csvFile;
     }
 }

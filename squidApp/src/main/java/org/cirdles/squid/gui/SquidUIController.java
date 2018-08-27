@@ -1087,11 +1087,4 @@ public class SquidUIController implements Initializable {
         launchPlots();
     }
 
-    public void importCustomExpressionsOnAction(ActionEvent actionEvent) {
-        squidProject.getTask().importCustomExpressionFromFolder(FileHandler.getCustomExpressionFolder(primaryStageWindow));
-    }
-
-    public void exportCustomExpressionsOnAction(ActionEvent actionEvent) {
-        squidProject.getTask().exportCustomExpressions(FileHandler.setCustomExpressionFolder(primaryStageWindow));
-    }
 }
