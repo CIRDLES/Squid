@@ -77,7 +77,7 @@ public class SquidPrefixTreeTest {
     @Test
     public void testPrettyPrint() {
         SquidPrefixTree spt = new SquidPrefixTree();
-        System.out.println(spt.prettyPrint());
+        //System.out.println(spt.prettyPrint());
         String expResult = "";
         String result = spt.prettyPrint().toString();
         assertEquals(expResult, result);

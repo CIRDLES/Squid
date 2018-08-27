@@ -894,7 +894,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                                     new String(new char[padLeft]).replace('\0', ' ')//
                                     + retVal[f][columnCount];
                         } catch (Exception e) {
-                            System.out.println(e.getMessage());
+                            //System.out.println(e.getMessage());
                         }
 
                     }

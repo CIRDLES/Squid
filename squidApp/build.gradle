@@ -20,17 +20,10 @@ if (!hasProperty('mainClass')) {
 
 mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
-    mavenCentral()
-}
-
 dependencies {
-    compile project(":squidCore")
+    implementation project(":squidCore")
     //compile 'com.github.cirdles.topsoil:app:master-SNAPSHOT'
-     compile 'com.github.cirdles.topsoil:app:v2.0.6'
+    implementation 'com.github.cirdles.topsoil:app:master-SNAPSHOT'
 	
     //compile group: 'com.proudapes', name: 'jlatexmathfx', version: '0.3.3'
     //compile 'com.github.bitstormGER:jlatexmathfx:-SNAPSHOT'

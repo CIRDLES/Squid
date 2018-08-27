@@ -346,7 +346,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         } catch (Exception e) {
             // Jan 2015 refinement
             retVal = retVal.substring(0, totalStringLength - 1);
-            //System.out.println("RETVAL " + retVal);
+            ////System.out.println("RETVAL " + retVal);
         }
         return retVal;
     }
