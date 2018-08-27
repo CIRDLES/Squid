@@ -669,7 +669,6 @@ public abstract class BuiltInExpressionsFactory {
 //                + "sqrt( [%\"UncorrPb/Uconst\"]^2 + ((" + term2 + ") * ((" + term3 + ") + (" + term6 + "))) ),"
 //                + "false)", true, false, false);
 //        meansAndAgesForRefMaterials.add(expression8corr206Pb238Ucalibrconst);
-
         Expression expression8corr206Pb238Ucalibrconst = buildExpression("8-corr 206Pb/238Ucalibr.const",
                 "ValueModel("
                 + "(1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"],"
@@ -952,7 +951,7 @@ public abstract class BuiltInExpressionsFactory {
                         + "[%\"232Th/238U\"]^2 ),"
                         + "false)", true, false, false);
                 stdRadiogenicCols.add(expression4corrTotal238U206Pb);
-
+/// see perm1 for math for 207/235 and err and err corr
                 // repeat the math so the replacement engine works when creating "Total...
                 Expression expression7corrTotal206PbS238U = buildExpression("7-corr Total 206Pb/238U",
                         "ValueModel("
@@ -991,6 +990,17 @@ public abstract class BuiltInExpressionsFactory {
                     + "      ( sComm_64 * [%\"204/206\"] / ( 1/[\"204/206\"] - sComm_64 ) )^2 ),"
                     + "false)", true, false, false);
             stdRadiogenicCols.add(expression4corr206238);
+
+            Expression expression4corr207Pb235U = buildExpression("4-corr 207*/235",
+                    "ValueModel("
+                    + "[\"4-corr 207Pb/206Pb\"] * [\"4-corr 206*/238\"] * r238_235s,"
+                    + "sqrt( [%\"4-corr 206*/238\"]^2 + [%\"4-corr 207Pb/206Pb\"]^2 ),"
+                    + "false)", true, false, false);
+            stdRadiogenicCols.add(expression4corr207Pb235U);
+
+            Expression expression4correrrcorr = buildExpression("4-corr errcorr",
+                    "[%\"4-corr 206*/238\"] / [%\"4-corr 207*/235\"]", true, false, false);
+            stdRadiogenicCols.add(expression4correrrcorr);
 
             Expression expression7corr206Pb238UAge = buildExpression("7-corr 206Pb/238U Age",
                     "Age7corrWithErr("
