@@ -21,8 +21,6 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
  */
 public class BuiltInExpressionsDataDictionary {
 
-    public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
-
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "UncorrPb/Uconst";
     public static final String SQUID_PRIMARY_UTH_EQN_NAME_TH = "UncorrPb/Thconst";
@@ -47,8 +45,15 @@ public class BuiltInExpressionsDataDictionary {
     public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
 
     public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
-    
+
     public static final String OVER_COUNT_4_6_8 = "204/206 (fr. 208)";
     public static final String OVER_COUNTS_PERSEC_4_8 = "204 overcts/sec (fr. 208)";
     public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
+    public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
+
+    // **********************  PHYSICAL CONSTANTS ******************************
+    public static final String LAMBDA_232_NAME = "lambda232";
+    public static final String LAMBDA_235_NAME = "lambda235";
+    public static final String LAMBDA_238_NAME = "lambda238";
+    public static final String PRESENT_R238_235S_NAME = "r238_235s";
 }

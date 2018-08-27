@@ -103,15 +103,10 @@ public final class Squid3Constants {
     public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
 
     // holding spot until models are implemented
-    public static final double lambda238 = 1.55125E-10;
-    public static final double lambda235 = 9.8485E-10;
-    public static final double lambda232 = 4.9475E-11;
-    public static final double uRatio = 137.88;
-    public static final double badAge = -1.23456789;
-    public static final double PRESENT_238U235U = 137.88;
-
-//    public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";
-//    public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
+    public static final double LAMBDA232 = 4.9475E-11;
+    public static final double LAMBDA235 = 9.8485E-10;
+    public static final double LAMBDA238 = 1.55125E-10;
+    public static final double PRESENT_R238_235S = 137.88;
 
     public enum IndexIsoptopesEnum {
         PB_204("204"),
@@ -136,10 +131,6 @@ public final class Squid3Constants {
         }
 
     }
-
-    public static final int EXPRESSION_BUILDER_DEFAULT_FONTSIZE = 13;
-    public static final int EXPRESSION_BUILDER_MIN_FONTSIZE = 11;
-    public static final int EXPRESSION_BUILDER_MAX_FONTSIZE = 18;
 
     /**
      *
@@ -240,14 +231,4 @@ public final class Squid3Constants {
         }
     }
 
-    public static final String STYLE_MANAGER_TITLE
-            = "     -fx-padding: 0 0 0 0;   \n"
-            + "    -fx-border-width: 1;\n"
-            + "    -fx-border-color: black;\n"
-            + "    -fx-background-radius: 0;\n"
-            + "    -fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
-            + "    -fx-font-weight: bold;\n"
-            + "    -fx-font-size: 14pt;\n"
-            + "    -fx-text-fill: White;/*  #d8d8d8;*/\n"
-            + "    -fx-background-color: #3c77c9;\n";
 }
