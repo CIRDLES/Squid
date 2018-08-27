@@ -219,7 +219,7 @@ public class IntuitiveStringComparator<T extends CharSequence>
         Arrays.sort(list, new IntuitiveStringComparator<String>());
 
         for (String s : list) {
-            System.out.println(s);
+            //System.out.println(s);
 
         }
     }

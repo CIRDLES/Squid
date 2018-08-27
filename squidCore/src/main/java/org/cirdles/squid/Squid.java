@@ -95,7 +95,7 @@ public final class Squid {
         DEFAULT_SQUID3_REPORTS_FOLDER = new File("Squid3_Reports_v" + VERSION);
         if (!DEFAULT_SQUID3_REPORTS_FOLDER.exists()) {
             if (!DEFAULT_SQUID3_REPORTS_FOLDER.mkdir()) {
-                System.out.println("Failed to make Squid3 Reports folder.");
+                //System.out.println("Failed to make Squid3 Reports folder.");
             }
         }
     }

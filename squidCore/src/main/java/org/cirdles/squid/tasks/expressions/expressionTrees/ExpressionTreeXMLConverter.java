@@ -217,7 +217,7 @@ public class ExpressionTreeXMLConverter implements Converter {
             operation = Function.operationFactory(reader.getValue());
         }
         if (operation ==null){
-            System.out.println("NULL OP  "+ expressionTree.getName() + "    " + reader.getValue());
+            //System.out.println("NULL OP  "+ expressionTree.getName() + "    " + reader.getValue());
         }
         ((ExpressionTree) expressionTree).setOperation(operation);
         reader.moveUp();
