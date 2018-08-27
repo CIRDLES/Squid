@@ -72,7 +72,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private final int COMBO_WIDTH = 210;
     private final int ROW_HEIGHT = 30;
 
-    private static final String STYLE_BUTTON_LABEL = "-fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+    private static final String STYLE_BUTTON_LABEL
+            = "-fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 12pt;\n";
 
@@ -143,7 +144,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         graphs = new ArrayList<>();
 
         displayMassStationsForReview();
-        
+
         synchedScrolls = false;
     }
 
@@ -700,7 +701,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     public void removeSpotFromGraphs(int spotIndex) {
         setupMassStationDetailsListViews();
         displayMassStationsForReview();
-
     }
 
 }
