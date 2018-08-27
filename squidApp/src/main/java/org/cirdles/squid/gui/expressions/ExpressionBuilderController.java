@@ -135,9 +135,9 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_DEFAULT_FONTSIZE;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_MIN_FONTSIZE;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_MAX_FONTSIZE;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_DEFAULT_FONTSIZE;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MAX_FONTSIZE;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
 
 /**
  * FXML Controller class
