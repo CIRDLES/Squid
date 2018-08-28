@@ -97,6 +97,8 @@ public class TaskManagerController implements Initializable {
     private ComboBox<?> commonPbModelComboBox;
     @FXML
     private ComboBox<?> physConstModelComboBox;
+    @FXML
+    private ComboBox<?> concRefMatModelComboBox;
 
     /**
      * Initializes the controller class.
