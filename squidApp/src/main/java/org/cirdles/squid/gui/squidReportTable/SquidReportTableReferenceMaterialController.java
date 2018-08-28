@@ -48,6 +48,8 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
     private String[][] textArray;
     private TextArrayManager tableManager;
     private ButtonTypes buttonState;
+    private boolean isSetUpScroller;
+
 
     private enum ButtonTypes {
         accepted, rejected
@@ -58,6 +60,7 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        isSetUpScroller = false;
         buttonState = ButtonTypes.accepted;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
@@ -71,10 +74,21 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
         setTableItems();
         FootnoteManager.setUpFootnotes(footnoteText, textArray);
         setUpColFootnote();
-        setUpScroller();
         setUpColFootnote();
         reportsTable.refresh();
         boundCol.refresh();
+        reportsTable.setOnScroll(val -> {
+            if (!isSetUpScroller) {
+                setUpScroller();
+                isSetUpScroller = true;
+            }
+        });
+        boundCol.setOnScroll(val -> {
+            if (!isSetUpScroller) {
+                setUpScroller();
+                isSetUpScroller = true;
+            }
+        });
     }
 
     @FXML

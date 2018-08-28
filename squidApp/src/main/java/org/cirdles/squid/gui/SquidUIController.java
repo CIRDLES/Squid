@@ -55,6 +55,7 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
@@ -62,6 +63,8 @@ import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
+
+import static org.cirdles.squid.gui.SquidUI.squidReportTableLauncher;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
@@ -1087,4 +1090,11 @@ public class SquidUIController implements Initializable {
         launchPlots();
     }
 
+    public void openSquid3ReportTableReferenceMaterials(ActionEvent actionEvent) {
+        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMat);
+    }
+
+    public void openSquid3ReportTableUnknowns(ActionEvent actionEvent) {
+        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknown);
+    }
 }

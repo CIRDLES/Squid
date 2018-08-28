@@ -37,7 +37,6 @@ public class SquidReportTableLauncher {
         Parent root = new Pane();
         Scene scene = new Scene(root);
 
-        scene.setRoot(root);
         tabs = new TabPane();
         refMatTab = new Tab("Reference Materials");
         unknownsTab = new Tab("Unknowns");
@@ -46,16 +45,18 @@ public class SquidReportTableLauncher {
         refMatTab.setContent(referenceMaterials);
         unknownsTab.setContent(unknowns);
 
+        ((Pane) root).getChildren().add(tabs);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Squid Report Table");
 
         primaryStage.setOnCloseRequest((WindowEvent e) -> {
-            Platform.exit();
-            System.exit(0);
+            primaryStage.hide();
         });
+        primaryStage.setMinWidth(400);
+        primaryStage.setMinHeight(400);
+        tabs.setMinHeight(400);
+        tabs.setMinHeight(400);
 
-        referenceMaterials = FXMLLoader.load(getClass().getResource("SquidReportTableReferenceMaterials.fxml"));
-        unknowns = FXMLLoader.load(getClass().getResource("SquidReportTableUnknowns.fxml"));
     }
 
     public void launch(ReportTableTab tab) {
@@ -70,6 +71,7 @@ public class SquidReportTableLauncher {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        primaryStage.show();
     }
 
     public enum ReportTableTab {

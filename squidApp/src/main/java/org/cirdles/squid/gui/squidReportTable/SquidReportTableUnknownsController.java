@@ -48,6 +48,7 @@ public class SquidReportTableUnknownsController implements Initializable {
     private TextArrayManager tableManager;
     private ButtonTypes buttonState;
     private String[][] textArray;
+    private boolean isSetUpScroller;
 
     private enum ButtonTypes {
         accepted, rejected
@@ -58,6 +59,7 @@ public class SquidReportTableUnknownsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        isSetUpScroller = false;
         buttonState = ButtonTypes.accepted;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
@@ -71,10 +73,21 @@ public class SquidReportTableUnknownsController implements Initializable {
         setTableItems();
         FootnoteManager.setUpFootnotes(footnoteText, textArray);
         setUpColFootnote();
-        setUpScroller();
         setUpColFootnote();
         reportsTable.refresh();
         boundCol.refresh();
+        reportsTable.setOnScroll(val -> {
+            if (!isSetUpScroller) {
+                setUpScroller();
+                isSetUpScroller = true;
+            }
+        });
+        boundCol.setOnScroll(val -> {
+            if (!isSetUpScroller) {
+                setUpScroller();
+                isSetUpScroller = true;
+            }
+        });
     }
 
     @FXML

@@ -123,6 +123,12 @@
                     </items>
                   </Menu>
               </items>
+                <Menu mnemonicParsing="false" text="Squid 3 Report Tables">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Reference Materials" onAction="#openSquid3ReportTableReferenceMaterials"/>
+                        <MenuItem mnemonicParsing="false" text="Unknowns" onAction="#openSquid3ReportTableUnknowns"/>
+                    </items>
+                </Menu>
             </Menu>
             <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
               <items>
