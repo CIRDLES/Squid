@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
@@ -90,6 +91,12 @@ public class TaskManagerController implements Initializable {
     private CheckBox autoExcludeSpotsCheckBox;
     @FXML
     private Spinner<Double> assignedExternalErrSpinner;
+    @FXML
+    private ComboBox<?> refMatModelComboBox;
+    @FXML
+    private ComboBox<?> commonPbModelComboBox;
+    @FXML
+    private ComboBox<?> physConstModelComboBox;
 
     /**
      * Initializes the controller class.
