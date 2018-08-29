@@ -37,7 +37,7 @@ public class SquidLabData implements Serializable {
     private PhysicalConstantsModel physConstDefault;
 
     public SquidLabData() {
-        laboratoryName = "mystery lab";
+        laboratoryName = "Your lab";
         referenceMaterials = ReferenceMaterial.getDefaultModels();
         physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
         commonPbModels = CommonPbModel.getDefaultModels();
