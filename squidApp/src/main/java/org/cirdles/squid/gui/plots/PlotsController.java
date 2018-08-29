@@ -159,7 +159,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getUnknownSpots();
             mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
             // case of no sample names chosen
-            if (mapOfSpotsBySampleNames.size() == 0) {
+            if (mapOfSpotsBySampleNames.isEmpty()) {
                 mapOfSpotsBySampleNames.put("Super Sample", allUnknownOrRefMatShrimpFractions);
             }
         } else {
