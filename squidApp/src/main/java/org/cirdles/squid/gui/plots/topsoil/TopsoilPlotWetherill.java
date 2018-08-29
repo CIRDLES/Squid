@@ -27,7 +27,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.plots.PlotDisplayInterface.SigmaPresentationModes.TWO_SIGMA_ABSOLUTE;
+import static org.cirdles.squid.gui.plots.PlotDisplayInterface.SigmaPresentationModes.ONE_SIGMA_ABSOLUTE;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 import org.cirdles.topsoil.app.isotope.IsotopeType;
@@ -72,7 +72,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 	    properties.put(MCLEAN_REGRESSION, false);
 	    properties.put(MCLEAN_REGRESSION_ENVELOPE, false);
 
-	    properties.put(UNCERTAINTY, TWO_SIGMA_ABSOLUTE.getSigmaMultiplier());
+	    properties.put(UNCERTAINTY, ONE_SIGMA_ABSOLUTE.getSigmaMultiplier());
 
 	    plot.setProperties(properties);
     }
@@ -88,7 +88,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         });
 
         ChoiceBox<SigmaPresentationModes> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(SigmaPresentationModes.values()));
-        uncertaintyChoiceBox.setValue(SigmaPresentationModes.TWO_SIGMA_ABSOLUTE);
+        uncertaintyChoiceBox.setValue(SigmaPresentationModes.ONE_SIGMA_ABSOLUTE);
         uncertaintyChoiceBox.setConverter(new StringConverter<SigmaPresentationModes>() {
             @Override
             public String toString(SigmaPresentationModes object) {
