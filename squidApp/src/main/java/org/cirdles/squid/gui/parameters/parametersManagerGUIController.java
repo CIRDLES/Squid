@@ -1583,10 +1583,10 @@ public class parametersManagerGUIController implements Initializable {
     private void physConstDataNotationOnAction(ActionEvent event) {
         if (physConstDataNotation.equals(getScientificNotationFormat())) {
             physConstDataNotation = getStandardNotationFormat();
-            physConstDataNotationButton.setText("Standard Notation");
+            physConstDataNotationButton.setText("Scientific Notation");
         } else {
             physConstDataNotation = getScientificNotationFormat();
-            physConstDataNotationButton.setText("Scientific Notation");
+            physConstDataNotationButton.setText("Standard Notation");
         }
         ObservableList<DataModel> models = physConstDataTable.getItems();
         for (int i = 0; i < models.size(); i++) {
@@ -1616,10 +1616,10 @@ public class parametersManagerGUIController implements Initializable {
     private void refMatDataNotationOnAction(ActionEvent event) {
         if (refMatDataNotation.equals(getScientificNotationFormat())) {
             refMatDataNotation = getStandardNotationFormat();
-            refMatDataNotationButton.setText("Standard Notation");
+            refMatDataNotationButton.setText("Scientific Notation");
         } else {
             refMatDataNotation = getScientificNotationFormat();
-            refMatDataNotationButton.setText("Scientific Notation");
+            refMatDataNotationButton.setText("Standard Notation");
         }
         ObservableList<RefMatDataModel> models = refMatDataTable.getItems();
         for (int i = 0; i < models.size(); i++) {
@@ -1653,10 +1653,10 @@ public class parametersManagerGUIController implements Initializable {
     private void refMatConcentrationsNotationOnAction(ActionEvent event) {
         if (refMatConcentrationsNotation.equals(getScientificNotationFormat())) {
             refMatConcentrationsNotation = getStandardNotationFormat();
-            refMatConcentrationsNotationButton.setText("Standard Notation");
+            refMatConcentrationsNotationButton.setText("Scientific Notation");
         } else {
             refMatConcentrationsNotation = getScientificNotationFormat();
-            refMatConcentrationsNotationButton.setText("Scientific Notation");
+            refMatConcentrationsNotationButton.setText("Standard Notation");
         }
         ObservableList<DataModel> models = refMatConcentrationsTable.getItems();
         for (int i = 0; i < models.size(); i++) {
