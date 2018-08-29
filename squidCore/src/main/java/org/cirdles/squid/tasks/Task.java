@@ -619,7 +619,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-                }   
+                }
                 if (listedExp.getName().compareToIgnoreCase(OVER_COUNT_4_6_8) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + OVER_COUNT_4_6_8 + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
@@ -783,6 +783,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             taskExpressionsRemoved.add(expression);
 
             updateAffectedExpressions(expression);
+            updateAllExpressions();
             setChanged(true);
             setupSquidSessionSpecsAndReduceAndReport();
         }
