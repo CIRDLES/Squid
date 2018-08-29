@@ -7,21 +7,6 @@ package org.cirdles.squid.parameters.parameterModels.referenceMaterials;
 
 import Jama.Matrix;
 import com.thoughtworks.xstream.XStream;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.ObjectStreamClass;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -29,21 +14,26 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.util.Lambdas;
 import org.cirdles.squid.parameters.util.ReferenceMaterialEnum;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxRefMatConverter;
-import org.cirdles.squid.parameters.valueModels.Age206_238r;
-import org.cirdles.squid.parameters.valueModels.Age207_206r;
-import org.cirdles.squid.parameters.valueModels.Age207_235r;
-import org.cirdles.squid.parameters.valueModels.Age208_232r;
-import org.cirdles.squid.parameters.valueModels.ValueModel;
+import org.cirdles.squid.parameters.valueModels.*;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.ObjectStreamClass;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- *
  * @author ryanb
  */
 public class ReferenceMaterial extends ParametersModel {
 
     private static long serialVersionUID = 1513337897720796891L;
-
-    public static ReferenceMaterial defaultReferenceMaterial = getDefaultModel("Zircon-91500", "1.0");
 
     ValueModel[] concentrations;
     boolean[] dataMeasured;
@@ -163,7 +153,7 @@ public class ReferenceMaterial extends ParametersModel {
                 try {
                     models.add(ReferenceMaterial.getReferenceMaterialFromETReduxXML(files[i]));
                 } catch (Exception e) {
-                    models.add((ReferenceMaterial) defaultReferenceMaterial.readXMLObject(files[i].getAbsolutePath(), false));
+                    models.add((ReferenceMaterial) (new ReferenceMaterial()).readXMLObject(files[i].getAbsolutePath(), false));
                 }
             }
         }
@@ -187,12 +177,14 @@ public class ReferenceMaterial extends ParametersModel {
 
     public void calculateApparentDates() {
 
-        ValueModel lambda232 = PhysicalConstantsModel.defaultPhysicalConstantsModel//
+        PhysicalConstantsModel defaultPhysConstModel =
+                PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+        ValueModel lambda232 = defaultPhysConstModel//
                 .getDatumByName(Lambdas.lambda232.getName());
 
-        ValueModel lambda235 = PhysicalConstantsModel.defaultPhysicalConstantsModel//
+        ValueModel lambda235 = defaultPhysConstModel//
                 .getDatumByName(Lambdas.lambda235.getName());
-        ValueModel lambda238 = PhysicalConstantsModel.defaultPhysicalConstantsModel//
+        ValueModel lambda238 = defaultPhysConstModel//
                 .getDatumByName(Lambdas.lambda238.getName());
 
         ValueModel r206_238r = getDatumByName(ReferenceMaterialEnum.r206_238r.getName());
@@ -272,8 +264,8 @@ public class ReferenceMaterial extends ParametersModel {
         apparentDates[0] = new Age206_238r();
         getApparentDates()[0].calculateValue(
                 new ValueModel[]{
-                    r206_238r,
-                    lambda238}, parDerivTerms);
+                        r206_238r,
+                        lambda238}, parDerivTerms);
         if (parDerivTerms.containsKey("dAge206_238r__dR206_238r")) {
             apparentDates[0].setOneSigma(//
                     parDerivTerms.get("dAge206_238r__dR206_238r") //
@@ -284,11 +276,11 @@ public class ReferenceMaterial extends ParametersModel {
         apparentDates[1] = new Age207_206r();
         getApparentDates()[1].calculateValue(
                 new ValueModel[]{
-                    r238_235s,
-                    r207_206r,
-                    apparentDates[0],
-                    lambda235,
-                    lambda238}, parDerivTerms);
+                        r238_235s,
+                        r207_206r,
+                        apparentDates[0],
+                        lambda235,
+                        lambda238}, parDerivTerms);
         if (parDerivTerms.containsKey("dAge207_206r__dR207_206r")) {
             apparentDates[1].setOneSigma(//
                     parDerivTerms.get("dAge207_206r__dR207_206r")//
@@ -299,8 +291,8 @@ public class ReferenceMaterial extends ParametersModel {
         apparentDates[2] = new Age207_235r();
         getApparentDates()[2].calculateValue(
                 new ValueModel[]{
-                    r207_235r,
-                    lambda235}, parDerivTerms);
+                        r207_235r,
+                        lambda235}, parDerivTerms);
         if (parDerivTerms.containsKey("dAge207_235r__dR207_235r")) {
             apparentDates[2].setOneSigma(//
                     parDerivTerms.get("dAge207_235r__dR207_235r")//
@@ -311,8 +303,8 @@ public class ReferenceMaterial extends ParametersModel {
         apparentDates[3] = new Age208_232r();
         getApparentDates()[3].calculateValue(
                 new ValueModel[]{
-                    r208_232r,
-                    lambda232}, parDerivTerms);
+                        r208_232r,
+                        lambda232}, parDerivTerms);
         if (parDerivTerms.containsKey("dAge208_232r__dR208_232r")) {
             apparentDates[3].setOneSigma(//
                     parDerivTerms.get("dAge208_232r__dR208_232r")//
@@ -322,7 +314,6 @@ public class ReferenceMaterial extends ParametersModel {
     }
 
     /**
-     *
      * @return
      */
     public String listFormattedApparentDates() {
@@ -334,7 +325,7 @@ public class ReferenceMaterial extends ParametersModel {
             if (apparentDates[i].hasPositiveValue()) {
                 retVal += apparentDates[i].getName() + " : "
                         + apparentDates[i].formatValueAndTwoSigmaForPublicationSigDigMode( //
-                                "ABS", -6, 2) //
+                        "ABS", -6, 2) //
                         + " (2\u03C3)  Ma\n";
             }
         }

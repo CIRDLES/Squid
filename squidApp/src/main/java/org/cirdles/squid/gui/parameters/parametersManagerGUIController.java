@@ -31,6 +31,7 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import java.io.File;
 import java.io.IOException;
@@ -371,19 +372,22 @@ public class parametersManagerGUIController implements Initializable {
         defaultPhysConstCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
             int selected = defaultPhysConstCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getPhysicalConstantsModels().size()) {
-                PhysicalConstantsModel.defaultPhysicalConstantsModel = squidLabData.getPhysicalConstantsModel(selected);
+                squidLabData.setPhysConstDefault(squidLabData.getPhysicalConstantsModel(selected));
+                squidLabData.storeState();
             }
         });
         defaultRefMatCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
             int selected = defaultRefMatCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getReferenceMaterials().size()) {
-                ReferenceMaterial.defaultReferenceMaterial = squidLabData.getReferenceMaterial(selected);
+                squidLabData.setRefMatDefault(squidLabData.getReferenceMaterial(selected));
+                squidLabData.storeState();
             }
         });
         defaultCommonPbCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
             int selected = defaultCommonPbCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getcommonPbModels().size()) {
-                CommonPbModel.defaultCommonPbModel = squidLabData.getcommonPbModel(selected);
+                squidLabData.setCommonPbDefault(squidLabData.getcommonPbModel(selected));
+                squidLabData.storeState();
             }
         });
     }
@@ -394,21 +398,21 @@ public class parametersManagerGUIController implements Initializable {
             items.add(getModVersionName(model));
         }
         defaultPhysConstCB.setItems(items);
-        defaultPhysConstCB.getSelectionModel().select(getModVersionName(PhysicalConstantsModel.defaultPhysicalConstantsModel));
+        defaultPhysConstCB.getSelectionModel().select(getModVersionName(squidLabData.getPhysConstDefault()));
 
         items = FXCollections.observableArrayList();
         for (ParametersModel model : squidLabData.getReferenceMaterials()) {
             items.add(getModVersionName(model));
         }
         defaultRefMatCB.setItems(items);
-        defaultRefMatCB.getSelectionModel().select(getModVersionName(ReferenceMaterial.defaultReferenceMaterial));
+        defaultRefMatCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatDefault()));
 
         items = FXCollections.observableArrayList();
         for (ParametersModel model : squidLabData.getcommonPbModels()) {
             items.add(getModVersionName(model));
         }
         defaultCommonPbCB.setItems(items);
-        defaultCommonPbCB.getSelectionModel().select(getModVersionName(CommonPbModel.defaultCommonPbModel));
+        defaultCommonPbCB.getSelectionModel().select(getModVersionName(squidLabData.getCommonPbDefault()));
     }
 
     private void setUpPhysConst() {
@@ -464,7 +468,7 @@ public class parametersManagerGUIController implements Initializable {
                 setPhysConstModel(nv.intValue());
             }
         });
-        physConstCB.getSelectionModel().select(getModVersionName(PhysicalConstantsModel.defaultPhysicalConstantsModel));
+        physConstCB.getSelectionModel().select(getModVersionName(squidLabData.getPhysConstDefault()));
     }
 
     private void setUpPhysConstCBItems() {
@@ -491,7 +495,7 @@ public class parametersManagerGUIController implements Initializable {
                 setRefMatModel(nv.intValue());
             }
         });
-        refMatCB.getSelectionModel().select(getModVersionName(ReferenceMaterial.defaultReferenceMaterial));
+        refMatCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatDefault()));
     }
 
     private void setUpRefMatCBItems() {
@@ -518,7 +522,7 @@ public class parametersManagerGUIController implements Initializable {
                 setCommonPbModel(nv.intValue());
             }
         });
-        commonPbCB.getSelectionModel().select(getModVersionName(CommonPbModel.defaultCommonPbModel));
+        commonPbCB.getSelectionModel().select(getModVersionName(squidLabData.getCommonPbDefault()));
     }
 
     private void setCommonPbModel(int num) {
@@ -1446,7 +1450,7 @@ public class parametersManagerGUIController implements Initializable {
 
         if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
                 && (squidProject.getTask().getPhysicalConstantsModel().equals(physConstModel) ||
-                squidProject.getTask().getPhysicalConstantsModel().equals(PhysicalConstantsModel.defaultPhysicalConstantsModel))) {
+                squidProject.getTask().getPhysicalConstantsModel().equals(squidLabData.getPhysConstDefault()))) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -1487,7 +1491,7 @@ public class parametersManagerGUIController implements Initializable {
 
         if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
                 && (squidProject.getTask().getReferenceMaterial().equals(refMatModel) ||
-                squidProject.getTask().getReferenceMaterial().equals(ReferenceMaterial.defaultReferenceMaterial))) {
+                squidProject.getTask().getReferenceMaterial().equals(squidLabData.getRefMatDefault()))) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -1912,7 +1916,7 @@ public class parametersManagerGUIController implements Initializable {
 
         if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getCommonPbModel() != null
                 && (squidProject.getTask().getCommonPbModel().equals(commonPbModel) ||
-                squidProject.getTask().getCommonPbModel().equals(CommonPbModel.defaultCommonPbModel))) {
+                squidProject.getTask().getCommonPbModel().equals(squidLabData.getCommonPbDefault()))) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }

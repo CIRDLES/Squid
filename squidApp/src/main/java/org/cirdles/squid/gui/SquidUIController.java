@@ -18,7 +18,6 @@ package org.cirdles.squid.gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.Reference;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -54,10 +53,10 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 
-import static org.cirdles.squid.gui.SquidUI.parametersLauncher;
+import org.cirdles.squid.gui.parameters.ParametersLauncher;
+import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
-import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.parameters.parametersManagerGUIController;
 import static org.cirdles.squid.gui.parameters.parametersManagerGUIController.getModVersionName;
 import org.cirdles.squid.gui.plots.PlotsController;
@@ -169,6 +168,9 @@ public class SquidUIController implements Initializable {
     @FXML
     private Menu commonPbModelsMenu;
 
+    public static ParametersLauncher parametersLauncher;
+
+
     /**
      * Initializes the controller class.
      *
@@ -226,6 +228,9 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
+        CalamariFileUtilities.initSampleParametersModels();
+
+        parametersLauncher = new ParametersLauncher(primaryStage);
     }
 
     private void buildProjectMenuMRU() {

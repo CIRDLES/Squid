@@ -75,6 +75,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInte
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
@@ -272,10 +273,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.extPErr = 0.75;
 
-        this.physicalConstantsModel = PhysicalConstantsModel.defaultPhysicalConstantsModel.clone();
-        this.referenceMaterial = ReferenceMaterial.defaultReferenceMaterial.clone();
-        this.concentrationReferenceMaterial = ReferenceMaterial.defaultReferenceMaterial.clone();
-        this.commonPbModel = CommonPbModel.defaultCommonPbModel.clone();
+        this.physicalConstantsModel = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+        this.referenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.concentrationReferenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.commonPbModel = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
 
         generateConstants();
         generateParameters();

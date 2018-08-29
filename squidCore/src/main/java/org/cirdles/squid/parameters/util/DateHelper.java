@@ -6,17 +6,17 @@
 package org.cirdles.squid.parameters.util;
 
 
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
- *
  * @author ryanb
  */
 public class DateHelper {
-    
+
     public static String getCurrentDate() {
-        return GregorianCalendar.getInstance().get(GregorianCalendar.MONTH) + 1 //months start at 0
-                + "/" + GregorianCalendar.getInstance().get(GregorianCalendar.DAY_OF_MONTH)
-                + "/" + GregorianCalendar.getInstance().get(GregorianCalendar.YEAR);
+        DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE;
+        return dtf.format(LocalDateTime.now());
     }
-    
+
 }

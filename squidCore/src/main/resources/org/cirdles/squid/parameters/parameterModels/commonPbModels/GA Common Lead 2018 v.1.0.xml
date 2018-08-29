@@ -1,8 +1,8 @@
 <CommonPbModel>
-  <modelName>blank placeholder</modelName>
-  <labName>unknown lab</labName>
+  <modelName>GA Common Lead 2018</modelName>
+  <labName>Geoscience Australia</labName>
   <version>1.0</version>
-  <dateCertified>8/14/2018</dateCertified>
+  <dateCertified>01/01/2018</dateCertified>
   <comments></comments>
   <references></references>
   <values>
@@ -10,38 +10,38 @@
       <name>r206_204b</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference></reference>
-      <value>0</value>
+      <value>17.821</value>
       <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>r207_204b</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference></reference>
-      <value>0</value>
+      <value>15.5773361</value>
       <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>r207_206b</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference></reference>
-      <value>0</value>
+      <value>0.8741</value>
       <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>r208_204b</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference></reference>
-      <value>0</value>
+      <value>37.5933995</value>
       <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>r208_206b</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference></reference>
-      <value>0</value>
+      <value>2.1095</value>
       <oneSigma>0</oneSigma>
     </ValueModel>
   </values>
   <rhos/>
-  <isEditable>false</isEditable>
+  <isEditable>true</isEditable>
 </CommonPbModel>

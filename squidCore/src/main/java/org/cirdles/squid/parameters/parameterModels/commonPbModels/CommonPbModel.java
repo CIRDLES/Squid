@@ -23,8 +23,6 @@ public class CommonPbModel extends ParametersModel {
 
     private static long serialVersionUID = -5054855251006560667L;
 
-    public static CommonPbModel defaultCommonPbModel = getDefaultModel("blank placeholder", "1.0");
-
     public CommonPbModel() {
         super();
         generateDefaultValueModels();
@@ -88,10 +86,7 @@ public class CommonPbModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                CommonPbModel mod = new CommonPbModel();
-                XStream xstream = new XStream();
-                mod.customizeXstream(xstream);
-                models.add((CommonPbModel) xstream.fromXML(files[i]));
+                models.add((CommonPbModel) (new CommonPbModel()).readXMLObject(files[i].getAbsolutePath(), false));
             }
         }
 

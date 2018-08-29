@@ -6,31 +6,25 @@
 package org.cirdles.squid.parameters.parameterModels.physicalConstantsModels;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.util.DataDictionary;
+import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.Map.Entry;
+
 /**
- *
  * @author ryanb
  */
 public class PhysicalConstantsModel extends ParametersModel {
 
     private static long serialVersionUID = 6711139902976873456L;
-
-    public static PhysicalConstantsModel defaultPhysicalConstantsModel = getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
 
     Map<String, BigDecimal> molarMasses;
 
@@ -114,7 +108,7 @@ public class PhysicalConstantsModel extends ParametersModel {
                 try {
                     models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
                 } catch (Exception e) {
-                    models.add((PhysicalConstantsModel) defaultPhysicalConstantsModel.readXMLObject(files[i].getAbsolutePath(), false));
+                    models.add((PhysicalConstantsModel) (new PhysicalConstantsModel()).readXMLObject(files[i].getAbsolutePath(), false));
                 }
             }
         }

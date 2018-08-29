@@ -20,7 +20,7 @@ public class CommonPbXMLConverterTest {
         try {
             ResourceExtractor extractor = new ResourceExtractor(CommonPbModel.class);
 
-            File initialFile = extractor.extractResourceAsFile("blank placeholder v.1.0.xml");
+            File initialFile = extractor.extractResourceAsFile("GA Common Lead 2018 v.1.0.xml");
             CommonPbModel model = new CommonPbModel();
             model = (CommonPbModel) model.readXMLObject(initialFile.getAbsolutePath(), false);
 
