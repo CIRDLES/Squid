@@ -43,7 +43,7 @@ public class ValueModel extends Function {
         precedence = 10;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Value", "1-sigma abs"}};
+        labelsForOutputValues = new String[][]{{"Value", "1\u03C3 Abs"}};
     }
 
     /**

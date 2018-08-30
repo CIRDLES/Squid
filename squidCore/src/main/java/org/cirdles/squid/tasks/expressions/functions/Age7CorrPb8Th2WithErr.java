@@ -60,12 +60,12 @@ public class Age7CorrPb8Th2WithErr extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 Unct"}};
         labelsForInputValues = new String[]{
-            "Total 206/238, Total 206/238 1%Unct,"
-            + "Total 208/232, Total 208/232 1%Unct, "
-            + "Total 208/206, Total 208/206 1%Unct,"
-            + "\"Total 207/206, Total 207/206 1%Unct,"
+            "Total 206/238, Total 206/238 1\u03C3 %Unct,"
+            + "Total 208/232, Total 208/232 1\u03C3 %Unct, "
+            + "Total 208/206, Total 208/206 1\u03C3 %Unct,"
+            + "\"Total 207/206, Total 207/206 1\u03C3 %Unct,"
             + "sComm_64, sComm_6476, sComm_86"};
     }
 
