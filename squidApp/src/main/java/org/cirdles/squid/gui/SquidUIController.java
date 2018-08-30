@@ -19,10 +19,13 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -66,6 +69,9 @@ import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
@@ -899,6 +905,7 @@ public class SquidUIController implements Initializable {
     private void addExpressionToTask(Expression exp) {
         squidProject.getTask().removeExpression(exp);
         squidProject.getTask().addExpression(exp);
+        
         ExpressionBuilderController.expressionToHighlightOnInit = exp;
         buildExpressionMenuMRU();
         launchExpressionBuilder();
@@ -1036,6 +1043,22 @@ public class SquidUIController implements Initializable {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), true);
         writeAndOpenReportTableFiles(report, "UnknownsReportTable.csv");
+    }
+
+    @FXML
+    private void unknownsBySampleReportTableAction(ActionEvent event)throws IOException {
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
+
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
+        List<ShrimpFractionExpressionInterface> spotsBySampleNames = new ArrayList<>();
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
+            ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
+            spotsBySampleNames.add(dummyForSample);
+            spotsBySampleNames.addAll(entry.getValue());
+        }
+
+        String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, true);
+        writeAndOpenReportTableFiles(report, "UnknownsBySampleReportTable.csv");
     }
 
     private void writeAndOpenReportTableFiles(String[][] report, String baseReportTableName) throws IOException {

@@ -23,7 +23,6 @@ import com.thoughtworks.xstream.security.AnyTypePermission;
 import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
-import java.awt.Frame;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -36,6 +35,7 @@ import java.util.Map;
 import org.cirdles.squid.reports.ReduxLabDataListElementI;
 import org.cirdles.squid.reports.XMLSerializationI;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples;
+import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 /**
@@ -73,7 +73,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         getReportCategories().add(getSpotFundamentalsCategory());
         getReportCategories().add(getCpsCategory());
         getReportCategories().add(getRawRatiosCategory());
-        if (referenceMaterial) {            
+        if (referenceMaterial) {
             getReportCategories().add(getCustomExpressionsCategory());
             getReportCategories().add(getCorrectionIndependentRMCategory());
             getReportCategories().add(getPb204CorrectedRMCategory());
@@ -409,34 +409,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      */
     void setVersion(int version);
 
-//    public default String[][] reportActiveFractionsByNumberStyle(final SampleInterface sample, boolean numberStyleIsNumeric) {
-//        Vector<ETFractionInterface> fractions = sample.getActiveFractionsSortedByAliquot();
-//
-//        return reportFractionsByNumberStyle(fractions, sample, numberStyleIsNumeric);
-//    }
-//    /**
-//     *
-//     * @param sample
-//     * @param numberStyleIsNumeric
-//     * @return
-//     */
-//    public default String[][] reportRejectedFractionsByNumberStyle(final SampleInterface sample, boolean numberStyleIsNumeric) {
-//        Vector<ETFractionInterface> fractions = sample.getFractionsRejected();
-//
-//        return reportFractionsByNumberStyle(fractions, sample, numberStyleIsNumeric);
-//    }
-//
-//    /**
-//     *
-//     * @param sample
-//     * @param fractions
-//     * @param numberStyleIsNumeric
-//     * @return
-//     */
-//    public default String[][] reportActiveAliquotFractionsByNumberStyle(final SampleInterface sample, Vector<ETFractionInterface> fractions, boolean numberStyleIsNumeric) {
-//
-//        return reportFractionsByNumberStyle(fractions, sample, numberStyleIsNumeric);
-//    }
     public default String[][] reportFractionsByNumberStyle(//
             List<ShrimpFractionExpressionInterface> fractions,
             boolean numberStyleIsNumeric) {
@@ -444,95 +416,9 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         // the first six (FRACTION_DATA_START_ROW) rows are provided for naming and formats
         String[][] retVal
                 = new String[fractions.size() + FRACTION_DATA_START_ROW][];
-        
+
         // column 0 will contain true for included fractions and false for rejected fractions
         // column 1 will contain aliquot name
-
-        // a special case oct 2009 to decide if units of dates is Ma or ka or auto
-        // repeated oct 2014 to handle Pbc corrected dates category also
-////        if (fractions.size() > 0) {
-////            if (getDatesCategory().getCategoryColumns().length > 0) {
-////                // first get the unittype of the first date (all will be set the same so this is a flag)
-////                String currentDateUnit = getDatesCategory().getCategoryColumns()[0].getUnits();
-////                boolean isAuto = false;
-////                // the default is ka, though it will usually be overwritten by Ma
-////                if (currentDateUnit.equalsIgnoreCase("Auto")) {
-////                    currentDateUnit = "ka";
-////                    isAuto = true;
-////                }
-////                getDatesCategory().setDisplayName("Dates (" + currentDateUnit + ")");
-////                for (ReportColumnInterface rc : getDatesCategory().getCategoryColumns()) {
-////                    if (!rc.getUnits().equalsIgnoreCase("")) {
-////                        rc.setUnits(currentDateUnit);
-////                    }
-////                }
-////
-////                if (isAuto) {
-////                    // let's find out
-////                    BigDecimal threshold = new BigDecimal(1000000);
-//////                        for (ETFractionInterface f : fractions) {
-//////                            if (!f.isRejected()) {
-//////                                BigDecimal date206_238Value = f.getRadiogenicIsotopeDateByName(RadDates.age206_238r).getValue();
-//////                                if (date206_238Value.compareTo(threshold) > 0) {
-//////                                    // we have Ma when any value is greater than threshold
-//////                                    getDatesCategory().setDisplayName("Dates (Ma)");
-//////                                    // now set units correctly
-//////                                    for (ReportColumnInterface rc : getDatesCategory().getCategoryColumns()) {
-//////                                        if (!rc.getUnits().equalsIgnoreCase("")) {
-//////                                            rc.setUnits("Ma");
-//////                                        }
-//////                                    }
-//////                                    break;
-//////                                }
-//////
-//////                            }
-//////
-//////                        }
-////                }
-////            }
-////
-////            if (getDatesPbcCorrCategory().getCategoryColumns().length > 0) {
-////                // first get the unittype of the first date (all will be set the same so this is a flag)
-////                String currentDateUnit = getDatesPbcCorrCategory().getCategoryColumns()[1].getUnits();
-////                boolean isAuto = false;
-////                // the default is ka, though it will usually be overwritten by Ma
-////                if (currentDateUnit.equalsIgnoreCase("Auto")) {
-////                    currentDateUnit = "ka";
-////                    isAuto = true;
-////                }
-////                getDatesPbcCorrCategory().setDisplayName("PbcCorr Dates (" + currentDateUnit + ")");
-////                for (ReportColumnInterface rc : getDatesPbcCorrCategory().getCategoryColumns()) {
-////                    if (!rc.getUnits().equalsIgnoreCase("")) {
-////                        rc.setUnits(currentDateUnit);
-////                    }
-////                }
-////
-////                if (isAuto) {
-////                    // let's find out
-////                    BigDecimal threshold = new BigDecimal(1000000);
-//////                        for (ETFractionInterface f : fractions) {
-//////                            if (!f.isRejected()) {
-//////                                BigDecimal date206_238Value = f.getRadiogenicIsotopeDateByName(RadDates.age206_238_PbcCorr).getValue();
-//////                                if (date206_238Value.compareTo(threshold) > 0) {
-//////                                    // we have Ma when any value is greater than threshold
-//////                                    getDatesPbcCorrCategory().setDisplayName("PbcCorr Dates (Ma)");
-//////                                    // now set units correctly
-//////                                    for (ReportColumnInterface rc : getDatesPbcCorrCategory().getCategoryColumns()) {
-//////                                        if (!rc.getUnits().equalsIgnoreCase("")) {
-//////                                            rc.setUnits("Ma");
-//////                                        }
-//////                                    }
-//////                                    break;
-//////                                }
-//////
-//////                            }
-//////
-//////                        }
-////                }
-////            }
-////
-////        }
-        // end of special case for units of date
         // oct 2016 added another cell to flag whether fraction is filtered = true or false
         int countOfAllColumns = getCountOfAllColumns() + 2 + 1;
 
@@ -559,7 +445,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         // filename is stored in 0,1
         retVal[0][1] = fractions.get(0).getFractionID();
 
-        // FileName is stored in 0,0
+        // FRACTION_DATA_START_ROW is stored in 0,0
         retVal[0][0] = Integer.toString(FRACTION_DATA_START_ROW);
 
         int columnCount = 2;
@@ -629,26 +515,31 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
 
                             // walk all the fractions for each column
                             int fractionRowCount = FRACTION_DATA_START_ROW;
+                            String aliquotName = "";
                             for (ShrimpFractionExpressionInterface f : fractions) {
+                                if (((ShrimpFraction) f).getIsotopicRatiosII().isEmpty()) {
+                                    // we have a placeholder for sample name
+                                    aliquotName = f.getFractionID();
+                                } else {
+                                    // test for included fraction on first data pass col=2==>fractionID
+                                    if (columnCount == 2) {
+                                        retVal[fractionRowCount][0] = "true";//included
+                                        retVal[fractionRowCount][1] = aliquotName;
+                                        retVal[fractionRowCount][countOfAllColumns - 1] = "true";//filtered
+                                    }
 
-                                // test for included fraction on first data pass col=2==>fractionID
-                                if (columnCount == 2) {
-                                    retVal[fractionRowCount][0] = "true";//included
-                                    retVal[fractionRowCount][1] = "aliquot";
-                                    retVal[fractionRowCount][countOfAllColumns - 1] = "true";//filtered
+                                    // field contains the Value in field[0]
+                                    //and the uncertainty in field[1] if it exists/isvisible
+                                    String[] field = myCol.getReportRecordByColumnSpec(f, numberStyleIsNumeric);
+
+                                    retVal[fractionRowCount][columnCount] = field[0];
+                                    // check for uncertainty column in next cell unless last cell
+                                    if (!field[1].equals("") && (retVal[fractionRowCount].length > (columnCount + 1))) {
+                                        retVal[fractionRowCount][columnCount + 1] = field[1];
+                                    }
+
+                                    fractionRowCount++;
                                 }
-
-                                // field contains the Value in field[0]
-                                //and the uncertainty in field[1] if it exists/isvisible
-                                String[] field = myCol.getReportRecordByColumnSpec(f, numberStyleIsNumeric);
-
-                                retVal[fractionRowCount][columnCount] = field[0];
-                                // check for uncertainty column in next cell unless last cell
-                                if (!field[1].equals("") && (retVal[fractionRowCount].length > (columnCount + 1))) {
-                                    retVal[fractionRowCount][columnCount + 1] = field[1];
-                                }
-
-                                fractionRowCount++;
 
                             }
                             // post process column

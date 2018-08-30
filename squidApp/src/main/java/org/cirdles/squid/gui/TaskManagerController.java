@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
@@ -32,8 +33,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.tasks.TaskInterface;
 
 /**
@@ -90,6 +91,14 @@ public class TaskManagerController implements Initializable {
     private CheckBox autoExcludeSpotsCheckBox;
     @FXML
     private Spinner<Double> assignedExternalErrSpinner;
+    @FXML
+    private ComboBox<?> refMatModelComboBox;
+    @FXML
+    private ComboBox<?> commonPbModelComboBox;
+    @FXML
+    private ComboBox<?> physConstModelComboBox;
+    @FXML
+    private ComboBox<?> concRefMatModelComboBox;
 
     /**
      * Initializes the controller class.

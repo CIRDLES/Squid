@@ -17,11 +17,12 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
-import static org.cirdles.squid.constants.Squid3Constants.lambda235;
-import static org.cirdles.squid.constants.Squid3Constants.lambda238;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_235_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
@@ -52,7 +53,7 @@ public class Concordia extends Function {
         rowCount = 1;
         colCount = 4;
         labelsForOutputValues = new String[][]{{"Age", "1-sigma abs", "MSWD", "Prob Of MSWD"}};
-        labelsForInputValues = new String[]{"ratioXAndUnct","ratioYAndUnct","rho"};
+        labelsForInputValues = new String[]{"ratioXAndUnct", "ratioYAndUnct", "rho"};
     }
 
     /**
@@ -75,9 +76,18 @@ public class Concordia extends Function {
             double[] ratioXAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] ratioYAndUnct = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] rho = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
+
+            double lambda235 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_235_NAME)).getValue();
+            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+
             double[] concordia
                     = org.cirdles.ludwig.isoplot3.Pub.concordia(
-                            ratioXAndUnct[0], ratioXAndUnct[1], ratioYAndUnct[0], ratioYAndUnct[1], rho[0],lambda235, lambda238);
+                            ratioXAndUnct[0],
+                            ratioXAndUnct[1],
+                            ratioYAndUnct[0],
+                            ratioYAndUnct[1],
+                            rho[0],
+                            lambda235, lambda238);
             retVal = new Object[][]{convertArrayToObjects(concordia)};
         } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0}};

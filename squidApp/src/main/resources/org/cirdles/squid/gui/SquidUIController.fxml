@@ -115,13 +115,14 @@
                         <Menu mnemonicParsing="false" text="Reference Materials">
                            <items>
                             <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
-                              <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - beta" />
+                              <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
                           <items>
                               <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
-                              <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - beta" />
+                              <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
+                              <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Report Table - by Sample for ET_Redux" />
                           </items>
                         </Menu>
                     </items>
