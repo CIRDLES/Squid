@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
@@ -57,7 +58,7 @@
       <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
         <columnConstraints>
           <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="259.0" minWidth="243.0" prefWidth="259.0" />
-          <ColumnConstraints hgrow="ALWAYS" maxWidth="598.0" minWidth="582.0" prefWidth="582.0" />
+          <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="NEVER" />
@@ -65,12 +66,21 @@
           <RowConstraints vgrow="NEVER" />
             <RowConstraints vgrow="NEVER" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <Label text="Normalise Ion Counts for SBM?" />
-            <Label text="Ratio Calculation Method:" GridPane.rowIndex="1" />
-            <Label text="Preferred index isotope:" GridPane.rowIndex="3" />
-            <Label layoutX="10.0" layoutY="94.0" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
+            <Label style="-fx-font-size: 14;" text="Normalise Ion Counts for SBM?" />
+            <Label style="-fx-font-size: 14;" text="Ratio Calculation Method:" GridPane.rowIndex="1" />
+            <Label style="-fx-font-size: 14;" text="Preferred index isotope:" GridPane.rowIndex="3" />
+            <Label layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
+            <Label style="-fx-font-size: 14;" text="(Beta Testing) Parameter Models:" GridPane.rowIndex="5" />
+            <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <children>
+                  <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="300.0" promptText="Reference Material Model" />
+                  <ComboBox fx:id="concRefMatModelComboBox" layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="300.0" promptText="Concentration Reference Material Model" />
+               </children>
+            </HBox>
             <HBox alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <RadioButton fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
@@ -107,6 +117,12 @@
                   <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
                   <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned Pb/U external 1sigma % err  (ExtPErr):" translateX="20.0" />
                   <Spinner fx:id="assignedExternalErrSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <children>
+                  <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="300.0" promptText="Common Lead Model" />
+                  <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="300.0" promptText="Physical Constants Model" />
                </children>
             </HBox>
          </children>

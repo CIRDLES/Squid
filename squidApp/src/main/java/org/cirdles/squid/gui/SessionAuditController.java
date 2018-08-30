@@ -39,11 +39,11 @@ import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
 /**

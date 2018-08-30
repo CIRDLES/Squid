@@ -23,8 +23,12 @@ import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_232_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_235_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
@@ -57,9 +61,6 @@ public abstract class BuiltInExpressionsFactory {
     public static Map<String, ExpressionTreeInterface> generateConstants() {
         Map<String, ExpressionTreeInterface> constants = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface r238_235s = new ConstantNode("r238_235s", Squid3Constants.uRatio);//          137.88);
-        constants.put(r238_235s.getName(), r238_235s);
-
         ExpressionTreeInterface squidTrue = new ConstantNode("TRUE", true);
         constants.put(squidTrue.getName(), squidTrue);
 
@@ -78,11 +79,17 @@ public abstract class BuiltInExpressionsFactory {
     public static Map<String, ExpressionTreeInterface> generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface lambda238 = new ConstantNode("lambda238", Squid3Constants.lambda238);
+        ExpressionTreeInterface lambda232 = new ConstantNode(LAMBDA_232_NAME, Squid3Constants.LAMBDA232);
+        parameters.put(lambda232.getName(), lambda232);
+
+        ExpressionTreeInterface lambda235 = new ConstantNode(LAMBDA_235_NAME, Squid3Constants.LAMBDA235);
+        parameters.put(lambda235.getName(), lambda235);
+
+        ExpressionTreeInterface lambda238 = new ConstantNode(LAMBDA_238_NAME, Squid3Constants.LAMBDA238);
         parameters.put(lambda238.getName(), lambda238);
 
-        ExpressionTreeInterface lambda232 = new ConstantNode("lambda232", Squid3Constants.lambda232);
-        parameters.put(lambda232.getName(), lambda232);
+        ExpressionTreeInterface PRESENT_R238_235S = new ConstantNode(PRESENT_R238_235S_NAME, Squid3Constants.PRESENT_R238_235S);
+        parameters.put(PRESENT_R238_235S.getName(), PRESENT_R238_235S);
 
         ExpressionTreeInterface L859 = new ConstantNode("L859", 0.859);
         parameters.put("L859", L859);
@@ -373,6 +380,7 @@ public abstract class BuiltInExpressionsFactory {
      *
      * Ludwig Q4 part 1
      *
+     * @param isDirectAltPD
      * @return
      */
     public static SortedSet<Expression> generateOverCountExpressions(boolean isDirectAltPD) {
@@ -656,19 +664,6 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> meansAndAgesForRefMaterials = new TreeSet<>();
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 8-corr  206/238  *** Start
-//        String term2 = "( sComm_64 * [\"UncorrPb/Uconst\"] * [\"204/206 (fr. 208)\"] "
-//                + "/ ((1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"]))^2 ";
-//        String term3 = "( [\"208/206\"] * [%\"208/206\"] / \n"
-//                + "( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) )^2 ";
-//        String term4 = "1 / ( [\"208/206\"] - StdRad86fact * [\"232Th/238U\"] ) +  \n"
-//                + "sComm_64 / ( sComm_84 - sComm_64 * StdRad86fact * [\"232Th/238U\"] )";
-//        String term6 = "((" + term4 + ")* StdRad86fact * [\"232Th/238U\"] * [%\"232Th/238U\"] )^2";
-//
-//        Expression expression8corr206Pb238Ucalibrconst = buildExpression("8-corr 206Pb/238Ucalibr.const",
-//                "ValueModel((1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"],"
-//                + "sqrt( [%\"UncorrPb/Uconst\"]^2 + ((" + term2 + ") * ((" + term3 + ") + (" + term6 + "))) ),"
-//                + "false)", true, false, false);
-//        meansAndAgesForRefMaterials.add(expression8corr206Pb238Ucalibrconst);
         Expression expression8corr206Pb238Ucalibrconst = buildExpression("8-corr 206Pb/238Ucalibr.const",
                 "ValueModel("
                 + "(1 - [\"204/206 (fr. 208)\"] * sComm_64) * [\"UncorrPb/Uconst\"],"
@@ -951,7 +946,7 @@ public abstract class BuiltInExpressionsFactory {
                         + "[%\"232Th/238U\"]^2 ),"
                         + "false)", true, false, false);
                 stdRadiogenicCols.add(expression4corrTotal238U206Pb);
-/// see perm1 for math for 207/235 and err and err corr
+
                 // repeat the math so the replacement engine works when creating "Total...
                 Expression expression7corrTotal206PbS238U = buildExpression("7-corr Total 206Pb/238U",
                         "ValueModel("
