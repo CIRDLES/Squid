@@ -34,6 +34,7 @@ public class SquidLabData implements Serializable {
 
     private CommonPbModel commonPbDefault;
     private ReferenceMaterial refMatDefault;
+    private ReferenceMaterial refMatConcDefault;
     private PhysicalConstantsModel physConstDefault;
 
     public SquidLabData() {
@@ -44,6 +45,7 @@ public class SquidLabData implements Serializable {
 
         physConstDefault = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         refMatDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        refMatConcDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         commonPbDefault = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
 
         storeState();
@@ -102,6 +104,19 @@ public class SquidLabData implements Serializable {
 
     public void setRefMatDefault(ReferenceMaterial refMatDefault) {
         this.refMatDefault = refMatDefault;
+    }
+
+    public ReferenceMaterial getRefMatConcDefault() {
+        ReferenceMaterial retVal;
+        if (refMatConcDefault == null)
+            retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        else
+            retVal = refMatConcDefault;
+        return retVal;
+    }
+
+    public void setRefMatConcDefault(ReferenceMaterial refMat) {
+        refMatConcDefault = refMat;
     }
 
     public PhysicalConstantsModel getPhysConstDefault() {

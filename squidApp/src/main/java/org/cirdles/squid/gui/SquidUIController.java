@@ -1251,6 +1251,7 @@ public class SquidUIController implements Initializable {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
             ReferenceMaterial refMat = task.getReferenceMaterial();
+            ReferenceMaterial refMatConc = task.getConcentrationReferenceMaterial();
             PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
             CommonPbModel commonPbModel = task.getCommonPbModel();
             if (physConst != null && !physConst.equals(new PhysicalConstantsModel()) && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
@@ -1260,13 +1261,20 @@ public class SquidUIController implements Initializable {
                         squidLabData.addPhysicalConstantsModel(physConst);
                     }
                 });
-
             }
             if (refMat != null && !refMat.equals(new ReferenceMaterial()) && !squidLabData.getReferenceMaterials().contains(refMat)) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to add " + getModVersionName(refMat) + " to your squid lab data?");
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         squidLabData.addReferenceMaterial(refMat);
+                    }
+                });
+            }
+            if (refMatConc != null && !refMatConc.equals(new ReferenceMaterial()) && !squidLabData.getReferenceMaterials().contains(refMatConc)) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to add " + getModVersionName(refMatConc) + " to your squid lab data?");
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        squidLabData.addReferenceMaterial(refMatConc);
                     }
                 });
             }

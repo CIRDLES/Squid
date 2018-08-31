@@ -64,6 +64,8 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     public ChoiceBox<String> defaultPhysConstCB;
     @FXML
+    private ChoiceBox<String> defaultRefMatConcCB;
+    @FXML
     private MenuItem editCopyOfCurrPhysConst;
     @FXML
     private MenuItem editNewEmpPhysConst;
@@ -386,6 +388,13 @@ public class parametersManagerGUIController implements Initializable {
                 squidLabData.storeState();
             }
         });
+        defaultRefMatConcCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
+            int selected = defaultRefMatConcCB.getSelectionModel().getSelectedIndex();
+            if (selected > -1 && selected < squidLabData.getReferenceMaterials().size()) {
+                squidLabData.setRefMatConcDefault(squidLabData.getReferenceMaterial(selected));
+                squidLabData.storeState();
+            }
+        });
         defaultCommonPbCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
             int selected = defaultCommonPbCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getcommonPbModels().size()) {
@@ -412,6 +421,8 @@ public class parametersManagerGUIController implements Initializable {
         items.sort(intuitiveComparator);
         defaultRefMatCB.setItems(items);
         defaultRefMatCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatDefault()));
+        defaultRefMatConcCB.setItems(items);
+        defaultRefMatConcCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatConcDefault()));
 
         items = FXCollections.observableArrayList();
         for (ParametersModel model : squidLabData.getcommonPbModels()) {

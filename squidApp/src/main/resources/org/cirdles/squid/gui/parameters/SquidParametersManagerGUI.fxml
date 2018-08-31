@@ -767,15 +767,20 @@
                                 <ChoiceBox fx:id="defaultRefMatCB" prefWidth="380" GridPane.columnIndex="1"
                                            GridPane.rowIndex="0"/>
 
-                                <Label text="Default Common Pb Model:" GridPane.columnIndex="0"
-                                       GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
-                                <ChoiceBox fx:id="defaultCommonPbCB" prefWidth="380" GridPane.columnIndex="1"
+                                <Label text="Default Concentration Reference Material Model:" GridPane.rowIndex="1"
+                                       GridPane.columnIndex="0" GridPane.halignment="RIGHT"/>
+                                <ChoiceBox fx:id="defaultRefMatConcCB" prefWidth="380" GridPane.columnIndex="1"
                                            GridPane.rowIndex="1"/>
 
-                                <Label text="Default Physical Constants Model:" GridPane.columnIndex="0"
+                                <Label text="Default Common Pb Model:" GridPane.columnIndex="0"
                                        GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
-                                <ChoiceBox fx:id="defaultPhysConstCB" prefWidth="380" GridPane.columnIndex="1"
+                                <ChoiceBox fx:id="defaultCommonPbCB" prefWidth="380" GridPane.columnIndex="1"
                                            GridPane.rowIndex="2"/>
+
+                                <Label text="Default Physical Constants Model:" GridPane.columnIndex="0"
+                                       GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
+                                <ChoiceBox fx:id="defaultPhysConstCB" prefWidth="380" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="3"/>
                                 <columnConstraints>
                                     <ColumnConstraints/>
                                     <ColumnConstraints/>
