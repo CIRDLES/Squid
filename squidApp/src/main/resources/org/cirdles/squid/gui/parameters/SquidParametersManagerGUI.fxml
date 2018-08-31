@@ -226,47 +226,31 @@
                                         </Tab>
                                     </tabs>
                                 </TabPane>
-                                <VBox spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                      AnchorPane.topAnchor="50.0">
-                                    <children>
-                                        <HBox spacing="20.0">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="Model Name:"/>
-                                                        <TextField fx:id="refMatModelName" prefHeight="26.0"
-                                                                   prefWidth="400.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="          Version:"/>
-                                                        <TextField fx:id="refMatVersion" prefHeight="26.0"
-                                                                   prefWidth="75.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <Label fx:id="refMatIsEditableLabel" textFill="RED"/>
-                                            </children>
-                                        </HBox>
-                                        <HBox spacing="20.0">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="    Lab Name:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="refMatLabName" prefHeight="26.0"
-                                                                   prefWidth="400.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="Date Certified:"/>
-                                                        <TextField fx:id="refMatDateCertified"/>
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
+
+                                <GridPane AnchorPane.topAnchor="50" AnchorPane.leftAnchor="10" vgap="10" hgap="5">
+                                    <Label text="Model Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                                           GridPane.halignment="RIGHT"/>
+                                    <TextField fx:id="refMatModelName" prefHeight="26.0"
+                                               prefWidth="400.0" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                    <Label text="Version:" GridPane.rowIndex="0" GridPane.columnIndex="3"
+                                           GridPane.halignment="RIGHT"/>
+                                    <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
+                                        <TextField fx:id="refMatVersion" prefHeight="26.0"
+                                                   prefWidth="75.0"/>
+                                        <Label fx:id="refMatIsEditableLabel" textFill="RED"/>
+                                    </HBox>
+
+                                    <Label prefWidth="10" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+
+                                    <Label text="Lab Name:" GridPane.halignment="RIGHT" textAlignment="RIGHT" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <TextField fx:id="refMatLabName" prefHeight="26.0"
+                                               prefWidth="400.0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                    <Label text="Date Certified:" GridPane.rowIndex="1" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
+                                    <TextField fx:id="refMatDateCertified" prefWidth="200" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+                                </GridPane>
+
                                 <HBox alignment="CENTER_LEFT" layoutX="45.0" layoutY="-26.0" spacing="5.0"
                                       AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
                                     <children>
@@ -444,47 +428,35 @@
                                         </Tab>
                                     </tabs>
                                 </TabPane>
-                                <VBox prefWidth="100.0" spacing="5.0" AnchorPane.leftAnchor="0.0"
-                                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
-                                    <children>
-                                        <HBox alignment="CENTER_LEFT" spacing="20.0">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="Model Name:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="commonPbModelName" prefHeight="26.0"
-                                                                   prefWidth="400.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="          Version:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="commonPbVersion" prefHeight="26.0"
-                                                                   prefWidth="75.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <Label fx:id="commonPbIsEditableLabel" textFill="RED"/>
-                                            </children>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT" spacing="20.0">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="    Lab Name:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="commonPbLabName" prefHeight="26.0"
-                                                                   prefWidth="400.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="Date Certified:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="commonPbDateCertified"/>
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
+                                <GridPane AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50" hgap="5" vgap="10">
+                                    <Label text="Model Name:" textAlignment="RIGHT" GridPane.halignment="RIGHT"
+                                           GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <TextField fx:id="commonPbModelName" prefHeight="26.0"
+                                               prefWidth="400.0" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                    <Label text="Version:" textAlignment="RIGHT" GridPane.halignment="RIGHT"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                                    <HBox spacing="15" GridPane.rowIndex="0" GridPane.columnIndex="4">
+                                        <children>
+                                            <TextField fx:id="commonPbVersion" prefHeight="26.0"
+                                                       prefWidth="75.0"/>
+                                            <Label fx:id="commonPbIsEditableLabel" textFill="RED"/>
+                                        </children>
+                                    </HBox>
+
+                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
+                                           GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
+                                    <TextField fx:id="commonPbLabName" prefHeight="26.0"
+                                               prefWidth="400.0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                    <Label text="Date Certified:" textAlignment="RIGHT" GridPane.columnIndex="3"
+                                           GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
+                                    <TextField fx:id="commonPbDateCertified" GridPane.rowIndex="1"
+                                               GridPane.columnIndex="4" GridPane.halignment="RIGHT" prefWidth="200"/>
+                                </GridPane>
                                 <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0"
                                       AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
                                     <children>
@@ -666,7 +638,7 @@
                                         </Tab>
                                         <Tab text="Atomic Molar Masses">
                                             <content>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <AnchorPane>
                                                     <children>
                                                         <ScrollPane id="physConstReferencesPane"
                                                                     AnchorPane.bottomAnchor="0.0"
@@ -688,7 +660,7 @@
                                         </Tab>
                                         <Tab text="Comment and Ref">
                                             <content>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <AnchorPane>
                                                     <children>
                                                         <TextArea fx:id="physConstReferencesArea" layoutX="430.0"
                                                                   prefHeight="200.0" prefWidth="400.0"
@@ -710,47 +682,34 @@
                                         </Tab>
                                     </tabs>
                                 </TabPane>
-                                <VBox prefWidth="100.0" spacing="5.0" AnchorPane.leftAnchor="0.0"
-                                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
-                                    <children>
-                                        <HBox alignment="CENTER_LEFT" spacing="20.0">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="Model Name:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="physConstModelName" prefHeight="26.0"
-                                                                   prefWidth="400.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="          Version:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="physConstVersion" prefHeight="26.0"
-                                                                   prefWidth="75.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <Label fx:id="physConstIsEditableLabel" textFill="RED"/>
-                                            </children>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT" spacing="20.0">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="    Lab Name:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="physConstLabName" prefHeight="26.0"
-                                                                   prefWidth="400.0"/>
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
-                                                    <children>
-                                                        <Label text="Date Certified:" textAlignment="RIGHT"/>
-                                                        <TextField fx:id="physConstDateCertified"/>
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
+                                <GridPane AnchorPane.topAnchor="50" AnchorPane.leftAnchor="10" hgap="5" vgap="10">
+                                    <Label text="Model Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="0"
+                                           GridPane.columnIndex="0"/>
+                                    <TextField fx:id="physConstModelName" prefHeight="26.0"
+                                               prefWidth="400.0" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                    <Label text="Version:" textAlignment="RIGHT" GridPane.halignment="RIGHT"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                                    <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
+                                        <children>
+                                            <TextField fx:id="physConstVersion" prefHeight="26.0"
+                                                       prefWidth="75.0"/>
+                                            <Label fx:id="physConstIsEditableLabel" textFill="RED"/>
+                                        </children>
+                                    </HBox>
+
+                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.rowIndex="1"
+                                           GridPane.columnIndex="0" GridPane.halignment="RIGHT"/>
+                                    <TextField fx:id="physConstLabName" prefHeight="26.0"
+                                               prefWidth="400.0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                    <Label text="Date Certified:" textAlignment="RIGHT" GridPane.rowIndex="1"
+                                           GridPane.columnIndex="3"/>
+                                    <TextField fx:id="physConstDateCertified" GridPane.rowIndex="1"
+                                               GridPane.columnIndex="4" prefWidth="200"/>
+                                </GridPane>
                                 <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0"
                                       AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
                                     <children>
