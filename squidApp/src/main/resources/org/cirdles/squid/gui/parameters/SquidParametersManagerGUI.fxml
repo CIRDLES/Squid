@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="450.0" minWidth="900.0" prefHeight="600.0"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="600.0"
             prefWidth="900.0" stylesheets="@../css/squidLabData.css" xmlns="http://javafx.com/javafx/9.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.cirdles.squid.gui.parameters.parametersManagerGUIController">
@@ -59,7 +59,7 @@
                                 </MenuBar>
                                 <TabPane layoutX="14.0" layoutY="112.0" tabClosingPolicy="UNAVAILABLE"
                                          AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
-                                         AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
+                                         AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
                                     <tabs>
                                         <Tab text="Data">
                                             <content>
@@ -227,28 +227,41 @@
                                     </tabs>
                                 </TabPane>
 
-                                <GridPane AnchorPane.topAnchor="50" AnchorPane.leftAnchor="10" vgap="10" hgap="5">
-                                    <Label text="Model Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"
-                                           GridPane.halignment="RIGHT"/>
-                                    <TextField fx:id="refMatModelName" prefHeight="26.0"
-                                               prefWidth="400.0" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <GridPane hgap="5" vgap="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
+                                    <Label text="Model Name:" GridPane.columnIndex="0" GridPane.halignment="RIGHT"
+                                           GridPane.rowIndex="0"/>
+                                    <TextField fx:id="refMatModelName" prefHeight="26.0" prefWidth="400.0"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                                    <Label text="Version:" GridPane.rowIndex="0" GridPane.columnIndex="3"
-                                           GridPane.halignment="RIGHT"/>
+                                    <Label text="Version:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"
+                                           GridPane.rowIndex="0"/>
                                     <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
-                                        <TextField fx:id="refMatVersion" prefHeight="26.0"
-                                                   prefWidth="75.0"/>
+                                        <TextField fx:id="refMatVersion" prefHeight="26.0" prefWidth="75.0"/>
                                         <Label fx:id="refMatIsEditableLabel" textFill="RED"/>
                                     </HBox>
 
-                                    <Label prefWidth="10" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
-                                    <Label text="Lab Name:" GridPane.halignment="RIGHT" textAlignment="RIGHT" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                    <TextField fx:id="refMatLabName" prefHeight="26.0"
-                                               prefWidth="400.0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
+                                           GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                                    <TextField fx:id="refMatLabName" prefHeight="26.0" prefWidth="400.0"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                                    <Label text="Date Certified:" GridPane.rowIndex="1" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
-                                    <TextField fx:id="refMatDateCertified" prefWidth="200" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+                                    <Label text="Date Certified:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"
+                                           GridPane.rowIndex="1"/>
+                                    <TextField fx:id="refMatDateCertified" prefWidth="200" GridPane.columnIndex="4"
+                                               GridPane.rowIndex="1"/>
+                                    <columnConstraints>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints/>
+                                        <RowConstraints/>
+                                    </rowConstraints>
                                 </GridPane>
 
                                 <HBox alignment="CENTER_LEFT" layoutX="45.0" layoutY="-26.0" spacing="5.0"
@@ -305,7 +318,7 @@
                                 <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0"
                                          tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0"
                                          AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
-                                         AnchorPane.topAnchor="120.0">
+                                         AnchorPane.topAnchor="130.0">
                                     <tabs>
                                         <Tab text="Data">
                                             <content>
@@ -428,19 +441,18 @@
                                         </Tab>
                                     </tabs>
                                 </TabPane>
-                                <GridPane AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50" hgap="5" vgap="10">
-                                    <Label text="Model Name:" textAlignment="RIGHT" GridPane.halignment="RIGHT"
-                                           GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                    <TextField fx:id="commonPbModelName" prefHeight="26.0"
-                                               prefWidth="400.0" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <GridPane hgap="5" vgap="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
+                                    <Label text="Model Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
+                                           GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
+                                    <TextField fx:id="commonPbModelName" prefHeight="26.0" prefWidth="400.0"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                                    <Label text="Version:" textAlignment="RIGHT" GridPane.halignment="RIGHT"
-                                           GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                                    <Label text="Version:" textAlignment="RIGHT" GridPane.columnIndex="3"
+                                           GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
 
-                                    <HBox spacing="15" GridPane.rowIndex="0" GridPane.columnIndex="4">
+                                    <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
                                         <children>
-                                            <TextField fx:id="commonPbVersion" prefHeight="26.0"
-                                                       prefWidth="75.0"/>
+                                            <TextField fx:id="commonPbVersion" prefHeight="26.0" prefWidth="75.0"/>
                                             <Label fx:id="commonPbIsEditableLabel" textFill="RED"/>
                                         </children>
                                     </HBox>
@@ -448,14 +460,25 @@
                                     <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
                                     <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
-                                           GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
-                                    <TextField fx:id="commonPbLabName" prefHeight="26.0"
-                                               prefWidth="400.0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                           GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                                    <TextField fx:id="commonPbLabName" prefHeight="26.0" prefWidth="400.0"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
                                     <Label text="Date Certified:" textAlignment="RIGHT" GridPane.columnIndex="3"
-                                           GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
-                                    <TextField fx:id="commonPbDateCertified" GridPane.rowIndex="1"
-                                               GridPane.columnIndex="4" GridPane.halignment="RIGHT" prefWidth="200"/>
+                                           GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                                    <TextField fx:id="commonPbDateCertified" prefWidth="200" GridPane.columnIndex="4"
+                                               GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                                    <columnConstraints>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints/>
+                                        <RowConstraints/>
+                                    </rowConstraints>
                                 </GridPane>
                                 <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0"
                                       AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
@@ -515,7 +538,7 @@
                                 <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0"
                                          tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0"
                                          AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
-                                         AnchorPane.topAnchor="120.0">
+                                         AnchorPane.topAnchor="130.0">
                                     <tabs>
                                         <Tab text="Data">
                                             <content>
@@ -616,9 +639,10 @@
                                         </Tab>
                                         <Tab text="References">
                                             <content>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <AnchorPane>
                                                     <children>
-                                                        <ScrollPane id="physConstReferencesPane"
+                                                        <ScrollPane id="physConstReferencesPane" hbarPolicy="NEVER"
+                                                                    vbarPolicy="NEVER"
                                                                     AnchorPane.bottomAnchor="0.0"
                                                                     AnchorPane.leftAnchor="0.0"
                                                                     AnchorPane.rightAnchor="0.0"
@@ -640,7 +664,8 @@
                                             <content>
                                                 <AnchorPane>
                                                     <children>
-                                                        <ScrollPane id="physConstReferencesPane"
+                                                        <ScrollPane id="physConstReferencesPane" hbarPolicy="NEVER"
+                                                                    vbarPolicy="NEVER"
                                                                     AnchorPane.bottomAnchor="0.0"
                                                                     AnchorPane.leftAnchor="0.0"
                                                                     AnchorPane.rightAnchor="0.0"
@@ -682,33 +707,43 @@
                                         </Tab>
                                     </tabs>
                                 </TabPane>
-                                <GridPane AnchorPane.topAnchor="50" AnchorPane.leftAnchor="10" hgap="5" vgap="10">
-                                    <Label text="Model Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="0"
-                                           GridPane.columnIndex="0"/>
-                                    <TextField fx:id="physConstModelName" prefHeight="26.0"
-                                               prefWidth="400.0" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <GridPane hgap="5" vgap="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
+                                    <Label text="Model Name:" GridPane.columnIndex="0" GridPane.halignment="RIGHT"
+                                           GridPane.rowIndex="0"/>
+                                    <TextField fx:id="physConstModelName" prefHeight="26.0" prefWidth="400.0"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                                    <Label text="Version:" textAlignment="RIGHT" GridPane.halignment="RIGHT"
-                                           GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                                    <Label text="Version:" textAlignment="RIGHT" GridPane.columnIndex="3"
+                                           GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
                                     <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
                                         <children>
-                                            <TextField fx:id="physConstVersion" prefHeight="26.0"
-                                                       prefWidth="75.0"/>
+                                            <TextField fx:id="physConstVersion" prefHeight="26.0" prefWidth="75.0"/>
                                             <Label fx:id="physConstIsEditableLabel" textFill="RED"/>
                                         </children>
                                     </HBox>
 
                                     <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
-                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.rowIndex="1"
-                                           GridPane.columnIndex="0" GridPane.halignment="RIGHT"/>
-                                    <TextField fx:id="physConstLabName" prefHeight="26.0"
-                                               prefWidth="400.0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
+                                           GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                                    <TextField fx:id="physConstLabName" prefHeight="26.0" prefWidth="400.0"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                                    <Label text="Date Certified:" textAlignment="RIGHT" GridPane.rowIndex="1"
-                                           GridPane.columnIndex="3"/>
-                                    <TextField fx:id="physConstDateCertified" GridPane.rowIndex="1"
-                                               GridPane.columnIndex="4" prefWidth="200"/>
+                                    <Label text="Date Certified:" textAlignment="RIGHT" GridPane.columnIndex="3"
+                                           GridPane.rowIndex="1"/>
+                                    <TextField fx:id="physConstDateCertified" prefWidth="200" GridPane.columnIndex="4"
+                                               GridPane.rowIndex="1"/>
+                                    <columnConstraints>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints/>
+                                        <RowConstraints/>
+                                    </rowConstraints>
                                 </GridPane>
                                 <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0"
                                       AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
@@ -721,28 +756,35 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Default Models" fx:id="defaultModelsTab">
+                <Tab fx:id="defaultModelsTab" text="Default Models">
                     <content>
                         <AnchorPane>
-                            <GridPane AnchorPane.leftAnchor="10" AnchorPane.topAnchor="10" hgap="10" vgap="50"
-                                      alignment="BASELINE_RIGHT">
+                            <GridPane alignment="BASELINE_RIGHT" hgap="10" vgap="50" AnchorPane.leftAnchor="10"
+                                      AnchorPane.topAnchor="10">
 
-                                <Label text="Default Reference Material Model:" GridPane.halignment="RIGHT"
-                                       GridPane.columnIndex="0"
-                                       GridPane.rowIndex="0"/>
+                                <Label text="Default Reference Material Model:" GridPane.columnIndex="0"
+                                       GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
                                 <ChoiceBox fx:id="defaultRefMatCB" prefWidth="380" GridPane.columnIndex="1"
                                            GridPane.rowIndex="0"/>
 
-                                <Label text="Default Common Pb Model:" GridPane.halignment="RIGHT"
-                                       GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <Label text="Default Common Pb Model:" GridPane.columnIndex="0"
+                                       GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
                                 <ChoiceBox fx:id="defaultCommonPbCB" prefWidth="380" GridPane.columnIndex="1"
                                            GridPane.rowIndex="1"/>
 
-                                <Label text="Default Physical Constants Model:" GridPane.halignment="RIGHT"
-                                       GridPane.columnIndex="0"
-                                       GridPane.rowIndex="2"/>
+                                <Label text="Default Physical Constants Model:" GridPane.columnIndex="0"
+                                       GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
                                 <ChoiceBox fx:id="defaultPhysConstCB" prefWidth="380" GridPane.columnIndex="1"
                                            GridPane.rowIndex="2"/>
+                                <columnConstraints>
+                                    <ColumnConstraints/>
+                                    <ColumnConstraints/>
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                </rowConstraints>
                             </GridPane>
                         </AnchorPane>
                     </content>

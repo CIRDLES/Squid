@@ -24,7 +24,7 @@ public class ParametersLauncher {
     public ParametersLauncher(Stage primaryStage) {
         this.primaryStage = primaryStage;
         squidLabDataStage = new Stage();
-        squidLabDataStage.setMinHeight(450);
+        squidLabDataStage.setMinHeight(600);
         squidLabDataStage.setMinWidth(900);
         squidLabDataStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
         try {
@@ -35,13 +35,13 @@ public class ParametersLauncher {
             e.printStackTrace();
         }
         squidLabDataStage.setTitle("Squid Parameters Manager");
-        squidLabDataStage.setX(primaryStage.getX() + (primaryStage.getWidth() - squidLabDataStage.getWidth()) / 2);
-        squidLabDataStage.setY(primaryStage.getY() + (primaryStage.getHeight() - squidLabDataStage.getHeight()) / 2);
 
         squidLabDataStage.setOnCloseRequest((WindowEvent e) -> {
             squidLabDataStage.hide();
             e.consume();
         });
+        launchParametersManager(ParametersTab.refMat);
+        squidLabDataStage.hide();
     }
 
     public void launchParametersManager(ParametersTab tab) {

@@ -158,9 +158,9 @@
             </Menu>
             <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Squid LabData">
               <items>
-                  <MenuItem  mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Manage Reference Material Models" />
-                  <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Manage Common Pb Models" />
-                <MenuItem  mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Manage Physical Constants Models" />
+                  <MenuItem  mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
+                  <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
+                <MenuItem  mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
                   <MenuItem mnemonicParsing="false" onAction="#openDefaultSquidLabDataModels" text="Manage Default Models"/>
               </items>
             </Menu>

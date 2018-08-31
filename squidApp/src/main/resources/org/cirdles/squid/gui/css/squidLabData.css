@@ -31,7 +31,15 @@ and open the template in the editor.
 }
 
 #apparentDates *.text {
-    -fx-font-size: 10pt;
+    -fx-font-size: 15pt;
+    -fx-text-alignment: center;
+}
+
+.menu-bar {
+    -fx-background-color: orange;
+    -fx-border-color: #f0cd90;
+    -fx-border-width: 2;
+    -fx-text-fill: ghostwhite;
 }
 
 #physConstReferencesPane {
@@ -55,7 +63,7 @@ and open the template in the editor.
     -fx-font-weight: bold;
 }
 
-.tab { 
+.tab {
     -fx-background-color: orange;
 }
 

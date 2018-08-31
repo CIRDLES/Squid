@@ -14,10 +14,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
@@ -974,19 +976,12 @@ public class parametersManagerGUIController implements Initializable {
         molarMasses = new ArrayList<>();
         Map<String, BigDecimal> masses = physConstModel.getMolarMasses();
         String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
-        int currY = 0;
+        int currY = 10;
         for (String[] mass : defaultMasses) {
             Label lab = new Label(mass[0] + ":");
-            molarMassesPane.getChildren().add(lab);
-            lab.setLayoutY(currY + 5);
-            lab.setLayoutX(10);
-            lab.setTextAlignment(TextAlignment.RIGHT);
-            lab.setPrefWidth(Region.USE_COMPUTED_SIZE);
 
             TextField text = new TextField(masses.get(mass[0]).toPlainString());
-            molarMassesPane.getChildren().add(text);
-            text.setLayoutY(currY);
-            text.setLayoutX(70 + lab.getLayoutX());
+            molarMasses.add(text);
             text.setPrefWidth(300);
             text.focusedProperty().addListener((obV, ov, nv) -> {
                 if (!nv && !isNumeric(text.getText())) {
@@ -995,8 +990,17 @@ public class parametersManagerGUIController implements Initializable {
                 }
             });
 
-            molarMasses.add(text);
-            currY += 40;
+            HBox hbox = new HBox();
+            hbox.setSpacing(5);
+            AnchorPane.setLeftAnchor(hbox, 0.0);
+            AnchorPane.setRightAnchor(hbox, 0.0);
+            hbox.setAlignment(Pos.CENTER);
+            hbox.getChildren().add(lab);
+            hbox.getChildren().add(text);
+            hbox.setLayoutY(currY);
+            molarMassesPane.getChildren().add(hbox);
+
+            currY += 30;
         }
     }
 
@@ -1011,25 +1015,27 @@ public class parametersManagerGUIController implements Initializable {
         physConstReferences = new ArrayList<>();
         AnchorPane.setRightAnchor(referencesPane, 0.0);
         AnchorPane.setBottomAnchor(referencesPane, 0.0);
-        int currHeight = 0;
+        int currHeight = 10;
         for (int i = 0; i < models.length; i++) {
             ValueModel mod = models[i];
 
+
             Label lab = new Label(getRatioVisibleName(mod.getName()) + ":");
-            referencesPane.getChildren().add(lab);
-            lab.setLayoutY(currHeight + 5);
-            lab.setLayoutX(10);
-            lab.setTextAlignment(TextAlignment.RIGHT);
-            lab.setPrefWidth(Region.USE_COMPUTED_SIZE);
-
             TextField text = new TextField(mod.getReference());
-            referencesPane.getChildren().add(text);
-            text.setLayoutY(currHeight);
-            text.setLayoutX(lab.getLayoutX() + 40);
-            text.setPrefWidth(500);
-
             physConstReferences.add(text);
-            currHeight += 40;
+            text.setPrefWidth(400);
+
+            HBox hbox = new HBox();
+            hbox.setSpacing(5);
+            AnchorPane.setLeftAnchor(hbox, 0.0);
+            AnchorPane.setRightAnchor(hbox, 0.0);
+            hbox.setAlignment(Pos.CENTER);
+            hbox.getChildren().add(lab);
+            hbox.getChildren().add(text);
+            hbox.setLayoutY(currHeight);
+
+            referencesPane.getChildren().add(hbox);
+            currHeight += 30;
         }
     }
 
