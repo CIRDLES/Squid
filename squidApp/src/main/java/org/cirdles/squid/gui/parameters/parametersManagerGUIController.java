@@ -31,6 +31,7 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import java.io.File;
@@ -394,9 +395,11 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpDefaultModelsTabItems() {
         ObservableList<String> items = FXCollections.observableArrayList();
+        IntuitiveStringComparator<String> intuitiveComparator = new IntuitiveStringComparator<>();
         for (ParametersModel model : squidLabData.getPhysicalConstantsModels()) {
             items.add(getModVersionName(model));
         }
+        items.sort(intuitiveComparator);
         defaultPhysConstCB.setItems(items);
         defaultPhysConstCB.getSelectionModel().select(getModVersionName(squidLabData.getPhysConstDefault()));
 
@@ -404,6 +407,7 @@ public class parametersManagerGUIController implements Initializable {
         for (ParametersModel model : squidLabData.getReferenceMaterials()) {
             items.add(getModVersionName(model));
         }
+        items.sort(intuitiveComparator);
         defaultRefMatCB.setItems(items);
         defaultRefMatCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatDefault()));
 
@@ -411,6 +415,7 @@ public class parametersManagerGUIController implements Initializable {
         for (ParametersModel model : squidLabData.getcommonPbModels()) {
             items.add(getModVersionName(model));
         }
+        items.sort(intuitiveComparator);
         defaultCommonPbCB.setItems(items);
         defaultCommonPbCB.getSelectionModel().select(getModVersionName(squidLabData.getCommonPbDefault()));
     }
@@ -476,6 +481,7 @@ public class parametersManagerGUIController implements Initializable {
         for (PhysicalConstantsModel mod : physConstModels) {
             cbList.add(getModVersionName(mod));
         }
+        cbList.sort(new IntuitiveStringComparator<>());
         physConstCB.setItems(cbList);
     }
 
@@ -503,6 +509,7 @@ public class parametersManagerGUIController implements Initializable {
         for (ReferenceMaterial mod : refMatModels) {
             cbList.add(getModVersionName(mod));
         }
+        cbList.sort(new IntuitiveStringComparator<>());
         refMatCB.setItems(cbList);
     }
 
@@ -539,6 +546,7 @@ public class parametersManagerGUIController implements Initializable {
         for (CommonPbModel mod : commonPbModels) {
             cbList.add(getModVersionName(mod));
         }
+        cbList.sort(new IntuitiveStringComparator<>());
         commonPbCB.setItems(cbList);
     }
 
