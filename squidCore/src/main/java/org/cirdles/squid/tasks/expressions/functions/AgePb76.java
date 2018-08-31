@@ -53,7 +53,7 @@ public class AgePb76 extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 Unct"}};
         labelsForInputValues = new String[]{"207/206RatioAnd1SigmaUnct"};
     }
 

@@ -53,8 +53,8 @@ public class Age7corrWithErr extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
-        labelsForInputValues = new String[]{"Total 206/238, Total 206/238 1SigmaUnct, Total 207/206, Total 207/206 1SigmaUnct, sComm_76"};
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 Unct"}};
+        labelsForInputValues = new String[]{"Total 206/238, Total 206/238 1\u03C3 Unct, Total 207/206, Total 207/206 1\u03C3 Unct, sComm_76"};
     }
 
     /**
