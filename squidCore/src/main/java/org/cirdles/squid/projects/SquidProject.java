@@ -298,6 +298,13 @@ public final class SquidProject implements Serializable {
         return prawnXMLFile.getName();
     }
 
+    /**
+     * @param prawnFile the prawnFile to set
+     */
+    public void setPrawnFile(PrawnFile prawnFile) {
+        this.prawnFile = prawnFile;
+    }
+
     public String getPrawnXMLFilePath() {
         return prawnXMLFile.getAbsolutePath();
     }

@@ -729,8 +729,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         assembleNamedExpressionsMap();
 
         buildExpressions();
-
-//        evaluateTaskExpressions();
     }
 
     @Override
@@ -1678,6 +1676,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param filtersForUnknownNames the filtersForUnknownNames to set
      */
+    @Override
     public void setFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames) {
         this.filtersForUnknownNames = filtersForUnknownNames;
     }
