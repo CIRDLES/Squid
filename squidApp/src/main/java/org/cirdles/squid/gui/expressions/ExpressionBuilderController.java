@@ -3042,7 +3042,7 @@ public class ExpressionBuilderController implements Initializable {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        setText(expression.getName());
+                        setText(expression.buildShortSignatureString());
                         if (showImage) {
                             ImageView imageView;
                             if (expression.amHealthy()) {
