@@ -17,6 +17,7 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterials.Reference
 import org.cirdles.squid.parameters.util.DateHelper;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 import org.cirdles.squid.parameters.valueModels.ValueModelConverter;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 import java.io.Serializable;
@@ -89,7 +90,8 @@ public abstract class ParametersModel implements
 
     @Override
     public int compareTo(ParametersModel o) {
-        return (modelName).compareTo(o.getModelName()) + version.compareTo(o.getVersion());
+        IntuitiveStringComparator<String> comparator = new IntuitiveStringComparator<>();
+        return comparator.compare(modelName, o.getModelName()) + comparator.compare(version, o.getVersion());
     }
 
     public boolean equals(Object o) {

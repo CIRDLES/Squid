@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 
 /**
  *
@@ -67,6 +68,8 @@ public final class SquidUI extends Application {
             Platform.exit();
             System.exit(0);
         });
+
+        CalamariFileUtilities.initSampleParametersModels();
 
         // postpone loading to allow for stage creation and use in controller
         scene.setRoot(FXMLLoader.load(getClass().getResource("SquidUIController.fxml")));

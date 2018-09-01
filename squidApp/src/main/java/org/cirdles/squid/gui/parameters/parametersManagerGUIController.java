@@ -26,6 +26,7 @@ import javafx.util.Callback;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
@@ -406,11 +407,9 @@ public class parametersManagerGUIController implements Initializable {
 
     private void setUpDefaultModelsTabItems() {
         ObservableList<String> items = FXCollections.observableArrayList();
-        IntuitiveStringComparator<String> intuitiveComparator = new IntuitiveStringComparator<>();
         for (ParametersModel model : squidLabData.getPhysicalConstantsModels()) {
             items.add(getModVersionName(model));
         }
-        items.sort(intuitiveComparator);
         defaultPhysConstCB.setItems(items);
         defaultPhysConstCB.getSelectionModel().select(getModVersionName(squidLabData.getPhysConstDefault()));
 
@@ -418,7 +417,6 @@ public class parametersManagerGUIController implements Initializable {
         for (ParametersModel model : squidLabData.getReferenceMaterials()) {
             items.add(getModVersionName(model));
         }
-        items.sort(intuitiveComparator);
         defaultRefMatCB.setItems(items);
         defaultRefMatCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatDefault()));
         defaultRefMatConcCB.setItems(items);
@@ -428,7 +426,6 @@ public class parametersManagerGUIController implements Initializable {
         for (ParametersModel model : squidLabData.getcommonPbModels()) {
             items.add(getModVersionName(model));
         }
-        items.sort(intuitiveComparator);
         defaultCommonPbCB.setItems(items);
         defaultCommonPbCB.getSelectionModel().select(getModVersionName(squidLabData.getCommonPbDefault()));
     }
@@ -494,7 +491,6 @@ public class parametersManagerGUIController implements Initializable {
         for (PhysicalConstantsModel mod : physConstModels) {
             cbList.add(getModVersionName(mod));
         }
-        cbList.sort(new IntuitiveStringComparator<>());
         physConstCB.setItems(cbList);
     }
 
@@ -522,7 +518,6 @@ public class parametersManagerGUIController implements Initializable {
         for (ReferenceMaterial mod : refMatModels) {
             cbList.add(getModVersionName(mod));
         }
-        cbList.sort(new IntuitiveStringComparator<>());
         refMatCB.setItems(cbList);
     }
 
@@ -559,7 +554,6 @@ public class parametersManagerGUIController implements Initializable {
         for (CommonPbModel mod : commonPbModels) {
             cbList.add(getModVersionName(mod));
         }
-        cbList.sort(new IntuitiveStringComparator<>());
         commonPbCB.setItems(cbList);
     }
 
@@ -1385,6 +1379,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private void physConstRemoveCurrMod(ActionEvent event) {
         physConstModels.remove(physConstModel);
+        physConstModels.sort(new ParametersModelComparator());
         setUpPhysConstCBItems();
         physConstCB.getSelectionModel().selectFirst();
         physConstEditable(false);
@@ -1405,6 +1400,7 @@ public class parametersManagerGUIController implements Initializable {
     private void physConstEditCopy(ActionEvent event) {
         physConstModel = physConstModel.clone();
         physConstModel.setModelName(physConstModel.getModelName() + " - copy");
+        physConstModel.setIsEditable(true);
         setUpPhysConst();
         physConstEditable(true);
         setUpPhysConstMenuItems(true, true);
@@ -1465,6 +1461,7 @@ public class parametersManagerGUIController implements Initializable {
             isEditingCurrPhysConst = false;
             physConstHolder = null;
         }
+        physConstModels.sort(new ParametersModelComparator());
         setUpPhysConstCBItems();
         physConstCB.getSelectionModel().select(getModVersionName(physConstModel));
         physConstEditable(false);
@@ -1506,6 +1503,7 @@ public class parametersManagerGUIController implements Initializable {
             isEditingCurrRefMat = false;
             refMatHolder = null;
         }
+        refMatModels.sort(new ParametersModelComparator());
         setUpRefMatCBItems();
         refMatCB.getSelectionModel().select(getModVersionName(refMatModel));
         refMatEditable(false);
@@ -1525,6 +1523,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private void refMatRemoveCurrMod(ActionEvent event) {
         refMatModels.remove(refMatModel);
+        refMatModels.sort(new ParametersModelComparator());
         setUpRefMatCBItems();
         refMatCB.getSelectionModel().selectFirst();
         refMatEditable(false);
@@ -1560,6 +1559,7 @@ public class parametersManagerGUIController implements Initializable {
     private void refMatEditCopy(ActionEvent event) {
         refMatModel = refMatModel.clone();
         refMatModel.setModelName(refMatModel.getModelName() + " - copy");
+        refMatModel.setIsEditable(true);
         setUpRefMat();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
@@ -1931,6 +1931,7 @@ public class parametersManagerGUIController implements Initializable {
             isEditingCurrCommonPbModel = false;
             commonPbModelHolder = null;
         }
+        commonPbModels.sort(new ParametersModelComparator());
         isEditingCommonPb = false;
         setUpCommonPbCBItems();
         commonPbCB.getSelectionModel().select(getModVersionName(commonPbModel));
@@ -1965,6 +1966,7 @@ public class parametersManagerGUIController implements Initializable {
     @FXML
     private void commonPbRemoveCurrMod(ActionEvent event) {
         commonPbModels.remove(commonPbModel);
+        commonPbModels.sort(new ParametersModelComparator());
         setUpCommonPbCBItems();
         commonPbCB.getSelectionModel().selectFirst();
         commonPbModelEditable(false);
@@ -1985,6 +1987,7 @@ public class parametersManagerGUIController implements Initializable {
     private void commonPbEditCopy(ActionEvent event) {
         isEditingCommonPb = true;
         commonPbModel = commonPbModel.clone();
+        commonPbModel.setIsEditable(true);
         commonPbModel.setModelName(commonPbModel.getModelName() + " - copy");
         setUpCommonPb();
         commonPbModelEditable(true);

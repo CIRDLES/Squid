@@ -15,7 +15,6 @@ import org.cirdles.squid.parameters.util.Lambdas;
 import org.cirdles.squid.parameters.util.ReferenceMaterialEnum;
 import org.cirdles.squid.parameters.util.XStreamETReduxConverters.ETReduxRefMatConverter;
 import org.cirdles.squid.parameters.valueModels.*;
-import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import java.io.File;
 import java.io.FilenameFilter;

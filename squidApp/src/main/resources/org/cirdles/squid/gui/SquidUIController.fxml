@@ -69,22 +69,6 @@
                   </Menu>
               </items>
             </Menu>
-            <Menu fx:id="parametersMenu" mnemonicParsing="false" text="Parameters">
-               <items>
-                  <Menu fx:id="referenceMaterialsMenu" mnemonicParsing="false" text="Reference Material Models">
-                    <items>
-                    </items>
-                  </Menu>
-                  <Menu fx:id="commonPbModelsMenu" mnemonicParsing="false" text="Common Pb Models">
-                    <items>
-                    </items>
-                  </Menu>
-                  <Menu fx:id="physicalConstantsModelsMenu" mnemonicParsing="false" text="Physical Constants Models">
-                    <items>
-                    </items>
-                  </Menu>
-               </items>
-            </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Manage Expressions" />
