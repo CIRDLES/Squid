@@ -30,6 +30,7 @@ import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -133,5 +134,15 @@ public class PrawnFileHandlerIT {
             assertThat(report).hasSameContentAs(expectedReport);
         }
     }
+    
+        /**
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testingOutputForCase1() throws Exception {
+        fail("");
+    }
+
 
 }
