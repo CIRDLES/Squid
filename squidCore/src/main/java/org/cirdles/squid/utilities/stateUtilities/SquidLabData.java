@@ -6,6 +6,7 @@
 package org.cirdles.squid.utilities.stateUtilities;
 
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
@@ -40,8 +41,11 @@ public class SquidLabData implements Serializable {
     public SquidLabData() {
         laboratoryName = "Your lab";
         referenceMaterials = ReferenceMaterial.getDefaultModels();
+        referenceMaterials.sort(new ParametersModelComparator());
         physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
+        physicalConstantsModels.sort(new ParametersModelComparator());
         commonPbModels = CommonPbModel.getDefaultModels();
+        commonPbModels.sort(new ParametersModelComparator());
 
         physConstDefault = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         refMatDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");

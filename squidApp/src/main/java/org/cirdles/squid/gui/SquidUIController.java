@@ -1146,19 +1146,31 @@ public class SquidUIController implements Initializable {
             ReferenceMaterial refMatConc = task.getConcentrationReferenceMaterial();
             PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
             CommonPbModel commonPbModel = task.getCommonPbModel();
-            if (physConst != null && !physConst.equals(new PhysicalConstantsModel()) && !squidLabData.getPhysicalConstantsModels().contains(physConst)) {
+
+            if(physConst == null) {
+                task.setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
+            } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
                 squidLabData.addPhysicalConstantsModel(physConst);
                 squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
             }
-            if (refMat != null && !refMat.equals(new ReferenceMaterial()) && !squidLabData.getReferenceMaterials().contains(refMat)) {
+
+            if(refMat == null) {
+                task.setReferenceMaterial(squidLabData.getRefMatDefault());
+            } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
                 squidLabData.addReferenceMaterial(refMat);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
-            if (refMatConc != null && !refMatConc.equals(new ReferenceMaterial()) && !squidLabData.getReferenceMaterials().contains(refMatConc)) {
+
+            if(refMatConc == null) {
+                task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
+            } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
                 squidLabData.addReferenceMaterial(refMatConc);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
-            if (commonPbModel != null && !commonPbModel.equals(new CommonPbModel()) && !squidLabData.getcommonPbModels().contains(commonPbModel)) {
+
+            if(commonPbModel == null) {
+                task.setCommonPbModel(squidLabData.getCommonPbDefault());
+            } else if (!squidLabData.getcommonPbModels().contains(commonPbModel)) {
                 squidLabData.addcommonPbModel(commonPbModel);
                 squidLabData.getcommonPbModels().sort(new ParametersModelComparator());
             }
