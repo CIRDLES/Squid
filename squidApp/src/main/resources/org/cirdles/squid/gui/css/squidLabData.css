@@ -31,8 +31,10 @@ and open the template in the editor.
 }
 
 #apparentDates *.text {
-    -fx-font-size: 15pt;
     -fx-text-alignment: center;
+}
+#apparentDates {
+    -fx-font-size: 12pt;
 }
 
 .menu-bar {

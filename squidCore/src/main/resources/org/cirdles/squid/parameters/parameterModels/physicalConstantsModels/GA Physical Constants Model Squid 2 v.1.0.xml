@@ -1,63 +1,63 @@
 <PhysicalConstantsModel>
-  <modelName>EARTHTIME Physical Constants Model</modelName>
-  <labName>EARTHTIME</labName>
-  <version>0.1</version>
-  <dateCertified>2016-01-01</dateCertified>
-  <comments>This Physical Constants Model is the accepted default used before Cheng 2000.</comments>
+  <modelName>GA Physical Constants Model Squid 2</modelName>
+  <labName>Geoscience Australia</labName>
+  <version>1.0</version>
+  <dateCertified>2008-01-01</dateCertified>
+  <comments>This Physical Constants Model reflects the values used in Squid 2.5 in 2018 at Geoscience Australia.</comments>
   <references>See individual constants for reference.</references>
   <values>
     <ValueModel>
       <name>lambda226</name>
-      <uncertaintyType>ABS</uncertaintyType>
+      <uncertaintyType>PCT</uncertaintyType>
       <reference>Holden 1990</reference>
-      <value>0.0004335</value>
-      <oneSigma>0.0000011</oneSigma>
+      <value>0</value>
+      <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>lambda230</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>Meadows et al 1980</reference>
-      <value>0.00000919525053474941</value>
-      <oneSigma>0.00000002794436637510</oneSigma>
+      <uncertaintyType>PCT</uncertaintyType>
+      <reference>Cheng et al. 2000</reference>
+      <value>0</value>
+      <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>lambda231</name>
-      <uncertaintyType>ABS</uncertaintyType>
+      <uncertaintyType>PCT</uncertaintyType>
       <reference>Robert et al. 1969</reference>
-      <value>0.00002118870000000000</value>
-      <oneSigma>0.00000007114741686000</oneSigma>
+      <value>0</value>
+      <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>lambda232</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>Le Roux and Glendenin, 1963</reference>
-      <value>0.00000000004948000000</value>
-      <oneSigma>0.00000000000025234800</oneSigma>
+      <uncertaintyType>PCT</uncertaintyType>
+      <reference>Holden 1990</reference>
+      <value>0.000000000049475</value>
+      <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>lambda234</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>De Bievre, et al., 1971; Lounsbury, Durham, 1971</reference>
-      <value>0.00000283500000000000</value>
-      <oneSigma>0.00000000566433000000</oneSigma>
+      <uncertaintyType>PCT</uncertaintyType>
+      <reference>Cheng et al. 2000</reference>
+      <value>0</value>
+      <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>lambda235</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference>Jaffey et al. 1971</reference>
-      <value>0.00000000098485000000</value>
-      <oneSigma>0.00000000000067000330</oneSigma>
+      <value>0</value>
+      <oneSigma>0</oneSigma>
     </ValueModel>
     <ValueModel>
       <name>lambda238</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference>Jaffey et al. 1971</reference>
-      <value>0.00000000015512500000</value>
-      <oneSigma>0.00000000000008299963</oneSigma>
+      <value>0.000000000155125</value>
+      <oneSigma>0</oneSigma>
     </ValueModel>
   </values>
   <rhos/>
-  <isEditable>false</isEditable>
+  <isEditable>true</isEditable>
   <molarMasses>
     <entry>
       <string>gmol235</string>

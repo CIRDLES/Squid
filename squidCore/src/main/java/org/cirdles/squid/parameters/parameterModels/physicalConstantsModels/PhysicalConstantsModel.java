@@ -105,11 +105,7 @@ public class PhysicalConstantsModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                try {
-                    models.add(PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(files[i]));
-                } catch (Exception e) {
-                    models.add((PhysicalConstantsModel) (new PhysicalConstantsModel()).readXMLObject(files[i].getAbsolutePath(), false));
-                }
+                models.add((PhysicalConstantsModel) (new PhysicalConstantsModel()).readXMLObject(files[i].getAbsolutePath(), false));
             }
         }
 

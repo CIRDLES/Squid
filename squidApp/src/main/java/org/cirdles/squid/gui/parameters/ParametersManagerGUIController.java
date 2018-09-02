@@ -17,12 +17,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.text.TextAlignment;
-import javafx.util.Callback;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
@@ -34,8 +30,6 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
-import org.cirdles.squid.utilities.IntuitiveStringComparator;
-import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,17 +38,17 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
+import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataWindow;
 
 /**
  * FXML Controller class
  *
  * @author ryanb
  */
-public class parametersManagerGUIController implements Initializable {
+public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     public Tab defaultModelsTab;
@@ -666,7 +660,7 @@ public class parametersManagerGUIController implements Initializable {
                             table.refresh();
                         } else {
                             SquidMessageDialog.showWarningDialog("Value Out of Range or Invalid: Only values"
-                                    + " in the range of [-1, 1] are allowed.", primaryStageWindow);
+                                    + " in the range of [-1, 1] are allowed.", squidLabDataWindow);
                             table.refresh();
                         }
                     });
@@ -763,7 +757,7 @@ public class parametersManagerGUIController implements Initializable {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
                 value.getTableView().refresh();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
@@ -806,7 +800,7 @@ public class parametersManagerGUIController implements Initializable {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
                 value.getTableView().refresh();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
@@ -849,7 +843,7 @@ public class parametersManagerGUIController implements Initializable {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
                 value.getTableView().refresh();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
@@ -891,7 +885,7 @@ public class parametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 setUpRefMatCovariancesAndCorrelations();
             } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
                 value.getTableView().refresh();
             }
             setUpRefMatDataModelColumns();
@@ -920,7 +914,7 @@ public class parametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 setUpRefMatCovariancesAndCorrelations();
             } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
                 value.getTableView().refresh();
             }
             setUpRefMatDataModelColumns();
@@ -949,7 +943,7 @@ public class parametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 setUpRefMatCovariancesAndCorrelations();
             } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
                 value.getTableView().refresh();
             }
             setUpRefMatDataModelColumns();
@@ -990,7 +984,7 @@ public class parametersManagerGUIController implements Initializable {
             text.setPrefWidth(300);
             text.focusedProperty().addListener((obV, ov, nv) -> {
                 if (!nv && !isNumeric(text.getText())) {
-                    SquidMessageDialog.showWarningDialog("Invalid Molar Mass: must be numeric", primaryStageWindow);
+                    SquidMessageDialog.showWarningDialog("Invalid Molar Mass: must be numeric", squidLabDataWindow);
                     text.setText(masses.get(mass[0]).toPlainString());
                 }
             });
@@ -1057,7 +1051,7 @@ public class parametersManagerGUIController implements Initializable {
     }
 
     private void setUpIsEditableLabel(Label lab, boolean isEditable) {
-        if(isEditable) {
+        if (isEditable) {
             lab.setText("editable");
         } else {
             lab.setText("not editable");
@@ -1149,9 +1143,9 @@ public class parametersManagerGUIController implements Initializable {
     private void physConstImpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(primaryStageWindow);
+            file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(squidLabDataWindow);
         } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog(e.getMessage(), squidLabDataWindow);
         }
         if (file != null) {
             PhysicalConstantsModel importedMod = (PhysicalConstantsModel) physConstModel.readXMLObject(file.getAbsolutePath(), false);
@@ -1172,9 +1166,9 @@ public class parametersManagerGUIController implements Initializable {
     private void physConstExpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSavePhysicalConstantsXMLFile(physConstModel, primaryStageWindow);
+            file = FileHandler.parametersManagerSavePhysicalConstantsXMLFile(physConstModel, squidLabDataWindow);
         } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog(e.getMessage(), squidLabDataWindow);
         }
         if (file != null) {
             physConstModel.serializeXMLObject(file.getAbsolutePath());
@@ -1187,9 +1181,9 @@ public class parametersManagerGUIController implements Initializable {
     private void refMatExpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSaveReferenceMaterialXMLFile(refMatModel, primaryStageWindow);
+            file = FileHandler.parametersManagerSaveReferenceMaterialXMLFile(refMatModel, squidLabDataWindow);
         } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog(e.getMessage(), squidLabDataWindow);
         }
         if (file != null) {
             refMatModel.serializeXMLObject(file.getAbsolutePath());
@@ -1202,9 +1196,9 @@ public class parametersManagerGUIController implements Initializable {
     private void refMatImpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(primaryStageWindow);
+            file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(squidLabDataWindow);
         } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog(e.getMessage(), squidLabDataWindow);
         }
         if (file != null) {
             ReferenceMaterial importedMod = (ReferenceMaterial) refMatModel.readXMLObject(file.getAbsolutePath(), false);
@@ -1224,9 +1218,9 @@ public class parametersManagerGUIController implements Initializable {
     private void importETReduxPhysicalConstantsModel(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(primaryStageWindow);
+            file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(squidLabDataWindow);
         } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog(e.getMessage(), squidLabDataWindow);
         }
         if (file != null) {
             PhysicalConstantsModel importedMod = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(file);
@@ -1248,9 +1242,9 @@ public class parametersManagerGUIController implements Initializable {
     private void importETReduxReferenceMaterial(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(primaryStageWindow);
+            file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(squidLabDataWindow);
         } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog(e.getMessage(), squidLabDataWindow);
         }
         if (file != null) {
             ReferenceMaterial importedMod = ReferenceMaterial.getReferenceMaterialFromETReduxXML(file);
@@ -1879,9 +1873,9 @@ public class parametersManagerGUIController implements Initializable {
     private void commonPbImpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSelectCommonPbModelXMLFile(primaryStageWindow);
+            file = FileHandler.parametersManagerSelectCommonPbModelXMLFile(squidLabDataWindow);
         } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog(e.getMessage(), squidLabDataWindow);
         }
         if (file != null) {
             CommonPbModel importedMod = (CommonPbModel) commonPbModel.readXMLObject(file.getAbsolutePath(), false);
@@ -1903,9 +1897,9 @@ public class parametersManagerGUIController implements Initializable {
     private void commonPbExpXMLAction(ActionEvent event) {
         File file = null;
         try {
-            file = FileHandler.parametersManagerSaveCommonPbModelXMLFile(commonPbModel, primaryStageWindow);
+            file = FileHandler.parametersManagerSaveCommonPbModelXMLFile(commonPbModel, squidLabDataWindow);
         } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog(e.getMessage(), squidLabDataWindow);
         }
         if (file != null) {
             commonPbModel.serializeXMLObject(file.getAbsolutePath());
