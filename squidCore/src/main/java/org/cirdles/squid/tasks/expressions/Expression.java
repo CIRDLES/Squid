@@ -73,22 +73,22 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public Expression(
-            ExpressionTreeInterface expressionTree, 
-            String excelExpressionString, 
-            boolean squidSwitchNU, 
-            boolean referenceMaterialValue, 
+            ExpressionTreeInterface expressionTree,
+            String excelExpressionString,
+            boolean squidSwitchNU,
+            boolean referenceMaterialValue,
             boolean parameterValue) {
         this(expressionTree, excelExpressionString, squidSwitchNU, referenceMaterialValue, parameterValue, "");
     }
 
     public Expression(
             ExpressionTreeInterface expressionTree,
-            String excelExpressionString, 
-            boolean squidSwitchNU, 
+            String excelExpressionString,
+            boolean squidSwitchNU,
             boolean referenceMaterialValue,
             boolean parameterValue,
             String notes) {
-        
+
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
         this.squidSwitchNU = squidSwitchNU;
@@ -228,6 +228,21 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? "  +" : "  -");
             signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? "  +" : "  -");
             signature.append(((ExpressionTree) expressionTree).isSquidSpecialUPbThExpression() ? "  +  " : "  -  ");
+            signature.append(name);
+        } else {
+            signature.append("  Parsing Error! ").append(name);
+        }
+
+        return signature.toString();
+    }
+
+    public String buildShortSignatureString() {
+        StringBuilder signature = new StringBuilder();
+        if (((ExpressionTree) expressionTree).isValid()) {
+            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? "\u1D3F"
+                    : ((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation() ? "\u1D9c" : "\u02C9");
+            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? "\u1D41" : "\u02C9");
+            signature.append(" ");
             signature.append(name);
         } else {
             signature.append("  Parsing Error! ").append(name);
