@@ -22,7 +22,7 @@ public class PhysicalConstantsModelXMLConverterTest {
             ResourceExtractor extractor = new ResourceExtractor(PhysicalConstantsModel.class);
 
             File initialFile = extractor.extractResourceAsFile("EARTHTIME Physical Constants Model v.1.1.xml");
-            PhysicalConstantsModel model = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(initialFile);
+            PhysicalConstantsModel model = (PhysicalConstantsModel) (new PhysicalConstantsModel()).readXMLObject(initialFile.getAbsolutePath(), false);
 
             File convertedFile = new File("physicalConstantsCopy.xml");
             model.serializeXMLObject(convertedFile.getAbsolutePath());

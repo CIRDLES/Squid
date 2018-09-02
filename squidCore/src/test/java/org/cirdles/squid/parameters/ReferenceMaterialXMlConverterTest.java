@@ -9,6 +9,7 @@ import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 
 import java.io.File;
+import java.sql.Ref;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -21,7 +22,7 @@ public class ReferenceMaterialXMlConverterTest {
             ResourceExtractor extractor = new ResourceExtractor(ReferenceMaterial.class);
 
             File initialFile = extractor.extractResourceAsFile("Zircon-91500 v.1.0.xml");
-            ReferenceMaterial model = ReferenceMaterial.getReferenceMaterialFromETReduxXML(initialFile);
+            ReferenceMaterial model = (ReferenceMaterial) (new ReferenceMaterial()).readXMLObject(initialFile.getAbsolutePath(), false);
 
             File convertedFile = new File("zirconCopy.xml");
             model.serializeXMLObject(convertedFile.getAbsolutePath());
