@@ -29,7 +29,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'
     
     compile "com.github.cirdles:LudwigLibrary:-SNAPSHOT"
-//    compile "com.github.cirdles:LudwigLibrary:-SNAPSHOT:javadoc"
+    //    compile "com.github.cirdles:LudwigLibrary:-SNAPSHOT:javadoc"
     compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.9'
     
     antlr "org.antlr:antlr4:4.7.1"
@@ -39,8 +39,7 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi', version: '3.16'
     // https://mvnrepository.com/artifact/org.apache.tika/tika-core
     //compile group: 'org.apache.tika', name: 'tika-core', version: '1.15'
-       compile group: 'org.jdom', name: 'jdom2', version: '2.0.6'
-
+    compile group: 'org.jdom', name: 'jdom2', version: '2.0.6'
 }
 
 sourceSets {

@@ -1,0 +1,74 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 24, 2018, 6:44:46 PM
+    Author     : ryanb
+*/
+
+.root {
+    -fx-background-color: #666666;
+}
+
+.table-view .table-cell {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 11pt;
+}
+
+.table-view .column-header {
+    -fx-font-family: "Arial";
+    -fx-font-size: 9pt;
+}
+
+.tab-pane {
+    -fx-background-color: ghostwhite;
+}
+
+.tab-pane .tab-pane {
+    -fx-background-color: lightgray;
+}
+
+#apparentDates *.text {
+    -fx-text-alignment: center;
+}
+#apparentDates {
+    -fx-font-size: 12pt;
+}
+
+.menu-bar {
+    -fx-background-color: orange;
+    -fx-border-color: #f0cd90;
+    -fx-border-width: 2;
+    -fx-text-fill: ghostwhite;
+}
+
+#physConstReferencesPane {
+    -fx-background-color: lightgray;
+}
+
+#laboratoryTextField {
+    -fx-font-family: "Arial";
+    -fx-font-size: 12pt;
+}
+
+.button {
+    -fx-background-color: darkorange;
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 11pt;
+    -fx-text-fill: ghostwhite;
+}
+
+.tab:selected {
+    -fx-background-color: orangered;
+    -fx-font-weight: bold;
+}
+
+.tab {
+    -fx-background-color: orange;
+}
+
+#labNameLabel {
+    -fx-text-fill: ghostwhite;
+}

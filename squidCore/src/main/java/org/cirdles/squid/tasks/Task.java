@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
@@ -37,6 +38,10 @@ import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
@@ -70,6 +75,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInte
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
@@ -182,6 +188,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected double extPErr;
 
+    protected PhysicalConstantsModel physicalConstantsModel;
+    protected ReferenceMaterial referenceMaterial;
+    protected CommonPbModel commonPbModel;
+    protected ReferenceMaterial concentrationReferenceMaterial;
+
     public Task() {
         this("New Task", null, null);
     }
@@ -261,6 +272,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.squidAllowsAutoExclusionOfSpots = true;
 
         this.extPErr = 0.75;
+
+        this.physicalConstantsModel = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+        this.referenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.concentrationReferenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.commonPbModel = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
 
         generateConstants();
         generateParameters();
@@ -2173,6 +2189,54 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public double getExtPErr() {
         return extPErr;
+    }
+
+    @Override
+    public void setReferenceMaterial(ParametersModel refMat) {
+        if (refMat instanceof ReferenceMaterial) {
+            referenceMaterial = (ReferenceMaterial) refMat;
+        }
+    }
+
+    @Override
+    public ReferenceMaterial getReferenceMaterial() {
+        return referenceMaterial;
+    }
+
+    @Override
+    public void setConcentrationReferenceMaterial(ParametersModel refMat) {
+        if (refMat instanceof ReferenceMaterial) {
+            concentrationReferenceMaterial = (ReferenceMaterial) refMat;
+        }
+    }
+
+    @Override
+    public ReferenceMaterial getConcentrationReferenceMaterial() {
+            return concentrationReferenceMaterial;
+    }
+
+    @Override
+    public void setPhysicalConstantsModel(ParametersModel physConst) {
+        if (physConst instanceof PhysicalConstantsModel) {
+            physicalConstantsModel = (PhysicalConstantsModel) physConst;
+        }
+    }
+
+    @Override
+    public PhysicalConstantsModel getPhysicalConstantsModel() {
+        return physicalConstantsModel;
+    }
+
+    @Override
+    public void setCommonPbModel(ParametersModel commonPbModel) {
+        if (commonPbModel instanceof CommonPbModel) {
+            this.commonPbModel = (CommonPbModel) commonPbModel;
+        }
+    }
+
+    @Override
+    public CommonPbModel getCommonPbModel() {
+        return commonPbModel;
     }
 
 }

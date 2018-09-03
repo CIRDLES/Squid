@@ -60,6 +60,11 @@ Schema/
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.squid
 !squidCore/src/main/resources/org/cirdles/squid/javadoc/*.jar
 
+!squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterials/*
+!squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/physicalConstantsModels/*
+!squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/commonPbModels/*
+
+
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
 
 
