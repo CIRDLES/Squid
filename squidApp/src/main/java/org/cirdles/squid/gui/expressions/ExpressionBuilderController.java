@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,7 +137,6 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_DEFAULT_FONTSIZE;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MAX_FONTSIZE;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
 /**
@@ -237,8 +237,11 @@ public class ExpressionBuilderController implements Initializable {
     private enum OrderChoiceEnum {
         EVALUATION(" Evaluation order"),
         NAME(" Name"),
-        NUSWITCH(" NU Switch"),
-        BUILTINCUSTOM(" BuiltIn/Custom");
+        //        NUSWITCH(" NU Switch"),
+        //        BUILTINCUSTOM(" BuiltIn/Custom"),
+        REFMAT(" Reference Material"),
+        CONCREFMAT(" Conc. Reference Mat"),
+        UNKNOWN(" Unknown Sample");
 
         private final String printName;
 
@@ -696,29 +699,80 @@ public class ExpressionBuilderController implements Initializable {
                         return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
                     }));
                     break;
-                case BUILTINCUSTOM:
+//                case BUILTINCUSTOM:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
+//                        boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
+//                        if ((o1IsCustom && o2IsCustom) || (!o1IsCustom && !o2IsCustom)) {
+//                            return 0;
+//                        } else if (o1IsCustom && !o2IsCustom) {
+//                            return 1;
+//                        } else {
+//                            return -1;
+//                        }
+//                    }));
+//                    break;
+//                case NUSWITCH:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        if (o1.isSquidSwitchNU() && o2.isSquidSwitchNU()) {
+//                            return 0;
+//                        } else if (o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()) {
+//                            return -1;
+//                        } else {
+//                            return 1;
+//                        }
+//                    }));
+//                    break;
+                case REFMAT:
                     globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
-                        boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
-                        if ((o1IsCustom && o2IsCustom) || (!o1IsCustom && !o2IsCustom)) {
-                            return 0;
-                        } else if (o1IsCustom && !o2IsCustom) {
-                            return 1;
-                        } else {
+                        if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                                && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                        } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                                && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                             return -1;
+                        } else {
+                            if (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                            }
+                            return 1;
                         }
                     }));
+                    globalListView.refresh();
                     break;
-                case NUSWITCH:
+                case UNKNOWN:
                     globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        if (o1.isSquidSwitchNU() && o2.isSquidSwitchNU()) {
-                            return 0;
-                        } else if (o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()) {
+                        if (o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                                && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                        } else if (o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                                && !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                             return -1;
                         } else {
+                            if (!o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                            }
                             return 1;
                         }
                     }));
+                    globalListView.refresh();
+                    break;
+                case CONCREFMAT:
+                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                        if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                                && o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                        } else if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                                && !o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                            return -1;
+                        } else {
+                            if (!o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                            }
+                            return 1;
+                        }
+                    }));
+                    globalListView.refresh();
                     break;
                 default:
                     globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
