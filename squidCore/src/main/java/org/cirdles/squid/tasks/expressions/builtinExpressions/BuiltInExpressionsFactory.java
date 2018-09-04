@@ -93,6 +93,9 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface L859 = new ConstantNode("L859", 0.859);
         parameters.put("L859", L859);
+        
+        ExpressionTreeInterface L1033 = new ConstantNode("L1033", 1.033);
+        parameters.put("L1033", L1033);
 
         ExpressionTreeInterface extPErr = new ConstantNode(SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, 0.75);
         parameters.put(SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, extPErr);
@@ -258,13 +261,13 @@ public abstract class BuiltInExpressionsFactory {
         if (!isDirectAltPD) {
             // TODO: promote this and tie to physical constants model
             // handles SecondaryParentPpmFromThU
-            String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
+            //String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
             Expression expressionPpmTh = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
-                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + uConstant, true, false, false);
+                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / L1033", true, false, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
 
             Expression expressionPpmThS = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH_S,
-                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME_S + "\"] / " + uConstant, false, true, false);
+                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME_S + "\"] / L1033", false, true, false);
             concentrationExpressionsOrdered.add(expressionPpmThS);
 
             if (!parentNuclide.contains("232")) {
