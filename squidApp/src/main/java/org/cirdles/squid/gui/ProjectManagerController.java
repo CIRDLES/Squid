@@ -25,8 +25,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import static org.cirdles.squid.constants.Squid3Constants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
 /**

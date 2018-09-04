@@ -17,11 +17,12 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
-import static org.cirdles.squid.constants.Squid3Constants.lambda232;
-import static org.cirdles.squid.constants.Squid3Constants.lambda238;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_232_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
@@ -55,11 +56,11 @@ public class Age8corrWithErr extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 Unct"}};
         labelsForInputValues = new String[]{
-            "Total 206/238, Total 206/238 1SigmaUnct, "
-            + "Total 208/232, Total 208/232 1SigmaUnct,"
-            + "232/238, 232/238 1SigmaUnct, sComm_86"};
+            "Total 206/238, Total 206/238 1\u03C3 Unct, "
+            + "Total 208/232, Total 208/232 1\u03C3 Unct,"
+            + "232/238, 232/238 1\u03C3 Unct, sComm_86"};
     }
 
     /**
@@ -88,6 +89,9 @@ public class Age8corrWithErr extends Function {
             double[] th2U8 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
             double[] th2U8err = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
             double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
+
+            double lambda232 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_232_NAME)).getValue();
+            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
 
             double[] age8corrWithErr = org.cirdles.ludwig.isoplot3.Pub.age8corrWithErr(
                     totPb6U8[0],

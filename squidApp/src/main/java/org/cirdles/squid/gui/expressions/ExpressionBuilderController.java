@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,12 +133,11 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
-import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_DEFAULT_FONTSIZE;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_MIN_FONTSIZE;
-import static org.cirdles.squid.constants.Squid3Constants.EXPRESSION_BUILDER_MAX_FONTSIZE;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_DEFAULT_FONTSIZE;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MAX_FONTSIZE;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
 /**
  * FXML Controller class
@@ -237,8 +237,11 @@ public class ExpressionBuilderController implements Initializable {
     private enum OrderChoiceEnum {
         EVALUATION(" Evaluation order"),
         NAME(" Name"),
-        NUSWITCH(" NU Switch"),
-        BUILTINCUSTOM(" BuiltIn/Custom");
+        //        NUSWITCH(" NU Switch"),
+        //        BUILTINCUSTOM(" BuiltIn/Custom"),
+        REFMAT(" Reference Material"),
+        CONCREFMAT(" Conc. Reference Mat"),
+        UNKNOWN(" Unknown Sample");
 
         private final String printName;
 
@@ -696,29 +699,80 @@ public class ExpressionBuilderController implements Initializable {
                         return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
                     }));
                     break;
-                case BUILTINCUSTOM:
+//                case BUILTINCUSTOM:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
+//                        boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
+//                        if ((o1IsCustom && o2IsCustom) || (!o1IsCustom && !o2IsCustom)) {
+//                            return 0;
+//                        } else if (o1IsCustom && !o2IsCustom) {
+//                            return 1;
+//                        } else {
+//                            return -1;
+//                        }
+//                    }));
+//                    break;
+//                case NUSWITCH:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        if (o1.isSquidSwitchNU() && o2.isSquidSwitchNU()) {
+//                            return 0;
+//                        } else if (o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()) {
+//                            return -1;
+//                        } else {
+//                            return 1;
+//                        }
+//                    }));
+//                    break;
+                case REFMAT:
                     globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
-                        boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
-                        if ((o1IsCustom && o2IsCustom) || (!o1IsCustom && !o2IsCustom)) {
-                            return 0;
-                        } else if (o1IsCustom && !o2IsCustom) {
-                            return 1;
-                        } else {
+                        if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                                && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                        } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                                && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                             return -1;
+                        } else {
+                            if (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                            }
+                            return 1;
                         }
                     }));
+                    globalListView.refresh();
                     break;
-                case NUSWITCH:
+                case UNKNOWN:
                     globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        if (o1.isSquidSwitchNU() && o2.isSquidSwitchNU()) {
-                            return 0;
-                        } else if (o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()) {
+                        if (o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                                && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                        } else if (o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                                && !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                             return -1;
                         } else {
+                            if (!o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                            }
                             return 1;
                         }
                     }));
+                    globalListView.refresh();
+                    break;
+                case CONCREFMAT:
+                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                        if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                                && o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                        } else if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                                && !o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                            return -1;
+                        } else {
+                            if (!o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                            }
+                            return 1;
+                        }
+                    }));
+                    globalListView.refresh();
                     break;
                 default:
                     globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
@@ -1732,13 +1786,13 @@ public class ExpressionBuilderController implements Initializable {
                 res = "Reference Materials not processed.";
                 if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     if (refMatSpots.size() > 0) {
-                        res = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree(), forcePercentUn);
+                        res = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree());
                     } else {
                         res = "No Reference Materials";
                     }
                 } else if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                     if (concRefMatSpots.size() > 0) {
-                        res = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree(), forcePercentUn);
+                        res = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree());
                     } else {
                         res = "No Concentration Reference Materials";
                     }
@@ -1779,7 +1833,7 @@ public class ExpressionBuilderController implements Initializable {
                 res = "Unknowns not processed.";
                 if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                     if (unSpots.size() > 0) {
-                        res = peekDetailsPerSpot(unSpots, exp.getExpressionTree(), forcePercentUn);
+                        res = peekDetailsPerSpot(unSpots, exp.getExpressionTree());
                     } else {
                         res = "No Unknowns";
                     }
@@ -2029,87 +2083,122 @@ public class ExpressionBuilderController implements Initializable {
         return sb.toString();
     }
 
-    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface exp, boolean forcePercentUn) {
+    private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface expTree) {
         StringBuilder sb = new StringBuilder();
+        int sigDigits = 15;
 
-        if (exp instanceof ShrimpSpeciesNode) {
-            sb.append("Please specify property of species such as totalCps.");
-        } else if (exp instanceof VariableNodeForIsotopicRatios) {
-            // special case where the expressionTree is a ratio
-            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-            sb.append(String.format("%1$-" + 20 + "s", exp.getName()));
-            sb.append(String.format("%1$-" + 20 + "s", "1-sigma ABS"));
-            sb.append("\n");
+//        if (expTree instanceof ShrimpSpeciesNode) {
+//            sb.append("Please specify property of species such as totalCps.");
+//        } 
+//        else if (expTree instanceof VariableNodeForIsotopicRatios) {
+//            // special case where the expressionTree is a ratio
+//            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
+//            // first determine if uncertainty directive is present
+//            String uncertaintyDirective = ((VariableNodeForIsotopicRatios) expTree).getUncertaintyDirective();
+//            if (uncertaintyDirective.length() > 0) {
+//                sb.append(String.format("%1$-" + 20 + "s", "1\u03C3 " + uncertaintyDirective + " " + expTree.getName()));
+//            } else {
+//                sb.append(String.format("%1$-" + 20 + "s", expTree.getName()));
+//                sb.append(String.format("%1$-" + 20 + "s", "1\u03C3 ABS"));
+//            }
+//            sb.append("\n");
+//
+//            for (ShrimpFractionExpressionInterface spot : spots) {
+//                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+//                double[][] results
+//                        = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
+//                for (int i = 0; i < (int)((uncertaintyDirective.length() == 0) ? results[0].length : 1); i++) {
+//                    try {
+//                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
+//                    } catch (Exception e) {
+//                    }
+//                }
+//                sb.append("\n");
+//            }
+//
+//        } 
+////        else 
+////        if (expTree instanceof SpotFieldNode) {
+////            // special case where the expressionTree is a field in spot (non-ratio)
+////            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
+////            sb.append(String.format("%1$-" + 20 + "s", expTree.getName()));
+////            sb.append("\n");
+////
+////            for (ShrimpFractionExpressionInterface spot : spots) {
+////                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+////                List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
+////                singleSpot.add(spot);
+////
+////                try {
+////                    double[][] results
+////                            = Arrays.stream(ExpressionTreeInterface.convertObjectArrayToDoubles(expTree.eval(singleSpot, null))).toArray(double[][]::new);
+////                    for (int i = 0; i < results[0].length; i++) {
+////                        try {
+////                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
+////                        } catch (Exception e) {
+////                        }
+////                    }
+////                    sb.append("\n");
+////                } catch (SquidException squidException) {
+////                }
+////
+////            }
+////
+////        } else {
+        if (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+            sb.append("Concentration Reference Materials Only\n\n");
+        }
+        sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
+        String[][] resultLabels;
+        if (((ExpressionTree) expTree).getOperation() != null) {
+            if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
 
-            for (ShrimpFractionExpressionInterface spot : spots) {
-                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                double[][] results
-                        = Arrays.stream(spot.getIsotopicRatioValuesByStringName(exp.getName())).toArray(double[][]::new);
-                for (int i = 0; i < results[0].length; i++) {
-                    try {
-                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
-                    } catch (Exception e) {
+                if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForSummary) {
+                    String uncertaintyDirective
+                            = ((VariableNodeForSummary) ((ExpressionTree) expTree).getChildrenET().get(0)).getUncertaintyDirective();
+                    if (uncertaintyDirective.length() > 0) {
+                        resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
+                    } else {
+                        resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
                     }
+                } else {
+                    // i.e., ConstantNode
+                    resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
                 }
-                sb.append("\n");
+            } else if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
+                // case of ratio
+                resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
+            } else if (((ExpressionTree) expTree).hasRatiosOfInterest()) {
+                // case of NU switch
+                String uncertaintyDirective
+                        = ((ExpressionTree) expTree).getUncertaintyDirective();
+                if (uncertaintyDirective.length() > 0) {
+                    resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
+                } else {
+                    resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
+                }
+            } else {
+                resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
             }
 
-        } else if (exp instanceof SpotFieldNode) {
-            // special case where the expressionTree is a field in spot (non-ratio)
-            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-            sb.append(String.format("%1$-" + 20 + "s", exp.getName()));
-            sb.append("\n");
-
-            for (ShrimpFractionExpressionInterface spot : spots) {
-                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
-                singleSpot.add(spot);
-
+            for (int i = 0; i < resultLabels[0].length; i++) {
                 try {
-                    double[][] results
-                            = Arrays.stream(ExpressionTreeInterface.convertObjectArrayToDoubles(exp.eval(singleSpot, null))).toArray(double[][]::new);
-                    for (int i = 0; i < results[0].length; i++) {
-                        try {
-                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
-                        } catch (Exception e) {
-                        }
-                    }
-                    sb.append("\n");
-                } catch (SquidException squidException) {
+                    sb.append(String.format("%1$-" + 20 + "s", resultLabels[0][i]));
+                } catch (Exception e) {
                 }
-
             }
 
-        } else {
-            if (exp.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                sb.append("Concentration Reference Materials Only\n\n");
-            }
-            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-            if (((ExpressionTree) exp).getOperation() != null) {
-                String[][] resultLabels = ((ExpressionTree) exp).getOperation().getLabelsForOutputValues();
-                for (int i = 0; i < resultLabels[0].length; i++) {
-                    try {
-                        sb.append(String.format("%1$-" + 20 + "s", resultLabels[0][i]));
-                    } catch (Exception e) {
-                    }
-                }
-                if (((ExpressionTree) exp).hasRatiosOfInterest()) {
-                    sb.append(String.format("%1$-" + 20 + "s", (forcePercentUn ? "1-sigma %" : "1-sigma ABS")));
-                }
-            }
             sb.append("\n");
 
-            if (((ExpressionTree) exp).getLeftET() instanceof ShrimpSpeciesNode) {
+            if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
+                // case of ratio
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
                     double[][] results
-                            = Arrays.stream(spot.getIsotopicRatioValuesByStringName(exp.getName())).toArray(double[][]::new);
-                    if (results[0].length == 2 && forcePercentUn) {
-                        results[0][1] = (results[0][1] / results[0][0]) * 100;
-                    }
+                            = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
                     for (int i = 0; i < results[0].length; i++) {
                         try {
-                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
+                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
                         } catch (Exception e) {
                         }
                     }
@@ -2117,16 +2206,13 @@ public class ExpressionBuilderController implements Initializable {
                 }
             } else {
                 for (ShrimpFractionExpressionInterface spot : spots) {
-                    if (spot.getTaskExpressionsEvaluationsPerSpot().get(exp) != null) {
+                    if (spot.getTaskExpressionsEvaluationsPerSpot().get(expTree) != null) {
                         sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
                         double[][] results
-                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(exp)).toArray(double[][]::new);
-                        if (results[0].length == 2 && forcePercentUn) {
-                            results[0][1] = (results[0][1] / results[0][0]) * 100;
-                        }
-                        for (int i = 0; i < results[0].length; i++) {
+                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+                        for (int i = 0; i < resultLabels[0].length; i++) {
                             try {
-                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
+                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
                             } catch (Exception e) {
                             }
                         }
@@ -2135,6 +2221,7 @@ public class ExpressionBuilderController implements Initializable {
                 }
             }
         }
+
         return sb.toString();
     }
 
@@ -2979,6 +3066,7 @@ public class ExpressionBuilderController implements Initializable {
             try {
                 Files.write(Paths.get("EXPRESSION.HTML"), graphContents.getBytes());
                 BrowserControl.showURI("EXPRESSION.HTML");
+
             } catch (IOException iOException) {
             }
         }
@@ -3008,7 +3096,7 @@ public class ExpressionBuilderController implements Initializable {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        setText(expression.getName());
+                        setText(expression.buildShortSignatureString());
                         if (showImage) {
                             ImageView imageView;
                             if (expression.amHealthy()) {
@@ -3544,7 +3632,7 @@ public class ExpressionBuilderController implements Initializable {
         }
     }
 
-    // this node signals user can edit in context menu
+// this node signals user can edit in context menu
     private class NumberTextNode extends ExpressionTextNode {
 
         public NumberTextNode(String text) {
@@ -3564,6 +3652,7 @@ public class ExpressionBuilderController implements Initializable {
                 }
             }
         });
+
     }
 
     private class ExpressionTextNode extends Text {
