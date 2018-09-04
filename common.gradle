@@ -6,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '0.4.5'
+String mavenVersion = '0.4.7'
 
 
 sourceCompatibility = '1.8'
@@ -22,6 +22,7 @@ repositories {
 dependencies {
     // Adding dependencies here will add the dependencies to each subproject.
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
 
     testCompile "junit:junit:4.12"
     testCompile "org.assertj:assertj-core:3.5.1"

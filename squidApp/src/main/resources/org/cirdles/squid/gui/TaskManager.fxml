@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1100.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
   <columnConstraints>
     <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
     <ColumnConstraints hgrow="ALWAYS" />
@@ -57,7 +58,7 @@
       <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
         <columnConstraints>
           <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="259.0" minWidth="243.0" prefWidth="259.0" />
-          <ColumnConstraints hgrow="ALWAYS" maxWidth="598.0" minWidth="582.0" prefWidth="582.0" />
+          <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="NEVER" />
@@ -65,12 +66,23 @@
           <RowConstraints vgrow="NEVER" />
             <RowConstraints vgrow="NEVER" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <Label text="Normalise Ion Counts for SBM?" />
-            <Label text="Ratio Calculation Method:" GridPane.rowIndex="1" />
-            <Label text="Preferred index isotope:" GridPane.rowIndex="3" />
-            <Label layoutX="10.0" layoutY="94.0" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
+            <Label style="-fx-font-size: 14;" text="Normalise Ion Counts for SBM?" />
+            <Label style="-fx-font-size: 14;" text="Ratio Calculation Method:" GridPane.rowIndex="1" />
+            <Label style="-fx-font-size: 14;" text="Preferred index isotope:" GridPane.rowIndex="3" />
+            <Label layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
+            <Label style="-fx-font-size: 14;" text="(Beta Testing) Parameter Models:" GridPane.rowIndex="5" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <children>
+                  <Label prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10;" text="Ref Mat:" textAlignment="RIGHT" />
+                  <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Reference Material Model" />
+                  <Label layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10;" text="Conc Ref Mat:" textAlignment="RIGHT" translateX="10.0" />
+                  <ComboBox fx:id="concRefMatModelComboBox" layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="325.0" promptText="Concentration Reference Material Model" translateX="10.0" />
+               </children>
+            </HBox>
             <HBox alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <RadioButton fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
@@ -107,6 +119,14 @@
                   <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
                   <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned Pb/U external 1sigma % err  (ExtPErr):" translateX="20.0" />
                   <Spinner fx:id="assignedExternalErrSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
+               </children>
+            </HBox>
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <children>
+                  <Label prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10;" text="Comm Pb:" textAlignment="RIGHT" />
+                  <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
+                  <Label prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
+                  <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
                </children>
             </HBox>
          </children>

@@ -19,10 +19,12 @@ package org.cirdles.squid.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -32,16 +34,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -55,7 +49,10 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
+import org.cirdles.squid.gui.parameters.ParametersLauncher;
+import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.plots.PlotsController;
@@ -64,13 +61,19 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
@@ -84,6 +87,7 @@ public class SquidUIController implements Initializable {
 
     public static SquidProject squidProject;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
+    public static final SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
     @FXML
     private Menu manageExpressionsMenu;
@@ -151,6 +155,11 @@ public class SquidUIController implements Initializable {
     private Menu openRecentExpressionFileMenu;
     @FXML
     private Menu manageVisualizationsMenu;
+    @FXML
+    private Menu squidLabDataMenu;
+
+    public static ParametersLauncher parametersLauncher;
+
 
     /**
      * Initializes the controller class.
@@ -199,9 +208,14 @@ public class SquidUIController implements Initializable {
         // Expression menu
         buildExpressionMenuMRU();
 
+        //Parameters Menu
+        squidLabDataMenu.setDisable(false);
+
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
+
+        parametersLauncher = new ParametersLauncher(primaryStage);
     }
 
     private void buildProjectMenuMRU() {
@@ -587,6 +601,8 @@ public class SquidUIController implements Initializable {
     private void launchTaskManager() {
         mainPane.getChildren().remove(taskManagerUI);
         try {
+            verifySquidLabDataParameters();
+
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
             taskManagerUI.setId("TaskManager");
 
@@ -899,6 +915,7 @@ public class SquidUIController implements Initializable {
     private void addExpressionToTask(Expression exp) {
         squidProject.getTask().removeExpression(exp);
         squidProject.getTask().addExpression(exp);
+
         ExpressionBuilderController.expressionToHighlightOnInit = exp;
         buildExpressionMenuMRU();
         launchExpressionBuilder();
@@ -1038,6 +1055,22 @@ public class SquidUIController implements Initializable {
         writeAndOpenReportTableFiles(report, "UnknownsReportTable.csv");
     }
 
+    @FXML
+    private void unknownsBySampleReportTableAction(ActionEvent event)throws IOException {
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
+
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
+        List<ShrimpFractionExpressionInterface> spotsBySampleNames = new ArrayList<>();
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
+            ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
+            spotsBySampleNames.add(dummyForSample);
+            spotsBySampleNames.addAll(entry.getValue());
+        }
+
+        String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, true);
+        writeAndOpenReportTableFiles(report, "UnknownsBySampleReportTable.csv");
+    }
+
     private void writeAndOpenReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
         // output a file
         File reportsFolderParent = squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports();
@@ -1085,6 +1118,64 @@ public class SquidUIController implements Initializable {
         PlotsController.fractionTypeSelected = PlotsController.SpotTypes.UNKNOWN;
         PlotsController.plotTypeSelected = PlotsController.PlotTypes.CONCORDIA;
         launchPlots();
+    }
+
+    @FXML
+    private void openParametersManagerPhysConst(ActionEvent event) {
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.physConst);
+    }
+
+    @FXML
+    private void openParametersManagerRefMat(ActionEvent event) {
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+    }
+
+    @FXML
+    private void openParametersManagerCommonPbModels(ActionEvent event) {
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.commonPb);
+    }
+
+    @FXML
+    private void openDefaultSquidLabDataModels() {
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
+    }
+
+    private void verifySquidLabDataParameters() {
+        if (squidProject != null && squidProject.getTask() != null) {
+            TaskInterface task = squidProject.getTask();
+            ReferenceMaterial refMat = task.getReferenceMaterial();
+            ReferenceMaterial refMatConc = task.getConcentrationReferenceMaterial();
+            PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
+            CommonPbModel commonPbModel = task.getCommonPbModel();
+
+            if(physConst == null) {
+                task.setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
+            } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
+                squidLabData.addPhysicalConstantsModel(physConst);
+                squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
+            }
+
+            if(refMat == null) {
+                task.setReferenceMaterial(squidLabData.getRefMatDefault());
+            } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
+                squidLabData.addReferenceMaterial(refMat);
+                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
+            }
+
+            if(refMatConc == null) {
+                task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
+            } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
+                squidLabData.addReferenceMaterial(refMatConc);
+                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
+            }
+
+            if(commonPbModel == null) {
+                task.setCommonPbModel(squidLabData.getCommonPbDefault());
+            } else if (!squidLabData.getcommonPbModels().contains(commonPbModel)) {
+                squidLabData.addcommonPbModel(commonPbModel);
+                squidLabData.getcommonPbModels().sort(new ParametersModelComparator());
+            }
+        }
     }
 
     public void importCustomExpressionsOnAction(ActionEvent actionEvent) {

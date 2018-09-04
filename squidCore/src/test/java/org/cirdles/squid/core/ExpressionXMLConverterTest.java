@@ -5,10 +5,7 @@
  */
 package org.cirdles.squid.core;
 
-import com.thoughtworks.xstream.XStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import org.cirdles.squid.ElementComparer;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -19,12 +16,16 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 /**
- *
  * @author ryanb
  */
 public class ExpressionXMLConverterTest {
@@ -32,7 +33,6 @@ public class ExpressionXMLConverterTest {
     @Test
     public void ExpressionXMLConverterTest() {
         try {
-            XStream xstream = new XStream();
             ExpressionTree LnUOU = new ExpressionTree("LnUO/U");
             List<String> ratiosOfInterest = new ArrayList<>();
             ratiosOfInterest.add("254/238");
@@ -42,9 +42,9 @@ public class ExpressionXMLConverterTest {
             LnUOU.setSquidSwitchSCSummaryCalculation(false);
             LnUOU.setSquidSwitchSTReferenceMaterialCalculation(true);
             LnUOU.setSquidSwitchSAUnknownCalculation(true);
-            
+
             Expression initialExpression = new Expression(LnUOU, "ln([\"254/238\"])", true, false, false);
-            
+
 
             SquidSpeciesModel sm1 = new SquidSpeciesModel(0, "254", "254", "Uranium", false, "", false);
             SquidSpeciesModel sm2 = new SquidSpeciesModel(0, "238", "238", "Uranium", false, "", false);
@@ -63,8 +63,7 @@ public class ExpressionXMLConverterTest {
             expTree.addChild(0, rm);
 
             String folderPath = "src/test/java/org/cirdles/squid/core/";
-            initialExpression.customizeXstream(xstream);
-            File initialFile = new File( folderPath + "InitialCreation.XML");
+            File initialFile = new File(folderPath + "InitialCreation.XML");
 
             initialExpression.serializeXMLObject(initialFile.getAbsolutePath());
 
@@ -73,41 +72,19 @@ public class ExpressionXMLConverterTest {
             convertedExpression.serializeXMLObject(convertedFile.getAbsolutePath());
 
             SAXBuilder builder = new SAXBuilder();
-            Document initialDocument = (Document) builder.build(initialFile);
-            Document convertedDocument = (Document) builder.build(convertedFile);
+            Document initialDocument = builder.build(initialFile);
+            Document convertedDocument = builder.build(convertedFile);
             Element initialRootElement = initialDocument.getRootElement();
             Element convertedRootElement = convertedDocument.getRootElement();
 
-            assertTrue(compareElements(initialRootElement, convertedRootElement));
+            initialFile.delete();
+            convertedFile.delete();
+
+            assertTrue(ElementComparer.compareElements(initialRootElement, convertedRootElement));
         } catch (Exception e) {
             e.printStackTrace();
             fail("Exception thrown: " + e.getMessage());
         }
     }
 
-    private boolean compareElements(Element firstElement, Element secondElement) {
-        boolean returnValue = true;
-        List<Element> firstList = firstElement.getChildren();
-        List<Element> secondList = secondElement.getChildren();
-
-        if (firstList.size() == secondList.size()) {
-            if (!firstList.isEmpty()) {
-                while (!firstList.isEmpty() && returnValue) {
-                    Element firstChild = firstList.remove(0);
-                    Element secondChild = secondList.remove(0);
-                    if (compareElements(firstChild, secondChild) == false) {
-                        returnValue = false;
-                    }
-                }
-            } else {
-                if (!(firstElement.getText().equals(secondElement.getText()))) {
-                    returnValue = false;
-                }
-            }
-        } else {
-            returnValue = false;
-        }
-
-        return returnValue;
-    }
 }

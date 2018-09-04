@@ -17,14 +17,15 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
-import static org.cirdles.squid.constants.Squid3Constants.lambda235;
-import static org.cirdles.squid.constants.Squid3Constants.lambda238;
-import static org.cirdles.squid.constants.Squid3Constants.uRatio;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_235_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
 
 /**
  *
@@ -52,8 +53,8 @@ public class AgePb76WithErr extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "1SigmaUnct"}};
-        labelsForInputValues = new String[]{"207/206 Ratio, 207/206 1SigmaUnct"};
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 Unct"}};
+        labelsForInputValues = new String[]{"207/206 Ratio, 207/206 1\u03C3 Unct"};
     }
 
     /**
@@ -74,13 +75,18 @@ public class AgePb76WithErr extends Function {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
 
         Object[][] retVal;
+
         try {
             double[] pb207_206Ratio = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] pb207_206Unct1Sigma = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
-            double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(
-                    pb207_206Ratio[0],
+
+            double lambda235 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_235_NAME)).getValue();
+            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
+
+            double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(pb207_206Ratio[0],
                     pb207_206Unct1Sigma[0],
-                    lambda235, lambda238, uRatio);
+                    lambda235, lambda238, PRESENT_R238_235S);
             retVal = new Object[][]{{agePb76[0], agePb76[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};

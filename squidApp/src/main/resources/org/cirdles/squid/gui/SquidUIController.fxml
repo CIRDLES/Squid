@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="720.0" minWidth="1230.0" prefHeight="720.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="720.0" minWidth="1230.0" prefHeight="720.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -69,12 +69,6 @@
                   </Menu>
               </items>
             </Menu>
-            <Menu disable="true" mnemonicParsing="false" text="Parameters">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Manage Physical Constants" />
-                  <MenuItem mnemonicParsing="false" text="Manage Reference Materials" />
-              </items>
-            </Menu>
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Manage Expressions" />
@@ -115,13 +109,14 @@
                         <Menu mnemonicParsing="false" text="Reference Materials">
                            <items>
                             <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
-                              <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - beta" />
+                              <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
                           <items>
                               <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
-                              <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - beta" />
+                              <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
+                              <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Report Table - by Sample for ET_Redux" />
                           </items>
                         </Menu>
                     </items>
@@ -147,6 +142,14 @@
             <Menu disable="true" mnemonicParsing="false" text="Archiving">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
+              </items>
+            </Menu>
+            <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Squid LabData">
+              <items>
+                  <MenuItem  mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
+                  <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
+                <MenuItem  mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
+                  <MenuItem mnemonicParsing="false" onAction="#openDefaultSquidLabDataModels" text="Manage Default Models"/>
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">
