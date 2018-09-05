@@ -298,8 +298,12 @@ public class FileHandler {
 
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
-        chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null ?
-                squidPersistentState.getCustomExpressionsFile() : new File(File.separator + System.getProperty("user.home")));
+        if(squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()) {
+            chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile());
+        } else {
+            File userHome = new File(File.separator + System.getProperty("user.home"));
+            chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
+        }
 
         //directory chooser doesn't have an option to set initial folder name, find solution
 

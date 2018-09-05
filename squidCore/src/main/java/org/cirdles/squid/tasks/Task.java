@@ -2242,7 +2242,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void exportCustomExpressions(File folder) {
-        if(folder != null && folder.mkdirs()) {
+        if(folder != null) {
+            folder.mkdirs();
             for(Expression expression : taskExpressionsOrdered) {
                 if(expression.isCustom()) {
                     try {
