@@ -9,11 +9,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
@@ -42,8 +46,6 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
     private Button fractionsButtons;
     @FXML
     private AnchorPane root;
-    @FXML
-    private Label label;
 
     private String[][] textArray;
     private TextArrayManager tableManager;
@@ -73,22 +75,20 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
         tableManager.setTableItems();
         setTableItems();
         FootnoteManager.setUpFootnotes(footnoteText, textArray);
-        setUpColFootnote();
-        setUpColFootnote();
         reportsTable.refresh();
         boundCol.refresh();
-        reportsTable.setOnScroll(val -> {
-            if (!isSetUpScroller) {
-                setUpScroller();
-                isSetUpScroller = true;
+
+        EventHandler<MouseEvent> scrollHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(!isSetUpScroller) {
+                    setUpScroller();
+                    isSetUpScroller = true;
+                }
             }
-        });
-        boundCol.setOnScroll(val -> {
-            if (!isSetUpScroller) {
-                setUpScroller();
-                isSetUpScroller = true;
-            }
-        });
+        };
+        reportsTable.setOnMouseEntered(scrollHandler);
+        boundCol.setOnMouseEntered(scrollHandler);
     }
 
     @FXML
@@ -128,26 +128,22 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
             }
         }
 
-        label.setPrefHeight(24);
-        label.setPrefWidth(160);
         rtHbar.setPrefHeight(24.0);
         rtHbar.visibleProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(final ObservableValue<? extends Boolean> observableValue, final Boolean oldVal, final Boolean newVal) {
                 if (newVal) {
-                    AnchorPane.setBottomAnchor(boundCol, 276.0);
-                    AnchorPane.clearConstraints(label);
-                    AnchorPane.setBottomAnchor(label, 252.0);
-                    AnchorPane.setLeftAnchor(label, 14.0);
-
+                    AnchorPane.setBottomAnchor(boundCol, 196.0);
                 } else {
-                    AnchorPane.setBottomAnchor(boundCol, 252.0);
-                    AnchorPane.setBottomAnchor(label, 225.0);
-                    AnchorPane.setRightAnchor(label, 14.0);
-                    AnchorPane.setLeftAnchor(label, 14.0);
+                    AnchorPane.setBottomAnchor(boundCol, 172.0);
                 }
             }
         });
+        if(rtHbar.isVisible()) {
+            AnchorPane.setBottomAnchor(boundCol, 196.0);
+        } else {
+            AnchorPane.setBottomAnchor(boundCol, 172.0);
+        }
     }
 
     private void setStyles() {
@@ -158,11 +154,5 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
                 + "-fx-font-family: \"Times New Roman\";"
                 + "-fx-font-size: 18;");
         root.setStyle("-fx-background-color: cadetblue");
-    }
-
-    private void setUpColFootnote() {
-        int spot = Integer.parseInt(textArray[0][0]);
-        label.setText(textArray[spot][1].trim());
-        label.setStyle("-fx-font-size:17;-fx-background-color:orange;");
     }
 }

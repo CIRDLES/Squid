@@ -61,7 +61,6 @@ import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 
-import static org.cirdles.squid.gui.SquidUI.squidReportTableLauncher;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
@@ -162,7 +161,7 @@ public class SquidUIController implements Initializable {
     private Menu squidLabDataMenu;
 
     public static ParametersLauncher parametersLauncher;
-
+    public static SquidReportTableLauncher squidReportTableLauncher;
 
     /**
      * Initializes the controller class.
@@ -219,6 +218,7 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.loadJavadoc();
 
         parametersLauncher = new ParametersLauncher(primaryStage);
+        squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
     }
 
     private void buildProjectMenuMRU() {

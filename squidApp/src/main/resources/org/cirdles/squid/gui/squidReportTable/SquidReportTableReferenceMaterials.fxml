@@ -2,7 +2,6 @@
 
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,16 +11,15 @@
     <children>
         <AnchorPane fx:id="root" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
-                <TableView fx:id="reportsTable" layoutX="173.0" layoutY="47.0" prefHeight="300.0" prefWidth="672.0" AnchorPane.bottomAnchor="252.0" AnchorPane.leftAnchor="173.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="47.0" />
-                <Button fx:id="fractionsButtons" layoutX="348.0" layoutY="14.0" mnemonicParsing="false" onAction="#acceptedRejectedAction" prefHeight="26.0" prefWidth="258.0" text="Accepted/Rejected Fractions" textAlignment="CENTER" />
-                <TextArea fx:id="footnoteText" layoutX="14.0" layoutY="347.0" prefHeight="162.0" prefWidth="846.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-                <TableView fx:id="boundCol" layoutX="14.0" layoutY="47.0" prefHeight="278.0" prefWidth="160.0" AnchorPane.bottomAnchor="252.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="47.0">
+                <TableView fx:id="reportsTable" AnchorPane.bottomAnchor="172.0" AnchorPane.leftAnchor="164.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="47.0" />
+                <Button fx:id="fractionsButtons" layoutX="5.0" layoutY="14.0" mnemonicParsing="false" onAction="#acceptedRejectedAction" prefHeight="26.0" prefWidth="258.0" text="Accepted/Rejected Fractions" textAlignment="CENTER" />
+                <TextArea fx:id="footnoteText" prefHeight="162.0"  AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                <TableView fx:id="boundCol" layoutX="14.0" layoutY="47.0" prefHeight="278.0" prefWidth="160.0" AnchorPane.bottomAnchor="172.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="47.0">
                     <stylesheets>
                         <URL value="@tableviewhorizontalscrollhider.css" />
                         <URL value="@tableviewverticalscrollhider.css" />
                     </stylesheets>
                 </TableView>
-                <Label fx:id="label" alignment="CENTER" layoutX="348.0" layoutY="349.0" prefHeight="24.0" prefWidth="160.0" textAlignment="CENTER" AnchorPane.bottomAnchor="225.39999999999998" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
             </children>
         </AnchorPane>
     </children>

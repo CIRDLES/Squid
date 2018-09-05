@@ -5,73 +5,81 @@
  */
 package org.cirdles.squid.gui.squidReportTable;
 
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+
+import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 
 /**
  * @author ryanb
  */
 public class SquidReportTableLauncher {
 
-    private static Stage primaryStage;
-    private static Pane referenceMaterials;
-    private static Pane unknowns;
     public String[][] referenceMaterialsReports;
     public String[][] unknownsReports;
-    TabPane tabs;
-    private Tab refMatTab;
-    private Tab unknownsTab;
+    private Stage refMatStage;
+    private Stage unknownsStage;
+    private Stage primaryStage;
 
-    public SquidReportTableLauncher(Stage masterStage) throws IOException {
-        primaryStage = new Stage();
+    public SquidReportTableLauncher(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        refMatStage = new Stage();
+        unknownsStage = new Stage();
+        refMatStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
+        unknownsStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
+        refMatStage.setTitle("Reference Materials");
+        unknownsStage.setTitle("Unknowns");
 
-        Parent root = new Pane();
-        Scene scene = new Scene(root);
+        refMatStage.setMinWidth(900);
+        refMatStage.setMinHeight(600);
+        unknownsStage.setMinWidth(900);
+        unknownsStage.setMinHeight(600);
 
-        tabs = new TabPane();
-        refMatTab = new Tab("Reference Materials");
-        unknownsTab = new Tab("Unknowns");
-        tabs.getTabs().add(refMatTab);
-        tabs.getTabs().add(unknownsTab);
-        refMatTab.setContent(referenceMaterials);
-        unknownsTab.setContent(unknowns);
+        refMatStage.show();
+        refMatStage.hide();
+        unknownsStage.show();
+        unknownsStage.hide();
 
-        ((Pane) root).getChildren().add(tabs);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Squid Report Table");
-
-        primaryStage.setOnCloseRequest((WindowEvent e) -> {
-            primaryStage.hide();
+        refMatStage.setOnCloseRequest( e -> {
+            refMatStage.hide();
+            e.consume();
         });
-        primaryStage.setMinWidth(400);
-        primaryStage.setMinHeight(400);
-        tabs.setMinHeight(400);
-        tabs.setMinHeight(400);
-
+        unknownsStage.setOnCloseRequest(e -> {
+            unknownsStage.hide();
+            e.consume();
+        });
     }
 
     public void launch(ReportTableTab tab) {
         try {
-            referenceMaterials = FXMLLoader.load(getClass().getResource("SquidReportTableReferenceMaterials.fxml"));
-            unknowns = FXMLLoader.load(getClass().getResource("SquidReportTableUnknowns.fxml"));
             if (tab == ReportTableTab.refMat) {
-                tabs.getSelectionModel().select(refMatTab);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTableReferenceMaterials.fxml"));
+                Scene scene = new Scene(loader.load());
+                refMatStage.setScene(scene);
+                if(!refMatStage.isShowing()) {
+                    refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2);
+                    refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2);
+                    refMatStage.show();
+                }
+                refMatStage.requestFocus();
             } else {
-                tabs.getSelectionModel().select(unknownsTab);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTableUnknowns.fxml"));
+                Scene scene = new Scene(loader.load());
+                unknownsStage.setScene(scene);
+                if(!unknownsStage.isShowing()) {
+                    unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2);
+                    unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2);
+                    unknownsStage.show();
+                }
+                unknownsStage.requestFocus();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        primaryStage.show();
     }
 
     public enum ReportTableTab {

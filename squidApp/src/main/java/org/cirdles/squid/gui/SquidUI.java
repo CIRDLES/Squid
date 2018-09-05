@@ -26,7 +26,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
-import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 
 /**
  *
@@ -51,8 +50,6 @@ public final class SquidUI extends Application {
     
     protected static SquidAboutWindow squidAboutWindow;
     protected static Stage primaryStage;
-
-    public static SquidReportTableLauncher squidReportTableLauncher;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -79,8 +76,6 @@ public final class SquidUI extends Application {
         primaryStage.show();
         primaryStage.setMinHeight(scene.getHeight() + 15);
         primaryStage.setMinWidth(scene.getWidth());
-
-        squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
 
         squidAboutWindow = new SquidAboutWindow(primaryStage);
     }
