@@ -129,6 +129,7 @@
                   <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
                </children>
             </HBox>
+            <Label style="-fx-font-size: 14;" text="(Models not connected to math)" GridPane.rowIndex="6" />
          </children>
       </GridPane>
       <Label text="Audit:" GridPane.rowIndex="6" />
