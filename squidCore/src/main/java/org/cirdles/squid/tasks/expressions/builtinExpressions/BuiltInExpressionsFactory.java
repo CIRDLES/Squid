@@ -1433,8 +1433,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"Total 208Pb/232ThS\"],"
                 + "[%\"Total 208Pb/232ThS\"] / 100 * [\"Total 208Pb/232ThS\"],"
                 + "[\"232Th/238US\"], "
-                + "[±\"232Th/238US\"],"
-                + "sComm_86)", false, true, false);
+                + "[±\"232Th/238US\"])", false, true, false);
         samRadiogenicCols.add(expression208corr206Pb238UAge1SigmaErr);
 
         Expression expression8corr206238 = buildExpression("8-corr 206*/238S",

@@ -22,6 +22,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_232_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_86_NAME;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
@@ -52,7 +53,7 @@ public class Age8corrWithErr extends Function {
     public Age8corrWithErr() {
 
         name = "Age8corrWithErr";
-        argumentCount = 7;
+        argumentCount = 6;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
@@ -88,7 +89,8 @@ public class Age8corrWithErr extends Function {
             double[] totPb8Th2err = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
             double[] th2U8 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
             double[] th2U8err = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
-            double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
+            
+            double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_86_NAME).getValues()[0][0];
 
             double lambda232 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_232_NAME)).getValue();
             double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
@@ -100,7 +102,7 @@ public class Age8corrWithErr extends Function {
                     totPb8Th2err[0],
                     th2U8[0],
                     th2U8err[0],
-                    sComm_86[0],
+                    sComm_86,
                     lambda232, lambda238);
             retVal = new Object[][]{{age8corrWithErr[0], age8corrWithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
