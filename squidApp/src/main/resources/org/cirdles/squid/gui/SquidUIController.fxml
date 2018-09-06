@@ -47,8 +47,8 @@
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Current Task" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem fx:id="newSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid Task" />
-                  <Menu fx:id="selectSquid3TaskFromLibraryMenu" disable="true" mnemonicParsing="false" text="Load Squid Task from Task Library" />
+                <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid Task" />
+                  <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Squid Task from Task Library" />
                   <MenuItem fx:id="importSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Load Squid Task from Squid 3  Task '.xml' File" />
                   <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="New Squid Task from Squid 2.* Excel File" />
                   <SeparatorMenuItem mnemonicParsing="false" />

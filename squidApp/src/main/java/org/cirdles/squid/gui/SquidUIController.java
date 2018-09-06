@@ -199,8 +199,8 @@ public class SquidUIController implements Initializable {
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
         //Task menu
-        newSquid3TaskMenuItem.setDisable(false);
-        selectSquid3TaskFromLibraryMenu.setDisable(false);
+        newSquid3TaskMenuItem.setDisable(true);
+        selectSquid3TaskFromLibraryMenu.setDisable(true);
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
         exportSquid3TaskMenuItem.setDisable(true);
@@ -239,7 +239,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void buildTaskLibraryMenu() {
-        selectSquid3TaskFromLibraryMenu.setDisable(false);
+        selectSquid3TaskFromLibraryMenu.setDisable(true);
 
         selectSquid3TaskFromLibraryMenu.getItems().clear();
         Map< String, TaskInterface> taskLibrary = squidProject.getTaskLibrary();
