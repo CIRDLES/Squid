@@ -68,8 +68,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
             "Total 206/238, Total 206/238 1\u03C3 %,"
             + "Total 208/232, Total 208/232 1\u03C3 %, "
             + "Total 208/206, Total 208/206 1\u03C3 %,"
-            + "\"Total 207/206, Total 207/206 1\u03C3 %,"
-            + "sComm_64, sComm_6476, sComm_86"};
+            + "\"Total 207/206, Total 207/206 1\u03C3 %"};
     }
 
     /**
