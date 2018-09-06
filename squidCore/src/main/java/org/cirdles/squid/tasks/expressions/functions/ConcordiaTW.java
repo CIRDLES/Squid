@@ -53,8 +53,8 @@ public class ConcordiaTW extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 4;
-        labelsForOutputValues = new String[][]{{"Raw Conc Age", "1-sigma abs", "MSWD Conc", "Prob Conc"}};
-        labelsForInputValues = new String[]{"ratioXAndUnct", "ratioYAndUnct"};
+        labelsForOutputValues = new String[][]{{"Raw Conc Age", "1\u03C3 abs", "MSWD Conc", "Prob Conc"}};
+        labelsForInputValues = new String[]{"ratioXAnd1\u03C3 abs", "ratioYAnd1\u03C3 abs"};
     }
 
     /**

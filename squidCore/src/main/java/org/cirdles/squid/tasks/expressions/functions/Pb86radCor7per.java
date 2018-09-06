@@ -53,7 +53,7 @@ public class Pb86radCor7per extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb86radCor7per"}};
         labelsForInputValues = new String[]{
-            "208/206RatioAndUnct", "207/206RatioAndUnct", "Total206Pb/238U", "Total206Pb/238U%err", "207corr206Pb/238UAge,"
+            "208/206RatioAndUnct", "207/206RatioAnd1\u03C3 abs", "Total206Pb/238U", "Total206Pb/238U%err", "207corr206Pb/238UAge,"
             + " sComm_64, sComm_74, sComm_84"};
     }
 
