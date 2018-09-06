@@ -27,6 +27,9 @@ import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_64_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_76_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_86_NAME;
 
 /**
  *
@@ -56,7 +59,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
     public Age7CorrPb8Th2WithErr() {
 
         name = "Age7CorrPb8Th2WithErr";
-        argumentCount = 11;
+        argumentCount = 8;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
@@ -96,10 +99,11 @@ public class Age7CorrPb8Th2WithErr extends Function {
             double[] totPb86percentErr = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
             double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
             double[] totPb76percentErr = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
-            double[] sComm_64 = convertObjectArrayToDoubles(childrenET.get(8).eval(shrimpFractions, task)[0]);
-            double[] sComm_76 = convertObjectArrayToDoubles(childrenET.get(9).eval(shrimpFractions, task)[0]);
-            double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(10).eval(shrimpFractions, task)[0]);
 
+            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_64_NAME).getValues()[0][0];
+            double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_76_NAME).getValues()[0][0];
+            double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_86_NAME).getValues()[0][0];
+            
             double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
             double lambda232 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_232_NAME)).getValue();
             double lambda235 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_235_NAME)).getValue();
@@ -113,7 +117,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
                     totPb86percentErr[0],
                     totPb76[0],
                     totPb76percentErr[0],
-                    sComm_64[0], sComm_76[0], sComm_86[0], lambda232, lambda235, lambda238, PRESENT_R238_235S);
+                    sComm_64, sComm_76, sComm_86, lambda232, lambda235, lambda238, PRESENT_R238_235S);
             retVal = new Object[][]{{age7CorrPb8Th2WithErr[0], age7CorrPb8Th2WithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};

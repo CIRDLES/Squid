@@ -56,4 +56,12 @@ public class BuiltInExpressionsDataDictionary {
     public static final String LAMBDA_235_NAME = "lambda235";
     public static final String LAMBDA_238_NAME = "lambda238";
     public static final String PRESENT_R238_235S_NAME = "r238_235s";
+    
+    // **********************  COMMON LEAD *************************************
+    public static final String SCOMM_64_NAME = "sComm_64";
+    public static final String SCOMM_74_NAME = "sComm_74";
+    public static final String SCOMM_84_NAME = "sComm_84";
+    public static final String SCOMM_76_NAME = "sComm_76";
+    public static final String SCOMM_86_NAME = "sComm_86";
+    public static final String SCOMM_68_NAME = "sComm_68";
 }
