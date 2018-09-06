@@ -485,9 +485,7 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression7Corr46 = buildExpression("7-corr 204Pb/206Pb",
                 "Pb46cor7( "
                 + "[\"207/206\"],"
-                + " [\"207corr 206Pb/238U Age\"],"
-                + "sComm_64,"
-                + "sComm_74 )", false, true, false);
+                + " [\"207corr 206Pb/238U Age\"])", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression7Corr46);
 
         Expression expression8Corr46 = buildExpression("8-corr 204Pb/206Pb",

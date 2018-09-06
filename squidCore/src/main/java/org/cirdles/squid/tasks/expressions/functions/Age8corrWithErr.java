@@ -61,7 +61,7 @@ public class Age8corrWithErr extends Function {
         labelsForInputValues = new String[]{
             "Total 206/238, Total 206/238 1\u03C3 abs, "
             + "Total 208/232, Total 208/232 1\u03C3 abs,"
-            + "232/238, 232/238 1\u03C3 abs, sComm_86"};
+            + "232/238, 232/238 1\u03C3 abs"};
     }
 
     /**

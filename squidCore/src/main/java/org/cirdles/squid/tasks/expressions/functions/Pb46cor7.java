@@ -26,6 +26,8 @@ import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_64_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_74_NAME;
 
 /**
  *
@@ -49,12 +51,12 @@ public class Pb46cor7 extends Function {
     public Pb46cor7() {
 
         name = "pb46cor7";
-        argumentCount = 4;
+        argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb46cor7"}};
-        labelsForInputValues = new String[]{"207/206RatioAnd1\u03C3 abs", "207corr206Pb/238UAge, sComm_64, sComm_74"};
+        labelsForInputValues = new String[]{"207/206RatioAnd1\u03C3 abs", "207corr206Pb/238UAge"};
     }
 
     /**
@@ -78,16 +80,20 @@ public class Pb46cor7 extends Function {
         try {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] pb207corr206_238Age = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
-            double[] sComm_64 = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
-            double[] sComm_74 = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
+            
+            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_64_NAME).getValues()[0][0];
+            double sComm_74 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_74_NAME).getValues()[0][0];
 
             double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
             double lambda235 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_235_NAME)).getValue();
             double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
 
-            double[] pb46cor7 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor7(pb207_206RatioAndUnct[0],
-                    sComm_64[0], sComm_74[0],
-                    pb207corr206_238Age[0], lambda235, lambda238, PRESENT_R238_235S);
+            double[] pb46cor7 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor7(
+                    pb207_206RatioAndUnct[0],
+                    sComm_64,
+                    sComm_74,
+                    pb207corr206_238Age[0],
+                    lambda235, lambda238, PRESENT_R238_235S);
             retVal = new Object[][]{{pb46cor7[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0}};
