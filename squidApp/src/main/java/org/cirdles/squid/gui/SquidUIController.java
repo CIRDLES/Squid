@@ -456,7 +456,6 @@ public class SquidUIController implements Initializable {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 buildProjectMenuMRU();
                 launchProjectManager();
-                launchTaskManager();
                 saveSquidProjectMenuItem.setDisable(false);
             } else {
                 saveSquidProjectMenuItem.setDisable(true);

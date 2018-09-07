@@ -77,9 +77,9 @@
             <Label style="-fx-font-size: 14;" text="(Beta Testing) Parameter Models:" GridPane.rowIndex="5" />
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
-                  <Label prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10;" text="Ref Mat:" textAlignment="RIGHT" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10;" text="Ref Mat:" textAlignment="RIGHT" />
                   <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Reference Material Model" />
-                  <Label layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10;" text="Conc Ref Mat:" textAlignment="RIGHT" translateX="10.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10;" text="Conc Ref Mat:" textAlignment="RIGHT" translateX="10.0" />
                   <ComboBox fx:id="concRefMatModelComboBox" layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="325.0" promptText="Concentration Reference Material Model" translateX="10.0" />
                </children>
             </HBox>
@@ -123,9 +123,9 @@
             </HBox>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
-                  <Label prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10;" text="Comm Pb:" textAlignment="RIGHT" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10;" text="Comm Pb:" textAlignment="RIGHT" />
                   <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
-                  <Label prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
                   <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
                </children>
             </HBox>
