@@ -213,21 +213,19 @@ public class CalamariFileUtilities {
     }
 
     public static void loadJavadoc() {
-        ResourceExtractor prawnFileResourceExtractor
-                = new ResourceExtractor(Squid.class);
-
         DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER = new File("LudwigLibraryJavadoc");
-        if (!DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
+        try {
+            if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
+                FileUtilities.recursiveDelete(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.toPath());
+            }
             if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.mkdir()) {
-                File ludwigLibraryJavadocResource = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsFile("javadoc/LudwigLibrary-1.0.7-javadoc.jar");
+                File ludwigLibraryJavadocResource = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsFile("javadoc/LudwigLibrary-1.1.0-javadoc.jar");
                 File ludwigLibraryJavadoc = new File(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc.jar");
 
                 if (ludwigLibraryJavadocResource.renameTo(ludwigLibraryJavadoc)) {
-                    //System.out.println("LudwigLibraryJavadoc.jar added.");
                     try {
                         unpackZipFile(ludwigLibraryJavadoc, DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER);
                     } catch (IOException iOException) {
-                        //System.out.println("HELP");
                     }
                 } else {
                     //System.out.println("Failed to add LudwigLibraryJavadoc.jar.");
@@ -235,6 +233,7 @@ public class CalamariFileUtilities {
             } else {
                 //System.out.println("Failed to make LudwigLibraryJavadoc folder.");
             }
+        } catch (IOException iOException) {
         }
     }
 
