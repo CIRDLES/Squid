@@ -370,7 +370,8 @@ public class SquidUIController implements Initializable {
             File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
             if (prawnXMLFileNew != null) {
                 squidProject.setupPrawnFile(prawnXMLFileNew);
-                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
+                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew); 
+                SquidUI.updateStageTitle("");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
             }
@@ -427,6 +428,7 @@ public class SquidUIController implements Initializable {
                 if (projectFile != null) {
                     saveSquidProjectMenuItem.setDisable(false);
                     squidPersistentState.updateProjectListMRU(projectFile);
+                    SquidUI.updateStageTitle(projectFile.getAbsolutePath());
                     buildProjectMenuMRU();
                 }
 
@@ -454,11 +456,13 @@ public class SquidUIController implements Initializable {
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
+                SquidUI.updateStageTitle(projectFileName);
                 buildProjectMenuMRU();
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
             } else {
                 saveSquidProjectMenuItem.setDisable(true);
+                SquidUI.updateStageTitle("");
                 throw new IOException();
             }
         }
@@ -472,6 +476,7 @@ public class SquidUIController implements Initializable {
     private void closeSquidProjectMenuItemClose(ActionEvent event) {
         confirmSaveOnProjectClose();
         removeAllManagers();
+        SquidUI.updateStageTitle("");
     }
 
     @FXML
