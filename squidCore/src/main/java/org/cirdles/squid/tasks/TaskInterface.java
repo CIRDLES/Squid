@@ -495,8 +495,4 @@ public interface TaskInterface {
      */
     public double getExtPErr() ;
 
-    public void importCustomExpressionFromFolder(File folder);
-    public void exportCustomExpressions(File folder);
-
-
     }
