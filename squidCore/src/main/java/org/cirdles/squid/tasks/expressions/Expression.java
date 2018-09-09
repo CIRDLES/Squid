@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_C_FOR_CONCREFMAT;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_DASH_FOR_DASH;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_R_FOR_REFMAT;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_U_FOR_UNKNOWN;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
@@ -239,9 +243,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public String buildShortSignatureString() {
         StringBuilder signature = new StringBuilder();
         if (((ExpressionTree) expressionTree).isValid()) {
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? "\u1D3F"
-                    : ((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation() ? "\u1D9c" : "\u02C9");
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? "\u1D41" : "\u02C9");
+            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? SUPERSCRIPT_R_FOR_REFMAT
+                    : ((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation() ? SUPERSCRIPT_C_FOR_CONCREFMAT : SUPERSCRIPT_DASH_FOR_DASH);
+            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? SUPERSCRIPT_U_FOR_UNKNOWN : SUPERSCRIPT_DASH_FOR_DASH);
             signature.append(" ");
             signature.append(name);
         } else {
