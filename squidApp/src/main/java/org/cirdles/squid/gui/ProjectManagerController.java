@@ -86,7 +86,6 @@ public class ProjectManagerController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 squidProject.setProjectName(newValue);
-                SquidUI.updateStageTitle("Squid 3.0 pre-release" + "  [Project: " + newValue + "]");
             }
         });
 

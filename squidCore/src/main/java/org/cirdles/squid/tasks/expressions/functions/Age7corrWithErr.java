@@ -26,6 +26,7 @@ import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_76_NAME;
 
 /**
  *
@@ -49,12 +50,12 @@ public class Age7corrWithErr extends Function {
     public Age7corrWithErr() {
 
         name = "Age7corrWithErr";
-        argumentCount = 5;
+        argumentCount = 4;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 Unct"}};
-        labelsForInputValues = new String[]{"Total 206/238, Total 206/238 1\u03C3 Unct, Total 207/206, Total 207/206 1\u03C3 Unct, sComm_76"};
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}};
+        labelsForInputValues = new String[]{"Total 206/238, Total 206/238 1\u03C3 abs, Total 207/206, Total 207/206 1\u03C3 abs"};
     }
 
     /**
@@ -80,7 +81,8 @@ public class Age7corrWithErr extends Function {
             double[] totPb6U8err = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
             double[] totPb76err = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
-            double[] sComm_76 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
+            
+            double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_76_NAME).getValues()[0][0];
 
             double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
             double lambda235 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_235_NAME)).getValue();
@@ -90,7 +92,7 @@ public class Age7corrWithErr extends Function {
                     totPb6U8err[0],
                     totPb76[0],
                     totPb76err[0],
-                    sComm_76[0],
+                    sComm_76,
                     lambda235, lambda238, PRESENT_R238_235S);
             retVal = new Object[][]{{age7corrWithErr[0], age7corrWithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {

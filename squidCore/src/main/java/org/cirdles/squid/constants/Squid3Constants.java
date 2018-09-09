@@ -17,6 +17,7 @@ package org.cirdles.squid.constants;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 
 /**
  *
@@ -53,7 +54,7 @@ public final class Squid3Constants {
 
     public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL
             = "Schema/SHRIMP_PRAWN.xsd";
-    
+
     public static final String SQUID_LAB_DATA_SERIALIZED_NAME = "SquidLabData.ser";
 
     /**
@@ -109,6 +110,12 @@ public final class Squid3Constants {
     public static final double LAMBDA235 = 9.8485E-10;
     public static final double LAMBDA238 = 1.55125E-10;
     public static final double PRESENT_R238_235S = 137.88;
+    
+    public static final double SCOMM_64 = 17.821;
+    public static final double SCOMM_74 = 15.5773361;
+    public static final double SCOMM_84 = 37.5933995;
+    public static final double SCOMM_76 = 0.8741;
+    public static final double SCOMM_86 = 2.1095;
 
     public enum IndexIsoptopesEnum {
         PB_204("204"),
@@ -232,5 +239,10 @@ public final class Squid3Constants {
             return retVal;
         }
     }
+
+    public final static String SUPERSCRIPT_R_FOR_REFMAT = "\u1D3F";
+    public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
+    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "\u1D41";
+    public final static String SUPERSCRIPT_DASH_FOR_DASH = "\u02C9";
 
 }
