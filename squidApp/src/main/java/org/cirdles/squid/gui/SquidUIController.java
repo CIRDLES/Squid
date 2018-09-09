@@ -159,7 +159,9 @@ public class SquidUIController implements Initializable {
     private Menu squidLabDataMenu;
 
     public static ParametersLauncher parametersLauncher;
-
+//    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
+    @FXML
+    private Menu unknownsmenu;
 
     /**
      * Initializes the controller class.
@@ -216,6 +218,26 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.loadJavadoc();
 
         parametersLauncher = new ParametersLauncher(primaryStage);
+//
+//        // experiment with tooltips for menuitems
+//        Label unknownsReportBySampleLabel = new Label("Report Table - by Sample for ET_Redux");
+//        reportCustomUnknownsBySamplesMenuItem
+//                = new CustomMenuItem(unknownsReportBySampleLabel);
+//        Tooltip tooltip = new Tooltip("This is a tooltip");
+//        Tooltip.install(unknownsReportBySampleLabel, tooltip);
+//
+//        reportCustomUnknownsBySamplesMenuItem.setHideOnClick(false);
+//        reportCustomUnknownsBySamplesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                try {
+//                    unknownsBySampleReportTableAction(event);
+//                } catch (IOException iOException) {
+//                }
+//            }
+//        });
+//
+//        unknownsmenu.getItems().add(reportCustomUnknownsBySamplesMenuItem);
     }
 
     private void buildProjectMenuMRU() {
@@ -370,7 +392,7 @@ public class SquidUIController implements Initializable {
             File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
             if (prawnXMLFileNew != null) {
                 squidProject.setupPrawnFile(prawnXMLFileNew);
-                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew); 
+                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
@@ -918,7 +940,7 @@ public class SquidUIController implements Initializable {
     private void addExpressionToTask(Expression exp) {
         squidProject.getTask().removeExpression(exp);
         squidProject.getTask().addExpression(exp);
-        
+
         ExpressionBuilderController.expressionToHighlightOnInit = exp;
         buildExpressionMenuMRU();
         launchExpressionBuilder();
@@ -1043,7 +1065,7 @@ public class SquidUIController implements Initializable {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
         if (squidProject.getTask().getReferenceMaterialSpots().size() > 0) {
             String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
-            writeAndOpenReportTableFiles(report, "ReferenceMaterialReportTable.csv");
+            writeAndOpenReportTableFiles(report, squidProject.getProjectName() + "_ReferenceMaterialReportTable.csv");
         } else {
             SquidMessageDialog.showWarningDialog(
                     "There are no reference materials chosen.\n\n",
@@ -1055,11 +1077,11 @@ public class SquidUIController implements Initializable {
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), true);
-        writeAndOpenReportTableFiles(report, "UnknownsReportTable.csv");
+        writeAndOpenReportTableFiles(report, squidProject.getProjectName() + "_UnknownsReportTable.csv");
     }
 
     @FXML
-    private void unknownsBySampleReportTableAction(ActionEvent event)throws IOException {
+    private void unknownsBySampleReportTableAction(ActionEvent event) throws IOException {
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
 
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
@@ -1071,7 +1093,9 @@ public class SquidUIController implements Initializable {
         }
 
         String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, true);
-        writeAndOpenReportTableFiles(report, "UnknownsBySampleReportTable.csv");
+        writeAndOpenReportTableFiles(
+                report,
+                squidProject.getProjectName() + "_UnknownsBySampleReportTableForET_Redux.csv");
     }
 
     private void writeAndOpenReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
@@ -1151,28 +1175,28 @@ public class SquidUIController implements Initializable {
             PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
             CommonPbModel commonPbModel = task.getCommonPbModel();
 
-            if(physConst == null) {
+            if (physConst == null) {
                 task.setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
             } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
                 squidLabData.addPhysicalConstantsModel(physConst);
                 squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
             }
 
-            if(refMat == null) {
+            if (refMat == null) {
                 task.setReferenceMaterial(squidLabData.getRefMatDefault());
             } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
                 squidLabData.addReferenceMaterial(refMat);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
 
-            if(refMatConc == null) {
+            if (refMatConc == null) {
                 task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
             } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
                 squidLabData.addReferenceMaterial(refMatConc);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
 
-            if(commonPbModel == null) {
+            if (commonPbModel == null) {
                 task.setCommonPbModel(squidLabData.getCommonPbDefault());
             } else if (!squidLabData.getcommonPbModels().contains(commonPbModel)) {
                 squidLabData.addcommonPbModel(commonPbModel);
