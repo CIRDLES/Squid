@@ -52,8 +52,8 @@ public class Concordia extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 4;
-        labelsForOutputValues = new String[][]{{"Age", "1-sigma abs", "MSWD", "Prob Of MSWD"}};
-        labelsForInputValues = new String[]{"ratioXAndUnct", "ratioYAndUnct", "rho"};
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs", "MSWD", "Prob Of MSWD"}};
+        labelsForInputValues = new String[]{"ratioXAnd1\u03C3 abs", "ratioYAnd1\u03C3 abs", "rho"};
     }
 
     /**

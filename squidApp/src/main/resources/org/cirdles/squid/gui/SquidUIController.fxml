@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="720.0" minWidth="1230.0" prefHeight="720.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="720.0" minWidth="1230.0" prefHeight="720.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -49,17 +49,17 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid Task" />
                   <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Squid Task from Task Library" />
-                  <MenuItem fx:id="importSquid3TaskMenuItem" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Load Squid Task from Squid 3  Task '.xml' File" />
+                  <MenuItem fx:id="importSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Load Squid Task from Squid 3  Task '.xml' File" />
                   <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="New Squid Task from Squid 2.* Excel File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="exportSquid3TaskMenuItem" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Export Squid3 Task to '.xml' File" />
+                  <MenuItem fx:id="exportSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Export Squid3 Task to '.xml' File" />
               </items>
             </Menu>
             <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Isotopes &amp; Ratios">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Manage Isotopes" />
                   <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Manage Ratios" />
-                  <Menu mnemonicParsing="false" text="Load a Default Ratio Set">
+                  <Menu disable="true" mnemonicParsing="false" text="Load a Default Ratio Set">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
                         <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
@@ -77,8 +77,6 @@
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
                   <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />
                   <Menu fx:id="openRecentExpressionFileMenu" mnemonicParsing="false" text="Load Recent Expression from xml File" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Manage Constants" visible="false" />
           </items>
         </Menu>
             <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
@@ -97,7 +95,7 @@
                               <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
                           </items>
                         </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
+                        <MenuItem disable="true" mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" visible="false" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Custom Report Tables">
@@ -108,7 +106,7 @@
                               <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
                            </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Unknowns">
+                        <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns">
                           <items>
                               <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
                               <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
@@ -148,10 +146,10 @@
             </Menu>
             <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Squid LabData">
               <items>
-                  <MenuItem  mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
+                  <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
                   <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
-                <MenuItem  mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
-                  <MenuItem mnemonicParsing="false" onAction="#openDefaultSquidLabDataModels" text="Manage Default Models"/>
+                <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
+                  <MenuItem mnemonicParsing="false" onAction="#openDefaultSquidLabDataModels" text="Manage Default Models" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">

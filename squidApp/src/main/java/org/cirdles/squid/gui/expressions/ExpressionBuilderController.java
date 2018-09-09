@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +104,10 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_C_FOR_CONCREFMAT;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_DASH_FOR_DASH;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_R_FOR_REFMAT;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_U_FOR_UNKNOWN;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
@@ -2527,9 +2530,14 @@ public class ExpressionBuilderController implements Initializable {
             text = text.replace(VISIBLETABPLACEHOLDER, "\t");
             text = text.replace(UNVISIBLEWHITESPACEPLACEHOLDER, " ");
             text = text.replace(VISIBLEWHITESPACEPLACEHOLDER, " ");
+            
 
-            if (!text.matches("^[ \t\n\r]$")) {
-                text = nodeText.trim();
+            if (! text.matches("^[ \t\n\r]$")) {
+                text = nodeText.replace(SUPERSCRIPT_R_FOR_REFMAT + SUPERSCRIPT_DASH_FOR_DASH + " ", "");
+                text = text.replace(SUPERSCRIPT_C_FOR_CONCREFMAT + SUPERSCRIPT_DASH_FOR_DASH + " ", "");
+                text = text.replace(SUPERSCRIPT_R_FOR_REFMAT + SUPERSCRIPT_U_FOR_UNKNOWN + " ", "");
+                text = text.replace(SUPERSCRIPT_DASH_FOR_DASH + SUPERSCRIPT_U_FOR_UNKNOWN + " ", "");
+                text = text.trim();
             }
 
             ImageView imageView = new ImageView(UNHEALTHY);

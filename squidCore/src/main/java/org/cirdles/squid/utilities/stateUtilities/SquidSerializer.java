@@ -20,6 +20,7 @@ package org.cirdles.squid.utilities.stateUtilities;
 import java.io.*;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.projects.SquidProject;
 
 /**
  *
@@ -36,20 +37,57 @@ public final class SquidSerializer {
     /**
      *
      * @param serializableObject
-     * @param filename
+     * @param fileName
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public static void serializeObjectToFile(Object serializableObject, String filename) throws SquidException {
-        try {
-            // Serialize to a file
-            FileOutputStream outputStream = new FileOutputStream(filename);
-            try (ObjectOutputStream serialized = new ObjectOutputStream(outputStream)) {
-                serialized.writeObject(serializableObject);
-                serialized.flush();
-            }
+    public static void serializeObjectToFile(Object serializableObject, String fileName) throws SquidException {
+//        try {
+//            // Serialize to a file
+//            FileOutputStream outputStream = new FileOutputStream(fileName);
+//            try (ObjectOutputStream serialized = new ObjectOutputStream(outputStream)) {
+//                serialized.writeObject(serializableObject);
+//                serialized.flush();
+//            }
+//
+//        } catch (IOException ex) {
+//            throw new SquidException("Cannot serialize object of " + serializableObject.getClass().getSimpleName() + " to: " + fileName);
+//        }
 
+        // https://dzone.com/articles/fast-java-file-serialization
+        // Sept 2018 speedup per Rayner request
+        ObjectOutputStream objectOutputStream = null;
+        try {
+            RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+            FileOutputStream fos = new FileOutputStream(raf.getFD());
+            objectOutputStream = new ObjectOutputStream(fos);
+            objectOutputStream.writeObject(serializableObject);
         } catch (IOException ex) {
-            throw new SquidException("Cannot serialize object of " + serializableObject.getClass().getSimpleName() + " to: " + filename);
+            throw new SquidException("Cannot serialize object of " + serializableObject.getClass().getSimpleName() + " to: " + fileName);
+
+        } finally {
+            if (objectOutputStream != null) {
+                try {
+                    objectOutputStream.close();
+                } catch (IOException iOException) {
+                }
+            }
+        }
+    }
+
+    public static void serializeObjectToFileRAF(Object serializableObject, String fileName) throws SquidException, IOException {
+        ObjectOutputStream objectOutputStream = null;
+        try {
+            RandomAccessFile raf = new RandomAccessFile(fileName, "rwd");
+            FileOutputStream fos = new FileOutputStream(raf.getFD());
+            objectOutputStream = new ObjectOutputStream(fos);
+            objectOutputStream.writeObject(serializableObject);
+        } catch (IOException ex) {
+            throw new SquidException("Cannot serialize object of " + serializableObject.getClass().getSimpleName() + " to: " + fileName);
+
+        } finally {
+            if (objectOutputStream != null) {
+                objectOutputStream.close();
+            }
         }
     }
 
