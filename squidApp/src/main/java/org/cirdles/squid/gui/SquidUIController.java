@@ -1217,4 +1217,5 @@ public class SquidUIController implements Initializable {
     public void openSquid3ReportTableUnknowns(ActionEvent actionEvent) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknown);
     }
+
 }
