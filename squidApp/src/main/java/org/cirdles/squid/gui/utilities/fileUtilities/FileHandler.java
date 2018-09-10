@@ -282,7 +282,7 @@ public class FileHandler {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
         chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null ?
-                squidPersistentState.getCustomExpressionsFile() : new File(File.separator + System.getProperty("user.home")));
+                squidPersistentState.getCustomExpressionsFile().getParentFile() : new File(File.separator + System.getProperty("user.home")));
 
         retVal = chooser.showDialog(ownerWindow);
 
@@ -299,7 +299,7 @@ public class FileHandler {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
         if(squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()) {
-            chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile());
+            chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile().getParentFile());
         } else {
             File userHome = new File(File.separator + System.getProperty("user.home"));
             chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
