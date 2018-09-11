@@ -1,0 +1,25 @@
+.root {
+    -fx-background-color: cadetblue
+}
+
+.table-view {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 15;
+}
+
+.table-view .table-column {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 14;
+    -fx-alignment: center-right;
+}
+
+.table-row-cell {
+    -fx-background-color: orange;
+}
+
+.button {
+    -fx-background-color: orange;
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 18;
+}
+

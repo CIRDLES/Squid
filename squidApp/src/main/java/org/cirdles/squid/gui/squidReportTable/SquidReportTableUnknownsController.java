@@ -65,7 +65,6 @@ public class SquidReportTableUnknownsController implements Initializable {
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
         footnoteText.setEditable(false);
-        setStyles();
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
         textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), true);
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
@@ -142,15 +141,5 @@ public class SquidReportTableUnknownsController implements Initializable {
         } else {
             AnchorPane.setBottomAnchor(boundCol, 172.0);
         }
-    }
-
-    private void setStyles() {
-        String tableStyle = "-fx-font-family: \"Courier New\"; -fx-font-size: 15;";
-        reportsTable.setStyle(tableStyle);
-        boundCol.setStyle(tableStyle);
-        fractionsButtons.setStyle("-fx-background-color: orange;"
-                + "-fx-font-family: \"Times New Roman\";"
-                + "-fx-font-size: 18;");
-        root.setStyle("-fx-background-color: cadetblue");
     }
 }

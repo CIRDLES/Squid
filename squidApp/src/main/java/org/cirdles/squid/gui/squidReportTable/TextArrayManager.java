@@ -9,10 +9,13 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.util.Callback;
 import org.cirdles.squid.gui.squidReportTable.utilities.StringComparer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,10 +38,35 @@ public class TextArrayManager {
         this.array = array;
         accepted = FXCollections.observableArrayList();
         rejected = FXCollections.observableArrayList();
-        colStyle = "-fx-font-family: \"Courier New\";"
-                + "-fx-font-size: 14; -fx-alignment: center-right;";
         characterSize = 10;
         columnHeaderCharacterSize = 11;
+
+        Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>> tableCallBack =
+                new Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>>() {
+            @Override
+            public TableRow<ObservableList<String>> call(TableView<ObservableList<String>> personTableView) {
+                return new TableRow<ObservableList<String>>() {
+                    @Override
+                    protected void updateItem(ObservableList<String> list, boolean b) {
+                        super.updateItem(list, b);
+                        ObservableList<String> styles = getStyleClass();
+                        boolean isAliquot = true;
+                        for (int i = 1; isAliquot && i < list.size(); i++) {
+                            isAliquot = list.get(i).isEmpty();
+                        }
+                        if (isAliquot) {
+                            if (!styles.contains("table-row-cell")) {
+                                styles.add("table-row-cell");
+                            }
+                        } else {
+                            styles.removeAll(Collections.singleton("table-row-cell"));
+                        }
+                    }
+                };
+            }
+        };
+        table.setRowFactory(tableCallBack);
+        boundCol.setRowFactory(tableCallBack);
     }
 
     public void setHeaders() {
@@ -57,7 +85,6 @@ public class TextArrayManager {
             TableColumn<ObservableList<String>, String> col = new TableColumn<>(colName);
             col.setComparator(new StringComparer());
             col.setPrefWidth(colLength * columnHeaderCharacterSize + 20);
-            col.setStyle(colStyle);
             final int colNum = i - 2;
             col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
             header.getColumns().add(col);
@@ -101,8 +128,29 @@ public class TextArrayManager {
     public void setTableItems() {
         accepted.clear();
         rejected.clear();
+
+        String aliquot = array[0][1];
+        ObservableList<String> aliquotRow = FXCollections.observableArrayList();
+        aliquotRow.add(aliquot);
+        for (int j = 3; j < array[0].length - 1; j++) {
+            aliquotRow.add("");
+        }
+        accepted.add(aliquotRow);
+        rejected.add(aliquotRow);
+
         int startSpot = Integer.parseInt(array[0][0]);
         for (int i = startSpot; i < array.length; i++) {
+            if (!array[i][1].isEmpty() && !aliquot.equals(array[i][1])) {
+                aliquot = array[i][1];
+                aliquotRow = FXCollections.observableArrayList();
+                aliquotRow.add(aliquot);
+                for (int j = 3; j < array[0].length - 1; j++) {
+                    aliquotRow.add("");
+                }
+                accepted.add(aliquotRow);
+                rejected.add(aliquotRow);
+            }
+
             ObservableList<String> data = FXCollections.observableArrayList();
             for (int j = 2; j < array[0].length - 1; j++) {
                 data.add(array[i][j]);
@@ -121,7 +169,6 @@ public class TextArrayManager {
         TableColumn<ObservableList<String>, String> col = new TableColumn<>("\n\n\nFractions");
         col.setComparator(new StringComparer());
         col.setPrefWidth(col.getPrefWidth() + 76);
-        col.setStyle(colStyle);
         final int num = 0;
         col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(num)));
         header.getColumns().add(col);

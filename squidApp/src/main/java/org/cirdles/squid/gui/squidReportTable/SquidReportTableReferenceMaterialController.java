@@ -10,14 +10,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
@@ -67,7 +68,6 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
         footnoteText.setEditable(false);
-        setStyles();
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
         textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
@@ -81,7 +81,7 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
         EventHandler<MouseEvent> scrollHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(!isSetUpScroller) {
+                if (!isSetUpScroller) {
                     setUpScroller();
                     isSetUpScroller = true;
                 }
@@ -139,20 +139,10 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
                 }
             }
         });
-        if(rtHbar.isVisible()) {
+        if (rtHbar.isVisible()) {
             AnchorPane.setBottomAnchor(boundCol, 196.0);
         } else {
             AnchorPane.setBottomAnchor(boundCol, 172.0);
         }
-    }
-
-    private void setStyles() {
-        String tableStyle = "-fx-font-family: \"Courier New\"; -fx-font-size: 15;";
-        reportsTable.setStyle(tableStyle);
-        boundCol.setStyle(tableStyle);
-        fractionsButtons.setStyle("-fx-background-color: orange;"
-                + "-fx-font-family: \"Times New Roman\";"
-                + "-fx-font-size: 18;");
-        root.setStyle("-fx-background-color: cadetblue");
     }
 }
