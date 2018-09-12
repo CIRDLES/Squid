@@ -111,6 +111,11 @@ public class TaskSquid25 implements Serializable {
                 }
 
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
+                if (isSquid2_20 && ratioStrings[0].toUpperCase().startsWith("HIDDEN")){
+                    // special case of 2.2 where this row exists
+                    firstRow++;
+                    ratioStrings = lines[firstRow + 15].split("\t");
+                }
                 int countOfRatios = Integer.valueOf(ratioStrings[1]);
                 taskSquid25.ratioNames = new ArrayList<>();
                 for (int i = 0; i < countOfRatios; i++) {
