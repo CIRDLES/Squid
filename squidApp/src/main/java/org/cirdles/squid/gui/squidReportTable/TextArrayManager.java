@@ -12,10 +12,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
-import org.cirdles.squid.gui.squidReportTable.utilities.StringComparer;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -31,6 +32,7 @@ public class TextArrayManager {
     private String colStyle;
     private final int characterSize;
     private final int columnHeaderCharacterSize;
+    private final ComparatorRowSeparators comparator;
 
     public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array) {
         this.boundCol = boundCol;
@@ -40,31 +42,32 @@ public class TextArrayManager {
         rejected = FXCollections.observableArrayList();
         characterSize = 10;
         columnHeaderCharacterSize = 11;
+        comparator = new ComparatorRowSeparators();
 
         Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>> tableCallBack =
                 new Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>>() {
-            @Override
-            public TableRow<ObservableList<String>> call(TableView<ObservableList<String>> personTableView) {
-                return new TableRow<ObservableList<String>>() {
                     @Override
-                    protected void updateItem(ObservableList<String> list, boolean b) {
-                        super.updateItem(list, b);
-                        ObservableList<String> styles = getStyleClass();
-                        boolean isAliquot = true;
-                        for (int i = 1; isAliquot && i < list.size(); i++) {
-                            isAliquot = list.get(i).isEmpty();
-                        }
-                        if (isAliquot) {
-                            if (!styles.contains("table-row-cell")) {
-                                styles.add("table-row-cell");
+                    public TableRow<ObservableList<String>> call(TableView<ObservableList<String>> personTableView) {
+                        return new TableRow<ObservableList<String>>() {
+                            @Override
+                            protected void updateItem(ObservableList<String> list, boolean b) {
+                                super.updateItem(list, b);
+                                ObservableList<String> styles = getStyleClass();
+                                boolean isAliquot = true;
+                                for (int i = 1; isAliquot && i < list.size(); i++) {
+                                    isAliquot = list.get(i).isEmpty();
+                                }
+                                if (isAliquot) {
+                                    if (!styles.contains("table-row-cell")) {
+                                        styles.add("table-row-cell");
+                                    }
+                                } else {
+                                    styles.removeAll(Collections.singleton("table-row-cell"));
+                                }
                             }
-                        } else {
-                            styles.removeAll(Collections.singleton("table-row-cell"));
-                        }
+                        };
                     }
                 };
-            }
-        };
         table.setRowFactory(tableCallBack);
         boundCol.setRowFactory(tableCallBack);
     }
@@ -83,7 +86,10 @@ public class TextArrayManager {
             String colName = getColumnName(i, array);
             int colLength = getMaxColumnHeaderLength(colName);
             TableColumn<ObservableList<String>, String> col = new TableColumn<>(colName);
-            col.setComparator(new StringComparer());
+            col.setComparator(comparator);
+            table.setOnSort(val -> {
+
+            });
             col.setPrefWidth(colLength * columnHeaderCharacterSize + 20);
             final int colNum = i - 2;
             col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
@@ -167,7 +173,7 @@ public class TextArrayManager {
         boundCol.getColumns().clear();
         TableColumn<ObservableList<String>, String> header = new TableColumn<>("Squid");
         TableColumn<ObservableList<String>, String> col = new TableColumn<>("\n\n\nFractions");
-        col.setComparator(new StringComparer());
+        col.setComparator(comparator);
         col.setPrefWidth(col.getPrefWidth() + 76);
         final int num = 0;
         col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(num)));
@@ -259,5 +265,32 @@ public class TextArrayManager {
 
     public void setColStyle(String colStyle) {
         this.colStyle = colStyle;
+    }
+
+    public class ComparatorRowSeparators implements Comparator<String> {
+        private IntuitiveStringComparator<String> comparator = new IntuitiveStringComparator<>();
+        private List<String> aliquots;
+
+        public ComparatorRowSeparators() {
+            aliquots = new ArrayList<>();
+            int startSpot = Integer.parseInt(array[0][0]);
+            aliquots.add(array[0][1]);
+            for (int i = startSpot; i < array.length; i++) {
+                if (!array[i][1].isEmpty() && !aliquots.contains(array[i][1])) {
+                    aliquots.add(array[i][1]);
+                }
+            }
+        }
+
+        @Override
+        public int compare(String s1, String s2) {
+            int retVal;
+            if ((!s1.isEmpty() && !s2.isEmpty() && !aliquots.contains(s1) && !aliquots.contains(s2))) {
+                retVal = comparator.compare(s1, s2);
+            } else {
+                retVal = 0;
+            }
+            return retVal;
+        }
     }
 }

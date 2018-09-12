@@ -8,6 +8,9 @@ package org.cirdles.squid.gui.squidReportTable.utilities;
 import java.util.Comparator;
 
 /**
+ * Intuitively compares strings, I didn't fully read up on intuitive string comparing rules when I made this,
+ * took me like half an hour - I knew I would be using the intuitive comparator in squid once I brought the reports
+ * tables over
  *
  * @author ryanb
  */
