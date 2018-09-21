@@ -10,8 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 
 /**
@@ -44,7 +42,7 @@ public class SquidReportTableLauncher {
         unknownsStage.show();
         unknownsStage.hide();
 
-        refMatStage.setOnCloseRequest( e -> {
+        refMatStage.setOnCloseRequest(e -> {
             refMatStage.hide();
             e.consume();
         });
@@ -54,31 +52,34 @@ public class SquidReportTableLauncher {
         });
     }
 
-    public void launch(ReportTableTab tab) {
+    public void load() {
         try {
-            if (tab == ReportTableTab.refMat) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTableReferenceMaterials.fxml"));
-                Scene scene = new Scene(loader.load());
-                refMatStage.setScene(scene);
-                if(!refMatStage.isShowing()) {
-                    refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2);
-                    refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2);
-                    refMatStage.show();
-                }
-                refMatStage.requestFocus();
-            } else {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTableUnknowns.fxml"));
-                Scene scene = new Scene(loader.load());
-                unknownsStage.setScene(scene);
-                if(!unknownsStage.isShowing()) {
-                    unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2);
-                    unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2);
-                    unknownsStage.show();
-                }
-                unknownsStage.requestFocus();
-            }
+            FXMLLoader refLoader = new FXMLLoader(getClass().getResource("SquidReportTableReferenceMaterials.fxml"));
+            Scene refScene = new Scene(refLoader.load());
+            refMatStage.setScene(refScene);
+            FXMLLoader unLoader = new FXMLLoader(getClass().getResource("SquidReportTableUnknowns.fxml"));
+            Scene unScene = new Scene(unLoader.load());
+            unknownsStage.setScene(unScene);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void launch(ReportTableTab tab) {
+        if (tab == ReportTableTab.refMat) {
+            if (!refMatStage.isShowing()) {
+                refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2);
+                refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2);
+                refMatStage.show();
+            }
+            refMatStage.requestFocus();
+        } else {
+            if (!unknownsStage.isShowing()) {
+                unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2);
+                unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2);
+                unknownsStage.show();
+            }
+            unknownsStage.requestFocus();
         }
     }
 

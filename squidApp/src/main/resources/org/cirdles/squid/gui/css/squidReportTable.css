@@ -15,7 +15,6 @@
 
 .table-row-cell {
     -fx-background-color: orange;
-    -fx-border-color: orange;
     -fx-table-cell-border-color: orange;
 }
 

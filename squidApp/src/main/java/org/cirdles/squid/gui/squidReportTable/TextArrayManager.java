@@ -52,17 +52,19 @@ public class TextArrayManager {
                             @Override
                             protected void updateItem(ObservableList<String> list, boolean b) {
                                 super.updateItem(list, b);
-                                ObservableList<String> styles = getStyleClass();
-                                boolean isAliquot = true;
-                                for (int i = 1; isAliquot && i < list.size(); i++) {
-                                    isAliquot = list.get(i).isEmpty();
-                                }
-                                if (isAliquot) {
-                                    if (!styles.contains("table-row-cell")) {
-                                        styles.add("table-row-cell");
+                                if (list != null) {
+                                    ObservableList<String> styles = getStyleClass();
+                                    boolean isAliquot = true;
+                                    for (int i = 1; isAliquot && i < list.size(); i++) {
+                                        isAliquot = list.get(i).isEmpty();
                                     }
-                                } else {
-                                    styles.removeAll(Collections.singleton("table-row-cell"));
+                                    if (isAliquot) {
+                                        if (!styles.contains("table-row-cell")) {
+                                            styles.add("table-row-cell");
+                                        }
+                                    } else {
+                                        styles.removeAll(Collections.singleton("table-row-cell"));
+                                    }
                                 }
                             }
                         };

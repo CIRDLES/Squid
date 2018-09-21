@@ -633,6 +633,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(taskManagerUI);
         try {
             verifySquidLabDataParameters();
+            squidReportTableLauncher.load();
 
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
             taskManagerUI.setId("TaskManager");
