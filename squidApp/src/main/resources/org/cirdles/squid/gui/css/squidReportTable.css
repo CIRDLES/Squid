@@ -1,5 +1,5 @@
 .root {
-    -fx-background-color: cadetblue
+    -fx-background-color: Gainsboro;
 }
 
 .table-view {
@@ -18,9 +18,7 @@
     -fx-table-cell-border-color: orange;
 }
 
-.button {
-    -fx-background-color: orange;
-    -fx-font-family: "Times New Roman";
-    -fx-font-size: 18;
+#sortHint {
+    -fx-text-fill: black;
+    -fx-font-size: 14;
 }
-

@@ -104,6 +104,7 @@
                            <items>
                             <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
                               <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
+                               <MenuItem mnemonicParsing="false" text="Squid 3 Report Table - Reference Materials" onAction="#openSquid3ReportTableReferenceMaterials"/>
                            </items>
                         </Menu>
                         <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns">
@@ -111,17 +112,12 @@
                               <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
                               <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
                               <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Report Table - by Sample for ET_Redux" />
+                              <MenuItem mnemonicParsing="false" text="Squid 3 Report Table - Unknowns" onAction="#openSquid3ReportTableUnknowns"/>
                           </items>
                         </Menu>
                     </items>
                   </Menu>
               </items>
-                <Menu mnemonicParsing="false" text="Squid 3 Report Tables">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Reference Materials" onAction="#openSquid3ReportTableReferenceMaterials"/>
-                        <MenuItem mnemonicParsing="false" text="Unknowns" onAction="#openSquid3ReportTableUnknowns"/>
-                    </items>
-                </Menu>
             </Menu>
             <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
               <items>

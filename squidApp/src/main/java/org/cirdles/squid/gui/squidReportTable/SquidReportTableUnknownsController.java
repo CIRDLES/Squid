@@ -102,16 +102,16 @@ public class SquidReportTableUnknownsController implements Initializable {
             @Override
             public void changed(final ObservableValue<? extends Boolean> observableValue, final Boolean oldVal, final Boolean newVal) {
                 if (newVal) {
-                    AnchorPane.setBottomAnchor(boundCol, 196.0);
+                    AnchorPane.setBottomAnchor(boundCol, 29.0);
                 } else {
-                    AnchorPane.setBottomAnchor(boundCol, 172.0);
+                    AnchorPane.setBottomAnchor(boundCol, 5.0);
                 }
             }
         });
         if(rtHbar.isVisible()) {
-            AnchorPane.setBottomAnchor(boundCol, 196.0);
+            AnchorPane.setBottomAnchor(boundCol, 29.0);
         } else {
-            AnchorPane.setBottomAnchor(boundCol, 172.0);
+            AnchorPane.setBottomAnchor(boundCol, 5.0);
         }
     }
 }

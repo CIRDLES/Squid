@@ -32,9 +32,9 @@ public class SquidReportTableLauncher {
         refMatStage.setTitle("Reference Materials");
         unknownsStage.setTitle("Unknowns");
 
-        refMatStage.setMinWidth(900);
+        refMatStage.setMinWidth(984);
         refMatStage.setMinHeight(600);
-        unknownsStage.setMinWidth(900);
+        unknownsStage.setMinWidth(984);
         unknownsStage.setMinHeight(600);
 
         refMatStage.show();
@@ -69,8 +69,8 @@ public class SquidReportTableLauncher {
         load();
         if (tab == ReportTableTab.refMat) {
             if (!refMatStage.isShowing()) {
-                refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2);
-                refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2);
+                refMatStage.setX(primaryStage.getX() + 20 + (primaryStage.getWidth() - refMatStage.getWidth()) / 2);
+                refMatStage.setY(primaryStage.getY() + 20 + (primaryStage.getHeight() - refMatStage.getHeight()) / 2);
                 refMatStage.show();
             }
             refMatStage.requestFocus();
