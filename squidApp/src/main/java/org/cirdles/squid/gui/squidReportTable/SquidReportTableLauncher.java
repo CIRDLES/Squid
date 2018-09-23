@@ -66,6 +66,7 @@ public class SquidReportTableLauncher {
     }
 
     public void launch(ReportTableTab tab) {
+        load();
         if (tab == ReportTableTab.refMat) {
             if (!refMatStage.isShowing()) {
                 refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2);

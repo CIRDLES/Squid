@@ -8,7 +8,6 @@ package org.cirdles.squid.gui.squidReportTable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,11 +21,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 import java.net.URL;
-import java.util.Iterator;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
@@ -42,21 +41,11 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
     @FXML
     private TableView<ObservableList<String>> boundCol;
     @FXML
-    private TextArea footnoteText;
-    @FXML
-    private Button fractionsButtons;
-    @FXML
     private AnchorPane root;
 
     private String[][] textArray;
     private TextArrayManager tableManager;
-    private ButtonTypes buttonState;
     private boolean isSetUpScroller;
-
-
-    private enum ButtonTypes {
-        accepted, rejected
-    }
 
     /**
      * Initializes the controller class.
@@ -64,17 +53,21 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         isSetUpScroller = false;
-        buttonState = ButtonTypes.accepted;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
-        footnoteText.setEditable(false);
+
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
-        textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
+        List<ShrimpFractionExpressionInterface> spotsBySampleNames = new ArrayList<>();
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
+            ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
+            spotsBySampleNames.add(dummyForSample);
+            spotsBySampleNames.addAll(entry.getValue());
+        }
+
+        textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, true);
+
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
-        tableManager.setHeaders();
-        tableManager.setTableItems();
-        setTableItems();
-        FootnoteManager.setUpFootnotes(footnoteText, textArray);
         reportsTable.refresh();
         boundCol.refresh();
 
@@ -89,28 +82,6 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
         };
         reportsTable.setOnMouseEntered(scrollHandler);
         boundCol.setOnMouseEntered(scrollHandler);
-    }
-
-    @FXML
-    private void acceptedRejectedAction(ActionEvent event) {
-        if (buttonState.equals(ButtonTypes.accepted)) {
-            buttonState = ButtonTypes.rejected;
-            fractionsButtons.setText("Rejected");
-        } else {
-            buttonState = ButtonTypes.accepted;
-            fractionsButtons.setText("Accepted");
-        }
-        setTableItems();
-    }
-
-    private void setTableItems() {
-        if (buttonState.equals(ButtonTypes.accepted)) {
-            tableManager.setAccepted();
-        } else {
-            tableManager.setRejected();
-        }
-        reportsTable.refresh();
-        boundCol.refresh();
     }
 
     private void setUpScroller() {

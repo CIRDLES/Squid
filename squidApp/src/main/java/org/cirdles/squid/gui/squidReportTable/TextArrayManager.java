@@ -27,9 +27,7 @@ public class TextArrayManager {
     private TableView<ObservableList<String>> table;
     private TableView<ObservableList<String>> boundCol;
     private String[][] array;
-    private ObservableList<ObservableList<String>> accepted;
-    private ObservableList<ObservableList<String>> rejected;
-    private String colStyle;
+    private ObservableList<ObservableList<String>> data;
     private final int characterSize;
     private final int columnHeaderCharacterSize;
     private final ComparatorRowSeparators comparator;
@@ -38,8 +36,7 @@ public class TextArrayManager {
         this.boundCol = boundCol;
         this.table = table;
         this.array = array;
-        accepted = FXCollections.observableArrayList();
-        rejected = FXCollections.observableArrayList();
+        data = FXCollections.observableArrayList();
         characterSize = 10;
         columnHeaderCharacterSize = 11;
         comparator = new ComparatorRowSeparators();
@@ -72,40 +69,31 @@ public class TextArrayManager {
                 };
         table.setRowFactory(tableCallBack);
         boundCol.setRowFactory(tableCallBack);
+        setHeaders();
+        setTableItems();
     }
 
     public void setHeaders() {
         table.getColumns().clear();
 
-        List<TableColumn<ObservableList<String>, String>> headers = new ArrayList<>();
-        List<TableColumn<ObservableList<String>, String>> columns = new ArrayList<>();
-
-        TableColumn<ObservableList<String>, String> header = new TableColumn<>("");
-        for (int i = 3; i < array[0].length - 1; i++) {
-            if (i == 3 || !array[0][i - 1].equals(array[0][i])) {
+        TableColumn<ObservableList<String>, String> header = new TableColumn<>(array[0][1]);
+        for (int i = 1; i < array[0].length; i++) {
+            if (!array[0][i].equals(header.getText())) {
+                table.getColumns().add(header);
                 header = new TableColumn<>(array[0][i].trim());
             }
             String colName = getColumnName(i, array);
             int colLength = getMaxColumnHeaderLength(colName);
             TableColumn<ObservableList<String>, String> col = new TableColumn<>(colName);
             col.setComparator(comparator);
-            table.setOnSort(val -> {
-
-            });
             col.setPrefWidth(colLength * columnHeaderCharacterSize + 20);
-            final int colNum = i - 2;
+            final int colNum = i;
             col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
             header.getColumns().add(col);
-            columns.add(col);
-            if (!array[0][i].equals(array[0][i + 1])) {
-                table.getColumns().add(header);
-                headers.add(header);
-                columns = new ArrayList<>();
-            }
         }
+        table.getColumns().add(header);
         setUpBoundCol();
     }
-
 
     public int getMaxColumnHeaderLength(String input) {
         int max = 0;
@@ -134,41 +122,28 @@ public class TextArrayManager {
     }
 
     public void setTableItems() {
-        accepted.clear();
-        rejected.clear();
-
-        String aliquot = array[0][1];
-        ObservableList<String> aliquotRow = FXCollections.observableArrayList();
-        aliquotRow.add(aliquot);
-        for (int j = 3; j < array[0].length - 1; j++) {
-            aliquotRow.add("");
-        }
-        accepted.add(aliquotRow);
-        rejected.add(aliquotRow);
-
-        int startSpot = Integer.parseInt(array[0][0]);
+        data.clear();
+        int startSpot = 4;
         for (int i = startSpot; i < array.length; i++) {
-            if (!array[i][1].isEmpty() && !aliquot.equals(array[i][1])) {
-                aliquot = array[i][1];
-                aliquotRow = FXCollections.observableArrayList();
+            if (array[i][1].isEmpty() && array[i][2].isEmpty()) {
+                String aliquot = array[i][1];
+                ObservableList<String> aliquotRow = FXCollections.observableArrayList();
                 aliquotRow.add(aliquot);
-                for (int j = 3; j < array[0].length - 1; j++) {
+                for (int j = 1; j < array[0].length ; j++) {
                     aliquotRow.add("");
                 }
-                accepted.add(aliquotRow);
-                rejected.add(aliquotRow);
-            }
-
-            ObservableList<String> data = FXCollections.observableArrayList();
-            for (int j = 2; j < array[0].length - 1; j++) {
-                data.add(array[i][j]);
-            }
-            if (Boolean.parseBoolean(array[i][0])) {
-                accepted.add(data);
+                data.add(aliquotRow);
             } else {
-                rejected.add(data);
+                ObservableList<String> row = FXCollections.observableArrayList();
+                for (int j = 0; j < array[0].length; j++) {
+                    row.add(array[i][j]);
+                }
+                data.add(row);
             }
         }
+        table.setItems(data);
+        boundCol.setItems(data);
+        setUpWidths();
     }
 
     private void setUpBoundCol() {
@@ -184,19 +159,7 @@ public class TextArrayManager {
         boundCol.getColumns().add(header);
     }
 
-    public void setAccepted() {
-        boundCol.setItems(accepted);
-        table.setItems(accepted);
-        setUpWidths(accepted);
-    }
-
-    public void setRejected() {
-        boundCol.setItems(rejected);
-        table.setItems(rejected);
-        setUpWidths(rejected);
-    }
-
-    public void setUpWidths(ObservableList<ObservableList<String>> data) {
+    public void setUpWidths() {
         if (!data.isEmpty()) {
             int header = 0, counter = 0;
             for (int j = 1; j < data.get(0).size(); j++) {
@@ -219,54 +182,6 @@ public class TextArrayManager {
                 counter++;
             }
         }
-    }
-
-    public TableView<ObservableList<String>> getBoundCol() {
-        return boundCol;
-    }
-
-    public void setBoundCol(TableView<ObservableList<String>> boundCol) {
-        this.boundCol = boundCol;
-    }
-
-    public TableView<ObservableList<String>> getTable() {
-        return table;
-    }
-
-    public void setTable(TableView<ObservableList<String>> table) {
-        this.table = table;
-    }
-
-    public String[][] getArray() {
-        return array;
-    }
-
-    public void setArray(String[][] array) {
-        this.array = array;
-    }
-
-    public ObservableList<ObservableList<String>> getAccepted() {
-        return accepted;
-    }
-
-    public void setAccepted(ObservableList<ObservableList<String>> accepted) {
-        this.accepted = accepted;
-    }
-
-    public ObservableList<ObservableList<String>> getRejected() {
-        return rejected;
-    }
-
-    public void setRejected(ObservableList<ObservableList<String>> rejected) {
-        this.rejected = rejected;
-    }
-
-    public String getColStyle() {
-        return colStyle;
-    }
-
-    public void setColStyle(String colStyle) {
-        this.colStyle = colStyle;
     }
 
     public class ComparatorRowSeparators implements Comparator<String> {
