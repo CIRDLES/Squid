@@ -31,11 +31,13 @@ public class TextArrayManager {
     private final int characterSize;
     private final int columnHeaderCharacterSize;
     private final ComparatorRowSeparators comparator;
+    private List<String> aliquots;
 
     public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array) {
         this.boundCol = boundCol;
         this.table = table;
         this.array = array;
+        aliquots = new ArrayList<>();
         data = FXCollections.observableArrayList();
         characterSize = 10;
         columnHeaderCharacterSize = 11;
@@ -49,19 +51,17 @@ public class TextArrayManager {
                             @Override
                             protected void updateItem(ObservableList<String> list, boolean b) {
                                 super.updateItem(list, b);
-                                if (list != null) {
-                                    ObservableList<String> styles = getStyleClass();
-                                    boolean isAliquot = true;
-                                    for (int i = 1; isAliquot && i < list.size(); i++) {
-                                        isAliquot = list.get(i).isEmpty();
+                                ObservableList<String> styles = getStyleClass();
+                                boolean isAliquot = true;
+                                for (int i = 1; isAliquot && i < list.size(); i++) {
+                                    isAliquot = list.get(i).isEmpty();
+                                }
+                                if (isAliquot) {
+                                    if (!styles.contains("table-row-cell")) {
+                                        styles.add("table-row-cell");
                                     }
-                                    if (isAliquot) {
-                                        if (!styles.contains("table-row-cell")) {
-                                            styles.add("table-row-cell");
-                                        }
-                                    } else {
-                                        styles.removeAll(Collections.singleton("table-row-cell"));
-                                    }
+                                } else {
+                                    styles.removeAll(Collections.singleton("table-row-cell"));
                                 }
                             }
                         };
@@ -76,8 +76,8 @@ public class TextArrayManager {
     public void setHeaders() {
         table.getColumns().clear();
 
-        TableColumn<ObservableList<String>, String> header = new TableColumn<>(array[0][1]);
-        for (int i = 1; i < array[0].length; i++) {
+        TableColumn<ObservableList<String>, String> header = new TableColumn<>(array[0][3]);
+        for (int i = 3; i < array[0].length - 1; i++) {
             if (!array[0][i].equals(header.getText())) {
                 table.getColumns().add(header);
                 header = new TableColumn<>(array[0][i].trim());
@@ -87,7 +87,7 @@ public class TextArrayManager {
             TableColumn<ObservableList<String>, String> col = new TableColumn<>(colName);
             col.setComparator(comparator);
             col.setPrefWidth(colLength * columnHeaderCharacterSize + 20);
-            final int colNum = i;
+            final int colNum = i - 2;
             col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
             header.getColumns().add(col);
         }
@@ -123,19 +123,21 @@ public class TextArrayManager {
 
     public void setTableItems() {
         data.clear();
-        int startSpot = 4;
+        int startSpot = Integer.parseInt(array[0][0]);
+        String aliquot = null;
         for (int i = startSpot; i < array.length; i++) {
-            if (array[i][1].isEmpty() && array[i][2].isEmpty()) {
-                String aliquot = array[i][1];
+            if (aliquot == null || !aliquot.equals(array[i][1]) && !array[i][1].isEmpty()) {
+                aliquot = array[i][1];
                 ObservableList<String> aliquotRow = FXCollections.observableArrayList();
                 aliquotRow.add(aliquot);
-                for (int j = 1; j < array[0].length ; j++) {
+                for (int j = 2; j < array[0].length - 2; j++) {
                     aliquotRow.add("");
                 }
                 data.add(aliquotRow);
-            } else {
+            }
+            if (Boolean.parseBoolean(array[i][0]) == true) {
                 ObservableList<String> row = FXCollections.observableArrayList();
-                for (int j = 0; j < array[0].length; j++) {
+                for (int j = 2; j < array[0].length - 1; j++) {
                     row.add(array[i][j]);
                 }
                 data.add(row);
@@ -185,15 +187,14 @@ public class TextArrayManager {
     }
 
     public class ComparatorRowSeparators implements Comparator<String> {
-        private IntuitiveStringComparator<String> comparator = new IntuitiveStringComparator<>();
-        private List<String> aliquots;
+        private IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
 
         public ComparatorRowSeparators() {
             aliquots = new ArrayList<>();
             int startSpot = Integer.parseInt(array[0][0]);
             aliquots.add(array[0][1]);
             for (int i = startSpot; i < array.length; i++) {
-                if (!array[i][1].isEmpty() && !aliquots.contains(array[i][1])) {
+                if (!aliquots.contains(array[i][1])) {
                     aliquots.add(array[i][1]);
                 }
             }
@@ -203,7 +204,7 @@ public class TextArrayManager {
         public int compare(String s1, String s2) {
             int retVal;
             if ((!s1.isEmpty() && !s2.isEmpty() && !aliquots.contains(s1) && !aliquots.contains(s2))) {
-                retVal = comparator.compare(s1, s2);
+                retVal = intuitiveStringComparator.compare(s1, s2);
             } else {
                 retVal = 0;
             }

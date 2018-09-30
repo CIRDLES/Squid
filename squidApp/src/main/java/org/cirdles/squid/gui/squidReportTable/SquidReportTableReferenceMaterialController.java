@@ -64,7 +64,6 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
             spotsBySampleNames.add(dummyForSample);
             spotsBySampleNames.addAll(entry.getValue());
         }
-
         textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, true);
 
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
