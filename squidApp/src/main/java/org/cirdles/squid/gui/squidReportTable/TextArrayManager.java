@@ -53,15 +53,17 @@ public class TextArrayManager {
                                 super.updateItem(list, b);
                                 ObservableList<String> styles = getStyleClass();
                                 boolean isAliquot = true;
-                                for (int i = 1; isAliquot && i < list.size(); i++) {
-                                    isAliquot = list.get(i).isEmpty();
-                                }
-                                if (isAliquot) {
-                                    if (!styles.contains("table-row-cell")) {
-                                        styles.add("table-row-cell");
+                                if (list != null) {
+                                    for (int i = 1; isAliquot && i < list.size(); i++) {
+                                        isAliquot = list.get(i).isEmpty();
                                     }
-                                } else {
-                                    styles.removeAll(Collections.singleton("table-row-cell"));
+                                    if (isAliquot) {
+                                        if (!styles.contains("table-row-cell")) {
+                                            styles.add("table-row-cell");
+                                        }
+                                    } else {
+                                        styles.removeAll(Collections.singleton("table-row-cell"));
+                                    }
                                 }
                             }
                         };
@@ -71,6 +73,51 @@ public class TextArrayManager {
         boundCol.setRowFactory(tableCallBack);
         setHeaders();
         setTableItems();
+        table.setSortPolicy(t -> {
+            Comparator<ObservableList<String>> rowComparator = (r1, r2) ->
+                    t.getComparator() == null ? 0
+                            : t.getComparator().compare(r1, r2);
+            int startIndex = 1;
+            int endIndex;
+            ObservableList<ObservableList<String>> items = table.getItems();
+            for (int i = 2; i < items.size(); i++) {
+                if (aliquots.contains(items.get(i).get(0))) {
+                    endIndex = i - 1;
+                    List<ObservableList<String>> subList = items.subList(startIndex, endIndex);
+                    Collections.sort(subList, rowComparator);
+                    for (int j = 0; j < subList.size(); j++) {
+                        items.set(j + startIndex, subList.get(j));
+                    }
+                    startIndex = i + 1;
+                }
+            }
+            table.setItems(items);
+            table.refresh();
+            boundCol.setItems(items);
+            boundCol.refresh();
+            return true;
+        });
+        boundCol.setSortPolicy(t -> {
+            Comparator<ObservableList<String>> rowComparator = (r1, r2) ->
+                    t.getComparator() == null ? 0
+                            : t.getComparator().compare(r1, r2);
+            int startIndex = 1;
+            int endIndex;
+            for (int i = 2; i < boundCol.getItems().size(); i++) {
+                if (aliquots.contains(boundCol.getItems().get(i).get(0))) {
+                    endIndex = i - 1;
+                    List<ObservableList<String>> subList = boundCol.getItems().subList(startIndex, endIndex);
+                    Collections.sort(subList, rowComparator);
+                    for (int j = 0; j < subList.size(); j++) {
+                        boundCol.getItems().set(j + startIndex, subList.get(j));
+                    }
+                    startIndex = i + 1;
+                }
+            }
+            table.refresh();
+            boundCol.refresh();
+            return true;
+        });
     }
 
     public void setHeaders() {
