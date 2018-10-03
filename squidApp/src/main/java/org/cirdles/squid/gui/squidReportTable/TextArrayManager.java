@@ -82,7 +82,7 @@ public class TextArrayManager {
             ObservableList<ObservableList<String>> items = table.getItems();
             for (int i = 2; i < items.size(); i++) {
                 if (aliquots.contains(items.get(i).get(0))) {
-                    endIndex = i - 1;
+                    endIndex = i;
                     List<ObservableList<String>> subList = items.subList(startIndex, endIndex);
                     Collections.sort(subList, rowComparator);
                     for (int j = 0; j < subList.size(); j++) {
@@ -91,9 +91,7 @@ public class TextArrayManager {
                     startIndex = i + 1;
                 }
             }
-            table.setItems(items);
             table.refresh();
-            boundCol.setItems(items);
             boundCol.refresh();
             return true;
         });
@@ -105,7 +103,7 @@ public class TextArrayManager {
             int endIndex;
             for (int i = 2; i < boundCol.getItems().size(); i++) {
                 if (aliquots.contains(boundCol.getItems().get(i).get(0))) {
-                    endIndex = i - 1;
+                    endIndex = i;
                     List<ObservableList<String>> subList = boundCol.getItems().subList(startIndex, endIndex);
                     Collections.sort(subList, rowComparator);
                     for (int j = 0; j < subList.size(); j++) {
