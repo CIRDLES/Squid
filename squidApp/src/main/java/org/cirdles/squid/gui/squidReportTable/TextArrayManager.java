@@ -30,7 +30,7 @@ public class TextArrayManager {
     private ObservableList<ObservableList<String>> data;
     private final int characterSize;
     private final int columnHeaderCharacterSize;
-    private final ComparatorRowSeparators comparator;
+    private final IntuitiveStringComparator<String> comparator;
     private List<String> aliquots;
 
     public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array) {
@@ -41,7 +41,7 @@ public class TextArrayManager {
         data = FXCollections.observableArrayList();
         characterSize = 10;
         columnHeaderCharacterSize = 11;
-        comparator = new ComparatorRowSeparators();
+        comparator = new IntuitiveStringComparator<>();
 
         Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>> tableCallBack =
                 new Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>>() {
@@ -185,6 +185,13 @@ public class TextArrayManager {
                     row.add(array[i][j]);
                 }
                 data.add(row);
+            }
+        }
+        aliquots = new ArrayList<>();
+        aliquots.add(array[0][1]);
+        for (int i = Integer.parseInt(array[0][0]); i < array.length; i++) {
+            if (!aliquots.contains(array[i][1])) {
+                aliquots.add(array[i][1]);
             }
         }
         table.setItems(data);
