@@ -52,12 +52,8 @@ public class TextArrayManager {
                             protected void updateItem(ObservableList<String> list, boolean b) {
                                 super.updateItem(list, b);
                                 ObservableList<String> styles = getStyleClass();
-                                boolean isAliquot = true;
                                 if (list != null) {
-                                    for (int i = 1; isAliquot && i < list.size(); i++) {
-                                        isAliquot = list.get(i).isEmpty();
-                                    }
-                                    if (isAliquot) {
+                                    if (aliquots.contains(list.get(0))) {
                                         if (!styles.contains("table-row-cell")) {
                                             styles.add("table-row-cell");
                                         }
@@ -81,9 +77,10 @@ public class TextArrayManager {
             int endIndex;
             ObservableList<ObservableList<String>> items = table.getItems();
             for (int i = 2; i < items.size(); i++) {
-                if (aliquots.contains(items.get(i).get(0))) {
+                if (aliquots.contains(items.get(i).get(0)) || i == items.size() - 1) {
                     endIndex = i;
-                    List<ObservableList<String>> subList = items.subList(startIndex, endIndex);
+                    List<ObservableList<String>> subList = (i == items.size() - 1) ?
+                            items.subList(startIndex, items.size()) : items.subList(startIndex, endIndex);
                     Collections.sort(subList, rowComparator);
                     for (int j = 0; j < subList.size(); j++) {
                         items.set(j + startIndex, subList.get(j));
@@ -101,13 +98,15 @@ public class TextArrayManager {
                             : t.getComparator().compare(r1, r2);
             int startIndex = 1;
             int endIndex;
-            for (int i = 2; i < boundCol.getItems().size(); i++) {
-                if (aliquots.contains(boundCol.getItems().get(i).get(0))) {
+            ObservableList<ObservableList<String>> items = table.getItems();
+            for (int i = 2; i < items.size(); i++) {
+                if (aliquots.contains(items.get(i).get(0)) || i == items.size() - 1) {
                     endIndex = i;
-                    List<ObservableList<String>> subList = boundCol.getItems().subList(startIndex, endIndex);
+                    List<ObservableList<String>> subList = (i == items.size() - 1) ?
+                            items.subList(startIndex, items.size()) : items.subList(startIndex, endIndex);
                     Collections.sort(subList, rowComparator);
                     for (int j = 0; j < subList.size(); j++) {
-                        boundCol.getItems().set(j + startIndex, subList.get(j));
+                        items.set(j + startIndex, subList.get(j));
                     }
                     startIndex = i + 1;
                 }
