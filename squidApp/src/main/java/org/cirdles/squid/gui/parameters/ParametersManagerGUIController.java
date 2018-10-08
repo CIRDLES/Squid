@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
@@ -1467,8 +1468,7 @@ public class ParametersManagerGUIController implements Initializable {
         if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
                 && (squidProject.getTask().getPhysicalConstantsModel().equals(physConstModel) ||
                 squidProject.getTask().getPhysicalConstantsModel().equals(squidLabData.getPhysConstDefault()))) {
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            SquidUI.loadSpecsAndReduceReports(squidLabDataStage);
         }
     }
 
@@ -1509,8 +1509,7 @@ public class ParametersManagerGUIController implements Initializable {
         if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
                 && (squidProject.getTask().getReferenceMaterial().equals(refMatModel) ||
                 squidProject.getTask().getReferenceMaterial().equals(squidLabData.getRefMatDefault()))) {
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            SquidUI.loadSpecsAndReduceReports(squidLabDataStage);
         }
     }
 
@@ -1937,8 +1936,7 @@ public class ParametersManagerGUIController implements Initializable {
         if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getCommonPbModel() != null
                 && (squidProject.getTask().getCommonPbModel().equals(commonPbModel) ||
                 squidProject.getTask().getCommonPbModel().equals(squidLabData.getCommonPbDefault()))) {
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            SquidUI.loadSpecsAndReduceReports(squidLabDataStage);
         }
     }
 

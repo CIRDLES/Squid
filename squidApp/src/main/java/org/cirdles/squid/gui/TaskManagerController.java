@@ -120,7 +120,7 @@ public class TaskManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         if (squidProject.getTask() != null) {
             task = squidProject.getTask();
-            task.setupSquidSessionSpecsAndReduceAndReport();
+            SquidUI.loadSpecsAndReduceReports();
             populateTaskFields();
             setupListeners();
         } else {
@@ -257,8 +257,7 @@ public class TaskManagerController implements Initializable {
             int selectedSpot = refMatModelComboBox.getSelectionModel().getSelectedIndex();
             if(selectedSpot > -1 && selectedSpot < squidLabData.getReferenceMaterials().size() && task != null) {
                 task.setReferenceMaterial(squidLabData.getReferenceMaterial(selectedSpot));
-                squidProject.getTask().setChanged(true);
-                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                SquidUI.loadSpecsAndReduceReports();
             }
         });
         concRefMatModelComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, val ->{
@@ -275,8 +274,7 @@ public class TaskManagerController implements Initializable {
             int selectedSpot = concRefMatModelComboBox.getSelectionModel().getSelectedIndex();
             if(selectedSpot > -1 && selectedSpot < squidLabData.getReferenceMaterials().size() && task != null) {
                 task.setConcentrationReferenceMaterial(squidLabData.getReferenceMaterial(selectedSpot));
-                squidProject.getTask().setChanged(true);
-                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                SquidUI.loadSpecsAndReduceReports();
             }
         });
 
@@ -302,8 +300,7 @@ public class TaskManagerController implements Initializable {
             int selectedSpot = physConstModelComboBox.getSelectionModel().getSelectedIndex();
             if(selectedSpot > -1 && selectedSpot < squidLabData.getPhysicalConstantsModels().size() && task != null) {
                 task.setPhysicalConstantsModel(squidLabData.getPhysicalConstantsModel(selectedSpot));
-                squidProject.getTask().setChanged(true);
-                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                SquidUI.loadSpecsAndReduceReports();
             }
         });
 
@@ -329,8 +326,7 @@ public class TaskManagerController implements Initializable {
             int selectedSpot = commonPbModelComboBox.getSelectionModel().getSelectedIndex();
             if(selectedSpot > -1 && selectedSpot < squidLabData.getcommonPbModels().size() && task != null) {
                 task.setCommonPbModel(squidLabData.getcommonPbModel(selectedSpot));
-                squidProject.getTask().setChanged(true);
-                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                SquidUI.loadSpecsAndReduceReports();
             }
         });
     }

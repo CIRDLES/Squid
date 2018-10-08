@@ -27,8 +27,9 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+
 /**
- *
  * @author James F. Bowring
  */
 public final class SquidUI extends Application {
@@ -50,6 +51,7 @@ public final class SquidUI extends Application {
 
     protected static SquidAboutWindow squidAboutWindow;
     protected static Stage primaryStage;
+    protected static LoadingPopup loadingPopup;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -78,12 +80,27 @@ public final class SquidUI extends Application {
         primaryStage.setMinWidth(scene.getWidth());
 
         squidAboutWindow = new SquidAboutWindow(primaryStage);
+        loadingPopup = new LoadingPopup(primaryStage);
     }
 
     public static void updateStageTitle(String fileName) {
         String fileSpec = "[Project File: NONE]";
         fileSpec = fileName.length() > 0 ? fileSpec.replace("NONE", fileName) : fileSpec;
         primaryStage.setTitle("Squid 3  " + fileSpec);
+    }
+
+    public static void loadSpecsAndReduceReports() {
+        loadingPopup.show();
+        squidProject.getTask().setChanged(true);
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        loadingPopup.hide();
+    }
+
+    public static void loadSpecsAndReduceReports(Stage stage) {
+        loadingPopup.show(stage);
+        squidProject.getTask().setChanged(true);
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        loadingPopup.hide();
     }
 
     /**

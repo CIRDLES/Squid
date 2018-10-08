@@ -164,7 +164,7 @@ public class ExpressionManagerController implements Initializable {
         expressionSortOrder = ExpressionSortOrder.EVAL;
         expressionChoiceFilter = ExpressionChoiceFilter.ALL;
         // update 
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        SquidUI.loadSpecsAndReduceReports();
 
         initializeExpressionsChoiceFilterChoiceBox();
         initializeExpressionsSortFilterChoiceBox();
@@ -777,8 +777,7 @@ public class ExpressionManagerController implements Initializable {
 
             squidProject.getTask().updateAffectedExpressions(currentExpression);
             squidProject.getTask().updateAllExpressions();
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            SquidUI.loadSpecsAndReduceReports();
 
             // reveal new ordering etc
             populateExpressionsListView();

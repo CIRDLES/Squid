@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui.plots;
 
+import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotWetherill;
 import java.net.URL;
 import java.util.ArrayList;
@@ -137,7 +138,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // update 
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        SquidUI.loadSpecsAndReduceReports();
 
         vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));

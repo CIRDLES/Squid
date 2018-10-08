@@ -360,8 +360,7 @@ public class SpotManagerController implements Initializable {
         rmCountLabel.setText(String.valueOf(shrimpRunsRefMat.size()));
 
         if (updateTaskStatus) {
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            SquidUI.loadSpecsAndReduceReports();
         }
     }
 
@@ -383,8 +382,7 @@ public class SpotManagerController implements Initializable {
         concrmCountLabel.setText(String.valueOf(shrimpRunsConcRefMat.size()));
 
         if (updateTaskStatus) {
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            SquidUI.loadSpecsAndReduceReports();
         }
 
     }

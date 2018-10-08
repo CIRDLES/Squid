@@ -516,7 +516,7 @@ public class ExpressionBuilderController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         // update 
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        SquidUI.loadSpecsAndReduceReports();
 
         initPropertyBindings();
         initListViews();

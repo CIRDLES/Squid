@@ -990,7 +990,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void reportsMenuSelectedAction(Event event) {
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        SquidUI.loadSpecsAndReduceReports();
     }
 
     @FXML
