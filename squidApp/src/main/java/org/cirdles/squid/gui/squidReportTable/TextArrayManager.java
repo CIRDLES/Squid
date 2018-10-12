@@ -30,7 +30,7 @@ public class TextArrayManager {
     private ObservableList<ObservableList<String>> data;
     private final int characterSize;
     private final int columnHeaderCharacterSize;
-    private final IntuitiveStringComparator<String> comparator;
+    private final RowComparator comparator;
     private List<String> aliquots;
 
     public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array) {
@@ -41,7 +41,16 @@ public class TextArrayManager {
         data = FXCollections.observableArrayList();
         characterSize = 10;
         columnHeaderCharacterSize = 11;
-        comparator = new IntuitiveStringComparator<>();
+        comparator = new RowComparator();
+
+        aliquots = new ArrayList<>();
+        String currentAliquot = "";
+        for (int i = Integer.parseInt(array[0][0]); i < array.length; i++) {
+            if (!currentAliquot.equals(array[i][1])) {
+                aliquots.add(array[i][1]);
+                currentAliquot = array[i][1];
+            }
+        }
 
         Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>> tableCallBack =
                 new Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>>() {
@@ -53,7 +62,7 @@ public class TextArrayManager {
                                 super.updateItem(list, b);
                                 ObservableList<String> styles = getStyleClass();
                                 if (list != null) {
-                                    if (aliquots.contains(list.get(0))) {
+                                    if (aliquots.contains(list.get(1))) {
                                         if (!styles.contains("table-row-cell")) {
                                             styles.add("table-row-cell");
                                         }
@@ -69,50 +78,23 @@ public class TextArrayManager {
         boundCol.setRowFactory(tableCallBack);
         setHeaders();
         setTableItems();
+
         table.setSortPolicy(t -> {
             Comparator<ObservableList<String>> rowComparator = (r1, r2) ->
-                    t.getComparator() == null ? 0
+                    t.getComparator() == null || (r1.get(0) != r2.get(0)) ||
+                            aliquots.contains(r1.get(1)) || aliquots.contains(r2.get(1)) ? 0
                             : t.getComparator().compare(r1, r2);
-            int startIndex = 1;
-            int endIndex;
-            ObservableList<ObservableList<String>> items = table.getItems();
-            for (int i = 2; i < items.size(); i++) {
-                if (aliquots.contains(items.get(i).get(0)) || i == items.size() - 1) {
-                    endIndex = i;
-                    List<ObservableList<String>> subList = (i == items.size() - 1) ?
-                            items.subList(startIndex, items.size()) : items.subList(startIndex, endIndex);
-                    Collections.sort(subList, rowComparator);
-                    for (int j = 0; j < subList.size(); j++) {
-                        items.set(j + startIndex, subList.get(j));
-                    }
-                    startIndex = i + 1;
-                }
-            }
-            table.refresh();
-            boundCol.refresh();
+
+            FXCollections.sort(table.getItems(), rowComparator);
             return true;
         });
         boundCol.setSortPolicy(t -> {
             Comparator<ObservableList<String>> rowComparator = (r1, r2) ->
-                    t.getComparator() == null ? 0
+                    t.getComparator() == null || (r1.get(0) != r2.get(0)) ||
+                            aliquots.contains(r1.get(1)) || aliquots.contains(r2.get(1)) ? 0
                             : t.getComparator().compare(r1, r2);
-            int startIndex = 1;
-            int endIndex;
-            ObservableList<ObservableList<String>> items = table.getItems();
-            for (int i = 2; i < items.size(); i++) {
-                if (aliquots.contains(items.get(i).get(0)) || i == items.size() - 1) {
-                    endIndex = i;
-                    List<ObservableList<String>> subList = (i == items.size() - 1) ?
-                            items.subList(startIndex, items.size()) : items.subList(startIndex, endIndex);
-                    Collections.sort(subList, rowComparator);
-                    for (int j = 0; j < subList.size(); j++) {
-                        items.set(j + startIndex, subList.get(j));
-                    }
-                    startIndex = i + 1;
-                }
-            }
-            table.refresh();
-            boundCol.refresh();
+
+            FXCollections.sort(table.getItems(), rowComparator);
             return true;
         });
     }
@@ -131,7 +113,7 @@ public class TextArrayManager {
             TableColumn<ObservableList<String>, String> col = new TableColumn<>(colName);
             col.setComparator(comparator);
             col.setPrefWidth(colLength * columnHeaderCharacterSize + 20);
-            final int colNum = i - 2;
+            final int colNum = i - 1;
             col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
             header.getColumns().add(col);
         }
@@ -174,6 +156,7 @@ public class TextArrayManager {
                 aliquot = array[i][1];
                 ObservableList<String> aliquotRow = FXCollections.observableArrayList();
                 aliquotRow.add(aliquot);
+                aliquotRow.add(aliquot);
                 for (int j = 2; j < array[0].length - 2; j++) {
                     aliquotRow.add("");
                 }
@@ -181,7 +164,7 @@ public class TextArrayManager {
             }
             if (Boolean.parseBoolean(array[i][0]) == true) {
                 ObservableList<String> row = FXCollections.observableArrayList();
-                for (int j = 2; j < array[0].length - 1; j++) {
+                for (int j = 1; j < array[0].length - 1; j++) {
                     row.add(array[i][j]);
                 }
                 data.add(row);
@@ -205,7 +188,7 @@ public class TextArrayManager {
         TableColumn<ObservableList<String>, String> col = new TableColumn<>("\n\n\nFractions");
         col.setComparator(comparator);
         col.setPrefWidth(col.getPrefWidth() + 76);
-        final int num = 0;
+        final int num = 1;
         col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(num)));
         header.getColumns().add(col);
         header.setPrefWidth(header.getMaxWidth());
@@ -215,7 +198,7 @@ public class TextArrayManager {
     public void setUpWidths() {
         if (!data.isEmpty()) {
             int header = 0, counter = 0;
-            for (int j = 1; j < data.get(0).size(); j++) {
+            for (int j = 2; j < data.get(0).size(); j++) {
                 int max = 0;
                 for (int i = 0; i < data.size(); i++) {
                     int length = data.get(i).get(j).length();
@@ -237,29 +220,34 @@ public class TextArrayManager {
         }
     }
 
-    public class ComparatorRowSeparators implements Comparator<String> {
-        private IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+    public class RowComparator implements Comparator<String> {
+        private IntuitiveStringComparator<String> stringComparator;
 
-        public ComparatorRowSeparators() {
-            aliquots = new ArrayList<>();
-            int startSpot = Integer.parseInt(array[0][0]);
-            aliquots.add(array[0][1]);
-            for (int i = startSpot; i < array.length; i++) {
-                if (!aliquots.contains(array[i][1])) {
-                    aliquots.add(array[i][1]);
-                }
-            }
+        public RowComparator() {
+            stringComparator = new IntuitiveStringComparator<>();
         }
 
         @Override
         public int compare(String s1, String s2) {
             int retVal;
-            if ((!s1.isEmpty() && !s2.isEmpty() && !aliquots.contains(s1) && !aliquots.contains(s2))) {
-                retVal = intuitiveStringComparator.compare(s1, s2);
-            } else {
-                retVal = 0;
+
+            try {
+                double n1 = Double.parseDouble(s1);
+                double n2 = Double.parseDouble(s2);
+
+                if (n1 == n2) {
+                    retVal = 0;
+                } else if (n1 > n2) {
+                    retVal = 1;
+                } else {
+                    retVal = -1;
+                }
+            } catch (Exception e) {
+                retVal = stringComparator.compare(s1, s2);
             }
+
             return retVal;
         }
     }
+
 }
