@@ -31,16 +31,16 @@ public class LoadingPopup {
     }
 
     public void show() {
-        window.setX(primaryStage.getX() + (primaryStage.getWidth() - 450) / 2);
-        window.setY(primaryStage.getY() + (primaryStage.getHeight() - 600) / 2);
+        window.setX(primaryStage.getX() + (primaryStage.getWidth() - window.getScene().getWidth()) / 2);
+        window.setY(primaryStage.getY() + (primaryStage.getHeight() - window.getScene().getHeight()) / 2);
         window.initOwner(primaryStage.getScene().getWindow());
         window.show();
         window.requestFocus();
     }
 
     public void show(Stage stage) {
-        window.setX(stage.getX() + (stage.getWidth() - 450) / 2);
-        window.setY(stage.getY() + (stage.getHeight() - 600) / 2);
+        window.setX(stage.getX() + (stage.getWidth() - window.getScene().getWidth()) / 2);
+        window.setY(stage.getY() + (stage.getHeight() - window.getScene().getHeight()) / 2);
         window.initOwner(stage.getScene().getWindow());
         window.show();
         window.requestFocus();
