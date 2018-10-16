@@ -21,7 +21,7 @@ public class LoadingPopup {
     public void load() {
         try {
             Parent popup = FXMLLoader.load(getClass().getResource("LoadingPopup.fxml"));
-            Scene scene = new Scene(popup, 450, 600);
+            Scene scene = new Scene(popup, 436, 320.8);
             Stage window = new Stage(StageStyle.UNDECORATED);
             this.window = window;
             window.setScene(scene);
