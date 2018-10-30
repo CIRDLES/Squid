@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -8,6 +10,8 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox minHeight="720.0" minWidth="1230.0" prefHeight="720.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
@@ -170,14 +174,48 @@
     </MenuBar>
       <AnchorPane fx:id="mainPane" style="-fx-background-color: #3a4c88;" stylesheets="@css/projectManager.css" VBox.vgrow="ALWAYS">
          <children>
-            <ImageView fx:id="squidImageView" fitHeight="333.0" fitWidth="350.0" layoutX="338.0" layoutY="125.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@images/SquidLogo.png" />
-               </image>
-               <viewport>
-                  <Rectangle2D />
-               </viewport>
-            </ImageView>
+            <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <center>
+                  <ImageView fx:id="squidImageView" fitHeight="333.0" fitWidth="350.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/SquidLogo.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+               </center>
+               <bottom>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label text="Label" />
+                              <Label layoutX="10.0" layoutY="10.0" text="Label" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="605.0" layoutY="10.0">
+                           <children>
+                              <Label text="Label" />
+                              <Label layoutX="10.0" layoutY="10.0" text="Label" />
+                           </children>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox alignment="CENTER" layoutX="584.0" layoutY="10.0">
+                           <children>
+                              <Label text="Label" />
+                              <Label layoutX="10.0" layoutY="10.0" text="Label" />
+                           </children>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </bottom>
+            </BorderPane>
          </children>
       </AnchorPane>
   </children>
