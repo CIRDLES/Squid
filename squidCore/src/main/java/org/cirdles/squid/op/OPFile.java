@@ -1,39 +1,32 @@
 package org.cirdles.squid.op;
 
-import java.sql.Time;
-import java.time.LocalTime;
-import java.util.Date;
-
 public class OPFile {
     //in 2d arrays the columns are scans and the rows are measurements
 
-    private String name;
-    private Date date;
-    private Time time;
+    private String name; //fractionID
+    private long dateTimeMilliseconds;
     private int sets;
     private int scans;
-    private int measurements;
-    double[] countTimeSec;
-    int[][] timeStampSec;
-    int[][] totalCounts;
-    int sbmZeroCPS;
-    int[][] totalSBM;
+    private int measurements; //number of species, no variable
+    double[] countTimeSec; //countTimeSec
+    double[][] timeStampSec; //timeStampSec
+    double[][] totalCounts; //totalCounts
+    int sbmZeroCPS; //sbmZeroCps
+    double[][] totalSBM; //totalCountsSBM
 
     public OPFile() {
-        this.name = name;
-        this.date = new Date();
-        this.time = Time.valueOf(LocalTime.now());
+        name = "";
         countTimeSec = new double[0];
-        timeStampSec = new int[0][0];
-        totalCounts = new int[0][0];
-        totalSBM = new int[0][0];
+        timeStampSec = new double[0][0];
+        totalCounts = new double[0][0];
+        totalSBM = new double[0][0];
     }
 
-    public int[][] getTotalSBM() {
+    public double[][] getTotalSBM() {
         return totalSBM;
     }
 
-    public void setTotalSBM(int[][] totalSBM) {
+    public void setTotalSBM(double[][] totalSBM) {
         this.totalSBM = totalSBM;
     }
 
@@ -45,20 +38,12 @@ public class OPFile {
         this.name = name;
     }
 
-    public Date getDate() {
-        return date;
+    public long getDateTimeMilliseconds() {
+        return dateTimeMilliseconds;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Time getTime() {
-        return time;
-    }
-
-    public void setTime(Time time) {
-        this.time = time;
+    public void setDateTimeMilliseconds(long dateTimeMilliseconds) {
+        this.dateTimeMilliseconds = dateTimeMilliseconds;
     }
 
     public int getSets() {
@@ -93,19 +78,19 @@ public class OPFile {
         this.countTimeSec = countTimeSec;
     }
 
-    public int[][] getTimeStampSec() {
+    public double[][] getTimeStampSec() {
         return timeStampSec;
     }
 
-    public void setTimeStampSec(int[][] timeStampSec) {
+    public void setTimeStampSec(double[][] timeStampSec) {
         this.timeStampSec = timeStampSec;
     }
 
-    public int[][] getTotalCounts() {
+    public double[][] getTotalCounts() {
         return totalCounts;
     }
 
-    public void setTotalCounts(int[][] totalCounts) {
+    public void setTotalCounts(double[][] totalCounts) {
         this.totalCounts = totalCounts;
     }
 

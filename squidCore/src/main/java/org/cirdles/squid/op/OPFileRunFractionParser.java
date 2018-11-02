@@ -3,6 +3,7 @@ package org.cirdles.squid.op;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,15 +30,16 @@ public class OPFileRunFractionParser {
 
                     //time and date
                     String timeDate = scanner.nextLine();
-                    int indexOfFirstSpaceInTimeDate = timeDate.indexOf(' ');
-                    String time = timeDate.substring(0, indexOfFirstSpaceInTimeDate);
+                    /*int indexOfFirstSpaceInTimeDate = timeDate.indexOf(' ');
+                    String timeString = timeDate.substring(0, indexOfFirstSpaceInTimeDate);
                     String date = timeDate.substring(indexOfFirstSpaceInTimeDate);
-                    op.setTime(Time.valueOf(time));
+                    Time time = Time.valueOf(timeString));
                     String[] dates = date.split("/");
                     int day = Integer.parseInt(dates[0].trim());
                     int month = Integer.parseInt(dates[1].trim());
-                    int year = Integer.parseInt(dates[2].trim());
-                    op.setDate(new Date(year, month, day));
+                    int year = Integer.parseInt(dates[2].trim());*/
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+                    op.setDateTimeMilliseconds(dateFormat.parse(timeDate).getTime());
 
                     op.setSets(Integer.parseInt(scanner.nextLine().trim()));
                     op.setScans(Integer.parseInt(scanner.nextLine().trim()));
@@ -54,13 +56,13 @@ public class OPFileRunFractionParser {
                         throw new Exception("incorrect input");
                     }
 
-                    int[][] timeStampSec = new int[op.getMeasurements()][op.getScans()];
+                    double[][] timeStampSec = new double[op.getMeasurements()][op.getScans()];
                     for (int i = 0; i < op.getMeasurements(); i++) {
                         String[] timeStampSecRowString = scanner.nextLine().split("\\s+");
                         if (timeStampSecRowString.length == op.getScans()) {
-                            int[] timeStampSecRow = new int[timeStampSecRowString.length];
+                            double[] timeStampSecRow = new double[timeStampSecRowString.length];
                             for (int j = 0; j < op.getScans(); j++) {
-                                timeStampSecRow[j] = Integer.parseInt(timeStampSecRowString[j]);
+                                timeStampSecRow[j] = Double.parseDouble(timeStampSecRowString[j]);
                             }
                             timeStampSec[i] = timeStampSecRow;
                         } else {
@@ -69,13 +71,13 @@ public class OPFileRunFractionParser {
                     }
                     op.setTimeStampSec(timeStampSec);
 
-                    int[][] totalCounts = new int[op.getMeasurements()][op.getScans()];
+                    double[][] totalCounts = new double[op.getMeasurements()][op.getScans()];
                     for (int i = 0; i < op.getMeasurements(); i++) {
                         String[] totalCountsRowString = scanner.nextLine().split("\\s+");
                         if (totalCountsRowString.length == op.getMeasurements()) {
-                            int[] totalCountsRow = new int[totalCountsRowString.length];
+                            double[] totalCountsRow = new double[totalCountsRowString.length];
                             for (int j = 0; j < op.getScans(); j++) {
-                                totalCountsRow[j] = Integer.parseInt(totalCountsRowString[j]);
+                                totalCountsRow[j] = Double.parseDouble(totalCountsRowString[j]);
                             }
                             totalCounts[i] = totalCountsRow;
                         } else {
