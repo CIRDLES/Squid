@@ -17,7 +17,7 @@ initializes a new GitHub issue for you - please use freely.
 
 **Request** The current version is only tested on a few 9-, 10-, and 11-species Prawn xml files.  We would like to have more examples of Prawn files and Squid2.5 tasks in Excel for testing.
 
-The current versions - Squid3-**0.4.n.jar** - prototype the development of the
+The current versions - Squid3-**1.0.n.jar** - prototype the development of the
 workflow support including project, task, and expression management, reporting,
 and visualization features
 of Squid.  Squid provides for creating and saving Squid Project files that have an

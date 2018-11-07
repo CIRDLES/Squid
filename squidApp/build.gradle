@@ -23,7 +23,7 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 dependencies {
     compile project(":squidCore")
     //compile 'com.github.cirdles.topsoil:app:master-SNAPSHOT'
-    compile 'com.github.cirdles.topsoil:app:master-SNAPSHOT'
+    compile 'com.github.cirdles:topsoil:9a4aecf0e5'
 	
     //compile group: 'com.proudapes', name: 'jlatexmathfx', version: '0.3.3'
     //compile 'com.github.bitstormGER:jlatexmathfx:-SNAPSHOT'
