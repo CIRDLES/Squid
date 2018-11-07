@@ -49,6 +49,7 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.op.OPFileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
@@ -89,6 +90,8 @@ public class SquidUIController implements Initializable {
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
     public static final SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
+    @FXML
+    private MenuItem newSquidProjectFromOPFileMenuItem;
     @FXML
     private Menu manageExpressionsMenu;
     @FXML
@@ -1205,4 +1208,19 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    public void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
+        List<ShrimpFraction> shrimps = null;
+        try {
+          shrimps  = OPFileHandler.convertOPFileToShrimpFractions(FileHandler.selectOPFile(primaryStageWindow));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(shrimps != null) {
+            prepareForNewProject();
+
+
+        } else {
+            SquidMessageDialog.showWarningDialog("OP File not opened properly or incorrect op file format", primaryStageWindow);
+        }
+    }
 }

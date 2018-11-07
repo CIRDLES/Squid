@@ -74,7 +74,7 @@ public class OPFileRunFractionParser {
                     double[][] totalCounts = new double[op.getMeasurements()][op.getScans()];
                     for (int i = 0; i < op.getMeasurements(); i++) {
                         String[] totalCountsRowString = scanner.nextLine().split("\\s+");
-                        if (totalCountsRowString.length == op.getMeasurements()) {
+                        if (totalCountsRowString.length == op.getScans()) {
                             double[] totalCountsRow = new double[totalCountsRowString.length];
                             for (int j = 0; j < op.getScans(); j++) {
                                 totalCountsRow[j] = Double.parseDouble(totalCountsRowString[j]);
@@ -91,8 +91,8 @@ public class OPFileRunFractionParser {
                     int[][] totalSBM = new int[op.getMeasurements()][op.getScans()];
                     for (int i = 0; i < op.getMeasurements(); i++) {
                         String[] totalSBMRowString = scanner.nextLine().split("\\s+");
-                        if (totalSBMRowString.length == op.getMeasurements()) {
-                            int[] totalSBMRow = new int[op.getMeasurements()];
+                        if (totalSBMRowString.length == op.getScans()) {
+                            int[] totalSBMRow = new int[totalSBMRowString.length];
                             for (int j = 0; j < totalSBMRowString.length; j++) {
                                 totalSBMRow[j] = Integer.parseInt(totalSBMRowString[j]);
                             }
