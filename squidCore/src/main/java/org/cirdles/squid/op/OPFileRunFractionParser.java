@@ -20,7 +20,7 @@ public class OPFileRunFractionParser {
 
                 //checks if the end of the file was reached or gets to the next run
                 String name = scanner.nextLine();
-                while (name.trim().isEmpty()) {
+                while (scanner.hasNextLine() && name.trim().isEmpty()) {
                     name = scanner.nextLine().trim();
                 }
                 if (!name.isEmpty()) {
