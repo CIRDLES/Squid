@@ -63,11 +63,13 @@ public class TextArrayManager {
                                 ObservableList<String> styles = getStyleClass();
                                 if (list != null) {
                                     if (aliquots.contains(list.get(1))) {
-                                        if (!styles.contains("table-row-cell")) {
-                                            styles.add("table-row-cell");
+                                        if (!styles.contains("table-row-aliquot")) {
+                                            styles.removeAll(Collections.singleton("table-row-cell"));
+                                            styles.add("table-row-aliquot");
                                         }
                                     } else {
-                                        styles.removeAll(Collections.singleton("table-row-cell"));
+                                        styles.removeAll(Collections.singleton("table-row-aliquot"));
+                                        styles.add("table-row-cell");
                                     }
                                 }
                             }

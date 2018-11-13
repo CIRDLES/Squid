@@ -13,10 +13,18 @@
     -fx-alignment: center-right;
 }
 
-.table-row-cell {
+.table-row-aliquot {
     -fx-background-color: orange;
     -fx-border-color: orange;
     -fx-table-cell-border-color: orange;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: gainsboro;
+}
+
+.table-row-cell:even {
+    -fx-background-color: ghostwhite;
 }
 
 #sortHint {
