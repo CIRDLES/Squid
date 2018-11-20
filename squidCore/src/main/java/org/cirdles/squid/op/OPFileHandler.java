@@ -16,7 +16,7 @@ public class OPFileHandler {
 
     public static List<ShrimpFraction> convertOPFilesToShrimpFractions(List<OPFile> ops) {
         List<ShrimpFraction> shrimps = new ArrayList<>(ops.size());
-        for (int i = 0; i < shrimps.size(); i++) {
+        for (int i = 0; i < ops.size(); i++) {
             ShrimpFraction shrimp = convertOPFileToShrimpFraction(ops.get(i));
             shrimps.add(shrimp);
         }

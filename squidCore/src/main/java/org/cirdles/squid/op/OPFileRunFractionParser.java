@@ -88,19 +88,20 @@ public class OPFileRunFractionParser {
 
                     op.setSbmZeroCPS(Integer.parseInt(scanner.nextLine()));
 
-                    int[][] totalSBM = new int[op.getMeasurements()][op.getScans()];
+                    double[][] totalSBM = new double[op.getMeasurements()][op.getScans()];
                     for (int i = 0; i < op.getMeasurements(); i++) {
                         String[] totalSBMRowString = scanner.nextLine().split("\\s+");
                         if (totalSBMRowString.length == op.getScans()) {
-                            int[] totalSBMRow = new int[totalSBMRowString.length];
+                            double[] totalSBMRow = new double[totalSBMRowString.length];
                             for (int j = 0; j < totalSBMRowString.length; j++) {
-                                totalSBMRow[j] = Integer.parseInt(totalSBMRowString[j]);
+                                totalSBMRow[j] = Double.parseDouble(totalSBMRowString[j]);
                             }
                             totalSBM[i] = totalSBMRow;
                         } else {
                             throw new Exception("incorrect input");
                         }
                     }
+                    op.setTotalSBM(totalSBM);
 
                     opList.add(op);
                 }
