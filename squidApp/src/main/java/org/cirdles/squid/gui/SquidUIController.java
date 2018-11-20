@@ -1216,12 +1216,14 @@ public class SquidUIController implements Initializable {
             final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
 
             ButtonType replaceAll = new ButtonType("Replace All");
-            ButtonType replaceNone = new ButtonType("Don't Replace All");
+            ButtonType replaceNone = new ButtonType("Replace None");
             ButtonType replace = new ButtonType("Replace");
             ButtonType dontReplace = new ButtonType("Don't Replace");
             ButtonType rename = new ButtonType("Rename");
             Alert alert = new Alert(Alert.AlertType.WARNING, "", replaceAll, replaceNone, replace, dontReplace, rename);
             alert.initStyle(StageStyle.UNDECORATED);
+            alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
+            alert.setY(primaryStage.getY() + (primaryStage.getHeight()- alert.getHeight()) / 2);
             for (int i = 0; i < files.length; i++) {
                 try {
                     final Expression exp = (Expression) (new Expression()).readXMLObject(files[i].getAbsolutePath(), false);
