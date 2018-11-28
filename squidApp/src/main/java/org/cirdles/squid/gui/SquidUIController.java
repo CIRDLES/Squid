@@ -51,6 +51,7 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.op.OPFileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
@@ -1209,16 +1210,23 @@ public class SquidUIController implements Initializable {
     }
 
     public void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
+        removeAllManagers();
         List<ShrimpFraction> shrimps = null;
         try {
-          shrimps  = OPFileHandler.convertOPFileToShrimpFractions(FileHandler.selectOPFile(primaryStageWindow));
+            File file = FileHandler.selectOPFile(primaryStageWindow);
+            if(file != null) {
+                shrimps = OPFileHandler.convertOPFileToShrimpFractions(file);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(shrimps != null) {
             prepareForNewProject();
-
-
+            squidProject = new SquidProject();
+            squidProject.getTask().getShrimpFractions().clear();
+            squidProject.getTask().getShrimpFractions().addAll(shrimps);
+            ((Task) squidProject.getTask()).setupSquidSessionSkeleton();
+            launchProjectManager();
         } else {
             SquidMessageDialog.showWarningDialog("OP File not opened properly or incorrect op file format", primaryStageWindow);
         }

@@ -327,12 +327,14 @@ public class FileHandler {
     }
 
     public static File selectOPFile(Window ownerWindow) throws IOException {
-        File retVal = null;
+        File retVal;
 
         FileChooser fc = new FileChooser();
         fc.setTitle("Select OP File");
         fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("OP Files", "*.op"));
-        fc.setInitialDirectory(squidPersistentState.getOpFile().getParentFile().getAbsoluteFile());
+        if(squidPersistentState.getOpFile() != null && squidPersistentState.getOpFile().exists()) {
+            fc.setInitialDirectory(squidPersistentState.getOpFile().getParentFile().getAbsoluteFile());
+        }
 
         retVal = fc.showOpenDialog(ownerWindow);
 
