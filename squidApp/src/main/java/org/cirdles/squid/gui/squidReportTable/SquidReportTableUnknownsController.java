@@ -63,7 +63,7 @@ public class SquidReportTableUnknownsController implements Initializable {
             spotsBySampleNames.add(dummyForSample);
             spotsBySampleNames.addAll(entry.getValue());
         }
-        textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, true);
+        textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
 
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
         reportsTable.refresh();
