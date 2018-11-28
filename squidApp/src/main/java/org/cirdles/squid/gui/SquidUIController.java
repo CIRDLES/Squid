@@ -1222,6 +1222,7 @@ public class SquidUIController implements Initializable {
             ButtonType rename = new ButtonType("Rename");
             Alert alert = new Alert(Alert.AlertType.WARNING, "", replaceAll, replaceNone, replace, dontReplace, rename);
             alert.initStyle(StageStyle.UNDECORATED);
+            alert.initOwner(primaryStageWindow);
             alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
             alert.setY(primaryStage.getY() + (primaryStage.getHeight()- alert.getHeight()) / 2);
             for (int i = 0; i < files.length; i++) {
@@ -1239,6 +1240,10 @@ public class SquidUIController implements Initializable {
                             alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
                             alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
                             alert.showAndWait().ifPresent((t) -> {
+                                alert.initOwner(primaryStageWindow);
+                                alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
+                                alert.setY(primaryStage.getY() + (primaryStage.getHeight()- alert.getHeight()) / 2);
+                                alert.setWidth(1000);
                                 if (t.equals(replace) || t.equals(replaceAll)) {
                                     expressions.add(exp);
                                     squidProject.getTask().updateAffectedExpressions(exp);
