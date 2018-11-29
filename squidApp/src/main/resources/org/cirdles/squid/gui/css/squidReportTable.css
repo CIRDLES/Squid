@@ -27,6 +27,10 @@
     -fx-background-color: ghostwhite;
 }
 
+.table-row-cell:selected {
+    -fx-background-color: rgb(94, 208, 242);
+}
+
 #sortHint {
     -fx-text-fill: black;
     -fx-font-size: 14;
