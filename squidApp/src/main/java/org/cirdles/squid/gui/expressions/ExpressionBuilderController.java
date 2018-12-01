@@ -201,6 +201,8 @@ public class ExpressionBuilderController implements Initializable {
     private final TextArea expressionAsTextArea = new TextArea();
     @FXML
     private Label modeLabel;
+    @FXML
+    private ToggleGroup expressionsSortToggleGroup;
 
     {
         expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSION_BUILDER_DEFAULT_FONTSIZE));
@@ -232,53 +234,6 @@ public class ExpressionBuilderController implements Initializable {
     private CheckBox showGraphCheckBox;
     @FXML
     private CheckBox graphBrowserCheckBox;
-
-    //CHOICEBOXES
-    @FXML
-    private ChoiceBox<OrderChoiceEnum> orderChoiceBox;
-
-    private enum OrderChoiceEnum {
-        EVALUATION(" Evaluation order"),
-        NAME(" Name"),
-        //        NUSWITCH(" NU Switch"),
-        //        BUILTINCUSTOM(" BuiltIn/Custom"),
-        REFMAT(" Reference Material"),
-        CONCREFMAT(" Conc. Reference Mat"),
-        UNKNOWN(" Unknown Sample");
-
-        private final String printName;
-
-        private OrderChoiceEnum(String printName) {
-            this.printName = printName;
-        }
-
-        @Override
-        public String toString() {
-            return printName;
-        }
-    }
-
-    @FXML
-    private ChoiceBox<FromChoiceEnum> fromChoiceBox;
-
-    private enum FromChoiceEnum {
-        ALL(" All"),
-        HEALTHY(" Healthy"),
-        UNHEALTHY(" Unhealthy"),
-        BUILTIN(" BuiltIn"),
-        CUSTOM(" Custom");
-
-        private final String printName;
-
-        private FromChoiceEnum(String printName) {
-            this.printName = printName;
-        }
-
-        @Override
-        public String toString() {
-            return printName;
-        }
-    }
 
     //LISTVIEWS
     @FXML
@@ -345,9 +300,6 @@ public class ExpressionBuilderController implements Initializable {
     private ListView<Expression> parametersListView;
     @FXML
     private TitledPane parametersTitledPane;
-
-    @FXML
-    private ListView<Expression> globalListView;
 
     //MISC
     @FXML
@@ -520,7 +472,6 @@ public class ExpressionBuilderController implements Initializable {
 
         initPropertyBindings();
         initListViews();
-        initFilterChoice();
         initRadios();
         initExpressionTextFlowAndTextArea();
         initGraph();
@@ -642,155 +593,150 @@ public class ExpressionBuilderController implements Initializable {
         expressionTextFlow.maxWidthProperty().bind(expressionPane.widthProperty());
     }
 
-    private void initFilterChoice() {
-        ObservableList<FromChoiceEnum> fromChoiceList = FXCollections.observableArrayList(Arrays.asList(FromChoiceEnum.values()));
-        fromChoiceBox.setItems(fromChoiceList);
-        ObservableList<OrderChoiceEnum> orderChoiceList = FXCollections.observableArrayList(Arrays.asList(OrderChoiceEnum.values()));
-        orderChoiceBox.setItems(orderChoiceList);
-
-        //Update the list on source change
-        fromChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue instanceof FromChoiceEnum) {
-                filterList((FromChoiceEnum) newValue);
-                orderList((OrderChoiceEnum) orderChoiceBox.getSelectionModel().getSelectedItem());
-            }
-        });
-        fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
-        //Update the list on order change
-        orderChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue instanceof OrderChoiceEnum) {
-                orderList((OrderChoiceEnum) newValue);
-            }
-        });
-        orderChoiceBox.getSelectionModel().select(OrderChoiceEnum.EVALUATION);
+    @FXML
+    private void expressionSortToggleAction(ActionEvent event) {
+        String flag = ((RadioButton) event.getSource()).getId();
+        orderListViewByFlag(builtInExpressionsListView, flag);
     }
 
-    private void filterList(FromChoiceEnum from) {
-        if (from != null) {
-            switch (from) {
-                case BUILTIN:
-                    globalListView.setItems(namedExpressions.filtered((exp) -> {
-                        return exp.getExpressionTree().isSquidSpecialUPbThExpression() && !exp.isSquidSwitchNU();
-                    }));
-                    break;
-                case CUSTOM:
-                    globalListView.setItems(namedExpressions.filtered((exp) -> {
-                        return exp.isCustom();
-                    }));
-                    break;
-                case HEALTHY:
-                    globalListView.setItems(namedExpressions.filtered((exp) -> {
-                        return exp.amHealthy();
-                    }));
-                    break;
-                case UNHEALTHY:
-                    globalListView.setItems(namedExpressions.filtered((exp) -> {
-                        return !exp.amHealthy();
-                    }));
-                    break;
-                default:
-                    globalListView.setItems(namedExpressions);
-            }
-        }
-    }
+    private void orderListViewByFlag(ListView<Expression> listView, String flag) {
+        ObservableList<Expression> items = listView.getItems();
 
-    private void orderList(OrderChoiceEnum order) {
-        if (order != null) {
-            switch (order) {
-                case NAME:
-                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+        switch (flag) {
+            case "EXEC":
+                listView.setItems(items.sorted((o1, o2) -> {
+                    if ((o1.amHealthy() && o2.amHealthy()) || (!o1.amHealthy() && !o2.amHealthy())) {
+                        return namedExpressions.indexOf(o1) - namedExpressions.indexOf(o2);
+                    } else if (!o1.amHealthy() && o2.amHealthy()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }));
+                break;
+
+            case "NAME":
+                listView.setItems(items.sorted((o1, o2) -> {
+                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                }));
+                break;
+                
+            case "TARGET":
+                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+                    if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                            && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                         return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                    }));
-                    break;
-//                case BUILTINCUSTOM:
-//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-//                        boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
-//                        boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
-//                        if ((o1IsCustom && o2IsCustom) || (!o1IsCustom && !o2IsCustom)) {
-//                            return 0;
-//                        } else if (o1IsCustom && !o2IsCustom) {
-//                            return 1;
-//                        } else {
-//                            return -1;
-//                        }
-//                    }));
-//                    break;
-//                case NUSWITCH:
-//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-//                        if (o1.isSquidSwitchNU() && o2.isSquidSwitchNU()) {
-//                            return 0;
-//                        } else if (o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()) {
-//                            return -1;
-//                        } else {
-//                            return 1;
-//                        }
-//                    }));
-//                    break;
-                case REFMAT:
-                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                                && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                    } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                            && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                        return -1;
+                    } else {
+                        if (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                             return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                        } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                                && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                            return -1;
-                        } else {
-                            if (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                            }
-                            return 1;
                         }
-                    }));
-                    globalListView.refresh();
-                    break;
-                case UNKNOWN:
-                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        if (o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                                && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                        } else if (o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                                && !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                            return -1;
-                        } else {
-                            if (!o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                            }
-                            return 1;
-                        }
-                    }));
-                    globalListView.refresh();
-                    break;
-                case CONCREFMAT:
-                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
-                                && o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                        } else if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
-                                && !o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                            return -1;
-                        } else {
-                            if (!o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                            }
-                            return 1;
-                        }
-                    }));
-                    globalListView.refresh();
-                    break;
-                default:
-                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                        if ((o1.amHealthy() && o2.amHealthy()) || (!o1.amHealthy() && !o2.amHealthy())) {
-                            return namedExpressions.indexOf(o1) - namedExpressions.indexOf(o2);
-                        } else if (!o1.amHealthy() && o2.amHealthy()) {
-                            return 1;
-                        } else {
-                            return -1;
-                        }
-                    }));
-            }
+                        return 1;
+                    }
+                }));
+                globalListView.refresh();
+                break;
         }
     }
 
+//    private void orderList(OrderChoiceEnum order) {
+//        if (order != null) {
+//            switch (order) {
+//                case NAME:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+//                    }));
+//                    break;
+////                case BUILTINCUSTOM:
+////                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+////                        boolean o1IsCustom = !o1.getExpressionTree().isSquidSpecialUPbThExpression() && !o1.isSquidSwitchNU();
+////                        boolean o2IsCustom = !o2.getExpressionTree().isSquidSpecialUPbThExpression() && !o2.isSquidSwitchNU();
+////                        if ((o1IsCustom && o2IsCustom) || (!o1IsCustom && !o2IsCustom)) {
+////                            return 0;
+////                        } else if (o1IsCustom && !o2IsCustom) {
+////                            return 1;
+////                        } else {
+////                            return -1;
+////                        }
+////                    }));
+////                    break;
+////                case NUSWITCH:
+////                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+////                        if (o1.isSquidSwitchNU() && o2.isSquidSwitchNU()) {
+////                            return 0;
+////                        } else if (o1.isSquidSwitchNU() && !o2.isSquidSwitchNU()) {
+////                            return -1;
+////                        } else {
+////                            return 1;
+////                        }
+////                    }));
+////                    break;
+//                case REFMAT:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+//                                && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+//                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+//                        } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+//                                && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+//                            return -1;
+//                        } else {
+//                            if (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+//                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+//                            }
+//                            return 1;
+//                        }
+//                    }));
+//                    globalListView.refresh();
+//                    break;
+//                case UNKNOWN:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        if (o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+//                                && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+//                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+//                        } else if (o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+//                                && !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+//                            return -1;
+//                        } else {
+//                            if (!o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+//                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+//                            }
+//                            return 1;
+//                        }
+//                    }));
+//                    globalListView.refresh();
+//                    break;
+//                case CONCREFMAT:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+//                                && o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+//                            return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+//                        } else if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+//                                && !o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+//                            return -1;
+//                        } else {
+//                            if (!o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+//                                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+//                            }
+//                            return 1;
+//                        }
+//                    }));
+//                    globalListView.refresh();
+//                    break;
+//                default:
+//                    globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
+//                        if ((o1.amHealthy() && o2.amHealthy()) || (!o1.amHealthy() && !o2.amHealthy())) {
+//                            return namedExpressions.indexOf(o1) - namedExpressions.indexOf(o2);
+//                        } else if (!o1.amHealthy() && o2.amHealthy()) {
+//                            return 1;
+//                        } else {
+//                            return -1;
+//                        }
+//                    }));
+//            }
+//        }
+//    }
     private void initRadios() {
         toggleGroup = new ToggleGroup();
         dragndropLeftRadio.setToggleGroup(toggleGroup);
@@ -801,23 +747,6 @@ public class ExpressionBuilderController implements Initializable {
 
     private void initListViews() {
         //EXPRESSIONS
-        globalListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        globalListView.setCellFactory(new ExpressionCellFactory(true));
-        globalListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-        //Selection listener to update the categories tab when a new value is selected on the filter tab
-        globalListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
-            @Override
-            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if (newValue != null) {
-                    if (currentMode.get().equals(Mode.VIEW)) {
-                        selectedExpressionIsEditable.set(true);
-                        selectedExpression.set(newValue);
-                    }
-                    selectInAllPanes(newValue, false);
-                }
-            }
-        });
 
         brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         brokenExpressionsListView.setCellFactory(new ExpressionCellFactory(true));
@@ -1076,19 +1005,6 @@ public class ExpressionBuilderController implements Initializable {
         if (found) {
             //If found in the expressions then it is not a ratio
             ratioExpressionsListView.getSelectionModel().clearSelection();
-        }
-
-        if (globalListView.getSelectionModel().getSelectedItem() == null
-                || !globalListView.getSelectionModel().getSelectedItem().equals(exp)) {
-            //If the current filtered list does not contain the expression, reset the filter to show all the expressions
-            if (!globalListView.getItems().contains(exp)) {
-                fromChoiceBox.getSelectionModel().select(FromChoiceEnum.ALL);
-            }
-            //And then select and show the new value
-            globalListView.getSelectionModel().select(exp);
-            globalListView.scrollTo(exp);
-        } else if (scrollIfAlreadySelected) {
-            globalListView.scrollTo(exp);
         }
     }
 
@@ -1607,9 +1523,6 @@ public class ExpressionBuilderController implements Initializable {
                 sortedBrokenExpressionsList.add(exp);
             }
         }
-
-        globalListView.setItems(null);
-        globalListView.setItems(namedExpressions);
 
         ObservableList<Expression> items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
@@ -2530,9 +2443,8 @@ public class ExpressionBuilderController implements Initializable {
             text = text.replace(VISIBLETABPLACEHOLDER, "\t");
             text = text.replace(UNVISIBLEWHITESPACEPLACEHOLDER, " ");
             text = text.replace(VISIBLEWHITESPACEPLACEHOLDER, " ");
-            
 
-            if (! text.matches("^[ \t\n\r]$")) {
+            if (!text.matches("^[ \t\n\r]$")) {
                 text = nodeText.replace(SUPERSCRIPT_R_FOR_REFMAT + SUPERSCRIPT_DASH_FOR_DASH + " ", "");
                 text = text.replace(SUPERSCRIPT_C_FOR_CONCREFMAT + SUPERSCRIPT_DASH_FOR_DASH + " ", "");
                 text = text.replace(SUPERSCRIPT_R_FOR_REFMAT + SUPERSCRIPT_U_FOR_UNKNOWN + " ", "");
