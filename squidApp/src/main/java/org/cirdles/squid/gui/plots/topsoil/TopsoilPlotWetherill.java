@@ -30,7 +30,7 @@ import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.plots.PlotDisplayInterface.SigmaPresentationModes.ONE_SIGMA_ABSOLUTE;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
-import org.cirdles.topsoil.app.isotope.IsotopeType;
+import org.cirdles.topsoil.isotope.IsotopeSystem;
 import org.cirdles.topsoil.plot.DefaultProperties;
 import org.cirdles.topsoil.plot.PlotProperty;
 
@@ -47,22 +47,22 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
     }
 
     public TopsoilPlotWetherill(String title) {
-        plot = IsotopeType.UPb.getPlots()[0].getPlot();
+        plot = IsotopeSystem.UPB.getPlots()[0].getPlot();
         //plot.setData(TopsoilDataFactory.prepareWetherillData(EXAMPLE_CM2_DATASET));
         setupPlot(title);
     }
 
     public TopsoilPlotWetherill(String title, List<ShrimpFractionExpressionInterface> shrimpFractions) {
-        plot = IsotopeType.UPb.getPlots()[0].getPlot();
+        plot = IsotopeSystem.UPB.getPlots()[0].getPlot();
         setupPlot(title);
     }
 
     private void setupPlot(String title) {
     	Map<PlotProperty, Object> properties = new DefaultProperties();
 
-        properties.put(ISOTOPE_SYSTEM, IsotopeType.UPb.getName());
-	    properties.put(X_AXIS, IsotopeType.UPb.getHeaders()[0]);
-	    properties.put(Y_AXIS, IsotopeType.UPb.getHeaders()[1]);
+        properties.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB.getName());
+	    properties.put(X_AXIS, IsotopeSystem.UPB.getHeaders()[0]);
+	    properties.put(Y_AXIS, IsotopeSystem.UPB.getHeaders()[1]);
 
 	    properties.put(TITLE, title);
 	    properties.put(WETHERILL_LINE, true);

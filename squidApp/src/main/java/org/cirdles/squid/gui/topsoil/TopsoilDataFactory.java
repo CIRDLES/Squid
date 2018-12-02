@@ -22,11 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import static org.cirdles.topsoil.app.plot.variable.Variables.RHO;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_Y;
-import static org.cirdles.topsoil.app.plot.variable.Variables.X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.Y;
+
+import static org.cirdles.topsoil.variable.Variables.*;
 
 /**
  *
