@@ -615,19 +615,28 @@ public class ExpressionBuilderController implements Initializable {
                 }));
                 break;
 
-            case "NAME":
-                listView.setItems(items.sorted((o1, o2) -> {
-                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                }));
-                break;
-                
             case "TARGET":
-                globalListView.setItems(globalListView.getItems().sorted((o1, o2) -> {
-                    if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
-                        return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                // order by ConcRefMat then RU then R then U
+                listView.setItems(items.sorted((o1, o2) -> {
+                    // ConcRefMat
+                    if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                            && !o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                        return -1;
+                        // ConcRefMat
+                    } else if (!o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                            && o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                        return 1;
+                        //RU
                     } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
+                            && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                            && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                            && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                        return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                        // RU
+                    } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                            && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                            && (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                            || !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation())) {
                         return -1;
                     } else {
                         if (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
@@ -636,8 +645,14 @@ public class ExpressionBuilderController implements Initializable {
                         return 1;
                     }
                 }));
-                globalListView.refresh();
                 break;
+
+            case "NAME":
+                listView.setItems(items.sorted((o1, o2) -> {
+                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                }));
+                break;
+
         }
     }
 
