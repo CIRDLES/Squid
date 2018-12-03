@@ -22,7 +22,7 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
 dependencies {
     compile project(":squidCore")
-    compile 'com.github.cirdles:topsoil:9a4aecf0e5'
+    compile 'com.github.cirdles:topsoil:v2.0.7'
 }
 
 task fatAppJar(type: Jar) {
