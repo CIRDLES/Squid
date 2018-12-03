@@ -22,14 +22,7 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
 dependencies {
     compile project(":squidCore")
-    //compile 'com.github.cirdles.topsoil:app:master-SNAPSHOT'
     compile 'com.github.cirdles:topsoil:v2.0.7'
-	
-    //compile group: 'com.proudapes', name: 'jlatexmathfx', version: '0.3.3'
-    //compile 'com.github.bitstormGER:jlatexmathfx:-SNAPSHOT'
-    //compile 'com.github.bitstormGER:jlatexmathfx:0.3.3'
-    
-    //compile files('libs/jlatexmathfx-0.3.3.jar')
 }
 
 task fatAppJar(type: Jar) {
