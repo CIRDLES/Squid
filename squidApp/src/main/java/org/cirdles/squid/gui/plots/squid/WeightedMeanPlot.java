@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
@@ -243,9 +244,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
 
         g2d.setFill(Paint.valueOf("Black"));
+        g2d.setFont(Font.font("Monospaced", FontWeight.BOLD, 14));
         text.setText("2\u03C3 error bars");
         textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin - 25);
+        g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin - 0);
 
         // ticsY         
         float verticalTextShift = 3.2f;
@@ -297,7 +299,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         // X- label
         text.setText("Hours");
         textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 55);
+        g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 35);
 
         // legend
         text.setText("Legend:");
@@ -317,7 +319,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setFill(Paint.valueOf("BLACK"));
         g2d.setFont(Font.font("Lucida Sans", 10));
         g2d.fillText("Mouse:", leftMargin + 0, topMargin + graphHeight + 60);
-        g2d.fillText(" left = spot name", leftMargin + 0, topMargin + graphHeight + 70);
+        g2d.fillText(" left = spot details", leftMargin + 0, topMargin + graphHeight + 70);
         if (spotSummaryDetails.isManualRejectionEnabled()) {
             g2d.fillText(" right = spot menu", leftMargin + 0, topMargin + graphHeight + 80);
         }
@@ -329,9 +331,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             g2d.setFill(Color.rgb(0, 0, 0, 0.2));
             g2d.fillRect(
                     mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - 6,
-                    mapY(maxY) - 20,
+                    mapY(ticsY[ticsY.length - 1].doubleValue()),
                     12,
-                    graphHeight + 20);
+                    Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
             if (rejectedIndices[indexOfSelectedSpot]) {
                 g2d.setFill(Paint.valueOf("Blue"));
             } else {
@@ -395,6 +397,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
+        
+        // force y to tics
+        minY = ticsY[0].doubleValue();
+        maxY = ticsY[ticsY.length - 1].doubleValue();
         // adjust margins
         double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);
         minY -= yMarginStretch;
