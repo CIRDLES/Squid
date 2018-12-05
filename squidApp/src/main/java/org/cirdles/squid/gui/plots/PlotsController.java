@@ -299,7 +299,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
         VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
         VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
-        VBox.setVgrow(plotVBox, Priority.ALWAYS);
+        VBox.setVgrow(plotVBox, Priority.NEVER);//ALWAYS);
 
         plotToolBar.getItems().clear();
         plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
