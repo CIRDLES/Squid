@@ -66,7 +66,8 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
 	    properties.put(TITLE, title);
 	    properties.put(WETHERILL_LINE, true);
-	    properties.put(ELLIPSES, true);
+	    properties.put(POINTS, true);
+            properties.put(ELLIPSES, true);
 	    properties.put(ELLIPSES_FILL, "red");
 
 	    properties.put(MCLEAN_REGRESSION, false);
@@ -81,10 +82,10 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
     public List<Node> toolbarControlsFactory() {
         List<Node> controls = super.toolbarControlsFactory();
 
-        CheckBox ellipsesCheckBox = new CheckBox("Ellipses");
+        CheckBox ellipsesCheckBox = new CheckBox("Centers");
         ellipsesCheckBox.setSelected(true);
         ellipsesCheckBox.setOnAction(mouseEvent -> {
-            plot.setProperty(ELLIPSES, ellipsesCheckBox.isSelected());
+            plot.setProperty(POINTS, ellipsesCheckBox.isSelected());
         });
 
         ChoiceBox<SigmaPresentationModes> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(SigmaPresentationModes.values()));
