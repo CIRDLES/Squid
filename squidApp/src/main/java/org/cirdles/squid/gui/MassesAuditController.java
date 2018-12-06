@@ -57,6 +57,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
 import org.cirdles.squid.gui.dataViews.MassStationAuditViewForShrimp;
+import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -76,6 +77,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             = "-fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 12pt;\n";
+
+    private int[] countOfScansCumulative;
 
     @FXML
     private VBox scrolledBox;
@@ -142,6 +145,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         showQt1zCheckBox.setSelected(showQt1z);
 
         graphs = new ArrayList<>();
+
+        calculateCountOfScansCumulative();
 
         displayMassStationsForReview();
 
@@ -238,6 +243,20 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @FXML
     private void scrollBoxMouseEntered(MouseEvent event) {
         setupScrollBarSynch();
+    }
+
+    private void calculateCountOfScansCumulative() {
+        // stores accumulated scans at each index
+        List<Run> prawnFileRuns = squidProject.getPrawnFileRuns();
+        countOfScansCumulative = new int[prawnFileRuns.size() + 1];
+        for (int i = 0; i < prawnFileRuns.size(); i++) {
+            int countOfScans = Integer.parseInt(prawnFileRuns.get(i).getPar().get(3).getValue());
+            countOfScansCumulative[i + 1] = countOfScansCumulative[i] + countOfScans;
+        }
+    }
+
+    public int[] getCountOfScansCumulative() {
+        return countOfScansCumulative;
     }
 
     static class MassStationDetailListCell extends ListCell<MassStationDetail> {
@@ -551,8 +570,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     private void displayMassStationsForReview() {
 
-        int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(0).getPar().get(3).getValue());
-
         scrolledBox.getChildren().clear();
         scrolledBoxLeft.getChildren().clear();
         graphs.clear();
@@ -611,6 +628,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
             List<Double> primaryBeam = new ArrayList<>();
             for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
                 for (int j = 0; j < countOfScans; j++) {
                     primaryBeam.add(spots.get(i).getPrimaryBeam());
                 }
@@ -639,6 +657,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
             List<Double> qt1y = new ArrayList<>();
             for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
                 for (int j = 0; j < countOfScans; j++) {
                     qt1y.add((double) spots.get(i).getQtlY());
                 }
@@ -666,6 +685,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
             List<Double> qt1z = new ArrayList<>();
             for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
                 for (int j = 0; j < countOfScans; j++) {
                     qt1z.add((double) spots.get(i).getQtlZ());
                 }
@@ -699,6 +719,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     @Override
     public void removeSpotFromGraphs(int spotIndex) {
+        calculateCountOfScansCumulative();
         setupMassStationDetailsListViews();
         displayMassStationsForReview();
     }

@@ -26,7 +26,6 @@ import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -63,7 +62,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     private double[] peakTukeysMeanAndUnct;
 
     private int indexOfSelectedSpot;
-    private final int countOfScans;
+    private int[] countOfScansCumulative;
 
     private final MassAuditRefreshInterface massAuditRefreshInterface;
 
@@ -80,16 +79,17 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * @param prawnFileRuns the value of prawnFileRuns
      * @param showTimeNormalized
      * @param massAuditRefreshInterface the value of massAuditRefreshInterface
+     * @param countOfScansCumulative the value of countOfScansCumulative
      */
     public MassStationAuditViewForShrimp(
-            Rectangle bounds,
-            String plotTitle,
+            Rectangle bounds, 
+            String plotTitle, 
             List<Double> measuredTrimMasses,
-            List<Double> timesOfMeasuredTrimMasses,
+            List<Double> timesOfMeasuredTrimMasses, 
             List<Integer> indicesOfScansAtMeasurementTimes,
-            List<Integer> indicesOfRunsAtMeasurementTimes,
+            List<Integer> indicesOfRunsAtMeasurementTimes, 
             List<Run> prawnFileRuns,
-            boolean showTimeNormalized,
+            boolean showTimeNormalized, 
             MassAuditRefreshInterface massAuditRefreshInterface) {
 
         super(bounds, 265, 0);
@@ -110,7 +110,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         setupSpotContextMenu();
 
-        countOfScans = Integer.parseInt(prawnFileRuns.get(0).getPar().get(3).getValue());
+        this.countOfScansCumulative = massAuditRefreshInterface.getCountOfScansCumulative().clone();
     }
 
     /**
@@ -197,7 +197,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                 massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot);
                 if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0) {
                     spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
-                            mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans]), 25);
+                            mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]), 25);
                 }
             }
         }
@@ -214,7 +214,16 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             }
         }
 
-        return (int) Math.floor(index / countOfScans);
+        // determine spot number
+        int spotIndex = -1;
+        for (int i = 0; i < countOfScansCumulative.length; i++) {
+            if (index < countOfScansCumulative[i]) {
+                spotIndex = i - 1;
+                break;
+            }
+        }
+
+        return spotIndex;
     }
 
     /**
@@ -250,16 +259,17 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             // gray spot rectangle
             g2d.setFill(Color.rgb(0, 0, 0, 0.2));
             g2d.fillRect(
-                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans]),
+                    mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]) - 2f,
                     0,
-                    Math.abs(mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans + 4]) - mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans])),
+                    Math.abs(mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot + 1] - 1])
+                            - mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]])) + 4f,
                     height);
             g2d.setFill(Paint.valueOf("BLACK"));
             Text text = new Text(prawnFileRuns.get(indexOfSelectedSpot).getPar().get(0).getValue());
             text.applyCss();
             g2d.fillText(
                     prawnFileRuns.get(indexOfSelectedSpot).getPar().get(0).getValue(),
-                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot * countOfScans + 4]) - text.getLayoutBounds().getWidth(),
+                    mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot] + 4]) - text.getLayoutBounds().getWidth(),
                     20);
         }
 

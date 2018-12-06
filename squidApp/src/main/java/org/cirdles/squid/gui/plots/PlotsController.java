@@ -145,7 +145,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         corr4_RadioButton.setUserData("4-corr");
         corr7_RadioButton.setUserData("7-corr");
         corr8_RadioButton.setUserData("8-corr");
-        
+
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
@@ -361,7 +361,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             spotsTreeViewCheckBox.setCellFactory(p -> new CheckBoxTreeCell<>(
                     (TreeItem<SampleTreeNodeInterface> item) -> ((WeightedMeanFractionNode) item.getValue()).getSelectedProperty(),
                     new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
-                        
+
                 @Override
                 public String toString(TreeItem<SampleTreeNodeInterface> object) {
                     SampleTreeNodeInterface item = object.getValue();
@@ -446,7 +446,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     @FXML
     private void plotChooserAction(ActionEvent event) {
-        customizePlotChooserToolbarAndInvokePlotter();
+        if (((Task) squidProject.getTask()).getReferenceMaterialSpots().size() > 0) {
+            customizePlotChooserToolbarAndInvokePlotter();
+        }
     }
 
     private void customizePlotChooserToolbarAndInvokePlotter() {
@@ -537,7 +539,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         @Override
         public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
             this.selectedProperty = selectedProperty;
-        }      
+        }
     }
 
     private class ConcordiaFractionNode implements SampleTreeNodeInterface {
