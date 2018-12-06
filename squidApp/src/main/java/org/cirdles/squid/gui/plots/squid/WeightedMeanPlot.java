@@ -97,20 +97,26 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         this.setOnMouseClicked(new MouseClickEventHandler());
     }
 
-    private void extractFractionDetails() {
+    private boolean extractFractionDetails() {
         shrimpFractions = spotSummaryDetails.getSelectedSpots();
-        rejectedIndices = spotSummaryDetails.getRejectedIndices();
+        boolean retVal = shrimpFractions.size() > 0;
 
-        ages = new ArrayList<>();
-        ageTwoSigma = new ArrayList<>();
-        hours = new ArrayList<>();
-        for (ShrimpFractionExpressionInterface sf : shrimpFractions) {
-            ages.add(sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0]);
-            ageTwoSigma.add(2.0 * sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][1]);
-            hours.add(sf.getHours());
+        if (retVal) {
+            rejectedIndices = spotSummaryDetails.getRejectedIndices();
+
+            ages = new ArrayList<>();
+            ageTwoSigma = new ArrayList<>();
+            hours = new ArrayList<>();
+            for (ShrimpFractionExpressionInterface sf : shrimpFractions) {
+                ages.add(sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0]);
+                ageTwoSigma.add(2.0 * sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][1]);
+                hours.add(sf.getHours());
+            }
+
+            weightedMeanStats = spotSummaryDetails.getValues()[0];
         }
 
-        weightedMeanStats = spotSummaryDetails.getValues()[0];
+        return retVal;
     }
 
     private class MouseClickEventHandler implements EventHandler<MouseEvent> {
@@ -163,7 +169,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setFill(Paint.valueOf("Red"));
 
         int rightOfText = 450;
-        Text text = new Text("Wtd Mean of Ref Mat Pb/" + ((String)(ageLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
+        Text text = new Text("Wtd Mean of Ref Mat Pb/" + ((String) (ageLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
         text.setFont(Font.font("Lucida Sans", 15));
 
         int textWidth = (int) text.getLayoutBounds().getWidth();
@@ -397,7 +403,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
-        
+
         // force y to tics
         minY = ticsY[0].doubleValue();
         maxY = ticsY[ticsY.length - 1].doubleValue();
@@ -433,9 +439,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     @Override
     public Node displayPlotAsNode() {
-        extractFractionDetails();
-        preparePanel();
-        this.repaint();
+        if (extractFractionDetails()) {
+            preparePanel();
+            this.repaint();
+        }
         return this;
     }
 

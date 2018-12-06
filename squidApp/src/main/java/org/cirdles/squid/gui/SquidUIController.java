@@ -1035,7 +1035,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(topsoilPlotUI);
             topsoilPlotUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            //System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
+            System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
         }
     }
 
