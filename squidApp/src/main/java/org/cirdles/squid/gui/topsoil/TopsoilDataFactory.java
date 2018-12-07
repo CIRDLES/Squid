@@ -95,7 +95,10 @@ public class TopsoilDataFactory {
 
             double rho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + errCorr}))[0].clone()[0];
             datum.put(RHO.getName(), rho);
+            
             datum.put("Selected", true);
+            
+            datum.put("AGE", 0.0);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
         }
 
