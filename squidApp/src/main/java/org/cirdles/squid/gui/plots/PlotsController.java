@@ -18,19 +18,24 @@ package org.cirdles.squid.gui.plots;
 import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotWetherill;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBoxTreeItem;
+import javafx.scene.control.CheckBoxTreeItem.TreeModificationEvent;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
@@ -78,7 +83,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     private static ObservableList<SampleTreeNodeInterface> fractionNodes;
     private static PlotDisplayInterface rootPlot;
     private static List<Map<String, Object>> rootData;
-    private static Map<String, List<Map<String, Object>>> dataSets;
     private static Map<String, PlotDisplayInterface> mapOfPlotsOfSpotSets;
     private static CheckBoxTreeItem<SampleTreeNodeInterface> chosenSample;
     private static SpotSummaryDetails spotSummaryDetails;
@@ -153,6 +157,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     }
 
     private void showConcordiaPlotsOfUnknownsOrRefMat() {
+        spotsTreeViewCheckBox = new CheckTreeView<>();
+        spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
+        spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
+
         final List<ShrimpFractionExpressionInterface> allUnknownOrRefMatShrimpFractions;
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
         if (fractionTypeSelected.compareTo(SpotTypes.UNKNOWN) == 0) {
@@ -182,19 +190,20 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
                 = new CheckBoxTreeItem<>(new SampleNode(fractionTypeSelected.getPlotType()));
         chosenSample = rootItem;
-        rootItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            ((SampleNode) rootItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
-            if (newValue) {
-                if (chosenSample != rootItem) {
-                    chosenSample.setSelected(false);
-                    chosenSample = rootItem;
+        rootItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                ((SampleNode) rootItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+
+                ObservableList<TreeItem<SampleTreeNodeInterface>> mySamples = rootItem.getChildren();
+                Iterator<TreeItem<SampleTreeNodeInterface>> mySamplesIterator = mySamples.iterator();
+                while (mySamplesIterator.hasNext()) {
+                    CheckBoxTreeItem<SampleTreeNodeInterface> mySampleItem = (CheckBoxTreeItem) mySamplesIterator.next();
+                    mySampleItem.setSelected(newValue);
                 }
-                // plot all samples
                 plot = rootPlot;
                 plot.setData(rootData);
-                refreshConcordiaPlot();
             }
-            refreshConcordiaPlot();
         });
 
         rootItem.setExpanded(true);
@@ -204,15 +213,14 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotsTreeViewCheckBox.setRoot(rootItem);
         spotsTreeViewCheckBox.setShowRoot(true);
 
-        dataSets = new TreeMap<>();
         mapOfPlotsOfSpotSets = new TreeMap<>();
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
             CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem
                     = new CheckBoxTreeItem<>(new SampleNode(entry.getKey()));
+            sampleItem.setSelected(true);
             rootItem.getChildren().add(sampleItem);
 
             List<Map<String, Object>> myData = new ArrayList<>();
-            dataSets.put(entry.getKey(), myData);
 
             PlotDisplayInterface myPlot = new TopsoilPlotWetherill(
                     "Concordia of " + correction + " for " + entry.getKey(),
@@ -224,40 +232,41 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 SampleTreeNodeInterface fractionNode
                         = new ConcordiaFractionNode(spot, correction);
                 fractionNodeDetails.add(fractionNode);
-                CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItem
-                        = new CheckBoxTreeItem<>(fractionNode);
-                checkBoxTreeItem.setSelected(true);
-                sampleItem.getChildren().add(checkBoxTreeItem);
 
-                checkBoxTreeItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                    ((ConcordiaFractionNode) checkBoxTreeItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
-                    myPlot.setData(myData);
+                // handles each spot
+                CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeSpotItem
+                        = new CheckBoxTreeItem<>(fractionNode);
+                sampleItem.getChildren().add(checkBoxTreeSpotItem);
+
+                checkBoxTreeSpotItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        ((ConcordiaFractionNode) checkBoxTreeSpotItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+                        myPlot.setData(myData);
+                    }
                 });
+                checkBoxTreeSpotItem.setIndependent(false);
+                checkBoxTreeSpotItem.setSelected(fractionNode.getSelectedProperty().getValue());
 
                 myData.add(((ConcordiaFractionNode) fractionNode).getDatum());
-                // this is for overall of all at the tree top
+                // this contains all samples at the tree top
                 rootData.add(((ConcordiaFractionNode) fractionNode).getDatum());
-                checkBoxTreeItem.setIndependent(true);
             }
 
-            sampleItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                ((SampleNode) sampleItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
-                if (newValue) {
-                    if (chosenSample != sampleItem) {
-                        chosenSample.setSelected(false);
-                        chosenSample = sampleItem;
-                    }
-                    plot = mapOfPlotsOfSpotSets.get(sampleItem.getValue().getNodeName());
-                    refreshConcordiaPlot();
+            // this sample item contains all the spot item checkboxes
+            sampleItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    myPlot.setData(myData);
+                    rootPlot.setData(rootData);
                 }
-                refreshConcordiaPlot();
             });
-            sampleItem.setIndependent(true);
+            sampleItem.setIndependent(false);
         }
 
         fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
 
-        ((TreeView<SampleTreeNodeInterface>) spotsTreeViewCheckBox).setCellFactory(p -> new CheckBoxTreeCell<>(
+        ((TreeView<SampleTreeNodeInterface>) spotsTreeViewCheckBox).setCellFactory(cell -> new CheckBoxTreeCell<>(
                 (TreeItem<SampleTreeNodeInterface> item) -> ((ConcordiaFractionNode) item.getValue()).getSelectedProperty(),
                 new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
 
@@ -278,14 +287,27 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotsTreeViewCheckBox.setMinHeight(vboxMaster.getHeight());
         vboxTreeHolder.getChildren().add(spotsTreeViewCheckBox);
 
-    }
+        // dec 2018 improvement suggested by Nicole Rayner to use checkboxes to select members
+        // thus selecting tree item displays it and checkbox (see above) for a sample will
+        // allow toggling of all spots
+        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
+            @Override
+            public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable,
+                    TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
+                rootPlot.setData(rootData);
+                if (newValue.getValue() instanceof SampleNode) {
+                    if (newValue.equals(spotsTreeViewCheckBox.getRoot())) {
+                        plot = rootPlot;
+                    } else if (chosenSample != newValue) {
+                        plot = mapOfPlotsOfSpotSets.get(newValue.getValue().getNodeName());
+                    }
+                    chosenSample = (CheckBoxTreeItem< SampleTreeNodeInterface>) newValue;
+                }
+                refreshPlot();
+            }
+        });
 
-    private void refreshConcordiaPlot() {
-        if (chosenSample.isSelected()) {
-            refreshPlot();
-        } else {
-            plotAndConfigAnchorPane.getChildren().clear();
-        }
+        refreshPlot();
     }
 
     @Override
@@ -590,7 +612,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
         @Override
         public String getNodeName() {
-            return shrimpFraction.getFractionID();
+            return shrimpFraction.getFractionID();// + " AGE = " + datum.get("AGE");
         }
     }
 
