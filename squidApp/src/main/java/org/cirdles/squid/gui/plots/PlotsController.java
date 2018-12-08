@@ -160,7 +160,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotsTreeViewCheckBox = new CheckTreeView<>();
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
-        
+
         final List<ShrimpFractionExpressionInterface> allUnknownOrRefMatShrimpFractions;
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
         if (fractionTypeSelected.compareTo(SpotTypes.UNKNOWN) == 0) {
@@ -232,30 +232,25 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 SampleTreeNodeInterface fractionNode
                         = new ConcordiaFractionNode(spot, correction);
                 fractionNodeDetails.add(fractionNode);
-                
+
                 // handles each spot
                 CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeSpotItem
                         = new CheckBoxTreeItem<>(fractionNode);
                 sampleItem.getChildren().add(checkBoxTreeSpotItem);
-                
+
                 checkBoxTreeSpotItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                         ((ConcordiaFractionNode) checkBoxTreeSpotItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
                         myPlot.setData(myData);
-                        refreshPlot();
                     }
                 });
                 checkBoxTreeSpotItem.setIndependent(false);
                 checkBoxTreeSpotItem.setSelected(fractionNode.getSelectedProperty().getValue());
-                
-
-                
 
                 myData.add(((ConcordiaFractionNode) fractionNode).getDatum());
                 // this contains all samples at the tree top
                 rootData.add(((ConcordiaFractionNode) fractionNode).getDatum());
-                
             }
 
             // this sample item contains all the spot item checkboxes
@@ -617,7 +612,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
         @Override
         public String getNodeName() {
-            return shrimpFraction.getFractionID() + "AGE = " + datum.get("AGE");
+            return shrimpFraction.getFractionID();// + " AGE = " + datum.get("AGE");
         }
     }
 
