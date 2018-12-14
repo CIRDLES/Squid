@@ -56,6 +56,7 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
+import org.controlsfx.dialog.*;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -1215,6 +1216,8 @@ public class SquidUIController implements Initializable {
 
             final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
 
+
+
             ButtonType replaceAll = new ButtonType("Replace All");
             ButtonType replaceNone = new ButtonType("Replace None");
             ButtonType replace = new ButtonType("Replace");
@@ -1222,7 +1225,7 @@ public class SquidUIController implements Initializable {
             ButtonType rename = new ButtonType("Rename");
             Alert alert = new Alert(Alert.AlertType.WARNING, "", replaceAll, replaceNone, replace, dontReplace, rename);
             alert.initStyle(StageStyle.UNDECORATED);
-            alert.initOwner(primaryStageWindow);
+            alert.initOwner(primaryStage.getScene().getWindow());
             alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
             alert.setY(primaryStage.getY() + (primaryStage.getHeight()- alert.getHeight()) / 2);
             for (int i = 0; i < files.length; i++) {
@@ -1237,13 +1240,9 @@ public class SquidUIController implements Initializable {
                             squidProject.getTask().updateAllExpressions();
                         } else if (alert.getResult() == null || !alert.getResult().equals(replaceNone)) {
                             alert.setContentText(exp.getName() + " exists");
-                            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - alert.getWidth()) / 2);
+                            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - alert.getHeight()) / 2);
                             alert.showAndWait().ifPresent((t) -> {
-                                alert.initOwner(primaryStageWindow);
-                                alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
-                                alert.setY(primaryStage.getY() + (primaryStage.getHeight()- alert.getHeight()) / 2);
-                                alert.setWidth(1000);
                                 if (t.equals(replace) || t.equals(replaceAll)) {
                                     expressions.add(exp);
                                     squidProject.getTask().updateAffectedExpressions(exp);
