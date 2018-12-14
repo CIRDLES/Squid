@@ -22,11 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import static org.cirdles.topsoil.app.plot.variable.Variables.RHO;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.SIGMA_Y;
-import static org.cirdles.topsoil.app.plot.variable.Variables.X;
-import static org.cirdles.topsoil.app.plot.variable.Variables.Y;
+
+import static org.cirdles.topsoil.variable.Variables.*;
 
 /**
  *
@@ -98,7 +95,10 @@ public class TopsoilDataFactory {
 
             double rho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + errCorr}))[0].clone()[0];
             datum.put(RHO.getName(), rho);
+            
             datum.put("Selected", true);
+            
+            datum.put("AGE", 0.0);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
         }
 

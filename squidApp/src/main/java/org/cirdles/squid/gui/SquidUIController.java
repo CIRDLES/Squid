@@ -166,6 +166,20 @@ public class SquidUIController implements Initializable {
 //    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
     @FXML
     private Menu unknownsmenu;
+    @FXML
+    private Label chinese;
+    @FXML
+    private Label japanese;
+    @FXML
+    private Label korean;
+    @FXML
+    private Label japanese1;
+    @FXML
+    private Label japanese11;
+    @FXML
+    private Label japanese111;
+    @FXML
+    private Label japanese1111;
 
     /**
      * Initializes the controller class.
@@ -1025,7 +1039,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(topsoilPlotUI);
             topsoilPlotUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            //System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
+            System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
         }
     }
 
