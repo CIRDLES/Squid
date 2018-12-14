@@ -15,13 +15,13 @@ public class LoadingPopup {
 
     public LoadingPopup(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        load();
+        window = null;
     }
 
     public void load() {
         try {
-            Parent popup = FXMLLoader.load(getClass().getResource("LoadingPopup.fxml"));
-            Scene scene = new Scene(popup, 436, 320.8);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("LoadingPopup.fxml"));
+            Scene scene = new Scene(loader.load());
             Stage window = new Stage(StageStyle.UNDECORATED);
             this.window = window;
             window.setScene(scene);
@@ -31,22 +31,26 @@ public class LoadingPopup {
     }
 
     public void show() {
-        window.setX(primaryStage.getX() + (primaryStage.getWidth() - window.getScene().getWidth()) / 2);
-        window.setY(primaryStage.getY() + (primaryStage.getHeight() - window.getScene().getHeight()) / 2);
+        load();
         window.initOwner(primaryStage.getScene().getWindow());
         window.show();
+        window.setX(primaryStage.getX() + (primaryStage.getWidth() - window.getScene().getWidth()) / 2);
+        window.setY(primaryStage.getY() + (primaryStage.getHeight() - window.getScene().getHeight()) / 2);
         window.requestFocus();
     }
 
     public void show(Stage stage) {
-        window.setX(stage.getX() + (stage.getWidth() - window.getScene().getWidth()) / 2);
-        window.setY(stage.getY() + (stage.getHeight() - window.getScene().getHeight()) / 2);
+        load();
         window.initOwner(stage.getScene().getWindow());
         window.show();
+        window.setX(stage.getX() + (stage.getWidth() - window.getScene().getWidth()) / 2);
+        window.setY(stage.getY() + (stage.getHeight() - window.getScene().getHeight()) / 2);
         window.requestFocus();
     }
 
     public void hide() {
-        primaryStage.hide();
+        if(window != null) {
+            window.hide();
+        }
     }
 }
