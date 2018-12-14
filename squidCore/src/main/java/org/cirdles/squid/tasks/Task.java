@@ -34,6 +34,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import org.cirdles.squid.SquidDataFileInterface;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -167,7 +168,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     protected Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet;
 
-    protected PrawnFile prawnFile;
+    protected SquidDataFileInterface prawnFile;
     protected CalamariReportsEngine reportsEngine;
 
     protected boolean changed;
@@ -211,7 +212,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param prawnFile
      * @param reportsEngine
      */
-    public Task(String name, PrawnFile prawnFile, CalamariReportsEngine reportsEngine) {
+    public Task(String name, SquidDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
         this.name = name;
         this.type = "geochron";
         this.description = "";
@@ -823,7 +824,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void createMapOfIndexToMassStationDetails() {
         if (prawnFile != null) {
-            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
+            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(((PrawnFile)prawnFile).getRun());
         }
     }
 
@@ -1209,16 +1210,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public List<ShrimpFractionExpressionInterface> processRunFractions(PrawnFile prawnFile, SquidSessionModel squidSessionSpecs) {
+    public List<ShrimpFractionExpressionInterface> processRunFractions(SquidDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) {
         shrimpFractions = new ArrayList<>();
-        for (int f = 0; f < prawnFile.getRun().size(); f++) {
-            PrawnFile.Run runFraction = prawnFile.getRun().get(f);
+        for (int f = 0; f < ((PrawnFile)prawnFile).getRun().size(); f++) {
+            PrawnFile.Run runFraction = ((PrawnFile)prawnFile).getRun().get(f);
 
             ShrimpFraction shrimpFraction
                     = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
             if (shrimpFraction != null) {
                 shrimpFraction.setSpotNumber(f + 1);
-                String nameOfMount = prawnFile.getMount();
+                String nameOfMount = ((PrawnFile)prawnFile).getMount();
                 if (nameOfMount == null) {
                     nameOfMount = "No-Mount-Name";
                 }
@@ -1902,7 +1903,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param prawnFile the prawnFile to set
      */
     @Override
-    public void setPrawnFile(PrawnFile prawnFile) {
+    public void setPrawnFile(SquidDataFileInterface prawnFile) {
         this.prawnFile = prawnFile;
     }
 
