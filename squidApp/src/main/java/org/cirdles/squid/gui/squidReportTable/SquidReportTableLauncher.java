@@ -35,11 +35,6 @@ public class SquidReportTableLauncher {
         unknownsStage.setMinWidth(984);
         unknownsStage.setMinHeight(600);
 
-        refMatStage.show();
-        refMatStage.hide();
-        unknownsStage.show();
-        unknownsStage.hide();
-
         refMatStage.setOnCloseRequest( e -> {
             refMatStage.hide();
             e.consume();
@@ -57,9 +52,9 @@ public class SquidReportTableLauncher {
                 Scene scene = new Scene(loader.load());
                 refMatStage.setScene(scene);
                 if(!refMatStage.isShowing()) {
+                    refMatStage.show();
                     refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2);
                     refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2);
-                    refMatStage.show();
                 }
                 refMatStage.requestFocus();
             } else {
@@ -67,9 +62,9 @@ public class SquidReportTableLauncher {
                 Scene scene = new Scene(loader.load());
                 unknownsStage.setScene(scene);
                 if(!unknownsStage.isShowing()) {
+                    unknownsStage.show();
                     unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2);
                     unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2);
-                    unknownsStage.show();
                 }
                 unknownsStage.requestFocus();
             }
