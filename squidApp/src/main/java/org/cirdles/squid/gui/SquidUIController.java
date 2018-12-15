@@ -1218,19 +1218,9 @@ public class SquidUIController implements Initializable {
     public void importCustomExpressionsOnAction(ActionEvent actionEvent) {
         File folder = FileHandler.getCustomExpressionFolder(primaryStageWindow);
         if (folder != null && folder.exists()) {
-            File[] files = folder.listFiles(f -> {
-                boolean retVal;
-                if (f.getName().toLowerCase().endsWith(".xml")) {
-                    retVal = true;
-                } else {
-                    retVal = false;
-                }
-                return retVal;
-            });
+            File[] files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml"));
 
             final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
-
-
 
             ButtonType replaceAll = new ButtonType("Replace All");
             ButtonType replaceNone = new ButtonType("Replace None");
@@ -1254,8 +1244,6 @@ public class SquidUIController implements Initializable {
                             squidProject.getTask().updateAllExpressions();
                         } else if (alert.getResult() == null || !alert.getResult().equals(replaceNone)) {
                             alert.setContentText(exp.getName() + " exists");
-                            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - alert.getWidth()) / 2);
-                            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - alert.getHeight()) / 2);
                             alert.showAndWait().ifPresent((t) -> {
                                 if (t.equals(replace) || t.equals(replaceAll)) {
                                     expressions.add(exp);
