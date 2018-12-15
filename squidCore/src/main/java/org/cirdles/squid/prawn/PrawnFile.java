@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
-import org.cirdles.squid.SquidDataFileInterface;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 
 /**
  * <p>
@@ -189,7 +189,7 @@ import org.cirdles.squid.SquidDataFileInterface;
     "run"
 })
 @XmlRootElement(name = "prawn_file")
-public class PrawnFile implements SquidDataFileInterface, Serializable {
+public class PrawnFile implements ShrimpDataFileInterface, Serializable {
 
     private static final long serialVersionUID = 8704130590199113402L;
 
