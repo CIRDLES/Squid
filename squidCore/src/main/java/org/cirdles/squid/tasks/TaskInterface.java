@@ -19,6 +19,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.SquidDataFileInterface;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -108,7 +109,7 @@ public interface TaskInterface {
     /**
      * @param prawnFile the prawnFile to set
      */
-    public void setPrawnFile(PrawnFile prawnFile);
+    public void setPrawnFile(SquidDataFileInterface prawnFile);
 
     public SquidSpeciesModel lookUpSpeciesByName(String isotopeName);
 
@@ -254,7 +255,7 @@ public interface TaskInterface {
      */
     public List<ShrimpFractionExpressionInterface> getShrimpFractions();
 
-    public List<ShrimpFractionExpressionInterface> processRunFractions(PrawnFile prawnFile, SquidSessionModel squidSessionSpecs);
+    public List<ShrimpFractionExpressionInterface> processRunFractions(SquidDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs);
 
     /**
      * @return the referenceMaterialSpots

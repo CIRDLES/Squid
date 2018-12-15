@@ -62,14 +62,15 @@ public class CalamariReportsEngine implements Serializable {
     private StringBuilder refMatFractionsNuclideCPS_PerSpot;
     private StringBuilder unknownFractionsNuclideCPS_PerSpot;
 
-    private StringBuilder headerWithinSpotRatios_PerScanMinus1;
-    private StringBuilder refMatWithinSpotRatios_PerScanMinus1;
+    private StringBuilder unknownHeaderWithinSpotRatios_PerScanMinus1;
     private StringBuilder unknownWithinSpotRatios_PerScanMinus1;
+    private StringBuilder refMatHeaderWithinSpotRatios_PerScanMinus1;
+    private StringBuilder refMatWithinSpotRatios_PerScanMinus1;
 
-    private StringBuilder headerMeanRatios_PerSpot_Unknowns;
-    private StringBuilder headerMeanRatios_PerSpot_RefMat;
-    private StringBuilder refMatMeanRatios_PerSpot;
+    private StringBuilder unknownHeaderMeanRatios_PerSpot;
     private StringBuilder unknownMeanRatios_PerSpot;
+    private StringBuilder refMatHeaderMeanRatios_PerSpot;
+    private StringBuilder refMatMeanRatios_PerSpot;
 
     private boolean doWriteReportFiles;
 
@@ -87,12 +88,13 @@ public class CalamariReportsEngine implements Serializable {
         this.refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
         this.unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
 
-        this.headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        this.unknownHeaderWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        this.refMatHeaderWithinSpotRatios_PerScanMinus1 = new StringBuilder();
         this.refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
         this.unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
 
-        this.headerMeanRatios_PerSpot_Unknowns = new StringBuilder();
-        this.headerMeanRatios_PerSpot_RefMat = new StringBuilder();
+        this.unknownHeaderMeanRatios_PerSpot = new StringBuilder();
+        this.refMatHeaderMeanRatios_PerSpot = new StringBuilder();
         this.refMatMeanRatios_PerSpot = new StringBuilder();
         this.unknownMeanRatios_PerSpot = new StringBuilder();
 
@@ -103,12 +105,13 @@ public class CalamariReportsEngine implements Serializable {
         refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
         unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
 
-        headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        unknownHeaderWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        refMatHeaderWithinSpotRatios_PerScanMinus1 = new StringBuilder();
         refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
         unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
 
-        headerMeanRatios_PerSpot_Unknowns = new StringBuilder();
-        headerMeanRatios_PerSpot_RefMat = new StringBuilder();
+        unknownHeaderMeanRatios_PerSpot = new StringBuilder();
+        refMatHeaderMeanRatios_PerSpot = new StringBuilder();
         refMatMeanRatios_PerSpot = new StringBuilder();
         unknownMeanRatios_PerSpot = new StringBuilder();
     }
@@ -672,19 +675,21 @@ public class CalamariReportsEngine implements Serializable {
             withinSpotRatios_PerScanMinus1 = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_03_WithinSpotRatios_PerScanMinus1.csv");
         }
 
-        headerWithinSpotRatios_PerScanMinus1 = new StringBuilder();
-        StringBuilder headerWithinSpotRatios_PerScanMinus1_2 = new StringBuilder();
+        unknownHeaderWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        StringBuilder unknownHeaderWithinSpotRatios_PerScanMinus1_2 = new StringBuilder();
+        refMatHeaderWithinSpotRatios_PerScanMinus1 = new StringBuilder();
+        StringBuilder refMatHeaderWithinSpotRatios_PerScanMinus1_2 = new StringBuilder();
 
         if (doWriteReportFiles) {
-            headerWithinSpotRatios_PerScanMinus1.append("Title, Date, Ndod, Type");
+            unknownHeaderWithinSpotRatios_PerScanMinus1.append("Title, Date, Ndod, Type");
         } else {
             // format for GUI
-            headerWithinSpotRatios_PerScanMinus1
+            unknownHeaderWithinSpotRatios_PerScanMinus1
                     .append(String.format("%1$-" + 20 + "s", "Title"))
                     .append(String.format("%1$-" + 20 + "s", "Date"))
                     .append(String.format("%1$-" + 10 + "s", "Ndod"))
                     .append(String.format("%1$-" + 15 + "s", "Type"));
-            headerWithinSpotRatios_PerScanMinus1_2
+            unknownHeaderWithinSpotRatios_PerScanMinus1_2
                     .append(String.format("%1$-" + 20 + "s", "     "))
                     .append(String.format("%1$-" + 20 + "s", "     "))
                     .append(String.format("%1$-" + 10 + "s", "     "))
@@ -697,47 +702,70 @@ public class CalamariReportsEngine implements Serializable {
             if (entry.isActive()) {
                 String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20, entry.getDisplayNameNoSpaces().length()));
                 if (doWriteReportFiles) {
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".InterpTime");
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".Value");
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".1SigmaAbs");
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".InterpTime");
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".Value");
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".1SigmaAbs");
                 } else {
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
-                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".InterpTime"));
-                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
-                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaAbs"));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".InterpTime"));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaAbs"));
                 }
             }
         }
 
+        refMatHeaderWithinSpotRatios_PerScanMinus1.append(unknownHeaderWithinSpotRatios_PerScanMinus1.toString());
+        refMatHeaderWithinSpotRatios_PerScanMinus1_2.append(unknownHeaderWithinSpotRatios_PerScanMinus1_2.toString());
+
         if (doWriteReportFiles) {
-            headerWithinSpotRatios_PerScanMinus1.append("\n");
-            Files.write(withinSpotRatios_PerScanMinus1.toPath(), headerWithinSpotRatios_PerScanMinus1.toString().getBytes(UTF_8));
+            unknownHeaderWithinSpotRatios_PerScanMinus1.append("\n");
+            Files.write(withinSpotRatios_PerScanMinus1.toPath(), unknownHeaderWithinSpotRatios_PerScanMinus1.toString().getBytes(UTF_8));
         } else {
-            // prepare headers for any task expressions
+            // prepare headers for any UNKNOWN task expressions
             List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFractionUnknown.getTaskExpressionsForScansEvaluated();
             for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
                 String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20, taskExpressionEval.getExpression().getName().length()));
                 if (doWriteReportFiles) {
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Time");
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Value");
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".1SigmaAbs");
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Time");
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Value");
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".1SigmaAbs");
                 } else {
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                    headerWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Time"));
-                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
-                    headerWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaAbs"));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Time"));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    unknownHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaAbs"));
                 }
             }
 
+            // prepare headers for any REFMAT task expressions
+            taskExpressionsEvaluated = shrimpFractionRefMat.getTaskExpressionsForScansEvaluated();
+            for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
+                String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20, taskExpressionEval.getExpression().getName().length()));
+                if (doWriteReportFiles) {
+                    refMatHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Time");
+                    refMatHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Value");
+                    refMatHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".1SigmaAbs");
+                } else {
+                    refMatHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    refMatHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    refMatHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    refMatHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Time"));
+                    refMatHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    refMatHeaderWithinSpotRatios_PerScanMinus1_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaAbs"));
+                }
+            }
         }
-        headerWithinSpotRatios_PerScanMinus1.append("\n");
-        headerWithinSpotRatios_PerScanMinus1_2.append("\n");
+        unknownHeaderWithinSpotRatios_PerScanMinus1.append("\n");
+        unknownHeaderWithinSpotRatios_PerScanMinus1_2.append("\n");
+        unknownHeaderWithinSpotRatios_PerScanMinus1.append(unknownHeaderWithinSpotRatios_PerScanMinus1_2);
 
-        headerWithinSpotRatios_PerScanMinus1.append(headerWithinSpotRatios_PerScanMinus1_2);
+        refMatHeaderWithinSpotRatios_PerScanMinus1.append("\n");
+        refMatHeaderWithinSpotRatios_PerScanMinus1_2.append("\n");
+        refMatHeaderWithinSpotRatios_PerScanMinus1.append(refMatHeaderWithinSpotRatios_PerScanMinus1_2);
 
         refMatWithinSpotRatios_PerScanMinus1 = new StringBuilder();
         unknownWithinSpotRatios_PerScanMinus1 = new StringBuilder();
@@ -746,19 +774,20 @@ public class CalamariReportsEngine implements Serializable {
         if (doWriteReportFiles) {
             meanRatios_PerSpot = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_04_MeanRatios_PerSpot.csv");
         }
-        headerMeanRatios_PerSpot_Unknowns = new StringBuilder();
-        StringBuilder headerMeanRatios_PerSpot_Unknowns2 = new StringBuilder();
-        headerMeanRatios_PerSpot_RefMat = new StringBuilder();
-        StringBuilder headerMeanRatios_PerSpot_RefMat2 = new StringBuilder();
+
+        unknownHeaderMeanRatios_PerSpot = new StringBuilder();
+        StringBuilder unknownHeaderMeanRatios_PerSpot_2 = new StringBuilder();
+        refMatHeaderMeanRatios_PerSpot = new StringBuilder();
+        StringBuilder refMatHeaderMeanRatios_PerSpot_2 = new StringBuilder();
         if (doWriteReportFiles) {
-            headerMeanRatios_PerSpot_Unknowns.append("Title, Date, Type");
+            unknownHeaderMeanRatios_PerSpot.append("Title, Date, Type");
         } else {
             // format for GUI
-            headerMeanRatios_PerSpot_Unknowns
+            unknownHeaderMeanRatios_PerSpot
                     .append(String.format("%1$-" + 20 + "s", "Title"))
                     .append(String.format("%1$-" + 20 + "s", "Date"))
                     .append(String.format("%1$-" + 15 + "s", "Type"));
-            headerMeanRatios_PerSpot_Unknowns2
+            unknownHeaderMeanRatios_PerSpot_2
                     .append(String.format("%1$-" + 20 + "s", "     "))
                     .append(String.format("%1$-" + 20 + "s", "     "))
                     .append(String.format("%1$-" + 15 + "s", "     "));
@@ -770,56 +799,52 @@ public class CalamariReportsEngine implements Serializable {
             if (entry.isActive()) {
                 String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20, entry.getDisplayNameNoSpaces().length()));
                 if (doWriteReportFiles) {
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(displayNameNoSpaces).append(".MinIndex");
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(displayNameNoSpaces).append(".Value");
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(displayNameNoSpaces).append(".1SigmaPct");
+                    unknownHeaderMeanRatios_PerSpot.append(", ").append(displayNameNoSpaces).append(".MinIndex");
+                    unknownHeaderMeanRatios_PerSpot.append(", ").append(displayNameNoSpaces).append(".Value");
+                    unknownHeaderMeanRatios_PerSpot.append(", ").append(displayNameNoSpaces).append(".1SigmaPct");
                 } else {
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 12 + "s", displayNameNoSpaces));
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
-                    headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 12 + "s", ".MinIndex"));
-                    headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
-                    headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
+                    unknownHeaderMeanRatios_PerSpot.append(", ").append(String.format("%1$-" + 12 + "s", displayNameNoSpaces));
+                    unknownHeaderMeanRatios_PerSpot.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
+                    unknownHeaderMeanRatios_PerSpot.append(", ").append(String.format("%1$-" + 20 + "s", displayNameNoSpaces));
+                    unknownHeaderMeanRatios_PerSpot_2.append(", ").append(String.format("%1$-" + 12 + "s", ".MinIndex"));
+                    unknownHeaderMeanRatios_PerSpot_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    unknownHeaderMeanRatios_PerSpot_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
                 }
+
             }
         }
+        refMatHeaderMeanRatios_PerSpot.append(unknownHeaderMeanRatios_PerSpot.toString());
+        refMatHeaderMeanRatios_PerSpot_2.append(unknownHeaderMeanRatios_PerSpot_2.toString());
 
         if (doWriteReportFiles) {
-            headerMeanRatios_PerSpot_Unknowns.append("\n");
-            Files.write(meanRatios_PerSpot.toPath(), headerMeanRatios_PerSpot_Unknowns.toString().getBytes(UTF_8));
+            unknownHeaderMeanRatios_PerSpot.append("\n");
+            Files.write(meanRatios_PerSpot.toPath(), unknownHeaderMeanRatios_PerSpot.toString().getBytes(UTF_8));
         } else {
-            // these expressions are spot-specific with no ratios-of-interest
-            // we create two flavors of header - one for unknowns and one for reference materials when not writing file
-            // todo : more robust solution
-            // currently, this duplicates these outputs since they are stored in the per scan results too
-            headerMeanRatios_PerSpot_RefMat.append(headerMeanRatios_PerSpot_Unknowns.toString());
-            headerMeanRatios_PerSpot_RefMat2.append(headerMeanRatios_PerSpot_Unknowns2.toString());
-
             // for unknowns
             Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFractionUnknown.getTaskExpressionsEvaluationsPerSpot();
             for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
                 String expressionName = entry.getKey().getName().substring(0, Math.min(20, entry.getKey().getName().length()));
+                double[] expressionResults = entry.getValue()[0];
                 if (doWriteReportFiles) {
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(expressionName).append(".Value");
-                    if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                        headerMeanRatios_PerSpot_Unknowns.append(", ").append(expressionName).append(".1SigmaPct");
+                    unknownHeaderMeanRatios_PerSpot.append(", ").append(expressionName).append(".Value");
+                    if (expressionResults.length > 1) {//   if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        unknownHeaderMeanRatios_PerSpot.append(", ").append(expressionName).append(".1SigmaPct");
                     }
                 } else {
-                    headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
-                    if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                        headerMeanRatios_PerSpot_Unknowns.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    unknownHeaderMeanRatios_PerSpot.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    if (expressionResults.length > 1) {//   if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        unknownHeaderMeanRatios_PerSpot.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
                     }
-                    headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
-                    if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                        headerMeanRatios_PerSpot_Unknowns2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
+                    unknownHeaderMeanRatios_PerSpot_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    if (expressionResults.length > 1) {//   if (((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
+                        unknownHeaderMeanRatios_PerSpot_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
                     }
                 }
             }
 
-            headerMeanRatios_PerSpot_Unknowns.append("\n");
-            headerMeanRatios_PerSpot_Unknowns2.append("\n");
-
-            headerMeanRatios_PerSpot_Unknowns.append(headerMeanRatios_PerSpot_Unknowns2);
+            unknownHeaderMeanRatios_PerSpot.append("\n");
+            unknownHeaderMeanRatios_PerSpot_2.append("\n");
+            unknownHeaderMeanRatios_PerSpot.append(unknownHeaderMeanRatios_PerSpot_2);
 
             // for reference materials ********************************************************************************
             spotExpressions = shrimpFractionRefMat.getTaskExpressionsEvaluationsPerSpot();
@@ -827,35 +852,29 @@ public class CalamariReportsEngine implements Serializable {
                 String expressionName = entry.getKey().getName().substring(0, Math.min(20, entry.getKey().getName().length()));
                 double[] expressionResults = entry.getValue()[0];
                 if (doWriteReportFiles) {
-                    headerMeanRatios_PerSpot_RefMat.append(", ").append(expressionName).append(".Value");
+                    refMatHeaderMeanRatios_PerSpot.append(", ").append(expressionName).append(".Value");
                     if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                        headerMeanRatios_PerSpot_RefMat.append(", ").append(expressionName).append(".1SigmaPct");
+                        refMatHeaderMeanRatios_PerSpot.append(", ").append(expressionName).append(".1SigmaPct");
                     }
                 } else {
-                    headerMeanRatios_PerSpot_RefMat.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                    refMatHeaderMeanRatios_PerSpot.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
                     if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                        headerMeanRatios_PerSpot_RefMat.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
+                        refMatHeaderMeanRatios_PerSpot.append(", ").append(String.format("%1$-" + 20 + "s", expressionName));
                     }
-                    headerMeanRatios_PerSpot_RefMat2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
+                    refMatHeaderMeanRatios_PerSpot_2.append(", ").append(String.format("%1$-" + 20 + "s", ".Value"));
                     if (expressionResults.length > 1) {//   ((ExpressionTree) entry.getKey()).hasRatiosOfInterest()) {
-                        headerMeanRatios_PerSpot_RefMat2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
+                        refMatHeaderMeanRatios_PerSpot_2.append(", ").append(String.format("%1$-" + 20 + "s", ".1SigmaPct"));
                     }
                 }
             }
 
         }
-        headerMeanRatios_PerSpot_RefMat.append("\n");
-        headerMeanRatios_PerSpot_RefMat2.append("\n");
+        refMatHeaderMeanRatios_PerSpot.append("\n");
+        refMatHeaderMeanRatios_PerSpot_2.append("\n");
+        refMatHeaderMeanRatios_PerSpot.append(refMatHeaderMeanRatios_PerSpot_2);
 
-        if (doWriteReportFiles) {
-            // do nothing Files.write(meanRatios_PerSpot.toPath(), headerMeanRatios_PerSpot_Unknowns.toString().getBytes(UTF_8));
-        } else {
-            headerMeanRatios_PerSpot_RefMat.append(headerMeanRatios_PerSpot_RefMat2);
-        }
-
-        refMatMeanRatios_PerSpot = new StringBuilder();
         unknownMeanRatios_PerSpot = new StringBuilder();
-
+        refMatMeanRatios_PerSpot = new StringBuilder();
     }
 
     private void finishSpeciesReportFiles() throws IOException {
@@ -895,22 +914,22 @@ public class CalamariReportsEngine implements Serializable {
 
         switch (flavor) {
             case MEAN_RATIOS_PER_SPOT_UNKNOWNS:
-                report.append(headerMeanRatios_PerSpot_Unknowns);
+                report.append(unknownHeaderMeanRatios_PerSpot);
                 report.append(unknownMeanRatios_PerSpot);
                 break;
 
             case MEAN_RATIOS_PER_SPOT_REFERENCEMAT:
-                report.append(headerMeanRatios_PerSpot_RefMat);
+                report.append(refMatHeaderMeanRatios_PerSpot);
                 report.append(refMatMeanRatios_PerSpot);
                 break;
 
             case WITHIN_SPOT_RATIOS_UNKNOWNS:
-                report.append(headerWithinSpotRatios_PerScanMinus1);
+                report.append(unknownHeaderWithinSpotRatios_PerScanMinus1);
                 report.append(unknownWithinSpotRatios_PerScanMinus1);
                 break;
 
             case WITHIN_SPOT_RATIOS_REFERENCEMAT:
-                report.append(headerWithinSpotRatios_PerScanMinus1);
+                report.append(refMatHeaderWithinSpotRatios_PerScanMinus1);
                 report.append(refMatWithinSpotRatios_PerScanMinus1);
                 break;
 
@@ -944,10 +963,10 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     /**
-     * @return the headerMeanRatios_PerSpot_Unknowns
+     * @return the unknownHeaderMeanRatios_PerSpot
      */
-    public StringBuilder getHeaderMeanRatios_PerSpot_Unknowns() {
-        return headerMeanRatios_PerSpot_Unknowns;
+    public StringBuilder getUnknownHeaderMeanRatios_PerSpot() {
+        return unknownHeaderMeanRatios_PerSpot;
     }
 
     /**
