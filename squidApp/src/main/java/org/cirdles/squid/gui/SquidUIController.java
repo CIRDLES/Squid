@@ -51,6 +51,7 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
+import org.cirdles.squid.utilities.fileUtilities.FileValidator;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
@@ -1218,7 +1219,9 @@ public class SquidUIController implements Initializable {
     public void importCustomExpressionsOnAction(ActionEvent actionEvent) {
         File folder = FileHandler.getCustomExpressionFolder(primaryStageWindow);
         if (folder != null && folder.exists()) {
-            File[] files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml"));
+            File[] files = folder.listFiles(f ->
+                    f.getName().toLowerCase().endsWith(".xml") &&
+                    FileValidator.validateFileIsXMLSerializedEntity(f, Expression.class));
 
             final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
 
