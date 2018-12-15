@@ -444,9 +444,9 @@ public final class SquidProject implements Serializable {
         for (Run runS : second) {
             runs.add(runS);
         }
-        prawnFile.setRuns((short) runs.size());
+        ((PrawnFile)prawnFile).setRuns((short) runs.size());
         try {
-            prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[1]);
+            prawnFileHandler.writeRawDataFileAsXML(((PrawnFile)prawnFile), retVal[1]);
         } catch (JAXBException jAXBException) {
         }
 
@@ -459,7 +459,7 @@ public final class SquidProject implements Serializable {
         for (Run runS : second) {
             runs.add(runS);
         }
-        prawnFile.setRuns((short) runs.size());
+        ((PrawnFile)prawnFile).setRuns((short) runs.size());
 
         return retVal;
     }
