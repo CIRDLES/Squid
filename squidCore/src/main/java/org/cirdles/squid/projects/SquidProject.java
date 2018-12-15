@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
-import org.cirdles.squid.SquidDataFileInterface;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.core.PrawnFileHandler;
@@ -46,6 +45,7 @@ import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 
 /**
  *
@@ -62,7 +62,7 @@ public final class SquidProject implements Serializable {
     private String analystName;
     private String projectNotes;
     private File prawnXMLFile;
-    private SquidDataFileInterface prawnFile;
+    private ShrimpDataFileInterface prawnFile;
     private String filterForRefMatSpotNames;
     private String filterForConcRefMatSpotNames;
     private double sessionDurationHours;

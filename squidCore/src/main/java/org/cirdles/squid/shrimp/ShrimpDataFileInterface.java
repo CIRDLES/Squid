@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid;
+package org.cirdles.squid.shrimp;
 
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface SquidDataFileInterface {
+public interface ShrimpDataFileInterface {
     
     public int extractCountOfRuns();
     

@@ -34,7 +34,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import org.cirdles.squid.SquidDataFileInterface;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -103,6 +102,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateCommonLeadParameterValues;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 
 /**
  *
@@ -168,7 +168,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     protected Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet;
 
-    protected SquidDataFileInterface prawnFile;
+    protected ShrimpDataFileInterface prawnFile;
     protected CalamariReportsEngine reportsEngine;
 
     protected boolean changed;
@@ -212,7 +212,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param prawnFile
      * @param reportsEngine
      */
-    public Task(String name, SquidDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
+    public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
         this.name = name;
         this.type = "geochron";
         this.description = "";
@@ -1210,7 +1210,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public List<ShrimpFractionExpressionInterface> processRunFractions(SquidDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) {
+    public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) {
         shrimpFractions = new ArrayList<>();
 
         boolean isPrawnFile = prawnFile instanceof PrawnFile;
@@ -1911,7 +1911,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param prawnFile the prawnFile to set
      */
     @Override
-    public void setPrawnFile(SquidDataFileInterface prawnFile) {
+    public void setPrawnFile(ShrimpDataFileInterface prawnFile) {
         this.prawnFile = prawnFile;
     }
 
