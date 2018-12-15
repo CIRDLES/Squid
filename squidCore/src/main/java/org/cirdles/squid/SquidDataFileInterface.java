@@ -21,4 +21,6 @@ package org.cirdles.squid;
  */
 public interface SquidDataFileInterface {
     
+    public int extractCountOfRuns();
+    
 }

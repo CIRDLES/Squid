@@ -410,9 +410,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         summary.append("\n ")
                 .append(String.valueOf(concentrationReferenceMaterialSpots.size()))
-                .append(" Concentration Reference Material Spots extracted by filter: ' ")
+                .append(" Concentration Reference Material Spots extracted by filter: \"")
                 .append(filterForConcRefMatSpotNames)
-                .append(" '.\n\t\t  Mean Concentration of Primary Parent Element ")
+                .append("\".\n\t\t  Mean Concentration of Primary Parent Element ")
                 .append(parentNuclide)
                 .append(" = ")
                 .append(meanConcValue);
@@ -824,7 +824,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void createMapOfIndexToMassStationDetails() {
         if (prawnFile != null) {
-            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(((PrawnFile)prawnFile).getRun());
+            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(((PrawnFile) prawnFile).getRun());
         }
     }
 
@@ -1212,14 +1212,21 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public List<ShrimpFractionExpressionInterface> processRunFractions(SquidDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) {
         shrimpFractions = new ArrayList<>();
-        for (int f = 0; f < ((PrawnFile)prawnFile).getRun().size(); f++) {
-            PrawnFile.Run runFraction = ((PrawnFile)prawnFile).getRun().get(f);
 
-            ShrimpFraction shrimpFraction
-                    = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
+        boolean isPrawnFile = prawnFile instanceof PrawnFile;
+        ShrimpFraction shrimpFraction = null;
+        for (int f = 0; f < prawnFile.extractCountOfRuns(); f++) {
+            if (isPrawnFile) {
+                PrawnFile.Run runFraction = ((PrawnFile) prawnFile).getRun().get(f);
+                shrimpFraction
+                        = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
+            } else {
+                // OP files go here
+            }
+
             if (shrimpFraction != null) {
                 shrimpFraction.setSpotNumber(f + 1);
-                String nameOfMount = ((PrawnFile)prawnFile).getMount();
+                String nameOfMount = ((PrawnFile) prawnFile).getMount();
                 if (nameOfMount == null) {
                     nameOfMount = "No-Mount-Name";
                 }
@@ -1227,13 +1234,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 shrimpFractions.add(shrimpFraction);
             }
         }
-
         // prepare for task expressions to be evaluated
         // setup spots
-        shrimpFractions.forEach((spot) -> {
-            List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated = new ArrayList<>();
-            spot.setTaskExpressionsForScansEvaluated(taskExpressionsForScansEvaluated);
-        });
+        shrimpFractions.forEach(
+                (spot) -> {
+                    List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated = new ArrayList<>();
+                    spot.setTaskExpressionsForScansEvaluated(taskExpressionsForScansEvaluated);
+                }
+        );
 
         // subdivide spots and calculate hours
         referenceMaterialSpots = new ArrayList<>();
@@ -2213,7 +2221,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public ReferenceMaterial getConcentrationReferenceMaterial() {
-            return concentrationReferenceMaterial;
+        return concentrationReferenceMaterial;
     }
 
     @Override

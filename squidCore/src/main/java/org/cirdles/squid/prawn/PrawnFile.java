@@ -1750,4 +1750,9 @@ public class PrawnFile implements SquidDataFileInterface, Serializable {
 
     }
 
+    @Override
+    public int extractCountOfRuns() {
+        return run.size();
+    }
+
 }
