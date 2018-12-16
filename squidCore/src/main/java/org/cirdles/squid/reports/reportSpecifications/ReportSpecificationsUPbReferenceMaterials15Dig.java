@@ -54,37 +54,37 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      */
     public static final String[][] ReportCategory_CorrectionIndependent = new String[][]{
         {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PPM_PARENT_EQN_NAME_U, "",
-            "", "true", "false", "20", "", "concentration of U", "false", "false"
+            "", "true", "false", "15", "", "concentration of U", "false", "false"
         },
         {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", "<SQUID_PPM_PARENT_EQN_NAME_TH>", "",
-            "", "true", "false", "20", "", "concentration of Th", "false", "false"
+            "", "true", "false", "15", "", "concentration of Th", "false", "false"
         },
         {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "<SQUID_TH_U_EQN_NAME>", "PCT",
-            "", "true", "false", "20", "true", "232/238 ratio", "false", "false"
+            "", "true", "false", "15", "true", "232/238 ratio", "false", "false"
         },
         {"204", "overcts", "/sec", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204 overcts/sec (fr. 207)", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"204", "overcts", "/sec", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "<OVER_COUNTS_PERSEC_4_8>", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"", "204", "/206", "(fr. 207)", "", "getTaskExpressionsEvaluationsPerSpotByField", "204/206 (fr. 207)", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "204", "/206", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "<OVER_COUNT_4_6_8>", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr Primary calib const. delta%", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"8-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "<CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA>", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"", "", "UncorrPb", "/Uconst", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PRIMARY_UTH_EQN_NAME_U, "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "", "UncorrPb", "/Thconst", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_PRIMARY_UTH_EQN_NAME_TH, "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },};
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
@@ -95,46 +95,46 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      */
     public static final String[][] ReportCategory_204PbCorrected = new String[][]{
         {"4-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206Pb/238Ucalibr.const", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206Pb/238U Age", "ABS",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb/232Thcalibr.const", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb/232Th Age", "ABS",
             "", "true", "false", "4", "true", "", "false", "false"
         },
         {"4-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr Total 206Pb/238U", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr Total 208Pb/232Th", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com206", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com208", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb*/206Pb*", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "207Pb", "206Pb", "age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207Pb/206Pb age", "ABS",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "4-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207Pb/206Pb", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "4-corr", "207Pb", "/235U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/235", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "4-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "4-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr errcorr", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         }
     };
     // Report column order =
@@ -146,34 +146,34 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      */
     public static final String[][] ReportCategory_207PbCorrected = new String[][]{
         {"7-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206Pb/238Ucalibr.const", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"7-corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206Pb/238U Age", "ABS",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"7-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb/232Thcalibr.const", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"7-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb/232Th Age", "ABS",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"7-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr Total 206Pb/238U", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"7-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr Total 208Pb/232Th", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com206", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com208", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb*/206Pb*", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "7-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         }
     };
 
@@ -186,31 +186,31 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      */
     public static final String[][] ReportCategory_208PbCorrected = new String[][]{
         {"8-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206Pb/238Ucalibr.const", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206Pb/238U Age", "ABS",
-            "", "true", "true", "20", "true", "", "false", "false"
+            "", "true", "true", "15", "true", "", "false", "false"
         },
         {"8-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr Total 206Pb/238U", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr %com206", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         },
         {"8-corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207Pb/206Pb Age", "ABS",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "8-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "8-corr", "207Pb", "/235U", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/235", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238", "PCT",
-            "", "true", "false", "20", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "8-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr errcorr", "",
-            "", "true", "false", "20", "", "", "false", "false"
+            "", "true", "false", "15", "", "", "false", "false"
         }
     };
 
