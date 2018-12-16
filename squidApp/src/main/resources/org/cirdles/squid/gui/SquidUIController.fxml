@@ -47,7 +47,7 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Prawn File as ..." />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="choosePrawnFileMenuItem" mnemonicParsing="false" onAction="#choosePrawnFileMenuItemAction" text="Replace Prawn File with ..." />
+                  <MenuItem fx:id="choosePrawnFileMenuItem" mnemonicParsing="false" onAction="#choosePrawnFileMenuItemAction" text="Replace Project Prawn File with ..." />
               </items>
             </Menu>
             <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
