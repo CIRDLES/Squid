@@ -154,7 +154,7 @@ public abstract class AbstractDataView extends Canvas {
         // draw border
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(1);
-        g2d.strokeRect(0, 0, width, height);
+        g2d.strokeRect(1, 1, width-1, height-1);
 
     }
 

@@ -46,6 +46,8 @@
                   <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Prawn File as ..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="choosePrawnFileMenuItem" mnemonicParsing="false" onAction="#choosePrawnFileMenuItemAction" text="Replace Prawn File with ..." />
               </items>
             </Menu>
             <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
@@ -100,7 +102,7 @@
                               <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
                           </items>
                         </Menu>
-                        <MenuItem disable="true" mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Custom Report Tables">
@@ -145,18 +147,17 @@
                 <MenuItem mnemonicParsing="false" text="Action 1" />
               </items>
             </Menu>
-            <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Squid LabData">
+            <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Resources">
               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
-                  <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
-                <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
-                  <MenuItem mnemonicParsing="false" onAction="#openDefaultSquidLabDataModels" text="Manage Default Models" />
-              </items>
-            </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-                  <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
-                  <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="User Preferences" />
+                  <Menu mnemonicParsing="false" text="Parameter Models">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
+                        <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
+                      <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDefaultSquidLabDataModels" text="Manage Default Models" />
+                    </items>
+                  </Menu>
                   <Menu mnemonicParsing="false" text="Online Resources">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
@@ -170,6 +171,12 @@
                       <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
                     </items>
                   </Menu>
+              </items>
+            </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
+                  <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
             <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
           </items>
         </Menu>
