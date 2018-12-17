@@ -16,6 +16,18 @@
  */
 package org.cirdles.squid.gui;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -172,6 +184,8 @@ public class SquidUIController implements Initializable {
     private Label japanese111;
     @FXML
     private Label japanese1111;
+    @FXML
+    private MenuItem choosePrawnFileMenuItem;
 
     /**
      * Initializes the controller class.
@@ -1321,6 +1335,34 @@ public class SquidUIController implements Initializable {
             }
         } else {
             System.out.println("custom expression folder not created");
+        }
+    }
+
+    @FXML
+    private void choosePrawnFileMenuItemAction(ActionEvent event) {
+        try {
+            File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
+            if (prawnXMLFileNew != null) {
+                squidProject.setupPrawnFile(prawnXMLFileNew);
+                squidProject.updateFilterForRefMatSpotNames("");
+                squidProject.updateFilterForConcRefMatSpotNames("");
+                squidProject.updateFiltersForUnknownNames(new HashMap<>());
+                squidProject.getTask().setChanged(true);
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
+                launchProjectManager();
+                saveSquidProjectMenuItem.setDisable(true);
+            }
+        } catch (IOException | JAXBException | SAXException | SquidException anException) {
+            String message = anException.getMessage();
+            if (message == null) {
+                message = anException.getCause().getMessage();
+            }
+
+            SquidMessageDialog.showWarningDialog(
+                    "Squid encountered an error while trying to open the selected Prawn File:\n\n"
+                    + message,
+                    primaryStageWindow);
         }
     }
 

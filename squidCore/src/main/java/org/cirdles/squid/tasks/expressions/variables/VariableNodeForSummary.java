@@ -99,7 +99,7 @@ public class VariableNodeForSummary extends ExpressionTree {
      *
      * @param shrimpFractions
      * @param task
-     * @return
+     * @return object array
      * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override

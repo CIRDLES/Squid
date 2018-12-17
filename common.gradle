@@ -6,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '1.0.2'
+String mavenVersion = '1.0.3'
 
 
 sourceCompatibility = '1.8'
@@ -38,9 +38,17 @@ task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from 
     from sourceSets.main.allSource
 }
 
+
+task packageJavadoc(type: Jar, dependsOn: 'javadoc') {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
 artifacts {
     archives jar
     archives sourcesJar
+//  Uncomment next line to produce javadocs
+//    archives packageJavadoc
 }
 
 configure(install.repositories.mavenInstaller) {
