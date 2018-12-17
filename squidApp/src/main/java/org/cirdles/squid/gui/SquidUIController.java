@@ -1227,28 +1227,7 @@ public class SquidUIController implements Initializable {
     }
 
 
-    public void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
-        removeAllManagers();
-        List<ShrimpFraction> shrimps = null;
-        try {
-            File file = FileHandler.selectOPFile(primaryStageWindow);
-            if(file != null) {
-                shrimps = OPFileHandler.convertOPFileToShrimpFractions(file);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(shrimps != null) {
-            prepareForNewProject();
-            squidProject = new SquidProject();
-            squidProject.getTask().getShrimpFractions().clear();
-            squidProject.getTask().getShrimpFractions().addAll(shrimps);
-            ((Task) squidProject.getTask()).setupSquidSessionSkeleton();
-            launchProjectManager();
-        } else {
-            SquidMessageDialog.showWarningDialog("OP File not opened properly or incorrect op file format", primaryStageWindow);
-        }
-    }
+
 
     @FXML
     private void choosePrawnFileMenuItemAction(ActionEvent event) {
