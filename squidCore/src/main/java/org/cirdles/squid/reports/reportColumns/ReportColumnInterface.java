@@ -662,7 +662,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
             int movePointRightCount,
             int uncertaintySigDigits) {
 
-        if (uncertaintyType.equalsIgnoreCase("PCT")) {
+        // if value == 0, use second method to generate "0"
+        if ((value != 0.0) && (uncertaintyType.equalsIgnoreCase("PCT"))) {
             return formatBigDecimalForPublicationSigDigMode(//
                     new BigDecimal(oneSigmaAbs / value * 100.0).movePointRight(movePointRightCount),//
                     uncertaintySigDigits);
