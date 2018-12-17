@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.dataViews;
+package org.cirdles.squid.shrimp;
 
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface MassAuditRefreshInterface {
-    public void updateGraphsWithSelectedIndex(int index);
+public interface ShrimpDataFileInterface {
     
-    public void removeSpotFromGraphs(int spotIndex);
+    public int extractCountOfRuns();
     
-    public int[] getCountOfScansCumulative();
 }
