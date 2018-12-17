@@ -34,6 +34,7 @@ import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 
 /**
  *
@@ -109,7 +110,7 @@ public interface TaskInterface {
     /**
      * @param prawnFile the prawnFile to set
      */
-    public void setPrawnFile(PrawnFile prawnFile);
+    public void setPrawnFile(ShrimpDataFileInterface prawnFile);
 
     public SquidSpeciesModel lookUpSpeciesByName(String isotopeName);
 
@@ -255,7 +256,7 @@ public interface TaskInterface {
      */
     public List<ShrimpFractionExpressionInterface> getShrimpFractions();
 
-    public List<ShrimpFractionExpressionInterface> processRunFractions(PrawnFile prawnFile, SquidSessionModel squidSessionSpecs);
+    public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs);
 
     /**
      * @return the referenceMaterialSpots

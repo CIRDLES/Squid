@@ -154,14 +154,14 @@ public abstract class AbstractDataView extends Canvas {
         // draw border
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(1);
-        g2d.strokeRect(0, 0, width, height);
+        g2d.strokeRect(1, 1, width-1, height-1);
 
     }
 
     /**
      *
      * @param x
-     * @return
+     * @return mapped x
      */
     public double mapX(double x) {
         return (((x - getMinX_Display()) / getRangeX_Display()) * graphWidth) + leftMargin;
@@ -170,7 +170,7 @@ public abstract class AbstractDataView extends Canvas {
     /**
      *
      * @param y
-     * @return
+     * @return mapped y
      */
     protected double mapY(double y) {
         return (((getMaxY_Display() - y) / getRangeY_Display()) * graphHeight) + topMargin;
@@ -225,7 +225,7 @@ public abstract class AbstractDataView extends Canvas {
 
     /**
      *
-     * @return
+     * @return minimum displayed x
      */
     public double getMinX_Display() {
         return minX + displayOffsetX;
@@ -233,7 +233,7 @@ public abstract class AbstractDataView extends Canvas {
 
     /**
      *
-     * @return
+     * @return maximum displayed x
      */
     public double getMaxX_Display() {
         return maxX + displayOffsetX;
@@ -241,7 +241,7 @@ public abstract class AbstractDataView extends Canvas {
 
     /**
      *
-     * @return
+     * @return minimum displayed y
      */
     public double getMinY_Display() {
         return minY + displayOffsetY;
@@ -249,7 +249,7 @@ public abstract class AbstractDataView extends Canvas {
 
     /**
      *
-     * @return
+     * @return maximum displayed y
      */
     public double getMaxY_Display() {
         return maxY + displayOffsetY;

@@ -72,10 +72,11 @@ public class EditCell<S, T> extends TableCell<S, T> {
     /**
      * Convenience method for creating an EditCell for a String value.
      *
-     * @return
+     * @param <S>
+     * @return EditCell
      */
     public static <S> EditCell<S, String> createStringEditCell() {
-        return new EditCell<S, String>(IDENTITY_CONVERTER);
+        return new EditCell<>(IDENTITY_CONVERTER);
     }
 
 

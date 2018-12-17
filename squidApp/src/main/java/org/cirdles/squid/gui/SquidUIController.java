@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -163,6 +164,22 @@ public class SquidUIController implements Initializable {
     //    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
     @FXML
     private Menu unknownsmenu;
+    @FXML
+    private Label chinese;
+    @FXML
+    private Label japanese;
+    @FXML
+    private Label korean;
+    @FXML
+    private Label japanese1;
+    @FXML
+    private Label japanese11;
+    @FXML
+    private Label japanese111;
+    @FXML
+    private Label japanese1111;
+    @FXML
+    private MenuItem choosePrawnFileMenuItem;
 
     public static ParametersLauncher parametersLauncher;
     public static SquidReportTableLauncher squidReportTableLauncher;
@@ -1026,7 +1043,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(topsoilPlotUI);
             topsoilPlotUI.setVisible(false);
         } catch (IOException | RuntimeException iOException) {
-            //System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
+            System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
         }
     }
 
@@ -1216,6 +1233,34 @@ public class SquidUIController implements Initializable {
 
     public void openSquid3ReportTableUnknowns(ActionEvent actionEvent) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknown);
+    }
+
+    @FXML
+    private void choosePrawnFileMenuItemAction(ActionEvent event) {
+        try {
+            File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
+            if (prawnXMLFileNew != null) {
+                squidProject.setupPrawnFile(prawnXMLFileNew);
+                squidProject.updateFilterForRefMatSpotNames("");
+                squidProject.updateFilterForConcRefMatSpotNames("");
+                squidProject.updateFiltersForUnknownNames(new HashMap<>());
+                squidProject.getTask().setChanged(true);
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
+                launchProjectManager();
+                saveSquidProjectMenuItem.setDisable(true);
+            }
+        } catch (IOException | JAXBException | SAXException | SquidException anException) {
+            String message = anException.getMessage();
+            if (message == null) {
+                message = anException.getCause().getMessage();
+            }
+
+            SquidMessageDialog.showWarningDialog(
+                    "Squid encountered an error while trying to open the selected Prawn File:\n\n"
+                    + message,
+                    primaryStageWindow);
+        }
     }
 
 }
