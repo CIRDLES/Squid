@@ -16,18 +16,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -40,6 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -69,9 +58,11 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
-import org.controlsfx.dialog.*;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBException;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -1233,9 +1224,16 @@ public class SquidUIController implements Initializable {
     public void importCustomExpressionsOnAction(ActionEvent actionEvent) {
         File folder = FileHandler.getCustomExpressionFolder(primaryStageWindow);
         if (folder != null && folder.exists()) {
-            File[] files = folder.listFiles(f ->
-                    f.getName().toLowerCase().endsWith(".xml") &&
-                    FileValidator.validateFileIsXMLSerializedEntity(f, Expression.class));
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+            File[] files;
+            try {
+                final Schema schema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL));
+                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml") &&
+                        FileValidator.validateFileIsXMLSerializedEntity(f, schema));
+            } catch (SAXException e) {
+                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml"));
+            }
 
             final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
 
@@ -1248,7 +1246,7 @@ public class SquidUIController implements Initializable {
             alert.initStyle(StageStyle.UNDECORATED);
             alert.initOwner(primaryStage.getScene().getWindow());
             alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
-            alert.setY(primaryStage.getY() + (primaryStage.getHeight()- alert.getHeight()) / 2);
+            alert.setY(primaryStage.getY() + (primaryStage.getHeight() - alert.getHeight()) / 2);
             for (int i = 0; i < files.length; i++) {
                 try {
                     final Expression exp = (Expression) (new Expression()).readXMLObject(files[i].getAbsolutePath(), false);
@@ -1361,7 +1359,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected Prawn File:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
     }
