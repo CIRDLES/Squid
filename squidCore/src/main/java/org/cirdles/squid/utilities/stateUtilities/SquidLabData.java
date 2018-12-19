@@ -67,7 +67,7 @@ public class SquidLabData implements Serializable {
             } else {
                 retVal = new SquidLabData();
             }
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             retVal = new SquidLabData();
         }
@@ -80,17 +80,18 @@ public class SquidLabData implements Serializable {
                     + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
             serialize(file);
-        } catch (Exception e) {
+        } catch (IOException | SquidException e) {
             e.printStackTrace();
         }
     }
 
     public CommonPbModel getCommonPbDefault() {
         CommonPbModel retVal;
-        if (commonPbDefault == null)
+        if (commonPbDefault == null) {
             retVal = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
-        else
+        } else {
             retVal = commonPbDefault;
+        }
         return retVal;
     }
 
@@ -100,10 +101,11 @@ public class SquidLabData implements Serializable {
 
     public ReferenceMaterial getRefMatDefault() {
         ReferenceMaterial retVal;
-        if (refMatDefault == null)
+        if (refMatDefault == null) {
             retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        else
+        } else {
             retVal = refMatDefault;
+        }
         return retVal;
     }
 
@@ -113,10 +115,11 @@ public class SquidLabData implements Serializable {
 
     public ReferenceMaterial getRefMatConcDefault() {
         ReferenceMaterial retVal;
-        if (refMatConcDefault == null)
+        if (refMatConcDefault == null) {
             retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        else
+        } else {
             retVal = refMatConcDefault;
+        }
         return retVal;
     }
 
@@ -126,10 +129,11 @@ public class SquidLabData implements Serializable {
 
     public PhysicalConstantsModel getPhysConstDefault() {
         PhysicalConstantsModel retVal;
-        if (physConstDefault == null)
+        if (physConstDefault == null) {
             retVal = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
-        else
+        } else {
             retVal = physConstDefault;
+        }
         return retVal;
     }
 
@@ -232,21 +236,5 @@ public class SquidLabData implements Serializable {
 
     public boolean equals(Object o) {
         return o instanceof SquidLabData && this.compareTo(((SquidLabData) o)) == 0;
-    }
-
-    public static void main(String[] args) {
-        ObjectStreamClass stream = ObjectStreamClass.lookup(SquidLabData.class);
-        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
-    }
-private void readObject(ObjectInputStream stream) throws IOException,
-            ClassNotFoundException {
-        stream.defaultReadObject();
-
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(
-                Class.forName(SquidLabData.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-
-        System.out.println("Customized De-serialization of SquidLabData "
-                + theSUID);
     }
 }

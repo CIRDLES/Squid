@@ -103,6 +103,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateCommonLeadParameterValues;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
  *
@@ -277,7 +278,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.physicalConstantsModel = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         this.referenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         this.concentrationReferenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        this.commonPbModel = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
+        this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();//           CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
 
         generateConstants();
         generateParameters();

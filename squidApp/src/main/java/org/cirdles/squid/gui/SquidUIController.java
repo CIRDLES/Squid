@@ -497,6 +497,7 @@ public class SquidUIController implements Initializable {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 SquidUI.updateStageTitle(projectFileName);
                 buildProjectMenuMRU();
+                verifySquidLabDataParameters();
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
             } else {
@@ -644,8 +645,6 @@ public class SquidUIController implements Initializable {
     private void launchTaskManager() {
         mainPane.getChildren().remove(taskManagerUI);
         try {
-            verifySquidLabDataParameters();
-
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
             taskManagerUI.setId("TaskManager");
 
