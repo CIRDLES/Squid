@@ -55,14 +55,7 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
         reportsTable.setFixedCellSize(24);
 
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
-        Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
-        List<ShrimpFractionExpressionInterface> spotsBySampleNames = new ArrayList<>();
-        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
-            ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
-            spotsBySampleNames.add(dummyForSample);
-            spotsBySampleNames.addAll(entry.getValue());
-        }
-        textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
+        textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
 
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
         reportsTable.refresh();
