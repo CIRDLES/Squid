@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.XStream;
 import org.cirdles.squid.parameters.matrices.CorrelationMatrixModel;
 import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
-import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModelConverter;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModelXMLConverter;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModelConverter;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
@@ -33,7 +33,7 @@ import java.util.Map;
 public abstract class ParametersModel implements
         Comparable<ParametersModel>,
         Serializable, XMLSerializerInterface {
-
+    
     protected String modelName;
     protected String labName;
     protected String version;
@@ -214,7 +214,7 @@ public abstract class ParametersModel implements
         xstream.registerConverter(new PhysicalConstantsModelConverter());
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
 
-        xstream.registerConverter(new CommonPbModelConverter());
+        xstream.registerConverter(new CommonPbModelXMLConverter());
         xstream.alias("CommonPbModel", CommonPbModel.class);
     }
 

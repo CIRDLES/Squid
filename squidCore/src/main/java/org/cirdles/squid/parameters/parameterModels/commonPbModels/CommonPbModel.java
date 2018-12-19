@@ -12,16 +12,19 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.util.*;
+import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 
 /**
  * @author ryanb
  */
 public class CommonPbModel extends ParametersModel {
 
-    private static long serialVersionUID = -5054855251006560667L;
+    private static final long serialVersionUID = 8844997267638498894L;
 
     public CommonPbModel() {
         super();
@@ -107,9 +110,15 @@ public class CommonPbModel extends ParametersModel {
         return retVal;
     }
 
-    public static void main(String[] args) {
-        ObjectStreamClass stream = ObjectStreamClass.lookup(CommonPbModel.class);
-        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
-    }
+    private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        stream.defaultReadObject();
 
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(
+                Class.forName(CommonPbModel.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+
+        System.out.println("Customized De-serialization of CommonPbModel "
+                + theSUID);
+    }
 }

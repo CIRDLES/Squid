@@ -20,6 +20,8 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
@@ -99,7 +101,7 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface L859 = new ConstantNode("L859", 0.859);
         parameters.put("L859", L859);
-        
+
         ExpressionTreeInterface L1033 = new ConstantNode("L1033", 1.033);
         parameters.put("L1033", L1033);
 
@@ -143,7 +145,42 @@ public abstract class BuiltInExpressionsFactory {
         parameterValues.add(expressionsComm_68);
 
         return parameterValues;
+    }
 
+    public static SortedSet<Expression> updateCommonLeadParameterValues(ParametersModel commonPbModel) {
+        SortedSet<Expression> parameterValues = new TreeSet<>();
+
+        Expression expressionsComm_64 = buildExpression(SCOMM_64_NAME,
+                String.valueOf(commonPbModel.getDatumByName(Squid3Constants.R206_204B).getValue().doubleValue()), true, true, true);
+        expressionsComm_64.setParameterValue(true);
+        parameterValues.add(expressionsComm_64);
+
+        Expression expressionsComm_74 = buildExpression(SCOMM_74_NAME,
+                String.valueOf(Squid3Constants.SCOMM_74), true, true, true);
+        expressionsComm_74.setParameterValue(true);
+        parameterValues.add(expressionsComm_74);
+
+        Expression expressionsComm_84 = buildExpression(SCOMM_84_NAME,
+                String.valueOf(Squid3Constants.SCOMM_84), true, true, true);
+        expressionsComm_84.setParameterValue(true);
+        parameterValues.add(expressionsComm_84);
+
+        Expression expressionsComm_76 = buildExpression(SCOMM_76_NAME,
+                String.valueOf(Squid3Constants.SCOMM_76), true, true, true);
+        expressionsComm_76.setParameterValue(true);
+        parameterValues.add(expressionsComm_76);
+
+        Expression expressionsComm_86 = buildExpression(SCOMM_86_NAME,
+                String.valueOf(Squid3Constants.SCOMM_86), true, true, true);
+        expressionsComm_86.setParameterValue(true);
+        parameterValues.add(expressionsComm_86);
+
+        Expression expressionsComm_68 = buildExpression(SCOMM_68_NAME,
+                "1.0/" + String.valueOf(Squid3Constants.SCOMM_86), true, true, true);
+        expressionsComm_68.setParameterValue(true);
+        parameterValues.add(expressionsComm_68);
+
+        return parameterValues;
     }
 
     public static SortedSet<Expression> generateReferenceMaterialValues() {

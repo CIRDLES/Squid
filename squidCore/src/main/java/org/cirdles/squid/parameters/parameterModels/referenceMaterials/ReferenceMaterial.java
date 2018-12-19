@@ -18,6 +18,8 @@ import org.cirdles.squid.parameters.valueModels.*;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -32,7 +34,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ReferenceMaterial extends ParametersModel {
 
-    private static long serialVersionUID = 1513337897720796891L;
+    private static final long serialVersionUID = 8791002391578871182L;
 
     ValueModel[] concentrations;
     boolean[] dataMeasured;
@@ -379,9 +381,16 @@ public class ReferenceMaterial extends ParametersModel {
         ReferenceMaterial model = (ReferenceMaterial) xstream.fromXML(input);
         return model;
     }
+    
+    private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        stream.defaultReadObject();
 
-    public static void main(String[] args) {
-        ObjectStreamClass stream = ObjectStreamClass.lookup(ReferenceMaterial.class);
-        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(
+                Class.forName(ReferenceMaterial.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+
+        System.out.println("Customized De-serialization of ReferenceMaterial "
+                + theSUID);
     }
 }

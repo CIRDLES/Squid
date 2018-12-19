@@ -193,19 +193,26 @@ public interface TaskInterface {
      */
     public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
 
-    public void removeExpression(Expression expression);
+    public void removeExpression(Expression expression, boolean reprocessExpressions);
 
     public void restoreRemovedExpressions();
 
-    public void addExpression(Expression exp);
-    
+    public void addExpression(Expression exp, boolean reprocessExpressions);
+
     public void setReferenceMaterial(ParametersModel refMat);
+
     public ReferenceMaterial getReferenceMaterial();
+
     public void setPhysicalConstantsModel(ParametersModel physConst);
+
     public PhysicalConstantsModel getPhysicalConstantsModel();
+
     public void setCommonPbModel(ParametersModel model);
+
     public CommonPbModel getCommonPbModel();
+
     public void setConcentrationReferenceMaterial(ParametersModel refMat);
+
     public ReferenceMaterial getConcentrationReferenceMaterial();
 
     /**
@@ -318,7 +325,7 @@ public interface TaskInterface {
      */
     public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies);
 
-    public void updateAllExpressions();
+    public void updateAllExpressions(boolean reprocessExpressions);
 
     /**
      * @param reportsEngine the reportsEngine to set
@@ -332,7 +339,7 @@ public interface TaskInterface {
 
     public void updateRatioNames(String[] ratioNames);
 
-    public void updateAffectedExpressions(Expression sourceExpression);
+    public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions);
 
     public void applyTaskIsotopeLabelsToMassStations();
 
@@ -489,8 +496,9 @@ public interface TaskInterface {
      * @param extPErr the extPErr to set
      */
     public void setExtPErr(double extPErr);
-      /**
+
+    /**
      * @return the extPErr
      */
-    public double getExtPErr() ;
+    public double getExtPErr();
 }

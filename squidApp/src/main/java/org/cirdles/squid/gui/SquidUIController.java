@@ -955,8 +955,8 @@ public class SquidUIController implements Initializable {
     }
 
     private void addExpressionToTask(Expression exp) {
-        squidProject.getTask().removeExpression(exp);
-        squidProject.getTask().addExpression(exp);
+        squidProject.getTask().removeExpression(exp, true);
+        squidProject.getTask().addExpression(exp, true);
 
         ExpressionBuilderController.expressionToHighlightOnInit = exp;
         buildExpressionMenuMRU();

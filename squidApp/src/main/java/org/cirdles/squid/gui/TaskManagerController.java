@@ -184,8 +184,8 @@ public class TaskManagerController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Double> observable,//
                     Double oldValue, Double newValue) {
-                    task.setExtPErr(assignedExternalErrSpinner.getValue());
-                    taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
+                task.setExtPErr(assignedExternalErrSpinner.getValue());
+                taskAuditTextArea.setText(squidProject.getTask().printTaskAudit());
             }
         });
     }
@@ -230,44 +230,44 @@ public class TaskManagerController implements Initializable {
 
     private void setUpParametersModelsComboBoxes() {
         ObservableList<String> list = FXCollections.observableArrayList();
-        for(ReferenceMaterial model : squidLabData.getReferenceMaterials()) {
+        for (ReferenceMaterial model : squidLabData.getReferenceMaterials()) {
             list.add(ParametersManagerGUIController.getModVersionName(model));
         }
         refMatModelComboBox.setItems(list);
         concRefMatModelComboBox.setItems(list);
-        if(task != null) {
-            if(task.getReferenceMaterial() != null) {
+        if (task != null) {
+            if (task.getReferenceMaterial() != null) {
                 refMatModelComboBox.getSelectionModel().select(ParametersManagerGUIController.getModVersionName(task.getReferenceMaterial()));
             }
-            if(task.getConcentrationReferenceMaterial() != null) {
+            if (task.getConcentrationReferenceMaterial() != null) {
                 concRefMatModelComboBox.getSelectionModel().select(ParametersManagerGUIController.getModVersionName(task.getConcentrationReferenceMaterial()));
             }
         }
-        refMatModelComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, val ->{
+        refMatModelComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, val -> {
             ObservableList<String> refList = FXCollections.observableArrayList();
-            for(ReferenceMaterial model : squidLabData.getReferenceMaterials()) {
+            for (ReferenceMaterial model : squidLabData.getReferenceMaterials()) {
                 refList.add(ParametersManagerGUIController.getModVersionName(model));
             }
             refMatModelComboBox.setItems(refList);
-            if(task != null && task.getReferenceMaterial() != null) {
+            if (task != null && task.getReferenceMaterial() != null) {
                 refMatModelComboBox.getSelectionModel().select(ParametersManagerGUIController.getModVersionName(task.getReferenceMaterial()));
             }
         });
         refMatModelComboBox.setOnAction(action -> {
             int selectedSpot = refMatModelComboBox.getSelectionModel().getSelectedIndex();
-            if(selectedSpot > -1 && selectedSpot < squidLabData.getReferenceMaterials().size() && task != null) {
+            if (selectedSpot > -1 && selectedSpot < squidLabData.getReferenceMaterials().size() && task != null) {
                 task.setReferenceMaterial(squidLabData.getReferenceMaterial(selectedSpot));
                 squidProject.getTask().setChanged(true);
                 squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
             }
         });
-        concRefMatModelComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, val ->{
+        concRefMatModelComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, val -> {
             ObservableList<String> refList = FXCollections.observableArrayList();
-            for(ReferenceMaterial model : squidLabData.getReferenceMaterials()) {
+            for (ReferenceMaterial model : squidLabData.getReferenceMaterials()) {
                 refList.add(ParametersManagerGUIController.getModVersionName(model));
             }
             concRefMatModelComboBox.setItems(refList);
-            if(task != null && task.getConcentrationReferenceMaterial() != null) {
+            if (task != null && task.getConcentrationReferenceMaterial() != null) {
                 concRefMatModelComboBox.getSelectionModel().select(ParametersManagerGUIController.getModVersionName(task.getReferenceMaterial()));
             }
         });
@@ -281,26 +281,26 @@ public class TaskManagerController implements Initializable {
         });
 
         list = FXCollections.observableArrayList();
-        for(PhysicalConstantsModel model : squidLabData.getPhysicalConstantsModels()) {
+        for (PhysicalConstantsModel model : squidLabData.getPhysicalConstantsModels()) {
             list.add(ParametersManagerGUIController.getModVersionName(model));
         }
         physConstModelComboBox.setItems(list);
-        if(task != null && task.getPhysicalConstantsModel() != null) {
+        if (task != null && task.getPhysicalConstantsModel() != null) {
             physConstModelComboBox.getSelectionModel().select(ParametersManagerGUIController.getModVersionName(task.getPhysicalConstantsModel()));
         }
         physConstModelComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, val -> {
             ObservableList<String> physList = FXCollections.observableArrayList();
-            for(PhysicalConstantsModel model : squidLabData.getPhysicalConstantsModels()) {
+            for (PhysicalConstantsModel model : squidLabData.getPhysicalConstantsModels()) {
                 physList.add(ParametersManagerGUIController.getModVersionName(model));
             }
             physConstModelComboBox.setItems(physList);
-            if(task != null && task.getPhysicalConstantsModel() != null) {
+            if (task != null && task.getPhysicalConstantsModel() != null) {
                 physConstModelComboBox.getSelectionModel().select(ParametersManagerGUIController.getModVersionName(task.getPhysicalConstantsModel()));
             }
         });
         physConstModelComboBox.setOnAction(action -> {
             int selectedSpot = physConstModelComboBox.getSelectionModel().getSelectedIndex();
-            if(selectedSpot > -1 && selectedSpot < squidLabData.getPhysicalConstantsModels().size() && task != null) {
+            if (selectedSpot > -1 && selectedSpot < squidLabData.getPhysicalConstantsModels().size() && task != null) {
                 task.setPhysicalConstantsModel(squidLabData.getPhysicalConstantsModel(selectedSpot));
                 squidProject.getTask().setChanged(true);
                 squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
@@ -308,20 +308,20 @@ public class TaskManagerController implements Initializable {
         });
 
         list = FXCollections.observableArrayList();
-        for(CommonPbModel model : squidLabData.getcommonPbModels()) {
+        for (CommonPbModel model : squidLabData.getcommonPbModels()) {
             list.add(ParametersManagerGUIController.getModVersionName(model));
         }
         commonPbModelComboBox.setItems(list);
-        if(task != null && task.getCommonPbModel() != null) {
+        if (task != null && task.getCommonPbModel() != null) {
             commonPbModelComboBox.getSelectionModel().select(ParametersManagerGUIController.getModVersionName(task.getCommonPbModel()));
         }
         commonPbModelComboBox.addEventFilter(MouseEvent.MOUSE_CLICKED, val -> {
             ObservableList<String> pbList = FXCollections.observableArrayList();
-            for(CommonPbModel model : squidLabData.getcommonPbModels()) {
+            for (CommonPbModel model : squidLabData.getcommonPbModels()) {
                 pbList.add(ParametersManagerGUIController.getModVersionName(model));
             }
             commonPbModelComboBox.setItems(pbList);
-            if(task != null && task.getCommonPbModel() != null) {
+            if (task != null && task.getCommonPbModel() != null) {
                 commonPbModelComboBox.getSelectionModel().select(ParametersManagerGUIController.getModVersionName(task.getCommonPbModel()));
             }
         });

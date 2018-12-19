@@ -13,6 +13,7 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterials.Reference
 
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.List;
@@ -25,7 +26,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDE
  */
 public class SquidLabData implements Serializable {
 
-    private static long serialVersionUID = 2042394065348785942L;
+    private static final long serialVersionUID = -6819591137651731346L;
 
     private List<ReferenceMaterial> referenceMaterials;
     private List<PhysicalConstantsModel> physicalConstantsModels;
@@ -237,5 +238,15 @@ public class SquidLabData implements Serializable {
         ObjectStreamClass stream = ObjectStreamClass.lookup(SquidLabData.class);
         System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
     }
+private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        stream.defaultReadObject();
 
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(
+                Class.forName(SquidLabData.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+
+        System.out.println("Customized De-serialization of SquidLabData "
+                + theSUID);
+    }
 }

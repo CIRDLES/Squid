@@ -15,16 +15,20 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.Map.Entry;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 
 /**
  * @author ryanb
  */
 public class PhysicalConstantsModel extends ParametersModel {
 
-    private static long serialVersionUID = 6711139902976873456L;
+    private static final long serialVersionUID = 7402377463547497587L;
 
     Map<String, BigDecimal> molarMasses;
 
@@ -160,5 +164,16 @@ public class PhysicalConstantsModel extends ParametersModel {
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
         return xstream;
     }
+    
+    private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        stream.defaultReadObject();
 
+        ObjectStreamClass myObject = ObjectStreamClass.lookup(
+                Class.forName(PhysicalConstantsModel.class.getCanonicalName()));
+        long theSUID = myObject.getSerialVersionUID();
+
+        System.out.println("Customized De-serialization of PhysicalConstantsModel "
+                + theSUID);
+    }
 }

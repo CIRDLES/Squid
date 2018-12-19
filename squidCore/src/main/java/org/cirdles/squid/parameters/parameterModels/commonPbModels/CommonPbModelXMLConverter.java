@@ -20,7 +20,7 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
  *
  * @author ryanb
  */
-public class CommonPbModelConverter implements Converter {
+public class CommonPbModelXMLConverter implements Converter {
     
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {

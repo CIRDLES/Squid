@@ -1092,7 +1092,7 @@ public class ExpressionBuilderController implements Initializable {
         //Listener that updates the whole builder when the expression to edit is changed
         selectedExpression.addListener((observable, oldValue, newValue) -> {
             if (needUpdateExpressions) {
-                squidProject.getTask().updateAllExpressions();
+                squidProject.getTask().updateAllExpressions(true);
                 needUpdateExpressions = false;
             }
             if (editAsText.get()) {
@@ -2666,12 +2666,12 @@ public class ExpressionBuilderController implements Initializable {
         Expression exp = makeExpression();
         TaskInterface task = squidProject.getTask();
         //Remove if an expression already exists with the same name
-        task.removeExpression(exp);
+        task.removeExpression(exp, true);
         //Removes the old expression if the name has been changed
         if (currentMode.get().equals(Mode.EDIT) && !exp.getName().equalsIgnoreCase(selectedExpression.get().getName())) {
-            task.removeExpression(selectedExpression.get());
+            task.removeExpression(selectedExpression.get(), true);
         }
-        task.addExpression(exp);
+        task.addExpression(exp, true);
         //update lists
         populateExpressionListViews();
         //set the new expression as edited expression
@@ -3055,7 +3055,7 @@ public class ExpressionBuilderController implements Initializable {
                         ListView parent = cell.getListView();
                         TaskInterface task = squidProject.getTask();
                         removedExpressions.add(cell.getItem());
-                        task.removeExpression(cell.getItem());
+                        task.removeExpression(cell.getItem(), true);
                         selectedExpression.set(null);
                         populateExpressionListViews();
 
@@ -3089,7 +3089,7 @@ public class ExpressionBuilderController implements Initializable {
                             } while (nameExist);
 
                             TaskInterface task = squidProject.getTask();
-                            task.addExpression(removedExp);
+                            task.addExpression(removedExp, true);
                         }
                         removedExpressions.clear();
                         populateExpressionListViews();
