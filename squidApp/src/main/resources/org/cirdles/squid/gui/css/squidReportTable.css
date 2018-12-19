@@ -28,7 +28,8 @@
 }
 
 .table-row-cell:selected {
-    -fx-background-color: rgb(94, 208, 242);
+    -fx-background-color: rgba(94, 208, 242, .8);
+    -fx-text-fill: black;
 }
 
 #sortHint {

@@ -8,15 +8,14 @@ package org.cirdles.squid.gui.squidReportTable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
@@ -72,7 +71,7 @@ public class SquidReportTableUnknownsController implements Initializable {
         EventHandler<MouseEvent> scrollHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(!isSetUpScroller) {
+                if (!isSetUpScroller) {
                     setUpScroller();
                     isSetUpScroller = true;
                 }
@@ -108,7 +107,7 @@ public class SquidReportTableUnknownsController implements Initializable {
                 }
             }
         });
-        if(rtHbar.isVisible()) {
+        if (rtHbar.isVisible()) {
             AnchorPane.setBottomAnchor(boundCol, 29.0);
         } else {
             AnchorPane.setBottomAnchor(boundCol, 5.0);

@@ -39,7 +39,7 @@ public class SquidReportTableLauncher {
         unknownsStage.setMinHeight(375);
         unknownsStage.setHeight(600);
 
-        refMatStage.setOnCloseRequest( e -> {
+        refMatStage.setOnCloseRequest(e -> {
             refMatStage.hide();
             e.consume();
         });
@@ -55,20 +55,20 @@ public class SquidReportTableLauncher {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTableReferenceMaterials.fxml"));
                 Scene scene = new Scene(loader.load());
                 refMatStage.setScene(scene);
-                if(!refMatStage.isShowing()) {
+                if (!refMatStage.isShowing()) {
                     refMatStage.show();
-                    refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 20);
-                    refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 10);
+                    refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
+                    refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 5);
                 }
                 refMatStage.requestFocus();
             } else {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTableUnknowns.fxml"));
                 Scene scene = new Scene(loader.load());
                 unknownsStage.setScene(scene);
-                if(!unknownsStage.isShowing()) {
+                if (!unknownsStage.isShowing()) {
                     unknownsStage.show();
-                    unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2);
-                    unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2);
+                    unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2 - 10);
+                    unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2 - 5);
                 }
                 unknownsStage.requestFocus();
             }

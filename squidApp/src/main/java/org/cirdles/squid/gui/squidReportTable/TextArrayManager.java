@@ -12,6 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
+import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.util.ArrayList;
@@ -28,8 +29,8 @@ public class TextArrayManager {
     private TableView<ObservableList<String>> boundCol;
     private String[][] array;
     private ObservableList<ObservableList<String>> data;
-    private final int characterSize;
-    private final int columnHeaderCharacterSize;
+    private static final double characterSize = 9.5;
+    private static final double columnHeaderCharacterSize = 11;
     private final RowComparator comparator;
     private List<String> aliquots;
 
@@ -39,10 +40,16 @@ public class TextArrayManager {
         this.array = array;
         aliquots = new ArrayList<>();
         data = FXCollections.observableArrayList();
-        characterSize = 10;
-        columnHeaderCharacterSize = 11;
         comparator = new RowComparator();
 
+        initializeAliquots();
+        initializeRowFactories();
+        setHeaders();
+        setTableItems();
+        initializeSortPolicies();
+    }
+
+    private void initializeAliquots() {
         aliquots = new ArrayList<>();
         String currentAliquot = "";
         for (int i = Integer.parseInt(array[0][0]); i < array.length; i++) {
@@ -51,7 +58,9 @@ public class TextArrayManager {
                 currentAliquot = array[i][1];
             }
         }
+    }
 
+    private void initializeRowFactories() {
         Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>> tableCallBack =
                 new Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>>() {
                     @Override
@@ -78,27 +87,19 @@ public class TextArrayManager {
                 };
         table.setRowFactory(tableCallBack);
         boundCol.setRowFactory(tableCallBack);
-        setHeaders();
-        setTableItems();
+    }
 
-        table.setSortPolicy(t -> {
+    private void initializeSortPolicies() {
+        Callback<TableView<ObservableList<String>>, Boolean> sortPolicy = t -> {
             Comparator<ObservableList<String>> rowComparator = (r1, r2) ->
                     t.getComparator() == null || (r1.get(0) != r2.get(0)) ||
                             aliquots.contains(r1.get(1)) || aliquots.contains(r2.get(1)) ? 0
                             : t.getComparator().compare(r1, r2);
-
             FXCollections.sort(table.getItems(), rowComparator);
             return true;
-        });
-        boundCol.setSortPolicy(t -> {
-            Comparator<ObservableList<String>> rowComparator = (r1, r2) ->
-                    t.getComparator() == null || (r1.get(0) != r2.get(0)) ||
-                            aliquots.contains(r1.get(1)) || aliquots.contains(r2.get(1)) ? 0
-                            : t.getComparator().compare(r1, r2);
-
-            FXCollections.sort(table.getItems(), rowComparator);
-            return true;
-        });
+        };
+        table.setSortPolicy(sortPolicy);
+        boundCol.setSortPolicy(sortPolicy);
     }
 
     public void setHeaders() {
