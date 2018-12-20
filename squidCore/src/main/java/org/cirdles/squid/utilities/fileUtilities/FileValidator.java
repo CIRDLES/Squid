@@ -1,30 +1,17 @@
 package org.cirdles.squid.utilities.fileUtilities;
 
-import org.cirdles.commons.util.ResourceExtractor;
-import org.cirdles.squid.prawn.PrawnFile;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FileValidator {
 
-
+    /* not possible (unless you use a if else ladder, switch, etc to match class to schema)
     public static boolean validateFileIsXMLSerializedEntity(File serializedFile, Class entityClass) {
         AtomicBoolean retVal = new AtomicBoolean(false);
         try {
@@ -41,22 +28,22 @@ public class FileValidator {
                 for (String cur : extractors) {
                     System.out.println(cur);
                 }
-                List<String> completeScemas = new ArrayList<>();
+                List<String> completeSchemas = new ArrayList<>();
                 String lastURL = null;
                 for (String current : extractors) {
                     boolean isURL = current.startsWith("http");
                     boolean isSchema = current.toLowerCase().endsWith(".xsd");
                     if (isURL && isSchema) {
-                        completeScemas.add(current);
+                        completeSchemas.add(current);
                     } else if (isURL) {
                         lastURL = current;
                     } else if (isSchema && lastURL != null) {
-                        completeScemas.add(lastURL + "/" + current);
+                        completeSchemas.add(lastURL + "/" + current);
                     }
                 }
 
                 SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                completeScemas.forEach(schemaLocation -> {
+                completeSchemas.forEach(schemaLocation -> {
                     System.out.println(schemaLocation);
                     URL url = null;
                     try {
@@ -97,6 +84,7 @@ public class FileValidator {
         }
         return retVal.get();
     }
+    */
 
     public static boolean validateFileIsXMLSerializedEntity(File serializedFile, Schema schema) {
         boolean retVal = false;
@@ -105,15 +93,10 @@ public class FileValidator {
         try {
             validator.validate(source);
             retVal = true;
-        } catch(SAXException | IOException e) {
+        } catch (SAXException | IOException e) {
+            e.printStackTrace();
         }
         return retVal;
-    }
-
-    public static void main(String[] args) {
-        ResourceExtractor extractor = new ResourceExtractor(PrawnFile.class);
-        File file = extractor.extractResourceAsFile("836_1_2016_Nov_28_09.50.xml");
-        System.out.println(validateFileIsXMLSerializedEntity(file, PrawnFile.class));
     }
 }
         /*  XStream stream = new XStream();

@@ -41,6 +41,7 @@
             <xs:element name="referenceMaterialValue" type="xs:boolean"></xs:element>
             <xs:element name="parameterValue" type="xs:boolean"></xs:element>
             <xs:element name="expressionTree" type="ExpressionTree"></xs:element>
+            <xs:element name="notes" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
               
