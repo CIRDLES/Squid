@@ -382,15 +382,4 @@ public class ReferenceMaterial extends ParametersModel {
         return model;
     }
     
-    private void readObject(ObjectInputStream stream) throws IOException,
-            ClassNotFoundException {
-        stream.defaultReadObject();
-
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(
-                Class.forName(ReferenceMaterial.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-
-        System.out.println("Customized De-serialization of ReferenceMaterial "
-                + theSUID);
-    }
 }

@@ -123,13 +123,13 @@
             </HBox>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10;" text="Comm Pb:" textAlignment="RIGHT" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Comm Pb:" textAlignment="RIGHT" />
                   <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
                   <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
                   <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
                </children>
             </HBox>
-            <Label style="-fx-font-size: 14;" text="(Models not connected to math)" GridPane.rowIndex="6" />
+            <Label style="-fx-font-size: 14;" text="(Red Models are connected to math)" GridPane.rowIndex="6" />
          </children>
       </GridPane>
       <Label text="Audit:" GridPane.rowIndex="6" />

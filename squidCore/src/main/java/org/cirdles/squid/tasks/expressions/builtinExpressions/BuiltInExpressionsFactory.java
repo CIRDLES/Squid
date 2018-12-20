@@ -111,73 +111,44 @@ public abstract class BuiltInExpressionsFactory {
         return parameters;
     }
 
-    public static SortedSet<Expression> generateCommonLeadParameterValues() {
+    public static SortedSet<Expression> updateCommonLeadParameterValuesFromModel(ParametersModel commonPbModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
-        Expression expressionsComm_64 = buildExpression(SCOMM_64_NAME,
-                String.valueOf(Squid3Constants.SCOMM_64), true, true, true);
-        expressionsComm_64.setParameterValue(true);
-        parameterValues.add(expressionsComm_64);
-
-        Expression expressionsComm_74 = buildExpression(SCOMM_74_NAME,
-                String.valueOf(Squid3Constants.SCOMM_74), true, true, true);
-        expressionsComm_74.setParameterValue(true);
-        parameterValues.add(expressionsComm_74);
-
-        Expression expressionsComm_84 = buildExpression(SCOMM_84_NAME,
-                String.valueOf(Squid3Constants.SCOMM_84), true, true, true);
-        expressionsComm_84.setParameterValue(true);
-        parameterValues.add(expressionsComm_84);
-
-        Expression expressionsComm_76 = buildExpression(SCOMM_76_NAME,
-                String.valueOf(Squid3Constants.SCOMM_76), true, true, true);
-        expressionsComm_76.setParameterValue(true);
-        parameterValues.add(expressionsComm_76);
-
-        Expression expressionsComm_86 = buildExpression(SCOMM_86_NAME,
-                String.valueOf(Squid3Constants.SCOMM_86), true, true, true);
-        expressionsComm_86.setParameterValue(true);
-        parameterValues.add(expressionsComm_86);
-
-        Expression expressionsComm_68 = buildExpression(SCOMM_68_NAME,
-                "1.0/" + String.valueOf(Squid3Constants.SCOMM_86), true, true, true);
-        expressionsComm_68.setParameterValue(true);
-        parameterValues.add(expressionsComm_68);
-
-        return parameterValues;
-    }
-
-    public static SortedSet<Expression> updateCommonLeadParameterValues(ParametersModel commonPbModel) {
-        SortedSet<Expression> parameterValues = new TreeSet<>();
-
+        String notes = "from Common Pb model: " + commonPbModel.getModelNameWithVersion();
         Expression expressionsComm_64 = buildExpression(SCOMM_64_NAME,
                 String.valueOf(commonPbModel.getDatumByName(Squid3Constants.R206_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_64.setParameterValue(true);
+        expressionsComm_64.setNotes(notes);
         parameterValues.add(expressionsComm_64);
-
+        
         Expression expressionsComm_74 = buildExpression(SCOMM_74_NAME,
-                String.valueOf(Squid3Constants.SCOMM_74), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(Squid3Constants.R207_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_74.setParameterValue(true);
+        expressionsComm_74.setNotes(notes);
         parameterValues.add(expressionsComm_74);
 
         Expression expressionsComm_84 = buildExpression(SCOMM_84_NAME,
-                String.valueOf(Squid3Constants.SCOMM_84), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(Squid3Constants.R208_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_84.setParameterValue(true);
+        expressionsComm_84.setNotes(notes);
         parameterValues.add(expressionsComm_84);
 
         Expression expressionsComm_76 = buildExpression(SCOMM_76_NAME,
-                String.valueOf(Squid3Constants.SCOMM_76), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(Squid3Constants.R207_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_76.setParameterValue(true);
+        expressionsComm_76.setNotes(notes);
         parameterValues.add(expressionsComm_76);
 
         Expression expressionsComm_86 = buildExpression(SCOMM_86_NAME,
-                String.valueOf(Squid3Constants.SCOMM_86), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(Squid3Constants.R208_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_86.setParameterValue(true);
+        expressionsComm_86.setNotes(notes);
         parameterValues.add(expressionsComm_86);
 
         Expression expressionsComm_68 = buildExpression(SCOMM_68_NAME,
-                "1.0/" + String.valueOf(Squid3Constants.SCOMM_86), true, true, true);
+                "1.0/" + String.valueOf(commonPbModel.getDatumByName(Squid3Constants.R208_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_68.setParameterValue(true);
+        expressionsComm_68.setNotes(notes);
         parameterValues.add(expressionsComm_68);
 
         return parameterValues;

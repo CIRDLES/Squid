@@ -11,9 +11,9 @@ import org.cirdles.squid.parameters.matrices.CovarianceMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModelXMLConverter;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModelConverter;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModelXMLConverter;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterialConverter;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterialModelXMLConverter;
 import org.cirdles.squid.parameters.util.DateHelper;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 import org.cirdles.squid.parameters.valueModels.ValueModelConverter;
@@ -33,6 +33,8 @@ import java.util.Map;
 public abstract class ParametersModel implements
         Comparable<ParametersModel>,
         Serializable, XMLSerializerInterface {
+    
+    private static final long serialVersionUID = -7022400910390974294L;
     
     protected String modelName;
     protected String labName;
@@ -208,10 +210,10 @@ public abstract class ParametersModel implements
         xstream.registerConverter(new ValueModelConverter());
         xstream.alias("ValueModel", ValueModel.class);
 
-        xstream.registerConverter(new ReferenceMaterialConverter());
+        xstream.registerConverter(new ReferenceMaterialModelXMLConverter());
         xstream.alias("ReferenceMaterial", ReferenceMaterial.class);
 
-        xstream.registerConverter(new PhysicalConstantsModelConverter());
+        xstream.registerConverter(new PhysicalConstantsModelXMLConverter());
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
 
         xstream.registerConverter(new CommonPbModelXMLConverter());
@@ -258,6 +260,10 @@ public abstract class ParametersModel implements
         this.version = version;
     }
 
+    public String getModelNameWithVersion() {
+        return modelName + " v." + version;
+    }
+    
     public String getDateCertified() {
         return dateCertified;
     }

@@ -775,7 +775,7 @@ public class ExpressionBuilderController implements Initializable {
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
-                        selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsEditable.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -2952,7 +2952,9 @@ public class ExpressionBuilderController implements Initializable {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        setText(expression.buildShortSignatureString());
+                        String mainText = expression.buildShortSignatureString();
+                        String postPend = (expression.isParameterValue())? " (see Notes)" : "";
+                        setText(mainText + postPend);
                         if (showImage) {
                             ImageView imageView;
                             if (expression.amHealthy()) {
@@ -2965,7 +2967,7 @@ public class ExpressionBuilderController implements Initializable {
                             imageView.setFitWidth(12);
                             setGraphic(imageView);
                         }
-                        Tooltip t = createFloatingTooltip("[\"" + getText() + "\"]");
+                        Tooltip t = createFloatingTooltip("[\"" + mainText + "\"]");
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });

@@ -247,5 +247,9 @@ public final class Squid3Constants {
     
     
     public static String R206_204B = "r206_204b";
+    public static String R207_204B = "r207_204b";
+    public static String R207_206B = "r207_206b";
+    public static String R208_204B = "r208_204b";
+    public static String R208_206B = "r208_206b";
 
 }

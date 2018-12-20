@@ -110,15 +110,4 @@ public class CommonPbModel extends ParametersModel {
         return retVal;
     }
 
-    private void readObject(ObjectInputStream stream) throws IOException,
-            ClassNotFoundException {
-        stream.defaultReadObject();
-
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(
-                Class.forName(CommonPbModel.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-
-        System.out.println("Customized De-serialization of CommonPbModel "
-                + theSUID);
-    }
 }

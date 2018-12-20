@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.parameters.parameterModels.referenceMaterials;
+package org.cirdles.squid.parameters.parameterModels.physicalConstantsModels;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -19,11 +19,11 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
  *
  * @author ryanb
  */
-public class ReferenceMaterialConverter implements Converter {
+public class PhysicalConstantsModelXMLConverter implements Converter {
 
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
-        ReferenceMaterial model = (ReferenceMaterial) o;
+        PhysicalConstantsModel model = (PhysicalConstantsModel) o;
 
         writer.startNode("modelName");
         writer.setValue(model.getModelName());
@@ -61,18 +61,14 @@ public class ReferenceMaterialConverter implements Converter {
         writer.setValue(Boolean.toString(model.isEditable()));
         writer.endNode();
 
-        writer.startNode("concentrations");
-        context.convertAnother(model.getConcentrations());
-        writer.endNode();
-
-        writer.startNode("dataMeasured");
-        context.convertAnother(model.getDataMeasured());
+        writer.startNode("molarMasses");
+        context.convertAnother(model.getMolarMasses());
         writer.endNode();
     }
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        ReferenceMaterial model = new ReferenceMaterial();
+        PhysicalConstantsModel model = new PhysicalConstantsModel();
 
         reader.moveDown();
         model.setModelName(reader.getValue());
@@ -133,21 +129,38 @@ public class ReferenceMaterialConverter implements Converter {
         model.setIsEditable(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 
+        Map<String, BigDecimal> molarMasses = new HashMap<>();
         reader.moveDown();
-        model.setConcentrations(new ValueModel[0]);
-        model.setConcentrations((ValueModel[]) context.convertAnother(model.getConcentrations(), ValueModel[].class));
-        reader.moveUp();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
 
-        reader.moveDown();
-        model.setDataMeasured(new boolean[0]);
-        model.setDataMeasured((boolean[]) context.convertAnother(model.getDataMeasured(), boolean[].class));
+            reader.moveDown();
+            String key = reader.getValue();
+            reader.moveUp();
+
+            reader.moveDown();
+            String currBigDec = reader.getValue();
+            BigDecimal value;
+            if (Double.parseDouble(currBigDec) == 0.0) {
+                value = BigDecimal.ZERO;
+            } else {
+                value = new BigDecimal(currBigDec);
+            }
+            reader.moveUp();
+
+            reader.moveUp();
+
+            molarMasses.put(key, value);
+        }
         reader.moveUp();
+        model.setMolarMasses(molarMasses);
 
         return model;
     }
 
     @Override
     public boolean canConvert(Class type) {
-        return type.equals(ReferenceMaterial.class);
+        return type.equals(PhysicalConstantsModel.class);
     }
+
 }

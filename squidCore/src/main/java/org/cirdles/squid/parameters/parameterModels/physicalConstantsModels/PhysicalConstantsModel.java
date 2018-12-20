@@ -164,16 +164,4 @@ public class PhysicalConstantsModel extends ParametersModel {
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
         return xstream;
     }
-    
-    private void readObject(ObjectInputStream stream) throws IOException,
-            ClassNotFoundException {
-        stream.defaultReadObject();
-
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(
-                Class.forName(PhysicalConstantsModel.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-
-        System.out.println("Customized De-serialization of PhysicalConstantsModel "
-                + theSUID);
-    }
 }

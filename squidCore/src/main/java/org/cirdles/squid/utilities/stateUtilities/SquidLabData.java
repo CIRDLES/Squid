@@ -157,7 +157,7 @@ public class SquidLabData implements Serializable {
         this.physicalConstantsModels = physicalConstantsModels;
     }
 
-    public List<CommonPbModel> getcommonPbModels() {
+    public List<CommonPbModel> getCommonPbModels() {
         return commonPbModels;
     }
 

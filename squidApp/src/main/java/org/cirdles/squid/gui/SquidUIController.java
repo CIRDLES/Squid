@@ -1214,9 +1214,9 @@ public class SquidUIController implements Initializable {
 
             if (commonPbModel == null) {
                 task.setCommonPbModel(squidLabData.getCommonPbDefault());
-            } else if (!squidLabData.getcommonPbModels().contains(commonPbModel)) {
+            } else if (!squidLabData.getCommonPbModels().contains(commonPbModel)) {
                 squidLabData.addcommonPbModel(commonPbModel);
-                squidLabData.getcommonPbModels().sort(new ParametersModelComparator());
+                squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
             }
         }
     }
