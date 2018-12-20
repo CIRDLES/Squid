@@ -170,7 +170,8 @@
             
             <xs:enumeration value="sqWtdAv" />
             <xs:enumeration value="sqrt" />
-            
+
+            <xs:enumeration value="value"/>
             <xs:enumeration value="none" />
         </xs:restriction>
     </xs:simpleType>
