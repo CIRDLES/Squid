@@ -12,12 +12,8 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.util.*;
-import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 
 /**
  * @author ryanb

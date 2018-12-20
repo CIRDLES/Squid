@@ -13,8 +13,6 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterials.Reference
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.List;
 
@@ -38,6 +36,8 @@ public class SquidLabData implements Serializable {
     private ReferenceMaterial refMatDefault;
     private ReferenceMaterial refMatConcDefault;
     private PhysicalConstantsModel physConstDefault;
+    
+    private int squidLabDataVersion;
 
     public SquidLabData() {
         laboratoryName = "Your lab";
@@ -64,6 +64,12 @@ public class SquidLabData implements Serializable {
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
             if (file.exists() && !file.isDirectory()) {
                 retVal = SquidLabData.deserialize(file);
+                if (retVal == null){
+                    // bad labdata
+                    // save off old lab data
+                    // announce to user
+                    retVal = new SquidLabData();
+                }
             } else {
                 retVal = new SquidLabData();
             }
@@ -75,6 +81,7 @@ public class SquidLabData implements Serializable {
     }
 
     public void storeState() {
+        this.squidLabDataVersion = 2;
         try {
             File file = new File(File.separator + System.getProperty("user.home")
                     + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
