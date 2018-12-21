@@ -48,7 +48,7 @@ public class SquidLabData implements Serializable {
         commonPbModels = CommonPbModel.getDefaultModels();
         commonPbModels.sort(new ParametersModelComparator());
 
-        physConstDefault = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+        physConstDefault = PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0");
         refMatDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         refMatConcDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         commonPbDefault = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");

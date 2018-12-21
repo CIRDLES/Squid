@@ -31,7 +31,7 @@
       <name>lambda232</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference>Le Roux and Glendenin, 1963</reference>
-      <value>0.00000000004948000000</value>
+      <value>0.00000000004947500000</value>
       <oneSigma>0.00000000000025234800</oneSigma>
     </ValueModel>
     <ValueModel>
