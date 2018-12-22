@@ -91,8 +91,8 @@ public class Pb86radCor7per extends Function {
             double pb207_206Unct = pb207_206RatioAndUnct[1] / pb207_206RatioAndUnct[0] * 100.0;
 
             double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
-            double lambda235 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_235_NAME)).getValue();
-            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235_NAME).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238_NAME).getValues()[0][0];
 
             double[] pb86radCor7per = org.cirdles.ludwig.squid25.PbUTh_2.pb86radCor7per(pb208_206RatioAndUnct[0], pb208_206Unct, pb207_206RatioAndUnct[0], pb207_206Unct,
                     pb6U8tot[0], pb6U8totPerr[0], age7corPb6U8[0],

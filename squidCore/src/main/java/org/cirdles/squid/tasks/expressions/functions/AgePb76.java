@@ -78,8 +78,8 @@ public class AgePb76 extends Function {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
 
             double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
-            double lambda235 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_235_NAME)).getValue();
-            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235_NAME).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238_NAME).getValues()[0][0];
 
             double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(pb207_206RatioAndUnct[0],
                     (pb207_206RatioAndUnct.length > 1) ? pb207_206RatioAndUnct[1] : 0.0,

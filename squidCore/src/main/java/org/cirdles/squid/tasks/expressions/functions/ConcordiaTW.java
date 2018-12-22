@@ -77,8 +77,8 @@ public class ConcordiaTW extends Function {
             double[] ratioYAndUnct = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
 
             double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
-            double lambda235 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_235_NAME)).getValue();
-            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235_NAME).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238_NAME).getValues()[0][0];
 
             double[] concordiaTW
                     = org.cirdles.ludwig.isoplot3.Pub.concordiaTW(ratioXAndUnct[0],

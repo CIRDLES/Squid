@@ -84,8 +84,8 @@ public class Pb46cor8 extends Function {
             double[] sComm_64 = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
             double[] sComm_84 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
 
-            double lambda232 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_232_NAME)).getValue();
-            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_232_NAME).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238_NAME).getValues()[0][0];
 
             double[] pb46cor8 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor8(
                     pb208_206RatioAndUnct[0], 

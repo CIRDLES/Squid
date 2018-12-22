@@ -74,7 +74,7 @@ public class Pb206U238rad extends Function {
         try {
             double[] age = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             
-            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238_NAME).getValues()[0][0];
 
             double[] pb206U238rad = org.cirdles.ludwig.squid25.PbUTh_2.pb206U238rad(
                     age[0],

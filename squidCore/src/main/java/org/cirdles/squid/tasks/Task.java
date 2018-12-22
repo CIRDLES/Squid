@@ -79,6 +79,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.samRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
@@ -275,7 +276,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.extPErr = 0.75;
 
-        this.physicalConstantsModel = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+        this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
         this.referenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         this.concentrationReferenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
@@ -302,6 +303,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         SortedSet<Expression> generateParameterValues = updateCommonLeadParameterValuesFromModel(commonPbModel);
         taskExpressionsOrdered.addAll(generateParameterValues);
+        
+        SortedSet<Expression> generatePhysicalConstantsValues = updatePhysicalConstantsParameterValuesFromModel(physicalConstantsModel);
+        taskExpressionsOrdered.addAll(generatePhysicalConstantsValues);
 
         SortedSet<Expression> generatePlaceholderExpressions = generatePlaceholderExpressions(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(generatePlaceholderExpressions);
@@ -547,7 +551,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void updateParametersFromModels() {
-        SortedSet<Expression> updatedCommonPbExpressions = BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel(commonPbModel);
+        SortedSet<Expression> updatedCommonPbExpressions = 
+                BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel(commonPbModel);
         Iterator<Expression> updatedCommonPbIterator = updatedCommonPbExpressions.iterator();
         while (updatedCommonPbIterator.hasNext()) {
             Expression exp = updatedCommonPbIterator.next();
@@ -555,6 +560,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             addExpression(exp, false);
             updateAffectedExpressions(exp, false);
         }
+        
+        SortedSet<Expression> updatedPhysicalConstantsExpressions = 
+                BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel(physicalConstantsModel);
+        Iterator<Expression> updatedPhysicalConstantsExpressionsIterator = updatedPhysicalConstantsExpressions.iterator();
+        while (updatedPhysicalConstantsExpressionsIterator.hasNext()) {
+            Expression exp = updatedPhysicalConstantsExpressionsIterator.next();
+            removeExpression(exp, false);
+            addExpression(exp, false);
+            updateAffectedExpressions(exp, false);
+        }        
         updateAllExpressions(false);
     }
 

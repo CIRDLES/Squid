@@ -93,8 +93,8 @@ public class Rad8corConcRho extends Function {
             double[] sComm_86 = convertObjectArrayToDoubles(childrenET.get(10).eval(shrimpFractions, task)[0]);
             
             double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
-            double lambda232 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_232_NAME)).getValue();
-            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_232_NAME).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238_NAME).getValues()[0][0];
 
             double[] rad8corConcRho = org.cirdles.ludwig.squid25.PbUTh_2.rad8corConcRho(totPb6U8[0],
                     totPb6U8per[0],
