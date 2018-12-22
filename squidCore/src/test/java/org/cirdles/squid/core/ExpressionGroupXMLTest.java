@@ -14,6 +14,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class ExpressionGroupXMLTest {
         final File folder = new File("testingExpressionsGroups");
         folder.mkdir();
         List<Expression> expressions = project.getTask().getTaskExpressionsOrdered();
-        List<Expression> customExpressions = new ArrayList<>();
-        expressions.forEach(exp -> {
+        List<Expression> customExpressions = Collections.synchronizedList(new ArrayList<>());
+        expressions.parallelStream().forEach(exp -> {
             if (exp.isCustom()) {
                 exp.serializeXMLObject(folder.getAbsolutePath() + File.separator + FileNameFixer.fixFileName(exp.getName()) + ".xml");
                 customExpressions.add(exp);
@@ -52,13 +53,11 @@ public class ExpressionGroupXMLTest {
             for (File file : files) {
                 convertedExpressions.add((Expression) converter.readXMLObject(file.getAbsolutePath(), false));
             }
-
-            Comparator<Expression> expressionComparator = new Comparator<Expression>() {
-                @Override
-                public int compare(Expression o1, Expression o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            };
+            files = folder.listFiles();
+            for(File file : files) {
+                file.delete();
+            }
+            Comparator<Expression> expressionComparator = Comparator.comparing(Expression::getName);
             convertedExpressions.sort(expressionComparator);
             customExpressions.sort(expressionComparator);
             retVal = convertedExpressions.equals(customExpressions);
