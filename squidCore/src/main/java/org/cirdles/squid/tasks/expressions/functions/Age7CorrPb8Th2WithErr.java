@@ -52,9 +52,8 @@ public class Age7CorrPb8Th2WithErr extends Function {
      * calculated numerically, by successive perturbation of the input errors.
      *
      * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * <a href="https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas" target="_blank">
+     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas</a>
      */
     public Age7CorrPb8Th2WithErr() {
 

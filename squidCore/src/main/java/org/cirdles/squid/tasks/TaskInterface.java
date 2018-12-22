@@ -57,7 +57,6 @@ public interface TaskInterface {
 
     /**
      *
-     * @param shrimpFractions
      */
     public void evaluateTaskExpressions();
 
@@ -248,7 +247,6 @@ public interface TaskInterface {
 
     /**
      * @param taskExpressionsOrdered
-     * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
      */
     public void setTaskExpressionsOrdered(List<Expression> taskExpressionsOrdered);
 
@@ -286,7 +284,6 @@ public interface TaskInterface {
 
     /**
      * @param filterForConcRefMatSpotNames
-     * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
     public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
 
