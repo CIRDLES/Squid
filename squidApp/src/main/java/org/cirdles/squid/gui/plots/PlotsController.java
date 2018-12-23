@@ -178,6 +178,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         // get type of correctionList
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
         
+        // need current physical contants for plotting of concordia etc.
         ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
 
         rootPlot = new TopsoilPlotWetherill(

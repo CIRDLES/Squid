@@ -168,12 +168,12 @@ public class ReferenceMaterial extends ParametersModel {
         PhysicalConstantsModel defaultPhysConstModel =
                 PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         ValueModel lambda232 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.lambda232.getName());
+                .getDatumByName(Lambdas.LAMBDA_232.getName());
 
         ValueModel lambda235 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.lambda235.getName());
+                .getDatumByName(Lambdas.LAMBDA_235.getName());
         ValueModel lambda238 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.lambda238.getName());
+                .getDatumByName(Lambdas.LAMBDA_238.getName());
 
         ValueModel r206_238r = getDatumByName(ReferenceMaterialEnum.r206_238r.getName());
 

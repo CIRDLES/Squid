@@ -64,7 +64,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         setupPlot(title, physicalConstantsModel);
     }
 
-    private void setupPlot(String title, ParametersModel physicalConstantsMode) {
+    private void setupPlot(String title, ParametersModel physicalConstantsModel) {
         Map<PlotProperty, Object> properties = new DefaultProperties();
 
         properties.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB.getName());
@@ -82,9 +82,9 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
         properties.put(UNCERTAINTY, ONE_SIGMA_ABSOLUTE.getSigmaMultiplier());
 
-        properties.put(LAMBDA_U234, 0.0);//physicalConstantsMode.getDatumByName(Lambdas.lambda234.getName()).getValue().doubleValue());
-        properties.put(LAMBDA_U235, 0.000000098485);//physicalConstantsMode.getDatumByName(Lambdas.lambda235.getName()).getValue().doubleValue());
-        properties.put(LAMBDA_U238, 0.0000000255125);//physicalConstantsMode.getDatumByName(Lambdas.lambda238.getName()).getValue().doubleValue());
+        properties.put(LAMBDA_U234, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_234.getName()).getValue().doubleValue());
+        properties.put(LAMBDA_U235, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_235.getName()).getValue().doubleValue());
+        properties.put(LAMBDA_U238, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_238.getName()).getValue().doubleValue());
 
         plot.setProperties(properties);
     }

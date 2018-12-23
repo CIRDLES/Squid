@@ -21,19 +21,14 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_230;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_234;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_230;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_230_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_232;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_232_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_234;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_234_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_235;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_235_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
@@ -117,32 +112,32 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> parameterValues = new TreeSet<>();
         
         String notes = "from Physical Constants model: " + physicalConstantsModel.getModelNameWithVersion();
-        Expression expressionslambda230 = buildExpression(LAMBDA_230_NAME,
-                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_230).getValue().doubleValue()), true, true, true);
+        Expression expressionslambda230 = buildExpression(LAMBDA_230.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_230.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda230.setParameterValue(true);
         expressionslambda230.setNotes(notes);
         parameterValues.add(expressionslambda230);
         
-        Expression expressionslambda232 = buildExpression(LAMBDA_232_NAME,
-                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_232).getValue().doubleValue()), true, true, true);
+        Expression expressionslambda232 = buildExpression(LAMBDA_232.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_232.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda232.setParameterValue(true);
         expressionslambda232.setNotes(notes);
         parameterValues.add(expressionslambda232);
  
-        Expression expressionslambda234 = buildExpression(LAMBDA_234_NAME,
-                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_234).getValue().doubleValue()), true, true, true);
+        Expression expressionslambda234 = buildExpression(LAMBDA_234.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_234.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda234.setParameterValue(true);
         expressionslambda234.setNotes(notes);
         parameterValues.add(expressionslambda234);
  
-        Expression expressionslambda235 = buildExpression(LAMBDA_235_NAME,
-                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_235).getValue().doubleValue()), true, true, true);
+        Expression expressionslambda235 = buildExpression(LAMBDA_235.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_235.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda235.setParameterValue(true);
         expressionslambda235.setNotes(notes);
         parameterValues.add(expressionslambda235);
  
-        Expression expressionslambda238 = buildExpression(LAMBDA_238_NAME,
-                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_238).getValue().doubleValue()), true, true, true);
+        Expression expressionslambda238 = buildExpression(LAMBDA_238.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_238.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda238.setParameterValue(true);
         expressionslambda238.setNotes(notes);
         parameterValues.add(expressionslambda238);
