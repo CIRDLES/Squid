@@ -1503,8 +1503,8 @@ public class ParametersManagerGUIController implements Initializable {
         squidLabData.storeState();
 
         if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
-                && (squidProject.getTask().getReferenceMaterial().equals(refMatModel) ||
-                squidProject.getTask().getReferenceMaterial().equals(squidLabData.getRefMatDefault()))) {
+                && (squidProject.getTask().getReferenceMaterialModel().equals(refMatModel) ||
+                squidProject.getTask().getReferenceMaterialModel().equals(squidLabData.getRefMatDefault()))) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }

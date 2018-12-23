@@ -241,25 +241,25 @@ public class TaskManagerController implements Initializable {
         // ReferenceMaterials
         refMatModelComboBox.setConverter(new ParameterModelStringConverter());
         refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
-        refMatModelComboBox.getSelectionModel().select(task.getReferenceMaterial());
+        refMatModelComboBox.getSelectionModel().select(task.getReferenceMaterialModel());
 
         refMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
                     task.setReferenceMaterial(newValue);
-                    squidProject.getTask().setChanged(true);
-                    squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                    task.setChanged(true);
+                    task.setupSquidSessionSpecsAndReduceAndReport();
                 });
 
         // ConcentrationReferenceMaterials
         concRefMatModelComboBox.setConverter(new ParameterModelStringConverter());
         concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
-        concRefMatModelComboBox.getSelectionModel().select(task.getConcentrationReferenceMaterial());
+        concRefMatModelComboBox.getSelectionModel().select(task.getConcentrationReferenceMaterialModel());
 
         concRefMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
                     task.setConcentrationReferenceMaterial(newValue);
-                    squidProject.getTask().setChanged(true);
-                    squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                    task.setChanged(true);
+                    task.setupSquidSessionSpecsAndReduceAndReport();
                 });
 
         // PhysicalConstantsModels
@@ -270,8 +270,8 @@ public class TaskManagerController implements Initializable {
         physConstModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
                     task.setPhysicalConstantsModel(newValue);
-                    squidProject.getTask().setChanged(true);
-                    squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                    task.setChanged(true);
+                    task.setupSquidSessionSpecsAndReduceAndReport();
                 });
 
         // CommonPbModels
@@ -282,8 +282,8 @@ public class TaskManagerController implements Initializable {
         commonPbModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
                     task.setCommonPbModel(newValue);
-                    squidProject.getTask().setChanged(true);
-                    squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                    task.setChanged(true);
+                    task.setupSquidSessionSpecsAndReduceAndReport();
                 });
     }
 

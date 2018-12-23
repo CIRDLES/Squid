@@ -194,9 +194,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected double extPErr;
 
     protected PhysicalConstantsModel physicalConstantsModel;
-    protected ReferenceMaterial referenceMaterial;
+    protected ReferenceMaterial referenceMaterialModel;
     protected CommonPbModel commonPbModel;
-    protected ReferenceMaterial concentrationReferenceMaterial;
+    protected ReferenceMaterial concentrationReferenceMaterialModel;
+
+    protected boolean physicalConstantsModelChanged;
+    protected boolean referenceMaterialModelChanged;
+    protected boolean commonPbModelChanged;
+    protected boolean concentrationReferenceMaterialModelChanged;
 
     public Task() {
         this("New Task", null, null);
@@ -279,9 +284,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.extPErr = 0.75;
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
-        this.referenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        this.concentrationReferenceMaterial = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.referenceMaterialModel = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.concentrationReferenceMaterialModel = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
+
+        this.physicalConstantsModelChanged = false;
+        this.referenceMaterialModelChanged = false;
+        this.commonPbModelChanged = false;
+        this.concentrationReferenceMaterialModelChanged = false;
 
         generateConstants();
         generateParameters();
@@ -553,26 +563,38 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void updateParametersFromModels() {
-        SortedSet<Expression> updatedCommonPbExpressions
-                = BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel(commonPbModel);
-        Iterator<Expression> updatedCommonPbIterator = updatedCommonPbExpressions.iterator();
-        while (updatedCommonPbIterator.hasNext()) {
-            Expression exp = updatedCommonPbIterator.next();
-            removeExpression(exp, false);
-            addExpression(exp, false);
-            updateAffectedExpressions(exp, false);
+        boolean doUpdateAll
+                = commonPbModelChanged || physicalConstantsModelChanged || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
+
+        if (commonPbModelChanged) {
+            SortedSet<Expression> updatedCommonPbExpressions
+                    = BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel(commonPbModel);
+            Iterator<Expression> updatedCommonPbIterator = updatedCommonPbExpressions.iterator();
+            while (updatedCommonPbIterator.hasNext()) {
+                Expression exp = updatedCommonPbIterator.next();
+                removeExpression(exp, false);
+                addExpression(exp, false);
+                updateAffectedExpressions(exp, false);
+            }
+            commonPbModelChanged = false;
         }
 
-        SortedSet<Expression> updatedPhysicalConstantsExpressions
-                = BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel(physicalConstantsModel);
-        Iterator<Expression> updatedPhysicalConstantsExpressionsIterator = updatedPhysicalConstantsExpressions.iterator();
-        while (updatedPhysicalConstantsExpressionsIterator.hasNext()) {
-            Expression exp = updatedPhysicalConstantsExpressionsIterator.next();
-            removeExpression(exp, false);
-            addExpression(exp, false);
-            updateAffectedExpressions(exp, false);
+        if (physicalConstantsModelChanged) {
+            SortedSet<Expression> updatedPhysicalConstantsExpressions
+                    = BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel(physicalConstantsModel);
+            Iterator<Expression> updatedPhysicalConstantsExpressionsIterator = updatedPhysicalConstantsExpressions.iterator();
+            while (updatedPhysicalConstantsExpressionsIterator.hasNext()) {
+                Expression exp = updatedPhysicalConstantsExpressionsIterator.next();
+                removeExpression(exp, false);
+                addExpression(exp, false);
+                updateAffectedExpressions(exp, false);
+            }
+            physicalConstantsModelChanged = false;
         }
-        updateAllExpressions(false);
+
+        if (doUpdateAll) {
+            updateAllExpressions(false);
+        }
     }
 
     /**
@@ -1290,7 +1312,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         boolean firstReferenceMaterial = true;
         long baseTimeOfFirstRefMatForCalcHoursField = 0l;
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
-            // spots that are concentrationReferenceMaterial will also be in one of the other two buckets
+            // spots that are concentrationReferenceMaterialModel will also be in one of the other two buckets
             if (spot.isConcentrationReferenceMaterial()) {
                 concentrationReferenceMaterialSpots.add(spot);
             }
@@ -2242,30 +2264,33 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setReferenceMaterial(ParametersModel refMat) {
         if (refMat instanceof ReferenceMaterial) {
-            referenceMaterial = (ReferenceMaterial) refMat;
+            referenceMaterialModelChanged = !referenceMaterialModel.equals(refMat);
+            referenceMaterialModel = (ReferenceMaterial) refMat;
         }
     }
 
     @Override
-    public ReferenceMaterial getReferenceMaterial() {
-        return referenceMaterial;
+    public ReferenceMaterial getReferenceMaterialModel() {
+        return referenceMaterialModel;
     }
 
     @Override
     public void setConcentrationReferenceMaterial(ParametersModel refMat) {
         if (refMat instanceof ReferenceMaterial) {
-            concentrationReferenceMaterial = (ReferenceMaterial) refMat;
+            concentrationReferenceMaterialModelChanged = !concentrationReferenceMaterialModel.equals(refMat);
+            concentrationReferenceMaterialModel = (ReferenceMaterial) refMat;
         }
     }
 
     @Override
-    public ReferenceMaterial getConcentrationReferenceMaterial() {
-        return concentrationReferenceMaterial;
+    public ReferenceMaterial getConcentrationReferenceMaterialModel() {
+        return concentrationReferenceMaterialModel;
     }
 
     @Override
     public void setPhysicalConstantsModel(ParametersModel physConst) {
         if (physConst instanceof PhysicalConstantsModel) {
+            physicalConstantsModelChanged = !physicalConstantsModel.equals(physConst);
             physicalConstantsModel = (PhysicalConstantsModel) physConst;
         }
     }
@@ -2278,6 +2303,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setCommonPbModel(ParametersModel commonPbModel) {
         if (commonPbModel instanceof CommonPbModel) {
+            commonPbModelChanged = !this.commonPbModel.equals(commonPbModel);
             this.commonPbModel = (CommonPbModel) commonPbModel;
         }
     }

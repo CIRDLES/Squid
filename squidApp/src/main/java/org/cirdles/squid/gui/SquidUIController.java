@@ -1185,8 +1185,8 @@ public class SquidUIController implements Initializable {
     private void verifySquidLabDataParameters() {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
-            ReferenceMaterial refMat = task.getReferenceMaterial();
-            ReferenceMaterial refMatConc = task.getConcentrationReferenceMaterial();
+            ReferenceMaterial refMat = task.getReferenceMaterialModel();
+            ReferenceMaterial refMatConc = task.getConcentrationReferenceMaterialModel();
             PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
             CommonPbModel commonPbModel = task.getCommonPbModel();
 

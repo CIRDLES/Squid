@@ -200,7 +200,7 @@ public interface TaskInterface {
 
     public void setReferenceMaterial(ParametersModel refMat);
 
-    public ReferenceMaterial getReferenceMaterial();
+    public ReferenceMaterial getReferenceMaterialModel();
 
     public void setPhysicalConstantsModel(ParametersModel physConst);
 
@@ -212,7 +212,7 @@ public interface TaskInterface {
 
     public void setConcentrationReferenceMaterial(ParametersModel refMat);
 
-    public ReferenceMaterial getConcentrationReferenceMaterial();
+    public ReferenceMaterial getConcentrationReferenceMaterialModel();
 
     /**
      * @param type the type to set
