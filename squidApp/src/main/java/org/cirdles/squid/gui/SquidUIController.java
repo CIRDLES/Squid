@@ -16,18 +16,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -36,35 +24,25 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javax.xml.bind.JAXBException;
+import javafx.scene.layout.*;
+import javafx.stage.StageStyle;
 import org.cirdles.squid.Squid;
-import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
-import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.parameters.ParametersModelComparator;
-import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
-import org.cirdles.squid.gui.parameters.ParametersLauncher;
-import static org.cirdles.squid.gui.SquidUI.primaryStage;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
+import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
-import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -72,12 +50,32 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
-import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
+import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
+import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
+import org.cirdles.squid.utilities.fileUtilities.FileValidator;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBException;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
+import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
+import static org.cirdles.squid.gui.SquidUI.primaryStage;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
+import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
 /**
  * FXML Controller class
@@ -160,7 +158,7 @@ public class SquidUIController implements Initializable {
     private Menu squidLabDataMenu;
 
     public static ParametersLauncher parametersLauncher;
-//    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
+    //    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
     @FXML
     private Menu unknownsmenu;
     @FXML
@@ -281,8 +279,8 @@ public class SquidUIController implements Initializable {
         selectSquid3TaskFromLibraryMenu.setDisable(true);
 
         selectSquid3TaskFromLibraryMenu.getItems().clear();
-        Map< String, TaskInterface> taskLibrary = squidProject.getTaskLibrary();
-        for (Map.Entry< String, TaskInterface> entry : taskLibrary.entrySet()) {
+        Map<String, TaskInterface> taskLibrary = squidProject.getTaskLibrary();
+        for (Map.Entry<String, TaskInterface> entry : taskLibrary.entrySet()) {
             MenuItem menuItem = new MenuItem(entry.getKey());
             menuItem.setOnAction((ActionEvent t) -> {
                 // get a new library
@@ -422,7 +420,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
     }
@@ -433,9 +431,9 @@ public class SquidUIController implements Initializable {
 
         SquidMessageDialog.showInfoDialog(
                 "To join two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
-                + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
-                + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
-                + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
+                        + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
+                        + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
+                        + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
                 primaryStageWindow);
 
         try {
@@ -453,7 +451,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open and join the selected files:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
 
@@ -660,6 +658,7 @@ public class SquidUIController implements Initializable {
             manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageVisualizationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("TaskManager >>>>   " + iOException.getMessage());
         }
@@ -1222,6 +1221,121 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    public void importCustomExpressionsOnAction(ActionEvent actionEvent) {
+        File folder = FileHandler.getCustomExpressionFolder(primaryStageWindow);
+        if (folder != null && folder.exists()) {
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+            File[] files;
+            try {
+                final Schema schema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL));
+                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml") &&
+                        FileValidator.validateFileIsXMLSerializedEntity(f, schema));
+            } catch (SAXException e) {
+                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml"));
+            }
+
+            final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
+
+            ButtonType replaceAll = new ButtonType("Replace All");
+            ButtonType replaceNone = new ButtonType("Replace None");
+            ButtonType replace = new ButtonType("Replace");
+            ButtonType dontReplace = new ButtonType("Don't Replace");
+            ButtonType rename = new ButtonType("Rename");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "", replaceAll, replaceNone, replace, dontReplace, rename);
+            alert.initStyle(StageStyle.UNDECORATED);
+            alert.initOwner(primaryStage.getScene().getWindow());
+            alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
+            alert.setY(primaryStage.getY() + (primaryStage.getHeight() - alert.getHeight()) / 2);
+            for (int i = 0; i < files.length; i++) {
+                try {
+                    final Expression exp = (Expression) (new Expression()).readXMLObject(files[i].getAbsolutePath(), false);
+
+                    if (expressions.contains(exp)) {
+                        if (alert.getResult() != null && alert.getResult().equals(replaceAll)) {
+                            expressions.remove(exp);
+                            expressions.add(exp);
+                            squidProject.getTask().updateAffectedExpressions(exp);
+                            squidProject.getTask().updateAllExpressions();
+                        } else if (alert.getResult() == null || !alert.getResult().equals(replaceNone)) {
+                            alert.setContentText(exp.getName() + " exists");
+                            alert.showAndWait().ifPresent((t) -> {
+                                if (t.equals(replace) || t.equals(replaceAll)) {
+                                    expressions.add(exp);
+                                    squidProject.getTask().updateAffectedExpressions(exp);
+                                    squidProject.getTask().updateAllExpressions();
+                                }
+                                if (t.equals(rename)) {
+                                    TextInputDialog dialog = new TextInputDialog(exp.getName());
+                                    dialog.setTitle("Rename");
+                                    dialog.setHeaderText("Rename " + exp.getName());
+                                    dialog.setContentText("Enter the new name:");
+                                    Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                                    TextField newName = null;
+                                    for (Node n : dialog.getDialogPane().getChildren()) {
+                                        if (n instanceof TextField) {
+                                            newName = (TextField) n;
+                                        }
+                                    }
+                                    if (okBtn != null && newName != null) {
+                                        newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                            okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
+                                        });
+                                    }
+                                    dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                                    dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                                    Optional<String> result = dialog.showAndWait();
+                                    if (result.isPresent()) {
+                                        exp.setName(result.get());
+                                        expressions.add(exp);
+                                        squidProject.getTask().updateAffectedExpressions(exp);
+                                        squidProject.getTask().updateAllExpressions();
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        expressions.add(exp);
+                        squidProject.getTask().updateAffectedExpressions(exp);
+                        squidProject.getTask().updateAllExpressions();
+                    }
+                } catch (Exception e) {
+                    System.out.println(files[i].getName() + " custom expression not added");
+                }
+            }
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        } else {
+            System.out.println("custom expressions folder does not exist");
+        }
+
+        buildExpressionMenuMRU();
+
+        launchExpressionBuilder();
+
+        showUI(expressionBuilderUI);
+
+    }
+
+    public void exportCustomExpressionsOnAction(ActionEvent actionEvent) {
+        File folder = FileHandler.setCustomExpressionFolder(primaryStageWindow);
+        if (folder != null) {
+            folder.mkdirs();
+            for (Expression expression : squidProject.getTask().getTaskExpressionsOrdered()) {
+                if (expression.isCustom()) {
+                    try {
+                        expression.serializeXMLObject(folder.getAbsolutePath() + File.separator +
+                                FileNameFixer.fixFileName(expression.getName()) + ".xml");
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+        } else {
+            System.out.println("custom expression folder not created");
+        }
+    }
+
     @FXML
     private void choosePrawnFileMenuItemAction(ActionEvent event) {
         try {
@@ -1245,7 +1359,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected Prawn File:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
     }
