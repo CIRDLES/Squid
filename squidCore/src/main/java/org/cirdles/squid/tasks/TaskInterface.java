@@ -18,7 +18,6 @@ package org.cirdles.squid.tasks;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -27,7 +26,6 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
-import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;

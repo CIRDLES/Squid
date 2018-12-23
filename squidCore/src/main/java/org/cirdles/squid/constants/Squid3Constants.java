@@ -17,7 +17,6 @@ package org.cirdles.squid.constants;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 
 /**
  *

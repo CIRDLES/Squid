@@ -1220,6 +1220,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    @FXML
     public void importCustomExpressionsOnAction(ActionEvent actionEvent) {
         File folder = FileHandler.getCustomExpressionFolder(primaryStageWindow);
         if (folder != null && folder.exists()) {
@@ -1316,6 +1317,7 @@ public class SquidUIController implements Initializable {
 
     }
 
+    @FXML
     public void exportCustomExpressionsOnAction(ActionEvent actionEvent) {
         File folder = FileHandler.setCustomExpressionFolder(primaryStageWindow);
         if (folder != null) {

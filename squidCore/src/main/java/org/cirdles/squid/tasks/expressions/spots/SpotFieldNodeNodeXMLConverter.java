@@ -15,14 +15,11 @@
  */
 package org.cirdles.squid.tasks.expressions.spots;
 
-import org.cirdles.squid.tasks.expressions.isotopes.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 
 /**
  * A <code>SpotFieldNodeXMLConverter</code> is used to marshal and unmarshal

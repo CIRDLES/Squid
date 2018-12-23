@@ -9,7 +9,6 @@ import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 
 import java.io.File;
-import java.sql.Ref;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
