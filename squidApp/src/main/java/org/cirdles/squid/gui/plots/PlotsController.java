@@ -60,6 +60,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 /**
  *
@@ -67,7 +68,7 @@ import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
  */
 public class PlotsController implements Initializable, WeightedMeanRefreshInterface {
 
-    public static PlotDisplayInterface plot;
+    private static PlotDisplayInterface plot;
     private static Node topsoilPlotNode;
 
     @FXML
@@ -176,10 +177,12 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         }
         // get type of correctionList
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
+        
+        ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
 
         rootPlot = new TopsoilPlotWetherill(
                 "Concordia of " + correction + " for " + fractionTypeSelected.getPlotType(),
-                allUnknownOrRefMatShrimpFractions);
+                allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
         rootData = new ArrayList<>();
 
         List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
@@ -222,7 +225,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
             PlotDisplayInterface myPlot = new TopsoilPlotWetherill(
                     "Concordia of " + correction + " for " + entry.getKey(),
-                    entry.getValue());
+                    entry.getValue(), physicalConstantsModel);
             mapOfPlotsOfSpotSets.put(sampleItem.getValue().getNodeName(), myPlot);
             myPlot.setData(myData);
 

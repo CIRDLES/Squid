@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui.plots.topsoil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.beans.value.ChangeListener;
@@ -28,7 +29,10 @@ import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.plots.PlotDisplayInterface.SigmaPresentationModes.ONE_SIGMA_ABSOLUTE;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.util.Lambdas;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import org.cirdles.topsoil.isotope.IsotopeSystem;
 import org.cirdles.topsoil.plot.DefaultProperties;
@@ -47,35 +51,42 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
     }
 
     public TopsoilPlotWetherill(String title) {
-        plot = IsotopeSystem.UPB.getPlots()[0].getPlot();
-        //plot.setData(TopsoilDataFactory.prepareWetherillData(EXAMPLE_CM2_DATASET));
-        setupPlot(title);
+        this(title,
+                new ArrayList<ShrimpFractionExpressionInterface>(),
+                SquidLabData.getExistingSquidLabData().getPhysConstDefault());
     }
 
-    public TopsoilPlotWetherill(String title, List<ShrimpFractionExpressionInterface> shrimpFractions) {
+    public TopsoilPlotWetherill(
+            String title,
+            List<ShrimpFractionExpressionInterface> shrimpFractions,
+            ParametersModel physicalConstantsModel) {
         plot = IsotopeSystem.UPB.getPlots()[0].getPlot();
-        setupPlot(title);
+        setupPlot(title, physicalConstantsModel);
     }
 
-    private void setupPlot(String title) {
-    	Map<PlotProperty, Object> properties = new DefaultProperties();
+    private void setupPlot(String title, ParametersModel physicalConstantsMode) {
+        Map<PlotProperty, Object> properties = new DefaultProperties();
 
         properties.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB.getName());
-	    properties.put(X_AXIS, IsotopeSystem.UPB.getHeaders()[0]);
-	    properties.put(Y_AXIS, IsotopeSystem.UPB.getHeaders()[1]);
+        properties.put(X_AXIS, IsotopeSystem.UPB.getHeaders()[0]);
+        properties.put(Y_AXIS, IsotopeSystem.UPB.getHeaders()[1]);
 
-	    properties.put(TITLE, title);
-	    properties.put(WETHERILL_LINE, true);
-	    properties.put(POINTS, true);
-            properties.put(ELLIPSES, true);
-	    properties.put(ELLIPSES_FILL, "red");
+        properties.put(TITLE, title);
+        properties.put(WETHERILL_LINE, true);
+        properties.put(POINTS, true);
+        properties.put(ELLIPSES, true);
+        properties.put(ELLIPSES_FILL, "red");
 
-	    properties.put(MCLEAN_REGRESSION, false);
-	    properties.put(MCLEAN_REGRESSION_ENVELOPE, false);
+        properties.put(MCLEAN_REGRESSION, false);
+        properties.put(MCLEAN_REGRESSION_ENVELOPE, false);
 
-	    properties.put(UNCERTAINTY, ONE_SIGMA_ABSOLUTE.getSigmaMultiplier());
+        properties.put(UNCERTAINTY, ONE_SIGMA_ABSOLUTE.getSigmaMultiplier());
 
-	    plot.setProperties(properties);
+        properties.put(LAMBDA_U234, 0.0);//physicalConstantsMode.getDatumByName(Lambdas.lambda234.getName()).getValue().doubleValue());
+        properties.put(LAMBDA_U235, 0.000000098485);//physicalConstantsMode.getDatumByName(Lambdas.lambda235.getName()).getValue().doubleValue());
+        properties.put(LAMBDA_U238, 0.0000000255125);//physicalConstantsMode.getDatumByName(Lambdas.lambda238.getName()).getValue().doubleValue());
+
+        plot.setProperties(properties);
     }
 
     @Override
@@ -113,8 +124,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         ellipsesColorPicker.setPrefWidth(100);
         ellipsesColorPicker.setOnAction(mouseEvent -> {
             // to satisfy D3
-            plot.setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll
-		            ("0x", "#"));
+            plot.setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
         });
 
         CheckBox concordiaLineCheckBox = new CheckBox("Concordia");
