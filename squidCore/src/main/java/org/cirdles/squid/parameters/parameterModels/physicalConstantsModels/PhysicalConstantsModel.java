@@ -89,19 +89,13 @@ public class PhysicalConstantsModel extends ParametersModel {
     }
 
     public static List<PhysicalConstantsModel> getDefaultModels() {
-        File folder = new File("SamplePhysicalConstantsModels/");
+        File folder = new File("SamplePhysicalConstantsModels");
         File[] files = new File[0];
         List<PhysicalConstantsModel> models = new ArrayList<>();
         if (folder.exists()) {
             files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    boolean retVal;
-                    if (name.toLowerCase().endsWith(".xml")) {
-                        retVal = true;
-                    } else {
-                        retVal = false;
-                    }
-                    return retVal;
+                    return name.toLowerCase().endsWith(".xml");
                 }
             });
             for (int i = 0; i < files.length; i++) {

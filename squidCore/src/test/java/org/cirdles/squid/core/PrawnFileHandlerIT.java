@@ -36,6 +36,7 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
+import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -157,6 +158,9 @@ public class PrawnFileHandlerIT {
     public void testingOutputForZ6266Permutation1() throws Exception {
 
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 4-,7-,8-corr reference materials and unknowns.");
+        
+        CalamariFileUtilities.initSampleParametersModels();
+        
         File prawnFile = RESOURCE_EXTRACTOR
                 .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266);
 

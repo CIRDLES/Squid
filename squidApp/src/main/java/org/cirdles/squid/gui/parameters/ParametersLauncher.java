@@ -44,16 +44,14 @@ public class ParametersLauncher {
             squidLabDataStage.hide();
             e.consume();
         });
-        launchParametersManager(ParametersTab.refMat);
-        squidLabDataStage.hide();
     }
 
     public void launchParametersManager(ParametersTab tab) {
         ParametersManagerGUIController.chosenTab = tab;
         if (!squidLabDataStage.isShowing()) {
+            squidLabDataStage.show();
             squidLabDataStage.setX(primaryStage.getX() + (primaryStage.getWidth() - squidLabDataStage.getWidth()) / 2);
             squidLabDataStage.setY(primaryStage.getY() + (primaryStage.getHeight() - squidLabDataStage.getHeight()) / 2);
-            squidLabDataStage.show();
         }
         squidLabDataStage.requestFocus();
     }

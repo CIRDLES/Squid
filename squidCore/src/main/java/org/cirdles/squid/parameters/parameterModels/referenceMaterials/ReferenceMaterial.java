@@ -18,9 +18,6 @@ import org.cirdles.squid.parameters.valueModels.*;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -135,19 +132,13 @@ public class ReferenceMaterial extends ParametersModel {
     }
 
     public static List<ReferenceMaterial> getDefaultModels() {
-        File folder = new File("SampleReferenceMaterials/");
+        File folder = new File("SampleReferenceMaterials");
         File[] files = new File[0];
         List<ReferenceMaterial> models = new ArrayList<>();
         if (folder.exists()) {
             files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    boolean retVal;
-                    if (name.toLowerCase().endsWith(".xml")) {
-                        retVal = true;
-                    } else {
-                        retVal = false;
-                    }
-                    return retVal;
+                    return name.toLowerCase().endsWith(".xml");
                 }
             });
             for (int i = 0; i < files.length; i++) {

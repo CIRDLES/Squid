@@ -70,18 +70,12 @@ public class CommonPbModel extends ParametersModel {
     }
 
     public static List<CommonPbModel> getDefaultModels() {
-        File folder = new File("SampleCommonPbModels/");
+        File folder = new File("SampleCommonPbModels");
         List<CommonPbModel> models = new ArrayList<>();
         if (folder.exists()) {
             File[] files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    boolean retVal;
-                    if (name.toLowerCase().endsWith(".xml")) {
-                        retVal = true;
-                    } else {
-                        retVal = false;
-                    }
-                    return retVal;
+                    return name.toLowerCase().endsWith(".xml");
                 }
             });
             for (int i = 0; i < files.length; i++) {
