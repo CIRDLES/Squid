@@ -17,6 +17,8 @@ package org.cirdles.squid.tasks;
 
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
+
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -493,4 +495,5 @@ public interface TaskInterface {
      * @return the extPErr
      */
     public double getExtPErr() ;
-}
+
+    }
