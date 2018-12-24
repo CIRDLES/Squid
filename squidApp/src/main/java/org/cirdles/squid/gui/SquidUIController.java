@@ -495,7 +495,6 @@ public class SquidUIController implements Initializable {
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 SquidUI.updateStageTitle(projectFileName);
                 buildProjectMenuMRU();
-                verifySquidLabDataParameters();
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
             } else {
@@ -1180,44 +1179,6 @@ public class SquidUIController implements Initializable {
     @FXML
     private void openDefaultSquidLabDataModels() {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
-    }
-
-    private void verifySquidLabDataParameters() {
-        if (squidProject != null && squidProject.getTask() != null) {
-            TaskInterface task = squidProject.getTask();
-            ReferenceMaterial refMat = task.getReferenceMaterialModel();
-            ReferenceMaterial refMatConc = task.getConcentrationReferenceMaterialModel();
-            PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
-            CommonPbModel commonPbModel = task.getCommonPbModel();
-
-            if (physConst == null) {
-                task.setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
-            } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
-                squidLabData.addPhysicalConstantsModel(physConst);
-                squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
-            }
-
-            if (refMat == null) {
-                task.setReferenceMaterial(squidLabData.getRefMatDefault());
-            } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
-                squidLabData.addReferenceMaterial(refMat);
-                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
-            }
-
-            if (refMatConc == null) {
-                task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
-            } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
-                squidLabData.addReferenceMaterial(refMatConc);
-                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
-            }
-
-            if (commonPbModel == null) {
-                task.setCommonPbModel(squidLabData.getCommonPbDefault());
-            } else if (!squidLabData.getCommonPbModels().contains(commonPbModel)) {
-                squidLabData.addcommonPbModel(commonPbModel);
-                squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
-            }
-        }
     }
 
     @FXML
