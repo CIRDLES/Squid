@@ -61,6 +61,8 @@ public class SquidPersistentState implements Serializable {
     private List<String> MRUExpressionGraphList;
     private String MRUExpressionGraphFolderPath;
 
+    private File customExpressionsFile;
+
     /**
      *
      */
@@ -92,6 +94,8 @@ public class SquidPersistentState implements Serializable {
         MRUExpressionFile = null;
         MRUExpressionList = new ArrayList<>();
         MRUExpressionFolderPath = "";
+
+        customExpressionsFile = null;
 
         serializeSelf();
     }
@@ -672,4 +676,11 @@ public class SquidPersistentState implements Serializable {
         this.MRUExpressionGraphFolderPath = MRUExpressionGraphFolderPath;
     }
 
+    public File getCustomExpressionsFile() {
+        return customExpressionsFile;
+    }
+
+    public void setCustomExpressionsFile(File file) {
+        customExpressionsFile = file;
+    }
 }

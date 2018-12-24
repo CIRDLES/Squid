@@ -41,6 +41,7 @@
             <xs:element name="referenceMaterialValue" type="xs:boolean"></xs:element>
             <xs:element name="parameterValue" type="xs:boolean"></xs:element>
             <xs:element name="expressionTree" type="ExpressionTree"></xs:element>
+            <xs:element name="notes" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
               
@@ -136,10 +137,16 @@
     
     <xs:complexType name="Operation">
         <xs:sequence>
-            <xs:element name="name" type="operationType" minOccurs="0"></xs:element>
+            <xs:element name="name" type="xs:string" minOccurs="0"></xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
+
+    <xs:annotation>
+        <xs:documentation xml:lang="en">
+            the operationType enumeration causes case sensitivity
+        </xs:documentation>
+    </xs:annotation>
     <xs:simpleType name="operationType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="add" />
@@ -150,26 +157,27 @@
             <xs:enumeration value="pexp" />
             <xs:enumeration value="subtract" />
             <xs:enumeration value="pow" />
-            
+
             <xs:enumeration value="abs" />
             <xs:enumeration value="agePb76" />
             <xs:enumeration value="and" />
             <xs:enumeration value="concordiaTW" />
-            
+
             <xs:enumeration value="exp" />
             <xs:enumeration value="sqIf" />
             <xs:enumeration value="ln" />
             <xs:enumeration value="max" />
-            
+
             <xs:enumeration value="robReg" />
             <xs:enumeration value="lookup" />
             <xs:enumeration value="totalCps" />
             <xs:enumeration value="TotalCps" />
             <xs:enumeration value="sqBiweight" />
-            
+
             <xs:enumeration value="sqWtdAv" />
             <xs:enumeration value="sqrt" />
-            
+
+            <xs:enumeration value="value"/>
             <xs:enumeration value="none" />
         </xs:restriction>
     </xs:simpleType>
