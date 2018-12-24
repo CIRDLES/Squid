@@ -32,7 +32,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
  *
  * @author ryanb
  */
-public class SquidReportTableReferenceMaterialController implements Initializable {
+public class SquidReportTableController implements Initializable {
 
     @FXML
     private TableView<ObservableList<String>> reportsTable;
@@ -45,6 +45,11 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
     private TextArrayManager tableManager;
     private boolean isSetUpScroller;
 
+    public static TypeOfController typeOfController;
+    public enum TypeOfController {
+        ReferenceMaterials, Uknowns
+    }
+
     /**
      * Initializes the controller class.
      */
@@ -54,9 +59,20 @@ public class SquidReportTableReferenceMaterialController implements Initializabl
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
 
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
-        textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
-
+        if (typeOfController == TypeOfController.ReferenceMaterials) {
+            ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
+            textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
+        } else {
+            ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
+            Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
+            List<ShrimpFractionExpressionInterface> spotsBySampleNames = new ArrayList<>();
+            for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
+                ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
+                spotsBySampleNames.add(dummyForSample);
+                spotsBySampleNames.addAll(entry.getValue());
+            }
+            textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
+        }
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
         reportsTable.refresh();
         boundCol.refresh();

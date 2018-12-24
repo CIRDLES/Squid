@@ -52,7 +52,8 @@ public class SquidReportTableLauncher {
     public void launch(ReportTableTab tab) {
         try {
             if (tab == ReportTableTab.refMat) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTableReferenceMaterials.fxml"));
+                SquidReportTableController.typeOfController = SquidReportTableController.TypeOfController.ReferenceMaterials;
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
                 Scene scene = new Scene(loader.load());
                 refMatStage.setScene(scene);
                 if (!refMatStage.isShowing()) {
@@ -62,7 +63,8 @@ public class SquidReportTableLauncher {
                 }
                 refMatStage.requestFocus();
             } else {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTableUnknowns.fxml"));
+                SquidReportTableController.typeOfController = SquidReportTableController.TypeOfController.Uknowns;
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
                 Scene scene = new Scene(loader.load());
                 unknownsStage.setScene(scene);
                 if (!unknownsStage.isShowing()) {

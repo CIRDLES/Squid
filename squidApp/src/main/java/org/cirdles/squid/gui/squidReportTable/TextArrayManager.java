@@ -12,7 +12,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
-import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class TextArrayManager {
     }
 
     private void initializeAliquots() {
-        aliquots = new ArrayList<>();
+        aliquots.clear();
         String currentAliquot = "";
         for (int i = Integer.parseInt(array[0][0]); i < array.length; i++) {
             if (!currentAliquot.equals(array[i][1])) {
