@@ -46,6 +46,17 @@ public class TextArrayManager {
         setHeaders();
         setTableItems();
         initializeSortPolicies();
+        initializeSelectionProperties();
+    }
+
+    private void initializeSelectionProperties() {
+        boundCol.setOnMouseClicked(val -> {
+            table.getSelectionModel().select(boundCol.getSelectionModel().getSelectedIndex());
+        });
+        table.setOnMouseClicked(val -> {
+            boundCol.getSelectionModel().select(table.getSelectionModel().getSelectedIndex());
+        });
+
     }
 
     private void initializeAliquots() {
