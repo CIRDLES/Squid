@@ -86,6 +86,12 @@
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
                   <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />
                   <Menu fx:id="openRecentExpressionFileMenu" mnemonicParsing="false" text="Load Recent Expression from xml File" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem mnemonicParsing="false" text="Manage Constants" visible="false" />
+              <SeparatorMenuItem mnemonicParsing="false"/>
+              <MenuItem mnemonicParsing="false" onAction="#importCustomExpressionsOnAction" text="Import Custom Expressions from Folder"/>
+              <MenuItem mnemonicParsing="false" onAction="#exportCustomExpressionsOnAction" text="Export Custom Expressions to Folder"/>
+
           </items>
         </Menu>
             <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">

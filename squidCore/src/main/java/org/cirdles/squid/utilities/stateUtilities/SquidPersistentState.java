@@ -63,6 +63,8 @@ public class SquidPersistentState implements Serializable {
 
     private File opFile;
 
+    private File customExpressionsFile;
+
     /**
      *
      */
@@ -96,6 +98,8 @@ public class SquidPersistentState implements Serializable {
         MRUExpressionFolderPath = "";
 
         opFile = null;
+
+        customExpressionsFile = null;
 
         serializeSelf();
     }
@@ -682,5 +686,13 @@ public class SquidPersistentState implements Serializable {
 
     public void setOpFile(File opFile) {
         this.opFile = opFile;
+    }
+
+    public File getCustomExpressionsFile() {
+        return customExpressionsFile;
+    }
+
+    public void setCustomExpressionsFile(File file) {
+        customExpressionsFile = file;
     }
 }
