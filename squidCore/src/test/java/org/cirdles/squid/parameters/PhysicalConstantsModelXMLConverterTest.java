@@ -3,7 +3,6 @@ package org.cirdles.squid.parameters;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.ElementComparer;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;

@@ -18,10 +18,9 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
@@ -74,7 +73,7 @@ public class Pb206U238rad extends Function {
         try {
             double[] age = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             
-            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
 
             double[] pb206U238rad = org.cirdles.ludwig.squid25.PbUTh_2.pb206U238rad(
                     age[0],

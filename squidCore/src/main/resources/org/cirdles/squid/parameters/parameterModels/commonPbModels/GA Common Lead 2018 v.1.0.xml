@@ -2,8 +2,8 @@
   <modelName>GA Common Lead 2018</modelName>
   <labName>Geoscience Australia</labName>
   <version>1.0</version>
-  <dateCertified>01/01/2018</dateCertified>
-  <comments></comments>
+  <dateCertified>2018-01-01</dateCertified>
+  <comments>This Common Lead Model reflects the values used in Squid 2.5 in 2018 at Geoscience Australia.</comments>
   <references></references>
   <values>
     <ValueModel>

@@ -35,7 +35,6 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**

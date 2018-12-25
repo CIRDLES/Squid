@@ -19,57 +19,46 @@
 package org.cirdles.squid.parameters.util;
 
 /**
+ * Decay Constants Names
  *
  * @author James F. Bowring
  */
-/*
- *
- *
- * Created Dec 2010 as part of major refactoring to control magic strings
- */
 public enum Lambdas {
-
-    // decay constants
+    LAMBDA_226("lambda226", "lambda 226"),
+    LAMBDA_230("lambda230", "lambda 230"),
     /**
      *
      */
-    lambda226( "lambda226", "lambda 226", 0 ),
-    lambda230( "lambda230", "lambda 230", 0 ),
+    LAMBDA_231("lambda231", "lambda 231"),
     /**
      *
      */
-    lambda231( "lambda231", "lambda 231", 1 ),
+    LAMBDA_232("lambda232", "lambda 232"),
     /**
      *
      */
-    lambda232( "lambda232", "lambda 232", 2 ),
+    LAMBDA_234("lambda234", "lambda 234"),
     /**
      *
      */
-    lambda234( "lambda234", "lambda 234", 3 ),
+    LAMBDA_235("lambda235", "lambda 235"),
     /**
      *
      */
-    lambda235( "lambda235", "lambda 235", 4 ),
-    /**
-     *
-     */
-    lambda238( "lambda238", "lambda 238", 5 );
+    LAMBDA_238("lambda238", "lambda 238");
     private String name;
     private String displayName;
-    private int index;
 
-    private Lambdas ( String name, String displayName, int index ) {
+    private Lambdas(String name, String displayName) {
         this.name = name;
         this.displayName = displayName;
-        this.index = index;
     }
 
     /**
      *
      * @return
      */
-    public String getName () {
+    public String getName() {
         return name;
     }
 
@@ -77,17 +66,9 @@ public enum Lambdas {
      *
      * @return
      */
-    public int getIndex () {
-        return index;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static String[] getNames () {
+    public static String[] getNames() {
         String[] retVal = new String[Lambdas.values().length];
-        for (int i = 0; i < Lambdas.values().length; i ++) {
+        for (int i = 0; i < Lambdas.values().length; i++) {
             retVal[i] = Lambdas.values()[i].getName();
         }
         return retVal;
@@ -97,7 +78,7 @@ public enum Lambdas {
      *
      * @return
      */
-    public String getDisplayName () {
+    public String getDisplayName() {
         return displayName;
     }
 
@@ -106,10 +87,10 @@ public enum Lambdas {
      * @param checkString
      * @return
      */
-    public static boolean contains ( String checkString ) {
+    public static boolean contains(String checkString) {
         boolean retVal = true;
         try {
-            Lambdas.valueOf( checkString );
+            Lambdas.valueOf(checkString);
         } catch (IllegalArgumentException e) {
             retVal = false;
         }
