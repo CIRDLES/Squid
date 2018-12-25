@@ -13,7 +13,6 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterials.Reference
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDE
  */
 public class SquidLabData implements Serializable {
 
-    private static long serialVersionUID = 2042394065348785942L;
+    private static final long serialVersionUID = -6819591137651731346L;
 
     private List<ReferenceMaterial> referenceMaterials;
     private List<PhysicalConstantsModel> physicalConstantsModels;
@@ -37,6 +36,8 @@ public class SquidLabData implements Serializable {
     private ReferenceMaterial refMatDefault;
     private ReferenceMaterial refMatConcDefault;
     private PhysicalConstantsModel physConstDefault;
+    
+    private int squidLabDataVersion;
 
     public SquidLabData() {
         laboratoryName = "Your lab";
@@ -47,7 +48,7 @@ public class SquidLabData implements Serializable {
         commonPbModels = CommonPbModel.getDefaultModels();
         commonPbModels.sort(new ParametersModelComparator());
 
-        physConstDefault = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+        physConstDefault = PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0");
         refMatDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         refMatConcDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
         commonPbDefault = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
@@ -63,10 +64,16 @@ public class SquidLabData implements Serializable {
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
             if (file.exists() && !file.isDirectory()) {
                 retVal = SquidLabData.deserialize(file);
+                if (retVal == null){
+                    // bad labdata
+                    // save off old lab data
+                    // announce to user
+                    retVal = new SquidLabData();
+                }
             } else {
                 retVal = new SquidLabData();
             }
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             retVal = new SquidLabData();
         }
@@ -74,22 +81,24 @@ public class SquidLabData implements Serializable {
     }
 
     public void storeState() {
+        this.squidLabDataVersion = 2;
         try {
             File file = new File(File.separator + System.getProperty("user.home")
                     + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
             serialize(file);
-        } catch (Exception e) {
+        } catch (IOException | SquidException e) {
             e.printStackTrace();
         }
     }
 
     public CommonPbModel getCommonPbDefault() {
         CommonPbModel retVal;
-        if (commonPbDefault == null)
+        if (commonPbDefault == null) {
             retVal = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
-        else
+        } else {
             retVal = commonPbDefault;
+        }
         return retVal;
     }
 
@@ -99,10 +108,11 @@ public class SquidLabData implements Serializable {
 
     public ReferenceMaterial getRefMatDefault() {
         ReferenceMaterial retVal;
-        if (refMatDefault == null)
+        if (refMatDefault == null) {
             retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        else
+        } else {
             retVal = refMatDefault;
+        }
         return retVal;
     }
 
@@ -112,10 +122,11 @@ public class SquidLabData implements Serializable {
 
     public ReferenceMaterial getRefMatConcDefault() {
         ReferenceMaterial retVal;
-        if (refMatConcDefault == null)
+        if (refMatConcDefault == null) {
             retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        else
+        } else {
             retVal = refMatConcDefault;
+        }
         return retVal;
     }
 
@@ -125,10 +136,11 @@ public class SquidLabData implements Serializable {
 
     public PhysicalConstantsModel getPhysConstDefault() {
         PhysicalConstantsModel retVal;
-        if (physConstDefault == null)
+        if (physConstDefault == null) {
             retVal = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
-        else
+        } else {
             retVal = physConstDefault;
+        }
         return retVal;
     }
 
@@ -152,7 +164,7 @@ public class SquidLabData implements Serializable {
         this.physicalConstantsModels = physicalConstantsModels;
     }
 
-    public List<CommonPbModel> getcommonPbModels() {
+    public List<CommonPbModel> getCommonPbModels() {
         return commonPbModels;
     }
 
@@ -232,10 +244,4 @@ public class SquidLabData implements Serializable {
     public boolean equals(Object o) {
         return o instanceof SquidLabData && this.compareTo(((SquidLabData) o)) == 0;
     }
-
-    public static void main(String[] args) {
-        ObjectStreamClass stream = ObjectStreamClass.lookup(SquidLabData.class);
-        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
-    }
-
 }

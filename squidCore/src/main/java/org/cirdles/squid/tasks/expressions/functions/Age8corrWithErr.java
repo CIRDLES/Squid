@@ -18,12 +18,11 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_232_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_86_NAME;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
@@ -92,8 +91,8 @@ public class Age8corrWithErr extends Function {
             
             double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_86_NAME).getValues()[0][0];
 
-            double lambda232 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_232_NAME)).getValue();
-            double lambda238 = (Double) ((ConstantNode) task.getNamedParametersMap().get(LAMBDA_238_NAME)).getValue();
+            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_232.getName()).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
 
             double[] age8corrWithErr = org.cirdles.ludwig.isoplot3.Pub.age8corrWithErr(
                     totPb6U8[0],

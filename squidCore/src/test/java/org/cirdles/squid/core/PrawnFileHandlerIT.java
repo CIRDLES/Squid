@@ -23,6 +23,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
@@ -34,6 +36,7 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
+import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -155,12 +158,18 @@ public class PrawnFileHandlerIT {
     public void testingOutputForZ6266Permutation1() throws Exception {
 
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 4-,7-,8-corr reference materials and unknowns.");
+        
+        CalamariFileUtilities.initSampleParametersModels();
+        
         File prawnFile = RESOURCE_EXTRACTOR
                 .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266);
 
         SquidProject squidProject = new SquidProject();
         PrawnFile prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
         squidProject.setPrawnFile(prawnFileData);
+
+        squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
+        squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
 
         File squidTaskFile = RESOURCE_EXTRACTOR
                 .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1);

@@ -642,8 +642,6 @@ public class SquidUIController implements Initializable {
     private void launchTaskManager() {
         mainPane.getChildren().remove(taskManagerUI);
         try {
-            verifySquidLabDataParameters();
-
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
             taskManagerUI.setId("TaskManager");
 
@@ -954,8 +952,8 @@ public class SquidUIController implements Initializable {
     }
 
     private void addExpressionToTask(Expression exp) {
-        squidProject.getTask().removeExpression(exp);
-        squidProject.getTask().addExpression(exp);
+        squidProject.getTask().removeExpression(exp, true);
+        squidProject.getTask().addExpression(exp, true);
 
         ExpressionBuilderController.expressionToHighlightOnInit = exp;
         buildExpressionMenuMRU();
@@ -1183,44 +1181,7 @@ public class SquidUIController implements Initializable {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
     }
 
-    private void verifySquidLabDataParameters() {
-        if (squidProject != null && squidProject.getTask() != null) {
-            TaskInterface task = squidProject.getTask();
-            ReferenceMaterial refMat = task.getReferenceMaterial();
-            ReferenceMaterial refMatConc = task.getConcentrationReferenceMaterial();
-            PhysicalConstantsModel physConst = task.getPhysicalConstantsModel();
-            CommonPbModel commonPbModel = task.getCommonPbModel();
-
-            if (physConst == null) {
-                task.setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
-            } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
-                squidLabData.addPhysicalConstantsModel(physConst);
-                squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
-            }
-
-            if (refMat == null) {
-                task.setReferenceMaterial(squidLabData.getRefMatDefault());
-            } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
-                squidLabData.addReferenceMaterial(refMat);
-                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
-            }
-
-            if (refMatConc == null) {
-                task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
-            } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
-                squidLabData.addReferenceMaterial(refMatConc);
-                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
-            }
-
-            if (commonPbModel == null) {
-                task.setCommonPbModel(squidLabData.getCommonPbDefault());
-            } else if (!squidLabData.getcommonPbModels().contains(commonPbModel)) {
-                squidLabData.addcommonPbModel(commonPbModel);
-                squidLabData.getcommonPbModels().sort(new ParametersModelComparator());
-            }
-        }
-    }
-
+    @FXML
     public void importCustomExpressionsOnAction(ActionEvent actionEvent) {
         File folder = FileHandler.getCustomExpressionFolder(primaryStageWindow);
         if (folder != null && folder.exists()) {
@@ -1255,15 +1216,15 @@ public class SquidUIController implements Initializable {
                         if (alert.getResult() != null && alert.getResult().equals(replaceAll)) {
                             expressions.remove(exp);
                             expressions.add(exp);
-                            squidProject.getTask().updateAffectedExpressions(exp);
-                            squidProject.getTask().updateAllExpressions();
+                            squidProject.getTask().updateAffectedExpressions(exp, true);
+                            squidProject.getTask().updateAllExpressions(true);
                         } else if (alert.getResult() == null || !alert.getResult().equals(replaceNone)) {
                             alert.setContentText(exp.getName() + " exists");
                             alert.showAndWait().ifPresent((t) -> {
                                 if (t.equals(replace) || t.equals(replaceAll)) {
                                     expressions.add(exp);
-                                    squidProject.getTask().updateAffectedExpressions(exp);
-                                    squidProject.getTask().updateAllExpressions();
+                                    squidProject.getTask().updateAffectedExpressions(exp, true);
+                                    squidProject.getTask().updateAllExpressions(true);
                                 }
                                 if (t.equals(rename)) {
                                     TextInputDialog dialog = new TextInputDialog(exp.getName());
@@ -1288,16 +1249,16 @@ public class SquidUIController implements Initializable {
                                     if (result.isPresent()) {
                                         exp.setName(result.get());
                                         expressions.add(exp);
-                                        squidProject.getTask().updateAffectedExpressions(exp);
-                                        squidProject.getTask().updateAllExpressions();
+                                        squidProject.getTask().updateAffectedExpressions(exp, true);
+                                        squidProject.getTask().updateAllExpressions(true);
                                     }
                                 }
                             });
                         }
                     } else {
                         expressions.add(exp);
-                        squidProject.getTask().updateAffectedExpressions(exp);
-                        squidProject.getTask().updateAllExpressions();
+                        squidProject.getTask().updateAffectedExpressions(exp, true);
+                        squidProject.getTask().updateAllExpressions(true);
                     }
                 } catch (Exception e) {
                     System.out.println(files[i].getName() + " custom expression not added");
@@ -1317,6 +1278,7 @@ public class SquidUIController implements Initializable {
 
     }
 
+    @FXML
     public void exportCustomExpressionsOnAction(ActionEvent actionEvent) {
         File folder = FileHandler.setCustomExpressionFolder(primaryStageWindow);
         if (folder != null) {

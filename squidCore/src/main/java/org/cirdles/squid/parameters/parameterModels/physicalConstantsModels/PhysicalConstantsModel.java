@@ -24,7 +24,7 @@ import java.util.Map.Entry;
  */
 public class PhysicalConstantsModel extends ParametersModel {
 
-    private static long serialVersionUID = 6711139902976873456L;
+    private static final long serialVersionUID = 7402377463547497587L;
 
     Map<String, BigDecimal> molarMasses;
 
@@ -89,19 +89,13 @@ public class PhysicalConstantsModel extends ParametersModel {
     }
 
     public static List<PhysicalConstantsModel> getDefaultModels() {
-        File folder = new File("SamplePhysicalConstantsModels/");
+        File folder = new File("SamplePhysicalConstantsModels");
         File[] files = new File[0];
         List<PhysicalConstantsModel> models = new ArrayList<>();
         if (folder.exists()) {
             files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    boolean retVal;
-                    if (name.toLowerCase().endsWith(".xml")) {
-                        retVal = true;
-                    } else {
-                        retVal = false;
-                    }
-                    return retVal;
+                    return name.toLowerCase().endsWith(".xml");
                 }
             });
             for (int i = 0; i < files.length; i++) {
@@ -160,5 +154,4 @@ public class PhysicalConstantsModel extends ParametersModel {
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
         return xstream;
     }
-
 }

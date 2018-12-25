@@ -5,7 +5,6 @@
  */
 package org.cirdles.squid.parameters.valueModels;
 
-import org.cirdles.squid.parameters.*;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;

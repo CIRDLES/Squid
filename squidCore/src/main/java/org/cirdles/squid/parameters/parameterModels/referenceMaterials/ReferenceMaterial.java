@@ -18,7 +18,6 @@ import org.cirdles.squid.parameters.valueModels.*;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -32,7 +31,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ReferenceMaterial extends ParametersModel {
 
-    private static long serialVersionUID = 1513337897720796891L;
+    private static final long serialVersionUID = 8791002391578871182L;
 
     ValueModel[] concentrations;
     boolean[] dataMeasured;
@@ -133,19 +132,13 @@ public class ReferenceMaterial extends ParametersModel {
     }
 
     public static List<ReferenceMaterial> getDefaultModels() {
-        File folder = new File("SampleReferenceMaterials/");
+        File folder = new File("SampleReferenceMaterials");
         File[] files = new File[0];
         List<ReferenceMaterial> models = new ArrayList<>();
         if (folder.exists()) {
             files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    boolean retVal;
-                    if (name.toLowerCase().endsWith(".xml")) {
-                        retVal = true;
-                    } else {
-                        retVal = false;
-                    }
-                    return retVal;
+                    return name.toLowerCase().endsWith(".xml");
                 }
             });
             for (int i = 0; i < files.length; i++) {
@@ -175,12 +168,12 @@ public class ReferenceMaterial extends ParametersModel {
         PhysicalConstantsModel defaultPhysConstModel =
                 PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         ValueModel lambda232 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.lambda232.getName());
+                .getDatumByName(Lambdas.LAMBDA_232.getName());
 
         ValueModel lambda235 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.lambda235.getName());
+                .getDatumByName(Lambdas.LAMBDA_235.getName());
         ValueModel lambda238 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.lambda238.getName());
+                .getDatumByName(Lambdas.LAMBDA_238.getName());
 
         ValueModel r206_238r = getDatumByName(ReferenceMaterialEnum.r206_238r.getName());
 
@@ -379,9 +372,5 @@ public class ReferenceMaterial extends ParametersModel {
         ReferenceMaterial model = (ReferenceMaterial) xstream.fromXML(input);
         return model;
     }
-
-    public static void main(String[] args) {
-        ObjectStreamClass stream = ObjectStreamClass.lookup(ReferenceMaterial.class);
-        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
-    }
+    
 }

@@ -16,11 +16,7 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
-import org.antlr.v4.codegen.model.SrcOp;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
