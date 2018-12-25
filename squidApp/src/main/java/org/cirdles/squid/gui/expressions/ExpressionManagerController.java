@@ -713,7 +713,7 @@ public class ExpressionManagerController implements Initializable {
         menuItem.setOnAction((evt) -> {
             Expression selectedExpression = expressionsListView.getSelectionModel().getSelectedItem();
             if (selectedExpression != null) {
-                squidProject.getTask().removeExpression(selectedExpression);
+                squidProject.getTask().removeExpression(selectedExpression, true);
                 populateExpressionsListView();
             }
         });
@@ -774,10 +774,11 @@ public class ExpressionManagerController implements Initializable {
             currentExpression.setName(expressionNameTextField.getText().trim());
             currentExpression.setExpressionTree(expTree);
             currentExpression.setExcelExpressionString(expressionExcelTextArea.getText().trim());//.replace("\n", ""));
-
-            squidProject.getTask().updateAffectedExpressions(currentExpression);
-            squidProject.getTask().updateAllExpressions();
-            SquidUI.loadSpecsAndReduceReports();
+          
+            squidProject.getTask().updateAffectedExpressions(currentExpression, true);
+            squidProject.getTask().updateAllExpressions(true);
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
 
             // reveal new ordering etc
             populateExpressionsListView();

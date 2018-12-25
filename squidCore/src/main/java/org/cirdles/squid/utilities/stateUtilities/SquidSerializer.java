@@ -20,7 +20,6 @@ package org.cirdles.squid.utilities.stateUtilities;
 import java.io.*;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
-import org.cirdles.squid.projects.SquidProject;
 
 /**
  *

@@ -12,7 +12,6 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.ObjectStreamClass;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -21,7 +20,7 @@ import java.util.*;
  */
 public class CommonPbModel extends ParametersModel {
 
-    private static long serialVersionUID = -5054855251006560667L;
+    private static final long serialVersionUID = 8844997267638498894L;
 
     public CommonPbModel() {
         super();
@@ -71,18 +70,12 @@ public class CommonPbModel extends ParametersModel {
     }
 
     public static List<CommonPbModel> getDefaultModels() {
-        File folder = new File("SampleCommonPbModels/");
+        File folder = new File("SampleCommonPbModels");
         List<CommonPbModel> models = new ArrayList<>();
         if (folder.exists()) {
             File[] files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    boolean retVal;
-                    if (name.toLowerCase().endsWith(".xml")) {
-                        retVal = true;
-                    } else {
-                        retVal = false;
-                    }
-                    return retVal;
+                    return name.toLowerCase().endsWith(".xml");
                 }
             });
             for (int i = 0; i < files.length; i++) {
@@ -105,11 +98,6 @@ public class CommonPbModel extends ParametersModel {
             retVal = new CommonPbModel();
         }
         return retVal;
-    }
-
-    public static void main(String[] args) {
-        ObjectStreamClass stream = ObjectStreamClass.lookup(CommonPbModel.class);
-        System.out.println("serialVersionUID: " + stream.getSerialVersionUID());
     }
 
 }

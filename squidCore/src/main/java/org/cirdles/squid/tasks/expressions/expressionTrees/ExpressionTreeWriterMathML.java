@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +21,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 
 /**
- * @see http://www.xmlmind.com/tutorials/MathML/
- * @see http://rypress.com/tutorials/mathml/advanced-formatting
+ * @see <a href="http://www.xmlmind.com/tutorials/MathML" target="_blank">http://www.xmlmind.com/tutorials/MathML</a>
+ * @see <a href="http://rypress.com/tutorials/mathml/advanced-formatting" target="_blank">http://rypress.com/tutorials/mathml/advanced-formatting</a>
  * @author James F. Bowring
  */
 public class ExpressionTreeWriterMathML {
