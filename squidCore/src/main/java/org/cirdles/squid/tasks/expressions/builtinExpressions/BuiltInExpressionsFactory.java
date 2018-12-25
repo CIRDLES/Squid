@@ -20,15 +20,23 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_230;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_234;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_232_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_235_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA_238_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_206B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_206B;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_64_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_68_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_74_NAME;
@@ -85,21 +93,12 @@ public abstract class BuiltInExpressionsFactory {
     public static Map<String, ExpressionTreeInterface> generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface lambda232 = new ConstantNode(LAMBDA_232_NAME, Squid3Constants.LAMBDA232);
-        parameters.put(lambda232.getName(), lambda232);
-
-        ExpressionTreeInterface lambda235 = new ConstantNode(LAMBDA_235_NAME, Squid3Constants.LAMBDA235);
-        parameters.put(lambda235.getName(), lambda235);
-
-        ExpressionTreeInterface lambda238 = new ConstantNode(LAMBDA_238_NAME, Squid3Constants.LAMBDA238);
-        parameters.put(lambda238.getName(), lambda238);
-
         ExpressionTreeInterface PRESENT_R238_235S = new ConstantNode(PRESENT_R238_235S_NAME, Squid3Constants.PRESENT_R238_235S);
         parameters.put(PRESENT_R238_235S.getName(), PRESENT_R238_235S);
 
         ExpressionTreeInterface L859 = new ConstantNode("L859", 0.859);
         parameters.put("L859", L859);
-        
+
         ExpressionTreeInterface L1033 = new ConstantNode("L1033", 1.033);
         parameters.put("L1033", L1033);
 
@@ -109,41 +108,85 @@ public abstract class BuiltInExpressionsFactory {
         return parameters;
     }
 
-    public static SortedSet<Expression> generateCommonLeadParameterValues() {
+    public static SortedSet<Expression> updatePhysicalConstantsParameterValuesFromModel(ParametersModel physicalConstantsModel) {
+        SortedSet<Expression> parameterValues = new TreeSet<>();
+        
+        String notes = "from Physical Constants model: " + physicalConstantsModel.getModelNameWithVersion();
+        Expression expressionslambda230 = buildExpression(LAMBDA_230.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_230.getName()).getValue().doubleValue()), true, true, true);
+        expressionslambda230.setParameterValue(true);
+        expressionslambda230.setNotes(notes);
+        parameterValues.add(expressionslambda230);
+        
+        Expression expressionslambda232 = buildExpression(LAMBDA_232.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_232.getName()).getValue().doubleValue()), true, true, true);
+        expressionslambda232.setParameterValue(true);
+        expressionslambda232.setNotes(notes);
+        parameterValues.add(expressionslambda232);
+ 
+        Expression expressionslambda234 = buildExpression(LAMBDA_234.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_234.getName()).getValue().doubleValue()), true, true, true);
+        expressionslambda234.setParameterValue(true);
+        expressionslambda234.setNotes(notes);
+        parameterValues.add(expressionslambda234);
+ 
+        Expression expressionslambda235 = buildExpression(LAMBDA_235.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_235.getName()).getValue().doubleValue()), true, true, true);
+        expressionslambda235.setParameterValue(true);
+        expressionslambda235.setNotes(notes);
+        parameterValues.add(expressionslambda235);
+ 
+        Expression expressionslambda238 = buildExpression(LAMBDA_238.getName(),
+                String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_238.getName()).getValue().doubleValue()), true, true, true);
+        expressionslambda238.setParameterValue(true);
+        expressionslambda238.setNotes(notes);
+        parameterValues.add(expressionslambda238);
+ 
+        
+        return parameterValues;
+    }
+    
+    public static SortedSet<Expression> updateCommonLeadParameterValuesFromModel(ParametersModel commonPbModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
+        String notes = "from Common Pb model: " + commonPbModel.getModelNameWithVersion();
         Expression expressionsComm_64 = buildExpression(SCOMM_64_NAME,
-                String.valueOf(Squid3Constants.SCOMM_64), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(R206_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_64.setParameterValue(true);
+        expressionsComm_64.setNotes(notes);
         parameterValues.add(expressionsComm_64);
-
+        
         Expression expressionsComm_74 = buildExpression(SCOMM_74_NAME,
-                String.valueOf(Squid3Constants.SCOMM_74), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(R207_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_74.setParameterValue(true);
+        expressionsComm_74.setNotes(notes);
         parameterValues.add(expressionsComm_74);
 
         Expression expressionsComm_84 = buildExpression(SCOMM_84_NAME,
-                String.valueOf(Squid3Constants.SCOMM_84), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(R208_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_84.setParameterValue(true);
+        expressionsComm_84.setNotes(notes);
         parameterValues.add(expressionsComm_84);
 
         Expression expressionsComm_76 = buildExpression(SCOMM_76_NAME,
-                String.valueOf(Squid3Constants.SCOMM_76), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(R207_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_76.setParameterValue(true);
+        expressionsComm_76.setNotes(notes);
         parameterValues.add(expressionsComm_76);
 
         Expression expressionsComm_86 = buildExpression(SCOMM_86_NAME,
-                String.valueOf(Squid3Constants.SCOMM_86), true, true, true);
+                String.valueOf(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_86.setParameterValue(true);
+        expressionsComm_86.setNotes(notes);
         parameterValues.add(expressionsComm_86);
 
         Expression expressionsComm_68 = buildExpression(SCOMM_68_NAME,
-                "1.0/" + String.valueOf(Squid3Constants.SCOMM_86), true, true, true);
+                "1.0/" + String.valueOf(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_68.setParameterValue(true);
+        expressionsComm_68.setNotes(notes);
         parameterValues.add(expressionsComm_68);
 
         return parameterValues;
-
     }
 
     public static SortedSet<Expression> generateReferenceMaterialValues() {

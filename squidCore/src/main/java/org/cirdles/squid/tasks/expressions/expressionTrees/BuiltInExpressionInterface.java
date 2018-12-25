@@ -15,8 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
-import org.cirdles.squid.tasks.TaskInterface;
-
 /**
  *
  * @author James F. Bowring

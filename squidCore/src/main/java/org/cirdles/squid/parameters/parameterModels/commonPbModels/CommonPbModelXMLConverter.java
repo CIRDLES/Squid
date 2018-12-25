@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.parameters.parameterModels.physicalConstantsModels;
+package org.cirdles.squid.parameters.parameterModels.commonPbModels;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -13,17 +13,18 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
  *
  * @author ryanb
  */
-public class PhysicalConstantsModelConverter implements Converter {
-
+public class CommonPbModelXMLConverter implements Converter {
+    
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
-        PhysicalConstantsModel model = (PhysicalConstantsModel) o;
+        CommonPbModel model = (CommonPbModel) o;
 
         writer.startNode("modelName");
         writer.setValue(model.getModelName());
@@ -60,15 +61,11 @@ public class PhysicalConstantsModelConverter implements Converter {
         writer.startNode("isEditable");
         writer.setValue(Boolean.toString(model.isEditable()));
         writer.endNode();
-
-        writer.startNode("molarMasses");
-        context.convertAnother(model.getMolarMasses());
-        writer.endNode();
     }
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        PhysicalConstantsModel model = new PhysicalConstantsModel();
+        CommonPbModel model = new  CommonPbModel();
 
         reader.moveDown();
         model.setModelName(reader.getValue());
@@ -129,38 +126,11 @@ public class PhysicalConstantsModelConverter implements Converter {
         model.setIsEditable(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 
-        Map<String, BigDecimal> molarMasses = new HashMap<>();
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-
-            reader.moveDown();
-            String key = reader.getValue();
-            reader.moveUp();
-
-            reader.moveDown();
-            String currBigDec = reader.getValue();
-            BigDecimal value;
-            if (Double.parseDouble(currBigDec) == 0.0) {
-                value = BigDecimal.ZERO;
-            } else {
-                value = new BigDecimal(currBigDec);
-            }
-            reader.moveUp();
-
-            reader.moveUp();
-
-            molarMasses.put(key, value);
-        }
-        reader.moveUp();
-        model.setMolarMasses(molarMasses);
-
         return model;
     }
 
     @Override
     public boolean canConvert(Class type) {
-        return type.equals(PhysicalConstantsModel.class);
+        return type.equals(CommonPbModel.class);
     }
-
 }

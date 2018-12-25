@@ -108,7 +108,7 @@ public final class SquidProject implements Serializable {
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
-        this.task.updateAllExpressions();
+        this.task.updateAllExpressions(true);
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
     }
@@ -121,7 +121,7 @@ public final class SquidProject implements Serializable {
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
             this.task.setFiltersForUnknownNames(filtersForUnknownNames);
             // four passes needed for percolating results
-            task.updateAllExpressions();
+            task.updateAllExpressions(true);
             task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -139,7 +139,7 @@ public final class SquidProject implements Serializable {
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
         // if Task is ashort of nominal masses, add them
-        int prawnSpeciesCount = Integer.parseInt(((PrawnFile)prawnFile).getRun().get(0).getPar().get(2).getValue());
+        int prawnSpeciesCount = Integer.parseInt(((PrawnFile) prawnFile).getRun().get(0).getPar().get(2).getValue());
         if (prawnSpeciesCount != taskSquid25.getNominalMasses().size()) {
             SquidMessageDialog.showWarningDialog(
                     "The PrawnFile has "
@@ -290,7 +290,7 @@ public final class SquidProject implements Serializable {
 
     private void serializePrawnData(String fileName)
             throws IOException, JAXBException, SAXException {
-        prawnFileHandler.writeRawDataFileAsXML(((PrawnFile)prawnFile), fileName);
+        prawnFileHandler.writeRawDataFileAsXML(((PrawnFile) prawnFile), fileName);
     }
 
     public String getPrawnXMLFileName() {
@@ -309,19 +309,19 @@ public final class SquidProject implements Serializable {
     }
 
     public String getPrawnFileShrimpSoftwareVersionName() {
-        return ((PrawnFile)prawnFile).getSoftwareVersion();
+        return ((PrawnFile) prawnFile).getSoftwareVersion();
     }
 
     public String getPrawnFileLoginComment() {
-        return ((PrawnFile)prawnFile).getLoginComment();
+        return ((PrawnFile) prawnFile).getLoginComment();
     }
 
     public List<Run> getPrawnFileRuns() {
-        return new ArrayList<>(((PrawnFile)prawnFile).getRun());
+        return new ArrayList<>(((PrawnFile) prawnFile).getRun());
     }
 
     public void processPrawnSessionForDuplicateSpotNames() {
-        List<Run> runs = ((PrawnFile)prawnFile).getRun();
+        List<Run> runs = ((PrawnFile) prawnFile).getRun();
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
             String spotName = runs.get(i).getPar().get(0).getValue().trim();
@@ -349,7 +349,7 @@ public final class SquidProject implements Serializable {
         processPrawnSessionForDuplicateSpotNames();
 
         // determine time in hours for session
-        List<Run> runs = ((PrawnFile)prawnFile).getRun();
+        List<Run> runs = ((PrawnFile) prawnFile).getRun();
         long startFirst = PrawnFileUtilities.timeInMillisecondsOfRun(runs.get(0));
         long startLast = PrawnFileUtilities.timeInMillisecondsOfRun(runs.get(runs.size() - 1));
         long sessionDuration = startLast - startFirst;
@@ -359,19 +359,19 @@ public final class SquidProject implements Serializable {
     }
 
     public void removeRunFromPrawnFile(Run run) {
-        ((PrawnFile)prawnFile).getRun().remove(run);
+        ((PrawnFile) prawnFile).getRun().remove(run);
 
         // save new count
-        ((PrawnFile)prawnFile).setRuns((short) ((PrawnFile)prawnFile).getRun().size());
-        
+        ((PrawnFile) prawnFile).setRuns((short) ((PrawnFile) prawnFile).getRun().size());
+
         // update fractions
-        ((Task) task).setupSquidSessionSkeleton();       
+        ((Task) task).setupSquidSessionSkeleton();
     }
 
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
         prefixTree = new SquidPrefixTree();
 
-        List<Run> copyOfRuns = new ArrayList<Run>(((PrawnFile)prawnFile).getRun());
+        List<Run> copyOfRuns = new ArrayList<Run>(((PrawnFile) prawnFile).getRun());
         Comparator<String> intuitiveString = new IntuitiveStringComparator<>();
         Collections.sort(copyOfRuns, (Run pt1, Run pt2)
                 -> (intuitiveString.compare(pt1.getPar().get(0).getValue(), pt2.getPar().get(0).getValue())));
@@ -405,9 +405,9 @@ public final class SquidProject implements Serializable {
         retVal[1] = prawnFileHandler.getCurrentPrawnFileLocation().replace(".xml", "-PART-B.xml").replace(".XML", "-PART-B.xml");
 
         // get index from original prawnFile
-        int indexOfRun = ((PrawnFile)prawnFile).getRun().indexOf(run);
+        int indexOfRun = ((PrawnFile) prawnFile).getRun().indexOf(run);
 
-        List<Run> runs = ((PrawnFile)prawnFile).getRun();
+        List<Run> runs = ((PrawnFile) prawnFile).getRun();
         List<Run> runsCopy;
 
         if (useOriginalData) {
@@ -432,9 +432,9 @@ public final class SquidProject implements Serializable {
             runs.add(runF);
         }
 
-        ((PrawnFile)prawnFile).setRuns((short) runs.size());
+        ((PrawnFile) prawnFile).setRuns((short) runs.size());
         try {
-            prawnFileHandler.writeRawDataFileAsXML(((PrawnFile)prawnFile), retVal[0]);
+            prawnFileHandler.writeRawDataFileAsXML(((PrawnFile) prawnFile), retVal[0]);
         } catch (JAXBException jAXBException) {
         }
 
@@ -443,9 +443,9 @@ public final class SquidProject implements Serializable {
         for (Run runS : second) {
             runs.add(runS);
         }
-        ((PrawnFile)prawnFile).setRuns((short) runs.size());
+        ((PrawnFile) prawnFile).setRuns((short) runs.size());
         try {
-            prawnFileHandler.writeRawDataFileAsXML(((PrawnFile)prawnFile), retVal[1]);
+            prawnFileHandler.writeRawDataFileAsXML(((PrawnFile) prawnFile), retVal[1]);
         } catch (JAXBException jAXBException) {
         }
 
@@ -458,7 +458,7 @@ public final class SquidProject implements Serializable {
         for (Run runS : second) {
             runs.add(runS);
         }
-        ((PrawnFile)prawnFile).setRuns((short) runs.size());
+        ((PrawnFile) prawnFile).setRuns((short) runs.size());
 
         return retVal;
     }

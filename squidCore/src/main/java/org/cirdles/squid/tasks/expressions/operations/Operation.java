@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.operations;
 
-import org.cirdles.squid.tasks.expressions.functions.ValueModel;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;

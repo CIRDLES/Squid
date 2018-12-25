@@ -304,7 +304,7 @@ public class ParametersManagerGUIController implements Initializable {
         refMatModels = squidLabData.getReferenceMaterials();
         setUpRefMatCB();
 
-        commonPbModels = squidLabData.getcommonPbModels();
+        commonPbModels = squidLabData.getCommonPbModels();
         setUpCommonPbCB();
 
         setUpTabs();
@@ -392,7 +392,7 @@ public class ParametersManagerGUIController implements Initializable {
         });
         defaultCommonPbCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
             int selected = defaultCommonPbCB.getSelectionModel().getSelectedIndex();
-            if (selected > -1 && selected < squidLabData.getcommonPbModels().size()) {
+            if (selected > -1 && selected < squidLabData.getCommonPbModels().size()) {
                 squidLabData.setCommonPbDefault(squidLabData.getcommonPbModel(selected));
                 squidLabData.storeState();
             }
@@ -402,26 +402,26 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpDefaultModelsTabItems() {
         ObservableList<String> items = FXCollections.observableArrayList();
         for (ParametersModel model : squidLabData.getPhysicalConstantsModels()) {
-            items.add(getModVersionName(model));
+            items.add(model.getModelNameWithVersion());
         }
         defaultPhysConstCB.setItems(items);
-        defaultPhysConstCB.getSelectionModel().select(getModVersionName(squidLabData.getPhysConstDefault()));
+        defaultPhysConstCB.getSelectionModel().select(squidLabData.getPhysConstDefault().getModelNameWithVersion());
 
         items = FXCollections.observableArrayList();
         for (ParametersModel model : squidLabData.getReferenceMaterials()) {
-            items.add(getModVersionName(model));
+            items.add(model.getModelNameWithVersion());
         }
         defaultRefMatCB.setItems(items);
-        defaultRefMatCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatDefault()));
+        defaultRefMatCB.getSelectionModel().select(squidLabData.getRefMatDefault().getModelNameWithVersion());
         defaultRefMatConcCB.setItems(items);
-        defaultRefMatConcCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatConcDefault()));
+        defaultRefMatConcCB.getSelectionModel().select(squidLabData.getRefMatConcDefault().getModelNameWithVersion());
 
         items = FXCollections.observableArrayList();
-        for (ParametersModel model : squidLabData.getcommonPbModels()) {
-            items.add(getModVersionName(model));
+        for (ParametersModel model : squidLabData.getCommonPbModels()) {
+            items.add(model.getModelNameWithVersion());
         }
         defaultCommonPbCB.setItems(items);
-        defaultCommonPbCB.getSelectionModel().select(getModVersionName(squidLabData.getCommonPbDefault()));
+        defaultCommonPbCB.getSelectionModel().select(squidLabData.getCommonPbDefault().getModelNameWithVersion());
     }
 
     private void setUpPhysConst() {
@@ -477,13 +477,13 @@ public class ParametersManagerGUIController implements Initializable {
                 setPhysConstModel(nv.intValue());
             }
         });
-        physConstCB.getSelectionModel().select(getModVersionName(squidLabData.getPhysConstDefault()));
+        physConstCB.getSelectionModel().select(squidLabData.getPhysConstDefault().getModelNameWithVersion());
     }
 
     private void setUpPhysConstCBItems() {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
         for (PhysicalConstantsModel mod : physConstModels) {
-            cbList.add(getModVersionName(mod));
+            cbList.add(mod.getModelNameWithVersion());
         }
         physConstCB.setItems(cbList);
     }
@@ -504,13 +504,13 @@ public class ParametersManagerGUIController implements Initializable {
                 setRefMatModel(nv.intValue());
             }
         });
-        refMatCB.getSelectionModel().select(getModVersionName(squidLabData.getRefMatDefault()));
+        refMatCB.getSelectionModel().select(squidLabData.getRefMatDefault().getModelNameWithVersion());
     }
 
     private void setUpRefMatCBItems() {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
         for (ReferenceMaterial mod : refMatModels) {
-            cbList.add(getModVersionName(mod));
+            cbList.add(mod.getModelNameWithVersion());
         }
         refMatCB.setItems(cbList);
     }
@@ -531,7 +531,7 @@ public class ParametersManagerGUIController implements Initializable {
                 setCommonPbModel(nv.intValue());
             }
         });
-        commonPbCB.getSelectionModel().select(getModVersionName(squidLabData.getCommonPbDefault()));
+        commonPbCB.getSelectionModel().select(squidLabData.getCommonPbDefault().getModelNameWithVersion());
     }
 
     private void setCommonPbModel(int num) {
@@ -546,7 +546,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpCommonPbCBItems() {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
         for (CommonPbModel mod : commonPbModels) {
-            cbList.add(getModVersionName(mod));
+            cbList.add(mod.getModelNameWithVersion());
         }
         commonPbCB.setItems(cbList);
     }
@@ -1099,10 +1099,6 @@ public class ParametersManagerGUIController implements Initializable {
         });
     }
 
-    public static String getModVersionName(ParametersModel mod) {
-        return mod.getModelName() + " v." + mod.getVersion();
-    }
-
     private static String getRatioVisibleName(String ratio) {
         String retVal = ratio.replaceAll("lambda", "λ");
 
@@ -1151,7 +1147,7 @@ public class ParametersManagerGUIController implements Initializable {
             PhysicalConstantsModel importedMod = (PhysicalConstantsModel) physConstModel.readXMLObject(file.getAbsolutePath(), false);
             if (!physConstModels.contains(importedMod)) {
                 physConstModels.add(importedMod);
-                physConstCB.getItems().add(getModVersionName(importedMod));
+                physConstCB.getItems().add(importedMod.getModelNameWithVersion());
                 physConstCB.getSelectionModel().selectLast();
                 physConstModel = importedMod;
                 setUpPhysConst();
@@ -1204,7 +1200,7 @@ public class ParametersManagerGUIController implements Initializable {
             ReferenceMaterial importedMod = (ReferenceMaterial) refMatModel.readXMLObject(file.getAbsolutePath(), false);
             if (!refMatModels.contains(importedMod)) {
                 refMatModels.add(importedMod);
-                refMatCB.getItems().add(getModVersionName(importedMod));
+                refMatCB.getItems().add(importedMod.getModelNameWithVersion());
                 refMatCB.getSelectionModel().selectLast();
                 refMatModel = importedMod;
                 squidLabData.storeState();
@@ -1227,7 +1223,7 @@ public class ParametersManagerGUIController implements Initializable {
             if (!physConstModels.contains(importedMod)) {
                 importedMod.setIsEditable(true);
                 physConstModels.add(importedMod);
-                physConstCB.getItems().add(getModVersionName(importedMod));
+                physConstCB.getItems().add(importedMod.getModelNameWithVersion());
                 physConstCB.getSelectionModel().selectLast();
                 physConstModel = importedMod;
                 setUpPhysConst();
@@ -1251,7 +1247,7 @@ public class ParametersManagerGUIController implements Initializable {
             if (!refMatModels.contains(importedMod)) {
                 importedMod.setIsEditable(true);
                 refMatModels.add(importedMod);
-                refMatCB.getItems().add(getModVersionName(importedMod));
+                refMatCB.getItems().add(importedMod.getModelNameWithVersion());
                 refMatCB.getSelectionModel().selectLast();
                 refMatModel = importedMod;
                 squidLabData.storeState();
@@ -1457,7 +1453,7 @@ public class ParametersManagerGUIController implements Initializable {
         }
         physConstModels.sort(new ParametersModelComparator());
         setUpPhysConstCBItems();
-        physConstCB.getSelectionModel().select(getModVersionName(physConstModel));
+        physConstCB.getSelectionModel().select(physConstModel.getModelNameWithVersion());
         physConstEditable(false);
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
         isEditingPhysConst = false;
@@ -1499,7 +1495,7 @@ public class ParametersManagerGUIController implements Initializable {
         }
         refMatModels.sort(new ParametersModelComparator());
         setUpRefMatCBItems();
-        refMatCB.getSelectionModel().select(getModVersionName(refMatModel));
+        refMatCB.getSelectionModel().select(refMatModel.getModelNameWithVersion());
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
         isEditingRefMat = false;
@@ -1507,8 +1503,8 @@ public class ParametersManagerGUIController implements Initializable {
         squidLabData.storeState();
 
         if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
-                && (squidProject.getTask().getReferenceMaterial().equals(refMatModel) ||
-                squidProject.getTask().getReferenceMaterial().equals(squidLabData.getRefMatDefault()))) {
+                && (squidProject.getTask().getReferenceMaterialModel().equals(refMatModel) ||
+                squidProject.getTask().getReferenceMaterialModel().equals(squidLabData.getRefMatDefault()))) {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
@@ -1882,7 +1878,7 @@ public class ParametersManagerGUIController implements Initializable {
             if (!commonPbModels.contains(importedMod)) {
                 importedMod.setIsEditable(true);
                 commonPbModels.add(importedMod);
-                commonPbCB.getItems().add(getModVersionName(importedMod));
+                commonPbCB.getItems().add(importedMod.getModelNameWithVersion());
                 commonPbCB.getSelectionModel().selectLast();
                 commonPbModel = importedMod;
                 setUpCommonPb();
@@ -1928,7 +1924,7 @@ public class ParametersManagerGUIController implements Initializable {
         commonPbModels.sort(new ParametersModelComparator());
         isEditingCommonPb = false;
         setUpCommonPbCBItems();
-        commonPbCB.getSelectionModel().select(getModVersionName(commonPbModel));
+        commonPbCB.getSelectionModel().select(commonPbModel.getModelNameWithVersion());
         commonPbModelEditable(false);
         setUpCommonPbMenuItems(false, commonPbModel.isEditable());
 

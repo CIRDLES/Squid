@@ -17,9 +17,7 @@ package org.cirdles.squid.tasks;
 
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
-
 import java.io.File;
-
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -28,7 +26,6 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
-import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
@@ -60,7 +57,6 @@ public interface TaskInterface {
 
     /**
      *
-     * @param shrimpFractions
      */
     public void evaluateTaskExpressions();
 
@@ -196,20 +192,27 @@ public interface TaskInterface {
      */
     public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
 
-    public void removeExpression(Expression expression);
+    public void removeExpression(Expression expression, boolean reprocessExpressions);
 
     public void restoreRemovedExpressions();
 
-    public void addExpression(Expression exp);
-    
+    public void addExpression(Expression exp, boolean reprocessExpressions);
+
     public void setReferenceMaterial(ParametersModel refMat);
-    public ReferenceMaterial getReferenceMaterial();
+
+    public ReferenceMaterial getReferenceMaterialModel();
+
     public void setPhysicalConstantsModel(ParametersModel physConst);
+
     public PhysicalConstantsModel getPhysicalConstantsModel();
+
     public void setCommonPbModel(ParametersModel model);
+
     public CommonPbModel getCommonPbModel();
+
     public void setConcentrationReferenceMaterial(ParametersModel refMat);
-    public ReferenceMaterial getConcentrationReferenceMaterial();
+
+    public ReferenceMaterial getConcentrationReferenceMaterialModel();
 
     /**
      * @param type the type to set
@@ -244,7 +247,6 @@ public interface TaskInterface {
 
     /**
      * @param taskExpressionsOrdered
-     * @param taskExpressionTreesOrdered the taskExpressionTreesOrdered to set
      */
     public void setTaskExpressionsOrdered(List<Expression> taskExpressionsOrdered);
 
@@ -282,7 +284,6 @@ public interface TaskInterface {
 
     /**
      * @param filterForConcRefMatSpotNames
-     * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
     public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
 
@@ -321,7 +322,7 @@ public interface TaskInterface {
      */
     public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies);
 
-    public void updateAllExpressions();
+    public void updateAllExpressions(boolean reprocessExpressions);
 
     /**
      * @param reportsEngine the reportsEngine to set
@@ -335,7 +336,7 @@ public interface TaskInterface {
 
     public void updateRatioNames(String[] ratioNames);
 
-    public void updateAffectedExpressions(Expression sourceExpression);
+    public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions);
 
     public void applyTaskIsotopeLabelsToMassStations();
 
@@ -492,9 +493,9 @@ public interface TaskInterface {
      * @param extPErr the extPErr to set
      */
     public void setExtPErr(double extPErr);
-      /**
+
+    /**
      * @return the extPErr
      */
-    public double getExtPErr() ;
-
-    }
+    public double getExtPErr();
+}
