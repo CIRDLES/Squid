@@ -5,8 +5,6 @@
  */
 package org.cirdles.squid.gui.squidReportTable;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -46,6 +44,7 @@ public class SquidReportTableController implements Initializable {
     private boolean isSetUpScroller;
 
     public static TypeOfController typeOfController;
+
     public enum TypeOfController {
         ReferenceMaterials, Uknowns
     }
@@ -73,17 +72,14 @@ public class SquidReportTableController implements Initializable {
             }
             textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
         }
-        tableManager = new TextArrayManager(boundCol, reportsTable, textArray);
+        tableManager = new TextArrayManager(boundCol, reportsTable, textArray, typeOfController);
         reportsTable.refresh();
         boundCol.refresh();
 
-        EventHandler<MouseEvent> scrollHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (!isSetUpScroller) {
-                    setUpScroller();
-                    isSetUpScroller = true;
-                }
+        EventHandler<MouseEvent> scrollHandler = event -> {
+            if (!isSetUpScroller) {
+                setUpScroller();
+                isSetUpScroller = true;
             }
         };
         reportsTable.setOnMouseEntered(scrollHandler);
@@ -106,14 +102,11 @@ public class SquidReportTableController implements Initializable {
         }
 
         rtHbar.setPrefHeight(24.0);
-        rtHbar.visibleProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(final ObservableValue<? extends Boolean> observableValue, final Boolean oldVal, final Boolean newVal) {
-                if (newVal) {
-                    AnchorPane.setBottomAnchor(boundCol, 29.0);
-                } else {
-                    AnchorPane.setBottomAnchor(boundCol, 5.0);
-                }
+        rtHbar.visibleProperty().addListener((obVal, oldVal, newVal) -> {
+            if (newVal) {
+                AnchorPane.setBottomAnchor(boundCol, 29.0);
+            } else {
+                AnchorPane.setBottomAnchor(boundCol, 5.0);
             }
         });
         if (rtHbar.isVisible()) {

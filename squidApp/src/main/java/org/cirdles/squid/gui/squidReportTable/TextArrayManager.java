@@ -12,7 +12,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
-import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,22 +29,25 @@ public class TextArrayManager {
     private ObservableList<ObservableList<String>> data;
     private static final double characterSize = 9.5;
     private static final double columnHeaderCharacterSize = 11;
-    private final RowComparator comparator;
+    private static final RowComparator comparator = new RowComparator();
     private List<String> aliquots;
+    private SquidReportTableController.TypeOfController controllerType;
 
-    public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array) {
+    public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array, SquidReportTableController.TypeOfController controllerType) {
         this.boundCol = boundCol;
         this.table = table;
         this.array = array;
+        this.controllerType = controllerType;
         aliquots = new ArrayList<>();
         data = FXCollections.observableArrayList();
-        comparator = new RowComparator();
 
-        initializeAliquots();
+        if (controllerType == SquidReportTableController.TypeOfController.Uknowns) {
+            initializeAliquots();
+            initializeSortPolicies();
+        }
         initializeRowFactories();
         setHeaders();
         setTableItems();
-        initializeSortPolicies();
         initializeSelectionProperties();
     }
 
@@ -165,7 +167,7 @@ public class TextArrayManager {
         int startSpot = Integer.parseInt(array[0][0]);
         String aliquot = null;
         for (int i = startSpot; i < array.length; i++) {
-            if (aliquot == null || !aliquot.equals(array[i][1]) && !array[i][1].isEmpty()) {
+            if (controllerType == SquidReportTableController.TypeOfController.Uknowns && (aliquot == null || !aliquot.equals(array[i][1]) && !array[i][1].isEmpty())) {
                 aliquot = array[i][1];
                 ObservableList<String> aliquotRow = FXCollections.observableArrayList();
                 aliquotRow.add(aliquot);
@@ -181,13 +183,6 @@ public class TextArrayManager {
                     row.add(array[i][j]);
                 }
                 data.add(row);
-            }
-        }
-        aliquots = new ArrayList<>();
-        aliquots.add(array[0][1]);
-        for (int i = Integer.parseInt(array[0][0]); i < array.length; i++) {
-            if (!aliquots.contains(array[i][1])) {
-                aliquots.add(array[i][1]);
             }
         }
         table.setItems(data);
@@ -232,35 +227,4 @@ public class TextArrayManager {
             }
         }
     }
-
-    public class RowComparator implements Comparator<String> {
-        private IntuitiveStringComparator<String> stringComparator;
-
-        public RowComparator() {
-            stringComparator = new IntuitiveStringComparator<>();
-        }
-
-        @Override
-        public int compare(String s1, String s2) {
-            int retVal;
-
-            try {
-                double n1 = Double.parseDouble(s1);
-                double n2 = Double.parseDouble(s2);
-
-                if (n1 == n2) {
-                    retVal = 0;
-                } else if (n1 > n2) {
-                    retVal = 1;
-                } else {
-                    retVal = -1;
-                }
-            } catch (Exception e) {
-                retVal = stringComparator.compare(s1, s2);
-            }
-
-            return retVal;
-        }
-    }
-
 }
