@@ -51,12 +51,9 @@ public class BuiltInExpressionsDataDictionary {
     public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
     public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
 
-    // **********************  PHYSICAL CONSTANTS ******************************
-    public static final String LAMBDA_232_NAME = "lambda232";
-    public static final String LAMBDA_235_NAME = "lambda235";
-    public static final String LAMBDA_238_NAME = "lambda238";
+    // **********************  SPECIAL CONSTANTS ******************************
     public static final String PRESENT_R238_235S_NAME = "r238_235s";
-    
+
     // **********************  COMMON LEAD *************************************
     public static final String SCOMM_64_NAME = "sComm_64";
     public static final String SCOMM_74_NAME = "sComm_74";
@@ -64,4 +61,10 @@ public class BuiltInExpressionsDataDictionary {
     public static final String SCOMM_76_NAME = "sComm_76";
     public static final String SCOMM_86_NAME = "sComm_86";
     public static final String SCOMM_68_NAME = "sComm_68";
+
+    public static String R206_204B = "r206_204b";
+    public static String R207_204B = "r207_204b";
+    public static String R207_206B = "r207_206b";
+    public static String R208_204B = "r208_204b";
+    public static String R208_206B = "r208_206b";
 }

@@ -16,7 +16,6 @@
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 
 /**

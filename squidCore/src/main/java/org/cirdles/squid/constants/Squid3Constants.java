@@ -17,7 +17,6 @@ package org.cirdles.squid.constants;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 
 /**
  *
@@ -244,5 +243,6 @@ public final class Squid3Constants {
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
     public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "\u1D41";
     public final static String SUPERSCRIPT_DASH_FOR_DASH = "\u02C9";
+    
 
 }

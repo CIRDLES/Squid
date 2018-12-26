@@ -22,11 +22,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  * A <code>TaskXMLConverter</code> is used to marshal and unmarshal data between

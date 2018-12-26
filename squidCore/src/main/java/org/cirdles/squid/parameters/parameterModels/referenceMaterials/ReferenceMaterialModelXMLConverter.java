@@ -19,7 +19,7 @@ import org.cirdles.squid.parameters.valueModels.ValueModel;
  *
  * @author ryanb
  */
-public class ReferenceMaterialConverter implements Converter {
+public class ReferenceMaterialModelXMLConverter implements Converter {
 
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {

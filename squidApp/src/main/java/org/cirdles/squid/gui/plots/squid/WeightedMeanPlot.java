@@ -34,11 +34,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.plots.PlotDisplayInterface;
-import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 

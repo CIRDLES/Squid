@@ -425,7 +425,7 @@ public class ExpressionTree
 
     /**
      *
-     * @return
+     * @return int ranking of expression evaluation precedence
      */
     @Override
     public int getOperationPrecedence() {
@@ -448,7 +448,7 @@ public class ExpressionTree
     }
     /**
      *
-     * @return
+     * @return true if instance of Function class
      */
     @Override
     public boolean isTypeFunction() {
@@ -457,7 +457,7 @@ public class ExpressionTree
 
     /**
      *
-     * @return
+     * @return true if instance of Function or Operation class
      */
     @Override
     public boolean isTypeFunctionOrOperation() {
@@ -466,7 +466,7 @@ public class ExpressionTree
 
     /**
      *
-     * @return
+     * @return String MathML recursively generated
      */
     @Override
     public String toStringMathML() {
@@ -557,7 +557,7 @@ public class ExpressionTree
 
     /**
      *
-     * @return
+     * @return int count of children of node
      */
     @Override
     public int getCountOfChildren() {
@@ -622,7 +622,7 @@ public class ExpressionTree
 
     /**
      *
-     * @return
+     * @return true if ratios-of-interest (raw ratios) included in expressionTree
      */
     public boolean hasRatiosOfInterest() {
         return ratiosOfInterest.size() > 0;
