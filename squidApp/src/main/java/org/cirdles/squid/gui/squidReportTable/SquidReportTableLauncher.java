@@ -27,8 +27,8 @@ public class SquidReportTableLauncher {
         unknownsStage = new Stage();
         refMatStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
         unknownsStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
-        refMatStage.setTitle("Reference Materials");
-        unknownsStage.setTitle("Unknowns");
+        refMatStage.setTitle("Squid 3 Reference Materials");
+        unknownsStage.setTitle("Squid 3 Unknowns");
 
         refMatStage.setMinWidth(500);
         refMatStage.setWidth(1000);
@@ -53,25 +53,27 @@ public class SquidReportTableLauncher {
         try {
             if (tab == ReportTableTab.refMat) {
                 SquidReportTableController.typeOfController = ReportTableTab.refMat;
+                if(refMatStage.isShowing()) {
+                    refMatStage.close();
+                }
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
                 Scene scene = new Scene(loader.load());
                 refMatStage.setScene(scene);
-                if (!refMatStage.isShowing()) {
-                    refMatStage.show();
-                    refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
-                    refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 5);
-                }
+                refMatStage.show();
+                refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
+                refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 5);
                 refMatStage.requestFocus();
             } else {
                 SquidReportTableController.typeOfController = ReportTableTab.unknown;
+                if (unknownsStage.isShowing()) {
+                    unknownsStage.close();
+                }
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
                 Scene scene = new Scene(loader.load());
                 unknownsStage.setScene(scene);
-                if (!unknownsStage.isShowing()) {
-                    unknownsStage.show();
-                    unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2 - 10);
-                    unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2 - 5);
-                }
+                unknownsStage.show();
+                unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2 - 10);
+                unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2 - 5);
                 unknownsStage.requestFocus();
             }
         } catch (Exception e) {
