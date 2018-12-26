@@ -31,9 +31,9 @@ public class TextArrayManager {
     private static final double columnHeaderCharacterSize = 11;
     private static final RowComparator comparator = new RowComparator();
     private List<String> aliquots;
-    private SquidReportTableController.TypeOfController controllerType;
+    private SquidReportTableLauncher.ReportTableTab controllerType;
 
-    public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array, SquidReportTableController.TypeOfController controllerType) {
+    public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array, SquidReportTableLauncher.ReportTableTab controllerType) {
         this.boundCol = boundCol;
         this.table = table;
         this.array = array;
@@ -41,7 +41,7 @@ public class TextArrayManager {
         aliquots = new ArrayList<>();
         data = FXCollections.observableArrayList();
 
-        if (controllerType == SquidReportTableController.TypeOfController.Uknowns) {
+        if (controllerType == SquidReportTableLauncher.ReportTableTab.unknown) {
             initializeAliquots();
             initializeSortPolicies();
         }
@@ -167,7 +167,7 @@ public class TextArrayManager {
         int startSpot = Integer.parseInt(array[0][0]);
         String aliquot = null;
         for (int i = startSpot; i < array.length; i++) {
-            if (controllerType == SquidReportTableController.TypeOfController.Uknowns && (aliquot == null || !aliquot.equals(array[i][1]) && !array[i][1].isEmpty())) {
+            if (controllerType == SquidReportTableLauncher.ReportTableTab.unknown && (aliquot == null || !aliquot.equals(array[i][1]) && !array[i][1].isEmpty())) {
                 aliquot = array[i][1];
                 ObservableList<String> aliquotRow = FXCollections.observableArrayList();
                 aliquotRow.add(aliquot);

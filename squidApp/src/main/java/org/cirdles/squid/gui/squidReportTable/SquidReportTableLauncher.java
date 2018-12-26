@@ -52,7 +52,7 @@ public class SquidReportTableLauncher {
     public void launch(ReportTableTab tab) {
         try {
             if (tab == ReportTableTab.refMat) {
-                SquidReportTableController.typeOfController = SquidReportTableController.TypeOfController.ReferenceMaterials;
+                SquidReportTableController.typeOfController = ReportTableTab.refMat;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
                 Scene scene = new Scene(loader.load());
                 refMatStage.setScene(scene);
@@ -63,7 +63,7 @@ public class SquidReportTableLauncher {
                 }
                 refMatStage.requestFocus();
             } else {
-                SquidReportTableController.typeOfController = SquidReportTableController.TypeOfController.Uknowns;
+                SquidReportTableController.typeOfController = ReportTableTab.unknown;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
                 Scene scene = new Scene(loader.load());
                 unknownsStage.setScene(scene);

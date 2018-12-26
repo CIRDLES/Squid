@@ -43,11 +43,7 @@ public class SquidReportTableController implements Initializable {
     private TextArrayManager tableManager;
     private boolean isSetUpScroller;
 
-    public static TypeOfController typeOfController;
-
-    public enum TypeOfController {
-        ReferenceMaterials, Uknowns
-    }
+    public static SquidReportTableLauncher.ReportTableTab typeOfController;
 
     /**
      * Initializes the controller class.
@@ -58,7 +54,7 @@ public class SquidReportTableController implements Initializable {
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
 
-        if (typeOfController == TypeOfController.ReferenceMaterials) {
+        if (typeOfController == SquidReportTableLauncher.ReportTableTab.refMat) {
             ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
             textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
         } else {
@@ -101,6 +97,7 @@ public class SquidReportTableController implements Initializable {
             }
         }
 
+
         rtHbar.setPrefHeight(24.0);
         rtHbar.visibleProperty().addListener((obVal, oldVal, newVal) -> {
             if (newVal) {
@@ -109,6 +106,8 @@ public class SquidReportTableController implements Initializable {
                 AnchorPane.setBottomAnchor(boundCol, 5.0);
             }
         });
+
+        //surprisingly not redundant, above won't be triggered until the visible property changes
         if (rtHbar.isVisible()) {
             AnchorPane.setBottomAnchor(boundCol, 29.0);
         } else {
