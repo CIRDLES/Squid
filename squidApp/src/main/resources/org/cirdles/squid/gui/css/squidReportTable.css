@@ -29,7 +29,10 @@
 
 .table-row-cell:selected {
     -fx-background-color: rgba(94, 208, 242, .8);
-    -fx-text-fill: black;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: black;
 }
 
 #sortHint {
