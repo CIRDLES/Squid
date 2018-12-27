@@ -38,8 +38,8 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      *
      */
     public static final String[][] ReportCategory_CustomExpressions = new String[][]{
-        {"", "", "", "", "", "getTaskExpressionsEvaluationsPerSpotByField", "<RM_EXPRESSIONS_ARRAY>", "",
-            "", "", "", "", "", "", "", ""
+        {"", "", "", "", "", "getTaskExpressionsEvaluationsPerSpotByField", "<RM_EXPRESSIONS_ARRAY>", "PCT",
+            "", "true", "false", "15", "true", "", "", ""
         }
     };
 
