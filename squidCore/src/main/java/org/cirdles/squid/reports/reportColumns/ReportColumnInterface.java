@@ -317,11 +317,15 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      * @param numericString
      * @return
      */
-    public static String FormatNumericStringAlignDecimalPoint(String numericString) {
+    public static String FormatNumericStringAlignDecimalPoint(String aNumericString) {
         // precondition: can fit within 123456789.0123456789
+        String numericString = aNumericString;
+        if (aNumericString.length() > 25){
+            numericString = aNumericString.substring(0, 24);
+        }
         int countOfLeadingDigits = 9;
         int totalStringLength = 25;
-        String thirtySpaces = "                              ";
+        String twentyFiveSpaces = "                         ";
 
         String retVal = "---";
 
@@ -337,12 +341,12 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
             retVal = numericString.substring(0, totalStringLength - 1);
         } else {
             // pad left
-            retVal = thirtySpaces.substring(0, Math.abs(countOfLeadingDigits - indexOfPoint)) + numericString;
+            retVal = twentyFiveSpaces.substring(0, Math.abs(countOfLeadingDigits - indexOfPoint)) + numericString;
         }
 
         // pad right
         try {
-            retVal += thirtySpaces.substring(0, totalStringLength - retVal.length());
+            retVal += twentyFiveSpaces.substring(0, totalStringLength - retVal.length());
         } catch (Exception e) {
             // Jan 2015 refinement
             retVal = retVal.substring(0, totalStringLength - 1);
