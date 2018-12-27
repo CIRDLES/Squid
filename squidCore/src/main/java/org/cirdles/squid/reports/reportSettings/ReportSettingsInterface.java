@@ -594,113 +594,12 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                 // test for known variables in footnote
                 // since lambda235 and 238 appear in same footnote, we first check whether the
                 // references are the same so as to avoid repetition
-                String lambda238Ref = "";
-                String lambda235Ref = "";
-//                try {
-//                    lambda238Ref
-//                            = " (" + ((ValueModelReferenced) sample.getPhysicalConstantsModel()//
-//                                    .getDatumByName(Lambdas.lambda238.getName())).getReference() + ")";
-//                    lambda235Ref
-//                            = " (" + ((ValueModelReferenced) sample.getPhysicalConstantsModel()//
-//                                    .getDatumByName(Lambdas.lambda235.getName())).getReference() + ")";
-//                } catch (BadLabDataException badLabDataException) {
-//                }
-
-                NumberFormat formatter = new DecimalFormat("0.000#####E0");
-
-//                String lambda238 = "\u03BB238 = ";
-//                try {
-//                    lambda238
-//                            += formatter.format(sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda238.getName())//
-//                                    .getValue().doubleValue());
-//                    lambda238 += lambda238Ref;
-//                } catch (BadLabDataException badLabDataException) {
-//                }
-//
-//                String lambda235 = "\u03BB235 = ";
-//                try {
-//                    lambda235
-//                            += formatter.format(sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda235.getName())//
-//                                    .getValue().doubleValue());
-//                    lambda235 += lambda235Ref;
-//                } catch (BadLabDataException badLabDataException) {
-//                }
-//
-//                String lambda230 = "\u03BB230 = ";
-//                try {
-//                    lambda230
-//                            += formatter.format(sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda230.getName())//
-//                                    .getValue().doubleValue());
-//                    lambda230
-//                            += " ("
-//                            + ((ValueModelReferenced) sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda230.getName()))
-//                                    .getReference()
-//                            + ")";
-//                } catch (BadLabDataException badLabDataException) {
-//                }
-//
-//                String lambda232 = "\u03BB232 = ";
-//                try {
-//                    lambda232
-//                            += formatter.format(sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda232.getName())
-//                                    .getValue().doubleValue());
-//                    lambda232
-//                            += " ("
-//                            + ((ValueModelReferenced) sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda232.getName()))
-//                                    .getReference() //
-//                            + ")";
-//                } catch (BadLabDataException badLabDataException) {
-//                }
-//                String lambda234 = "\u03BB234 = ";
-//                try {
-//                    lambda234
-//                            += formatter.format(sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda234.getName())
-//                                    .getValue().doubleValue());
-//                    lambda234
-//                            += " ("
-//                            + ((ValueModelReferenced) sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda234.getName()))
-//                                    .getReference() //
-//                            + ")";
-//                } catch (BadLabDataException badLabDataException) {
-//                }
-//                String lambda226 = "\u03BB226 = ";
-//                try {
-//                    lambda226
-//                            += formatter.format(sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda226.getName())
-//                                    .getValue().doubleValue());
-//                    lambda226
-//                            += " ("
-//                            + ((ValueModelReferenced) sample.getPhysicalConstantsModel().getDatumByName(Lambdas.lambda226.getName()))
-//                                    .getReference() //
-//                            + ")";
-//                } catch (BadLabDataException badLabDataException) {
-//                }
-                // perform replacement of footnote parameters               
-//                footNote = footNote.replaceFirst("<lambda226>", lambda226);
-//                footNote = footNote.replaceFirst("<lambda230>", lambda230);
-//                footNote = footNote.replaceFirst("<lambda232>", lambda232);
-//                footNote = footNote.replaceFirst("<lambda234>", lambda234);
-//                footNote = footNote.replaceFirst("<lambda235>", lambda235);
-//                footNote = footNote.replaceFirst("<lambda238>", lambda238);
-//
-//                if (fractions.get(0) instanceof UPbFraction) {
-//                    //<r207_206c>
-//                    //<bestDateDivider>
-//                    // april 2010 specialize footnote for zircons
-//                    switch (zirconPopulationType) {
-//                        case 1:
-//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPbSamples.reportTableFootnotes.get("FN-5zircon"));
-//                        case 2:
-//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPbSamples.reportTableFootnotes.get("FN-5mixed"));
-//                        default:
-//                            footNote = footNote.replaceFirst("<zirconPopulationChoice>", ReportSpecificationsUPbSamples.reportTableFootnotes.get("FN-5noZircon"));
-//                    }
-//                }
+                // code removed until needed - see ET_Redux for code
                 retVal[7][i] = determineFootNoteLetter(i) + "&" + footNote;
             }
         }
-        return retVal;
 
+        return retVal;
     }
 
     public default String determineFootNoteLetter(
@@ -709,14 +608,13 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     }
 
     public default void trimColumn(String[][] retVal, int columnCount) {
-
         // walk the column(s) and find the minimum count of leading spaces
         // and the minimum count of trailing spaces
         int minLeading = 10;
         int minTrailing = 15;
         for (int f = FRACTION_DATA_START_ROW; f
                 < retVal.length; f++) {
-            if (retVal[f][columnCount] != null) {
+            if ((retVal[f][columnCount] != null) && (retVal[f][columnCount].length() > 0)) {
                 String entry = retVal[f][columnCount];
                 int lbCount = 0;
                 for (int lb = 0; lb
@@ -739,33 +637,30 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                     } else {
                         break;
                     }
-
                 }
                 if (tbCount < minTrailing) {
                     minTrailing = tbCount;
                 }
-
             }
         }
 
         // walk the column and trim the strings
         for (int f = FRACTION_DATA_START_ROW; f
                 < retVal.length; f++) {
-            if (retVal[f][columnCount] != null) {
+            if ((retVal[f][columnCount] != null) && (retVal[f][columnCount].length() > 0)) {
                 retVal[f][columnCount] = retVal[f][columnCount].substring(minLeading);
-                retVal[f][columnCount]
-                        = retVal[f][columnCount].substring(//
-                                0, retVal[f][columnCount].length() - minTrailing);
-
+                if (retVal[f][columnCount].length() >= minTrailing) {
+                    retVal[f][columnCount]
+                            = retVal[f][columnCount].substring(//
+                                    0, retVal[f][columnCount].length() - minTrailing);
+                }
             }
-
         }
 
         // walk the column and padleft to meet width of displayname the strings
         // except for fraction name always in first col (0)
         int minWide = 3;
         if (!retVal[4][columnCount].trim().equalsIgnoreCase("Fraction")) {// (columnCount > 2) {
-
             // July 2017 removed trim() calls here
             int padLeft
                     = Math.max(minWide,//
@@ -781,13 +676,10 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                     if (retVal[f][columnCount] != null) {
                         try {
                             retVal[f][columnCount]
-                                    = // "                 ".substring( 0, padLeft + 0 )//
-                                    new String(new char[padLeft]).replace('\0', ' ')//
+                                    = new String(new char[padLeft]).replace('\0', ' ')//
                                     + retVal[f][columnCount];
                         } catch (Exception e) {
-                            //System.out.println(e.getMessage());
                         }
-
                     }
                 }
             }
@@ -810,7 +702,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                 }
             }
         }
-
     }
 
     public default int getCountOfAllColumns() {
