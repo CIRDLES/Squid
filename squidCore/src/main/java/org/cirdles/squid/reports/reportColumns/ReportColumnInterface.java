@@ -321,7 +321,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         // precondition: can fit within 123456789.0123456789
         int countOfLeadingDigits = 9;
         int totalStringLength = 25;
-        String twentySpaces = "                         ";
+        String thirtySpaces = "                              ";
 
         String retVal = "---";
 
@@ -337,12 +337,12 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
             retVal = numericString.substring(0, totalStringLength - 1);
         } else {
             // pad left
-            retVal = twentySpaces.substring(0, Math.abs(countOfLeadingDigits - indexOfPoint)) + numericString;
+            retVal = thirtySpaces.substring(0, Math.abs(countOfLeadingDigits - indexOfPoint)) + numericString;
         }
 
         // pad right
         try {
-            retVal += twentySpaces.substring(0, totalStringLength - retVal.length());
+            retVal += thirtySpaces.substring(0, totalStringLength - retVal.length());
         } catch (Exception e) {
             // Jan 2015 refinement
             retVal = retVal.substring(0, totalStringLength - 1);
@@ -362,7 +362,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         // there are two possible modes : sigfig and arbitrary
         // if sigfig, the string contains only the sig digits forced to length
         // 20 with the decimal point at position 9 (0-based index) with space fillers
-        // if arbitrary, the string is the bigdecimal number with 15 places after the
+        // if arbitrary, the string is the bigdecimal number with getCountOfSignificantDigits() places after the
         // decimal
         // these "raw" strings will be post-processed by the report engine
         String[] retVal = new String[2];
@@ -429,10 +429,20 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                         double doubleValue = (double) meth.invoke(fraction, new Object[0]);
 
                         if (isNumeric) {
-                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, 15));//doubleValue);
+                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
                         } else if (isDisplayedWithArbitraryDigitCount()) {
                             retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
                                     new BigDecimal(doubleValue),
+                                    getCountOfSignificantDigits());
+                        } else {
+                            // value is in sigfig mode = two flavors
+                            // if there is no uncertainty column, then show the value with
+                            // normal sigfig formatting
+                            // if there is an uncertainty column and it is in arbitrary mode, then
+                            // also show value with normal sigfig formatting
+
+                            retVal[0] = formatBigDecimalForPublicationSigDigMode(
+                                    new BigDecimal(doubleValue).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
                                     getCountOfSignificantDigits());
                         }
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -449,10 +459,20 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                         double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
 
                         if (isNumeric) {
-                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, 15));//doubleValue);
+                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
                         } else if (isDisplayedWithArbitraryDigitCount()) {
                             retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
                                     new BigDecimal(doubleValue),
+                                    getCountOfSignificantDigits());
+                        } else {
+                            // value is in sigfig mode = two flavors
+                            // if there is no uncertainty column, then show the value with
+                            // normal sigfig formatting
+                            // if there is an uncertainty column and it is in arbitrary mode, then
+                            // also show value with normal sigfig formatting
+
+                            retVal[0] = formatBigDecimalForPublicationSigDigMode(
+                                    new BigDecimal(doubleValue).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
                                     getCountOfSignificantDigits());
                         }
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -467,7 +487,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                         double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
 
                         if (isNumeric) {
-                            retVal[0] = String.valueOf(Utilities.roundedToSize(getValueInUnits(vm[0], getUnits()).doubleValue(), 15));//   .toPlainString().trim();
+                            retVal[0] = String.valueOf(Utilities.roundedToSize(getValueInUnits(vm[0], getUnits()).doubleValue(), getCountOfSignificantDigits()));//   .toPlainString().trim();
                         } else if (isDisplayedWithArbitraryDigitCount()) {
                             retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
                                     getValueInUnits(vm[0], getUnits()),
@@ -526,9 +546,10 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                     try {
                                         // check on size of vm[1] - if already rounded, then preserve for output
                                         int countDigits = countSigDigits(String.valueOf(vm[1]));
-                                        int roundingCount = 15;
-                                        if (countDigits <= 12) {
-                                            roundingCount = 12;
+                                        int roundingCount = getCountOfSignificantDigits();
+                                        // this is needed for test cases where 15 digit rounding is specified
+                                        if ((roundingCount >= 12)&&(countDigits <= 12)) {
+                                                roundingCount = 12;
                                         }
 
                                         retVal[1] = String.valueOf(Utilities.roundedToSize(
