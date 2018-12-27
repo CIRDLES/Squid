@@ -95,8 +95,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                             "",
                             reportCategorySpecs[0][5],
                             "<INDEX>" + i,
-                            "",
-                            "", "true", "true", "15", "", "", "false", "false"
+                            reportCategorySpecs[0][7],
+                            reportCategorySpecs[0][8],
+                            reportCategorySpecs[0][9],
+                            reportCategorySpecs[0][10],
+                            reportCategorySpecs[0][11],
+                            reportCategorySpecs[0][12], "", "false", "false"
                         };
             }
             categoryColumns = new ReportColumn[generatedReportCategorySpecs.length];
@@ -123,8 +127,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                         "",
                         reportCategorySpecs[0][5],
                         displayNameNoSpaces,
-                        "PCT",
-                        "", "true", "false", "15", "true", "", "false", "false"
+                        reportCategorySpecs[0][7],
+                        reportCategorySpecs[0][8],
+                        reportCategorySpecs[0][9],
+                        reportCategorySpecs[0][10],
+                        reportCategorySpecs[0][11],
+                        reportCategorySpecs[0][12], "", "false", "false"
                     };
 
                     generatedReportCategorySpecsList.add(columnSpec);
@@ -156,8 +164,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                         "",
                         reportCategorySpecs[0][5],
                         expressionName,
-                        "PCT",
-                        "", "true", "false", "15", "true", "", "false", "false"
+                        reportCategorySpecs[0][7],
+                        reportCategorySpecs[0][8],
+                        reportCategorySpecs[0][9],
+                        reportCategorySpecs[0][10],
+                        reportCategorySpecs[0][11],
+                        reportCategorySpecs[0][12], "", "false", "false"
                     };
 
                     generatedReportCategorySpecsList.add(columnSpec);
@@ -179,27 +191,27 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
 
                 if (reportCategorySpecs[specIndex][6].compareToIgnoreCase("<SQUID_TH_U_EQN_NAME>") == 0) {
                     List<ReportColumnInterface> categoryColumnListSQUID_TH_U_EQN_NAME
-                            = produceColumnSQUID_TH_U_EQN_NAME(colIndex, isDirect, has232);
+                            = produceColumnSQUID_TH_U_EQN_NAME(reportCategorySpecs[specIndex], colIndex, isDirect, has232);
                     categoryColumnList.addAll(categoryColumnListSQUID_TH_U_EQN_NAME);
                     colIndex = colIndex + categoryColumnListSQUID_TH_U_EQN_NAME.size();
                 } else if (reportCategorySpecs[specIndex][6].compareToIgnoreCase("<SQUID_PPM_PARENT_EQN_NAME_TH>") == 0) {
                     List<ReportColumnInterface> categoryColumnListSQUID_PPM_PARENT_EQN_NAME_TH
-                            = produceColumnSQUID_PPM_PARENT_EQN_NAME_TH(colIndex, isDirect, has232);
+                            = produceColumnSQUID_PPM_PARENT_EQN_NAME_TH(reportCategorySpecs[specIndex], colIndex, isDirect, has232);
                     categoryColumnList.addAll(categoryColumnListSQUID_PPM_PARENT_EQN_NAME_TH);
                     colIndex = colIndex + categoryColumnListSQUID_PPM_PARENT_EQN_NAME_TH.size();
                 } else if (reportCategorySpecs[specIndex][6].compareToIgnoreCase("<OVER_COUNT_4_6_8>") == 0) {
                     List<ReportColumnInterface> categoryColumnListOVER_COUNT_4_6_8
-                            = produceColumnOVER_COUNT_4_6_8(colIndex, isDirect, has232);
+                            = produceColumnOVER_COUNT_4_6_8(reportCategorySpecs[specIndex], colIndex, isDirect, has232);
                     categoryColumnList.addAll(categoryColumnListOVER_COUNT_4_6_8);
                     colIndex = colIndex + categoryColumnListOVER_COUNT_4_6_8.size();
                 } else if (reportCategorySpecs[specIndex][6].compareToIgnoreCase("<OVER_COUNTS_PERSEC_4_8>") == 0) {
                     List<ReportColumnInterface> categoryColumnListOVER_COUNTS_PERSEC_4_8
-                            = produceColumnOVER_COUNTS_PERSEC_4_8(colIndex, isDirect, has232);
+                            = produceColumnOVER_COUNTS_PERSEC_4_8(reportCategorySpecs[specIndex], colIndex, isDirect, has232);
                     categoryColumnList.addAll(categoryColumnListOVER_COUNTS_PERSEC_4_8);
                     colIndex = colIndex + categoryColumnListOVER_COUNTS_PERSEC_4_8.size();
                 } else if (reportCategorySpecs[specIndex][6].compareToIgnoreCase("<CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA>") == 0) {
                     List<ReportColumnInterface> categoryColumnListCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA
-                            = produceColumnCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA(colIndex, isDirect, has232);
+                            = produceColumnCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA(reportCategorySpecs[specIndex], colIndex, isDirect, has232);
                     categoryColumnList.addAll(categoryColumnListCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA);
                     colIndex = colIndex + categoryColumnListCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA.size();
                 } else {
@@ -220,7 +232,8 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
 
     }
 
-    private List<ReportColumnInterface> produceColumnSQUID_TH_U_EQN_NAME(int myColIndex, boolean isDirect, boolean has232) {
+    private List<ReportColumnInterface> produceColumnSQUID_TH_U_EQN_NAME(
+            String[] specs, int myColIndex, boolean isDirect, boolean has232) {
         List<ReportColumnInterface> categoryColumnList = new ArrayList<>();
         int colIndex = myColIndex;
 
@@ -230,10 +243,15 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             "232Th",
             "/238U",
             "",
-            "getTaskExpressionsEvaluationsPerSpotByField",
+            specs[5],
             SQUID_TH_U_EQN_NAME,
-            "PCT",
-            "", "true", "false", "20", "true", "232/238 ratio", "false", "false"};
+            specs[7],
+            specs[8],
+            specs[9],
+            specs[10],
+            specs[11],
+            specs[12],
+            specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[1] = "204corr";
@@ -265,7 +283,8 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         return categoryColumnList;
     }
 
-    private List<ReportColumnInterface> produceColumnSQUID_PPM_PARENT_EQN_NAME_TH(int myColIndex, boolean isDirect, boolean has232) {
+    private List<ReportColumnInterface> produceColumnSQUID_PPM_PARENT_EQN_NAME_TH(
+            String[] specs, int myColIndex, boolean isDirect, boolean has232) {
         List<ReportColumnInterface> categoryColumnList = new ArrayList<>();
         int colIndex = myColIndex;
 
@@ -275,10 +294,15 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             "Th",
             "(ppm)",
             "",
-            "getTaskExpressionsEvaluationsPerSpotByField",
+            specs[5],
             SQUID_PPM_PARENT_EQN_NAME_TH,
-            "",
-            "", "true", "false", "20", "", "concentration of Th", "false", "false"};
+            specs[7],
+            specs[8],
+            specs[9],
+            specs[10],
+            specs[11],
+            specs[12],
+            specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[1] = "204corr";
@@ -310,17 +334,23 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         return categoryColumnList;
     }
 
-    private List<ReportColumnInterface> produceColumnOVER_COUNT_4_6_8(int myColIndex, boolean isDirect, boolean has232) {
+    private List<ReportColumnInterface> produceColumnOVER_COUNT_4_6_8(
+            String[] specs, int myColIndex, boolean isDirect, boolean has232) {
         List<ReportColumnInterface> categoryColumnList = new ArrayList<>();
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
             "204corr", "204", "/206", "(fr. 208)",
             "",
-            "getTaskExpressionsEvaluationsPerSpotByField",
+            specs[5],
             OVER_COUNT_4_6_8,
-            "",
-            "", "true", "false", "20", "", "", "false", "false"};
+            specs[7],
+            specs[8],
+            specs[9],
+            specs[10],
+            specs[11],
+            specs[12],
+            specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
@@ -352,17 +382,23 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         return categoryColumnList;
     }
 
-    private List<ReportColumnInterface> produceColumnOVER_COUNTS_PERSEC_4_8(int myColIndex, boolean isDirect, boolean has232) {
+    private List<ReportColumnInterface> produceColumnOVER_COUNTS_PERSEC_4_8(
+            String[] specs, int myColIndex, boolean isDirect, boolean has232) {
         List<ReportColumnInterface> categoryColumnList = new ArrayList<>();
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
             "204corr", "204", "overcts/sec", "(fr. 208)",
             "",
-            "getTaskExpressionsEvaluationsPerSpotByField",
+            specs[5],
             OVER_COUNTS_PERSEC_4_8,
-            "",
-            "", "true", "false", "20", "", "", "false", "false"};
+            specs[7],
+            specs[8],
+            specs[9],
+            specs[10],
+            specs[11],
+            specs[12],
+            specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
@@ -394,17 +430,23 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         return categoryColumnList;
     }
 
-    private List<ReportColumnInterface> produceColumnCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA(int myColIndex, boolean isDirect, boolean has232) {
+    private List<ReportColumnInterface> produceColumnCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA(
+            String[] specs, int myColIndex, boolean isDirect, boolean has232) {
         List<ReportColumnInterface> categoryColumnList = new ArrayList<>();
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
             "204corr", "8-corr", "206Pb/238U", "const delta%",
             "",
-            "getTaskExpressionsEvaluationsPerSpotByField",
+            specs[5],
             CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
-            "",
-            "", "true", "false", "20", "", "", "false", "false"};
+            specs[7],
+            specs[8],
+            specs[9],
+            specs[10],
+            specs[11],
+            specs[12],
+            specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
