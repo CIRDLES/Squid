@@ -97,11 +97,7 @@ public abstract class ParametersModel implements
     }
 
     public boolean equals(Object o) {
-        boolean retVal = o instanceof ParametersModel;
-        if (retVal && ((ParametersModel) o).compareTo(this) != 0) {
-            retVal = false;
-        }
-        return retVal;
+        return o instanceof ParametersModel && ((ParametersModel) o).compareTo(this) == 0;
     }
 
     public ValueModel getDatumByName(String datumName) {

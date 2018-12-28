@@ -39,7 +39,6 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
 import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataWindow;
 
@@ -1423,90 +1422,102 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstSaveAndRegisterEdit(ActionEvent event) {
-        physConstModel.setIsEditable(true);
-        physConstModel.setModelName(physConstModelName.getText());
-        physConstModel.setVersion(physConstVersion.getText());
-        physConstModel.setDateCertified(physConstDateCertified.getText());
-        physConstModel.setLabName(physConstLabName.getText());
+        boolean hasModelWithSameNameAndVersion = false;
+        String name = physConstModelName.getText();
+        String version = physConstVersion.getText();
+        for (int i = 0; i < physConstModels.size() && !hasModelWithSameNameAndVersion; i++) {
+            hasModelWithSameNameAndVersion = name.equals(physConstModels.get(i).getModelName())
+                    && version.equals(physConstModels.get(i).getVersion());
+        }
+        if (!hasModelWithSameNameAndVersion) {
 
-        Map<String, BigDecimal> masses = new HashMap<>();
-        String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
-        for (int i = 0; i < defaultMasses.length; i++) {
-            String[] defaultMass = defaultMasses[i];
-            try {
-                if (Double.parseDouble(defaultMass[1]) != 0) {
-                    masses.put(defaultMass[0], new BigDecimal(molarMasses.get(i).getText()));
+            physConstModel.setIsEditable(true);
+            physConstModel.setModelName(physConstModelName.getText());
+            physConstModel.setVersion(physConstVersion.getText());
+            physConstModel.setDateCertified(physConstDateCertified.getText());
+            physConstModel.setLabName(physConstLabName.getText());
+
+            Map<String, BigDecimal> masses = new HashMap<>();
+            String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
+            for (int i = 0; i < defaultMasses.length; i++) {
+                String[] defaultMass = defaultMasses[i];
+                try {
+                    if (Double.parseDouble(defaultMass[1]) != 0) {
+                        masses.put(defaultMass[0], new BigDecimal(molarMasses.get(i).getText()));
+                    }
+                } catch (Exception e) {
+                    masses.put(defaultMass[0], new BigDecimal(defaultMass[1]));
                 }
-            } catch (Exception e) {
-                masses.put(defaultMass[0], new BigDecimal(defaultMass[1]));
             }
-        }
 
-        physConstModel.setReferences(physConstReferencesArea.getText());
-        physConstModel.setComments(physConstCommentsArea.getText());
+            physConstModel.setReferences(physConstReferencesArea.getText());
+            physConstModel.setComments(physConstCommentsArea.getText());
 
-        if (!isEditingCurrPhysConst) {
-            physConstModels.add(physConstModel);
+            if (!isEditingCurrPhysConst) {
+                physConstModels.add(physConstModel);
+            } else {
+                isEditingCurrPhysConst = false;
+                physConstHolder = null;
+            }
+            physConstModels.sort(new ParametersModelComparator());
+            setUpPhysConstCBItems();
+            physConstCB.getSelectionModel().select(physConstModel.getModelNameWithVersion());
+            physConstEditable(false);
+            setUpPhysConstMenuItems(false, physConstModel.isEditable());
+            isEditingPhysConst = false;
+
+            squidLabData.storeState();
         } else {
-            isEditingCurrPhysConst = false;
-            physConstHolder = null;
-        }
-        physConstModels.sort(new ParametersModelComparator());
-        setUpPhysConstCBItems();
-        physConstCB.getSelectionModel().select(physConstModel.getModelNameWithVersion());
-        physConstEditable(false);
-        setUpPhysConstMenuItems(false, physConstModel.isEditable());
-        isEditingPhysConst = false;
-
-        squidLabData.storeState();
-
-        if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
-                && (squidProject.getTask().getPhysicalConstantsModel().equals(physConstModel) ||
-                squidProject.getTask().getPhysicalConstantsModel().equals(squidLabData.getPhysConstDefault()))) {
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            SquidMessageDialog.showWarningDialog("A Physical Constants Model with the same name and version exists.\n" +
+                    "Please change the name and/or version", squidLabDataWindow);
         }
     }
 
     @FXML
     private void refMatSaveAndRegisterEdit(ActionEvent event) {
-        refMatModel.setIsEditable(true);
-        refMatModel.setModelName(refMatModelName.getText());
-        refMatModel.setLabName(refMatLabName.getText());
-        refMatModel.setVersion(refMatVersion.getText());
-        refMatModel.setDateCertified(refMatDateCertified.getText());
-
-        ObservableList<RefMatDataModel> dataModels = refMatDataTable.getItems();
-        boolean[] isMeasures = new boolean[dataModels.size()];
-        for (int i = 0; i < isMeasures.length; i++) {
-            RefMatDataModel mod = dataModels.get(i);
-            isMeasures[i] = mod.getIsMeasured().isSelected();
+        boolean hasModelWithSameNameAndVersion = false;
+        String name = refMatModelName.getText();
+        String version = refMatVersion.getText();
+        for (int i = 0; i < refMatModels.size() && !hasModelWithSameNameAndVersion; i++) {
+            hasModelWithSameNameAndVersion = name.equals(refMatModels.get(i).getModelName())
+                    && version.equals(refMatModels.get(i).getVersion());
         }
-        refMatModel.setDataMeasured(isMeasures);
+        if (!hasModelWithSameNameAndVersion) {
 
-        refMatModel.setReferences(refMatReferencesArea.getText());
-        refMatModel.setComments(refMatCommentsArea.getText());
+            refMatModel.setIsEditable(true);
+            refMatModel.setModelName(refMatModelName.getText());
+            refMatModel.setLabName(refMatLabName.getText());
+            refMatModel.setVersion(refMatVersion.getText());
+            refMatModel.setDateCertified(refMatDateCertified.getText());
 
-        if (!isEditingCurrRefMat) {
-            refMatModels.add(refMatModel);
+            ObservableList<RefMatDataModel> dataModels = refMatDataTable.getItems();
+            boolean[] isMeasures = new boolean[dataModels.size()];
+            for (int i = 0; i < isMeasures.length; i++) {
+                RefMatDataModel mod = dataModels.get(i);
+                isMeasures[i] = mod.getIsMeasured().isSelected();
+            }
+            refMatModel.setDataMeasured(isMeasures);
+
+            refMatModel.setReferences(refMatReferencesArea.getText());
+            refMatModel.setComments(refMatCommentsArea.getText());
+
+            if (!isEditingCurrRefMat) {
+                refMatModels.add(refMatModel);
+            } else {
+                isEditingCurrRefMat = false;
+                refMatHolder = null;
+            }
+            refMatModels.sort(new ParametersModelComparator());
+            setUpRefMatCBItems();
+            refMatCB.getSelectionModel().select(refMatModel.getModelNameWithVersion());
+            refMatEditable(false);
+            setUpRefMatMenuItems(false, refMatModel.isEditable());
+            isEditingRefMat = false;
+
+            squidLabData.storeState();
         } else {
-            isEditingCurrRefMat = false;
-            refMatHolder = null;
-        }
-        refMatModels.sort(new ParametersModelComparator());
-        setUpRefMatCBItems();
-        refMatCB.getSelectionModel().select(refMatModel.getModelNameWithVersion());
-        refMatEditable(false);
-        setUpRefMatMenuItems(false, refMatModel.isEditable());
-        isEditingRefMat = false;
-
-        squidLabData.storeState();
-
-        if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getPhysicalConstantsModel() != null
-                && (squidProject.getTask().getReferenceMaterialModel().equals(refMatModel) ||
-                squidProject.getTask().getReferenceMaterialModel().equals(squidLabData.getRefMatDefault()))) {
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            SquidMessageDialog.showWarningDialog("A Reference Material with the same name and version exists.\n" +
+                    "Please change the name and/or version", squidLabDataWindow);
         }
     }
 
@@ -1906,37 +1917,43 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbSaveAndRegisterEdit(ActionEvent event) {
-        commonPbModel.setIsEditable(true);
-        commonPbModel.setModelName(commonPbModelName.getText());
-        commonPbModel.setLabName(commonPbLabName.getText());
-        commonPbModel.setVersion(commonPbVersion.getText());
-        commonPbModel.setDateCertified(commonPbDateCertified.getText());
-
-        commonPbModel.setReferences(commonPbReferencesArea.getText());
-        commonPbModel.setComments(commonPbCommentsArea.getText());
-
-        if (!isEditingCurrCommonPbModel) {
-            commonPbModels.add(commonPbModel);
-        } else {
-            isEditingCurrCommonPbModel = false;
-            commonPbModelHolder = null;
+        boolean hasModelWithSameNameAndVersion = false;
+        String name = commonPbModelName.getText();
+        String version = commonPbVersion.getText();
+        for (int i = 0; i < commonPbModels.size() && !hasModelWithSameNameAndVersion; i++) {
+            hasModelWithSameNameAndVersion = name.equals(commonPbModels.get(i).getModelName())
+                    && version.equals(commonPbModels.get(i).getVersion());
         }
-        commonPbModels.sort(new ParametersModelComparator());
-        isEditingCommonPb = false;
-        setUpCommonPbCBItems();
-        commonPbCB.getSelectionModel().select(commonPbModel.getModelNameWithVersion());
-        commonPbModelEditable(false);
-        setUpCommonPbMenuItems(false, commonPbModel.isEditable());
+        if (!hasModelWithSameNameAndVersion) {
+            commonPbModel.setIsEditable(true);
+            commonPbModel.setModelName(commonPbModelName.getText());
+            commonPbModel.setLabName(commonPbLabName.getText());
+            commonPbModel.setVersion(commonPbVersion.getText());
+            commonPbModel.setDateCertified(commonPbDateCertified.getText());
 
-        squidLabData.storeState();
+            commonPbModel.setReferences(commonPbReferencesArea.getText());
+            commonPbModel.setComments(commonPbCommentsArea.getText());
 
-        if (squidProject != null && squidProject.getTask() != null && squidProject.getTask().getCommonPbModel() != null
-                && (squidProject.getTask().getCommonPbModel().equals(commonPbModel) ||
-                squidProject.getTask().getCommonPbModel().equals(squidLabData.getCommonPbDefault()))) {
-            squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            if (!isEditingCurrCommonPbModel) {
+                commonPbModels.add(commonPbModel);
+            } else {
+                isEditingCurrCommonPbModel = false;
+                commonPbModelHolder = null;
+            }
+            commonPbModels.sort(new ParametersModelComparator());
+            isEditingCommonPb = false;
+            setUpCommonPbCBItems();
+            commonPbCB.getSelectionModel().select(commonPbModel.getModelNameWithVersion());
+            commonPbModelEditable(false);
+            setUpCommonPbMenuItems(false, commonPbModel.isEditable());
+
+            squidLabData.storeState();
+        } else {
+            SquidMessageDialog.showWarningDialog("A Common Lead Model with the same name and version exists.\n" +
+                    "Please change the name and/or version", squidLabDataWindow);
         }
     }
+
 
     @FXML
     private void commonPbCancelEdit(ActionEvent event) {
