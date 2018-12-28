@@ -1,0 +1,41 @@
+.root {
+    -fx-background-color: Gainsboro;
+}
+
+.table-view {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 15;
+}
+
+.table-view .table-column {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 14;
+    -fx-alignment: center-right;
+}
+
+.table-row-aliquot {
+    -fx-background-color: orange;
+    -fx-border-color: orange;
+    -fx-table-cell-border-color: orange;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: gainsboro;
+}
+
+.table-row-cell:even {
+    -fx-background-color: ghostwhite;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: rgba(94, 208, 242, .8);
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: black;
+}
+
+#sortHint {
+    -fx-text-fill: black;
+    -fx-font-size: 14;
+}
