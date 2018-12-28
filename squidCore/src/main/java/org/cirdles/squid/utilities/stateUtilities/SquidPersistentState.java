@@ -699,4 +699,4 @@ public class SquidPersistentState implements Serializable {
     public void setOpFile(File opFile) {
         this.opFile = opFile;
     }
-
+}
