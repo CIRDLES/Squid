@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
 import org.cirdles.squid.exceptions.SquidException;
 
@@ -59,7 +60,7 @@ public class SquidPersistentState implements Serializable {
     private File MRUExpressionGraphFile;
     private List<String> MRUExpressionGraphList;
     private String MRUExpressionGraphFolderPath;
-    
+   
     private File opFile;
 
     private File customExpressionsFile;
@@ -684,7 +685,7 @@ public class SquidPersistentState implements Serializable {
     public void setCustomExpressionsFile(File file) {
         customExpressionsFile = file;
     }
-     
+
     /**
      * @return the opFile
      */
@@ -698,4 +699,4 @@ public class SquidPersistentState implements Serializable {
     public void setOpFile(File opFile) {
         this.opFile = opFile;
     }
-}
+
