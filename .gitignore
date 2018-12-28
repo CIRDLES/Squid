@@ -56,10 +56,10 @@ Schema/
 !squidCore/src/main/resources/org/cirdles/squid/docs/*.txt
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.xml
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.txt
-!squidCore/src/main/resources/org/cirdles/squid/prawn/*.xls
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.squid
 !squidCore/src/main/resources/org/cirdles/squid/javadoc/*.jar
 !squidCore/src/main/resources/org/cirdles/squid/projects/Z626611PKPERM1.squid
+!squidCore/src/main/resources/org/cirdles/squid/tasks/squidTask25/*.xls
 
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterials/*
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/physicalConstantsModels/*
