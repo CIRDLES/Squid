@@ -32,11 +32,19 @@ import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
+import org.cirdles.squid.parameters.ParametersModelComparator;
+import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
+import org.cirdles.squid.gui.parameters.ParametersLauncher;
+import static org.cirdles.squid.gui.SquidUI.primaryStage;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.gui.utilities.BrowserControl;
+
+import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
@@ -157,7 +165,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private Menu squidLabDataMenu;
 
-    public static ParametersLauncher parametersLauncher;
+    //    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
     //    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
     @FXML
     private Menu unknownsmenu;
@@ -177,6 +185,9 @@ public class SquidUIController implements Initializable {
     private Label japanese1111;
     @FXML
     private MenuItem choosePrawnFileMenuItem;
+
+    public static ParametersLauncher parametersLauncher;
+    public static SquidReportTableLauncher squidReportTableLauncher;
 
     /**
      * Initializes the controller class.
@@ -233,6 +244,7 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.loadJavadoc();
 
         parametersLauncher = new ParametersLauncher(primaryStage);
+        squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
 //
 //        // experiment with tooltips for menuitems
 //        Label unknownsReportBySampleLabel = new Label("Report Table - by Sample for ET_Redux");
@@ -1179,6 +1191,14 @@ public class SquidUIController implements Initializable {
     @FXML
     private void openDefaultSquidLabDataModels() {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
+    }
+
+    public void openSquid3ReportTableReferenceMaterials(ActionEvent actionEvent) {
+        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMat);
+    }
+
+    public void openSquid3ReportTableUnknowns(ActionEvent actionEvent) {
+        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknown);
     }
 
     @FXML

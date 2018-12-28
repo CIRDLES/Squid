@@ -1,0 +1,45 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jun 9, 2018, 4:47:31 PM
+    Author     : ryanb
+*/
+
+/* The main scrollbar **track** CSS class  */
+.table-view .scroll-bar:vertical .track{
+    -fx-padding:0px;
+    -fx-background-color:transparent;
+    -fx-border-color:transparent;
+    -fx-background-radius: 0em;
+    -fx-border-radius:2em;
+
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+
+.table-view .scroll-bar:vertical .increment-button ,
+.table-view .scroll-bar:vertical .decrement-button {
+
+    -fx-background-color:transparent;
+    -fx-background-radius: 0em;
+    -fx-padding:0 0 0 0;
+}
+
+.table-view  .scroll-bar:vertical .increment-arrow,
+.table-view  .scroll-bar:vertical  .decrement-arrow
+{
+    -fx-shape: " ";	
+    -fx-padding:0;        
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color:transparent;
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 2em;
+    -fx-padding:0px;
+
+}

@@ -1,0 +1,87 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.cirdles.squid.gui.squidReportTable;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+
+import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
+
+/**
+ * @author ryanb
+ */
+public class SquidReportTableLauncher {
+
+    private Stage refMatStage;
+    private Stage unknownsStage;
+    private Stage primaryStage;
+
+    public SquidReportTableLauncher(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        refMatStage = new Stage();
+        unknownsStage = new Stage();
+        refMatStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
+        unknownsStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
+        refMatStage.setTitle("Squid 3 Reference Materials");
+        unknownsStage.setTitle("Squid 3 Unknowns");
+
+        refMatStage.setMinWidth(500);
+        refMatStage.setWidth(1000);
+        refMatStage.setMinHeight(375);
+        refMatStage.setHeight(600);
+        unknownsStage.setMinWidth(500);
+        unknownsStage.setWidth(1000);
+        unknownsStage.setMinHeight(375);
+        unknownsStage.setHeight(600);
+
+        refMatStage.setOnCloseRequest(e -> {
+            refMatStage.hide();
+            e.consume();
+        });
+        unknownsStage.setOnCloseRequest(e -> {
+            unknownsStage.hide();
+            e.consume();
+        });
+    }
+
+    public void launch(ReportTableTab tab) {
+        try {
+            if (tab == ReportTableTab.refMat) {
+                SquidReportTableController.typeOfController = ReportTableTab.refMat;
+                if(refMatStage.isShowing()) {
+                    refMatStage.close();
+                }
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
+                Scene scene = new Scene(loader.load());
+                refMatStage.setScene(scene);
+                refMatStage.show();
+                refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
+                refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 5);
+                refMatStage.requestFocus();
+            } else {
+                SquidReportTableController.typeOfController = ReportTableTab.unknown;
+                if (unknownsStage.isShowing()) {
+                    unknownsStage.close();
+                }
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
+                Scene scene = new Scene(loader.load());
+                unknownsStage.setScene(scene);
+                unknownsStage.show();
+                unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2 - 10);
+                unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2 - 5);
+                unknownsStage.requestFocus();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public enum ReportTableTab {
+        refMat, unknown
+    }
+}
