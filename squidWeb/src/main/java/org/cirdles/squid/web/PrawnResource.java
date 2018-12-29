@@ -47,15 +47,15 @@ public class PrawnResource {
             @FormDataParam("prawnFile") FormDataContentDisposition contentDispositionHeader,
             @DefaultValue("true") @FormDataParam("useSBM") boolean useSBM,
             @DefaultValue("false") @FormDataParam("userLinFits") boolean userLinFits,
-            @DefaultValue("T") @FormDataParam("firstLetterRM") String firstLetterRM)
+            @DefaultValue("T") @FormDataParam("refMatFilter") String refMatFilter)
             throws Exception {
 
         return Response
                 .ok(prawnFileHandlerService
-                        .generateReports(contentDispositionHeader.getFileName(), prawnFile, useSBM, userLinFits, firstLetterRM)
+                        .generateReports(contentDispositionHeader.getFileName(), prawnFile, useSBM, userLinFits, refMatFilter)
                         .toFile())
                 .header("Content-Disposition",
-                        "attachment; filename=calamari-reports.zip")
+                        "attachment; filename=squid-reports.zip")
                 .build();
     }
 
