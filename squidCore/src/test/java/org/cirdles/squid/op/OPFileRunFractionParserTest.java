@@ -16,6 +16,7 @@ public class OPFileRunFractionParserTest {
             File opFile = extractor.extractResourceAsFile("180050_GA6392_18081912.13.op");
             OPFileRunFractionParser.parseOPFile(opFile);
             OPFileHandler.convertOPFileToShrimpFractions(opFile);
+            OPFileHandler.convertOPFileToPrawnFile(opFile);
 
             assertTrue(true);
 

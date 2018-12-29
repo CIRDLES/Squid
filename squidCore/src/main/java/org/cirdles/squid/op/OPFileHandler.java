@@ -25,6 +25,8 @@ public class OPFileHandler {
         PrawnFile prawnFile = new PrawnFile();
         for (OPFile op : ops) {
             PrawnFile.Run run = new PrawnFile.Run();
+            run.setSet(new PrawnFile.Run.Set());
+            run.setRunTable(new PrawnFile.Run.RunTable());
 
             PrawnFile.Run.Par measurements = new PrawnFile.Run.Par();
             measurements.setName(RunParameterNames.MEASUREMENTS);
@@ -48,12 +50,12 @@ public class OPFileHandler {
 
             PrawnFile.Run.Set.Par date = new PrawnFile.Run.Set.Par();
             date.setName(SetParameterNames.DATE);
-            date.setValue(Date.valueOf("" + op.getDateTimeMilliseconds()).toString());
+            date.setValue(new Date(op.getDateTimeMilliseconds()).toString());
             run.getSet().getPar().add(date);
 
             PrawnFile.Run.Set.Par time = new PrawnFile.Run.Set.Par();
             time.setName(SetParameterNames.TIME);
-            date.setValue(Time.valueOf("" + op.getDateTimeMilliseconds()).toString());
+            time.setValue(new Time(op.getDateTimeMilliseconds()).toString());
             run.getSet().getPar().add(time);
 
             for (int i = 0; i < op.getCountTimeSec().length; i++) {
