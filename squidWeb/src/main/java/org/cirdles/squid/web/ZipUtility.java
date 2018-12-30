@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import org.cirdles.squid.utilities.FileUtilities;
 
 /**
  *
@@ -44,6 +45,7 @@ public class ZipUtility {
 
     public static Path recursivelyZip(Path target) throws IOException {
         Path zipFilePath = target.resolveSibling("reports.zip");
+        Files.deleteIfExists(zipFilePath);
 
         try (FileSystem zipFileFileSystem = FileSystems.newFileSystem(
                 URI.create("jar:file:" + zipFilePath), ZIP_FILE_ENV)) {

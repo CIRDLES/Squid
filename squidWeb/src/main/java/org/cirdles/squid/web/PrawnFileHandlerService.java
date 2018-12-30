@@ -33,7 +33,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.utilities.FileUtilities.recursiveDelete;
+import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.xml.sax.SAXException;
 
@@ -117,7 +117,8 @@ public class PrawnFileHandlerService {
             Path reportsFolder = Paths.get(reportsEngine.getFolderToWriteCalamariReports().getPath());
 
             reportsZip = ZipUtility.recursivelyZip(reportsFolder);
-            recursiveDelete(reportsFolder);
+            FileUtilities.recursiveDelete(reportsFolder);
+            
         } catch (IOException | JAXBException | SAXException | SquidException iOException) {
         }
 

@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.web;
 
+import java.io.File;
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -50,10 +51,12 @@ public class PrawnResource {
             @DefaultValue("T") @FormDataParam("refMatFilter") String refMatFilter)
             throws Exception {
 
+        java.nio.file.Path pathToZip = prawnFileHandlerService
+                        .generateReports(contentDispositionHeader.getFileName(), prawnFile, useSBM, userLinFits, refMatFilter);
+        File zippedFile = pathToZip.toFile();        
+        
         return Response
-                .ok(prawnFileHandlerService
-                        .generateReports(contentDispositionHeader.getFileName(), prawnFile, useSBM, userLinFits, refMatFilter)
-                        .toFile())
+                .ok(zippedFile)
                 .header("Content-Disposition",
                         "attachment; filename=squid-reports.zip")
                 .build();
