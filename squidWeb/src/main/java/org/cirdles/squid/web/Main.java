@@ -34,7 +34,7 @@ public class Main {
                 .port(8080)
                 .build();
 
-        ResourceConfig config = new ResourceConfig(PrawnResource.class);
+        ResourceConfig config = new ResourceConfig(SquidReportingResource.class);
         config.register(MultiPartFeature.class);
 
         JettyHttpContainerFactory.createServer(baseUri, config);

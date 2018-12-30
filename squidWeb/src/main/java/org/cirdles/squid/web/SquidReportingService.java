@@ -41,16 +41,16 @@ import org.xml.sax.SAXException;
 /**
  * Created by johnzeringue on 7/27/16. Adapted by James Bowring Dec 2018.
  */
-public class PrawnFileHandlerService {
+public class SquidReportingService {
 
     private PrawnFileHandler prawnFileHandler;
     private CalamariReportsEngine reportsEngine;
     private static final ResourceExtractor RESOURCE_EXTRACTOR
-            = new ResourceExtractor(PrawnFileHandlerService.class);
+            = new ResourceExtractor(SquidReportingService.class);
     private static final String PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1
             = "/org/cirdles/squid/tasks/squidTask25/SquidTask_Z6266 = 11pk Perm1.SB.xls";
 
-    public PrawnFileHandlerService() {
+    public SquidReportingService() {
     }
 
     public Path generateReports(
@@ -115,6 +115,7 @@ public class PrawnFileHandlerService {
 
             squidProject.produceUnknownsCSV(true);
             squidProject.produceReferenceMaterialCSV(true);
+            // next line won't yet produce report as no sample groupings are established
             squidProject.produceUnknownsBySampleForETReduxCSV(true);
 
             Files.delete(prawnFilePath);

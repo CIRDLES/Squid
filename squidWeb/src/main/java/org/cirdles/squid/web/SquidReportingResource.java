@@ -31,13 +31,13 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  * Created by johnzeringue on 7/27/16.
  * Adapted by James Bowring Dec 2018.
  */
-@Path("prawn")
-public class PrawnResource {
+@Path("squidReporting")
+public class SquidReportingResource {
 
-    private PrawnFileHandlerService prawnFileHandlerService;
+    private SquidReportingService squidReportingService;
 
-    public PrawnResource() {
-        prawnFileHandlerService = new PrawnFileHandlerService();
+    public SquidReportingResource() {
+        squidReportingService = new SquidReportingService();
     }
 
     @POST
@@ -51,7 +51,7 @@ public class PrawnResource {
             @DefaultValue("T") @FormDataParam("refMatFilter") String refMatFilter)
             throws Exception {
 
-        java.nio.file.Path pathToZip = prawnFileHandlerService
+        java.nio.file.Path pathToZip = squidReportingService
                         .generateReports(contentDispositionHeader.getFileName(), prawnFile, useSBM, userLinFits, refMatFilter);
         File zippedFile = pathToZip.toFile();        
         
