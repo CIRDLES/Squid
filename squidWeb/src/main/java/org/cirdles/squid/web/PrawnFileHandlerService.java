@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.xml.bind.JAXBException;
 import org.cirdles.commons.util.ResourceExtractor;
+import static org.cirdles.squid.Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.core.PrawnFileHandler;
@@ -42,16 +43,14 @@ import org.xml.sax.SAXException;
  */
 public class PrawnFileHandlerService {
 
-    private final PrawnFileHandler prawnFileHandler;
-    private final CalamariReportsEngine reportsEngine;
+    private PrawnFileHandler prawnFileHandler;
+    private CalamariReportsEngine reportsEngine;
     private static final ResourceExtractor RESOURCE_EXTRACTOR
             = new ResourceExtractor(PrawnFileHandlerService.class);
     private static final String PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1
             = "/org/cirdles/squid/tasks/squidTask25/SquidTask_Z6266 = 11pk Perm1.SB.xls";
 
     public PrawnFileHandlerService() {
-        prawnFileHandler = new PrawnFileHandler();
-        reportsEngine = prawnFileHandler.getReportsEngine();
     }
 
     public Path generateReports(
@@ -66,24 +65,20 @@ public class PrawnFileHandlerService {
             fileName = DEFAULT_PRAWNFILE_NAME;
         }
 
-        Path uploadDirectory = Files.createTempDirectory("upload");
-        Path prawnFilePath = uploadDirectory.resolve("prawn-file.xml");
-        Files.copy(prawnFile, prawnFilePath);
-
-        Path calamarirReportsFolderAlias = Files.createTempDirectory("reports-destination");
-        File reportsDestinationFile = calamarirReportsFolderAlias.toFile();
-
-        reportsEngine.setFolderToWriteCalamariReports(reportsDestinationFile);
+        SquidProject squidProject = new SquidProject();
+        prawnFileHandler = squidProject.getPrawnFileHandler();
 
         // this gives reportengine the name of the Prawnfile for use in report names
         prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(fileName);
 
         CalamariFileUtilities.initSampleParametersModels();
 
-        SquidProject squidProject = new SquidProject();
-
         Path reportsZip = null;
         try {
+            Path uploadDirectory = Files.createTempDirectory("upload");
+            Path prawnFilePath = uploadDirectory.resolve("prawn-file.xml");
+            Files.copy(prawnFile, prawnFilePath);
+
             PrawnFile prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFilePath.toString(), true);
             squidProject.setPrawnFile(prawnFileData);
 
@@ -92,15 +87,21 @@ public class PrawnFileHandlerService {
             squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
             File squidTaskFile = RESOURCE_EXTRACTOR
                     .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1);
-            
-            
+
             squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
+
             squidProject.setDelimiterForUnknownNames("-");
-            
+
             TaskInterface task = squidProject.getTask();
             task.setFilterForRefMatSpotNames(refMatFilter);
             task.setFilterForConcRefMatSpotNames("6266");
             task.applyTaskIsotopeLabelsToMassStations();
+                        
+            Path calamarirReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
+            Path calamarirReportsFolderAlias = calamarirReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
+            File reportsDestinationFile = calamarirReportsFolderAlias.toFile();
+            reportsEngine = prawnFileHandler.getReportsEngine();
+            reportsEngine.setFolderToWriteCalamariReports(reportsDestinationFile);
 
             try {
                 reportsEngine.produceReports(
@@ -112,13 +113,17 @@ public class PrawnFileHandlerService {
             } catch (IOException iOException) {
             }
 
+            squidProject.produceUnknownsCSV(true);
+            squidProject.produceReferenceMaterialCSV(true);
+            squidProject.produceUnknownsBySampleForETReduxCSV(true);
+
             Files.delete(prawnFilePath);
 
-            Path reportsFolder = Paths.get(reportsEngine.getFolderToWriteCalamariReports().getPath());
+            Path reportsFolder = Paths.get(reportsEngine.getFolderToWriteCalamariReports().getParentFile().getPath());
 
             reportsZip = ZipUtility.recursivelyZip(reportsFolder);
             FileUtilities.recursiveDelete(reportsFolder);
-            
+
         } catch (IOException | JAXBException | SAXException | SquidException iOException) {
         }
 
