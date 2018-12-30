@@ -34,13 +34,24 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.reports.reportSettings.ReportSettings;
+import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 
 /**
  * Calamari's reports engine.
  */
 public class CalamariReportsEngine implements Serializable {
+
+    /**
+     * @return the folderToWriteCalamariReportsPath
+     */
+    public String getFolderToWriteCalamariReportsPath() {
+        return folderToWriteCalamariReportsPath;
+    }
 
     private static final long serialVersionUID = 9086141392949762545L;
 
@@ -937,6 +948,25 @@ public class CalamariReportsEngine implements Serializable {
         }
 
         return report.toString();
+    }
+
+    
+
+    public File writeReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator
+                + "DataTables"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = new File(reportsPath + baseReportTableName);
+        ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
+
+        return reportTableFile;
     }
 
     /**
