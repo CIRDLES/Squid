@@ -93,7 +93,7 @@ public class CalamariReportsEngine implements Serializable {
      */
     public CalamariReportsEngine(SquidProject squidProject) {
         this.squidProject = squidProject;
-        
+
         this.folderToWriteCalamariReportsPath = "";
         this.reportParameterValues = "";
         this.reportNamePrefix = "";
@@ -962,8 +962,8 @@ public class CalamariReportsEngine implements Serializable {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
                 + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator
-                + "REPORTS-per-Squid2"
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator + "REPORTS-per-Squid2"
                 + File.separator;
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
