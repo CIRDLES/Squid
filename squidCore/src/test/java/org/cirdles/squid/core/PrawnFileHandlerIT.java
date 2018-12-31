@@ -88,7 +88,7 @@ public class PrawnFileHandlerIT {
      */
     @Before
     public void setUp() {
-        prawnFileHandler = new PrawnFileHandler();
+        prawnFileHandler = new PrawnFileHandler(new SquidProject());
     }
 
     /**
@@ -142,13 +142,12 @@ public class PrawnFileHandlerIT {
         } catch (IOException iOException) {
         }
 
-        assertThat(reportsFolder.listFiles()).hasSize(1); //Temp Calamari Reports Folder
-        assertThat(reportsFolder.listFiles()[0].listFiles()).hasSize(1); //Reports folder with name of this Prawn File
-        assertThat(reportsFolder.listFiles()[0].listFiles()[0]).isDirectory(); // the currently written folder of reports
-        assertThat(reportsFolder.listFiles()[0].listFiles()[0].listFiles()).hasSize(6); // 6 reports
+        // Dec 2018 represents temp / PROJECT / TASK / PRAWN /
+        // NOTE: this works on MACOS because it executes before creation of .dstore files
+        assertThat(reportsFolder.listFiles()[0].listFiles()[0].listFiles()[0].listFiles()[0].listFiles()).hasSize(6); // 6 reports
 
         // reportsFolder has produced reports
-        for (File report : reportsFolder.listFiles()[0].listFiles()[0].listFiles()) {
+        for (File report : reportsFolder.listFiles()[0].listFiles()[0].listFiles()[0].listFiles()[0].listFiles()) {
             File expectedReport = RESOURCE_EXTRACTOR
                     .extractResourceAsFile(report.getName());
 

@@ -34,6 +34,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
@@ -54,6 +55,8 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     private static final long serialVersionUID = 9086141392949762545L;
+
+    private SquidProject squidProject;
 
     private String folderToWriteCalamariReportsPath;
     private String reportParameterValues;
@@ -86,8 +89,11 @@ public class CalamariReportsEngine implements Serializable {
 
     /**
      *
+     * @param squidProject
      */
-    public CalamariReportsEngine() {
+    public CalamariReportsEngine(SquidProject squidProject) {
+        this.squidProject = squidProject;
+        
         this.folderToWriteCalamariReportsPath = "";
         this.reportParameterValues = "";
         this.reportNamePrefix = "";
@@ -174,7 +180,9 @@ public class CalamariReportsEngine implements Serializable {
         if (doWriteReportFiles) {
             folderToWriteCalamariReportsPath
                     = folderToWriteCalamariReports.getCanonicalPath()
-                    + File.separator + nameOfPrawnXMLFile
+                    + File.separator + "PROJECT-" + squidProject.getProjectName()
+                    + File.separator + "TASK-" + squidProject.getTask().getName()
+                    + File.separator + "PRAWN-" + nameOfPrawnXMLFile
                     + File.separator + sdfTime.format(new Date())
                     + reportParameterValues
                     + File.separator;
@@ -950,13 +958,12 @@ public class CalamariReportsEngine implements Serializable {
         return report.toString();
     }
 
-    
-
     public File writeReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
                 + File.separator
-                + "DataTables"
+                + "REPORTS-per-Squid2"
                 + File.separator;
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
@@ -1010,6 +1017,13 @@ public class CalamariReportsEngine implements Serializable {
      */
     public StringBuilder getUnknownMeanRatios_PerSpot() {
         return unknownMeanRatios_PerSpot;
+    }
+
+    /**
+     * @return the squidProject
+     */
+    public SquidProject getSquidProject() {
+        return squidProject;
     }
 
 }

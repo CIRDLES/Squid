@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import org.cirdles.squid.utilities.FileUtilities;
 
 /**
  *

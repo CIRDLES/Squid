@@ -58,7 +58,9 @@ public class SquidReportingService {
             InputStream prawnFile,
             boolean useSBM,
             boolean userLinFits,
-            String refMatFilter) throws IOException, JAXBException, SAXException {
+            String refMatFilter,
+            String concRefMatFilter)
+            throws IOException, JAXBException, SAXException {
 
         String fileName = myFileName;
         if (myFileName == null) {
@@ -67,9 +69,6 @@ public class SquidReportingService {
 
         SquidProject squidProject = new SquidProject();
         prawnFileHandler = squidProject.getPrawnFileHandler();
-
-        // this gives reportengine the name of the Prawnfile for use in report names
-        prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(fileName);
 
         CalamariFileUtilities.initSampleParametersModels();
 
@@ -94,13 +93,16 @@ public class SquidReportingService {
 
             TaskInterface task = squidProject.getTask();
             task.setFilterForRefMatSpotNames(refMatFilter);
-            task.setFilterForConcRefMatSpotNames("6266");
+            task.setFilterForConcRefMatSpotNames(concRefMatFilter);
             task.applyTaskIsotopeLabelsToMassStations();
-                        
+
             Path calamarirReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
             Path calamarirReportsFolderAlias = calamarirReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
             File reportsDestinationFile = calamarirReportsFolderAlias.toFile();
             reportsEngine = prawnFileHandler.getReportsEngine();
+            // this gives reportengine the name of the Prawnfile for use in report names
+            prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(fileName);
+
             reportsEngine.setFolderToWriteCalamariReports(reportsDestinationFile);
 
             try {

@@ -79,7 +79,7 @@ public final class SquidProject implements Serializable {
     private static boolean projectChanged;
 
     public SquidProject() {
-        this.prawnFileHandler = new PrawnFileHandler();
+        this.prawnFileHandler = new PrawnFileHandler(this);
         this.projectName = "NO_NAME";
         this.prawnXMLFile = new File("");
         this.prawnFile = null;
