@@ -117,7 +117,7 @@ public class SquidReportingService {
 
             squidProject.produceUnknownsCSV(true);
             squidProject.produceReferenceMaterialCSV(true);
-            // next line won't yet produce report as no sample groupings are established
+            // next line report will not show groupings
             squidProject.produceUnknownsBySampleForETReduxCSV(true);
 
             Files.delete(prawnFilePath);
