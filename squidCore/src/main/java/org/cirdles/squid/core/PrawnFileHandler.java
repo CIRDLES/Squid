@@ -53,6 +53,7 @@ import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_PRAWN_X
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
+import org.cirdles.squid.projects.SquidProject;
 import org.xml.sax.SAXException;
 
 /**
@@ -64,7 +65,9 @@ public class PrawnFileHandler implements Serializable {
 
     private transient Unmarshaller jaxbUnmarshaller;
     private transient Marshaller jaxbMarshaller;
-
+       
+    private SquidProject squidProject;
+    
     private CalamariReportsEngine reportsEngine;
 
     private String currentPrawnFileLocation;
@@ -74,17 +77,20 @@ public class PrawnFileHandler implements Serializable {
 
     /**
      * Creates a new {@link PrawnFileHandler} using a new reports engine.
+     * @param squidProject
      */
-    public PrawnFileHandler() {
-        this(new CalamariReportsEngine());
+    public PrawnFileHandler(SquidProject squidProject) {
+        this(squidProject, new CalamariReportsEngine(squidProject));
     }
 
     /**
      * Creates a new {@link PrawnFileHandler}.
      *
+     * @param squidProject
      * @param reportsEngine the reports engine to use
      */
-    public PrawnFileHandler(CalamariReportsEngine reportsEngine) {
+    public PrawnFileHandler(SquidProject squidProject, CalamariReportsEngine reportsEngine) {
+        this.squidProject = squidProject;
         this.reportsEngine = reportsEngine;
     }
 
@@ -315,16 +321,23 @@ public class PrawnFileHandler implements Serializable {
      */
     public CalamariReportsEngine getReportsEngine() {
         if (reportsEngine == null) {
-            reportsEngine = new CalamariReportsEngine();
+            reportsEngine = new CalamariReportsEngine(squidProject);
         }
         initReportsEngineWithCurrentPrawnFileName();
         return reportsEngine;
     }
 
     public CalamariReportsEngine getNewReportsEngine() {
-        reportsEngine = new CalamariReportsEngine();
+        reportsEngine = new CalamariReportsEngine(squidProject);
         initReportsEngineWithCurrentPrawnFileName();
         return reportsEngine;
+    }
+
+    /**
+     * @return the squidProject
+     */
+    public SquidProject getSquidProject() {
+        return squidProject;
     }
 
 }
