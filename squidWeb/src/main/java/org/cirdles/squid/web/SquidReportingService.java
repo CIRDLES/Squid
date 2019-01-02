@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.xml.bind.JAXBException;
+import org.apache.commons.io.FilenameUtils;
 import org.cirdles.commons.util.ResourceExtractor;
 import static org.cirdles.squid.Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
@@ -36,6 +37,7 @@ import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
+import static org.cirdles.squid.web.ZipUtility.extractZippedFile;
 import org.xml.sax.SAXException;
 
 /**
@@ -45,10 +47,6 @@ public class SquidReportingService {
 
     private PrawnFileHandler prawnFileHandler;
     private CalamariReportsEngine reportsEngine;
-    private static final ResourceExtractor RESOURCE_EXTRACTOR
-            = new ResourceExtractor(SquidReportingService.class);
-    private static final String PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1
-            = "/org/cirdles/squid/tasks/squidTask25/SquidTask_Z6266 = 11pk Perm1.SB.xls";
 
     public SquidReportingService() {
     }
@@ -56,15 +54,23 @@ public class SquidReportingService {
     public Path generateReports(
             String myFileName,
             InputStream prawnFile,
+            InputStream taskFile,
             boolean useSBM,
             boolean userLinFits,
             String refMatFilter,
             String concRefMatFilter)
             throws IOException, JAXBException, SAXException {
 
-        String fileName = myFileName;
+        // detect if prawnfile is zipped
+        boolean prawnIsZip = false;
+        String fileName = "";
         if (myFileName == null) {
             fileName = DEFAULT_PRAWNFILE_NAME;
+        } else if (myFileName.toLowerCase().endsWith(".zip")) {            
+            fileName = FilenameUtils.removeExtension(fileName);
+            prawnIsZip = true;
+        } else {
+            fileName = myFileName;
         }
 
         SquidProject squidProject = new SquidProject();
@@ -75,8 +81,21 @@ public class SquidReportingService {
         Path reportsZip = null;
         try {
             Path uploadDirectory = Files.createTempDirectory("upload");
-            Path prawnFilePath = uploadDirectory.resolve("prawn-file.xml");
-            Files.copy(prawnFile, prawnFilePath);
+            Path uploadDirectory2 = Files.createTempDirectory("upload2");
+
+            Path prawnFilePath;
+            Path taskFilePath;
+            if (prawnIsZip) {
+                Path prawnFilePathZip = uploadDirectory.resolve("prawn-file.zip");
+                Files.copy(prawnFile, prawnFilePathZip);
+                prawnFilePath = extractZippedFile(prawnFilePathZip.toFile(), uploadDirectory.toFile());
+            } else {
+                prawnFilePath = uploadDirectory.resolve("prawn-file.xml");
+                Files.copy(prawnFile, prawnFilePath);
+            }
+            
+            taskFilePath = uploadDirectory2.resolve("task-file.xls");
+            Files.copy(taskFile, taskFilePath);
 
             PrawnFile prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFilePath.toString(), true);
             squidProject.setPrawnFile(prawnFileData);
@@ -84,8 +103,7 @@ public class SquidReportingService {
             // hard-wired for now
             squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
             squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
-            File squidTaskFile = RESOURCE_EXTRACTOR
-                    .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1);
+            File squidTaskFile = taskFilePath.toFile();
 
             squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
 
@@ -117,7 +135,7 @@ public class SquidReportingService {
 
             squidProject.produceUnknownsCSV(true);
             squidProject.produceReferenceMaterialCSV(true);
-            // next line won't yet produce report as no sample groupings are established
+            // next line report will not show groupings
             squidProject.produceUnknownsBySampleForETReduxCSV(true);
 
             Files.delete(prawnFilePath);

@@ -15,17 +15,24 @@
  */
 package org.cirdles.squid.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  *
@@ -71,28 +78,37 @@ public class ZipUtility {
         });
     }
 
-    // saved for future use
-    //    private void unZip(Path zippedFilePath, Path target) throws IOException {
-    //        Map<String, String> zip_properties = new HashMap<>();
-    //        zip_properties.put("create", "false");
-    //
-    //        URI zip_disk = URI.create("jar:file:" + zippedFilePath);
-    //
-    //        try (FileSystem zipFileSystem = FileSystems.newFileSystem(zip_disk, zip_properties)) {
-    //            final Path root = zipFileSystem.getPath("/");
-    //
-    //            //walk the recursivelyZip file tree and copy files to the destination
-    //            Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
-    //                @Override
-    //                public FileVisitResult visitFile(Path file,
-    //                        BasicFileAttributes attrs) throws IOException {
-    //                    final Path destFile = Paths.get(target.toString(),
-    //                            file.toString());
-    //                    //System.out.printf("Extracting file %s to %s\n", file, destFile);
-    //                    Files.copy(file, destFile, StandardCopyOption.REPLACE_EXISTING);
-    //                    return FileVisitResult.CONTINUE;
-    //                }
-    //            });
-    //        }
-    //    }
+    public static Path extractZippedFile(File inFile, File destination) throws IOException {
+        File outFile = null;
+        OutputStream out = null;
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(inFile))) {
+            //open infile for reading
+            ZipEntry entry;
+
+            //checks first entry exists
+            if ((entry = zis.getNextEntry()) != null) {
+                String outFilename = entry.getName();
+                outFile = new File(destination, outFilename);
+
+                try {
+                    //open outFile for writing
+                    out = new FileOutputStream(outFile);
+                    byte[] buff = new byte[2048];
+                    int len;
+
+                    while ((len = zis.read(buff)) > 0) {
+                        out.write(buff, 0, len);
+                    }
+                } finally {
+                    //close outFile
+                    if (out != null) {
+                        out.close();
+                    }
+                }
+            }
+        }
+
+        return Paths.get(outFile.getPath());
+
+    }
 }

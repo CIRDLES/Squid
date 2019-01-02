@@ -47,13 +47,6 @@ import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
  */
 public class CalamariReportsEngine implements Serializable {
 
-    /**
-     * @return the folderToWriteCalamariReportsPath
-     */
-    public String getFolderToWriteCalamariReportsPath() {
-        return folderToWriteCalamariReportsPath;
-    }
-
     private static final long serialVersionUID = 9086141392949762545L;
 
     private SquidProject squidProject;
