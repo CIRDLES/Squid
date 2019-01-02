@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -26,31 +27,39 @@ import java.util.zip.ZipFile;
  */
 public class FileUtilities {
 
-    /**
-     *
-     * @param directory
-     * @throws IOException
-     */
-    public static void recursiveDelete(Path directory) throws IOException {
-        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(
-                    Path file,
-                    BasicFileAttributes attrs) throws IOException {
+//    /**
+//     *
+//     * @param directory
+//     * @throws IOException
+//     */
+//    public static void recursiveDelete(Path directory) throws IOException {
+//        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+//            @Override
+//            public FileVisitResult visitFile(
+//                    Path file,
+//                    BasicFileAttributes attrs) throws IOException {
+//
+//                Files.delete(file);
+//                return FileVisitResult.CONTINUE;
+//            }
+//
+//            @Override
+//            public FileVisitResult postVisitDirectory(
+//                    Path dir,
+//                    IOException exc) throws IOException {
+//
+//                Files.delete(dir);
+//                return FileVisitResult.CONTINUE;
+//            }
+//        });
+//    }
 
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(
-                    Path dir,
-                    IOException exc) throws IOException {
-
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+    public static void recursiveDelete(Path pathToBeDeleted)
+            throws IOException {
+        Files.walk(pathToBeDeleted)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
     }
 
     public static void unpackZipFile(final File archive, final File targetDirectory)
@@ -65,8 +74,8 @@ public class FileUtilities {
             final File targetFile = new File(targetDirectory,
                     zipEntry.getName());
             com.google.common.io.Files.createParentDirs(targetFile);
-            ByteStreams.copy(zipFile.getInputStream(zipEntry), 
-                    com.google.common.io.Files.asByteSink(targetFile, FileWriteMode.APPEND ).openStream());
+            ByteStreams.copy(zipFile.getInputStream(zipEntry),
+                    com.google.common.io.Files.asByteSink(targetFile, FileWriteMode.APPEND).openStream());
         }
     }
 }

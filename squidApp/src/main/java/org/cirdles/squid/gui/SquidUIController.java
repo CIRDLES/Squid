@@ -33,23 +33,13 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
-import org.cirdles.squid.parameters.ParametersModelComparator;
-import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
-import org.cirdles.squid.gui.parameters.ParametersLauncher;
-import static org.cirdles.squid.gui.SquidUI.primaryStage;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 
-import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.parameters.ParametersModelComparator;
-import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
@@ -245,26 +235,6 @@ public class SquidUIController implements Initializable {
 
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
-//
-//        // experiment with tooltips for menuitems
-//        Label unknownsReportBySampleLabel = new Label("Report Table - by Sample for ET_Redux");
-//        reportCustomUnknownsBySamplesMenuItem
-//                = new CustomMenuItem(unknownsReportBySampleLabel);
-//        Tooltip tooltip = new Tooltip("This is a tooltip");
-//        Tooltip.install(unknownsReportBySampleLabel, tooltip);
-//
-//        reportCustomUnknownsBySamplesMenuItem.setHideOnClick(false);
-//        reportCustomUnknownsBySamplesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                try {
-//                    unknownsBySampleReportTableAction(event);
-//                } catch (IOException iOException) {
-//                }
-//            }
-//        });
-//
-//        unknownsmenu.getItems().add(reportCustomUnknownsBySamplesMenuItem);
     }
 
     private void buildProjectMenuMRU() {
@@ -432,7 +402,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
-                            + message,
+                    + message,
                     primaryStageWindow);
         }
     }
@@ -443,9 +413,9 @@ public class SquidUIController implements Initializable {
 
         SquidMessageDialog.showInfoDialog(
                 "To join two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
-                        + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
-                        + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
-                        + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
+                + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
+                + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
+                + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
                 primaryStageWindow);
 
         try {
@@ -463,7 +433,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open and join the selected files:\n\n"
-                            + message,
+                    + message,
                     primaryStageWindow);
         }
 
@@ -1053,20 +1023,6 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void topsoilAction2(ActionEvent event) {
-//        if (topsoilWindows != null) {
-//            for (int i = 0; i < 6; i++) {
-//                topsoilWindows[i].close();
-//            }
-//        }
-//        topsoilWindows = new TopsoilWindow[6];
-//        for (int i = 0; i < 6; i++) {
-//            AbstractTopsoilPlot plot = new TopsoilPlotWetherill("Squid Test Plot #" + i);
-//            topsoilWindows[i] = new TopsoilWindow(plot);
-//            topsoilWindows[i].loadTopsoilWindow(i * 40, 100);
-//        }
-//
-//        topsoilWindows[3].getTopsoilPlot().getPlot().getProperties().put(TITLE, "Testing Handle");
-
     }
 
     @FXML
@@ -1088,10 +1044,9 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
-        if (squidProject.getTask().getReferenceMaterialSpots().size() > 0) {
-            String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
-            writeAndOpenReportTableFiles(report, squidProject.getProjectName() + "_ReferenceMaterialReportTable.csv");
+        File reportTableFile = squidProject.produceReferenceMaterialCSV(true);
+        if (reportTableFile != null) {
+            BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showWarningDialog(
                     "There are no reference materials chosen.\n\n",
@@ -1101,48 +1056,26 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), true);
-        writeAndOpenReportTableFiles(report, squidProject.getProjectName() + "_UnknownsReportTable.csv");
+        File reportTableFile = squidProject.produceUnknownsCSV(true);
+        if (reportTableFile != null) {
+            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+        } else {
+            SquidMessageDialog.showWarningDialog(
+                    "There are no Unknowns chosen.\n\n",
+                    primaryStageWindow);
+        }
     }
 
     @FXML
     private void unknownsBySampleReportTableAction(ActionEvent event) throws IOException {
-        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
-
-        Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
-        List<ShrimpFractionExpressionInterface> spotsBySampleNames = new ArrayList<>();
-        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
-            ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
-            spotsBySampleNames.add(dummyForSample);
-            spotsBySampleNames.addAll(entry.getValue());
+        File reportTableFile = squidProject.produceUnknownsBySampleForETReduxCSV(true);
+        if (reportTableFile != null) {
+            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+        } else {
+            SquidMessageDialog.showWarningDialog(
+                    "There are no Unknowns chosen.\n\n",
+                    primaryStageWindow);
         }
-
-        String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, true);
-        writeAndOpenReportTableFiles(
-                report,
-                squidProject.getProjectName() + "_UnknownsBySampleReportTableForET_Redux.csv");
-    }
-
-    private void writeAndOpenReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
-        // output a file
-        File reportsFolderParent = squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports();
-        String reportsPath
-                = reportsFolderParent.getCanonicalPath()
-                + File.separator
-                + "DataTables"
-                + File.separator;
-        File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
-        }
-
-        File reportTableFile = new File(reportsPath + baseReportTableName);
-        ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
-        File reportTableFileRaw = new File(reportsPath + "RAW_" + baseReportTableName);
-        ReportSerializerToCSV.writeCSVReport(true, reportTableFileRaw, report);
-
-        org.cirdles.squid.gui.utilities.BrowserControl.showURI(reportTableFile.getCanonicalPath());
     }
 
     private void launchPlots() {
@@ -1210,8 +1143,8 @@ public class SquidUIController implements Initializable {
             File[] files;
             try {
                 final Schema schema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL));
-                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml") &&
-                        FileValidator.validateFileIsXMLSerializedEntity(f, schema));
+                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml")
+                        && FileValidator.validateFileIsXMLSerializedEntity(f, schema));
             } catch (SAXException e) {
                 files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml"));
             }
@@ -1306,8 +1239,8 @@ public class SquidUIController implements Initializable {
             for (Expression expression : squidProject.getTask().getTaskExpressionsOrdered()) {
                 if (expression.isCustom()) {
                     try {
-                        expression.serializeXMLObject(folder.getAbsolutePath() + File.separator +
-                                FileNameFixer.fixFileName(expression.getName()) + ".xml");
+                        expression.serializeXMLObject(folder.getAbsolutePath() + File.separator
+                                + FileNameFixer.fixFileName(expression.getName()) + ".xml");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -1341,7 +1274,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected Prawn File:\n\n"
-                            + message,
+                    + message,
                     primaryStageWindow);
         }
     }

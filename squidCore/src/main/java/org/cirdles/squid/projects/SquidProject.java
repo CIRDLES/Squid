@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -34,6 +35,8 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
+import org.cirdles.squid.reports.reportSettings.ReportSettings;
+import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
@@ -46,6 +49,8 @@ import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 /**
  *
@@ -74,7 +79,7 @@ public final class SquidProject implements Serializable {
     private static boolean projectChanged;
 
     public SquidProject() {
-        this.prawnFileHandler = new PrawnFileHandler();
+        this.prawnFileHandler = new PrawnFileHandler(this);
         this.projectName = "NO_NAME";
         this.prawnXMLFile = new File("");
         this.prawnFile = null;
@@ -291,6 +296,62 @@ public final class SquidProject implements Serializable {
     private void serializePrawnData(String fileName)
             throws IOException, JAXBException, SAXException {
         prawnFileHandler.writeRawDataFileAsXML(((PrawnFile) prawnFile), fileName);
+    }
+
+    // reports
+    public File produceReferenceMaterialCSV(boolean numberStyleIsNumeric)
+            throws IOException {
+        File reportTableFile = null;
+        if (task.getReferenceMaterialSpots().size() > 0) {
+            ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, task);
+            String[][] report = reportSettings.reportFractionsByNumberStyle(task.getReferenceMaterialSpots(), numberStyleIsNumeric);
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, projectName + "_ReferenceMaterialReportTable.csv");
+        }
+        return reportTableFile;
+    }
+
+    public File produceUnknownsCSV(boolean numberStyleIsNumeric)
+            throws IOException {
+        File reportTableFile = null;
+        if (task.getUnknownSpots().size() > 0) {
+            ReportSettingsInterface reportSettings = new ReportSettings("Unknowns", false, task);
+            String[][] report = reportSettings.reportFractionsByNumberStyle(task.getUnknownSpots(), numberStyleIsNumeric);
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, projectName + "_UnknownsReportTable.csv");
+        }
+        return reportTableFile;
+    }
+
+    public File produceUnknownsBySampleForETReduxCSV(boolean numberStyleIsNumeric)
+            throws IOException {
+        File reportTableFile = null;
+
+        List<ShrimpFractionExpressionInterface> spotsBySampleNames = makeListOfUnknownsBySample();
+        if (spotsBySampleNames.size() > 0) {
+            ReportSettingsInterface reportSettings = new ReportSettings("UnknownsBySample", false, task);
+            String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, numberStyleIsNumeric);
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, projectName + "_UnknownsBySampleReportTableForET_Redux.csv");
+        }
+        return reportTableFile;
+    }
+
+    public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySample() {
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
+        List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();
+
+        if (mapOfUnknownsBySampleNames.isEmpty()) {
+            mapOfUnknownsBySampleNames.put("Super Sample", task.getUnknownSpots());
+        }
+
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfUnknownsBySampleNames.entrySet()) {
+            ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
+            listOfUnknownsBySample.add(dummyForSample);
+            listOfUnknownsBySample.addAll(entry.getValue());
+        }
+
+        return listOfUnknownsBySample;
     }
 
     public String getPrawnXMLFileName() {
