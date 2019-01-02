@@ -1,7 +1,6 @@
 package org.cirdles.squid.gui;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -16,6 +15,7 @@ public class LoadingPopup {
     public LoadingPopup(Stage primaryStage) {
         this.primaryStage = primaryStage;
         window = null;
+        load();
     }
 
     public void load() {
@@ -26,30 +26,35 @@ public class LoadingPopup {
             this.window = window;
             window.setScene(scene);
             window.initModality(Modality.NONE);
-        } catch (IOException iOException) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public void show() {
-        load();
-        window.initOwner(primaryStage.getScene().getWindow());
-        window.show();
-        window.setX(primaryStage.getX() + (primaryStage.getWidth() - window.getScene().getWidth()) / 2);
-        window.setY(primaryStage.getY() + (primaryStage.getHeight() - window.getScene().getHeight()) / 2);
-        window.requestFocus();
+        if (window != null) {
+            load();
+            window.initOwner(primaryStage.getScene().getWindow());
+            window.show();
+            window.setX(primaryStage.getX() + (primaryStage.getWidth() - window.getScene().getWidth()) / 2);
+            window.setY(primaryStage.getY() + (primaryStage.getHeight() - window.getScene().getHeight()) / 2);
+            window.requestFocus();
+        }
     }
 
     public void show(Stage stage) {
-        load();
-        window.initOwner(stage.getScene().getWindow());
-        window.show();
-        window.setX(stage.getX() + (stage.getWidth() - window.getScene().getWidth()) / 2);
-        window.setY(stage.getY() + (stage.getHeight() - window.getScene().getHeight()) / 2);
-        window.requestFocus();
+        if (window != null) {
+            load();
+            window.initOwner(stage.getScene().getWindow());
+            window.show();
+            window.setX(stage.getX() + (stage.getWidth() - window.getScene().getWidth()) / 2);
+            window.setY(stage.getY() + (stage.getHeight() - window.getScene().getHeight()) / 2);
+            window.requestFocus();
+        }
     }
 
     public void hide() {
-        if(window != null) {
+        if (window != null) {
             window.hide();
         }
     }
