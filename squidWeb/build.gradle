@@ -10,7 +10,6 @@
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
 apply plugin: "application"
-apply plugin: "war"
 
 mainClassName = "org.cirdles.squid.web.Main"
 
