@@ -15,13 +15,23 @@
  */
 package org.cirdles.squid.web;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import static java.nio.file.attribute.PosixFilePermission.GROUP_READ;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.EnumSet;
+import java.util.Set;
 import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
 import static org.cirdles.squid.Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
@@ -140,14 +150,21 @@ public class SquidReportingService {
             reportsFolder = Paths.get(reportsEngine.getFolderToWriteCalamariReports().getParentFile().getPath());
 
         } catch (IOException | JAXBException | SAXException | SquidException iOException) {
+
+            // Posix attributes added to support web service on Linux - ignoring windows for now
+            Set<PosixFilePermission> perms = EnumSet.of(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ);
+            Path config = Files.createTempFile("SquidWebServiceMessage", "txt", PosixFilePermissions.asFileAttribute(perms));
+            try (BufferedWriter writer = Files.newBufferedWriter(config, StandardCharsets.UTF_8)) {
+                writer.write("Squid Reporting web service was not able to process supplied files.");
+                writer.newLine();
+                writer.write(iOException.getMessage());
+                writer.newLine();
+            }
+            File message = config.toFile();
+
             Path messageDirectory = Files.createTempDirectory("message");
             Path messageFilePath = messageDirectory.resolve("Squid Web Service Message.txt");
-            File message = new File("Squid Web Service Message.txt");
-            Files.write(message.toPath(), 
-                    ("Squid Reporting web service was not able to process supplied files."
-                             + "\n" + iOException.getMessage()).getBytes(UTF_8));
             Files.copy(message.toPath(), messageFilePath);
-            Files.delete(message.toPath());
 
             reportsFolder = messageFilePath.getParent();
         }
