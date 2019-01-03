@@ -18,12 +18,12 @@ package org.cirdles.squid.web;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
-import org.cirdles.commons.util.ResourceExtractor;
 import static org.cirdles.squid.Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -66,8 +66,8 @@ public class SquidReportingService {
         String fileName = "";
         if (myFileName == null) {
             fileName = DEFAULT_PRAWNFILE_NAME;
-        } else if (myFileName.toLowerCase().endsWith(".zip")) {            
-            fileName = FilenameUtils.removeExtension(fileName);
+        } else if (myFileName.toLowerCase().endsWith(".zip")) {
+            fileName = FilenameUtils.removeExtension(myFileName);
             prawnIsZip = true;
         } else {
             fileName = myFileName;
@@ -79,6 +79,7 @@ public class SquidReportingService {
         CalamariFileUtilities.initSampleParametersModels();
 
         Path reportsZip = null;
+        Path reportsFolder = null;
         try {
             Path uploadDirectory = Files.createTempDirectory("upload");
             Path uploadDirectory2 = Files.createTempDirectory("upload2");
@@ -93,7 +94,7 @@ public class SquidReportingService {
                 prawnFilePath = uploadDirectory.resolve("prawn-file.xml");
                 Files.copy(prawnFile, prawnFilePath);
             }
-            
+
             taskFilePath = uploadDirectory2.resolve("task-file.xls");
             Files.copy(taskFile, taskFilePath);
 
@@ -114,39 +115,45 @@ public class SquidReportingService {
             task.setFilterForConcRefMatSpotNames(concRefMatFilter);
             task.applyTaskIsotopeLabelsToMassStations();
 
-            Path calamarirReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
-            Path calamarirReportsFolderAlias = calamarirReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
-            File reportsDestinationFile = calamarirReportsFolderAlias.toFile();
-            reportsEngine = prawnFileHandler.getReportsEngine();
-            // this gives reportengine the name of the Prawnfile for use in report names
-            prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(fileName);
+            Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
+            Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
+            File reportsDestinationFile = calamariReportsFolderAlias.toFile();
 
+            reportsEngine = prawnFileHandler.getReportsEngine();
+            prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(fileName);
             reportsEngine.setFolderToWriteCalamariReports(reportsDestinationFile);
 
-            try {
-                reportsEngine.produceReports(
-                        task.getShrimpFractions(),
-                        (ShrimpFraction) task.getUnknownSpots().get(0),
-                        task.getReferenceMaterialSpots().size() > 0
-                        ? (ShrimpFraction) task.getReferenceMaterialSpots().get(0) : (ShrimpFraction) task.getUnknownSpots().get(0),
-                        true, false);
-            } catch (IOException iOException) {
-            }
+            reportsEngine.produceReports(
+                    task.getShrimpFractions(),
+                    (ShrimpFraction) task.getUnknownSpots().get(0),
+                    task.getReferenceMaterialSpots().size() > 0
+                    ? (ShrimpFraction) task.getReferenceMaterialSpots().get(0) : (ShrimpFraction) task.getUnknownSpots().get(0),
+                    true, false);
 
             squidProject.produceUnknownsCSV(true);
             squidProject.produceReferenceMaterialCSV(true);
-            // next line report will not show groupings
+            // next line report will show only super sample for now
             squidProject.produceUnknownsBySampleForETReduxCSV(true);
 
             Files.delete(prawnFilePath);
 
-            Path reportsFolder = Paths.get(reportsEngine.getFolderToWriteCalamariReports().getParentFile().getPath());
-
-            reportsZip = ZipUtility.recursivelyZip(reportsFolder);
-            FileUtilities.recursiveDelete(reportsFolder);
+            reportsFolder = Paths.get(reportsEngine.getFolderToWriteCalamariReports().getParentFile().getPath());
 
         } catch (IOException | JAXBException | SAXException | SquidException iOException) {
+            Path messageDirectory = Files.createTempDirectory("message");
+            Path messageFilePath = messageDirectory.resolve("Squid Web Service Message.txt");
+            File message = new File("Squid Web Service Message.txt");
+            Files.write(message.toPath(), 
+                    ("Squid Reporting web service was not able to process supplied files."
+                             + "\n" + iOException.getMessage()).getBytes(UTF_8));
+            Files.copy(message.toPath(), messageFilePath);
+            Files.delete(message.toPath());
+
+            reportsFolder = messageFilePath.getParent();
         }
+
+        reportsZip = ZipUtility.recursivelyZip(reportsFolder);
+        FileUtilities.recursiveDelete(reportsFolder);
 
         return reportsZip;
     }
