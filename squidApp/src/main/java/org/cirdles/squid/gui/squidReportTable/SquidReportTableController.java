@@ -17,11 +17,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
-import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 import java.net.URL;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
@@ -38,6 +40,8 @@ public class SquidReportTableController implements Initializable {
     private TableView<ObservableList<String>> boundCol;
     @FXML
     private AnchorPane root;
+    @FXML
+    private ScrollBar scrollBar;
 
     private String[][] textArray;
     private TextArrayManager tableManager;
@@ -74,12 +78,22 @@ public class SquidReportTableController implements Initializable {
         };
         reportsTable.setOnMouseEntered(scrollHandler);
         boundCol.setOnMouseEntered(scrollHandler);
+        scrollBar.setOnMouseEntered(scrollHandler);
     }
 
     private void setUpScroller() {
         ScrollBar rTBar = (ScrollBar) reportsTable.lookup(".scroll-bar:vertical");
         ScrollBar bCBar = (ScrollBar) boundCol.lookup(".scroll-bar:vertical");
         rTBar.valueProperty().bindBidirectional(bCBar.valueProperty());
+
+        scrollBar.setMax(rTBar.getMax());
+        scrollBar.setMin(rTBar.getMin());
+        scrollBar.unitIncrementProperty().bindBidirectional(rTBar.unitIncrementProperty());
+        scrollBar.blockIncrementProperty().bindBidirectional(rTBar.blockIncrementProperty());
+        scrollBar.visibleProperty().bindBidirectional(bCBar.visibleProperty());
+        scrollBar.visibleAmountProperty().bindBidirectional(rTBar.visibleAmountProperty());
+        scrollBar.setOrientation(Orientation.VERTICAL);
+        scrollBar.valueProperty().bindBidirectional(rTBar.valueProperty());
 
         ScrollBar rtHbar = null;
         Set<Node> bars = reportsTable.lookupAll(".scroll-bar");
@@ -90,8 +104,6 @@ public class SquidReportTableController implements Initializable {
                 rtHbar = curr;
             }
         }
-
-
         rtHbar.setPrefHeight(24.0);
         rtHbar.visibleProperty().addListener((obVal, oldVal, newVal) -> {
             if (newVal) {
@@ -108,4 +120,5 @@ public class SquidReportTableController implements Initializable {
             AnchorPane.setBottomAnchor(boundCol, 5.0);
         }
     }
+
 }
