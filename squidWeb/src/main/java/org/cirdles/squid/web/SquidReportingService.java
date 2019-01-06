@@ -124,6 +124,8 @@ public class SquidReportingService {
             task.setFilterForRefMatSpotNames(refMatFilter);
             task.setFilterForConcRefMatSpotNames(concRefMatFilter);
             task.applyTaskIsotopeLabelsToMassStations();
+            
+            task.setUseSBM(useSBM);
 
             Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
             Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
