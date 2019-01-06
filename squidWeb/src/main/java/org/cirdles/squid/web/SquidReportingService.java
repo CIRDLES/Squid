@@ -35,6 +35,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
 import static org.cirdles.squid.Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
+import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
@@ -67,9 +68,12 @@ public class SquidReportingService {
             boolean useSBM,
             boolean userLinFits,
             String refMatFilter,
-            String concRefMatFilter)
+            String concRefMatFilter,
+            String prefIndexIso)
             throws IOException, JAXBException, SAXException {
 
+        IndexIsoptopesEnum preferredIndexIsotope = IndexIsoptopesEnum.valueOf(prefIndexIso);
+        
         // detect if prawnfile is zipped
         boolean prawnIsZip = false;
         String fileName = "";
@@ -124,6 +128,7 @@ public class SquidReportingService {
             task.setFilterForConcRefMatSpotNames(concRefMatFilter);
             task.setUseSBM(useSBM);
             task.setUserLinFits(userLinFits);
+            task.setSelectedIndexIsotope(preferredIndexIsotope);
             
             // process task           
             task.applyTaskIsotopeLabelsToMassStations();            
