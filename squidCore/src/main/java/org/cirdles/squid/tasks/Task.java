@@ -523,8 +523,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 requiresChanges = squidSessionModel.updateFields(
                         squidSpeciesModelList,
                         squidRatiosModelList,
-                        true,
-                        false,
+                        useSBM,
+                        userLinFits,
                         indexOfBackgroundSpecies,
                         filterForRefMatSpotNames,
                         filterForConcRefMatSpotNames,
@@ -536,8 +536,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         = new SquidSessionModel(
                                 squidSpeciesModelList,
                                 squidRatiosModelList,
-                                true,
-                                false,
+                                useSBM,
+                                userLinFits,
                                 indexOfBackgroundSpecies,
                                 filterForRefMatSpotNames,
                                 filterForConcRefMatSpotNames,
