@@ -69,10 +69,10 @@ public class SquidReportingService {
             boolean userLinFits,
             String refMatFilter,
             String concRefMatFilter,
-            String prefIndexIso)
+            String preferredIndexIsotopeName)
             throws IOException, JAXBException, SAXException {
 
-        IndexIsoptopesEnum preferredIndexIsotope = IndexIsoptopesEnum.valueOf(prefIndexIso);
+        IndexIsoptopesEnum preferredIndexIsotope = IndexIsoptopesEnum.valueOf(preferredIndexIsotopeName);
         
         // detect if prawnfile is zipped
         boolean prawnIsZip = false;
