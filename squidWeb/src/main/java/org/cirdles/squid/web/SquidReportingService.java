@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -123,7 +122,11 @@ public class SquidReportingService {
             TaskInterface task = squidProject.getTask();
             task.setFilterForRefMatSpotNames(refMatFilter);
             task.setFilterForConcRefMatSpotNames(concRefMatFilter);
-            task.applyTaskIsotopeLabelsToMassStations();
+            task.setUseSBM(useSBM);
+            task.setUserLinFits(userLinFits);
+            
+            // process task           
+            task.applyTaskIsotopeLabelsToMassStations();            
 
             Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
             Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
