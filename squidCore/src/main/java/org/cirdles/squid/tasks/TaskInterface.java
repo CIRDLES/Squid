@@ -143,6 +143,7 @@ public interface TaskInterface {
     List<MassStationDetail> makeListOfMassStationDetails();
 
     public String printTaskAudit();
+    public String printTaskSummary();
 
     public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
