@@ -73,7 +73,10 @@ public class SquidReportingService {
             throws IOException, JAXBException, SAXException {
 
         IndexIsoptopesEnum preferredIndexIsotope = IndexIsoptopesEnum.valueOf(preferredIndexIsotopeName);
-        
+
+        // Posix attributes added to support web service on Linux - ignoring windows for now
+        Set<PosixFilePermission> perms = EnumSet.of(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ);
+
         // detect if prawnfile is zipped
         boolean prawnIsZip = false;
         String fileName = "";
@@ -129,9 +132,9 @@ public class SquidReportingService {
             task.setUseSBM(useSBM);
             task.setUserLinFits(userLinFits);
             task.setSelectedIndexIsotope(preferredIndexIsotope);
-            
+
             // process task           
-            task.applyTaskIsotopeLabelsToMassStations();            
+            task.applyTaskIsotopeLabelsToMassStations();
 
             Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
             Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
@@ -148,6 +151,8 @@ public class SquidReportingService {
                     ? (ShrimpFraction) task.getReferenceMaterialSpots().get(0) : (ShrimpFraction) task.getUnknownSpots().get(0),
                     true, false);
 
+            squidProject.produceTaskAudit();
+            
             squidProject.produceUnknownsCSV(true);
             squidProject.produceReferenceMaterialCSV(true);
             // next line report will show only super sample for now
@@ -159,8 +164,6 @@ public class SquidReportingService {
 
         } catch (IOException | JAXBException | SAXException | SquidException iOException) {
 
-            // Posix attributes added to support web service on Linux - ignoring windows for now
-            Set<PosixFilePermission> perms = EnumSet.of(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ);
             Path config = Files.createTempFile("SquidWebServiceMessage", "txt", PosixFilePermissions.asFileAttribute(perms));
             try (BufferedWriter writer = Files.newBufferedWriter(config, StandardCharsets.UTF_8)) {
                 writer.write("Squid Reporting web service was not able to process supplied files.");

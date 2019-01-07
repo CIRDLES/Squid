@@ -364,6 +364,53 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
+    public String printTaskSummary() {
+        StringBuilder summary = new StringBuilder();
+
+        summary.append("TASK SUMMARY REPORT\n")
+                .append("Task Name: ")
+                .append(name)
+                .append("\n")
+                .append("Task Description: ")
+                .append(description)
+                .append("\n")
+                .append("Task Provenance: ")
+                .append(provenance)
+                .append("\n")
+                .append("\tNormalise Ion Counts for SBM?: ")
+                .append(useSBM)
+                .append("\n")
+                .append("\tRatio Calculation Method: ")
+                .append(userLinFits ? "Linear" : "Spot Average")
+                .append("\n")
+                .append("\tPreferred index isotope: ")
+                .append(selectedIndexIsotope.getIsotope())
+                .append("\n")
+                .append("\tAuto-reject spots in RefMat weighted means: ")
+                .append(squidAllowsAutoExclusionOfSpots)
+                .append("\n")
+                .append("\tReference Material Model: ")
+                .append("not available")
+                .append("\n")
+                .append("\tConcentration Reference Material Model: ")
+                .append("not available")
+                .append("\n")
+                .append("\tCommon Pb model: ")
+                .append(commonPbModel.getModelNameWithVersion())
+                .append("\n")
+                .append("\tPhysical Constants model: ")
+                .append(physicalConstantsModel.getModelNameWithVersion())
+                .append("\n");
+
+        summary.append("\n");
+        
+        summary.append(printTaskAudit());
+        
+        return summary.toString();
+    }
+
+    
+    @Override
     public String printTaskAudit() {
         // backward compatible 
         // TODO: Remove after 2/1/2018
