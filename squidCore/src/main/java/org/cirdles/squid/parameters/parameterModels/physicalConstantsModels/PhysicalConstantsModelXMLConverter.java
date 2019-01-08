@@ -13,6 +13,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
@@ -23,7 +24,7 @@ public class PhysicalConstantsModelXMLConverter implements Converter {
 
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
-        PhysicalConstantsModel model = (PhysicalConstantsModel) o;
+        ParametersModel model = (PhysicalConstantsModel) o;
 
         writer.startNode("modelName");
         writer.setValue(model.getModelName());
@@ -62,13 +63,13 @@ public class PhysicalConstantsModelXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("molarMasses");
-        context.convertAnother(model.getMolarMasses());
+        context.convertAnother(((PhysicalConstantsModel)model).getMolarMasses());
         writer.endNode();
     }
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        PhysicalConstantsModel model = new PhysicalConstantsModel();
+        ParametersModel model = new PhysicalConstantsModel();
 
         reader.moveDown();
         model.setModelName(reader.getValue());
@@ -153,7 +154,7 @@ public class PhysicalConstantsModelXMLConverter implements Converter {
             molarMasses.put(key, value);
         }
         reader.moveUp();
-        model.setMolarMasses(molarMasses);
+        ((PhysicalConstantsModel)model).setMolarMasses(molarMasses);
 
         return model;
     }

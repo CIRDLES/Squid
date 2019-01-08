@@ -29,7 +29,7 @@ import org.cirdles.squid.parameters.matrices.AbstractMatrixModel;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
@@ -716,7 +716,7 @@ public class ParametersManagerGUIController implements Initializable {
         ValueModel[] values = refMatModel.getValues();
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
-            Boolean isMeasured = ((ReferenceMaterial)refMatModel).getDataMeasured()[i];
+            Boolean isMeasured = ((ReferenceMaterialModel)refMatModel).getDataMeasured()[i];
             String value = refMatDataNotation.format(round(valMod.getValue(), precision));
             String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
             String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));
@@ -731,7 +731,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpConcentrations() {
         int precision = refMatConcSigFigs.getValue();
         refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision));
-        refMatConcentrationsTable.setItems(getDataModelObList(((ReferenceMaterial)refMatModel).getConcentrations(), refMatConcentrationsNotation, precision));
+        refMatConcentrationsTable.setItems(getDataModelObList(((ReferenceMaterialModel)refMatModel).getConcentrations(), refMatConcentrationsNotation, precision));
         refMatConcentrationsTable.refresh();
     }
 
@@ -759,7 +759,7 @@ public class ParametersManagerGUIController implements Initializable {
                     valMod = physConstModel.getDatumByName(ratioName);
                 }
                 if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterial)refMatModel).getConcentrationByName(ratioName);
+                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
                 }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
@@ -800,7 +800,7 @@ public class ParametersManagerGUIController implements Initializable {
                     valMod = physConstModel.getDatumByName(ratioName);
                 }
                 if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterial)refMatModel).getConcentrationByName(ratioName);
+                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
                 }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
@@ -843,7 +843,7 @@ public class ParametersManagerGUIController implements Initializable {
                     valMod = physConstModel.getDatumByName(ratioName);
                 }
                 if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterial)refMatModel).getConcentrationByName(ratioName);
+                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
                 }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
@@ -1026,8 +1026,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpApparentDates() {
-        ((ReferenceMaterial)refMatModel).calculateApparentDates();
-        apparentDatesTextArea.setText(((ReferenceMaterial)refMatModel).listFormattedApparentDates());
+        ((ReferenceMaterialModel)refMatModel).calculateApparentDates();
+        apparentDatesTextArea.setText(((ReferenceMaterialModel)refMatModel).listFormattedApparentDates());
     }
 
     private void setUpReferences() {
@@ -1284,7 +1284,7 @@ public class ParametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             try {
-                ReferenceMaterial importedMod = (ReferenceMaterial) refMatModel.readXMLObject(file.getAbsolutePath(), false);
+                ReferenceMaterialModel importedMod = (ReferenceMaterialModel) refMatModel.readXMLObject(file.getAbsolutePath(), false);
                 if (refMatModels.contains(importedMod)) {
 
                     ButtonType renameButton = new ButtonType("Rename");
@@ -1460,7 +1460,7 @@ public class ParametersManagerGUIController implements Initializable {
         }
         if (file != null) {
             try {
-                final ReferenceMaterial importedMod = ReferenceMaterial.getReferenceMaterialFromETReduxXML(file);
+                final ReferenceMaterialModel importedMod = ReferenceMaterialModel.getReferenceMaterialFromETReduxXML(file);
                 if (refMatModels.contains(importedMod)) {
 
                     ButtonType renameButton = new ButtonType("Rename");
@@ -1777,7 +1777,7 @@ public class ParametersManagerGUIController implements Initializable {
                 RefMatDataModel mod = dataModels.get(i);
                 isMeasures[i] = mod.getIsMeasured().isSelected();
             }
-            ((ReferenceMaterial)refMatModel).setDataMeasured(isMeasures);
+            ((ReferenceMaterialModel)refMatModel).setDataMeasured(isMeasures);
 
             refMatModel.setReferences(refMatReferencesArea.getText());
             refMatModel.setComments(refMatCommentsArea.getText());
@@ -1830,7 +1830,7 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMateEditEmptyMod(ActionEvent event) {
-        refMatModel = new ReferenceMaterial();
+        refMatModel = new ReferenceMaterialModel();
         setUpRefMat();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
@@ -2061,7 +2061,7 @@ public class ParametersManagerGUIController implements Initializable {
             int precision = refMatConcSigFigs.getValue();
             ObservableList<DataModel> items = refMatConcentrationsTable.getItems();
             for (DataModel mod : items) {
-                ValueModel valMod = ((ReferenceMaterial)refMatModel).getConcentrationByName(getRatioHiddenName(mod.getName()));
+                ValueModel valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(getRatioHiddenName(mod.getName()));
                 mod.setOneSigmaABS(refMatConcentrationsNotation.format(round(valMod.getOneSigmaABS(), precision)));
                 mod.setOneSigmaPCT(refMatConcentrationsNotation.format(round(valMod.getOneSigmaPCT(), precision)));
                 mod.setValue(refMatConcentrationsNotation.format(round(valMod.getValue(), precision)));

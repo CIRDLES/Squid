@@ -1,4 +1,4 @@
-<ReferenceMaterial>
+<ReferenceMaterialModel>
   <modelName>Temora Placeholder</modelName>
   <labName>EARTHTIME</labName>
   <version>1.0</version>
@@ -67,4 +67,4 @@
     <boolean>false</boolean>
     <boolean>false</boolean>
   </dataMeasured>
-</ReferenceMaterial>
+</ReferenceMaterialModel>

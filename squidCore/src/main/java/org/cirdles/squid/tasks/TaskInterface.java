@@ -25,7 +25,7 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;

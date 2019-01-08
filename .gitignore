@@ -61,7 +61,7 @@ Schema/
 !squidCore/src/main/resources/org/cirdles/squid/projects/Z626611PKPERM1.squid
 !squidCore/src/main/resources/org/cirdles/squid/tasks/squidTask25/*.xls
 
-!squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterials/*
+!squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterialModels/*
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/physicalConstantsModels/*
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/commonPbModels/*
 

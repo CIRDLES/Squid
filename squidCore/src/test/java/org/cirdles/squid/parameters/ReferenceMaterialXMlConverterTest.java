@@ -2,13 +2,14 @@ package org.cirdles.squid.parameters;
 
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.ElementComparer;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 
 import java.io.File;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -18,15 +19,15 @@ public class ReferenceMaterialXMlConverterTest {
     @Test
     public void testReferenceMaterialXMLConverter() {
         try {
-            ResourceExtractor extractor = new ResourceExtractor(ReferenceMaterial.class);
+            ResourceExtractor extractor = new ResourceExtractor(ReferenceMaterialModel.class);
 
             File initialFile = extractor.extractResourceAsFile("Zircon-91500 v.1.0.xml");
-            ReferenceMaterial model = (ReferenceMaterial) (new ReferenceMaterial()).readXMLObject(initialFile.getAbsolutePath(), false);
+            ParametersModel model = (ReferenceMaterialModel) (new ReferenceMaterialModel()).readXMLObject(initialFile.getAbsolutePath(), false);
 
             File convertedFile = new File("zirconCopy.xml");
             model.serializeXMLObject(convertedFile.getAbsolutePath());
 
-            model = (ReferenceMaterial) model.readXMLObject(convertedFile.getAbsolutePath(), false);
+            model = (ReferenceMaterialModel) model.readXMLObject(convertedFile.getAbsolutePath(), false);
 
             File convertedConvertedFile = new File("zirconCopyOfCopy.xml");
             model.serializeXMLObject(convertedConvertedFile.getAbsolutePath());

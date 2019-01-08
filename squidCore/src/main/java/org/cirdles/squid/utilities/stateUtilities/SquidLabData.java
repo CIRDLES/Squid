@@ -9,7 +9,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class SquidLabData implements Serializable {
 
     public SquidLabData() {
         laboratoryName = "Your lab";
-        referenceMaterials = ReferenceMaterial.getDefaultModels();
+        referenceMaterials = ReferenceMaterialModel.getDefaultModels();
         referenceMaterials.sort(new ParametersModelComparator());
         physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
         physicalConstantsModels.sort(new ParametersModelComparator());
@@ -48,8 +48,8 @@ public class SquidLabData implements Serializable {
         commonPbModels.sort(new ParametersModelComparator());
 
         physConstDefault = PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0");
-        refMatDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        refMatConcDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        refMatDefault = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
+        refMatConcDefault = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         commonPbDefault = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
 
         storeState();
@@ -107,7 +107,7 @@ public class SquidLabData implements Serializable {
     public ParametersModel getRefMatDefault() {
         ParametersModel retVal;
         if (refMatDefault == null) {
-            retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+            retVal = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         } else {
             retVal = refMatDefault;
         }
@@ -121,7 +121,7 @@ public class SquidLabData implements Serializable {
     public ParametersModel getRefMatConcDefault() {
         ParametersModel retVal;
         if (refMatConcDefault == null) {
-            retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+            retVal = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         } else {
             retVal = refMatConcDefault;
         }

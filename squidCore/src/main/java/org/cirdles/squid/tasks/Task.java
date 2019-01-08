@@ -40,7 +40,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
@@ -284,8 +284,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.extPErr = 0.75;
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
-        this.referenceMaterialModel = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        this.concentrationReferenceMaterialModel = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.referenceMaterialModel = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
+        this.concentrationReferenceMaterialModel = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         this.physicalConstantsModelChanged = false;
@@ -2310,9 +2310,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void setReferenceMaterial(ParametersModel refMat) {
-        if (refMat instanceof ReferenceMaterial) {
+        if (refMat instanceof ReferenceMaterialModel) {
             referenceMaterialModelChanged = !referenceMaterialModel.equals(refMat);
-            referenceMaterialModel = (ReferenceMaterial) refMat;
+            referenceMaterialModel = (ReferenceMaterialModel) refMat;
         }
     }
 
@@ -2323,9 +2323,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void setConcentrationReferenceMaterial(ParametersModel refMat) {
-        if (refMat instanceof ReferenceMaterial) {
+        if (refMat instanceof ReferenceMaterialModel) {
             concentrationReferenceMaterialModelChanged = !concentrationReferenceMaterialModel.equals(refMat);
-            concentrationReferenceMaterialModel = (ReferenceMaterial) refMat;
+            concentrationReferenceMaterialModel = (ReferenceMaterialModel) refMat;
         }
     }
 
