@@ -337,6 +337,14 @@ public final class SquidProject implements Serializable {
         return reportTableFile;
     }
 
+    public File produceTaskAudit()
+            throws IOException {
+        File reportTableFile = null;
+        reportTableFile = prawnFileHandler.getReportsEngine().writeTaskSummaryFile();
+
+        return reportTableFile;
+    }
+
     public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySample() {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
         List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();
