@@ -40,7 +40,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
@@ -193,10 +193,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected double extPErr;
 
-    protected PhysicalConstantsModel physicalConstantsModel;
-    protected ReferenceMaterial referenceMaterialModel;
-    protected CommonPbModel commonPbModel;
-    protected ReferenceMaterial concentrationReferenceMaterialModel;
+    protected ParametersModel physicalConstantsModel;
+    protected ParametersModel referenceMaterialModel;
+    protected ParametersModel commonPbModel;
+    protected ParametersModel concentrationReferenceMaterialModel;
 
     protected boolean physicalConstantsModelChanged;
     protected boolean referenceMaterialModelChanged;
@@ -284,8 +284,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.extPErr = 0.75;
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
-        this.referenceMaterialModel = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        this.concentrationReferenceMaterialModel = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.referenceMaterialModel = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
+        this.concentrationReferenceMaterialModel = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         this.physicalConstantsModelChanged = false;
@@ -2310,27 +2310,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void setReferenceMaterial(ParametersModel refMat) {
-        if (refMat instanceof ReferenceMaterial) {
+        if (refMat instanceof ReferenceMaterialModel) {
             referenceMaterialModelChanged = !referenceMaterialModel.equals(refMat);
-            referenceMaterialModel = (ReferenceMaterial) refMat;
+            referenceMaterialModel = (ReferenceMaterialModel) refMat;
         }
     }
 
     @Override
-    public ReferenceMaterial getReferenceMaterialModel() {
+    public ParametersModel getReferenceMaterialModel() {
         return referenceMaterialModel;
     }
 
     @Override
     public void setConcentrationReferenceMaterial(ParametersModel refMat) {
-        if (refMat instanceof ReferenceMaterial) {
+        if (refMat instanceof ReferenceMaterialModel) {
             concentrationReferenceMaterialModelChanged = !concentrationReferenceMaterialModel.equals(refMat);
-            concentrationReferenceMaterialModel = (ReferenceMaterial) refMat;
+            concentrationReferenceMaterialModel = (ReferenceMaterialModel) refMat;
         }
     }
 
     @Override
-    public ReferenceMaterial getConcentrationReferenceMaterialModel() {
+    public ParametersModel getConcentrationReferenceMaterialModel() {
         return concentrationReferenceMaterialModel;
     }
 
@@ -2343,7 +2343,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public PhysicalConstantsModel getPhysicalConstantsModel() {
+    public ParametersModel getPhysicalConstantsModel() {
         return physicalConstantsModel;
     }
 
@@ -2356,7 +2356,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public CommonPbModel getCommonPbModel() {
+    public ParametersModel getCommonPbModel() {
         return commonPbModel;
     }
 

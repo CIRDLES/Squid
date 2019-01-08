@@ -13,6 +13,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
@@ -24,7 +25,7 @@ public class CommonPbModelXMLConverter implements Converter {
     
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
-        CommonPbModel model = (CommonPbModel) o;
+        ParametersModel model = (CommonPbModel) o;
 
         writer.startNode("modelName");
         writer.setValue(model.getModelName());
@@ -65,7 +66,7 @@ public class CommonPbModelXMLConverter implements Converter {
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        CommonPbModel model = new  CommonPbModel();
+        ParametersModel model = new  CommonPbModel();
 
         reader.moveDown();
         model.setModelName(reader.getValue());

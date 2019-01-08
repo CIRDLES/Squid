@@ -12,8 +12,8 @@ import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModelXMLConverter;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModelXMLConverter;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterialModelXMLConverter;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModelXMLConverter;
 import org.cirdles.squid.parameters.util.DateHelper;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 import org.cirdles.squid.parameters.valueModels.ValueModelConverter;
@@ -207,7 +207,7 @@ public abstract class ParametersModel implements
         xstream.alias("ValueModel", ValueModel.class);
 
         xstream.registerConverter(new ReferenceMaterialModelXMLConverter());
-        xstream.alias("ReferenceMaterial", ReferenceMaterial.class);
+        xstream.alias("ReferenceMaterialModel", ReferenceMaterialModel.class);
 
         xstream.registerConverter(new PhysicalConstantsModelXMLConverter());
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);

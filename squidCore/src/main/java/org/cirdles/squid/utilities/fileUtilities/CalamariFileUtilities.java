@@ -28,7 +28,7 @@ import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
@@ -113,7 +113,7 @@ public class CalamariFileUtilities {
 
         }
 
-        ResourceExtractor refMatResourceExtractor = new ResourceExtractor(ReferenceMaterial.class);
+        ResourceExtractor refMatResourceExtractor = new ResourceExtractor(ReferenceMaterialModel.class);
 
         Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSampleReferenceMaterials.txt");
         if (listOfReferenceMaterials != null) {

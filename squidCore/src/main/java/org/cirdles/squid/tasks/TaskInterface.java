@@ -25,7 +25,7 @@ import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
@@ -201,19 +201,19 @@ public interface TaskInterface {
 
     public void setReferenceMaterial(ParametersModel refMat);
 
-    public ReferenceMaterial getReferenceMaterialModel();
+    public ParametersModel getReferenceMaterialModel();
 
     public void setPhysicalConstantsModel(ParametersModel physConst);
 
-    public PhysicalConstantsModel getPhysicalConstantsModel();
+    public ParametersModel getPhysicalConstantsModel();
 
     public void setCommonPbModel(ParametersModel model);
 
-    public CommonPbModel getCommonPbModel();
+    public ParametersModel getCommonPbModel();
 
     public void setConcentrationReferenceMaterial(ParametersModel refMat);
 
-    public ReferenceMaterial getConcentrationReferenceMaterialModel();
+    public ParametersModel getConcentrationReferenceMaterialModel();
 
     /**
      * @param type the type to set
