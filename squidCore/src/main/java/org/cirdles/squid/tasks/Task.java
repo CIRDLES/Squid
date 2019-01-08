@@ -193,10 +193,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected double extPErr;
 
-    protected PhysicalConstantsModel physicalConstantsModel;
-    protected ReferenceMaterial referenceMaterialModel;
-    protected CommonPbModel commonPbModel;
-    protected ReferenceMaterial concentrationReferenceMaterialModel;
+    protected ParametersModel physicalConstantsModel;
+    protected ParametersModel referenceMaterialModel;
+    protected ParametersModel commonPbModel;
+    protected ParametersModel concentrationReferenceMaterialModel;
 
     protected boolean physicalConstantsModelChanged;
     protected boolean referenceMaterialModelChanged;
@@ -2317,7 +2317,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public ReferenceMaterial getReferenceMaterialModel() {
+    public ParametersModel getReferenceMaterialModel() {
         return referenceMaterialModel;
     }
 
@@ -2330,7 +2330,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public ReferenceMaterial getConcentrationReferenceMaterialModel() {
+    public ParametersModel getConcentrationReferenceMaterialModel() {
         return concentrationReferenceMaterialModel;
     }
 
@@ -2343,7 +2343,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public PhysicalConstantsModel getPhysicalConstantsModel() {
+    public ParametersModel getPhysicalConstantsModel() {
         return physicalConstantsModel;
     }
 
@@ -2356,7 +2356,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public CommonPbModel getCommonPbModel() {
+    public ParametersModel getCommonPbModel() {
         return commonPbModel;
     }
 

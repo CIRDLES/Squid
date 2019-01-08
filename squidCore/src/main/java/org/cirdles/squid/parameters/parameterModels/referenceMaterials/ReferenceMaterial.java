@@ -131,10 +131,10 @@ public class ReferenceMaterial extends ParametersModel {
         buildRhosMap();
     }
 
-    public static List<ReferenceMaterial> getDefaultModels() {
+    public static List<ParametersModel> getDefaultModels() {
         File folder = new File("SampleReferenceMaterials");
         File[] files = new File[0];
-        List<ReferenceMaterial> models = new ArrayList<>();
+        List<ParametersModel> models = new ArrayList<>();
         if (folder.exists()) {
             files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
@@ -149,9 +149,9 @@ public class ReferenceMaterial extends ParametersModel {
         return models;
     }
 
-    public static ReferenceMaterial getDefaultModel(String modelName, String version) {
-        ReferenceMaterial retVal = null;
-        List<ReferenceMaterial> models = getDefaultModels();
+    public static ParametersModel getDefaultModel(String modelName, String version) {
+        ParametersModel retVal = null;
+        List<ParametersModel> models = getDefaultModels();
         for (int i = 0; i < models.size() && retVal == null; i++) {
             if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
                 retVal = models.get(i);
@@ -165,7 +165,7 @@ public class ReferenceMaterial extends ParametersModel {
 
     public void calculateApparentDates() {
 
-        PhysicalConstantsModel defaultPhysConstModel =
+        ParametersModel defaultPhysConstModel =
                 PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         ValueModel lambda232 = defaultPhysConstModel//
                 .getDatumByName(Lambdas.LAMBDA_232.getName());

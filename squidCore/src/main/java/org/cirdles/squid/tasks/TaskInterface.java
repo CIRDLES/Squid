@@ -201,19 +201,19 @@ public interface TaskInterface {
 
     public void setReferenceMaterial(ParametersModel refMat);
 
-    public ReferenceMaterial getReferenceMaterialModel();
+    public ParametersModel getReferenceMaterialModel();
 
     public void setPhysicalConstantsModel(ParametersModel physConst);
 
-    public PhysicalConstantsModel getPhysicalConstantsModel();
+    public ParametersModel getPhysicalConstantsModel();
 
     public void setCommonPbModel(ParametersModel model);
 
-    public CommonPbModel getCommonPbModel();
+    public ParametersModel getCommonPbModel();
 
     public void setConcentrationReferenceMaterial(ParametersModel refMat);
 
-    public ReferenceMaterial getConcentrationReferenceMaterialModel();
+    public ParametersModel getConcentrationReferenceMaterialModel();
 
     /**
      * @param type the type to set

@@ -88,10 +88,10 @@ public class PhysicalConstantsModel extends ParametersModel {
         values[6] = new ValueModel("lambda238");
     }
 
-    public static List<PhysicalConstantsModel> getDefaultModels() {
+    public static List<ParametersModel> getDefaultModels() {
         File folder = new File("SamplePhysicalConstantsModels");
         File[] files = new File[0];
-        List<PhysicalConstantsModel> models = new ArrayList<>();
+        List<ParametersModel> models = new ArrayList<>();
         if (folder.exists()) {
             files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
@@ -106,9 +106,9 @@ public class PhysicalConstantsModel extends ParametersModel {
         return models;
     }
 
-    public static PhysicalConstantsModel getDefaultModel(String modelName, String version) {
-        PhysicalConstantsModel retVal = null;
-        List<PhysicalConstantsModel> models = getDefaultModels();
+    public static ParametersModel getDefaultModel(String modelName, String version) {
+        ParametersModel retVal = null;
+        List<ParametersModel> models = getDefaultModels();
         for (int i = 0; i < models.size() && retVal == null; i++) {
             if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
                 retVal = models.get(i);
