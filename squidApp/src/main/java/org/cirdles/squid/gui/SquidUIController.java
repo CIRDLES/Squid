@@ -1205,6 +1205,7 @@ public class SquidUIController implements Initializable {
                                         squidProject.getTask().updateAffectedExpressions(exp, true);
                                         squidProject.getTask().updateAllExpressions(true);
                                     }
+
                                 }
                             });
                         }
