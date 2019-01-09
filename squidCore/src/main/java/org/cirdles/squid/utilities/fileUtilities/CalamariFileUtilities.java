@@ -117,7 +117,7 @@ public class CalamariFileUtilities {
 
         Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSampleReferenceMaterials.txt");
         if (listOfReferenceMaterials != null) {
-            referenceMaterialsFolder = new File("SampleReferenceMaterials");
+            referenceMaterialsFolder = new File("SampleReferenceMaterialModels");
             try {
                 if (referenceMaterialsFolder.exists()) {
                     FileUtilities.recursiveDelete(referenceMaterialsFolder.toPath());

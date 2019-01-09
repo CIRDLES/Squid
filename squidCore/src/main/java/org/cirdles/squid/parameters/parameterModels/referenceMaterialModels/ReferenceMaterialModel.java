@@ -132,7 +132,7 @@ public class ReferenceMaterialModel extends ParametersModel {
     }
 
     public static List<ParametersModel> getDefaultModels() {
-        File folder = new File("SampleReferenceMaterials");
+        File folder = new File("SampleReferenceMaterialModels");
         File[] files = new File[0];
         List<ParametersModel> models = new ArrayList<>();
         if (folder.exists()) {
@@ -142,7 +142,7 @@ public class ReferenceMaterialModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add((ReferenceMaterialModel) (new ReferenceMaterialModel()).readXMLObject(files[i].getAbsolutePath(), false));
+                models.add((ParametersModel) (new ReferenceMaterialModel()).readXMLObject(files[i].getAbsolutePath(), false));
             }
         }
 
