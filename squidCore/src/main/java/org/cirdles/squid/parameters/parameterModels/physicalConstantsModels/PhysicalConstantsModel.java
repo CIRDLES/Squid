@@ -99,7 +99,7 @@ public class PhysicalConstantsModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add((PhysicalConstantsModel) (new PhysicalConstantsModel()).readXMLObject(files[i].getAbsolutePath(), false));
+                models.add((ParametersModel) (new PhysicalConstantsModel()).readXMLObject(files[i].getAbsolutePath(), false));
             }
         }
 

@@ -1126,10 +1126,12 @@ public class SquidUIController implements Initializable {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
     }
 
+    @FXML
     public void openSquid3ReportTableReferenceMaterials(ActionEvent actionEvent) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMat);
     }
 
+    @FXML
     public void openSquid3ReportTableUnknowns(ActionEvent actionEvent) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknown);
     }
@@ -1278,6 +1280,11 @@ public class SquidUIController implements Initializable {
                     + message,
                     primaryStageWindow);
         }
+    }
+
+    @FXML
+    private void listBuiltinExpressionsAction(ActionEvent event) {
+        System.out.println(squidProject.getTask().listBuiltInExpressions());
     }
 
 }

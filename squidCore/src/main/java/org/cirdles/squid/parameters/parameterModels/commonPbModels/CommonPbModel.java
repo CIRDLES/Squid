@@ -79,7 +79,7 @@ public class CommonPbModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add((CommonPbModel) (new CommonPbModel()).readXMLObject(files[i].getAbsolutePath(), false));
+                models.add((ParametersModel) (new CommonPbModel()).readXMLObject(files[i].getAbsolutePath(), false));
             }
         }
 

@@ -403,13 +403,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append("\n");
 
         summary.append("\n");
-        
+
         summary.append(printTaskAudit());
-        
+
         return summary.toString();
     }
 
-    
     @Override
     public String printTaskAudit() {
         // backward compatible 
@@ -938,7 +937,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void buildExpressions() {
-
         for (Expression exp : taskExpressionsOrdered) {
             if (exp.isSquidSwitchNU()) {
                 if (exp.getExpressionTree() instanceof BuiltInExpressionInterface) {
@@ -946,6 +944,86 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
             }
         }
+    }
+
+    @Override
+    public String listBuiltInExpressions() {
+        StringBuilder expressionList = new StringBuilder();
+
+        // order by ConcRefMat then RU then R then U
+        List<Expression> taskExpressionsOrderedByTarget = new ArrayList<>();
+        taskExpressionsOrderedByTarget.addAll(taskExpressionsOrdered);
+        Collections.sort(taskExpressionsOrderedByTarget, ((o1, o2) -> {
+            // ConcRefMat
+            if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                    && !o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                return -1;
+                // ConcRefMat
+            } else if (!o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                    && o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                return 1;
+                //RU
+            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                // RU
+            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    || !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation())) {
+                return -1;
+                // R
+            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && !o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                // R
+            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && !o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                return -1;
+                // U
+            } else if (!o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            } else {
+                return 1;
+            }
+
+        }));
+
+        expressionList.append("Built-in Expressions Sorted by Target Sample Type\n");
+
+        for (int i = 0; i < taskExpressionsOrderedByTarget.size(); i++) {
+            ExpressionTreeInterface expTree = taskExpressionsOrderedByTarget.get(i).getExpressionTree();
+            if (expTree.isSquidSpecialUPbThExpression()) {
+                if(expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()){
+                    expressionList.append("C");
+                } else {
+                    expressionList.append(" ");
+                }
+                if(expTree.isSquidSwitchSTReferenceMaterialCalculation()){
+                    expressionList.append("R");
+                } else {
+                    expressionList.append(" ");
+                }
+                if(expTree.isSquidSwitchSAUnknownCalculation()){
+                    expressionList.append("U");
+                } else {
+                    expressionList.append(" ");
+                }
+                
+                expressionList.append("\t").append(expTree.getName()).append("\n");
+            }
+        }
+
+        return expressionList.toString();
     }
 
     @Override
