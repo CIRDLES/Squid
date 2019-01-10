@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.parameters.parameterModels.referenceMaterials;
+package org.cirdles.squid.parameters.parameterModels.referenceMaterialModels;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -13,6 +13,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
@@ -23,7 +25,7 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
 
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
-        ReferenceMaterial model = (ReferenceMaterial) o;
+        ParametersModel model = (ReferenceMaterialModel) o;
 
         writer.startNode("modelName");
         writer.setValue(model.getModelName());
@@ -62,17 +64,17 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("concentrations");
-        context.convertAnother(model.getConcentrations());
+        context.convertAnother(((ReferenceMaterialModel)model).getConcentrations());
         writer.endNode();
 
         writer.startNode("dataMeasured");
-        context.convertAnother(model.getDataMeasured());
+        context.convertAnother(((ReferenceMaterialModel)model).getDataMeasured());
         writer.endNode();
     }
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        ReferenceMaterial model = new ReferenceMaterial();
+        ParametersModel model = new ReferenceMaterialModel();
 
         reader.moveDown();
         model.setModelName(reader.getValue());
@@ -134,13 +136,13 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
         reader.moveUp();
 
         reader.moveDown();
-        model.setConcentrations(new ValueModel[0]);
-        model.setConcentrations((ValueModel[]) context.convertAnother(model.getConcentrations(), ValueModel[].class));
+        ((ReferenceMaterialModel)model).setConcentrations(new ValueModel[0]);
+        ((ReferenceMaterialModel)model).setConcentrations((ValueModel[]) context.convertAnother(((ReferenceMaterialModel)model).getConcentrations(), ValueModel[].class));
         reader.moveUp();
 
         reader.moveDown();
-        model.setDataMeasured(new boolean[0]);
-        model.setDataMeasured((boolean[]) context.convertAnother(model.getDataMeasured(), boolean[].class));
+        ((ReferenceMaterialModel)model).setDataMeasured(new boolean[0]);
+        ((ReferenceMaterialModel)model).setDataMeasured((boolean[]) context.convertAnother(((ReferenceMaterialModel)model).getDataMeasured(), boolean[].class));
         reader.moveUp();
 
         return model;
@@ -148,6 +150,6 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
 
     @Override
     public boolean canConvert(Class type) {
-        return type.equals(ReferenceMaterial.class);
+        return type.equals(ReferenceMaterialModel.class);
     }
 }

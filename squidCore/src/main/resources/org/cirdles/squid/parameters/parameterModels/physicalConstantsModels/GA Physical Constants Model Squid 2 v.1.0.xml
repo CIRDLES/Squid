@@ -57,7 +57,7 @@
     </ValueModel>
   </values>
   <rhos/>
-  <isEditable>true</isEditable>
+  <isEditable>false</isEditable>
   <molarMasses>
     <entry>
       <string>gmol235</string>

@@ -1,4 +1,4 @@
-<ReferenceMaterial>
+<ReferenceMaterialModel>
   <modelName>Zircon-91500</modelName>
   <labName>Weidenbeck et al., Geostandards, 1995</labName>
   <version>1.0</version>
@@ -80,4 +80,4 @@
     <boolean>false</boolean>
     <boolean>true</boolean>
   </dataMeasured>
-</ReferenceMaterial>
+</ReferenceMaterialModel>

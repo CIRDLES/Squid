@@ -40,7 +40,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
@@ -193,10 +193,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected double extPErr;
 
-    protected PhysicalConstantsModel physicalConstantsModel;
-    protected ReferenceMaterial referenceMaterialModel;
-    protected CommonPbModel commonPbModel;
-    protected ReferenceMaterial concentrationReferenceMaterialModel;
+    protected ParametersModel physicalConstantsModel;
+    protected ParametersModel referenceMaterialModel;
+    protected ParametersModel commonPbModel;
+    protected ParametersModel concentrationReferenceMaterialModel;
 
     protected boolean physicalConstantsModelChanged;
     protected boolean referenceMaterialModelChanged;
@@ -284,8 +284,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.extPErr = 0.75;
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
-        this.referenceMaterialModel = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        this.concentrationReferenceMaterialModel = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        this.referenceMaterialModel = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
+        this.concentrationReferenceMaterialModel = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         this.physicalConstantsModelChanged = false;
@@ -361,6 +361,52 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 mapOfUnknownsBySampleNames.put(sampleName, filteredList);
             }
         }
+    }
+
+    @Override
+    public String printTaskSummary() {
+        StringBuilder summary = new StringBuilder();
+
+        summary.append("TASK SUMMARY REPORT\n")
+                .append("Task Name: ")
+                .append(name)
+                .append("\n")
+                .append("Task Description: ")
+                .append(description)
+                .append("\n")
+                .append("Task Provenance: ")
+                .append(provenance)
+                .append("\n")
+                .append("\tNormalise Ion Counts for SBM?: ")
+                .append(useSBM)
+                .append("\n")
+                .append("\tRatio Calculation Method: ")
+                .append(userLinFits ? "Linear" : "Spot Average")
+                .append("\n")
+                .append("\tPreferred index isotope: ")
+                .append(selectedIndexIsotope.getIsotope())
+                .append("\n")
+                .append("\tAuto-reject spots in RefMat weighted means: ")
+                .append(squidAllowsAutoExclusionOfSpots)
+                .append("\n")
+                .append("\tReference Material Model: ")
+                .append("not available")
+                .append("\n")
+                .append("\tConcentration Reference Material Model: ")
+                .append("not available")
+                .append("\n")
+                .append("\tCommon Pb model: ")
+                .append(commonPbModel.getModelNameWithVersion())
+                .append("\n")
+                .append("\tPhysical Constants model: ")
+                .append(physicalConstantsModel.getModelNameWithVersion())
+                .append("\n");
+
+        summary.append("\n");
+
+        summary.append(printTaskAudit());
+
+        return summary.toString();
     }
 
     @Override
@@ -523,8 +569,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 requiresChanges = squidSessionModel.updateFields(
                         squidSpeciesModelList,
                         squidRatiosModelList,
-                        true,
-                        false,
+                        useSBM,
+                        userLinFits,
                         indexOfBackgroundSpecies,
                         filterForRefMatSpotNames,
                         filterForConcRefMatSpotNames,
@@ -536,8 +582,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         = new SquidSessionModel(
                                 squidSpeciesModelList,
                                 squidRatiosModelList,
-                                true,
-                                false,
+                                useSBM,
+                                userLinFits,
                                 indexOfBackgroundSpecies,
                                 filterForRefMatSpotNames,
                                 filterForConcRefMatSpotNames,
@@ -891,7 +937,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void buildExpressions() {
-
         for (Expression exp : taskExpressionsOrdered) {
             if (exp.isSquidSwitchNU()) {
                 if (exp.getExpressionTree() instanceof BuiltInExpressionInterface) {
@@ -899,6 +944,86 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 }
             }
         }
+    }
+
+    @Override
+    public String listBuiltInExpressions() {
+        StringBuilder expressionList = new StringBuilder();
+
+        // order by ConcRefMat then RU then R then U
+        List<Expression> taskExpressionsOrderedByTarget = new ArrayList<>();
+        taskExpressionsOrderedByTarget.addAll(taskExpressionsOrdered);
+        Collections.sort(taskExpressionsOrderedByTarget, ((o1, o2) -> {
+            // ConcRefMat
+            if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                    && !o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                return -1;
+                // ConcRefMat
+            } else if (!o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
+                    && o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                return 1;
+                //RU
+            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                // RU
+            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    || !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation())) {
+                return -1;
+                // R
+            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && !o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                // R
+            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && !o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                return -1;
+                // U
+            } else if (!o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            } else {
+                return 1;
+            }
+
+        }));
+
+        expressionList.append("Built-in Expressions Sorted by Target Sample Type\n");
+
+        for (int i = 0; i < taskExpressionsOrderedByTarget.size(); i++) {
+            ExpressionTreeInterface expTree = taskExpressionsOrderedByTarget.get(i).getExpressionTree();
+            if (expTree.isSquidSpecialUPbThExpression()) {
+                if(expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()){
+                    expressionList.append("C");
+                } else {
+                    expressionList.append(" ");
+                }
+                if(expTree.isSquidSwitchSTReferenceMaterialCalculation()){
+                    expressionList.append("R");
+                } else {
+                    expressionList.append(" ");
+                }
+                if(expTree.isSquidSwitchSAUnknownCalculation()){
+                    expressionList.append("U");
+                } else {
+                    expressionList.append(" ");
+                }
+                
+                expressionList.append("\t").append(expTree.getName()).append("\n");
+            }
+        }
+
+        return expressionList.toString();
     }
 
     @Override
@@ -2263,27 +2388,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void setReferenceMaterial(ParametersModel refMat) {
-        if (refMat instanceof ReferenceMaterial) {
+        if (refMat instanceof ReferenceMaterialModel) {
             referenceMaterialModelChanged = !referenceMaterialModel.equals(refMat);
-            referenceMaterialModel = (ReferenceMaterial) refMat;
+            referenceMaterialModel = (ReferenceMaterialModel) refMat;
         }
     }
 
     @Override
-    public ReferenceMaterial getReferenceMaterialModel() {
+    public ParametersModel getReferenceMaterialModel() {
         return referenceMaterialModel;
     }
 
     @Override
     public void setConcentrationReferenceMaterial(ParametersModel refMat) {
-        if (refMat instanceof ReferenceMaterial) {
+        if (refMat instanceof ReferenceMaterialModel) {
             concentrationReferenceMaterialModelChanged = !concentrationReferenceMaterialModel.equals(refMat);
-            concentrationReferenceMaterialModel = (ReferenceMaterial) refMat;
+            concentrationReferenceMaterialModel = (ReferenceMaterialModel) refMat;
         }
     }
 
     @Override
-    public ReferenceMaterial getConcentrationReferenceMaterialModel() {
+    public ParametersModel getConcentrationReferenceMaterialModel() {
         return concentrationReferenceMaterialModel;
     }
 
@@ -2296,7 +2421,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public PhysicalConstantsModel getPhysicalConstantsModel() {
+    public ParametersModel getPhysicalConstantsModel() {
         return physicalConstantsModel;
     }
 
@@ -2309,7 +2434,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public CommonPbModel getCommonPbModel() {
+    public ParametersModel getCommonPbModel() {
         return commonPbModel;
     }
 

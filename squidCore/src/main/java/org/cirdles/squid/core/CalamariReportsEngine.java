@@ -16,7 +16,9 @@
 package org.cirdles.squid.core;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
@@ -965,6 +967,33 @@ public class CalamariReportsEngine implements Serializable {
 
         File reportTableFile = new File(reportsPath + baseReportTableName);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
+
+        return reportTableFile;
+    }
+
+    public File writeTaskSummaryFile() throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = new File(reportsPath + "TaskSummary.txt");
+
+        PrintWriter outputWriter;
+
+        try {
+            outputWriter = new PrintWriter(new FileWriter(reportTableFile));
+            outputWriter.write(squidProject.getTask().printTaskSummary());
+            outputWriter.flush();
+            outputWriter.close();
+
+        } catch (IOException iOException) {
+        }
 
         return reportTableFile;
     }

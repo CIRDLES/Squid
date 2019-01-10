@@ -69,9 +69,9 @@ public class CommonPbModel extends ParametersModel {
         return model;
     }
 
-    public static List<CommonPbModel> getDefaultModels() {
+    public static List<ParametersModel> getDefaultModels() {
         File folder = new File("SampleCommonPbModels");
-        List<CommonPbModel> models = new ArrayList<>();
+        List<ParametersModel> models = new ArrayList<>();
         if (folder.exists()) {
             File[] files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
@@ -79,16 +79,16 @@ public class CommonPbModel extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add((CommonPbModel) (new CommonPbModel()).readXMLObject(files[i].getAbsolutePath(), false));
+                models.add((ParametersModel) (new CommonPbModel()).readXMLObject(files[i].getAbsolutePath(), false));
             }
         }
 
         return models;
     }
 
-    public static CommonPbModel getDefaultModel(String modelName, String version) {
-        CommonPbModel retVal = null;
-        List<CommonPbModel> models = getDefaultModels();
+    public static ParametersModel getDefaultModel(String modelName, String version) {
+        ParametersModel retVal = null;
+        List<ParametersModel> models = getDefaultModels();
         for (int i = 0; i < models.size() && retVal == null; i++) {
             if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
                 retVal = models.get(i);

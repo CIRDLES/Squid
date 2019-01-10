@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squid.parameters.parameterModels.referenceMaterials;
+package org.cirdles.squid.parameters.parameterModels.referenceMaterialModels;
 
 import Jama.Matrix;
 import com.thoughtworks.xstream.XStream;
@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author ryanb
  */
-public class ReferenceMaterial extends ParametersModel {
+public class ReferenceMaterialModel extends ParametersModel {
 
     private static final long serialVersionUID = 8791002391578871182L;
 
@@ -38,7 +38,7 @@ public class ReferenceMaterial extends ParametersModel {
     private ValueModel[] apparentDates;
     private ConcurrentMap<String, BigDecimal> parDerivTerms;
 
-    public ReferenceMaterial() {
+    public ReferenceMaterialModel() {
         super();
         apparentDates = new ValueModel[0];
         parDerivTerms = new ConcurrentHashMap<>();
@@ -47,8 +47,8 @@ public class ReferenceMaterial extends ParametersModel {
     }
 
     @Override
-    public ReferenceMaterial clone() {
-        ReferenceMaterial model = new ReferenceMaterial();
+    public ReferenceMaterialModel clone() {
+        ReferenceMaterialModel model = new ReferenceMaterialModel();
 
         model.setModelName(modelName);
         model.setIsEditable(isEditable);
@@ -131,10 +131,10 @@ public class ReferenceMaterial extends ParametersModel {
         buildRhosMap();
     }
 
-    public static List<ReferenceMaterial> getDefaultModels() {
-        File folder = new File("SampleReferenceMaterials");
+    public static List<ParametersModel> getDefaultModels() {
+        File folder = new File("SampleReferenceMaterialModels");
         File[] files = new File[0];
-        List<ReferenceMaterial> models = new ArrayList<>();
+        List<ParametersModel> models = new ArrayList<>();
         if (folder.exists()) {
             files = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
@@ -142,30 +142,30 @@ public class ReferenceMaterial extends ParametersModel {
                 }
             });
             for (int i = 0; i < files.length; i++) {
-                models.add((ReferenceMaterial) (new ReferenceMaterial()).readXMLObject(files[i].getAbsolutePath(), false));
+                models.add((ParametersModel) (new ReferenceMaterialModel()).readXMLObject(files[i].getAbsolutePath(), false));
             }
         }
 
         return models;
     }
 
-    public static ReferenceMaterial getDefaultModel(String modelName, String version) {
-        ReferenceMaterial retVal = null;
-        List<ReferenceMaterial> models = getDefaultModels();
+    public static ParametersModel getDefaultModel(String modelName, String version) {
+        ParametersModel retVal = null;
+        List<ParametersModel> models = getDefaultModels();
         for (int i = 0; i < models.size() && retVal == null; i++) {
             if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
                 retVal = models.get(i);
             }
         }
         if (retVal == null) {
-            retVal = new ReferenceMaterial();
+            retVal = new ReferenceMaterialModel();
         }
         return retVal;
     }
 
     public void calculateApparentDates() {
 
-        PhysicalConstantsModel defaultPhysConstModel =
+        ParametersModel defaultPhysConstModel =
                 PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         ValueModel lambda232 = defaultPhysConstModel//
                 .getDatumByName(Lambdas.LAMBDA_232.getName());
@@ -356,20 +356,20 @@ public class ReferenceMaterial extends ParametersModel {
     public static XStream getETReduxXStream() {
         XStream xstream = new XStream();
         xstream.registerConverter(new ETReduxRefMatConverter());
-        xstream.alias("ReferenceMaterial", ReferenceMaterial.class);
-        xstream.alias("MineralStandardUPbModel", ReferenceMaterial.class);
+        xstream.alias("ReferenceMaterial", ReferenceMaterialModel.class);
+        xstream.alias("MineralStandardUPbModel", ReferenceMaterialModel.class);
         return xstream;
     }
 
-    public static ReferenceMaterial getReferenceMaterialFromETReduxXML(String input) {
+    public static ReferenceMaterialModel getReferenceMaterialFromETReduxXML(String input) {
         XStream xstream = getETReduxXStream();
-        ReferenceMaterial model = (ReferenceMaterial) xstream.fromXML(input);
+        ReferenceMaterialModel model = (ReferenceMaterialModel) xstream.fromXML(input);
         return model;
     }
 
-    public static ReferenceMaterial getReferenceMaterialFromETReduxXML(File input) {
+    public static ReferenceMaterialModel getReferenceMaterialFromETReduxXML(File input) {
         XStream xstream = getETReduxXStream();
-        ReferenceMaterial model = (ReferenceMaterial) xstream.fromXML(input);
+        ReferenceMaterialModel model = (ReferenceMaterialModel) xstream.fromXML(input);
         return model;
     }
     
