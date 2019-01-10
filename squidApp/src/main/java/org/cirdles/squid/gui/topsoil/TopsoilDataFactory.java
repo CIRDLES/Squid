@@ -43,8 +43,27 @@ public class TopsoilDataFactory {
             ratioBase68 = " 206*/238S";
             errCorr = " errcorrS";
         }
-        
+
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase75, ratioBase68, errCorr);
+
+        return datum;
+    }
+
+    public static Map<String, Object> prepareTeraWasserburgDatum(
+            ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
+        // jan 2019 - there is a naming problem we are working on
+        // see for example : (unknowns): '4-corr 238/236' vs '8-corr 238/206*'
+        // default is for reference materials
+        String ratioBase86 = " 238/206*";
+        String ratioBase76 = " 207*/206*";
+        String errCorr = " errcorr";
+        if (isUnknown) {
+            ratioBase86 = " 238/206";
+            ratioBase76 = " 207*/206*";
+            errCorr = " errcorrS";
+        }
+
+        Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase86, ratioBase76, errCorr);
 
         return datum;
     }
