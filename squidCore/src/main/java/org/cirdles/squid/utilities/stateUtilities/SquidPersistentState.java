@@ -60,6 +60,8 @@ public class SquidPersistentState implements Serializable {
     private File MRUExpressionGraphFile;
     private List<String> MRUExpressionGraphList;
     private String MRUExpressionGraphFolderPath;
+   
+    private File opFile;
 
     private File customExpressionsFile;
 
@@ -682,5 +684,19 @@ public class SquidPersistentState implements Serializable {
 
     public void setCustomExpressionsFile(File file) {
         customExpressionsFile = file;
+    }
+
+    /**
+     * @return the opFile
+     */
+    public File getOpFile() {
+        return opFile;
+    }
+
+    /**
+     * @param opFile the opFile to set
+     */
+    public void setOpFile(File opFile) {
+        this.opFile = opFile;
     }
 }
