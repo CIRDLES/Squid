@@ -54,6 +54,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.xml.sax.SAXException;
 
 /**
@@ -102,8 +103,9 @@ public class PrawnFileHandler implements Serializable {
      * @throws MalformedURLException
      * @throws JAXBException
      * @throws SAXException
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public PrawnFile unmarshallCurrentPrawnFileXML()
+    public ShrimpDataFileInterface unmarshallCurrentPrawnFileXML()
             throws IOException, MalformedURLException, JAXBException, SAXException, SquidException {
         return unmarshallPrawnFileXML(currentPrawnFileLocation, false);
     }
@@ -118,12 +120,13 @@ public class PrawnFileHandler implements Serializable {
      * @throws JAXBException
      * @throws SAXException
      * @return the org.cirdles.squid.prawn.PrawnFile
+     * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public PrawnFile unmarshallPrawnFileXML(String prawnFileLocation, boolean isTestMode)
+    public ShrimpDataFileInterface unmarshallPrawnFileXML(String prawnFileLocation, boolean isTestMode)
             throws IOException, MalformedURLException, JAXBException, SAXException, SquidException {
 
         String localPrawnXMLFile = prawnFileLocation;
-        PrawnFile myPrawnFile;
+        ShrimpDataFileInterface myPrawnFile;
 
         JAXBContext jaxbContext = JAXBContext.newInstance(PrawnFile.class);
         jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -229,8 +232,8 @@ public class PrawnFileHandler implements Serializable {
      * @return the PrawnFile
      * @throws javax.xml.bind.JAXBException
      */
-    private PrawnFile readRawDataFile(File prawnDataFile) throws JAXBException {
-        PrawnFile myPrawnFile = (PrawnFile) jaxbUnmarshaller.unmarshal(prawnDataFile);
+    private ShrimpDataFileInterface readRawDataFile(File prawnDataFile) throws JAXBException {
+        ShrimpDataFileInterface myPrawnFile = (PrawnFile) jaxbUnmarshaller.unmarshal(prawnDataFile);
         return myPrawnFile;
     }
 
@@ -243,7 +246,7 @@ public class PrawnFileHandler implements Serializable {
      * @throws PropertyException
      * @throws JAXBException
      */
-    public void writeRawDataFileAsXML(PrawnFile prawnFile, String fileName)
+    public void writeRawDataFileAsXML(ShrimpDataFileInterface prawnFile, String fileName)
             throws PropertyException, JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(PrawnFile.class);
         jaxbMarshaller = jaxbContext.createMarshaller();

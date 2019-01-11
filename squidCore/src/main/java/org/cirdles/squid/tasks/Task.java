@@ -932,7 +932,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void createMapOfIndexToMassStationDetails() {
         if (prawnFile != null) {
-            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(((PrawnFile) prawnFile).getRun());
+            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
         }
     }
 
@@ -1084,6 +1084,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void buildSquidSpeciesModelList() {
         createMapOfIndexToMassStationDetails();
+        if (squidSpeciesModelList.isEmpty()) {
+            buildSquidSpeciesModelListFromMassStationDetails();
+        }
         if (mapOfIndexToMassStationDetails != null) {
             // update these if squidSpeciesModelList exists
             if (squidSpeciesModelList.size() > 0) {
