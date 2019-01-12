@@ -610,7 +610,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void updateParametersFromModels() {
         boolean doUpdateAll
-                = commonPbModelChanged || physicalConstantsModelChanged || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
+                = commonPbModelChanged || physicalConstantsModelChanged;// temp || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
 
         if (commonPbModelChanged) {
             SortedSet<Expression> updatedCommonPbExpressions
@@ -1403,16 +1403,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) {
         shrimpFractions = new ArrayList<>();
 
-        boolean isPrawnFile = prawnFile instanceof PrawnFile;
         ShrimpFraction shrimpFraction = null;
         for (int f = 0; f < prawnFile.extractCountOfRuns(); f++) {
-            if (isPrawnFile) {
                 PrawnFile.Run runFraction = ((PrawnFile) prawnFile).getRun().get(f);
                 shrimpFraction
                         = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
-            } else {
-                // OP files go here
-            }
 
             if (shrimpFraction != null) {
                 shrimpFraction.setSpotNumber(f + 1);

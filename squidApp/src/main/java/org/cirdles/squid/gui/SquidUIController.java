@@ -386,7 +386,7 @@ public class SquidUIController implements Initializable {
             File opFileNew = FileHandler.selectOPFile(primaryStageWindow);
             if (opFileNew != null) {
                 squidProject.setupPrawnFileFromOP(opFileNew);
-                //squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
+                //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);

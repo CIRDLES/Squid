@@ -4,12 +4,12 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.RunParameterNames;
 import org.cirdles.squid.prawn.RunTableEntryParameterNames;
 import org.cirdles.squid.prawn.SetParameterNames;
-import org.cirdles.squid.shrimp.ShrimpFraction;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.List;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
@@ -123,7 +123,6 @@ public class OPFileHandler {
                 /*
                 <par name="delay_sec" value="5.000" />
                 <par name="collector_focus" value="18.000" />
-                <par name="centering_time_sec" value="2.000" /><!-- 0=no centering -->
                  */
                 entry.getPar().add(placeHolderPar);
                 entry.getPar().add(placeHolderPar);
@@ -178,7 +177,8 @@ public class OPFileHandler {
 
                     PrawnFile.Run.Set.Scan.Measurement.Data totalCounts = new PrawnFile.Run.Set.Scan.Measurement.Data();
                     totalCounts.setName(massStationLabels[i]);
-                    totalCounts.setValue("" + opFraction.getTotalCounts()[i][j]);
+                    // place negative total in the measurements slot as a signal flag to PrawnFileRunParser
+                    totalCounts.setValue("-" + opFraction.getTotalCounts()[i][j]);
                     measurement.getData().add(totalCounts);
 
                     PrawnFile.Run.Set.Scan.Measurement.Data totalSBM = new PrawnFile.Run.Set.Scan.Measurement.Data();

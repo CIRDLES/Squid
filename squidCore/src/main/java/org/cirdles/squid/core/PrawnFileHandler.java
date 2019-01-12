@@ -268,7 +268,7 @@ public class PrawnFileHandler implements Serializable {
     public void initReportsEngineWithCurrentPrawnFileName() {
         // strip .xml from file name
         if (currentPrawnFileLocation != null) {
-            reportsEngine.setNameOfPrawnXMLFile(new File(currentPrawnFileLocation).getName().split("\\.")[0]);
+            initReportsEngineWithCurrentPrawnFileName(currentPrawnFileLocation);
         }
     }
 
@@ -303,6 +303,10 @@ public class PrawnFileHandler implements Serializable {
      * @return
      */
     public File currentPrawnFileLocationFolder() {
+        // TODO: make more elegant for OP file handling
+        if (currentPrawnFileLocation == null){
+            currentPrawnFileLocation = "."; 
+        }
         File retVal = new File(currentPrawnFileLocation);
         if (currentPrawnFileLocationIsFile()) {
             retVal = retVal.getParentFile();
@@ -335,12 +339,4 @@ public class PrawnFileHandler implements Serializable {
         initReportsEngineWithCurrentPrawnFileName();
         return reportsEngine;
     }
-
-    /**
-     * @return the squidProject
-     */
-    public SquidProject getSquidProject() {
-        return squidProject;
-    }
-
 }
