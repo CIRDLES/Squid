@@ -1,6 +1,6 @@
 package org.cirdles.squid.op;
 
-public class OPFile {
+public class OPFraction {
     //in 2d arrays the columns are scans and the rows are measurements
 
     private String name; //fractionID
@@ -14,7 +14,7 @@ public class OPFile {
     int sbmZeroCPS; //sbmZeroCps
     double[][] totalSBM; //totalCountsSBM
 
-    public OPFile() {
+    public OPFraction() {
         name = "";
         countTimeSec = new double[0];
         timeStampSec = new double[0][0];
