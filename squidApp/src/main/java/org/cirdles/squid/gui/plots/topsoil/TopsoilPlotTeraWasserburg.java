@@ -68,8 +68,8 @@ public class TopsoilPlotTeraWasserburg extends AbstractTopsoilPlot {
         Map<PlotProperty, Object> properties = new DefaultProperties();
 
         properties.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB.getName());
-        properties.put(X_AXIS, "207Pb* / 235U ");
-        properties.put(Y_AXIS, "206Pb* / 238U ");
+        properties.put(X_AXIS, "238U / 206Pb* ");
+        properties.put(Y_AXIS, "207Pb* / 206Pb* ");
 
         properties.put(TITLE, title);
         properties.put(WETHERILL_LINE, false);
