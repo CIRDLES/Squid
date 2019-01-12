@@ -52,7 +52,6 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.gui.plots.squid.WeightedMeanRefreshInterface;
-import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
@@ -60,6 +59,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
+import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotTeraWasserburg;
+import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
+import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 /**
@@ -177,13 +179,20 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         }
         // get type of correctionList
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
-        
+
         // need current physical contants for plotting of concordia etc.
         ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
 
-        rootPlot = new TopsoilPlotWetherill(
-                "Concordia of " + correction + " for " + fractionTypeSelected.getPlotType(),
-                allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
+        // choose wetherill or tw
+        if (plotFlavorOneRadioButton.isSelected()) {
+            rootPlot = new TopsoilPlotWetherill(
+                    "Wetherill Concordia of " + correction + " for " + fractionTypeSelected.getPlotType(),
+                    allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
+        } else {
+            rootPlot = new TopsoilPlotTeraWasserburg(
+                    "Tera-Wasserburg Concordia of " + correction + " for " + fractionTypeSelected.getPlotType(),
+                    allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
+        }
         rootData = new ArrayList<>();
 
         List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
@@ -224,15 +233,25 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
             List<Map<String, Object>> myData = new ArrayList<>();
 
-            PlotDisplayInterface myPlot = new TopsoilPlotWetherill(
-                    "Concordia of " + correction + " for " + entry.getKey(),
-                    entry.getValue(), physicalConstantsModel);
+            // choose wetherill or tw
+            PlotDisplayInterface myPlot;
+            if (plotFlavorOneRadioButton.isSelected()) {
+                myPlot = new TopsoilPlotWetherill(
+                        "Wetherill Concordia of " + correction + " for " + entry.getKey(),
+                        entry.getValue(), physicalConstantsModel);
+            } else {
+                myPlot = new TopsoilPlotTeraWasserburg(
+                        "Tera-Wasserburg Concordia of " + correction + " for " + entry.getKey(),
+                        entry.getValue(), physicalConstantsModel);
+            }
+
             mapOfPlotsOfSpotSets.put(sampleItem.getValue().getNodeName(), myPlot);
             myPlot.setData(myData);
 
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
+                String flavorOfConcordia = plotFlavorOneRadioButton.isSelected() ? "C" : "TW";
                 SampleTreeNodeInterface fractionNode
-                        = new ConcordiaFractionNode(spot, correction);
+                        = new ConcordiaFractionNode(flavorOfConcordia, spot, correction);
                 fractionNodeDetails.add(fractionNode);
 
                 // handles each spot
@@ -337,7 +356,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     }
 
     @Override
-
     public void calculateWeightedMean() {
         try {
             spotSummaryDetails.setValues(spotSummaryDetails.eval(squidProject.getTask()));
@@ -483,7 +501,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 plotFlavorOneRadioButton.setText("Wetherill Concordia");
                 plotFlavorTwoRadioButton.setText("Tera-Wasserburg");
                 plotFlavorOneRadioButton.setDisable(false);
-                plotFlavorTwoRadioButton.setDisable(true);
+                plotFlavorTwoRadioButton.setDisable(false);
 
                 corr7_RadioButton.setVisible(false);
                 corr8_RadioButton.setVisible(true);
@@ -572,10 +590,14 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         private final Map<String, Object> datum;
         private SimpleBooleanProperty selectedProperty;
 
-        public ConcordiaFractionNode(ShrimpFractionExpressionInterface shrimpFraction, String correction) {
+        public ConcordiaFractionNode(String flavor, ShrimpFractionExpressionInterface shrimpFraction, String correction) {
             this.shrimpFraction = shrimpFraction;
             this.selectedProperty = new SimpleBooleanProperty(shrimpFraction.isSelected());
-            this.datum = prepareWetherillDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
+            if (flavor.compareToIgnoreCase("C") == 0) {
+                this.datum = prepareWetherillDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
+            } else {
+                this.datum = prepareTeraWasserburgDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
+            }
             this.datum.put("Selected", shrimpFraction.isSelected());
         }
 
