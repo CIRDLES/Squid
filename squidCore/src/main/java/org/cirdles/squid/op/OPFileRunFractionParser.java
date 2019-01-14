@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OPFileRunFractionParser {
-    public static List<OPFile> parseOPFile(File file) {
-        List<OPFile> opList = new ArrayList<>();
+    public static List<OPFraction> parseOPFile(File file) {
+        List<OPFraction> opList = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(file);
             Scanner scanner = new Scanner(fis);
@@ -25,7 +25,7 @@ public class OPFileRunFractionParser {
                 }
                 if (!name.isEmpty()) {
 
-                    OPFile op = new OPFile();
+                    OPFraction op = new OPFraction();
                     op.setName(name);
 
                     //time and date

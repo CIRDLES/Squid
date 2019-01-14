@@ -43,6 +43,7 @@ import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.FileUtilities;
@@ -114,7 +115,7 @@ public class SquidReportingService {
             taskFilePath = uploadDirectory2.resolve("task-file.xls");
             Files.copy(taskFile, taskFilePath);
 
-            PrawnFile prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFilePath.toString(), true);
+            ShrimpDataFileInterface prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFilePath.toString(), true);
             squidProject.setPrawnFile(prawnFileData);
 
             // hard-wired for now
