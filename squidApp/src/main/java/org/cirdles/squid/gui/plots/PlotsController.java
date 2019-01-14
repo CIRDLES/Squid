@@ -61,6 +61,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
+import org.cirdles.squid.gui.topsoil.TopsoilDataFactory;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 /**

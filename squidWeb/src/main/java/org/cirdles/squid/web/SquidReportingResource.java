@@ -50,11 +50,14 @@ public class SquidReportingResource {
             @DefaultValue("true") @FormDataParam("useSBM") boolean useSBM,
             @DefaultValue("false") @FormDataParam("userLinFits") boolean userLinFits,
             @DefaultValue("") @FormDataParam("refMatFilter") String refMatFilter,
-            @DefaultValue("") @FormDataParam("concRefMatFilter") String concRefMatFilter)
+            @DefaultValue("") @FormDataParam("concRefMatFilter") String concRefMatFilter,
+            @DefaultValue("PB_204") @FormDataParam("prefIndexIso") String preferredIndexIsotopeName)
             throws Exception {
 
         java.nio.file.Path pathToZip = squidReportingService.generateReports(
-                contentDispositionHeader.getFileName(), prawnFile, taskFile, useSBM, userLinFits, refMatFilter, concRefMatFilter);
+                contentDispositionHeader.getFileName(), 
+                prawnFile, taskFile, useSBM, userLinFits, refMatFilter, concRefMatFilter,
+                preferredIndexIsotopeName);
         File zippedFile = pathToZip.toFile();        
         
         return Response

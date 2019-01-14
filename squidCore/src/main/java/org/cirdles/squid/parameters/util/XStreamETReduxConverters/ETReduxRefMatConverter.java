@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
@@ -26,7 +26,7 @@ public class ETReduxRefMatConverter implements Converter {
 
     @Override
     public boolean canConvert(Class type) {
-        return type.equals(ReferenceMaterial.class);
+        return type.equals(ReferenceMaterialModel.class);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ETReduxRefMatConverter implements Converter {
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        ReferenceMaterial model = new ReferenceMaterial();
+        ReferenceMaterialModel model = new ReferenceMaterialModel();
 
         reader.moveDown();
         model.setModelName(reader.getValue());

@@ -9,7 +9,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 /**
  * @author ryanb
@@ -26,22 +27,20 @@ public class SquidLabData implements Serializable {
 
     private static final long serialVersionUID = -6819591137651731346L;
 
-    private List<ReferenceMaterial> referenceMaterials;
-    private List<PhysicalConstantsModel> physicalConstantsModels;
-    private List<CommonPbModel> commonPbModels;
+    private List<ParametersModel> referenceMaterials;
+    private List<ParametersModel> physicalConstantsModels;
+    private List<ParametersModel> commonPbModels;
 
     private String laboratoryName;
 
-    private CommonPbModel commonPbDefault;
-    private ReferenceMaterial refMatDefault;
-    private ReferenceMaterial refMatConcDefault;
-    private PhysicalConstantsModel physConstDefault;
-    
-    private int squidLabDataVersion;
+    private ParametersModel commonPbDefault;
+    private ParametersModel refMatDefault;
+    private ParametersModel refMatConcDefault;
+    private ParametersModel physConstDefault;
 
     public SquidLabData() {
         laboratoryName = "Your lab";
-        referenceMaterials = ReferenceMaterial.getDefaultModels();
+        referenceMaterials = ReferenceMaterialModel.getDefaultModels();
         referenceMaterials.sort(new ParametersModelComparator());
         physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
         physicalConstantsModels.sort(new ParametersModelComparator());
@@ -49,8 +48,8 @@ public class SquidLabData implements Serializable {
         commonPbModels.sort(new ParametersModelComparator());
 
         physConstDefault = PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0");
-        refMatDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
-        refMatConcDefault = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+        refMatDefault = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
+        refMatConcDefault = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         commonPbDefault = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
 
         storeState();
@@ -81,7 +80,6 @@ public class SquidLabData implements Serializable {
     }
 
     public void storeState() {
-        this.squidLabDataVersion = 2;
         try {
             File file = new File(File.separator + System.getProperty("user.home")
                     + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
@@ -92,8 +90,8 @@ public class SquidLabData implements Serializable {
         }
     }
 
-    public CommonPbModel getCommonPbDefault() {
-        CommonPbModel retVal;
+    public ParametersModel getCommonPbDefault() {
+        ParametersModel retVal;
         if (commonPbDefault == null) {
             retVal = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
         } else {
@@ -102,40 +100,40 @@ public class SquidLabData implements Serializable {
         return retVal;
     }
 
-    public void setCommonPbDefault(CommonPbModel commonPbDefault) {
+    public void setCommonPbDefault(ParametersModel commonPbDefault) {
         this.commonPbDefault = commonPbDefault;
     }
 
-    public ReferenceMaterial getRefMatDefault() {
-        ReferenceMaterial retVal;
+    public ParametersModel getRefMatDefault() {
+        ParametersModel retVal;
         if (refMatDefault == null) {
-            retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+            retVal = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         } else {
             retVal = refMatDefault;
         }
         return retVal;
     }
 
-    public void setRefMatDefault(ReferenceMaterial refMatDefault) {
+    public void setRefMatDefault(ParametersModel refMatDefault) {
         this.refMatDefault = refMatDefault;
     }
 
-    public ReferenceMaterial getRefMatConcDefault() {
-        ReferenceMaterial retVal;
+    public ParametersModel getRefMatConcDefault() {
+        ParametersModel retVal;
         if (refMatConcDefault == null) {
-            retVal = ReferenceMaterial.getDefaultModel("Zircon-91500", "1.0");
+            retVal = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
         } else {
             retVal = refMatConcDefault;
         }
         return retVal;
     }
 
-    public void setRefMatConcDefault(ReferenceMaterial refMat) {
+    public void setRefMatConcDefault(ParametersModel refMat) {
         refMatConcDefault = refMat;
     }
 
-    public PhysicalConstantsModel getPhysConstDefault() {
-        PhysicalConstantsModel retVal;
+    public ParametersModel getPhysConstDefault() {
+        ParametersModel retVal;
         if (physConstDefault == null) {
             retVal = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         } else {
@@ -144,31 +142,31 @@ public class SquidLabData implements Serializable {
         return retVal;
     }
 
-    public void setPhysConstDefault(PhysicalConstantsModel physConstDefault) {
+    public void setPhysConstDefault(ParametersModel physConstDefault) {
         this.physConstDefault = physConstDefault;
     }
 
-    public List<ReferenceMaterial> getReferenceMaterials() {
+    public List<ParametersModel> getReferenceMaterials() {
         return referenceMaterials;
     }
 
-    public void setReferenceMaterials(List<ReferenceMaterial> referenceMaterials) {
+    public void setReferenceMaterials(List<ParametersModel> referenceMaterials) {
         this.referenceMaterials = referenceMaterials;
     }
 
-    public List<PhysicalConstantsModel> getPhysicalConstantsModels() {
+    public List<ParametersModel> getPhysicalConstantsModels() {
         return physicalConstantsModels;
     }
 
-    public void setPhysicalConstantsModels(List<PhysicalConstantsModel> physicalConstantsModels) {
+    public void setPhysicalConstantsModels(List<ParametersModel> physicalConstantsModels) {
         this.physicalConstantsModels = physicalConstantsModels;
     }
 
-    public List<CommonPbModel> getCommonPbModels() {
+    public List<ParametersModel> getCommonPbModels() {
         return commonPbModels;
     }
 
-    public void setcommonPbModels(List<CommonPbModel> commonPbModels) {
+    public void setcommonPbModels(List<ParametersModel> commonPbModels) {
         this.commonPbModels = commonPbModels;
     }
 
@@ -188,39 +186,39 @@ public class SquidLabData implements Serializable {
         SquidSerializer.serializeObjectToFile(this, file.getAbsolutePath());
     }
 
-    public void removeReferenceMaterial(ReferenceMaterial refMat) {
+    public void removeReferenceMaterial(ParametersModel refMat) {
         referenceMaterials.remove(refMat);
     }
 
-    public void remvovePhysicalConstantsModel(PhysicalConstantsModel model) {
+    public void remvovePhysicalConstantsModel(ParametersModel model) {
         physicalConstantsModels.remove(model);
     }
 
-    public void removecommonPbModel(CommonPbModel model) {
+    public void removecommonPbModel(ParametersModel model) {
         commonPbModels.remove(model);
     }
 
-    public void addReferenceMaterial(ReferenceMaterial refMat) {
+    public void addReferenceMaterial(ParametersModel refMat) {
         referenceMaterials.add(refMat);
     }
 
-    public void addPhysicalConstantsModel(PhysicalConstantsModel model) {
+    public void addPhysicalConstantsModel(ParametersModel model) {
         physicalConstantsModels.add(model);
     }
 
-    public void addcommonPbModel(CommonPbModel model) {
+    public void addcommonPbModel(ParametersModel model) {
         commonPbModels.add(model);
     }
 
-    public ReferenceMaterial getReferenceMaterial(int i) {
+    public ParametersModel getReferenceMaterial(int i) {
         return referenceMaterials.get(i);
     }
 
-    public PhysicalConstantsModel getPhysicalConstantsModel(int i) {
+    public ParametersModel getPhysicalConstantsModel(int i) {
         return physicalConstantsModels.get(i);
     }
 
-    public CommonPbModel getcommonPbModel(int i) {
+    public ParametersModel getcommonPbModel(int i) {
         return commonPbModels.get(i);
     }
 

@@ -17,15 +17,11 @@ package org.cirdles.squid.tasks;
 
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
@@ -144,6 +140,8 @@ public interface TaskInterface {
 
     public String printTaskAudit();
 
+    public String printTaskSummary();
+
     public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
     /**
@@ -200,19 +198,19 @@ public interface TaskInterface {
 
     public void setReferenceMaterial(ParametersModel refMat);
 
-    public ReferenceMaterial getReferenceMaterialModel();
+    public ParametersModel getReferenceMaterialModel();
 
     public void setPhysicalConstantsModel(ParametersModel physConst);
 
-    public PhysicalConstantsModel getPhysicalConstantsModel();
+    public ParametersModel getPhysicalConstantsModel();
 
     public void setCommonPbModel(ParametersModel model);
 
-    public CommonPbModel getCommonPbModel();
+    public ParametersModel getCommonPbModel();
 
     public void setConcentrationReferenceMaterial(ParametersModel refMat);
 
-    public ReferenceMaterial getConcentrationReferenceMaterialModel();
+    public ParametersModel getConcentrationReferenceMaterialModel();
 
     /**
      * @param type the type to set
@@ -498,4 +496,6 @@ public interface TaskInterface {
      * @return the extPErr
      */
     public double getExtPErr();
+
+    public String listBuiltInExpressions();
 }
