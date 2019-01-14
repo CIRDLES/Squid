@@ -40,6 +40,10 @@ import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.parameters.ParametersModelComparator;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -499,6 +503,8 @@ public class SquidUIController implements Initializable {
             confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
+                verifySquidLabDataParameters();
+
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 SquidUI.updateStageTitle(projectFileName);
                 buildProjectMenuMRU();
@@ -1313,5 +1319,44 @@ public class SquidUIController implements Initializable {
     @FXML
     private void listBuiltinExpressionsAction(ActionEvent event) {
         System.out.println(squidProject.getTask().listBuiltInExpressions());
+    }
+
+    private void verifySquidLabDataParameters() {
+        if (squidProject != null && squidProject.getTask() != null) {
+            TaskInterface task = squidProject.getTask();
+
+            ParametersModel refMat = task.getReferenceMaterialModel();
+            ParametersModel refMatConc = task.getConcentrationReferenceMaterialModel();
+            ParametersModel physConst = task.getPhysicalConstantsModel();
+            ParametersModel commonPbModel = task.getCommonPbModel();
+
+            if(physConst == null) {
+                task.setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
+            } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
+                squidLabData.addPhysicalConstantsModel(physConst);
+                squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
+            }
+
+            if(refMat == null) {
+                task.setReferenceMaterial(squidLabData.getRefMatDefault());
+            } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
+                squidLabData.addReferenceMaterial(refMat);
+                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
+            }
+
+            if(refMatConc == null) {
+                task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
+            } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
+                squidLabData.addReferenceMaterial(refMatConc);
+                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
+            }
+
+            if(commonPbModel == null) {
+                task.setCommonPbModel(squidLabData.getCommonPbDefault());
+            } else if (!squidLabData.getCommonPbModels().contains(commonPbModel)) {
+                squidLabData.addcommonPbModel(commonPbModel);
+                squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
+            }
+        }
     }
 }
