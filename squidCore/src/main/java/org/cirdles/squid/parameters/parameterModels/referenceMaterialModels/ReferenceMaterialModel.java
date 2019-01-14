@@ -43,7 +43,13 @@ public class ReferenceMaterialModel extends ParametersModel {
         apparentDates = new ValueModel[0];
         parDerivTerms = new ConcurrentHashMap<>();
         generateDefaultValueModels();
-        concentrations = new ValueModel[0];
+        initializeDefaultConcentrations();
+    }
+
+    private void initializeDefaultConcentrations() {
+        concentrations = new ValueModel[2];
+        concentrations[0] = new ValueModel("concU", "ABS", BigDecimal.ZERO, BigDecimal.ZERO);
+        concentrations[1] = new ValueModel("concTh", "ABS", BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     @Override

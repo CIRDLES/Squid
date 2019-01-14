@@ -22,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.StageStyle;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
@@ -629,8 +630,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
-            ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
-            ParametersModel model, int precision) {
+                                           ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
+                                           ParametersModel model, int precision) {
         if (obList.size() > 0) {
             List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns = new ArrayList<>();
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
@@ -716,7 +717,7 @@ public class ParametersManagerGUIController implements Initializable {
         ValueModel[] values = refMatModel.getValues();
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
-            Boolean isMeasured = ((ReferenceMaterialModel)refMatModel).getDataMeasured()[i];
+            Boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[i];
             String value = refMatDataNotation.format(round(valMod.getValue(), precision));
             String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
             String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));
@@ -731,7 +732,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpConcentrations() {
         int precision = refMatConcSigFigs.getValue();
         refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision));
-        refMatConcentrationsTable.setItems(getDataModelObList(((ReferenceMaterialModel)refMatModel).getConcentrations(), refMatConcentrationsNotation, precision));
+        refMatConcentrationsTable.setItems(getDataModelObList(((ReferenceMaterialModel) refMatModel).getConcentrations(), refMatConcentrationsNotation, precision));
         refMatConcentrationsTable.refresh();
     }
 
@@ -759,7 +760,7 @@ public class ParametersManagerGUIController implements Initializable {
                     valMod = physConstModel.getDatumByName(ratioName);
                 }
                 if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
+                    valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
                 }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
@@ -800,7 +801,7 @@ public class ParametersManagerGUIController implements Initializable {
                     valMod = physConstModel.getDatumByName(ratioName);
                 }
                 if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
+                    valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
                 }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
@@ -843,7 +844,7 @@ public class ParametersManagerGUIController implements Initializable {
                     valMod = physConstModel.getDatumByName(ratioName);
                 }
                 if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
+                    valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
                 }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
@@ -995,7 +996,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpMolarMasses() {
         molarMassesPane.getChildren().clear();
         molarMasses = new ArrayList<>();
-        Map<String, BigDecimal> masses = ((PhysicalConstantsModel)physConstModel).getMolarMasses();
+        Map<String, BigDecimal> masses = ((PhysicalConstantsModel) physConstModel).getMolarMasses();
         String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
         int currY = 10;
         for (String[] mass : defaultMasses) {
@@ -1026,8 +1027,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpApparentDates() {
-        ((ReferenceMaterialModel)refMatModel).calculateApparentDates();
-        apparentDatesTextArea.setText(((ReferenceMaterialModel)refMatModel).listFormattedApparentDates());
+        ((ReferenceMaterialModel) refMatModel).calculateApparentDates();
+        apparentDatesTextArea.setText(((ReferenceMaterialModel) refMatModel).listFormattedApparentDates());
     }
 
     private void setUpReferences() {
@@ -1098,7 +1099,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpTextFields(TextField model, String modelName, TextField lab, String labName, TextField ver, String version,
-            TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
+                                 TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
         model.setText(modelName);
         lab.setText(labName);
         ver.setText(version);
@@ -1634,8 +1635,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpMenuItems(boolean isEditing, boolean isEditable, Menu fileMenu, MenuItem saveAndReg,
-            MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
-            MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
+                                MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
+                                MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
         fileMenu.setDisable(isEditing);
         saveAndReg.setDisable(!isEditing);
         remCurr.setDisable(!isEditable || isEditing);
@@ -1751,6 +1752,7 @@ public class ParametersManagerGUIController implements Initializable {
         } else {
             SquidMessageDialog.showWarningDialog("A Physical Constants Model with the same name and version exists.\n"
                     + "Please change the name and/or version", squidLabDataWindow);
+            squidLabData.storeState();
         }
     }
 
@@ -1777,7 +1779,7 @@ public class ParametersManagerGUIController implements Initializable {
                 RefMatDataModel mod = dataModels.get(i);
                 isMeasures[i] = mod.getIsMeasured().isSelected();
             }
-            ((ReferenceMaterialModel)refMatModel).setDataMeasured(isMeasures);
+            ((ReferenceMaterialModel) refMatModel).setDataMeasured(isMeasures);
 
             refMatModel.setReferences(refMatReferencesArea.getText());
             refMatModel.setComments(refMatCommentsArea.getText());
@@ -2061,7 +2063,7 @@ public class ParametersManagerGUIController implements Initializable {
             int precision = refMatConcSigFigs.getValue();
             ObservableList<DataModel> items = refMatConcentrationsTable.getItems();
             for (DataModel mod : items) {
-                ValueModel valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(getRatioHiddenName(mod.getName()));
+                ValueModel valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(getRatioHiddenName(mod.getName()));
                 mod.setOneSigmaABS(refMatConcentrationsNotation.format(round(valMod.getOneSigmaABS(), precision)));
                 mod.setOneSigmaPCT(refMatConcentrationsNotation.format(round(valMod.getOneSigmaPCT(), precision)));
                 mod.setValue(refMatConcentrationsNotation.format(round(valMod.getValue(), precision)));
@@ -2144,7 +2146,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void corrCovPrecisionOrNotationAction(ParametersModel model,
-            TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
+                                                  TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
 
         ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
 
@@ -2300,6 +2302,7 @@ public class ParametersManagerGUIController implements Initializable {
         } else {
             SquidMessageDialog.showWarningDialog("A Common Lead Model with the same name and version exists.\n"
                     + "Please change the name and/or version", squidLabDataWindow);
+            squidLabData.storeState();
         }
     }
 
@@ -2429,7 +2432,7 @@ public class ParametersManagerGUIController implements Initializable {
         private SimpleStringProperty oneSigmaPCT;
 
         public DataModel(String name, String value,
-                String oneSigmaABS, String oneSigmaPCT) {
+                         String oneSigmaABS, String oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
             this.value = new SimpleStringProperty(trimTrailingZeroes(value));
             this.oneSigmaABS = new SimpleStringProperty(trimTrailingZeroes(oneSigmaABS));
@@ -2475,8 +2478,8 @@ public class ParametersManagerGUIController implements Initializable {
         private CheckBox isMeasured;
 
         public RefMatDataModel(String name, String value,
-                String oneSigmaABS, String oneSigmaPCT,
-                boolean isMeasured) {
+                               String oneSigmaABS, String oneSigmaPCT,
+                               boolean isMeasured) {
             super(name, value, oneSigmaABS, oneSigmaPCT);
             this.isMeasured = new CheckBox();
             this.isMeasured.setSelected(isMeasured);
@@ -2491,4 +2494,5 @@ public class ParametersManagerGUIController implements Initializable {
         }
 
     }
+
 }
