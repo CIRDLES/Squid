@@ -16,11 +16,17 @@ import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 
 public class OPFileHandler {
 
-    private static final String[] massStationLabels
+    private static final String[] massStationLabelsTEN
             = new String[]{"196Zr2O", "204Pb", "BKG", "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO", "270UO2"};
 
-    private static final String[] massStationAMUs
+    private static final String[] massStationAMUsTEN
             = new String[]{"195.8", "203.9", "204.0", "205.9", "206.9", "207.9", "238.0", "248.0", "254.0", "270.0"};
+
+    private static final String[] massStationLabelsELEVEN
+            = new String[]{"YbO", "Zr2O", "HfO", "Pb204", "BKG", "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO"};
+
+    private static final String[] massStationAMUsELEVEN
+            = new String[]{"189.9", "195.7", "195.8", "203.9", "203.9", "205.9", "206.9", "207.9", "237.9", "247.9", "253.9"};
 
     public ShrimpDataFileInterface convertOPFileToPrawnFile(File opFile) {
         List<OPFraction> opFractions = OPFileRunFractionParser.parseOPFile(opFile);
@@ -85,8 +91,7 @@ public class OPFileHandler {
             run.getPar().add(deadTimeNS); // placeholder in Par list
             run.getPar().add(deadTimeNS); // placeholder in Par list
             run.getPar().add(deadTimeNS); // placeholder in Par list
-            
-            
+
             // run.runtable
             // run.runtable entries
             // run.runtable entry parameters
@@ -98,12 +103,22 @@ public class OPFileHandler {
                 // the first two are faked for now
                 PrawnFile.Run.RunTable.Entry.Par label = new PrawnFile.Run.RunTable.Entry.Par();
                 label.setName(RunTableEntryParameterNames.LABEL);
-                label.setValue(massStationLabels[i]);
+                // TODO: make robust
+                if (opFraction.getMeasurements() == 10) {
+                    label.setValue(massStationLabelsTEN[i]);
+                } else {
+                    label.setValue(massStationLabelsELEVEN[i]);
+                }
                 entry.getPar().add(label);
 
                 PrawnFile.Run.RunTable.Entry.Par amu = new PrawnFile.Run.RunTable.Entry.Par();
                 amu.setName(RunTableEntryParameterNames.AMU);
-                amu.setValue(massStationAMUs[i]);
+                // TODO: make robust
+                if (opFraction.getMeasurements() == 10) {
+                    amu.setValue(massStationAMUsTEN[i]);
+                } else {
+                    amu.setValue(massStationAMUsELEVEN[i]);
+                }
                 entry.getPar().add(amu);
                 // need placeholder parameters for 
                 /*
@@ -176,8 +191,13 @@ public class OPFileHandler {
                     measurement.getPar().add(timeStampSec);
 
                     PrawnFile.Run.Set.Scan.Measurement.Data totalCounts = new PrawnFile.Run.Set.Scan.Measurement.Data();
-                    totalCounts.setName(massStationLabels[i]);
-                    // place negative total in the measurements slot as a signal flag to PrawnFileRunParser
+                    // TODO: make robust
+                    if (opFraction.getMeasurements() == 10) {
+                        totalCounts.setName(massStationLabelsTEN[i]);
+                    } else {
+                        totalCounts.setName(massStationLabelsELEVEN[i]);
+                    }
+                    // place negative total in the measurements slot as a signal flag "OP FILE" to PrawnFileRunParser
                     totalCounts.setValue("-" + opFraction.getTotalCounts()[i][j]);
                     measurement.getData().add(totalCounts);
 
