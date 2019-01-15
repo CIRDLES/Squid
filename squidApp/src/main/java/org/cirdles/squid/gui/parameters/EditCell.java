@@ -1,7 +1,7 @@
 package org.cirdles.squid.gui.parameters;
 // found at https://gist.github.com/james-d/be5bbd6255a4640a5357
 // fixes javafx bug where edit isn't committed on loss of focus
-// very lightly modified
+// modified
 
 import javafx.event.Event;
 import javafx.scene.control.*;
@@ -9,8 +9,6 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
-
-
 
 
 public class EditCell<S, T> extends TableCell<S, T> {

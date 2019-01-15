@@ -22,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.StageStyle;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
-import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
@@ -60,6 +59,22 @@ public class ParametersManagerGUIController implements Initializable {
     public ChoiceBox<String> defaultCommonPbCB;
     @FXML
     public ChoiceBox<String> defaultPhysConstCB;
+    @FXML
+    public CheckBox refMatApparentDatesCheckbox;
+    @FXML
+    public Tab refMatCorrTab;
+    @FXML
+    public Tab refMatDataTab;
+    @FXML
+    public Tab refMatCovTab;
+    @FXML
+    public Spinner<Integer> refDatesSigFigSpinner;
+    @FXML
+    public Button refDatesNotationButton;
+    @FXML
+    public Tab refMatRefDatesTab;
+    @FXML
+    public TableView refDatesTable;
     @FXML
     private ChoiceBox<String> defaultRefMatConcCB;
     @FXML
@@ -231,6 +246,9 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     private Tab physConstTab;
 
+    private static final DecimalFormat scientificNotation = new DecimalFormat("0.0##############################E0#############");
+    private static final DecimalFormat standardNotation = new DecimalFormat("########################0.0######################################");
+
     ParametersModel physConstModel;
     ParametersModel physConstHolder;
 
@@ -259,6 +277,7 @@ public class ParametersManagerGUIController implements Initializable {
     private DecimalFormat refMatConcentrationsNotation;
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
+    private DecimalFormat refDatesNotation;
 
     private DecimalFormat commonPbDataNotation;
     private DecimalFormat commonPbCorrNotation;
@@ -287,18 +306,19 @@ public class ParametersManagerGUIController implements Initializable {
         isEditingRefMat = false;
         isEditingCommonPb = false;
 
-        physConstDataNotation = getScientificNotationFormat();
-        physConstCorrNotation = getScientificNotationFormat();
-        physConstCovNotation = getScientificNotationFormat();
+        physConstDataNotation = scientificNotation;
+        physConstCorrNotation = scientificNotation;
+        physConstCovNotation = scientificNotation;
 
-        refMatDataNotation = getScientificNotationFormat();
-        refMatConcentrationsNotation = getScientificNotationFormat();
-        refMatCorrNotation = getScientificNotationFormat();
-        refMatCovNotation = getScientificNotationFormat();
+        refMatDataNotation = scientificNotation;
+        refMatConcentrationsNotation = scientificNotation;
+        refMatCorrNotation = scientificNotation;
+        refMatCovNotation = scientificNotation;
+        refDatesNotation = scientificNotation;
 
-        commonPbDataNotation = getScientificNotationFormat();
-        commonPbCorrNotation = getScientificNotationFormat();
-        commonPbCovNotation = getScientificNotationFormat();
+        commonPbDataNotation = scientificNotation;
+        commonPbCorrNotation = scientificNotation;
+        commonPbCovNotation = scientificNotation;
 
         physConstModels = squidLabData.getPhysicalConstantsModels();
         setUpPhysConstCB();
@@ -684,7 +704,7 @@ public class ParametersManagerGUIController implements Initializable {
                         } else {
                             SquidMessageDialog.showWarningDialog("Value Out of Range or Invalid: Only values"
                                     + " in the range of [-1, 1] are allowed.", squidLabDataWindow);
-                            table.refresh();
+                            value.consume();
                         }
                     });
                 }
@@ -708,6 +728,12 @@ public class ParametersManagerGUIController implements Initializable {
         commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation, precision));
         commonPbDataTable.setItems(getDataModelObList(commonPbModel.getValues(), commonPbDataNotation, precision));
         commonPbDataTable.refresh();
+    }
+
+    private void setUpRefDates() {
+        int precision = refDatesSigFigSpinner.getValue();
+        refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
+        refDatesTable.setItems(getDataModelObList(refMatModel.getValues(), refDatesNotation, precision));
     }
 
     private void setUpRefMatData() {
@@ -781,7 +807,7 @@ public class ParametersManagerGUIController implements Initializable {
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+                value.consume();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
@@ -824,7 +850,7 @@ public class ParametersManagerGUIController implements Initializable {
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+                value.consume();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
@@ -867,7 +893,7 @@ public class ParametersManagerGUIController implements Initializable {
                 }
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+                value.consume();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
@@ -909,7 +935,7 @@ public class ParametersManagerGUIController implements Initializable {
                 setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+                value.consume();
             }
             setUpRefMatDataModelColumns();
         });
@@ -938,7 +964,7 @@ public class ParametersManagerGUIController implements Initializable {
                 setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+                value.consume();
             }
             setUpRefMatDataModelColumns();
         });
@@ -967,7 +993,7 @@ public class ParametersManagerGUIController implements Initializable {
                 setUpRefMatCovariancesAndCorrelations();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+                value.consume();
             }
             setUpRefMatDataModelColumns();
         });
@@ -1880,21 +1906,13 @@ public class ParametersManagerGUIController implements Initializable {
         return retVal;
     }
 
-    public static DecimalFormat getScientificNotationFormat() {
-        return new DecimalFormat("0.0##############################E0#############");
-    }
-
-    public static DecimalFormat getStandardNotationFormat() {
-        return new DecimalFormat("########################0.0######################################");
-    }
-
     @FXML
     private void physConstDataNotationOnAction(ActionEvent event) {
-        if (physConstDataNotation.equals(getScientificNotationFormat())) {
-            physConstDataNotation = getStandardNotationFormat();
+        if (physConstDataNotation.equals(scientificNotation)) {
+            physConstDataNotation = standardNotation;
             physConstDataNotationButton.setText("Scientific Notation");
         } else {
-            physConstDataNotation = getScientificNotationFormat();
+            physConstDataNotation = scientificNotation;
             physConstDataNotationButton.setText("Standard Notation");
         }
         ObservableList<DataModel> models = physConstDataTable.getItems();
@@ -1923,11 +1941,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatDataNotationOnAction(ActionEvent event) {
-        if (refMatDataNotation.equals(getScientificNotationFormat())) {
-            refMatDataNotation = getStandardNotationFormat();
+        if (refMatDataNotation.equals(scientificNotation)) {
+            refMatDataNotation = standardNotation;
             refMatDataNotationButton.setText("Scientific Notation");
         } else {
-            refMatDataNotation = getScientificNotationFormat();
+            refMatDataNotation = scientificNotation;
             refMatDataNotationButton.setText("Standard Notation");
         }
         ObservableList<RefMatDataModel> models = refMatDataTable.getItems();
@@ -1960,11 +1978,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatConcentrationsNotationOnAction(ActionEvent event) {
-        if (refMatConcentrationsNotation.equals(getScientificNotationFormat())) {
-            refMatConcentrationsNotation = getStandardNotationFormat();
+        if (refMatConcentrationsNotation.equals(scientificNotation)) {
+            refMatConcentrationsNotation = standardNotation;
             refMatConcentrationsNotationButton.setText("Scientific Notation");
         } else {
-            refMatConcentrationsNotation = getScientificNotationFormat();
+            refMatConcentrationsNotation = scientificNotation;
             refMatConcentrationsNotationButton.setText("Standard Notation");
         }
         ObservableList<DataModel> models = refMatConcentrationsTable.getItems();
@@ -1990,11 +2008,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstCorrNotationOnAction(ActionEvent event) {
-        if (physConstCorrNotation.equals(getScientificNotationFormat())) {
-            physConstCorrNotation = getStandardNotationFormat();
+        if (physConstCorrNotation.equals(scientificNotation)) {
+            physConstCorrNotation = standardNotation;
             physConstCorrNotationButton.setText("Scientific Notation");
         } else {
-            physConstCorrNotation = getScientificNotationFormat();
+            physConstCorrNotation = scientificNotation;
             physConstCorrNotationButton.setText("Standard Notation");
         }
         int precision = physConstCorrSigFigs.getValue();
@@ -2003,11 +2021,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstCovNotationOnAction(ActionEvent event) {
-        if (physConstCovNotation.equals(getScientificNotationFormat())) {
-            physConstCovNotation = getStandardNotationFormat();
+        if (physConstCovNotation.equals(scientificNotation)) {
+            physConstCovNotation = standardNotation;
             physConstCovNotationButton.setText("Scientific Notation");
         } else {
-            physConstCovNotation = getScientificNotationFormat();
+            physConstCovNotation = scientificNotation;
             physConstCovNotationButton.setText("Standard Notation");
         }
         int precision = physConstCovSigFigs.getValue();
@@ -2016,11 +2034,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatCorrNotationOnAction(ActionEvent event) {
-        if (refMatCorrNotation.equals(getScientificNotationFormat())) {
-            refMatCorrNotation = getStandardNotationFormat();
+        if (refMatCorrNotation.equals(scientificNotation)) {
+            refMatCorrNotation = standardNotation;
             refMatCorrNotationButton.setText("Scientific Notation");
         } else {
-            refMatCorrNotation = getScientificNotationFormat();
+            refMatCorrNotation = scientificNotation;
             refMatCorrNotationButton.setText("Standard Notation");
         }
         int precision = refMatCorrSigFigs.getValue();
@@ -2029,11 +2047,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatCovNotationOnAction(ActionEvent event) {
-        if (refMatCovNotation.equals(getScientificNotationFormat())) {
-            refMatCovNotation = getStandardNotationFormat();
+        if (refMatCovNotation.equals(scientificNotation)) {
+            refMatCovNotation = standardNotation;
             refMatCovNotationButton.setText("Scientific Notation");
         } else {
-            refMatCovNotation = getScientificNotationFormat();
+            refMatCovNotation = scientificNotation;
             refMatCovNotationButton.setText("Standard Notation");
         }
         int precision = refMatCovSigFigs.getValue();
@@ -2113,6 +2131,27 @@ public class ParametersManagerGUIController implements Initializable {
         refMatCovSigFigs.valueProperty().addListener(value -> {
             int precision = refMatCovSigFigs.getValue();
             corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, precision, refMatCovNotation);
+        });
+
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        refDatesSigFigSpinner.setValueFactory(valueFactory);
+        refDatesSigFigSpinner.valueProperty().addListener(value -> {
+            int precision = refDatesSigFigSpinner.getValue();
+            ObservableList<DataModel> items = refDatesTable.getItems();
+            for (DataModel mod : items) {
+                boolean found = false;
+                for (int i = 0; !found && i < ((ReferenceMaterialModel) refMatModel).getApparentDates().length; i++) {
+                    ValueModel valMod = ((ReferenceMaterialModel) refMatModel).getApparentDates()[i];
+                    if (mod.getName().equals(valMod.getName())) {
+                        found = true;
+                        mod.setOneSigmaABS(refDatesNotation.format(round(valMod.getOneSigmaABS(), precision)));
+                        mod.setOneSigmaPCT(refDatesNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+                        mod.setValue(refDatesNotation.format(round(valMod.getValue(), precision)));
+                    }
+                }
+            }
+            refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
+            refDatesTable.refresh();
         });
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
@@ -2363,11 +2402,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbDataNotationOnAction(ActionEvent event) {
-        if (commonPbDataNotation.equals(getScientificNotationFormat())) {
-            commonPbDataNotation = getStandardNotationFormat();
+        if (commonPbDataNotation.equals(scientificNotation)) {
+            commonPbDataNotation = standardNotation;
             commonPbDataNotationButton.setText("Scientific Notation");
         } else {
-            commonPbDataNotation = getScientificNotationFormat();
+            commonPbDataNotation = scientificNotation;
             commonPbDataNotationButton.setText("Standard Notation");
         }
         ObservableList<DataModel> models = commonPbDataTable.getItems();
@@ -2392,11 +2431,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbCorrNotationOnAction(ActionEvent event) {
-        if (commonPbCorrNotation.equals(getScientificNotationFormat())) {
-            commonPbCorrNotation = getStandardNotationFormat();
+        if (commonPbCorrNotation.equals(scientificNotation)) {
+            commonPbCorrNotation = standardNotation;
             commonPbCorrNotationButton.setText("Scientific Notation");
         } else {
-            commonPbCorrNotation = getScientificNotationFormat();
+            commonPbCorrNotation = scientificNotation;
             commonPbCorrNotationButton.setText("Standard Notation");
         }
         int precision = commonPbCorrSigFigs.getValue();
@@ -2405,11 +2444,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbCovNotationOnAction(ActionEvent event) {
-        if (commonPbCovNotation.equals(getScientificNotationFormat())) {
-            commonPbCovNotation = getStandardNotationFormat();
+        if (commonPbCovNotation.equals(scientificNotation)) {
+            commonPbCovNotation = standardNotation;
             commonPbCovNotationButton.setText("Scientific Notation");
         } else {
-            commonPbCovNotation = getScientificNotationFormat();
+            commonPbCovNotation = scientificNotation;
             commonPbCovNotationButton.setText("Standard Notation");
         }
         int precision = commonPbCovSigFigs.getValue();
@@ -2422,6 +2461,33 @@ public class ParametersManagerGUIController implements Initializable {
                 setUpApparentDates();
             }
         });
+    }
+
+    @FXML
+    public void refMatApparentDatesCheckBoxOnAction(ActionEvent actionEvent) {
+        setUpRefMatDatesSelection();
+    }
+
+    private void setUpRefMatDatesSelection() {
+        if (refMatApparentDatesCheckbox.isSelected()) {
+            refMatDataTab.setDisable(false);
+            refMatCorrTab.setDisable(false);
+            refMatCovTab.setDisable(false);
+            apparentDatesTab.setDisable(false);
+
+            refMatRefDatesTab.setDisable(true);
+        } else {
+            refMatDataTab.setDisable(true);
+            refMatCorrTab.setDisable(true);
+            refMatCovTab.setDisable(true);
+            apparentDatesTab.setDisable(true);
+
+            refMatRefDatesTab.setDisable(false);
+        }
+    }
+
+    @FXML
+    public void refDatesNotationAction(ActionEvent actionEvent) {
     }
 
     public class DataModel {
