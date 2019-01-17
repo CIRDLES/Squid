@@ -266,8 +266,7 @@ public class PrawnFileRunFractionParser {
                 // ***TrimTime[j, k] = (StartTime + time_stamp_sec[j, k]) / 3600***
                 // handle peakMeasurements measurements
                 String[] peakMeasurementsRaw = measurements.get(speciesMeasurementIndex).getData().get(0).getValue().split(",");
-                // Jan 2019 Handling OP files means that the total counts and SBM are present as single negative integers
-                int localPeakMeasurementsCount = peakMeasurementsRaw.length;
+                // Jan 2019 Handling OP files means that the total counts and SBM are present as single negative integers               
                 
                 double median;
                 double totalCountsPeak;
@@ -278,18 +277,11 @@ public class PrawnFileRunFractionParser {
                     totalCountsPeak = Math.abs(Double.parseDouble(peakMeasurementsRaw[0]));
                     totalCountsSigma = Math.sqrt(totalCountsPeak);
                     
-//                    // fake the data for visualizations
-//                    double[] peakMeasurements = new double[peakMeasurementsCount];
-//                    for (int i = 0; i < peakMeasurementsCount; i++) {
-//                        peakMeasurements[i] = totalCountsPeak / peakMeasurementsCount;
-//                        rawPeakData[scanNum][speciesMeasurementIndex + speciesMeasurementIndex * (peakMeasurementsCount - 1) + i] = (int) peakMeasurements[i];
-//                    }
-                    
                 } else {
-                    double[] peakMeasurements = new double[localPeakMeasurementsCount];
-                    for (int i = 0; i < localPeakMeasurementsCount; i++) {
+                    double[] peakMeasurements = new double[peakMeasurementsCount];
+                    for (int i = 0; i < peakMeasurementsCount; i++) {
                         peakMeasurements[i] = Double.parseDouble(peakMeasurementsRaw[i]);
-                        rawPeakData[scanNum][speciesMeasurementIndex + speciesMeasurementIndex * (localPeakMeasurementsCount - 1) + i] = (int) peakMeasurements[i];
+                        rawPeakData[scanNum][speciesMeasurementIndex + speciesMeasurementIndex * (peakMeasurementsCount - 1) + i] = (int) peakMeasurements[i];
                     }
                     median = Utilities.median(peakMeasurements);
 
@@ -298,13 +290,13 @@ public class PrawnFileRunFractionParser {
 
                         // BV is variable used by Ludwig for Tukey Mean fo peak measurements
                         double bV = peakTukeysMeanAndUnct[0];
-                        double bVcps = bV * localPeakMeasurementsCount / countTimeSec[speciesMeasurementIndex];
+                        double bVcps = bV * peakMeasurementsCount / countTimeSec[speciesMeasurementIndex];
                         double bVcpsDeadTime = bVcps / (1.0 - bVcps * deadTimeNanoseconds / 1E9);
 
                         totalCountsPeak = bVcpsDeadTime * countTimeSec[speciesMeasurementIndex];
 
                         double countsSigmaCandidate = Math.max(peakTukeysMeanAndUnct[1], Math.sqrt(bV));
-                        totalCountsSigma = countsSigmaCandidate / Math.sqrt(localPeakMeasurementsCount) * bVcps * countTimeSec[speciesMeasurementIndex] / bV;
+                        totalCountsSigma = countsSigmaCandidate / Math.sqrt(peakMeasurementsCount) * bVcps * countTimeSec[speciesMeasurementIndex] / bV;
 
                     } else if (median >= 0.0) {
 
@@ -312,19 +304,19 @@ public class PrawnFileRunFractionParser {
                         int maxResidualIndex = PoissonLimitsCountLessThanEqual100.determineIndexOfValueWithLargestResidual(median, peakMeasurements);
                         double sumX = 0.0;
                         double sumXsquared = 0.0;
-                        for (int i = 0; i < localPeakMeasurementsCount; i++) {
+                        for (int i = 0; i < peakMeasurementsCount; i++) {
                             if (i != maxResidualIndex) {
                                 sumX += peakMeasurements[i];
                                 sumXsquared += peakMeasurements[i] * peakMeasurements[i];
                             }
                         }
 
-                        int countIncludedIntegrations = (maxResidualIndex == -1) ? localPeakMeasurementsCount : localPeakMeasurementsCount - 1;
+                        int countIncludedIntegrations = (maxResidualIndex == -1) ? peakMeasurementsCount : peakMeasurementsCount - 1;
                         double peakMeanCounts = sumX / countIncludedIntegrations;
                         double poissonSigma = Math.sqrt(peakMeanCounts);
                         double sigmaPeakCounts = Math.sqrt((sumXsquared - (sumX * sumX / countIncludedIntegrations)) / (countIncludedIntegrations - 1));
 
-                        double peakCountsPerSecond = peakMeanCounts * localPeakMeasurementsCount / countTimeSec[speciesMeasurementIndex];
+                        double peakCountsPerSecond = peakMeanCounts * peakMeasurementsCount / countTimeSec[speciesMeasurementIndex];
                         double peakCountsPerSecondDeadTime = peakCountsPerSecond / (1.0 - peakCountsPerSecond * deadTimeNanoseconds / 1E9);
 
                         totalCountsPeak = peakCountsPerSecondDeadTime * countTimeSec[speciesMeasurementIndex];
@@ -364,7 +356,7 @@ public class PrawnFileRunFractionParser {
                     }
                     double[] sbmTukeysMeanAndUnct = SquidMathUtils.tukeysBiweight(sbm, 6.0);
                     totalCountsSpeciesSBM = sbmMeasurementsCount * sbmTukeysMeanAndUnct[0];//  sbmTukeyMean.getValue().doubleValue();
-                }
+                } // end of decision regular Prawn vs OP
 
                 totalCountsSBM[scanNum][speciesMeasurementIndex] = totalCountsSpeciesSBM;
             }
@@ -543,7 +535,6 @@ public class PrawnFileRunFractionParser {
 
                         zerPkCt[sNum] = false;
                         zerPkCt[sn1] = false;
-//                    boolean hasZerPk = false;
 
                         double[] aPkCts = new double[2];
                         double[] bPkCts = new double[2];
@@ -554,7 +545,6 @@ public class PrawnFileRunFractionParser {
                                 double bNetCPS = pkNetCps[k][bOrd];
 
                                 if ((aNetCPS == SQUID_ERROR_VALUE) || (bNetCPS == SQUID_ERROR_VALUE)) {
-//                                hasZerPk = true;
                                     zerPkCt[k] = true;
                                     continueWithScanProcessing = false;
                                 }
