@@ -214,7 +214,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea id="apparentDates" fx:id="apparentDatesTextArea"
+                                                        <TextArea id="dates" fx:id="apparentDatesTextArea"
                                                                   editable="false" prefHeight="200.0" prefWidth="200.0"
                                                                   AnchorPane.bottomAnchor="5.0"
                                                                   AnchorPane.leftAnchor="5.0"
@@ -300,9 +300,9 @@
                                     <children>
                                         <Label text="Choose Reference Material Model:"/>
                                         <ChoiceBox fx:id="refMatCB" prefWidth="380.0"/>
-                                        <CheckBox fx:id="refMatApparentDatesCheckbox" mnemonicParsing="false"
-                                                  onAction="#refMatApparentDatesCheckBoxOnAction"
-                                                  text="Apparent Dates"/>
+                                        <CheckBox fx:id="refMatReferenceDatesCheckbox" mnemonicParsing="false"
+                                                  onAction="#refMatReferenceDatesCheckBoxOnAction"
+                                                  text="Reference Dates" visible="false"/>
                                     </children>
                                 </HBox>
                             </children>

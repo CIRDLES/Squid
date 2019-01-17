@@ -33,6 +33,7 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
+import javax.swing.event.DocumentEvent;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -60,7 +61,7 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     public ChoiceBox<String> defaultPhysConstCB;
     @FXML
-    public CheckBox refMatApparentDatesCheckbox;
+    public CheckBox refMatReferenceDatesCheckbox;
     @FXML
     public Tab refMatCorrTab;
     @FXML
@@ -74,7 +75,7 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     public Tab refMatRefDatesTab;
     @FXML
-    public TableView refDatesTable;
+    public TableView<DataModel> refDatesTable;
     @FXML
     private ChoiceBox<String> defaultRefMatConcCB;
     @FXML
@@ -333,6 +334,7 @@ public class ParametersManagerGUIController implements Initializable {
         setUpDefaultModelsTabCBs();
         setUpApparentDatesTabSelection();
         setUpLaboratoryName();
+        setUpDatesCheckboxVisibilityListener();
     }
 
     private void setUpTabs() {
@@ -469,8 +471,29 @@ public class ParametersManagerGUIController implements Initializable {
         setUpRefMatData();
         setUpConcentrations();
         setUpRefMatCovariancesAndCorrelations();
-        setUpApparentDates();
+        setUpRefMatDatesSelection();
         setUpRefMatEditableLabel();
+    }
+
+    private void setUpDatesCheckBoxVisibility() {
+        boolean hasNonZero = false;
+        ValueModel[] models = refMatModel.getValues();
+        if (models != null) {
+            for (int i = 0; !hasNonZero && i < models.length; i++) {
+                hasNonZero = !(models[i].getValue().doubleValue() == 0.0);
+            }
+        }
+        refMatReferenceDatesCheckbox.setVisible(!hasNonZero);
+    }
+
+    private void setUpDatesCheckboxVisibilityListener() {
+        refMatIsEditableLabel.textProperty().addListener((val) ->{
+            if(refMatIsEditableLabel.getText().equals("editing")) {
+                setUpDatesCheckBoxVisibility();
+            } else {
+                refMatReferenceDatesCheckbox.setVisible(false);
+            }
+        });
     }
 
     private void setUpCommonPb() {
@@ -557,6 +580,14 @@ public class ParametersManagerGUIController implements Initializable {
     private void setRefMatModel(int num) {
         if (num > -1 && num < refMatModels.size()) {
             refMatModel = refMatModels.get(num);
+            boolean hasNonZero = false;
+            ValueModel[] models = refMatModel.getValues();
+            if (models != null) {
+                for (int i = 0; !hasNonZero && i < models.length; i++) {
+                    hasNonZero = !(models[i].getValue().doubleValue() == 0.0);
+                }
+            }
+            refMatReferenceDatesCheckbox.setSelected(!hasNonZero);
             setUpRefMat();
             setUpRefMatMenuItems(false, refMatModel.isEditable());
             refMatEditable(false);
@@ -733,7 +764,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpRefDates() {
         int precision = refDatesSigFigSpinner.getValue();
         refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
-        refDatesTable.setItems(getDataModelObList(refMatModel.getValues(), refDatesNotation, precision));
+        refDatesTable.setItems(getDataModelObList(((ReferenceMaterialModel) refMatModel).getDates(), refDatesNotation, precision));
     }
 
     private void setUpRefMatData() {
@@ -788,6 +819,9 @@ public class ParametersManagerGUIController implements Initializable {
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
                 }
+                if (table.equals(refDatesTable)) {
+                    valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
+                }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
                 }
@@ -828,6 +862,9 @@ public class ParametersManagerGUIController implements Initializable {
                 }
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
+                }
+                if (table.equals(refDatesTable)) {
+                    valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
                 }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
@@ -871,6 +908,9 @@ public class ParametersManagerGUIController implements Initializable {
                 }
                 if (table.equals(refMatConcentrationsTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
+                }
+                if (table.equals(refDatesTable)) {
+                    valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
                 }
                 if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
@@ -933,6 +973,7 @@ public class ParametersManagerGUIController implements Initializable {
                 mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
                 value.getTableView().refresh();
                 setUpRefMatCovariancesAndCorrelations();
+                setUpDatesCheckBoxVisibility();
             } else {
                 SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
                 value.consume();
@@ -1052,8 +1093,15 @@ public class ParametersManagerGUIController implements Initializable {
         }
     }
 
+    private void setUpDates() {
+        if (refMatReferenceDatesCheckbox.isSelected()) {
+            setUpRefDates();
+        } else {
+            setUpApparentDates();
+        }
+    }
+
     private void setUpApparentDates() {
-        ((ReferenceMaterialModel) refMatModel).calculateApparentDates();
         apparentDatesTextArea.setText(((ReferenceMaterialModel) refMatModel).listFormattedApparentDates());
     }
 
@@ -1596,8 +1644,11 @@ public class ParametersManagerGUIController implements Initializable {
     private void refMatEditable(boolean isEditable) {
         if (isEditable) {
             refMatIsEditableLabel.setText("editing");
+            refMatReferenceDatesCheckbox.setDisable(false);
+        } else {
+            refMatReferenceDatesCheckbox.setDisable(true);
+            refMatReferenceDatesCheckbox.setStyle("-fx-opacity: 1");
         }
-
         refMatModelName.setEditable(isEditable);
         refMatLabName.setEditable(isEditable);
         refMatVersion.setEditable(isEditable);
@@ -1607,11 +1658,11 @@ public class ParametersManagerGUIController implements Initializable {
         refMatDataTable.getColumns().get(0).setEditable(false);
         ObservableList<RefMatDataModel> refMatData = refMatDataTable.getItems();
         for (RefMatDataModel mod : refMatData) {
-            if (!isEditable) {
+            if (isEditable) {
+                mod.getIsMeasured().setDisable(false);
+            } else {
                 mod.getIsMeasured().setDisable(true);
                 mod.getIsMeasured().setStyle("-fx-opacity: 1");
-            } else {
-                mod.getIsMeasured().setDisable(false);
             }
         }
 
@@ -1620,6 +1671,11 @@ public class ParametersManagerGUIController implements Initializable {
 
         refMatCorrTable.setEditable(isEditable);
         refMatCorrTable.getColumns().get(0).setEditable(false);
+
+        refDatesTable.setEditable(isEditable);
+        if(refDatesTable.getColumns() != null && refDatesTable.getColumns().size() > 0) {
+            refDatesTable.getColumns().get(0).setEditable(false);
+        }
 
         refMatCommentsArea.setEditable(isEditable);
         refMatReferencesArea.setEditable(isEditable);
@@ -1737,7 +1793,7 @@ public class ParametersManagerGUIController implements Initializable {
             hasModelWithSameNameAndVersion = name.equals(physConstModels.get(i).getModelName())
                     && version.equals(physConstModels.get(i).getVersion());
         }
-        if (!hasModelWithSameNameAndVersion) {
+        if (!hasModelWithSameNameAndVersion || isEditingCurrPhysConst) {
 
             physConstModel.setIsEditable(true);
             physConstModel.setModelName(physConstModelName.getText());
@@ -1778,7 +1834,6 @@ public class ParametersManagerGUIController implements Initializable {
         } else {
             SquidMessageDialog.showWarningDialog("A Physical Constants Model with the same name and version exists.\n"
                     + "Please change the name and/or version", squidLabDataWindow);
-            squidLabData.storeState();
         }
     }
 
@@ -1791,7 +1846,7 @@ public class ParametersManagerGUIController implements Initializable {
             hasModelWithSameNameAndVersion = name.equals(refMatModels.get(i).getModelName())
                     && version.equals(refMatModels.get(i).getVersion());
         }
-        if (!hasModelWithSameNameAndVersion) {
+        if (!hasModelWithSameNameAndVersion || isEditingCurrRefMat) {
 
             refMatModel.setIsEditable(true);
             refMatModel.setModelName(refMatModelName.getText());
@@ -1859,6 +1914,8 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     private void refMateEditEmptyMod(ActionEvent event) {
         refMatModel = new ReferenceMaterialModel();
+        ((ReferenceMaterialModel) refMatModel).calculateApparentDates();
+        refMatReferenceDatesCheckbox.setSelected(false);
         setUpRefMat();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
@@ -2140,14 +2197,12 @@ public class ParametersManagerGUIController implements Initializable {
             ObservableList<DataModel> items = refDatesTable.getItems();
             for (DataModel mod : items) {
                 boolean found = false;
-                for (int i = 0; !found && i < ((ReferenceMaterialModel) refMatModel).getApparentDates().length; i++) {
-                    ValueModel valMod = ((ReferenceMaterialModel) refMatModel).getApparentDates()[i];
-                    if (mod.getName().equals(valMod.getName())) {
-                        found = true;
-                        mod.setOneSigmaABS(refDatesNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                        mod.setOneSigmaPCT(refDatesNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                        mod.setValue(refDatesNotation.format(round(valMod.getValue(), precision)));
-                    }
+                for (int i = 0; !found && i < ((ReferenceMaterialModel) refMatModel).getDates().length; i++) {
+                    ValueModel valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(mod.getName());
+                    mod.setOneSigmaABS(refDatesNotation.format(round(valMod.getOneSigmaABS(), precision)));
+                    mod.setOneSigmaPCT(refDatesNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+                    mod.setValue(refDatesNotation.format(round(valMod.getValue(), precision)));
+
                 }
             }
             refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
@@ -2314,7 +2369,7 @@ public class ParametersManagerGUIController implements Initializable {
             hasModelWithSameNameAndVersion = name.equals(commonPbModels.get(i).getModelName())
                     && version.equals(commonPbModels.get(i).getVersion());
         }
-        if (!hasModelWithSameNameAndVersion) {
+        if (!hasModelWithSameNameAndVersion || isEditingCurrCommonPbModel) {
             commonPbModel.setIsEditable(true);
             commonPbModel.setModelName(commonPbModelName.getText());
             commonPbModel.setLabName(commonPbLabName.getText());
@@ -2341,7 +2396,6 @@ public class ParametersManagerGUIController implements Initializable {
         } else {
             SquidMessageDialog.showWarningDialog("A Common Lead Model with the same name and version exists.\n"
                     + "Please change the name and/or version", squidLabDataWindow);
-            squidLabData.storeState();
         }
     }
 
@@ -2464,30 +2518,54 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void refMatApparentDatesCheckBoxOnAction(ActionEvent actionEvent) {
+    public void refMatReferenceDatesCheckBoxOnAction(ActionEvent actionEvent) {
         setUpRefMatDatesSelection();
     }
 
     private void setUpRefMatDatesSelection() {
-        if (refMatApparentDatesCheckbox.isSelected()) {
-            refMatDataTab.setDisable(false);
-            refMatCorrTab.setDisable(false);
-            refMatCovTab.setDisable(false);
-            apparentDatesTab.setDisable(false);
-
-            refMatRefDatesTab.setDisable(true);
-        } else {
+        if (refMatReferenceDatesCheckbox.isSelected()) {
             refMatDataTab.setDisable(true);
             refMatCorrTab.setDisable(true);
             refMatCovTab.setDisable(true);
             apparentDatesTab.setDisable(true);
 
             refMatRefDatesTab.setDisable(false);
+        } else {
+            refMatDataTab.setDisable(false);
+            refMatCorrTab.setDisable(false);
+            refMatCovTab.setDisable(false);
+            apparentDatesTab.setDisable(false);
+
+            refMatRefDatesTab.setDisable(true);
         }
+        setUpDates();
     }
 
     @FXML
     public void refDatesNotationAction(ActionEvent actionEvent) {
+        if (refDatesNotation.equals(standardNotation)) {
+            refDatesNotationButton.setText("Standard Notation");
+            refDatesNotation = scientificNotation;
+        } else {
+            refDatesNotationButton.setText("Scientific Notation");
+            refDatesNotation = standardNotation;
+        }
+        ObservableList<DataModel> dataModels = refDatesTable.getItems();
+        int precision = refDatesSigFigSpinner.getValue();
+        for (DataModel model : dataModels) {
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(model.getValue());
+            model.setValue(refDatesNotation.format(round(bigDec, precision)));
+
+            bigDec = new BigDecimal(model.getOneSigmaABS());
+            model.setOneSigmaABS(refDatesNotation.format(round(bigDec, precision)));
+
+            bigDec = new BigDecimal(model.getOneSigmaPCT());
+            model.setOneSigmaPCT(refDatesNotation.format(round(bigDec, precision)));
+        }
+        refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
+        refDatesTable.refresh();
     }
 
     public class DataModel {

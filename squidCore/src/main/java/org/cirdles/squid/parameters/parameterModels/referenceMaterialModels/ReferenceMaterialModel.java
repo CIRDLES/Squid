@@ -35,12 +35,12 @@ public class ReferenceMaterialModel extends ParametersModel {
 
     ValueModel[] concentrations;
     boolean[] dataMeasured;
-    private ValueModel[] apparentDates;
+    private ValueModel[] dates;
     private ConcurrentMap<String, BigDecimal> parDerivTerms;
 
     public ReferenceMaterialModel() {
         super();
-        apparentDates = new ValueModel[0];
+        dates = new ValueModel[0];
         parDerivTerms = new ConcurrentHashMap<>();
         generateDefaultValueModels();
         initializeDefaultConcentrations();
@@ -115,6 +115,18 @@ public class ReferenceMaterialModel extends ParametersModel {
         for (int i = 0; i < concentrations.length && !found; i++) {
             if (concentrations[i].getName().equals(name)) {
                 retVal = concentrations[i];
+                found = true;
+            }
+        }
+        return retVal;
+    }
+
+    public ValueModel getDateByName(String name) {
+        ValueModel retVal = new ValueModel(name);
+        boolean found = false;
+        for (int i = 0; i < dates.length && !found; i++) {
+            if (dates[i].getName().equals(name)) {
+                retVal = dates[i];
                 found = true;
             }
         }
@@ -253,54 +265,54 @@ public class ReferenceMaterialModel extends ParametersModel {
 
         ValueModel r208_232r = getDatumByName(ReferenceMaterialEnum.r208_232r.getName());
 
-        apparentDates = new ValueModel[4];
+        dates = new ValueModel[4];
 
-        apparentDates[0] = new Age206_238r();
-        getApparentDates()[0].calculateValue(
+        dates[0] = new Age206_238r();
+        getDates()[0].calculateValue(
                 new ValueModel[]{
                         r206_238r,
                         lambda238}, parDerivTerms);
         if (parDerivTerms.containsKey("dAge206_238r__dR206_238r")) {
-            apparentDates[0].setOneSigma(//
+            dates[0].setOneSigma(//
                     parDerivTerms.get("dAge206_238r__dR206_238r") //
                             .abs()//
                             .multiply(r206_238r.getOneSigmaABS()));
         }
 
-        apparentDates[1] = new Age207_206r();
-        getApparentDates()[1].calculateValue(
+        dates[1] = new Age207_206r();
+        getDates()[1].calculateValue(
                 new ValueModel[]{
                         r238_235s,
                         r207_206r,
-                        apparentDates[0],
+                        dates[0],
                         lambda235,
                         lambda238}, parDerivTerms);
         if (parDerivTerms.containsKey("dAge207_206r__dR207_206r")) {
-            apparentDates[1].setOneSigma(//
+            dates[1].setOneSigma(//
                     parDerivTerms.get("dAge207_206r__dR207_206r")//
                             .abs()//
                             .multiply(r207_206r.getOneSigmaABS()));
         }
 
-        apparentDates[2] = new Age207_235r();
-        getApparentDates()[2].calculateValue(
+        dates[2] = new Age207_235r();
+        getDates()[2].calculateValue(
                 new ValueModel[]{
                         r207_235r,
                         lambda235}, parDerivTerms);
         if (parDerivTerms.containsKey("dAge207_235r__dR207_235r")) {
-            apparentDates[2].setOneSigma(//
+            dates[2].setOneSigma(//
                     parDerivTerms.get("dAge207_235r__dR207_235r")//
                             .abs()//
                             .multiply(r207_235r.getOneSigmaABS()));//******************************calc this with matrices
         }
 
-        apparentDates[3] = new Age208_232r();
-        getApparentDates()[3].calculateValue(
+        dates[3] = new Age208_232r();
+        getDates()[3].calculateValue(
                 new ValueModel[]{
                         r208_232r,
                         lambda232}, parDerivTerms);
         if (parDerivTerms.containsKey("dAge208_232r__dR208_232r")) {
-            apparentDates[3].setOneSigma(//
+            dates[3].setOneSigma(//
                     parDerivTerms.get("dAge208_232r__dR208_232r")//
                             .abs()//
                             .multiply(r208_232r.getOneSigmaABS()));
@@ -315,10 +327,10 @@ public class ReferenceMaterialModel extends ParametersModel {
 
         String retVal = "";
 
-        for (int i = 0; i < apparentDates.length; i++) {
-            if (apparentDates[i].hasPositiveValue()) {
-                retVal += apparentDates[i].getName() + " : "
-                        + apparentDates[i].formatValueAndTwoSigmaForPublicationSigDigMode( //
+        for (int i = 0; i < dates.length; i++) {
+            if (dates[i].hasPositiveValue()) {
+                retVal += dates[i].getName() + " : "
+                        + dates[i].formatValueAndTwoSigmaForPublicationSigDigMode( //
                         "ABS", -6, 2) //
                         + " (2\u03C3)  Ma\n";
             }
@@ -327,12 +339,12 @@ public class ReferenceMaterialModel extends ParametersModel {
         return retVal;
     }
 
-    public ValueModel[] getApparentDates() {
-        return apparentDates;
+    public ValueModel[] getDates() {
+        return dates;
     }
 
-    public void setApparentDates(ValueModel[] apparentDates) {
-        this.apparentDates = apparentDates;
+    public void setDates(ValueModel[] dates) {
+        this.dates = dates;
     }
 
     public ConcurrentMap<String, BigDecimal> getParDerivTerms() {
