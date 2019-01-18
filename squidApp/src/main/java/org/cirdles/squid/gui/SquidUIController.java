@@ -32,14 +32,6 @@ import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.op.OPFileHandler;
-import org.cirdles.squid.parameters.ParametersModelComparator;
-import org.cirdles.squid.tasks.Task;
-import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
-import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
-import org.cirdles.squid.gui.parameters.ParametersLauncher;
-import static org.cirdles.squid.gui.SquidUI.primaryStage;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
@@ -49,13 +41,8 @@ import org.cirdles.squid.gui.utilities.BrowserControl;
 
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.reports.reportSettings.ReportSettings;
-import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
-import org.cirdles.squid.shrimp.ShrimpFraction;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.fileUtilities.FileValidator;
@@ -390,6 +377,34 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
     }
+    
+    @FXML
+    public void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
+        prepareForNewProject();
+        
+        try {
+            File opFileNew = FileHandler.selectOPFile(primaryStageWindow);
+            if (opFileNew != null) {
+                squidProject.setupPrawnFileFromOP(opFileNew);
+                //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
+                SquidUI.updateStageTitle("");
+                launchProjectManager();
+                saveSquidProjectMenuItem.setDisable(true);
+            }
+        } catch (IOException iOException) {
+            String message = iOException.getMessage();
+            if (message == null) {
+                message = iOException.getCause().getMessage();
+            }
+            
+            SquidMessageDialog.showWarningDialog(
+                    "Squid encountered an error while trying to open the selected file:\n\n"
+                    + message,
+                    primaryStageWindow);
+        }
+        
+    }
+
 
     @FXML
     private void newSquidProjectAction(ActionEvent event) {
@@ -1292,29 +1307,6 @@ public class SquidUIController implements Initializable {
                     "Squid encountered an error while trying to open the selected Prawn File:\n\n"
                     + message,
                     primaryStageWindow);
-        }
-    }
-
-    public void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
-        removeAllManagers();
-        List<ShrimpFraction> shrimps = null;
-        try {
-            File file = FileHandler.selectOPFile(primaryStageWindow);
-            if(file != null) {
-                shrimps = OPFileHandler.convertOPFileToShrimpFractions(file);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(shrimps != null) {
-            prepareForNewProject();
-            squidProject = new SquidProject();
-            squidProject.getTask().getShrimpFractions().clear();
-            squidProject.getTask().getShrimpFractions().addAll(shrimps);
-            ((Task) squidProject.getTask()).setupSquidSessionSkeleton();
-            launchProjectManager();
-        } else {
-            SquidMessageDialog.showWarningDialog("OP File not opened properly or incorrect op file format", primaryStageWindow);
         }
     }
 

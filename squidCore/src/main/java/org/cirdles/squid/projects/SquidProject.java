@@ -33,6 +33,7 @@ import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.core.PrawnFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.op.OPFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
@@ -144,7 +145,7 @@ public final class SquidProject implements Serializable {
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
         // if Task is ashort of nominal masses, add them
-        int prawnSpeciesCount = Integer.parseInt(((PrawnFile) prawnFile).getRun().get(0).getPar().get(2).getValue());
+        int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
         if (prawnSpeciesCount != taskSquid25.getNominalMasses().size()) {
             SquidMessageDialog.showWarningDialog(
                     "The PrawnFile has "
@@ -222,6 +223,13 @@ public final class SquidProject implements Serializable {
         initializeTaskAndReduceData();
     }
 
+    public void setupPrawnFileFromOP(File opFileNew) {
+        OPFileHandler opFileHandler = new OPFileHandler();
+        prawnFile = opFileHandler.convertOPFileToPrawnFile(opFileNew);
+        task.setPrawnFile(prawnFile);
+        ((Task) task).setupSquidSessionSkeleton();
+    }
+
     public void setupPrawnFile(File prawnXMLFileNew)
             throws IOException, JAXBException, SAXException, SquidException {
 
@@ -236,8 +244,8 @@ public final class SquidProject implements Serializable {
             throws IOException, JAXBException, SAXException, SquidException {
 
         if (prawnXMLFilesNew.size() == 2) {
-            PrawnFile prawnFile1 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(0).getCanonicalPath(), false);
-            PrawnFile prawnFile2 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(1).getCanonicalPath(), false);
+            ShrimpDataFileInterface prawnFile1 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(0).getCanonicalPath(), false);
+            ShrimpDataFileInterface prawnFile2 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(1).getCanonicalPath(), false);
 
             long start1 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile1.getRun().get(0));
             long start2 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile2.getRun().get(0));
@@ -288,14 +296,14 @@ public final class SquidProject implements Serializable {
         return prawnFile != null;
     }
 
-    public PrawnFile deserializePrawnData()
+    public ShrimpDataFileInterface deserializePrawnData()
             throws IOException, JAXBException, SAXException, SquidException {
         return prawnFileHandler.unmarshallCurrentPrawnFileXML();
     }
 
     private void serializePrawnData(String fileName)
             throws IOException, JAXBException, SAXException {
-        prawnFileHandler.writeRawDataFileAsXML(((PrawnFile) prawnFile), fileName);
+        prawnFileHandler.writeRawDataFileAsXML(prawnFile, fileName);
     }
 
     // reports
@@ -369,7 +377,7 @@ public final class SquidProject implements Serializable {
     /**
      * @param prawnFile the prawnFile to set
      */
-    public void setPrawnFile(PrawnFile prawnFile) {
+    public void setPrawnFile(ShrimpDataFileInterface prawnFile) {
         this.prawnFile = prawnFile;
     }
 
@@ -378,7 +386,7 @@ public final class SquidProject implements Serializable {
     }
 
     public String getPrawnFileShrimpSoftwareVersionName() {
-        return ((PrawnFile) prawnFile).getSoftwareVersion();
+        return prawnFile.getSoftwareVersion();
     }
 
     public String getPrawnFileLoginComment() {
@@ -386,11 +394,11 @@ public final class SquidProject implements Serializable {
     }
 
     public List<Run> getPrawnFileRuns() {
-        return new ArrayList<>(((PrawnFile) prawnFile).getRun());
+        return new ArrayList<>(prawnFile.getRun());
     }
 
     public void processPrawnSessionForDuplicateSpotNames() {
-        List<Run> runs = ((PrawnFile) prawnFile).getRun();
+        List<Run> runs = prawnFile.getRun();
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
             String spotName = runs.get(i).getPar().get(0).getValue().trim();
@@ -418,7 +426,7 @@ public final class SquidProject implements Serializable {
         processPrawnSessionForDuplicateSpotNames();
 
         // determine time in hours for session
-        List<Run> runs = ((PrawnFile) prawnFile).getRun();
+        List<Run> runs = prawnFile.getRun();
         long startFirst = PrawnFileUtilities.timeInMillisecondsOfRun(runs.get(0));
         long startLast = PrawnFileUtilities.timeInMillisecondsOfRun(runs.get(runs.size() - 1));
         long sessionDuration = startLast - startFirst;
@@ -428,10 +436,10 @@ public final class SquidProject implements Serializable {
     }
 
     public void removeRunFromPrawnFile(Run run) {
-        ((PrawnFile) prawnFile).getRun().remove(run);
+        prawnFile.getRun().remove(run);
 
         // save new count
-        ((PrawnFile) prawnFile).setRuns((short) ((PrawnFile) prawnFile).getRun().size());
+        prawnFile.setRuns((short) prawnFile.getRun().size());
 
         // update fractions
         ((Task) task).setupSquidSessionSkeleton();
@@ -440,7 +448,7 @@ public final class SquidProject implements Serializable {
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
         prefixTree = new SquidPrefixTree();
 
-        List<Run> copyOfRuns = new ArrayList<Run>(((PrawnFile) prawnFile).getRun());
+        List<Run> copyOfRuns = new ArrayList<>(prawnFile.getRun());
         Comparator<String> intuitiveString = new IntuitiveStringComparator<>();
         Collections.sort(copyOfRuns, (Run pt1, Run pt2)
                 -> (intuitiveString.compare(pt1.getPar().get(0).getValue(), pt2.getPar().get(0).getValue())));
@@ -474,13 +482,13 @@ public final class SquidProject implements Serializable {
         retVal[1] = prawnFileHandler.getCurrentPrawnFileLocation().replace(".xml", "-PART-B.xml").replace(".XML", "-PART-B.xml");
 
         // get index from original prawnFile
-        int indexOfRun = ((PrawnFile) prawnFile).getRun().indexOf(run);
+        int indexOfRun = prawnFile.getRun().indexOf(run);
 
-        List<Run> runs = ((PrawnFile) prawnFile).getRun();
+        List<Run> runs = prawnFile.getRun();
         List<Run> runsCopy;
 
         if (useOriginalData) {
-            PrawnFile prawnFileOriginal = null;
+            ShrimpDataFileInterface prawnFileOriginal = null;
             try {
                 prawnFileOriginal = deserializePrawnData();
                 runsCopy = new CopyOnWriteArrayList<>(prawnFileOriginal.getRun());
@@ -501,9 +509,9 @@ public final class SquidProject implements Serializable {
             runs.add(runF);
         }
 
-        ((PrawnFile) prawnFile).setRuns((short) runs.size());
+        prawnFile.setRuns((short) runs.size());
         try {
-            prawnFileHandler.writeRawDataFileAsXML(((PrawnFile) prawnFile), retVal[0]);
+            prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[0]);
         } catch (JAXBException jAXBException) {
         }
 
@@ -512,9 +520,9 @@ public final class SquidProject implements Serializable {
         for (Run runS : second) {
             runs.add(runS);
         }
-        ((PrawnFile) prawnFile).setRuns((short) runs.size());
+        prawnFile.setRuns((short) runs.size());
         try {
-            prawnFileHandler.writeRawDataFileAsXML(((PrawnFile) prawnFile), retVal[1]);
+            prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[1]);
         } catch (JAXBException jAXBException) {
         }
 
@@ -527,7 +535,7 @@ public final class SquidProject implements Serializable {
         for (Run runS : second) {
             runs.add(runS);
         }
-        ((PrawnFile) prawnFile).setRuns((short) runs.size());
+        prawnFile.setRuns((short) runs.size());
 
         return retVal;
     }

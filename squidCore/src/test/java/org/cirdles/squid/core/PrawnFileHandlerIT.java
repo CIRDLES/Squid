@@ -29,6 +29,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
@@ -106,7 +107,8 @@ public class PrawnFileHandlerIT {
 
         prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(PRAWN_FILE_RESOURCE);
 
-        PrawnFile prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
+        ShrimpDataFileInterface prawnFileData = 
+                prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
 
         List<SquidSpeciesModel> squidSpeciesModelList = new ArrayList<>();
         squidSpeciesModelList.add(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O", false, "No", false));
@@ -170,7 +172,7 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266);
 
         SquidProject squidProject = new SquidProject();
-        PrawnFile prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
+        ShrimpDataFileInterface prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
         squidProject.setPrawnFile(prawnFileData);
 
         squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
