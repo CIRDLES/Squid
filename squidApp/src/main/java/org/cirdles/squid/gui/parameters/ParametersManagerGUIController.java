@@ -398,20 +398,24 @@ public class ParametersManagerGUIController implements Initializable {
             int selected = defaultPhysConstCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getPhysicalConstantsModels().size()) {
                 squidLabData.setPhysConstDefault(squidLabData.getPhysicalConstantsModel(selected));
-                int selectedIndex = physConstCB.getSelectionModel().getSelectedIndex();
-                setUpPhysConstCBItems();
-                physConstCB.getSelectionModel().select(selectedIndex);
-                squidLabData.storeState();
+                if (!isEditingPhysConst) {
+                    int selectedIndex = physConstCB.getSelectionModel().getSelectedIndex();
+                    setUpPhysConstCBItems();
+                    physConstCB.getSelectionModel().select(selectedIndex);
+                    squidLabData.storeState();
+                }
             }
         });
         defaultRefMatCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
             int selected = defaultRefMatCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getReferenceMaterials().size()) {
                 squidLabData.setRefMatDefault(squidLabData.getReferenceMaterial(selected));
-                int selectedIndex = refMatCB.getSelectionModel().getSelectedIndex();
-                setUpRefMatCBItems();
-                refMatCB.getSelectionModel().select(selectedIndex);
-                squidLabData.storeState();
+                if (!isEditingRefMat) {
+                    int selectedIndex = refMatCB.getSelectionModel().getSelectedIndex();
+                    setUpRefMatCBItems();
+                    refMatCB.getSelectionModel().select(selectedIndex);
+                    squidLabData.storeState();
+                }
             }
         });
         defaultRefMatConcCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
@@ -425,10 +429,12 @@ public class ParametersManagerGUIController implements Initializable {
             int selected = defaultCommonPbCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getCommonPbModels().size()) {
                 squidLabData.setCommonPbDefault(squidLabData.getcommonPbModel(selected));
-                int selectedIndex = commonPbCB.getSelectionModel().getSelectedIndex();
-                setUpCommonPbCBItems();
-                commonPbCB.getSelectionModel().select(selectedIndex);
-                squidLabData.storeState();
+                if (!isEditingCommonPb) {
+                    int selectedIndex = commonPbCB.getSelectionModel().getSelectedIndex();
+                    setUpCommonPbCBItems();
+                    commonPbCB.getSelectionModel().select(selectedIndex);
+                    squidLabData.storeState();
+                }
             }
         });
     }
@@ -701,8 +707,15 @@ public class ParametersManagerGUIController implements Initializable {
                 if (table.equals(physConstCorrTable) || table.equals(refMatCorrTable) || table.equals(commonPbCorrTable)) {
                     col.setCellFactory(column -> EditCell.createStringEditCell());
                     col.setOnEditCommit(value -> {
-                        if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1
-                                && Double.parseDouble(value.getNewValue()) >= -1
+                        String newValue = value.getNewValue();
+                        if(newValue.endsWith("E")) {
+                            newValue = newValue + "0";
+                        }
+                        if(newValue.startsWith("E")) {
+                            newValue = "0" + newValue;
+                        }
+                        if (!newValue.isEmpty() && Double.parseDouble(newValue) <= 1
+                                && Double.parseDouble(newValue) >= -1
                                 && value.getTablePosition().getColumn() != value.getTablePosition().getRow() + 1) {
                             String colRatio = getRatioHiddenName(value.getTableColumn().getText());
                             String rowRatio = getRatioHiddenName(value.getRowValue().get(0).get());
@@ -710,8 +723,8 @@ public class ParametersManagerGUIController implements Initializable {
                             String reverseKey = "rho" + rowRatio.substring(0, 1).toUpperCase() + rowRatio.substring(1) + "__" + colRatio;
                             model.getRhos().remove(key);
                             model.getRhos().remove(reverseKey);
-                            if (Double.parseDouble(value.getNewValue()) != 0) {
-                                model.getRhos().put(key, new BigDecimal(value.getNewValue()));
+                            if (Double.parseDouble(newValue) != 0) {
+                                model.getRhos().put(key, new BigDecimal(newValue));
                             }
                             model.initializeCorrelations();
                             model.generateCovariancesFromCorrelations();
@@ -726,10 +739,6 @@ public class ParametersManagerGUIController implements Initializable {
                                 setUpCommonPbCov();
                             }
                             table.refresh();
-                        } else {
-                            SquidMessageDialog.showWarningDialog("Value Out of Range or Invalid: Only values"
-                                    + " in the range of [-1, 1] are allowed.", squidLabDataWindow);
-                            value.consume();
                         }
                     });
                 }
@@ -802,7 +811,14 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setSortable(false);
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
+            String newValue = value.getNewValue();
+            if(newValue.endsWith("E")) {
+                newValue = newValue + "0";
+            }
+            if(newValue.startsWith("E")) {
+                newValue = "0" + newValue;
+            }
+            if (!newValue.isEmpty()) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
                 String ratioName = getRatioHiddenName(mod.getName());
@@ -816,11 +832,11 @@ public class ParametersManagerGUIController implements Initializable {
                 } else if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
                 }
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
+                BigDecimal newBigDec = BigDecimal.ZERO;
+                if (Double.parseDouble(newValue) != 0) {
+                    newBigDec = new BigDecimal(newValue);
                 }
-                valMod.setValue(newValue);
+                valMod.setValue(newBigDec);
                 mod.setValue(format.format(round(valMod.getValue(), precision)));
                 mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
                 mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
@@ -830,9 +846,6 @@ public class ParametersManagerGUIController implements Initializable {
                 } else if (table.equals(commonPbDataTable)) {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.consume();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
@@ -843,7 +856,14 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
         absCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
+            String newValue = value.getNewValue();
+            if(newValue.endsWith("E")) {
+                newValue = newValue + "0";
+            }
+            if(newValue.startsWith("E")) {
+                newValue = "0" + newValue;
+            }
+            if (!newValue.isEmpty()) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
                 String ratioName = getRatioHiddenName(mod.getName());
@@ -857,11 +877,11 @@ public class ParametersManagerGUIController implements Initializable {
                 } else if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
                 }
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
+                BigDecimal newBigDec = BigDecimal.ZERO;
+                if (Double.parseDouble(newValue) != 0) {
+                    newBigDec = new BigDecimal(newValue);
                 }
-                valMod.setOneSigma(newValue);
+                valMod.setOneSigma(newBigDec);
                 valMod.setUncertaintyType("ABS");
                 mod.setValue(format.format(round(valMod.getValue(), precision)));
                 mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
@@ -872,9 +892,6 @@ public class ParametersManagerGUIController implements Initializable {
                 } else if (table.equals(commonPbDataTable)) {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.consume();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
@@ -885,7 +902,14 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
         pctCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
+            String newValue = value.getNewValue();
+            if(newValue.endsWith("E")) {
+                newValue = newValue + "0";
+            }
+            if(newValue.startsWith("E")) {
+                newValue = "0" + newValue;
+            }
+            if (!newValue.isEmpty()) {
                 ObservableList<DataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
                 String ratioName = getRatioHiddenName(mod.getName());
@@ -899,11 +923,11 @@ public class ParametersManagerGUIController implements Initializable {
                 } else if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
                 }
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
+                BigDecimal newBigDec = BigDecimal.ZERO;
+                if (Double.parseDouble(newValue) != 0) {
+                    newBigDec = new BigDecimal(newValue);
                 }
-                valMod.setOneSigma(newValue);
+                valMod.setOneSigma(newBigDec);
                 valMod.setUncertaintyType("PCT");
                 mod.setValue(format.format(round(valMod.getValue(), precision)));
                 mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
@@ -914,9 +938,6 @@ public class ParametersManagerGUIController implements Initializable {
                 } else if (table.equals(commonPbDataTable)) {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.consume();
             }
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
@@ -941,25 +962,29 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setSortable(false);
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
+            String newValue = value.getNewValue();
+            if(newValue.endsWith("E")) {
+                newValue = newValue + "0";
+            }
+            if(newValue.startsWith("E")) {
+                newValue = "0" + newValue;
+            }
+            if (!newValue.isEmpty()) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
                 String ratioName = getRatioHiddenName(mod.getName());
                 ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
+                BigDecimal newBigDec = BigDecimal.ZERO;
+                if (Double.parseDouble(newValue) != 0) {
+                    newBigDec = new BigDecimal(newValue);
                 }
-                valMod.setValue(newValue);
+                valMod.setValue(newBigDec);
                 mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
                 mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
                 mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
                 value.getTableView().refresh();
                 setUpRefMatCovariancesAndCorrelations();
                 setUpDatesCheckBoxVisibility();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.consume();
             }
             setUpRefMatDataModelColumns();
         });
@@ -970,25 +995,29 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
         absCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
+            String newValue = value.getNewValue();
+            if(newValue.endsWith("E")) {
+                newValue = newValue + "0";
+            }
+            if(newValue.startsWith("E")) {
+                newValue = "0" + newValue;
+            }
+            if (!newValue.isEmpty()) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
                 String ratioName = getRatioHiddenName(mod.getName());
                 ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
+                BigDecimal newBigDec = BigDecimal.ZERO;
+                if (Double.parseDouble(newValue) != 0) {
+                    newBigDec = new BigDecimal(newValue);
                 }
-                valMod.setOneSigma(newValue);
+                valMod.setOneSigma(newBigDec);
                 valMod.setUncertaintyType("ABS");
                 mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
                 mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
                 mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
                 value.getTableView().refresh();
                 setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.consume();
             }
             setUpRefMatDataModelColumns();
         });
@@ -999,25 +1028,29 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
         pctCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
+            String newValue = value.getNewValue();
+            if(newValue.endsWith("E")) {
+                newValue = newValue + "0";
+            }
+            if(newValue.startsWith("E")) {
+                newValue = "0" + newValue;
+            }
+            if (!newValue.isEmpty()) {
                 ObservableList<RefMatDataModel> items = value.getTableView().getItems();
                 DataModel mod = items.get(value.getTablePosition().getRow());
                 String ratioName = getRatioHiddenName(mod.getName());
                 ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
+                BigDecimal newBigDec = BigDecimal.ZERO;
+                if (Double.parseDouble(newValue) != 0) {
+                    newBigDec = new BigDecimal(newValue);
                 }
-                valMod.setOneSigma(newValue);
+                valMod.setOneSigma(newBigDec);
                 valMod.setUncertaintyType("PCT");
                 mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
                 mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
                 mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
                 value.getTableView().refresh();
                 setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.consume();
             }
             setUpRefMatDataModelColumns();
         });
@@ -1759,9 +1792,8 @@ public class ParametersManagerGUIController implements Initializable {
             physConstModel = physConstHolder;
             physConstHolder = null;
         }
-        String selected = physConstCB.getSelectionModel().getSelectedItem();
         setUpPhysConstCBItems();
-        physConstCB.getSelectionModel().select(selected);
+        physConstCB.getSelectionModel().select(physConstModels.indexOf(squidLabData.getPhysConstDefault()));
         physConstEditable(false);
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
         isEditingPhysConst = false;
@@ -1886,9 +1918,8 @@ public class ParametersManagerGUIController implements Initializable {
             refMatModel = refMatHolder;
             refMatHolder = null;
         }
-        String selected = refMatCB.getSelectionModel().getSelectedItem();
         setUpRefMatCBItems();
-        refMatCB.getSelectionModel().select(selected);
+        refMatCB.getSelectionModel().select(refMatModels.indexOf(squidLabData.getRefMatDefault()));
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
         isEditingRefMat = false;
@@ -1897,7 +1928,7 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     private void refMateEditEmptyMod(ActionEvent event) {
         refMatModel = new ReferenceMaterialModel();
-        ((ReferenceMaterialModel)refMatModel).generateBaseDates();
+        ((ReferenceMaterialModel) refMatModel).generateBaseDates();
         refMatReferenceDatesCheckbox.setSelected(false);
         setUpRefMat();
         refMatEditable(true);
@@ -2390,9 +2421,8 @@ public class ParametersManagerGUIController implements Initializable {
             commonPbModelHolder = null;
         }
         isEditingCommonPb = false;
-        String selected = commonPbCB.getSelectionModel().getSelectedItem();
         setUpCommonPbCBItems();
-        commonPbCB.getSelectionModel().select(selected);
+        commonPbCB.getSelectionModel().select(commonPbModels.indexOf(squidLabData.getCommonPbDefault()));
         commonPbModelEditable(false);
         setUpCommonPbMenuItems(false, commonPbModel.isEditable());
     }
