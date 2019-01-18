@@ -12,6 +12,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -2520,6 +2521,10 @@ public class ParametersManagerGUIController implements Initializable {
             apparentDatesTab.setDisable(true);
 
             refMatRefDatesTab.setDisable(false);
+
+            if (((ReferenceMaterialModel) refMatModel).getDates().length == 0) {
+                ((ReferenceMaterialModel) refMatModel).calculateApparentDates();
+            }
 
             Tab selectedTab = refMatTabPane.getSelectionModel().getSelectedItem();
             if (selectedTab == refMatDataTab || selectedTab == refMatCorrTab || selectedTab == refMatCovTab || selectedTab == apparentDatesTab) {

@@ -1,7 +1,6 @@
 package org.cirdles.squid.gui.parameters;
 // found at https://gist.github.com/james-d/be5bbd6255a4640a5357
 // fixes javafx bug where edit isn't committed on loss of focus
-// modified
 
 import javafx.event.Event;
 import javafx.scene.control.*;
