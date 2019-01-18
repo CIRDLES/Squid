@@ -33,7 +33,6 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 
-import javax.swing.event.DocumentEvent;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -76,6 +75,8 @@ public class ParametersManagerGUIController implements Initializable {
     public Tab refMatRefDatesTab;
     @FXML
     public TableView<DataModel> refDatesTable;
+    @FXML
+    public TabPane refMatTabPane;
     @FXML
     private ChoiceBox<String> defaultRefMatConcCB;
     @FXML
@@ -487,8 +488,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpDatesCheckboxVisibilityListener() {
-        refMatIsEditableLabel.textProperty().addListener((val) ->{
-            if(refMatIsEditableLabel.getText().equals("editing")) {
+        refMatIsEditableLabel.textProperty().addListener((val) -> {
+            if (refMatIsEditableLabel.getText().equals("editing")) {
                 setUpDatesCheckBoxVisibility();
             } else {
                 refMatReferenceDatesCheckbox.setVisible(false);
@@ -815,14 +816,11 @@ public class ParametersManagerGUIController implements Initializable {
                 ValueModel valMod = new ValueModel(ratioName);
                 if (table.equals(physConstDataTable)) {
                     valMod = physConstModel.getDatumByName(ratioName);
-                }
-                if (table.equals(refMatConcentrationsTable)) {
+                } else if (table.equals(refMatConcentrationsTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
-                }
-                if (table.equals(refDatesTable)) {
+                } else if (table.equals(refDatesTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
-                }
-                if (table.equals(commonPbDataTable)) {
+                } else if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
                 }
                 BigDecimal newValue = BigDecimal.ZERO;
@@ -859,14 +857,11 @@ public class ParametersManagerGUIController implements Initializable {
                 ValueModel valMod = new ValueModel(ratioName);
                 if (table.equals(physConstDataTable)) {
                     valMod = physConstModel.getDatumByName(ratioName);
-                }
-                if (table.equals(refMatConcentrationsTable)) {
+                } else if (table.equals(refMatConcentrationsTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
-                }
-                if (table.equals(refDatesTable)) {
+                } else if (table.equals(refDatesTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
-                }
-                if (table.equals(commonPbDataTable)) {
+                } else if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
                 }
                 BigDecimal newValue = BigDecimal.ZERO;
@@ -881,8 +876,7 @@ public class ParametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
-                }
-                if (table.equals(commonPbDataTable)) {
+                } else if (table.equals(commonPbDataTable)) {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
@@ -905,14 +899,11 @@ public class ParametersManagerGUIController implements Initializable {
                 ValueModel valMod = new ValueModel(ratioName);
                 if (table.equals(physConstDataTable)) {
                     valMod = physConstModel.getDatumByName(ratioName);
-                }
-                if (table.equals(refMatConcentrationsTable)) {
+                } else if (table.equals(refMatConcentrationsTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
-                }
-                if (table.equals(refDatesTable)) {
+                } else if (table.equals(refDatesTable)) {
                     valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
-                }
-                if (table.equals(commonPbDataTable)) {
+                } else if (table.equals(commonPbDataTable)) {
                     valMod = commonPbModel.getDatumByName(ratioName);
                 }
                 BigDecimal newValue = BigDecimal.ZERO;
@@ -927,8 +918,7 @@ public class ParametersManagerGUIController implements Initializable {
                 value.getTableView().refresh();
                 if (table.equals(physConstDataTable)) {
                     setUpPhysConstCovariancesAndCorrelations();
-                }
-                if (table.equals(commonPbDataTable)) {
+                } else if (table.equals(commonPbDataTable)) {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
             } else {
@@ -1673,7 +1663,7 @@ public class ParametersManagerGUIController implements Initializable {
         refMatCorrTable.getColumns().get(0).setEditable(false);
 
         refDatesTable.setEditable(isEditable);
-        if(refDatesTable.getColumns() != null && refDatesTable.getColumns().size() > 0) {
+        if (refDatesTable.getColumns() != null && refDatesTable.getColumns().size() > 0) {
             refDatesTable.getColumns().get(0).setEditable(false);
         }
 
@@ -2530,6 +2520,11 @@ public class ParametersManagerGUIController implements Initializable {
             apparentDatesTab.setDisable(true);
 
             refMatRefDatesTab.setDisable(false);
+
+            Tab selectedTab = refMatTabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab == refMatDataTab || selectedTab == refMatCorrTab || selectedTab == refMatCovTab || selectedTab == apparentDatesTab) {
+                refMatTabPane.getSelectionModel().select(refMatRefDatesTab);
+            }
         } else {
             refMatDataTab.setDisable(false);
             refMatCorrTab.setDisable(false);
@@ -2537,6 +2532,10 @@ public class ParametersManagerGUIController implements Initializable {
             apparentDatesTab.setDisable(false);
 
             refMatRefDatesTab.setDisable(true);
+
+            if (refMatTabPane.getSelectionModel().getSelectedItem() == refMatRefDatesTab) {
+                refMatTabPane.getSelectionModel().select(refMatDataTab);
+            }
         }
         setUpDates();
     }
