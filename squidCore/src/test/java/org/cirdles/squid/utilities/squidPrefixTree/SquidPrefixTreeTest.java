@@ -63,7 +63,7 @@ public class SquidPrefixTreeTest {
 
         spt.prepareStatistics();
 
-        HashMap map = new HashMap<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
         map.put(0, 1);
         assertEquals(1, spt.getCountOfDups());
         assertEquals("G", spt.findTargetChild(new SquidPrefixTreeNode('g')).getStringValue());
@@ -126,7 +126,7 @@ public class SquidPrefixTreeTest {
     @Test
     public void testGetMapOfScansFrequencies() {
         SquidPrefixTree spt = new SquidPrefixTree();
-        HashMap map = new HashMap();
+        HashMap<Integer, Integer> map = new HashMap<>();
         spt.insert("5.3.fsdg-DUP-");
         spt.insert("2345.4");
         spt.insert("2345.45");
@@ -142,7 +142,7 @@ public class SquidPrefixTreeTest {
     @Test
     public void testGetMapOfSpeciesFrequencies() {
         SquidPrefixTree spt = new SquidPrefixTree();
-        HashMap map = new HashMap();
+        HashMap<Integer, Integer> map = new HashMap<>();
         spt.insert("t.2.1.1");
         spt.insert("t.2.1.1.2");
 
