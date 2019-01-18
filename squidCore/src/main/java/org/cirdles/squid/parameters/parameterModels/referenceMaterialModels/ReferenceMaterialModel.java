@@ -37,9 +37,12 @@ public class ReferenceMaterialModel extends ParametersModel {
     boolean[] dataMeasured;
     private ValueModel[] dates;
     private ConcurrentMap<String, BigDecimal> parDerivTerms;
+    private boolean referenceDates;
+
 
     public ReferenceMaterialModel() {
         super();
+        referenceDates = false;
         dates = new ValueModel[0];
         parDerivTerms = new ConcurrentHashMap<>();
         generateDefaultValueModels();
@@ -57,6 +60,7 @@ public class ReferenceMaterialModel extends ParametersModel {
         ReferenceMaterialModel model = new ReferenceMaterialModel();
 
         model.setModelName(modelName);
+        model.setReferenceDates(referenceDates);
         model.setIsEditable(isEditable);
         model.setLabName(labName);
         model.setVersion(version);
@@ -92,6 +96,14 @@ public class ReferenceMaterialModel extends ParametersModel {
         model.setConcentrations(concs);
 
         model.setDataMeasured(dataMeasured.clone());
+
+        ValueModel[] dateModels = new ValueModel[dates.length];
+        for (int i = 0; i < dateModels.length; i++) {
+            ValueModel curr = dates[i];
+            dateModels[i] = new ValueModel(curr.getName(), curr.getUncertaintyType(),
+                    curr.getValue(), curr.getOneSigma());
+        }
+        model.setDates(dateModels);
 
         return model;
     }
@@ -181,141 +193,159 @@ public class ReferenceMaterialModel extends ParametersModel {
         return retVal;
     }
 
+    public boolean isReferenceDates() {
+        return referenceDates;
+    }
+
+    public void setReferenceDates(boolean referenceDates) {
+        this.referenceDates = referenceDates;
+    }
+
+    public void generateBaseDates() {
+        values = new ValueModel[4];
+        values[0] = new Age206_238r();
+        values[1] = new Age207_206r();
+        values[2] = new Age207_235r();
+        values[3] = new Age208_232r();
+    }
+
     public void calculateApparentDates() {
+        if (!referenceDates) {
 
-        ParametersModel defaultPhysConstModel =
-                PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
-        ValueModel lambda232 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.LAMBDA_232.getName());
+            ParametersModel defaultPhysConstModel =
+                    PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+            ValueModel lambda232 = defaultPhysConstModel//
+                    .getDatumByName(Lambdas.LAMBDA_232.getName());
 
-        ValueModel lambda235 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.LAMBDA_235.getName());
-        ValueModel lambda238 = defaultPhysConstModel//
-                .getDatumByName(Lambdas.LAMBDA_238.getName());
+            ValueModel lambda235 = defaultPhysConstModel//
+                    .getDatumByName(Lambdas.LAMBDA_235.getName());
+            ValueModel lambda238 = defaultPhysConstModel//
+                    .getDatumByName(Lambdas.LAMBDA_238.getName());
 
-        ValueModel r206_238r = getDatumByName(ReferenceMaterialEnum.r206_238r.getName());
+            ValueModel r206_238r = getDatumByName(ReferenceMaterialEnum.r206_238r.getName());
 
-        // make inverted ratio
-        ValueModel r206_207r = getDatumByName(ReferenceMaterialEnum.r206_207r.getName());
-        BigDecimal invertedR206_207r = BigDecimal.ZERO;
-        try {
-            invertedR206_207r = BigDecimal.ONE.divide(r206_207r.getValue(), new MathContext(15, RoundingMode.HALF_UP));
-        } catch (Exception e) {
-        }
-
-        ValueModel r207_206r = new ValueModel("r207_206r");
-        r207_206r.setValue(invertedR206_207r);
-        // percent uncertainty is constant between ratio and invert
-        r207_206r.setUncertaintyType("PCT");
-        r207_206r.setOneSigma(r206_207r.getOneSigmaPCT());
-
-        ValueModel r238_235s = getDatumByName(ReferenceMaterialEnum.r238_235s.getName());
-
-        ValueModel r207_235r = new ValueModel("r207_235r");
-        try {
-            r207_235r.setValue(r238_235s.getValue()//
-                    .multiply(r206_238r.getValue()//
-                            .divide(r206_207r.getValue(), new MathContext(15, RoundingMode.HALF_UP))));
-
-            // calculate uncertainty
-            double[][] v = new double[1][covModel.getRows().size()];
-            Iterator<Integer> rowKeys = covModel.getRows().keySet().iterator();
-            while (rowKeys.hasNext()) {
-                int rowKey = rowKeys.next();
-
-                if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
-                        ReferenceMaterialEnum.r206_207r.getName())) {
-                    v[0][rowKey] = r206_238r.getValue()//
-                            .multiply(r238_235s.getValue())//
-                            .divide(r206_207r.getValue().pow(2), new MathContext(15, RoundingMode.HALF_UP))//
-                            .doubleValue();
-                }
-
-                if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
-                        ReferenceMaterialEnum.r206_208r.getName())) {
-                    v[0][rowKey] = 0.0;
-                }
-
-                if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
-                        ReferenceMaterialEnum.r206_238r.getName())) {
-                    v[0][rowKey] = r238_235s.getValue()//
-                            .divide(r206_207r.getValue(), new MathContext(15, RoundingMode.HALF_UP)).doubleValue();
-                }
-
-                if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
-                        ReferenceMaterialEnum.r208_232r.getName())) {
-                    v[0][rowKey] = 0.0;
-                }
-
-                if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
-                        ReferenceMaterialEnum.r238_235s.getName())) {
-                    v[0][rowKey] = r206_238r.getValue()//
-                            .divide(r206_207r.getValue(), new MathContext(15, RoundingMode.HALF_UP)).doubleValue();
-                }
+            // make inverted ratio
+            ValueModel r206_207r = getDatumByName(ReferenceMaterialEnum.r206_207r.getName());
+            BigDecimal invertedR206_207r = BigDecimal.ZERO;
+            try {
+                invertedR206_207r = BigDecimal.ONE.divide(r206_207r.getValue(), new MathContext(15, RoundingMode.HALF_UP));
+            } catch (Exception e) {
             }
 
-            Matrix V = new Matrix(v);
+            ValueModel r207_206r = new ValueModel("r207_206r");
+            r207_206r.setValue(invertedR206_207r);
+            // percent uncertainty is constant between ratio and invert
+            r207_206r.setUncertaintyType("PCT");
+            r207_206r.setOneSigma(r206_207r.getOneSigmaPCT());
 
-            double varianceR207_235r = V.times(covModel.getMatrix()).times(V.transpose()).get(0, 0);
+            ValueModel r238_235s = getDatumByName(ReferenceMaterialEnum.r238_235s.getName());
 
-            r207_235r.setOneSigma(new BigDecimal(Math.sqrt(varianceR207_235r)));
+            ValueModel r207_235r = new ValueModel("r207_235r");
+            try {
+                r207_235r.setValue(r238_235s.getValue()//
+                        .multiply(r206_238r.getValue()//
+                                .divide(r206_207r.getValue(), new MathContext(15, RoundingMode.HALF_UP))));
 
-        } catch (Exception e) {
-        }
+                // calculate uncertainty
+                double[][] v = new double[1][covModel.getRows().size()];
+                Iterator<Integer> rowKeys = covModel.getRows().keySet().iterator();
+                while (rowKeys.hasNext()) {
+                    int rowKey = rowKeys.next();
 
-        ValueModel r208_232r = getDatumByName(ReferenceMaterialEnum.r208_232r.getName());
+                    if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
+                            ReferenceMaterialEnum.r206_207r.getName())) {
+                        v[0][rowKey] = r206_238r.getValue()//
+                                .multiply(r238_235s.getValue())//
+                                .divide(r206_207r.getValue().pow(2), new MathContext(15, RoundingMode.HALF_UP))//
+                                .doubleValue();
+                    }
 
-        dates = new ValueModel[4];
+                    if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
+                            ReferenceMaterialEnum.r206_208r.getName())) {
+                        v[0][rowKey] = 0.0;
+                    }
 
-        dates[0] = new Age206_238r();
-        getDates()[0].calculateValue(
-                new ValueModel[]{
-                        r206_238r,
-                        lambda238}, parDerivTerms);
-        if (parDerivTerms.containsKey("dAge206_238r__dR206_238r")) {
-            dates[0].setOneSigma(//
-                    parDerivTerms.get("dAge206_238r__dR206_238r") //
-                            .abs()//
-                            .multiply(r206_238r.getOneSigmaABS()));
-        }
+                    if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
+                            ReferenceMaterialEnum.r206_238r.getName())) {
+                        v[0][rowKey] = r238_235s.getValue()//
+                                .divide(r206_207r.getValue(), new MathContext(15, RoundingMode.HALF_UP)).doubleValue();
+                    }
 
-        dates[1] = new Age207_206r();
-        getDates()[1].calculateValue(
-                new ValueModel[]{
-                        r238_235s,
-                        r207_206r,
-                        dates[0],
-                        lambda235,
-                        lambda238}, parDerivTerms);
-        if (parDerivTerms.containsKey("dAge207_206r__dR207_206r")) {
-            dates[1].setOneSigma(//
-                    parDerivTerms.get("dAge207_206r__dR207_206r")//
-                            .abs()//
-                            .multiply(r207_206r.getOneSigmaABS()));
-        }
+                    if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
+                            ReferenceMaterialEnum.r208_232r.getName())) {
+                        v[0][rowKey] = 0.0;
+                    }
 
-        dates[2] = new Age207_235r();
-        getDates()[2].calculateValue(
-                new ValueModel[]{
-                        r207_235r,
-                        lambda235}, parDerivTerms);
-        if (parDerivTerms.containsKey("dAge207_235r__dR207_235r")) {
-            dates[2].setOneSigma(//
-                    parDerivTerms.get("dAge207_235r__dR207_235r")//
-                            .abs()//
-                            .multiply(r207_235r.getOneSigmaABS()));//******************************calc this with matrices
-        }
+                    if (covModel.getRows().get(rowKey).equalsIgnoreCase(//
+                            ReferenceMaterialEnum.r238_235s.getName())) {
+                        v[0][rowKey] = r206_238r.getValue()//
+                                .divide(r206_207r.getValue(), new MathContext(15, RoundingMode.HALF_UP)).doubleValue();
+                    }
+                }
 
-        dates[3] = new Age208_232r();
-        getDates()[3].calculateValue(
-                new ValueModel[]{
-                        r208_232r,
-                        lambda232}, parDerivTerms);
-        if (parDerivTerms.containsKey("dAge208_232r__dR208_232r")) {
-            dates[3].setOneSigma(//
-                    parDerivTerms.get("dAge208_232r__dR208_232r")//
-                            .abs()//
-                            .multiply(r208_232r.getOneSigmaABS()));
+                Matrix V = new Matrix(v);
+
+                double varianceR207_235r = V.times(covModel.getMatrix()).times(V.transpose()).get(0, 0);
+
+                r207_235r.setOneSigma(new BigDecimal(Math.sqrt(varianceR207_235r)));
+
+            } catch (Exception e) {
+            }
+
+            ValueModel r208_232r = getDatumByName(ReferenceMaterialEnum.r208_232r.getName());
+
+            dates = new ValueModel[4];
+
+            dates[0] = new Age206_238r();
+            getDates()[0].calculateValue(
+                    new ValueModel[]{
+                            r206_238r,
+                            lambda238}, parDerivTerms);
+            if (parDerivTerms.containsKey("dAge206_238r__dR206_238r")) {
+                dates[0].setOneSigma(//
+                        parDerivTerms.get("dAge206_238r__dR206_238r") //
+                                .abs()//
+                                .multiply(r206_238r.getOneSigmaABS()));
+            }
+
+            dates[1] = new Age207_206r();
+            getDates()[1].calculateValue(
+                    new ValueModel[]{
+                            r238_235s,
+                            r207_206r,
+                            dates[0],
+                            lambda235,
+                            lambda238}, parDerivTerms);
+            if (parDerivTerms.containsKey("dAge207_206r__dR207_206r")) {
+                dates[1].setOneSigma(//
+                        parDerivTerms.get("dAge207_206r__dR207_206r")//
+                                .abs()//
+                                .multiply(r207_206r.getOneSigmaABS()));
+            }
+
+            dates[2] = new Age207_235r();
+            getDates()[2].calculateValue(
+                    new ValueModel[]{
+                            r207_235r,
+                            lambda235}, parDerivTerms);
+            if (parDerivTerms.containsKey("dAge207_235r__dR207_235r")) {
+                dates[2].setOneSigma(//
+                        parDerivTerms.get("dAge207_235r__dR207_235r")//
+                                .abs()//
+                                .multiply(r207_235r.getOneSigmaABS()));//******************************calc this with matrices
+            }
+
+            dates[3] = new Age208_232r();
+            getDates()[3].calculateValue(
+                    new ValueModel[]{
+                            r208_232r,
+                            lambda232}, parDerivTerms);
+            if (parDerivTerms.containsKey("dAge208_232r__dR208_232r")) {
+                dates[3].setOneSigma(//
+                        parDerivTerms.get("dAge208_232r__dR208_232r")//
+                                .abs()//
+                                .multiply(r208_232r.getOneSigmaABS()));
+            }
         }
     }
 
@@ -390,5 +420,5 @@ public class ReferenceMaterialModel extends ParametersModel {
         ReferenceMaterialModel model = (ReferenceMaterialModel) xstream.fromXML(input);
         return model;
     }
-    
+
 }

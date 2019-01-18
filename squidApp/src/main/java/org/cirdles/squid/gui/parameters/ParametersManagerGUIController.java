@@ -12,7 +12,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -582,14 +581,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setRefMatModel(int num) {
         if (num > -1 && num < refMatModels.size()) {
             refMatModel = refMatModels.get(num);
-            boolean hasNonZero = false;
-            ValueModel[] models = refMatModel.getValues();
-            if (models != null) {
-                for (int i = 0; !hasNonZero && i < models.length; i++) {
-                    hasNonZero = !(models[i].getValue().doubleValue() == 0.0);
-                }
-            }
-            refMatReferenceDatesCheckbox.setSelected(!hasNonZero);
+            refMatReferenceDatesCheckbox.setSelected(((ReferenceMaterialModel) refMatModel).isReferenceDates());
             setUpRefMat();
             setUpRefMatMenuItems(false, refMatModel.isEditable());
             refMatEditable(false);
@@ -1905,7 +1897,7 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     private void refMateEditEmptyMod(ActionEvent event) {
         refMatModel = new ReferenceMaterialModel();
-        ((ReferenceMaterialModel) refMatModel).calculateApparentDates();
+        ((ReferenceMaterialModel)refMatModel).generateBaseDates();
         refMatReferenceDatesCheckbox.setSelected(false);
         setUpRefMat();
         refMatEditable(true);
@@ -2510,11 +2502,12 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     public void refMatReferenceDatesCheckBoxOnAction(ActionEvent actionEvent) {
+        ((ReferenceMaterialModel) refMatModel).setReferenceDates(refMatReferenceDatesCheckbox.isSelected());
         setUpRefMatDatesSelection();
     }
 
     private void setUpRefMatDatesSelection() {
-        if (refMatReferenceDatesCheckbox.isSelected()) {
+        if (((ReferenceMaterialModel) refMatModel).isReferenceDates()) {
             refMatDataTab.setDisable(true);
             refMatCorrTab.setDisable(true);
             refMatCovTab.setDisable(true);
@@ -2523,7 +2516,7 @@ public class ParametersManagerGUIController implements Initializable {
             refMatRefDatesTab.setDisable(false);
 
             if (((ReferenceMaterialModel) refMatModel).getDates().length == 0) {
-                ((ReferenceMaterialModel) refMatModel).calculateApparentDates();
+                ((ReferenceMaterialModel) refMatModel).generateBaseDates();
             }
 
             Tab selectedTab = refMatTabPane.getSelectionModel().getSelectedItem();
