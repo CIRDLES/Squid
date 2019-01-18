@@ -209,7 +209,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 ObservableList<TreeItem<SampleTreeNodeInterface>> mySamples = rootItem.getChildren();
                 Iterator<TreeItem<SampleTreeNodeInterface>> mySamplesIterator = mySamples.iterator();
                 while (mySamplesIterator.hasNext()) {
-                    CheckBoxTreeItem<SampleTreeNodeInterface> mySampleItem = (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
+
+                    CheckBoxTreeItem<SampleTreeNodeInterface> mySampleItem = 
+                            (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
                     mySampleItem.setSelected(newValue);
                 }
                 plot = rootPlot;
