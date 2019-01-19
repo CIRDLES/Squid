@@ -211,7 +211,7 @@
                      <children>
                         <VBox alignment="CENTER">
                            <children>
-                              <Label fx:id="chinese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="墨斗鱼">
+                              <Label fx:id="chinese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans; -fx-font-weight: bold;" text="墨斗鱼">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -221,7 +221,7 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="584.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="いか">
+                              <Label fx:id="japanese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans; -fx-font-weight: bold;" text="いか">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -234,9 +234,9 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="605.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="korean" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="오징어">
+                              <Label fx:id="korean" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="오징어">
                                  <font>
-                                    <Font name="System Bold" size="14.0" />
+                                    <Font name="SansSerif Bold" size="14.0" />
                                  </font>
                               </Label>
                               <Label style="-fx-text-fill: white;" text="Korean" />
