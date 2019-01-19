@@ -284,8 +284,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.extPErr = 0.75;
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
-        this.referenceMaterialModel = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
-        this.concentrationReferenceMaterialModel = ReferenceMaterialModel.getDefaultModel("Zircon-91500", "1.0");
+        this.referenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
+        this.concentrationReferenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         this.physicalConstantsModelChanged = false;
@@ -1003,22 +1003,22 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (int i = 0; i < taskExpressionsOrderedByTarget.size(); i++) {
             ExpressionTreeInterface expTree = taskExpressionsOrderedByTarget.get(i).getExpressionTree();
             if (expTree.isSquidSpecialUPbThExpression()) {
-                if(expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()){
+                if (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                     expressionList.append("C");
                 } else {
                     expressionList.append(" ");
                 }
-                if(expTree.isSquidSwitchSTReferenceMaterialCalculation()){
+                if (expTree.isSquidSwitchSTReferenceMaterialCalculation()) {
                     expressionList.append("R");
                 } else {
                     expressionList.append(" ");
                 }
-                if(expTree.isSquidSwitchSAUnknownCalculation()){
+                if (expTree.isSquidSwitchSAUnknownCalculation()) {
                     expressionList.append("U");
                 } else {
                     expressionList.append(" ");
                 }
-                
+
                 expressionList.append("\t").append(expTree.getName()).append("\n");
             }
         }
@@ -1405,9 +1405,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         ShrimpFraction shrimpFraction = null;
         for (int f = 0; f < prawnFile.extractCountOfRuns(); f++) {
-                PrawnFile.Run runFraction = ((PrawnFile) prawnFile).getRun().get(f);
-                shrimpFraction
-                        = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
+            PrawnFile.Run runFraction = ((PrawnFile) prawnFile).getRun().get(f);
+            shrimpFraction
+                    = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
 
             if (shrimpFraction != null) {
                 shrimpFraction.setSpotNumber(f + 1);
