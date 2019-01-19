@@ -89,7 +89,7 @@ public class PrawnFileHandlerIT {
      */
     @Before
     public void setUp() {
-        prawnFileHandler = new PrawnFileHandler(new SquidProject());
+        prawnFileHandler = (new SquidProject()).getPrawnFileHandler();
     }
 
     /**
