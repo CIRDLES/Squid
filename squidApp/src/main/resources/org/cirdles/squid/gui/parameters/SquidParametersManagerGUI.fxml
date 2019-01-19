@@ -57,7 +57,8 @@
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <TabPane fx:id="refMatTabPane" layoutX="14.0" layoutY="112.0" tabClosingPolicy="UNAVAILABLE"
+                                <TabPane fx:id="refMatTabPane" layoutX="14.0" layoutY="112.0"
+                                         tabClosingPolicy="UNAVAILABLE"
                                          AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
                                          AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
                                     <tabs>
@@ -183,6 +184,7 @@
                                                                                  prefWidth="80.0"/>
                                                                     </children>
                                                                 </HBox>
+                                                                <Label text="Units are Parts Per Million"/>
                                                             </children>
                                                         </HBox>
                                                     </children>

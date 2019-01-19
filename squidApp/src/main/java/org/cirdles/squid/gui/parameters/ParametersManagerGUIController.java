@@ -708,13 +708,13 @@ public class ParametersManagerGUIController implements Initializable {
                     col.setCellFactory(column -> EditCell.createStringEditCell());
                     col.setOnEditCommit(value -> {
                         String newValue = value.getNewValue();
-                        if(newValue.endsWith("E")) {
+                        if (newValue.endsWith("E") || newValue.isEmpty()) {
                             newValue = newValue + "0";
                         }
-                        if(newValue.startsWith("E")) {
+                        if (newValue.startsWith("E") || newValue.startsWith(".")) {
                             newValue = "0" + newValue;
                         }
-                        if (!newValue.isEmpty() && Double.parseDouble(newValue) <= 1
+                        if (Double.parseDouble(newValue) <= 1
                                 && Double.parseDouble(newValue) >= -1
                                 && value.getTablePosition().getColumn() != value.getTablePosition().getRow() + 1) {
                             String colRatio = getRatioHiddenName(value.getTableColumn().getText());
@@ -738,6 +738,8 @@ public class ParametersManagerGUIController implements Initializable {
                                 setUpCommonPbCorr();
                                 setUpCommonPbCov();
                             }
+                            table.refresh();
+                        } else {
                             table.refresh();
                         }
                     });
@@ -812,41 +814,41 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
             String newValue = value.getNewValue();
-            if(newValue.endsWith("E")) {
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
                 newValue = newValue + "0";
             }
-            if(newValue.startsWith("E")) {
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
                 newValue = "0" + newValue;
             }
-            if (!newValue.isEmpty()) {
-                ObservableList<DataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = new ValueModel(ratioName);
-                if (table.equals(physConstDataTable)) {
-                    valMod = physConstModel.getDatumByName(ratioName);
-                } else if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
-                } else if (table.equals(refDatesTable)) {
-                    valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
-                } else if (table.equals(commonPbDataTable)) {
-                    valMod = commonPbModel.getDatumByName(ratioName);
-                }
-                BigDecimal newBigDec = BigDecimal.ZERO;
-                if (Double.parseDouble(newValue) != 0) {
-                    newBigDec = new BigDecimal(newValue);
-                }
-                valMod.setValue(newBigDec);
-                mod.setValue(format.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                if (table.equals(physConstDataTable)) {
-                    setUpPhysConstCovariancesAndCorrelations();
-                } else if (table.equals(commonPbDataTable)) {
-                    setUpCommonPbCovariancesAndCorrelations();
-                }
+
+            ObservableList<DataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = new ValueModel(ratioName);
+            if (table.equals(physConstDataTable)) {
+                valMod = physConstModel.getDatumByName(ratioName);
+            } else if (table.equals(refMatConcentrationsTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
+            } else if (table.equals(refDatesTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
+            } else if (table.equals(commonPbDataTable)) {
+                valMod = commonPbModel.getDatumByName(ratioName);
             }
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setValue(newBigDec);
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            if (table.equals(physConstDataTable)) {
+                setUpPhysConstCovariancesAndCorrelations();
+            } else if (table.equals(commonPbDataTable)) {
+                setUpCommonPbCovariancesAndCorrelations();
+            }
+
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(valCol);
@@ -857,42 +859,42 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
         absCol.setOnEditCommit(value -> {
             String newValue = value.getNewValue();
-            if(newValue.endsWith("E")) {
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
                 newValue = newValue + "0";
             }
-            if(newValue.startsWith("E")) {
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
                 newValue = "0" + newValue;
             }
-            if (!newValue.isEmpty()) {
-                ObservableList<DataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = new ValueModel(ratioName);
-                if (table.equals(physConstDataTable)) {
-                    valMod = physConstModel.getDatumByName(ratioName);
-                } else if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
-                } else if (table.equals(refDatesTable)) {
-                    valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
-                } else if (table.equals(commonPbDataTable)) {
-                    valMod = commonPbModel.getDatumByName(ratioName);
-                }
-                BigDecimal newBigDec = BigDecimal.ZERO;
-                if (Double.parseDouble(newValue) != 0) {
-                    newBigDec = new BigDecimal(newValue);
-                }
-                valMod.setOneSigma(newBigDec);
-                valMod.setUncertaintyType("ABS");
-                mod.setValue(format.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                if (table.equals(physConstDataTable)) {
-                    setUpPhysConstCovariancesAndCorrelations();
-                } else if (table.equals(commonPbDataTable)) {
-                    setUpCommonPbCovariancesAndCorrelations();
-                }
+
+            ObservableList<DataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = new ValueModel(ratioName);
+            if (table.equals(physConstDataTable)) {
+                valMod = physConstModel.getDatumByName(ratioName);
+            } else if (table.equals(refMatConcentrationsTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
+            } else if (table.equals(refDatesTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
+            } else if (table.equals(commonPbDataTable)) {
+                valMod = commonPbModel.getDatumByName(ratioName);
             }
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setOneSigma(newBigDec);
+            valMod.setUncertaintyType("ABS");
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            if (table.equals(physConstDataTable)) {
+                setUpPhysConstCovariancesAndCorrelations();
+            } else if (table.equals(commonPbDataTable)) {
+                setUpCommonPbCovariancesAndCorrelations();
+            }
+
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(absCol);
@@ -903,42 +905,42 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
         pctCol.setOnEditCommit(value -> {
             String newValue = value.getNewValue();
-            if(newValue.endsWith("E")) {
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
                 newValue = newValue + "0";
             }
-            if(newValue.startsWith("E")) {
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
                 newValue = "0" + newValue;
             }
-            if (!newValue.isEmpty()) {
-                ObservableList<DataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = new ValueModel(ratioName);
-                if (table.equals(physConstDataTable)) {
-                    valMod = physConstModel.getDatumByName(ratioName);
-                } else if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
-                } else if (table.equals(refDatesTable)) {
-                    valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
-                } else if (table.equals(commonPbDataTable)) {
-                    valMod = commonPbModel.getDatumByName(ratioName);
-                }
-                BigDecimal newBigDec = BigDecimal.ZERO;
-                if (Double.parseDouble(newValue) != 0) {
-                    newBigDec = new BigDecimal(newValue);
-                }
-                valMod.setOneSigma(newBigDec);
-                valMod.setUncertaintyType("PCT");
-                mod.setValue(format.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                if (table.equals(physConstDataTable)) {
-                    setUpPhysConstCovariancesAndCorrelations();
-                } else if (table.equals(commonPbDataTable)) {
-                    setUpCommonPbCovariancesAndCorrelations();
-                }
+
+            ObservableList<DataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = new ValueModel(ratioName);
+            if (table.equals(physConstDataTable)) {
+                valMod = physConstModel.getDatumByName(ratioName);
+            } else if (table.equals(refMatConcentrationsTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
+            } else if (table.equals(refDatesTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
+            } else if (table.equals(commonPbDataTable)) {
+                valMod = commonPbModel.getDatumByName(ratioName);
             }
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setOneSigma(newBigDec);
+            valMod.setUncertaintyType("PCT");
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            if (table.equals(physConstDataTable)) {
+                setUpPhysConstCovariancesAndCorrelations();
+            } else if (table.equals(commonPbDataTable)) {
+                setUpCommonPbCovariancesAndCorrelations();
+            }
+
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(pctCol);
@@ -963,29 +965,29 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
             String newValue = value.getNewValue();
-            if(newValue.endsWith("E")) {
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
                 newValue = newValue + "0";
             }
-            if(newValue.startsWith("E")) {
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
                 newValue = "0" + newValue;
             }
-            if (!newValue.isEmpty()) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newBigDec = BigDecimal.ZERO;
-                if (Double.parseDouble(newValue) != 0) {
-                    newBigDec = new BigDecimal(newValue);
-                }
-                valMod.setValue(newBigDec);
-                mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-                setUpDatesCheckBoxVisibility();
+
+            ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = refMatModel.getDatumByName(ratioName);
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
             }
+            valMod.setValue(newBigDec);
+            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            setUpRefMatCovariancesAndCorrelations();
+            setUpDatesCheckBoxVisibility();
+
             setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(valCol);
@@ -994,31 +996,31 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
-        absCol.setOnEditCommit(value -> {
+        absCol.setOnEditCommit(value ->
+        {
             String newValue = value.getNewValue();
-            if(newValue.endsWith("E")) {
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
                 newValue = newValue + "0";
             }
-            if(newValue.startsWith("E")) {
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
                 newValue = "0" + newValue;
             }
-            if (!newValue.isEmpty()) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newBigDec = BigDecimal.ZERO;
-                if (Double.parseDouble(newValue) != 0) {
-                    newBigDec = new BigDecimal(newValue);
-                }
-                valMod.setOneSigma(newBigDec);
-                valMod.setUncertaintyType("ABS");
-                mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
+            ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = refMatModel.getDatumByName(ratioName);
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
             }
+            valMod.setOneSigma(newBigDec);
+            valMod.setUncertaintyType("ABS");
+            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            setUpRefMatCovariancesAndCorrelations();
+
             setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(absCol);
@@ -1027,31 +1029,31 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
-        pctCol.setOnEditCommit(value -> {
+        pctCol.setOnEditCommit(value ->
+        {
             String newValue = value.getNewValue();
-            if(newValue.endsWith("E")) {
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
                 newValue = newValue + "0";
             }
-            if(newValue.startsWith("E")) {
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
                 newValue = "0" + newValue;
             }
-            if (!newValue.isEmpty()) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newBigDec = BigDecimal.ZERO;
-                if (Double.parseDouble(newValue) != 0) {
-                    newBigDec = new BigDecimal(newValue);
-                }
-                valMod.setOneSigma(newBigDec);
-                valMod.setUncertaintyType("PCT");
-                mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
+            ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = refMatModel.getDatumByName(ratioName);
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
             }
+            valMod.setOneSigma(newBigDec);
+            valMod.setUncertaintyType("PCT");
+            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            setUpRefMatCovariancesAndCorrelations();
+
             setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(pctCol);
