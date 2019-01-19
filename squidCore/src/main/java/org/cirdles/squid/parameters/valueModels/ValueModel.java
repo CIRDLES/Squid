@@ -92,7 +92,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         BigDecimal retVal;
         if (uncertaintyType.toUpperCase().equals("PCT")) {
             retVal = oneSigma;
-        } else if (value.equals(BigDecimal.ZERO)) {
+        } else if (value.doubleValue() == 0.0) {
             retVal = BigDecimal.ZERO;
         } else {
             retVal = oneSigma.divide(value, new MathContext(15, RoundingMode.HALF_UP)).movePointRight(2);

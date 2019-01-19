@@ -60,6 +60,24 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     public ChoiceBox<String> defaultPhysConstCB;
     @FXML
+    public CheckBox refMatReferenceDatesCheckbox;
+    @FXML
+    public Tab refMatCorrTab;
+    @FXML
+    public Tab refMatDataTab;
+    @FXML
+    public Tab refMatCovTab;
+    @FXML
+    public Spinner<Integer> refDatesSigFigSpinner;
+    @FXML
+    public Button refDatesNotationButton;
+    @FXML
+    public Tab refMatRefDatesTab;
+    @FXML
+    public TableView<DataModel> refDatesTable;
+    @FXML
+    public TabPane refMatTabPane;
+    @FXML
     private ChoiceBox<String> defaultRefMatConcCB;
     @FXML
     private MenuItem editCopyOfCurrPhysConst;
@@ -230,6 +248,9 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     private Tab physConstTab;
 
+    private static final DecimalFormat scientificNotation = new DecimalFormat("0.0##############################E0#############");
+    private static final DecimalFormat standardNotation = new DecimalFormat("########################0.0######################################");
+
     ParametersModel physConstModel;
     ParametersModel physConstHolder;
 
@@ -258,6 +279,7 @@ public class ParametersManagerGUIController implements Initializable {
     private DecimalFormat refMatConcentrationsNotation;
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
+    private DecimalFormat refDatesNotation;
 
     private DecimalFormat commonPbDataNotation;
     private DecimalFormat commonPbCorrNotation;
@@ -286,18 +308,19 @@ public class ParametersManagerGUIController implements Initializable {
         isEditingRefMat = false;
         isEditingCommonPb = false;
 
-        physConstDataNotation = getScientificNotationFormat();
-        physConstCorrNotation = getScientificNotationFormat();
-        physConstCovNotation = getScientificNotationFormat();
+        physConstDataNotation = scientificNotation;
+        physConstCorrNotation = scientificNotation;
+        physConstCovNotation = scientificNotation;
 
-        refMatDataNotation = getScientificNotationFormat();
-        refMatConcentrationsNotation = getScientificNotationFormat();
-        refMatCorrNotation = getScientificNotationFormat();
-        refMatCovNotation = getScientificNotationFormat();
+        refMatDataNotation = scientificNotation;
+        refMatConcentrationsNotation = scientificNotation;
+        refMatCorrNotation = scientificNotation;
+        refMatCovNotation = scientificNotation;
+        refDatesNotation = scientificNotation;
 
-        commonPbDataNotation = getScientificNotationFormat();
-        commonPbCorrNotation = getScientificNotationFormat();
-        commonPbCovNotation = getScientificNotationFormat();
+        commonPbDataNotation = scientificNotation;
+        commonPbCorrNotation = scientificNotation;
+        commonPbCovNotation = scientificNotation;
 
         physConstModels = squidLabData.getPhysicalConstantsModels();
         setUpPhysConstCB();
@@ -312,6 +335,7 @@ public class ParametersManagerGUIController implements Initializable {
         setUpDefaultModelsTabCBs();
         setUpApparentDatesTabSelection();
         setUpLaboratoryName();
+        setUpDatesCheckboxVisibilityListener();
     }
 
     private void setUpTabs() {
@@ -374,20 +398,24 @@ public class ParametersManagerGUIController implements Initializable {
             int selected = defaultPhysConstCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getPhysicalConstantsModels().size()) {
                 squidLabData.setPhysConstDefault(squidLabData.getPhysicalConstantsModel(selected));
-                int selectedIndex = physConstCB.getSelectionModel().getSelectedIndex();
-                setUpPhysConstCBItems();
-                physConstCB.getSelectionModel().select(selectedIndex);
-                squidLabData.storeState();
+                if (!isEditingPhysConst) {
+                    int selectedIndex = physConstCB.getSelectionModel().getSelectedIndex();
+                    setUpPhysConstCBItems();
+                    physConstCB.getSelectionModel().select(selectedIndex);
+                    squidLabData.storeState();
+                }
             }
         });
         defaultRefMatCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
             int selected = defaultRefMatCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getReferenceMaterials().size()) {
                 squidLabData.setRefMatDefault(squidLabData.getReferenceMaterial(selected));
-                int selectedIndex = refMatCB.getSelectionModel().getSelectedIndex();
-                setUpRefMatCBItems();
-                refMatCB.getSelectionModel().select(selectedIndex);
-                squidLabData.storeState();
+                if (!isEditingRefMat) {
+                    int selectedIndex = refMatCB.getSelectionModel().getSelectedIndex();
+                    setUpRefMatCBItems();
+                    refMatCB.getSelectionModel().select(selectedIndex);
+                    squidLabData.storeState();
+                }
             }
         });
         defaultRefMatConcCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
@@ -401,10 +429,12 @@ public class ParametersManagerGUIController implements Initializable {
             int selected = defaultCommonPbCB.getSelectionModel().getSelectedIndex();
             if (selected > -1 && selected < squidLabData.getCommonPbModels().size()) {
                 squidLabData.setCommonPbDefault(squidLabData.getcommonPbModel(selected));
-                int selectedIndex = commonPbCB.getSelectionModel().getSelectedIndex();
-                setUpCommonPbCBItems();
-                commonPbCB.getSelectionModel().select(selectedIndex);
-                squidLabData.storeState();
+                if (!isEditingCommonPb) {
+                    int selectedIndex = commonPbCB.getSelectionModel().getSelectedIndex();
+                    setUpCommonPbCBItems();
+                    commonPbCB.getSelectionModel().select(selectedIndex);
+                    squidLabData.storeState();
+                }
             }
         });
     }
@@ -448,8 +478,29 @@ public class ParametersManagerGUIController implements Initializable {
         setUpRefMatData();
         setUpConcentrations();
         setUpRefMatCovariancesAndCorrelations();
-        setUpApparentDates();
+        setUpRefMatDatesSelection();
         setUpRefMatEditableLabel();
+    }
+
+    private void setUpDatesCheckBoxVisibility() {
+        boolean hasNonZero = false;
+        ValueModel[] models = refMatModel.getValues();
+        if (models != null) {
+            for (int i = 0; !hasNonZero && i < models.length; i++) {
+                hasNonZero = !(models[i].getValue().doubleValue() == 0.0);
+            }
+        }
+        refMatReferenceDatesCheckbox.setVisible(!hasNonZero);
+    }
+
+    private void setUpDatesCheckboxVisibilityListener() {
+        refMatIsEditableLabel.textProperty().addListener((val) -> {
+            if (refMatIsEditableLabel.getText().equals("editing")) {
+                setUpDatesCheckBoxVisibility();
+            } else {
+                refMatReferenceDatesCheckbox.setVisible(false);
+            }
+        });
     }
 
     private void setUpCommonPb() {
@@ -536,6 +587,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setRefMatModel(int num) {
         if (num > -1 && num < refMatModels.size()) {
             refMatModel = refMatModels.get(num);
+            refMatReferenceDatesCheckbox.setSelected(((ReferenceMaterialModel) refMatModel).isReferenceDates());
             setUpRefMat();
             setUpRefMatMenuItems(false, refMatModel.isEditable());
             refMatEditable(false);
@@ -629,8 +681,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
-            ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
-            ParametersModel model, int precision) {
+                                           ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
+                                           ParametersModel model, int precision) {
         if (obList.size() > 0) {
             List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns = new ArrayList<>();
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
@@ -655,8 +707,15 @@ public class ParametersManagerGUIController implements Initializable {
                 if (table.equals(physConstCorrTable) || table.equals(refMatCorrTable) || table.equals(commonPbCorrTable)) {
                     col.setCellFactory(column -> EditCell.createStringEditCell());
                     col.setOnEditCommit(value -> {
-                        if (isNumeric(value.getNewValue()) && Double.parseDouble(value.getNewValue()) <= 1
-                                && Double.parseDouble(value.getNewValue()) >= -1
+                        String newValue = value.getNewValue();
+                        if (newValue.endsWith("E") || newValue.isEmpty()) {
+                            newValue = newValue + "0";
+                        }
+                        if (newValue.startsWith("E") || newValue.startsWith(".")) {
+                            newValue = "0" + newValue;
+                        }
+                        if (Double.parseDouble(newValue) <= 1
+                                && Double.parseDouble(newValue) >= -1
                                 && value.getTablePosition().getColumn() != value.getTablePosition().getRow() + 1) {
                             String colRatio = getRatioHiddenName(value.getTableColumn().getText());
                             String rowRatio = getRatioHiddenName(value.getRowValue().get(0).get());
@@ -664,8 +723,8 @@ public class ParametersManagerGUIController implements Initializable {
                             String reverseKey = "rho" + rowRatio.substring(0, 1).toUpperCase() + rowRatio.substring(1) + "__" + colRatio;
                             model.getRhos().remove(key);
                             model.getRhos().remove(reverseKey);
-                            if (Double.parseDouble(value.getNewValue()) != 0) {
-                                model.getRhos().put(key, new BigDecimal(value.getNewValue()));
+                            if (Double.parseDouble(newValue) != 0) {
+                                model.getRhos().put(key, new BigDecimal(newValue));
                             }
                             model.initializeCorrelations();
                             model.generateCovariancesFromCorrelations();
@@ -681,8 +740,6 @@ public class ParametersManagerGUIController implements Initializable {
                             }
                             table.refresh();
                         } else {
-                            SquidMessageDialog.showWarningDialog("Value Out of Range or Invalid: Only values"
-                                    + " in the range of [-1, 1] are allowed.", squidLabDataWindow);
                             table.refresh();
                         }
                     });
@@ -709,6 +766,12 @@ public class ParametersManagerGUIController implements Initializable {
         commonPbDataTable.refresh();
     }
 
+    private void setUpRefDates() {
+        int precision = refDatesSigFigSpinner.getValue();
+        refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
+        refDatesTable.setItems(getDataModelObList(((ReferenceMaterialModel) refMatModel).getDates(), refDatesNotation, precision));
+    }
+
     private void setUpRefMatData() {
         setUpRefMatDataModelColumns();
         int precision = refMatDataSigFigs.getValue();
@@ -716,7 +779,7 @@ public class ParametersManagerGUIController implements Initializable {
         ValueModel[] values = refMatModel.getValues();
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
-            Boolean isMeasured = ((ReferenceMaterialModel)refMatModel).getDataMeasured()[i];
+            Boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[i];
             String value = refMatDataNotation.format(round(valMod.getValue(), precision));
             String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
             String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));
@@ -731,7 +794,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpConcentrations() {
         int precision = refMatConcSigFigs.getValue();
         refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision));
-        refMatConcentrationsTable.setItems(getDataModelObList(((ReferenceMaterialModel)refMatModel).getConcentrations(), refMatConcentrationsNotation, precision));
+        refMatConcentrationsTable.setItems(getDataModelObList(((ReferenceMaterialModel) refMatModel).getConcentrations(), refMatConcentrationsNotation, precision));
         refMatConcentrationsTable.refresh();
     }
 
@@ -750,38 +813,42 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setSortable(false);
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<DataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = new ValueModel(ratioName);
-                if (table.equals(physConstDataTable)) {
-                    valMod = physConstModel.getDatumByName(ratioName);
-                }
-                if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
-                }
-                if (table.equals(commonPbDataTable)) {
-                    valMod = commonPbModel.getDatumByName(ratioName);
-                }
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setValue(newValue);
-                mod.setValue(format.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                if (table.equals(physConstDataTable)) {
-                    setUpPhysConstCovariancesAndCorrelations();
-                } else if (table.equals(commonPbDataTable)) {
-                    setUpCommonPbCovariancesAndCorrelations();
-                }
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+            String newValue = value.getNewValue();
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
+                newValue = newValue + "0";
             }
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
+                newValue = "0" + newValue;
+            }
+
+            ObservableList<DataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = new ValueModel(ratioName);
+            if (table.equals(physConstDataTable)) {
+                valMod = physConstModel.getDatumByName(ratioName);
+            } else if (table.equals(refMatConcentrationsTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
+            } else if (table.equals(refDatesTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
+            } else if (table.equals(commonPbDataTable)) {
+                valMod = commonPbModel.getDatumByName(ratioName);
+            }
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setValue(newBigDec);
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            if (table.equals(physConstDataTable)) {
+                setUpPhysConstCovariancesAndCorrelations();
+            } else if (table.equals(commonPbDataTable)) {
+                setUpCommonPbCovariancesAndCorrelations();
+            }
+
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(valCol);
@@ -791,40 +858,43 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
         absCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<DataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = new ValueModel(ratioName);
-                if (table.equals(physConstDataTable)) {
-                    valMod = physConstModel.getDatumByName(ratioName);
-                }
-                if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
-                }
-                if (table.equals(commonPbDataTable)) {
-                    valMod = commonPbModel.getDatumByName(ratioName);
-                }
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setOneSigma(newValue);
-                valMod.setUncertaintyType("ABS");
-                mod.setValue(format.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                if (table.equals(physConstDataTable)) {
-                    setUpPhysConstCovariancesAndCorrelations();
-                }
-                if (table.equals(commonPbDataTable)) {
-                    setUpCommonPbCovariancesAndCorrelations();
-                }
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+            String newValue = value.getNewValue();
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
+                newValue = newValue + "0";
             }
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
+                newValue = "0" + newValue;
+            }
+
+            ObservableList<DataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = new ValueModel(ratioName);
+            if (table.equals(physConstDataTable)) {
+                valMod = physConstModel.getDatumByName(ratioName);
+            } else if (table.equals(refMatConcentrationsTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
+            } else if (table.equals(refDatesTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
+            } else if (table.equals(commonPbDataTable)) {
+                valMod = commonPbModel.getDatumByName(ratioName);
+            }
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setOneSigma(newBigDec);
+            valMod.setUncertaintyType("ABS");
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            if (table.equals(physConstDataTable)) {
+                setUpPhysConstCovariancesAndCorrelations();
+            } else if (table.equals(commonPbDataTable)) {
+                setUpCommonPbCovariancesAndCorrelations();
+            }
+
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(absCol);
@@ -834,40 +904,43 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
         pctCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<DataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = new ValueModel(ratioName);
-                if (table.equals(physConstDataTable)) {
-                    valMod = physConstModel.getDatumByName(ratioName);
-                }
-                if (table.equals(refMatConcentrationsTable)) {
-                    valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(ratioName);
-                }
-                if (table.equals(commonPbDataTable)) {
-                    valMod = commonPbModel.getDatumByName(ratioName);
-                }
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setOneSigma(newValue);
-                valMod.setUncertaintyType("PCT");
-                mod.setValue(format.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                if (table.equals(physConstDataTable)) {
-                    setUpPhysConstCovariancesAndCorrelations();
-                }
-                if (table.equals(commonPbDataTable)) {
-                    setUpCommonPbCovariancesAndCorrelations();
-                }
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+            String newValue = value.getNewValue();
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
+                newValue = newValue + "0";
             }
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
+                newValue = "0" + newValue;
+            }
+
+            ObservableList<DataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = new ValueModel(ratioName);
+            if (table.equals(physConstDataTable)) {
+                valMod = physConstModel.getDatumByName(ratioName);
+            } else if (table.equals(refMatConcentrationsTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(ratioName);
+            } else if (table.equals(refDatesTable)) {
+                valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(ratioName);
+            } else if (table.equals(commonPbDataTable)) {
+                valMod = commonPbModel.getDatumByName(ratioName);
+            }
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setOneSigma(newBigDec);
+            valMod.setUncertaintyType("PCT");
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            if (table.equals(physConstDataTable)) {
+                setUpPhysConstCovariancesAndCorrelations();
+            } else if (table.equals(commonPbDataTable)) {
+                setUpCommonPbCovariancesAndCorrelations();
+            }
+
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(pctCol);
@@ -891,25 +964,30 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setSortable(false);
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setValue(newValue);
-                mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+            String newValue = value.getNewValue();
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
+                newValue = newValue + "0";
             }
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
+                newValue = "0" + newValue;
+            }
+
+            ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = refMatModel.getDatumByName(ratioName);
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setValue(newBigDec);
+            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            setUpRefMatCovariancesAndCorrelations();
+            setUpDatesCheckBoxVisibility();
+
             setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(valCol);
@@ -918,27 +996,31 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
-        absCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setOneSigma(newValue);
-                valMod.setUncertaintyType("ABS");
-                mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+        absCol.setOnEditCommit(value ->
+        {
+            String newValue = value.getNewValue();
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
+                newValue = newValue + "0";
             }
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
+                newValue = "0" + newValue;
+            }
+            ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = refMatModel.getDatumByName(ratioName);
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setOneSigma(newBigDec);
+            valMod.setUncertaintyType("ABS");
+            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            setUpRefMatCovariancesAndCorrelations();
+
             setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(absCol);
@@ -947,27 +1029,31 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
-        pctCol.setOnEditCommit(value -> {
-            if (isNumeric(value.getNewValue())) {
-                ObservableList<RefMatDataModel> items = value.getTableView().getItems();
-                DataModel mod = items.get(value.getTablePosition().getRow());
-                String ratioName = getRatioHiddenName(mod.getName());
-                ValueModel valMod = refMatModel.getDatumByName(ratioName);
-                BigDecimal newValue = BigDecimal.ZERO;
-                if (Double.parseDouble(value.getNewValue()) != 0) {
-                    newValue = new BigDecimal(value.getNewValue());
-                }
-                valMod.setOneSigma(newValue);
-                valMod.setUncertaintyType("PCT");
-                mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-                mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                value.getTableView().refresh();
-                setUpRefMatCovariancesAndCorrelations();
-            } else {
-                SquidMessageDialog.showWarningDialog("Invalid Value Entered!", squidLabDataWindow);
-                value.getTableView().refresh();
+        pctCol.setOnEditCommit(value ->
+        {
+            String newValue = value.getNewValue();
+            if (newValue.endsWith("E") || newValue.isEmpty()) {
+                newValue = newValue + "0";
             }
+            if (newValue.startsWith("E") || newValue.startsWith(".")) {
+                newValue = "0" + newValue;
+            }
+            ObservableList<RefMatDataModel> items = value.getTableView().getItems();
+            DataModel mod = items.get(value.getTablePosition().getRow());
+            String ratioName = getRatioHiddenName(mod.getName());
+            ValueModel valMod = refMatModel.getDatumByName(ratioName);
+            BigDecimal newBigDec = BigDecimal.ZERO;
+            if (Double.parseDouble(newValue) != 0) {
+                newBigDec = new BigDecimal(newValue);
+            }
+            valMod.setOneSigma(newBigDec);
+            valMod.setUncertaintyType("PCT");
+            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            value.getTableView().refresh();
+            setUpRefMatCovariancesAndCorrelations();
+
             setUpRefMatDataModelColumns();
         });
         refMatDataTable.getColumns().add(pctCol);
@@ -995,7 +1081,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpMolarMasses() {
         molarMassesPane.getChildren().clear();
         molarMasses = new ArrayList<>();
-        Map<String, BigDecimal> masses = ((PhysicalConstantsModel)physConstModel).getMolarMasses();
+        Map<String, BigDecimal> masses = ((PhysicalConstantsModel) physConstModel).getMolarMasses();
         String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
         int currY = 10;
         for (String[] mass : defaultMasses) {
@@ -1025,9 +1111,16 @@ public class ParametersManagerGUIController implements Initializable {
         }
     }
 
+    private void setUpDates() {
+        if (refMatReferenceDatesCheckbox.isSelected()) {
+            setUpRefDates();
+        } else {
+            setUpApparentDates();
+        }
+    }
+
     private void setUpApparentDates() {
-        ((ReferenceMaterialModel)refMatModel).calculateApparentDates();
-        apparentDatesTextArea.setText(((ReferenceMaterialModel)refMatModel).listFormattedApparentDates());
+        apparentDatesTextArea.setText(((ReferenceMaterialModel) refMatModel).listFormattedApparentDates());
     }
 
     private void setUpReferences() {
@@ -1098,7 +1191,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpTextFields(TextField model, String modelName, TextField lab, String labName, TextField ver, String version,
-            TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
+                                 TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
         model.setText(modelName);
         lab.setText(labName);
         ver.setText(version);
@@ -1172,8 +1265,14 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (physConstModels.get(physConstModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
@@ -1290,10 +1389,16 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (refMatModels.get(refMatModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
-                    alert.initOwner(squidLabDataWindow);
+                    alert.initOwner(squidLabDataStage.getScene().getWindow());
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
                     alert.setY(squidLabDataStage.getY() + (squidLabDataStage.getHeight() - alert.getHeight()) / 2);
                     alert.showAndWait().ifPresent(p -> {
@@ -1378,8 +1483,14 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (physConstModels.get(physConstModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
@@ -1466,8 +1577,14 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (refMatModels.get(refMatModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
@@ -1569,8 +1686,11 @@ public class ParametersManagerGUIController implements Initializable {
     private void refMatEditable(boolean isEditable) {
         if (isEditable) {
             refMatIsEditableLabel.setText("editing");
+            refMatReferenceDatesCheckbox.setDisable(false);
+        } else {
+            refMatReferenceDatesCheckbox.setDisable(true);
+            refMatReferenceDatesCheckbox.setStyle("-fx-opacity: 1");
         }
-
         refMatModelName.setEditable(isEditable);
         refMatLabName.setEditable(isEditable);
         refMatVersion.setEditable(isEditable);
@@ -1580,11 +1700,11 @@ public class ParametersManagerGUIController implements Initializable {
         refMatDataTable.getColumns().get(0).setEditable(false);
         ObservableList<RefMatDataModel> refMatData = refMatDataTable.getItems();
         for (RefMatDataModel mod : refMatData) {
-            if (!isEditable) {
+            if (isEditable) {
+                mod.getIsMeasured().setDisable(false);
+            } else {
                 mod.getIsMeasured().setDisable(true);
                 mod.getIsMeasured().setStyle("-fx-opacity: 1");
-            } else {
-                mod.getIsMeasured().setDisable(false);
             }
         }
 
@@ -1593,6 +1713,11 @@ public class ParametersManagerGUIController implements Initializable {
 
         refMatCorrTable.setEditable(isEditable);
         refMatCorrTable.getColumns().get(0).setEditable(false);
+
+        refDatesTable.setEditable(isEditable);
+        if (refDatesTable.getColumns() != null && refDatesTable.getColumns().size() > 0) {
+            refDatesTable.getColumns().get(0).setEditable(false);
+        }
 
         refMatCommentsArea.setEditable(isEditable);
         refMatReferencesArea.setEditable(isEditable);
@@ -1634,8 +1759,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpMenuItems(boolean isEditing, boolean isEditable, Menu fileMenu, MenuItem saveAndReg,
-            MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
-            MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
+                                MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
+                                MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
         fileMenu.setDisable(isEditing);
         saveAndReg.setDisable(!isEditing);
         remCurr.setDisable(!isEditable || isEditing);
@@ -1693,9 +1818,8 @@ public class ParametersManagerGUIController implements Initializable {
             physConstModel = physConstHolder;
             physConstHolder = null;
         }
-        String selected = physConstCB.getSelectionModel().getSelectedItem();
         setUpPhysConstCBItems();
-        physConstCB.getSelectionModel().select(selected);
+        physConstCB.getSelectionModel().select(physConstModels.indexOf(squidLabData.getPhysConstDefault()));
         physConstEditable(false);
         setUpPhysConstMenuItems(false, physConstModel.isEditable());
         isEditingPhysConst = false;
@@ -1710,7 +1834,7 @@ public class ParametersManagerGUIController implements Initializable {
             hasModelWithSameNameAndVersion = name.equals(physConstModels.get(i).getModelName())
                     && version.equals(physConstModels.get(i).getVersion());
         }
-        if (!hasModelWithSameNameAndVersion) {
+        if (!hasModelWithSameNameAndVersion || isEditingCurrPhysConst) {
 
             physConstModel.setIsEditable(true);
             physConstModel.setModelName(physConstModelName.getText());
@@ -1763,7 +1887,7 @@ public class ParametersManagerGUIController implements Initializable {
             hasModelWithSameNameAndVersion = name.equals(refMatModels.get(i).getModelName())
                     && version.equals(refMatModels.get(i).getVersion());
         }
-        if (!hasModelWithSameNameAndVersion) {
+        if (!hasModelWithSameNameAndVersion || isEditingCurrRefMat) {
 
             refMatModel.setIsEditable(true);
             refMatModel.setModelName(refMatModelName.getText());
@@ -1777,7 +1901,7 @@ public class ParametersManagerGUIController implements Initializable {
                 RefMatDataModel mod = dataModels.get(i);
                 isMeasures[i] = mod.getIsMeasured().isSelected();
             }
-            ((ReferenceMaterialModel)refMatModel).setDataMeasured(isMeasures);
+            ((ReferenceMaterialModel) refMatModel).setDataMeasured(isMeasures);
 
             refMatModel.setReferences(refMatReferencesArea.getText());
             refMatModel.setComments(refMatCommentsArea.getText());
@@ -1820,9 +1944,8 @@ public class ParametersManagerGUIController implements Initializable {
             refMatModel = refMatHolder;
             refMatHolder = null;
         }
-        String selected = refMatCB.getSelectionModel().getSelectedItem();
         setUpRefMatCBItems();
-        refMatCB.getSelectionModel().select(selected);
+        refMatCB.getSelectionModel().select(refMatModels.indexOf(squidLabData.getRefMatDefault()));
         refMatEditable(false);
         setUpRefMatMenuItems(false, refMatModel.isEditable());
         isEditingRefMat = false;
@@ -1831,6 +1954,8 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     private void refMateEditEmptyMod(ActionEvent event) {
         refMatModel = new ReferenceMaterialModel();
+        ((ReferenceMaterialModel) refMatModel).generateBaseDates();
+        refMatReferenceDatesCheckbox.setSelected(false);
         setUpRefMat();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
@@ -1878,21 +2003,13 @@ public class ParametersManagerGUIController implements Initializable {
         return retVal;
     }
 
-    public static DecimalFormat getScientificNotationFormat() {
-        return new DecimalFormat("0.0##############################E0#############");
-    }
-
-    public static DecimalFormat getStandardNotationFormat() {
-        return new DecimalFormat("########################0.0######################################");
-    }
-
     @FXML
     private void physConstDataNotationOnAction(ActionEvent event) {
-        if (physConstDataNotation.equals(getScientificNotationFormat())) {
-            physConstDataNotation = getStandardNotationFormat();
+        if (physConstDataNotation.equals(scientificNotation)) {
+            physConstDataNotation = standardNotation;
             physConstDataNotationButton.setText("Scientific Notation");
         } else {
-            physConstDataNotation = getScientificNotationFormat();
+            physConstDataNotation = scientificNotation;
             physConstDataNotationButton.setText("Standard Notation");
         }
         ObservableList<DataModel> models = physConstDataTable.getItems();
@@ -1921,11 +2038,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatDataNotationOnAction(ActionEvent event) {
-        if (refMatDataNotation.equals(getScientificNotationFormat())) {
-            refMatDataNotation = getStandardNotationFormat();
+        if (refMatDataNotation.equals(scientificNotation)) {
+            refMatDataNotation = standardNotation;
             refMatDataNotationButton.setText("Scientific Notation");
         } else {
-            refMatDataNotation = getScientificNotationFormat();
+            refMatDataNotation = scientificNotation;
             refMatDataNotationButton.setText("Standard Notation");
         }
         ObservableList<RefMatDataModel> models = refMatDataTable.getItems();
@@ -1958,11 +2075,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatConcentrationsNotationOnAction(ActionEvent event) {
-        if (refMatConcentrationsNotation.equals(getScientificNotationFormat())) {
-            refMatConcentrationsNotation = getStandardNotationFormat();
+        if (refMatConcentrationsNotation.equals(scientificNotation)) {
+            refMatConcentrationsNotation = standardNotation;
             refMatConcentrationsNotationButton.setText("Scientific Notation");
         } else {
-            refMatConcentrationsNotation = getScientificNotationFormat();
+            refMatConcentrationsNotation = scientificNotation;
             refMatConcentrationsNotationButton.setText("Standard Notation");
         }
         ObservableList<DataModel> models = refMatConcentrationsTable.getItems();
@@ -1988,11 +2105,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstCorrNotationOnAction(ActionEvent event) {
-        if (physConstCorrNotation.equals(getScientificNotationFormat())) {
-            physConstCorrNotation = getStandardNotationFormat();
+        if (physConstCorrNotation.equals(scientificNotation)) {
+            physConstCorrNotation = standardNotation;
             physConstCorrNotationButton.setText("Scientific Notation");
         } else {
-            physConstCorrNotation = getScientificNotationFormat();
+            physConstCorrNotation = scientificNotation;
             physConstCorrNotationButton.setText("Standard Notation");
         }
         int precision = physConstCorrSigFigs.getValue();
@@ -2001,11 +2118,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void physConstCovNotationOnAction(ActionEvent event) {
-        if (physConstCovNotation.equals(getScientificNotationFormat())) {
-            physConstCovNotation = getStandardNotationFormat();
+        if (physConstCovNotation.equals(scientificNotation)) {
+            physConstCovNotation = standardNotation;
             physConstCovNotationButton.setText("Scientific Notation");
         } else {
-            physConstCovNotation = getScientificNotationFormat();
+            physConstCovNotation = scientificNotation;
             physConstCovNotationButton.setText("Standard Notation");
         }
         int precision = physConstCovSigFigs.getValue();
@@ -2014,11 +2131,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatCorrNotationOnAction(ActionEvent event) {
-        if (refMatCorrNotation.equals(getScientificNotationFormat())) {
-            refMatCorrNotation = getStandardNotationFormat();
+        if (refMatCorrNotation.equals(scientificNotation)) {
+            refMatCorrNotation = standardNotation;
             refMatCorrNotationButton.setText("Scientific Notation");
         } else {
-            refMatCorrNotation = getScientificNotationFormat();
+            refMatCorrNotation = scientificNotation;
             refMatCorrNotationButton.setText("Standard Notation");
         }
         int precision = refMatCorrSigFigs.getValue();
@@ -2027,11 +2144,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void refMatCovNotationOnAction(ActionEvent event) {
-        if (refMatCovNotation.equals(getScientificNotationFormat())) {
-            refMatCovNotation = getStandardNotationFormat();
+        if (refMatCovNotation.equals(scientificNotation)) {
+            refMatCovNotation = standardNotation;
             refMatCovNotationButton.setText("Scientific Notation");
         } else {
-            refMatCovNotation = getScientificNotationFormat();
+            refMatCovNotation = scientificNotation;
             refMatCovNotationButton.setText("Standard Notation");
         }
         int precision = refMatCovSigFigs.getValue();
@@ -2061,7 +2178,7 @@ public class ParametersManagerGUIController implements Initializable {
             int precision = refMatConcSigFigs.getValue();
             ObservableList<DataModel> items = refMatConcentrationsTable.getItems();
             for (DataModel mod : items) {
-                ValueModel valMod = ((ReferenceMaterialModel)refMatModel).getConcentrationByName(getRatioHiddenName(mod.getName()));
+                ValueModel valMod = ((ReferenceMaterialModel) refMatModel).getConcentrationByName(getRatioHiddenName(mod.getName()));
                 mod.setOneSigmaABS(refMatConcentrationsNotation.format(round(valMod.getOneSigmaABS(), precision)));
                 mod.setOneSigmaPCT(refMatConcentrationsNotation.format(round(valMod.getOneSigmaPCT(), precision)));
                 mod.setValue(refMatConcentrationsNotation.format(round(valMod.getValue(), precision)));
@@ -2114,6 +2231,25 @@ public class ParametersManagerGUIController implements Initializable {
         });
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        refDatesSigFigSpinner.setValueFactory(valueFactory);
+        refDatesSigFigSpinner.valueProperty().addListener(value -> {
+            int precision = refDatesSigFigSpinner.getValue();
+            ObservableList<DataModel> items = refDatesTable.getItems();
+            for (DataModel mod : items) {
+                boolean found = false;
+                for (int i = 0; !found && i < ((ReferenceMaterialModel) refMatModel).getDates().length; i++) {
+                    ValueModel valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(mod.getName());
+                    mod.setOneSigmaABS(refDatesNotation.format(round(valMod.getOneSigmaABS(), precision)));
+                    mod.setOneSigmaPCT(refDatesNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+                    mod.setValue(refDatesNotation.format(round(valMod.getValue(), precision)));
+
+                }
+            }
+            refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
+            refDatesTable.refresh();
+        });
+
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         commonPbDataSigFigs.setValueFactory(valueFactory);
         commonPbDataSigFigs.valueProperty().addListener(value -> {
             int precision = commonPbDataSigFigs.getValue();
@@ -2144,7 +2280,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void corrCovPrecisionOrNotationAction(ParametersModel model,
-            TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
+                                                  TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
 
         ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
 
@@ -2174,8 +2310,14 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (commonPbModels.get(commonPbModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
@@ -2273,7 +2415,7 @@ public class ParametersManagerGUIController implements Initializable {
             hasModelWithSameNameAndVersion = name.equals(commonPbModels.get(i).getModelName())
                     && version.equals(commonPbModels.get(i).getVersion());
         }
-        if (!hasModelWithSameNameAndVersion) {
+        if (!hasModelWithSameNameAndVersion || isEditingCurrCommonPbModel) {
             commonPbModel.setIsEditable(true);
             commonPbModel.setModelName(commonPbModelName.getText());
             commonPbModel.setLabName(commonPbLabName.getText());
@@ -2311,9 +2453,8 @@ public class ParametersManagerGUIController implements Initializable {
             commonPbModelHolder = null;
         }
         isEditingCommonPb = false;
-        String selected = commonPbCB.getSelectionModel().getSelectedItem();
         setUpCommonPbCBItems();
-        commonPbCB.getSelectionModel().select(selected);
+        commonPbCB.getSelectionModel().select(commonPbModels.indexOf(squidLabData.getCommonPbDefault()));
         commonPbModelEditable(false);
         setUpCommonPbMenuItems(false, commonPbModel.isEditable());
     }
@@ -2360,11 +2501,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbDataNotationOnAction(ActionEvent event) {
-        if (commonPbDataNotation.equals(getScientificNotationFormat())) {
-            commonPbDataNotation = getStandardNotationFormat();
+        if (commonPbDataNotation.equals(scientificNotation)) {
+            commonPbDataNotation = standardNotation;
             commonPbDataNotationButton.setText("Scientific Notation");
         } else {
-            commonPbDataNotation = getScientificNotationFormat();
+            commonPbDataNotation = scientificNotation;
             commonPbDataNotationButton.setText("Standard Notation");
         }
         ObservableList<DataModel> models = commonPbDataTable.getItems();
@@ -2389,11 +2530,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbCorrNotationOnAction(ActionEvent event) {
-        if (commonPbCorrNotation.equals(getScientificNotationFormat())) {
-            commonPbCorrNotation = getStandardNotationFormat();
+        if (commonPbCorrNotation.equals(scientificNotation)) {
+            commonPbCorrNotation = standardNotation;
             commonPbCorrNotationButton.setText("Scientific Notation");
         } else {
-            commonPbCorrNotation = getScientificNotationFormat();
+            commonPbCorrNotation = scientificNotation;
             commonPbCorrNotationButton.setText("Standard Notation");
         }
         int precision = commonPbCorrSigFigs.getValue();
@@ -2402,11 +2543,11 @@ public class ParametersManagerGUIController implements Initializable {
 
     @FXML
     private void commonPbCovNotationOnAction(ActionEvent event) {
-        if (commonPbCovNotation.equals(getScientificNotationFormat())) {
-            commonPbCovNotation = getStandardNotationFormat();
+        if (commonPbCovNotation.equals(scientificNotation)) {
+            commonPbCovNotation = standardNotation;
             commonPbCovNotationButton.setText("Scientific Notation");
         } else {
-            commonPbCovNotation = getScientificNotationFormat();
+            commonPbCovNotation = scientificNotation;
             commonPbCovNotationButton.setText("Standard Notation");
         }
         int precision = commonPbCovSigFigs.getValue();
@@ -2421,6 +2562,71 @@ public class ParametersManagerGUIController implements Initializable {
         });
     }
 
+    @FXML
+    public void refMatReferenceDatesCheckBoxOnAction(ActionEvent actionEvent) {
+        ((ReferenceMaterialModel) refMatModel).setReferenceDates(refMatReferenceDatesCheckbox.isSelected());
+        setUpRefMatDatesSelection();
+    }
+
+    private void setUpRefMatDatesSelection() {
+        if (((ReferenceMaterialModel) refMatModel).isReferenceDates()) {
+            refMatDataTab.setDisable(true);
+            refMatCorrTab.setDisable(true);
+            refMatCovTab.setDisable(true);
+            apparentDatesTab.setDisable(true);
+
+            refMatRefDatesTab.setDisable(false);
+
+            if (((ReferenceMaterialModel) refMatModel).getDates().length == 0) {
+                ((ReferenceMaterialModel) refMatModel).generateBaseDates();
+            }
+
+            Tab selectedTab = refMatTabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab == refMatDataTab || selectedTab == refMatCorrTab || selectedTab == refMatCovTab || selectedTab == apparentDatesTab) {
+                refMatTabPane.getSelectionModel().select(refMatRefDatesTab);
+            }
+        } else {
+            refMatDataTab.setDisable(false);
+            refMatCorrTab.setDisable(false);
+            refMatCovTab.setDisable(false);
+            apparentDatesTab.setDisable(false);
+
+            refMatRefDatesTab.setDisable(true);
+
+            if (refMatTabPane.getSelectionModel().getSelectedItem() == refMatRefDatesTab) {
+                refMatTabPane.getSelectionModel().select(refMatDataTab);
+            }
+        }
+        setUpDates();
+    }
+
+    @FXML
+    public void refDatesNotationAction(ActionEvent actionEvent) {
+        if (refDatesNotation.equals(standardNotation)) {
+            refDatesNotationButton.setText("Standard Notation");
+            refDatesNotation = scientificNotation;
+        } else {
+            refDatesNotationButton.setText("Scientific Notation");
+            refDatesNotation = standardNotation;
+        }
+        ObservableList<DataModel> dataModels = refDatesTable.getItems();
+        int precision = refDatesSigFigSpinner.getValue();
+        for (DataModel model : dataModels) {
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(model.getValue());
+            model.setValue(refDatesNotation.format(round(bigDec, precision)));
+
+            bigDec = new BigDecimal(model.getOneSigmaABS());
+            model.setOneSigmaABS(refDatesNotation.format(round(bigDec, precision)));
+
+            bigDec = new BigDecimal(model.getOneSigmaPCT());
+            model.setOneSigmaPCT(refDatesNotation.format(round(bigDec, precision)));
+        }
+        refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
+        refDatesTable.refresh();
+    }
+
     public class DataModel {
 
         private SimpleStringProperty name;
@@ -2429,7 +2635,7 @@ public class ParametersManagerGUIController implements Initializable {
         private SimpleStringProperty oneSigmaPCT;
 
         public DataModel(String name, String value,
-                String oneSigmaABS, String oneSigmaPCT) {
+                         String oneSigmaABS, String oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
             this.value = new SimpleStringProperty(trimTrailingZeroes(value));
             this.oneSigmaABS = new SimpleStringProperty(trimTrailingZeroes(oneSigmaABS));
@@ -2475,8 +2681,8 @@ public class ParametersManagerGUIController implements Initializable {
         private CheckBox isMeasured;
 
         public RefMatDataModel(String name, String value,
-                String oneSigmaABS, String oneSigmaPCT,
-                boolean isMeasured) {
+                               String oneSigmaABS, String oneSigmaPCT,
+                               boolean isMeasured) {
             super(name, value, oneSigmaABS, oneSigmaPCT);
             this.isMeasured = new CheckBox();
             this.isMeasured.setSelected(isMeasured);
@@ -2491,4 +2697,5 @@ public class ParametersManagerGUIController implements Initializable {
         }
 
     }
+
 }

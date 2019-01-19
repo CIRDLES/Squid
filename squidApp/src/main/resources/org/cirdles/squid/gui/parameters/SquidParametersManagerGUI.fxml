@@ -57,11 +57,12 @@
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <TabPane layoutX="14.0" layoutY="112.0" tabClosingPolicy="UNAVAILABLE"
+                                <TabPane fx:id="refMatTabPane" layoutX="14.0" layoutY="112.0"
+                                         tabClosingPolicy="UNAVAILABLE"
                                          AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
                                          AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
                                     <tabs>
-                                        <Tab text="Data">
+                                        <Tab text="Data" fx:id="refMatDataTab">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
@@ -94,7 +95,7 @@
                                                 </AnchorPane>
                                             </content>
                                         </Tab>
-                                        <Tab text="Correlations">
+                                        <Tab text="Correlations" fx:id="refMatCorrTab">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
@@ -127,7 +128,7 @@
                                                 </AnchorPane>
                                             </content>
                                         </Tab>
-                                        <Tab text="Covariances">
+                                        <Tab text="Covariances" fx:id="refMatCovTab">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
@@ -183,6 +184,7 @@
                                                                                  prefWidth="80.0"/>
                                                                     </children>
                                                                 </HBox>
+                                                                <Label text="Units are Parts Per Million"/>
                                                             </children>
                                                         </HBox>
                                                     </children>
@@ -214,13 +216,44 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea id="apparentDates" fx:id="apparentDatesTextArea"
+                                                        <TextArea id="dates" fx:id="apparentDatesTextArea"
                                                                   editable="false" prefHeight="200.0" prefWidth="200.0"
                                                                   AnchorPane.bottomAnchor="5.0"
                                                                   AnchorPane.leftAnchor="5.0"
                                                                   AnchorPane.rightAnchor="5.0"
                                                                   AnchorPane.topAnchor="5.0"/>
                                                     </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
+                                        <Tab fx:id="refMatRefDatesTab" text="Reference Dates">
+                                            <content>
+                                                <AnchorPane prefWidth="200.0" prefHeight="200.0">
+                                                    <TableView fx:id="refDatesTable" layoutX="14.0" layoutY="22.0"
+                                                               prefHeight="170.0" prefWidth="200.0"
+                                                               AnchorPane.bottomAnchor="5.0"
+                                                               AnchorPane.leftAnchor="5.0"
+                                                               AnchorPane.rightAnchor="5.0"
+                                                               AnchorPane.topAnchor="30.4"/>
+                                                    <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0"
+                                                          spacing="15.0" AnchorPane.leftAnchor="10.0"
+                                                          AnchorPane.topAnchor="0.0">
+                                                        <children>
+                                                            <Button fx:id="refDatesNotationButton"
+                                                                    maxHeight="30.0" minHeight="30.0"
+                                                                    mnemonicParsing="false"
+                                                                    onAction="#refDatesNotationAction"
+                                                                    prefHeight="30.0" prefWidth="150"
+                                                                    text="Standard Notation"/>
+                                                            <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                                <children>
+                                                                    <Label text="SigFigs:"/>
+                                                                    <Spinner fx:id="refDatesSigFigSpinner"
+                                                                             prefWidth="80.0"/>
+                                                                </children>
+                                                            </HBox>
+                                                        </children>
+                                                    </HBox>
                                                 </AnchorPane>
                                             </content>
                                         </Tab>
@@ -269,6 +302,9 @@
                                     <children>
                                         <Label text="Choose Reference Material Model:"/>
                                         <ChoiceBox fx:id="refMatCB" prefWidth="380.0"/>
+                                        <CheckBox fx:id="refMatReferenceDatesCheckbox" mnemonicParsing="false"
+                                                  onAction="#refMatReferenceDatesCheckBoxOnAction"
+                                                  text="Reference Dates" visible="false"/>
                                     </children>
                                 </HBox>
                             </children>
@@ -642,8 +678,7 @@
                                                 <AnchorPane>
                                                     <children>
                                                         <ScrollPane id="physConstReferencesPane" hbarPolicy="NEVER"
-                                                                    vbarPolicy="NEVER"
-                                                                    AnchorPane.bottomAnchor="0.0"
+                                                                    vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0"
                                                                     AnchorPane.leftAnchor="0.0"
                                                                     AnchorPane.rightAnchor="0.0"
                                                                     AnchorPane.topAnchor="0.0">
@@ -665,8 +700,7 @@
                                                 <AnchorPane>
                                                     <children>
                                                         <ScrollPane id="physConstReferencesPane" hbarPolicy="NEVER"
-                                                                    vbarPolicy="NEVER"
-                                                                    AnchorPane.bottomAnchor="0.0"
+                                                                    vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0"
                                                                     AnchorPane.leftAnchor="0.0"
                                                                     AnchorPane.rightAnchor="0.0"
                                                                     AnchorPane.topAnchor="0.0">
@@ -767,8 +801,8 @@
                                 <ChoiceBox fx:id="defaultRefMatCB" prefWidth="380" GridPane.columnIndex="1"
                                            GridPane.rowIndex="0"/>
 
-                                <Label text="Default Concentration Reference Material Model:" GridPane.rowIndex="1"
-                                       GridPane.columnIndex="0" GridPane.halignment="RIGHT"/>
+                                <Label text="Default Concentration Reference Material Model:" GridPane.columnIndex="0"
+                                       GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
                                 <ChoiceBox fx:id="defaultRefMatConcCB" prefWidth="380" GridPane.columnIndex="1"
                                            GridPane.rowIndex="1"/>
 
@@ -786,6 +820,7 @@
                                     <ColumnConstraints/>
                                 </columnConstraints>
                                 <rowConstraints>
+                                    <RowConstraints/>
                                     <RowConstraints/>
                                     <RowConstraints/>
                                     <RowConstraints/>

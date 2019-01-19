@@ -10,15 +10,14 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.valueModels.ValueModel;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
- *
  * @author ryanb
  */
 public class ReferenceMaterialModelXMLConverter implements Converter {
@@ -29,6 +28,10 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
 
         writer.startNode("modelName");
         writer.setValue(model.getModelName());
+        writer.endNode();
+
+        writer.startNode("referenceDates");
+        writer.setValue(Boolean.toString(((ReferenceMaterialModel) model).isReferenceDates()));
         writer.endNode();
 
         writer.startNode("labName");
@@ -64,11 +67,11 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("concentrations");
-        context.convertAnother(((ReferenceMaterialModel)model).getConcentrations());
+        context.convertAnother(((ReferenceMaterialModel) model).getConcentrations());
         writer.endNode();
 
         writer.startNode("dataMeasured");
-        context.convertAnother(((ReferenceMaterialModel)model).getDataMeasured());
+        context.convertAnother(((ReferenceMaterialModel) model).getDataMeasured());
         writer.endNode();
     }
 
@@ -78,6 +81,10 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
 
         reader.moveDown();
         model.setModelName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        ((ReferenceMaterialModel) model).setReferenceDates(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 
         reader.moveDown();
@@ -136,13 +143,13 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
         reader.moveUp();
 
         reader.moveDown();
-        ((ReferenceMaterialModel)model).setConcentrations(new ValueModel[0]);
-        ((ReferenceMaterialModel)model).setConcentrations((ValueModel[]) context.convertAnother(((ReferenceMaterialModel)model).getConcentrations(), ValueModel[].class));
+        ((ReferenceMaterialModel) model).setConcentrations(new ValueModel[0]);
+        ((ReferenceMaterialModel) model).setConcentrations((ValueModel[]) context.convertAnother(((ReferenceMaterialModel) model).getConcentrations(), ValueModel[].class));
         reader.moveUp();
 
         reader.moveDown();
-        ((ReferenceMaterialModel)model).setDataMeasured(new boolean[0]);
-        ((ReferenceMaterialModel)model).setDataMeasured((boolean[]) context.convertAnother(((ReferenceMaterialModel)model).getDataMeasured(), boolean[].class));
+        ((ReferenceMaterialModel) model).setDataMeasured(new boolean[0]);
+        ((ReferenceMaterialModel) model).setDataMeasured((boolean[]) context.convertAnother(((ReferenceMaterialModel) model).getDataMeasured(), boolean[].class));
         reader.moveUp();
 
         return model;
