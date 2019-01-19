@@ -1265,8 +1265,14 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (physConstModels.get(physConstModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
@@ -1383,10 +1389,16 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (refMatModels.get(refMatModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
-                    alert.initOwner(squidLabDataWindow);
+                    alert.initOwner(squidLabDataStage.getScene().getWindow());
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
                     alert.setY(squidLabDataStage.getY() + (squidLabDataStage.getHeight() - alert.getHeight()) / 2);
                     alert.showAndWait().ifPresent(p -> {
@@ -1471,8 +1483,14 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (physConstModels.get(physConstModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
@@ -1559,8 +1577,14 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (refMatModels.get(refMatModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
@@ -2286,8 +2310,14 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType renameButton = new ButtonType("Rename");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
-                            + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    Alert alert;
+                    if (commonPbModels.get(commonPbModels.indexOf(importedMod)).isEditable()) {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
+                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
+                                + "What would you like to do?", renameButton, cancelButton);
+                    }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
                     alert.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - alert.getWidth()) / 2);
