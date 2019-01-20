@@ -30,7 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
-import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.op.OPFileHandler;
@@ -63,11 +63,11 @@ public final class SquidProject implements Serializable {
 
     private transient SquidPrefixTree prefixTree;
 
-    private PrawnFileHandler prawnFileHandler;
+    private PrawnXMLFileHandler prawnFileHandler;
     private String projectName;
     private String analystName;
     private String projectNotes;
-    private File prawnXMLFile;
+    private File prawnSourceFile;
     private ShrimpDataFileInterface prawnFile;
     private String filterForRefMatSpotNames;
     private String filterForConcRefMatSpotNames;
@@ -80,9 +80,9 @@ public final class SquidProject implements Serializable {
     private static boolean projectChanged;
 
     public SquidProject() {
-        this.prawnFileHandler = new PrawnFileHandler(this);
+        this.prawnFileHandler = new PrawnXMLFileHandler(this);
         this.projectName = "NO_NAME";
-        this.prawnXMLFile = new File("");
+        this.prawnSourceFile = new File("");
         this.prawnFile = null;
 
         this.filterForRefMatSpotNames = "";
@@ -223,24 +223,29 @@ public final class SquidProject implements Serializable {
         initializeTaskAndReduceData();
     }
 
-    public void setupPrawnFileFromOP(File opFileNew) {
+    public void setupPrawnOPFile(File opFileNew)
+            throws IOException {
+        prawnSourceFile = opFileNew;
+        updatePrawnFileHandlerWithFileLocation();
+
         OPFileHandler opFileHandler = new OPFileHandler();
         prawnFile = opFileHandler.convertOPFileToPrawnFile(opFileNew);
         task.setPrawnFile(prawnFile);
         ((Task) task).setupSquidSessionSkeleton();
     }
 
-    public void setupPrawnFile(File prawnXMLFileNew)
+    public void setupPrawnXMLFile(File prawnXMLFileNew)
             throws IOException, JAXBException, SAXException, SquidException {
 
-        prawnXMLFile = prawnXMLFileNew;
+        prawnSourceFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
+
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
         task.setPrawnFile(prawnFile);
         ((Task) task).setupSquidSessionSkeleton();
     }
 
-    public void setupPrawnFileByJoin(List<File> prawnXMLFilesNew)
+    public void setupPrawnXMLFileByJoin(List<File> prawnXMLFilesNew)
             throws IOException, JAXBException, SAXException, SquidException {
 
         if (prawnXMLFilesNew.size() == 2) {
@@ -253,7 +258,7 @@ public final class SquidProject implements Serializable {
             if (start1 > start2) {
                 prawnFile2.getRun().addAll(prawnFile1.getRun());
                 prawnFile2.setRuns((short) prawnFile2.getRun().size());
-                prawnXMLFile = new File(
+                prawnSourceFile = new File(
                         prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "")
                         + "-JOIN-"
                         + prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "") + ".xml");
@@ -261,7 +266,7 @@ public final class SquidProject implements Serializable {
             } else {
                 prawnFile1.getRun().addAll(prawnFile2.getRun());
                 prawnFile1.setRuns((short) prawnFile1.getRun().size());
-                prawnXMLFile = new File(
+                prawnSourceFile = new File(
                         prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "")
                         + "-JOIN-"
                         + prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "") + ".xml");
@@ -270,7 +275,7 @@ public final class SquidProject implements Serializable {
 
             updatePrawnFileHandlerWithFileLocation();
             // write and read merged file to confirm conforms to schema
-            serializePrawnData(prawnFileHandler.getCurrentPrawnFileLocation());
+            serializePrawnData(prawnFileHandler.getCurrentPrawnSourceFileLocation());
             prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
         } else {
             throw new IOException("Two files not present");
@@ -279,17 +284,17 @@ public final class SquidProject implements Serializable {
 
     public void updatePrawnFileHandlerWithFileLocation()
             throws IOException {
-        prawnFileHandler.setCurrentPrawnFileLocation(prawnXMLFile.getCanonicalPath());
+        prawnFileHandler.setCurrentPrawnSourceFileLocation(prawnSourceFile.getCanonicalPath());
     }
 
-    public void savePrawnFile(File prawnXMLFileNew)
+    public void savePrawnXMLFile(File prawnXMLFileNew)
             throws IOException, JAXBException, SAXException {
 
         preProcessPrawnSession();
 
-        prawnXMLFile = prawnXMLFileNew;
-        prawnFileHandler.setCurrentPrawnFileLocation(prawnXMLFile.getCanonicalPath());
-        serializePrawnData(prawnFileHandler.getCurrentPrawnFileLocation());
+        prawnSourceFile = prawnXMLFileNew;
+        prawnFileHandler.setCurrentPrawnSourceFileLocation(prawnSourceFile.getCanonicalPath());
+        serializePrawnData(prawnFileHandler.getCurrentPrawnSourceFileLocation());
     }
 
     public boolean prawnFileExists() {
@@ -370,8 +375,8 @@ public final class SquidProject implements Serializable {
         return listOfUnknownsBySample;
     }
 
-    public String getPrawnXMLFileName() {
-        return prawnXMLFile.getName();
+    public String getPrawnSourceFileName() {
+        return prawnSourceFile.getName();
     }
 
     /**
@@ -381,8 +386,8 @@ public final class SquidProject implements Serializable {
         this.prawnFile = prawnFile;
     }
 
-    public String getPrawnXMLFilePath() {
-        return prawnXMLFile.getAbsolutePath();
+    public String getPrawnSourceFilePath() {
+        return prawnSourceFile.getAbsolutePath();
     }
 
     public String getPrawnFileShrimpSoftwareVersionName() {
@@ -478,8 +483,8 @@ public final class SquidProject implements Serializable {
     public String[] splitPrawnFileAtRun(Run run, boolean useOriginalData)
             throws SquidException {
         String[] retVal = new String[2];
-        retVal[0] = prawnFileHandler.getCurrentPrawnFileLocation().replace(".xml", "-PART-A.xml").replace(".XML", "-PART-A.xml");
-        retVal[1] = prawnFileHandler.getCurrentPrawnFileLocation().replace(".xml", "-PART-B.xml").replace(".XML", "-PART-B.xml");
+        retVal[0] = prawnFileHandler.getCurrentPrawnSourceFileLocation().replace(".xml", "-PART-A.xml").replace(".XML", "-PART-A.xml");
+        retVal[1] = prawnFileHandler.getCurrentPrawnSourceFileLocation().replace(".xml", "-PART-B.xml").replace(".XML", "-PART-B.xml");
 
         // get index from original prawnFile
         int indexOfRun = prawnFile.getRun().indexOf(run);
@@ -543,14 +548,14 @@ public final class SquidProject implements Serializable {
     /**
      * @return the prawnFileHandler
      */
-    public PrawnFileHandler getPrawnFileHandler() {
+    public PrawnXMLFileHandler getPrawnFileHandler() {
         return prawnFileHandler;
     }
 
     /**
      * @param prawnFileHandler the prawnFileHandler to set
      */
-    public void setPrawnFileHandler(PrawnFileHandler prawnFileHandler) {
+    public void setPrawnFileHandler(PrawnXMLFileHandler prawnFileHandler) {
         this.prawnFileHandler = prawnFileHandler;
     }
 

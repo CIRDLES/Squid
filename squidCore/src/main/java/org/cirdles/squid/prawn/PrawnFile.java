@@ -279,6 +279,7 @@ public class PrawnFile implements ShrimpDataFileInterface, Serializable {
      * @return possible object is {@link String }
      *
      */
+    @Override
     public String getSoftwareVersion() {
         return softwareVersion;
     }
@@ -289,6 +290,7 @@ public class PrawnFile implements ShrimpDataFileInterface, Serializable {
      * @param value allowed object is {@link String }
      *
      */
+    @Override
     public void setSoftwareVersion(String value) {
         this.softwareVersion = value;
     }
@@ -307,6 +309,7 @@ public class PrawnFile implements ShrimpDataFileInterface, Serializable {
      *
      * @param value
      */
+    @Override
     public void setRuns(short value) {
         this.runs = value;
     }
@@ -489,7 +492,7 @@ public class PrawnFile implements ShrimpDataFileInterface, Serializable {
      */
     public List<PrawnFile.Run> getRun() {
         if (run == null) {
-            run = new ArrayList<PrawnFile.Run>();
+            run = new ArrayList<>();
         }
         return this.run;
     }

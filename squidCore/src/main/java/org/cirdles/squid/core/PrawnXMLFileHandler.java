@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
 /**
  * Handles common operations involving Prawn files.
  */
-public class PrawnFileHandler implements Serializable {
+public class PrawnXMLFileHandler implements Serializable {
 
     private static final long serialVersionUID = -581339876224458493L;
 
@@ -71,7 +71,7 @@ public class PrawnFileHandler implements Serializable {
     
     private CalamariReportsEngine reportsEngine;
 
-    private String currentPrawnFileLocation;
+    private String currentPrawnSourceFileLocation;
 
     private static final PrawnFileRunFractionParser PRAWN_FILE_RUN_FRACTION_PARSER
             = new PrawnFileRunFractionParser();
@@ -80,7 +80,7 @@ public class PrawnFileHandler implements Serializable {
      * Creates a new {@link PrawnFileHandler} using a new reports engine.
      * @param squidProject
      */
-    public PrawnFileHandler(SquidProject squidProject) {
+    public PrawnXMLFileHandler(SquidProject squidProject) {
         this(squidProject, new CalamariReportsEngine(squidProject));
     }
 
@@ -90,7 +90,7 @@ public class PrawnFileHandler implements Serializable {
      * @param squidProject
      * @param reportsEngine the reports engine to use
      */
-    public PrawnFileHandler(SquidProject squidProject, CalamariReportsEngine reportsEngine) {
+    public PrawnXMLFileHandler(SquidProject squidProject, CalamariReportsEngine reportsEngine) {
         this.squidProject = squidProject;
         this.reportsEngine = reportsEngine;
     }
@@ -107,7 +107,7 @@ public class PrawnFileHandler implements Serializable {
      */
     public ShrimpDataFileInterface unmarshallCurrentPrawnFileXML()
             throws IOException, MalformedURLException, JAXBException, SAXException, SquidException {
-        return unmarshallPrawnFileXML(currentPrawnFileLocation, false);
+        return unmarshallPrawnFileXML(currentPrawnSourceFileLocation, false);
     }
 
     /**
@@ -259,7 +259,7 @@ public class PrawnFileHandler implements Serializable {
      * @return
      */
     public boolean currentPrawnFileLocationIsFile() {
-        return new File(currentPrawnFileLocation).isFile();
+        return new File(currentPrawnSourceFileLocation).isFile();
     }
 
     /**
@@ -267,8 +267,8 @@ public class PrawnFileHandler implements Serializable {
      */
     public void initReportsEngineWithCurrentPrawnFileName() {
         // strip .xml from file name
-        if (currentPrawnFileLocation != null) {
-            initReportsEngineWithCurrentPrawnFileName(currentPrawnFileLocation);
+        if (currentPrawnSourceFileLocation != null) {
+            initReportsEngineWithCurrentPrawnFileName(currentPrawnSourceFileLocation);
         }
     }
 
@@ -278,19 +278,19 @@ public class PrawnFileHandler implements Serializable {
      */
     public void initReportsEngineWithCurrentPrawnFileName(String prawnFileLocation) {
         // strip .xml from file name
-        reportsEngine.setNameOfPrawnXMLFile(new File(prawnFileLocation).getName().split("\\.")[0]);
+        reportsEngine.setNameOfPrawnSourceFile(new File(prawnFileLocation).getName().split("\\.")[0]);
     }
 
     /**
-     * @return the currentPrawnFileLocation
+     * @return the currentPrawnSourceFileLocation
      */
-    public String getCurrentPrawnFileLocation() {
-        return currentPrawnFileLocation;
+    public String getCurrentPrawnSourceFileLocation() {
+        return currentPrawnSourceFileLocation;
     }
 
     public String getCurrentPrawnFileLocationFolder() {
         String retVal = "";
-        File prawnFileLocation = new File(currentPrawnFileLocation);
+        File prawnFileLocation = new File(currentPrawnSourceFileLocation);
         if (prawnFileLocation.exists()) {
             retVal = prawnFileLocation.getParent();
         }
@@ -304,10 +304,10 @@ public class PrawnFileHandler implements Serializable {
      */
     public File currentPrawnFileLocationFolder() {
         // TODO: make more elegant for OP file handling
-        if (currentPrawnFileLocation == null){
-            currentPrawnFileLocation = "."; 
+        if (currentPrawnSourceFileLocation == null){
+            currentPrawnSourceFileLocation = "."; 
         }
-        File retVal = new File(currentPrawnFileLocation);
+        File retVal = new File(currentPrawnSourceFileLocation);
         if (currentPrawnFileLocationIsFile()) {
             retVal = retVal.getParentFile();
         }
@@ -316,10 +316,10 @@ public class PrawnFileHandler implements Serializable {
     }
 
     /**
-     * @param aCurrentPrawnFileLocation the currentPrawnFileLocation to set
+     * @param aCurrentPrawnFileLocation the currentPrawnSourceFileLocation to set
      */
-    public void setCurrentPrawnFileLocation(String aCurrentPrawnFileLocation) {
-        currentPrawnFileLocation = aCurrentPrawnFileLocation;
+    public void setCurrentPrawnSourceFileLocation(String aCurrentPrawnFileLocation) {
+        currentPrawnSourceFileLocation = aCurrentPrawnFileLocation;
     }
 
     /**

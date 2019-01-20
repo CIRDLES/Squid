@@ -37,7 +37,7 @@ import static org.cirdles.squid.Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
-import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  */
 public class SquidReportingService {
 
-    private PrawnFileHandler prawnFileHandler;
+    private PrawnXMLFileHandler prawnFileHandler;
     private CalamariReportsEngine reportsEngine;
 
     public SquidReportingService() {
