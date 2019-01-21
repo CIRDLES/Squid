@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.gui;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -91,6 +93,48 @@ public final class SquidUI extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // arg[0] : -v[erbose]
+        boolean verbose = false;
+        if (args.length > 0) {
+            verbose = args[0].startsWith("-v");
+        }
+
+        // http://patorjk.com/software/taag/#p=display&c=c%2B%2B&f=Varsity&t=Squid
+        StringBuilder logo = new StringBuilder();
+        logo.append("         ______                      _        __    ______   \n");
+        logo.append("       .' ____ \\                    (_)      |  ]  / ____ `.\n");
+        logo.append("       | (___ \\_|  .--. _  __   _   __   .--.| |   `'  __) |\n");
+        logo.append("        _.____`. / /'`\\' ][  | | | [  |/ /'`\\' |   _  |__ '.\n");
+        logo.append("       | \\____) || \\__/ |  | \\_/ |, | || \\__/  |  | \\____) |\n");
+        logo.append("        \\______.' \\__.; |  '.__.'_/[___]'.__.;__]  \\______.'\n");
+        logo.append("                      |__]                        \n");
+        System.out.println((logo));
+
+        // detect if running from jar file
+        if (!verbose && (ClassLoader.getSystemResource("org/cirdles/squid/gui/SquidUI.class").toExternalForm().startsWith("jar"))) {
+            System.out.println(
+                    "Running Squid from Jar file ... suppressing terminal output.\n"
+                    + "\t use '-verbose' argument after jar file name to enable terminal output.");
+            System.setOut(new PrintStream(new OutputStream() {
+                public void write(int b) {
+                    // NO-OP
+                }
+            }));
+            System.setErr(new PrintStream(new OutputStream() {
+                public void write(int b) {
+                    // NO-OP
+                }
+            }));
+
+        }
+
         launch(args);
     }
-}
+}                   
+//    ______                      _        __    ______   
+//  .' ____ \                    (_)      |  ]  / ____ `. 
+//  | (___ \_|  .--. _  __   _   __   .--.| |   `'  __) | 
+//   _.____`. / /'`\' ][  | | | [  |/ /'`\' |   _  |__ '. 
+//  | \____) || \__/ |  | \_/ |, | || \__/  |  | \____) | 
+//   \______.' \__.; |  '.__.'_/[___]'.__.;__]  \______.' 
+//                 |__]                                   
