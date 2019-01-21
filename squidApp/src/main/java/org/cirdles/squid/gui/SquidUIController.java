@@ -179,6 +179,8 @@ public class SquidUIController implements Initializable {
 
     public static ParametersLauncher parametersLauncher;
     public static SquidReportTableLauncher squidReportTableLauncher;
+    @FXML
+    private MenuItem auditRawDataMenuItem;
 
     /**
      * Initializes the controller class.
@@ -389,11 +391,12 @@ public class SquidUIController implements Initializable {
         try {
             File opFileNew = FileHandler.selectOPFile(primaryStageWindow);
             if (opFileNew != null) {
-                squidProject.setupPrawnFileFromOP(opFileNew);
-                //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
+                squidProject.setupPrawnOPFile(opFileNew);
+                //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
+                customizePrawnFileMenu();
             }
         } catch (IOException iOException) {
             String message = iOException.getMessage();
@@ -405,23 +408,22 @@ public class SquidUIController implements Initializable {
                     "Squid encountered an error while trying to open the selected file:\n\n"
                     + message,
                     primaryStageWindow);
-        }
-        
+        }       
     }
-
 
     @FXML
     private void newSquidProjectAction(ActionEvent event) {
         prepareForNewProject();
 
         try {
-            File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
-            if (prawnXMLFileNew != null) {
-                squidProject.setupPrawnFile(prawnXMLFileNew);
-                squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
+            File prawnSourceFileNew = FileHandler.selectPrawnXMLFile(primaryStageWindow);
+            if (prawnSourceFileNew != null) {
+                squidProject.setupPrawnXMLFile(prawnSourceFileNew);
+                squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
+                customizePrawnFileMenu();
             }
         } catch (IOException | JAXBException | SAXException | SquidException anException) {
             String message = anException.getMessage();
@@ -448,11 +450,12 @@ public class SquidUIController implements Initializable {
                 primaryStageWindow);
 
         try {
-            List<File> prawnXMLFilesNew = FileHandler.selectForJoinTwoPrawnFiles(primaryStageWindow);
+            List<File> prawnXMLFilesNew = FileHandler.selectForJoinTwoPrawnXMLFiles(primaryStageWindow);
             if (prawnXMLFilesNew.size() == 2) {
-                squidProject.setupPrawnFileByJoin(prawnXMLFilesNew);
+                squidProject.setupPrawnXMLFileByJoin(prawnXMLFilesNew);
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
+                customizePrawnFileMenu();
             }
         } catch (IOException | JAXBException | SAXException | SquidException anException) {
             String message = anException.getMessage();
@@ -510,6 +513,7 @@ public class SquidUIController implements Initializable {
                 buildProjectMenuMRU();
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
+                customizePrawnFileMenu();
             } else {
                 saveSquidProjectMenuItem.setDisable(true);
                 SquidUI.updateStageTitle("");
@@ -520,6 +524,14 @@ public class SquidUIController implements Initializable {
         // this updates output folder for reports to current version
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
+    }
+    
+    private void customizePrawnFileMenu(){
+        boolean opSourceFile = squidProject.getPrawnSourceFileName().toUpperCase().endsWith(".OP");
+        
+        auditRawDataMenuItem.setDisable(opSourceFile);
+        savePrawnFileCopyMenuItem.setDisable(opSourceFile);
+        choosePrawnFileMenuItem.setDisable(opSourceFile);
     }
 
     @FXML
@@ -857,9 +869,9 @@ public class SquidUIController implements Initializable {
     @FXML
     private void savePrawnFileCopyMenuItemAction(ActionEvent event) {
         try {
-            File prawnXMLFileNew = FileHandler.savePrawnFile(squidProject, primaryStageWindow);
+            File prawnXMLFileNew = FileHandler.savePrawnXMLFile(squidProject, primaryStageWindow);
             if (prawnXMLFileNew != null) {
-                squidProject.setupPrawnFile(prawnXMLFileNew);
+                squidProject.setupPrawnXMLFile(prawnXMLFileNew);
                 launchProjectManager();
             }
         } catch (IOException | JAXBException | SAXException | SquidException iOException) {
@@ -1291,9 +1303,9 @@ public class SquidUIController implements Initializable {
     @FXML
     private void choosePrawnFileMenuItemAction(ActionEvent event) {
         try {
-            File prawnXMLFileNew = FileHandler.selectPrawnFile(primaryStageWindow);
+            File prawnXMLFileNew = FileHandler.selectPrawnXMLFile(primaryStageWindow);
             if (prawnXMLFileNew != null) {
-                squidProject.setupPrawnFile(prawnXMLFileNew);
+                squidProject.setupPrawnXMLFile(prawnXMLFileNew);
                 squidProject.updateFilterForRefMatSpotNames("");
                 squidProject.updateFilterForConcRefMatSpotNames("");
                 squidProject.updateFiltersForUnknownNames(new HashMap<>());

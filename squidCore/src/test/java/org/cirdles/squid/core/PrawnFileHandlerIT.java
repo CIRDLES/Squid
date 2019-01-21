@@ -82,7 +82,7 @@ public class PrawnFileHandlerIT {
     @Rule
     public Timeout timeout = Timeout.seconds(120);
 
-    private PrawnFileHandler prawnFileHandler;
+    private PrawnXMLFileHandler prawnFileHandler;
 
     /**
      *
