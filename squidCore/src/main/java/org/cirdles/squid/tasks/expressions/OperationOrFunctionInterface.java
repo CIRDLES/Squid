@@ -35,7 +35,11 @@ public interface OperationOrFunctionInterface {
      * @return the double[][]
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public abstract Object[][] eval(List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException;
+    public abstract Object[][] eval(
+            List<ExpressionTreeInterface> childrenET,
+            List<ShrimpFractionExpressionInterface> shrimpFractions,
+            TaskInterface task)
+            throws SquidException;
 
     /**
      * @return the precedence
