@@ -35,6 +35,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -107,6 +108,7 @@ import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -124,7 +126,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      */
     protected String name;
-    protected String type;
+    protected TaskTypeEnum type;
     protected String description;
     protected String authorName;
     protected String labName;
@@ -224,7 +226,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
         this.name = name;
-        this.type = "geochron";
+        this.type = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences().getTaskType();
         this.description = "";
         this.authorName = "";
         this.labName = "";
@@ -424,7 +426,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         StringBuilder summary = new StringBuilder();
 
         summary.append(" ")
-                .append("Prawn File provides ")
+                .append("Prawn Source File provides ")
                 .append(String.valueOf(squidSpeciesModelList.size()))
                 .append(" Species:");
 
@@ -1768,7 +1770,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the type
      */
     @Override
-    public String getType() {
+    public TaskTypeEnum getType() {
         return type;
     }
 
@@ -1776,7 +1778,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param type the type to set
      */
     @Override
-    public void setType(String type) {
+    public void setType(TaskTypeEnum type) {
         this.type = type;
     }
 

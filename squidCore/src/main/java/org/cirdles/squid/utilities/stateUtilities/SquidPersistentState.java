@@ -102,19 +102,16 @@ public class SquidPersistentState implements Serializable {
         serializeSelf();
     }
 
-    public static SquidPersistentState getInstance() {
-        if (instance == null) {
-            instance = new SquidPersistentState();
-        }
-        return instance;
-    }
-
     private void serializeSelf() {
         // save initial persistent state serialized file
         try {
             SquidSerializer.serializeObjectToFile(this, getMySerializedName());
         } catch (SquidException squidException) {
         }
+    }
+    
+    public void updateUserPreferences(){
+        serializeSelf();
     }
 
     /**

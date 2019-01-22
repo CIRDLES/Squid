@@ -26,7 +26,7 @@ public class PhysicalConstantsModel extends ParametersModel {
 
     private static final long serialVersionUID = 7402377463547497587L;
 
-    Map<String, BigDecimal> molarMasses;
+    private Map<String, BigDecimal> molarMasses;
 
     public PhysicalConstantsModel() {
         super();

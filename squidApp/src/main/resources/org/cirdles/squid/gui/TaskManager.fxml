@@ -34,12 +34,12 @@
          <children>
             <TextField fx:id="taskNameTextField" promptText="Task name" HBox.hgrow="ALWAYS" />
             <Label text="Type:" />
-            <RadioButton fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
+            <RadioButton id="GEOCHRON" fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
                <toggleGroup>
                   <ToggleGroup fx:id="taskTypeToggleGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
+            <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
          </children>
       </HBox>
       <Label text="Description:" GridPane.rowIndex="2" />

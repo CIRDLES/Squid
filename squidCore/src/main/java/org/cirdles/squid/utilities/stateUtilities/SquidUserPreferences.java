@@ -18,6 +18,7 @@
 package org.cirdles.squid.utilities.stateUtilities;
 
 import java.io.Serializable;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 
 /**
  *
@@ -26,12 +27,15 @@ import java.io.Serializable;
 public class SquidUserPreferences implements Serializable {
 
     // NOTE: java.utils.Properties should be considered for use here JFB
+    // Jan 2019 - considered and rejected as too simplistic
     // Class variables
     private static final long serialVersionUID = -936841271782482788L;
 
     // instance variables
     private String geochronUserName;
     private String geochronPassWord;
+    
+    private TaskTypeEnum taskType;
 
     /**
      * Creates a new instance of ReduxPreferences
@@ -40,6 +44,8 @@ public class SquidUserPreferences implements Serializable {
 
         this.geochronUserName = "username";
         this.geochronPassWord = "longpassword";
+        
+        this.taskType = TaskTypeEnum.GEOCHRON;
     }
 
     /**
@@ -75,4 +81,22 @@ public class SquidUserPreferences implements Serializable {
     public void setGeochronPassWord(String geochronPassWord) {
         this.geochronPassWord = geochronPassWord;
     }
+
+    /**
+     * 
+     * @return 
+     */
+    public TaskTypeEnum getTaskType() {
+        return taskType;
+    }
+
+    /**
+     * 
+     * @param taskType 
+     */
+    public void setTaskType(TaskTypeEnum taskType) {
+        this.taskType = taskType;
+    }
+    
+    
 }

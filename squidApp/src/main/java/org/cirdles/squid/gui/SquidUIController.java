@@ -126,6 +126,7 @@ public class SquidUIController implements Initializable {
     private static HBox spotManagerUI;
 
     private static GridPane taskManagerUI;
+    private static GridPane preferencesManagerUI;
 
     private static VBox isotopesManagerUI;
     private static ScrollPane ratiosManagerUI;
@@ -354,6 +355,8 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(reductionManagerUI);
         mainPane.getChildren().remove(reducedDataReportManagerUI);
         mainPane.getChildren().remove(topsoilPlotUI);
+        
+        mainPane.getChildren().remove(preferencesManagerUI);
 
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -802,6 +805,25 @@ public class SquidUIController implements Initializable {
             //System.out.println("reducedDataReportManagerUI >>>>   " + iOException.getMessage());
         }
     }
+    
+        private void launchPreferencesManager() {
+        mainPane.getChildren().remove(preferencesManagerUI);
+        try {
+            preferencesManagerUI = FXMLLoader.load(getClass().getResource("PreferencesManager.fxml"));
+            preferencesManagerUI.setId("PreferencesManager");
+
+            AnchorPane.setLeftAnchor(preferencesManagerUI, 0.0);
+            AnchorPane.setRightAnchor(preferencesManagerUI, 0.0);
+            AnchorPane.setTopAnchor(preferencesManagerUI, 0.0);
+            AnchorPane.setBottomAnchor(preferencesManagerUI, 0.0);
+
+            mainPane.getChildren().add(preferencesManagerUI);
+            showUI(preferencesManagerUI);
+            
+        } catch (IOException | RuntimeException iOException) {
+            //System.out.println("PreferencesManager >>>>   " + iOException.getMessage());
+        }
+    }
 
     @FXML
     private void projectManagerMenuItemAction(ActionEvent event) {
@@ -862,7 +884,6 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void manageTaskMenuItemAction(ActionEvent event) {
-//        mainPane.getChildren().remove(taskManagerUI);
         launchTaskManager();
     }
 
@@ -1370,5 +1391,10 @@ public class SquidUIController implements Initializable {
                 squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
             }
         }
+    }
+
+    @FXML
+    private void showPreferencesManagerAction(ActionEvent event) {
+        launchPreferencesManager();
     }
 }
