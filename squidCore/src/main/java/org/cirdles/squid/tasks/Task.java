@@ -414,15 +414,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public String printTaskAudit() {
-        // backward compatible 
-        // TODO: Remove after 2/1/2018
-        if (concentrationReferenceMaterialSpots == null) {
-            concentrationReferenceMaterialSpots = new ArrayList<>();
-        }
-        if (filterForConcRefMatSpotNames == null) {
-            filterForConcRefMatSpotNames = "";
-        }
-
         StringBuilder summary = new StringBuilder();
 
         summary.append(" ")
