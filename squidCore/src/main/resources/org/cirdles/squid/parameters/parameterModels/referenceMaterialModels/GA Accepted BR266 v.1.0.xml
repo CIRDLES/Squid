@@ -73,7 +73,7 @@
       <name>age207_235r</name>
       <uncertaintyType>ABS</uncertaintyType>
       <reference></reference>
-      <value>559100000</value>
+      <value>0</value>
       <oneSigma>0</oneSigma>
     </org.cirdles.squid.parameters.valueModels.Age207__235r>
     <org.cirdles.squid.parameters.valueModels.Age208__232r>

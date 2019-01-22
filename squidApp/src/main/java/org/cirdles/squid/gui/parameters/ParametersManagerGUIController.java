@@ -2255,10 +2255,10 @@ public class ParametersManagerGUIController implements Initializable {
     private void physConstCorrNotationOnAction(ActionEvent event) {
         if (physConstCorrNotation.equals(scientificNotation)) {
             physConstCorrNotation = standardNotation;
-            physConstCorrNotationButton.setText("Use Scientific Notation");
+            physConstCorrNotationButton.setText("Scientific Notation");
         } else {
             physConstCorrNotation = scientificNotation;
-            physConstCorrNotationButton.setText("Use Standard Notation");
+            physConstCorrNotationButton.setText("Standard Notation");
         }
         int precision = physConstCorrSigFigs.getValue();
         corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, precision, physConstCorrNotation);
@@ -2268,10 +2268,10 @@ public class ParametersManagerGUIController implements Initializable {
     private void physConstCovNotationOnAction(ActionEvent event) {
         if (physConstCovNotation.equals(scientificNotation)) {
             physConstCovNotation = standardNotation;
-            physConstCovNotationButton.setText("Use Scientific Notation");
+            physConstCovNotationButton.setText("Scientific Notation");
         } else {
             physConstCovNotation = scientificNotation;
-            physConstCovNotationButton.setText("Use Standard Notation");
+            physConstCovNotationButton.setText("Standard Notation");
         }
         int precision = physConstCovSigFigs.getValue();
         corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, precision, physConstCovNotation);
@@ -2281,10 +2281,10 @@ public class ParametersManagerGUIController implements Initializable {
     private void refMatCorrNotationOnAction(ActionEvent event) {
         if (refMatCorrNotation.equals(scientificNotation)) {
             refMatCorrNotation = standardNotation;
-            refMatCorrNotationButton.setText("Use Scientific Notation");
+            refMatCorrNotationButton.setText("Scientific Notation");
         } else {
             refMatCorrNotation = scientificNotation;
-            refMatCorrNotationButton.setText("Use Standard Notation");
+            refMatCorrNotationButton.setText("Standard Notation");
         }
         int precision = refMatCorrSigFigs.getValue();
         corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, precision, refMatCorrNotation);
@@ -2294,10 +2294,10 @@ public class ParametersManagerGUIController implements Initializable {
     private void refMatCovNotationOnAction(ActionEvent event) {
         if (refMatCovNotation.equals(scientificNotation)) {
             refMatCovNotation = standardNotation;
-            refMatCovNotationButton.setText("Use Scientific Notation");
+            refMatCovNotationButton.setText("Scientific Notation");
         } else {
             refMatCovNotation = scientificNotation;
-            refMatCovNotationButton.setText("Use Standard Notation");
+            refMatCovNotationButton.setText("Standard Notation");
         }
         int precision = refMatCovSigFigs.getValue();
         corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, precision, refMatCovNotation);
@@ -2717,10 +2717,10 @@ public class ParametersManagerGUIController implements Initializable {
     private void commonPbCorrNotationOnAction(ActionEvent event) {
         if (commonPbCorrNotation.equals(scientificNotation)) {
             commonPbCorrNotation = standardNotation;
-            commonPbCorrNotationButton.setText("Use Scientific Notation");
+            commonPbCorrNotationButton.setText("Scientific Notation");
         } else {
             commonPbCorrNotation = scientificNotation;
-            commonPbCorrNotationButton.setText("Use Standard Notation");
+            commonPbCorrNotationButton.setText("Standard Notation");
         }
         int precision = commonPbCorrSigFigs.getValue();
         corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, precision, commonPbCorrNotation);
@@ -2730,10 +2730,10 @@ public class ParametersManagerGUIController implements Initializable {
     private void commonPbCovNotationOnAction(ActionEvent event) {
         if (commonPbCovNotation.equals(scientificNotation)) {
             commonPbCovNotation = standardNotation;
-            commonPbCovNotationButton.setText("Use Scientific Notation");
+            commonPbCovNotationButton.setText("Scientific Notation");
         } else {
             commonPbCovNotation = scientificNotation;
-            commonPbCovNotationButton.setText("Use Standard Notation");
+            commonPbCovNotationButton.setText("Standard Notation");
         }
         int precision = commonPbCovSigFigs.getValue();
         corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, precision, commonPbCovNotation);
@@ -2788,10 +2788,10 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     public void refDatesNotationAction(ActionEvent actionEvent) {
         if (refDatesNotation.equals(standardNotation)) {
-            refDatesNotationButton.setText("Use Standard Notation");
+            refDatesNotationButton.setText("Standard Notation");
             refDatesNotation = scientificNotation;
         } else {
-            refDatesNotationButton.setText("Use Scientific Notation");
+            refDatesNotationButton.setText("Scientific Notation");
             refDatesNotation = standardNotation;
         }
         ObservableList<DataModel> dataModels = refDatesTable.getItems();
