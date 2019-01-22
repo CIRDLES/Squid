@@ -20,13 +20,13 @@ import org.apache.commons.math3.linear.BlockRealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.cirdles.ludwig.squid25.Utilities;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.MatrixConverters.convertCorrelationsToCovariances;
 
 /**
  *
- * @author James F. Bowring
- * Based on Simon Bodorkos' interpreation of Ludwig's code:
- * https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Step-4
+ * @author James F. Bowring Based on Simon Bodorkos' interpreation of Ludwig's
+ * code: https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Step-4
  */
 public final class WeightedMeanCalculators {
 
@@ -56,10 +56,9 @@ public final class WeightedMeanCalculators {
 //        int maxRej = (int) Math.ceil((n - avg1LinRegr2) / 8.0);
         // incorrect statement found by Griffin Hiers Feb 2017
         int maxRej = 1 + (int) Math.floor((n - avg1LinRegr2) / 8.0);
-//        boolean[] rej = new boolean[n]; // not used
 
         double minProb = 0.1;
-//        double wLrej = 0;
+
         int pass = 0;
         int minIndex = -1;
         double minMSWD = 0.0;
@@ -69,8 +68,8 @@ public final class WeightedMeanCalculators {
         double[] y2 = y.clone();
         double[] x1 = x.clone();
         double[] x2 = x.clone();
-        double[][] sigRho1 = sigRho.clone();
-        double[][] sigRho2 = sigRho.clone();
+        double[][] sigRho1 = clone2dArray(sigRho);
+        double[][] sigRho2 = clone2dArray(sigRho);
 
         double[] sigmaY = new double[n];
         for (int i = 0; i < n; i++) {
@@ -220,7 +219,6 @@ public final class WeightedMeanCalculators {
         return wtdLinCorrResults;
     }
 
-
     /**
      *
      * @param y
@@ -250,7 +248,7 @@ public final class WeightedMeanCalculators {
                 pXY += (invOm * (((x[i] * y[j]) + (x[j] * y[i]))));
                 mX += (invOm * x[i] * x[j]);
             }
-        }       
+        }
         double slope = ((2 * pXY * w) - (pX * pY)) / ((4 * mX * w) - (pX * pX));
         double intercept = (pY - (slope * pX)) / (2 * w);
 
@@ -260,7 +258,7 @@ public final class WeightedMeanCalculators {
         double slopeSig = Math.sqrt(fischerInv.getEntry(0, 0));
         double interceptSig = Math.sqrt(fischerInv.getEntry(1, 1));
         double slopeInterceptCov = fischerInv.getEntry(0, 1);
-        
+
         RealMatrix resid = new BlockRealMatrix(n, 1);
         for (int i = 0; i < n; i++) {
             resid.setEntry(i, 0, y[i] - (slope * x[i]) - intercept);
@@ -275,7 +273,7 @@ public final class WeightedMeanCalculators {
         // http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/FDistribution.html
         FDistribution fdist = new org.apache.commons.math3.distribution.FDistribution((n - 2), 1E9);
         double prob = 1.0 - fdist.cumulativeProbability(mswd);
-        
+
         weightedLinearCorrResults.setBad(false);
         weightedLinearCorrResults.setSlope(slope);
         weightedLinearCorrResults.setIntercept(intercept);
@@ -287,7 +285,6 @@ public final class WeightedMeanCalculators {
 
         return weightedLinearCorrResults;
     }
-
 
     /**
      *
@@ -348,7 +345,6 @@ public final class WeightedMeanCalculators {
 
         return results;
     }
-
 
     /**
      *

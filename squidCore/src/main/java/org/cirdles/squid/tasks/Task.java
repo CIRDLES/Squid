@@ -104,6 +104,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskE
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -2084,7 +2085,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public boolean[][] getTableOfSelectedRatiosByMassStationIndex() {
-        return tableOfSelectedRatiosByMassStationIndex.clone();
+        return clone2dArray(tableOfSelectedRatiosByMassStationIndex);
     }
 
     private void resetTableOfSelectedRatiosByMassStationIndex() {

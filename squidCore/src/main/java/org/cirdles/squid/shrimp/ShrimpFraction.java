@@ -27,6 +27,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
  *
@@ -386,28 +387,28 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the rawPeakData
      */
     public int[][] getRawPeakData() {
-        return rawPeakData.clone();
+        return clone2dArray(rawPeakData);
     }
 
     /**
      * @param rawPeakData the rawPeakData to set
      */
     public void setRawPeakData(int[][] rawPeakData) {
-        this.rawPeakData = rawPeakData.clone();
+        this.rawPeakData = clone2dArray(rawPeakData);
     }
 
     /**
      * @return the rawSBMData
      */
     public int[][] getRawSBMData() {
-        return rawSBMData.clone();
+        return clone2dArray(rawSBMData);
     }
 
     /**
      * @param rawSBMData the rawSBMData to set
      */
     public void setRawSBMData(int[][] rawSBMData) {
-        this.rawSBMData = rawSBMData.clone();
+        this.rawSBMData = clone2dArray(rawSBMData);
     }
 
     /**
@@ -415,14 +416,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getTotalCounts() {
-        return totalCounts.clone();
+        return clone2dArray(totalCounts);
     }
 
     /**
      * @param totalCounts the totalCounts to set
      */
     public void setTotalCounts(double[][] totalCounts) {
-        this.totalCounts = totalCounts.clone();
+        this.totalCounts = clone2dArray(totalCounts);
     }
 
     /**
@@ -430,28 +431,28 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getTotalCountsOneSigmaAbs() {
-        return totalCountsOneSigmaAbs.clone();
+        return clone2dArray(totalCountsOneSigmaAbs);
     }
 
     /**
      * @param totalCountsOneSigmaAbs the totalCountsOneSigmaAbs to set
      */
     public void setTotalCountsOneSigmaAbs(double[][] totalCountsOneSigmaAbs) {
-        this.totalCountsOneSigmaAbs = totalCountsOneSigmaAbs.clone();
+        this.totalCountsOneSigmaAbs = clone2dArray(totalCountsOneSigmaAbs);
     }
 
     /**
      * @return the totalCountsSBM
      */
     public double[][] getTotalCountsSBM() {
-        return totalCountsSBM.clone();
+        return clone2dArray(totalCountsSBM);
     }
 
     /**
      * @param totalCountsSBM the totalCountsSBM to set
      */
     public void setTotalCountsSBM(double[][] totalCountsSBM) {
-        this.totalCountsSBM = totalCountsSBM.clone();
+        this.totalCountsSBM = clone2dArray(totalCountsSBM);
     }
 
     /**
@@ -459,28 +460,28 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getTimeStampSec() {
-        return timeStampSec.clone();
+        return clone2dArray(timeStampSec);
     }
 
     /**
      * @param timeStampSec the timeStampSec to set
      */
     public void setTimeStampSec(double[][] timeStampSec) {
-        this.timeStampSec = timeStampSec.clone();
+        this.timeStampSec = clone2dArray(timeStampSec);
     }
 
     /**
      * @return the trimMass
      */
     public double[][] getTrimMass() {
-        return trimMass.clone();
+        return clone2dArray(trimMass);
     }
 
     /**
      * @param trimMass the trimMass to set
      */
     public void setTrimMass(double[][] trimMass) {
-        this.trimMass = trimMass.clone();
+        this.trimMass = clone2dArray(trimMass);
     }
 
     /**
@@ -504,14 +505,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getNetPkCps() {
-        return netPkCps.clone();
+        return clone2dArray(netPkCps);
     }
 
     /**
      * @param aNetPkCps the netPkCps to set
      */
     public void setNetPkCps(double[][] aNetPkCps) {
-        netPkCps = aNetPkCps.clone();
+        netPkCps = clone2dArray(aNetPkCps);
     }
 
     /**
@@ -519,14 +520,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getPkFerr() {
-        return pkFerr.clone();
+        return clone2dArray(pkFerr);
     }
 
     /**
      * @param aPkFerr the pkFerr to set
      */
     public void setPkFerr(double[][] aPkFerr) {
-        pkFerr = aPkFerr.clone();
+        pkFerr = clone2dArray(aPkFerr);
     }
 
     /**
@@ -595,14 +596,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getReducedPkHt() {
-        return reducedPkHt.clone();
+        return clone2dArray(reducedPkHt);
     }
 
     /**
      * @param reducedPkHt the reducedPkHt to set
      */
     public void setReducedPkHt(double[][] reducedPkHt) {
-        this.reducedPkHt = reducedPkHt.clone();
+        this.reducedPkHt = clone2dArray(reducedPkHt);
     }
 
     /**
@@ -610,14 +611,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getReducedPkHtFerr() {
-        return reducedPkHtFerr.clone();
+        return clone2dArray(reducedPkHtFerr);
     }
 
     /**
      * @param reducedPkHtFerr the reducedPkHtFerr to set
      */
     public void setReducedPkHtFerr(double[][] reducedPkHtFerr) {
-        this.reducedPkHtFerr = reducedPkHtFerr.clone();
+        this.reducedPkHtFerr = clone2dArray(reducedPkHtFerr);
     }
 
     /**
