@@ -24,6 +24,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
  *
@@ -107,14 +108,14 @@ public class VariableNodeForSummary extends ExpressionTree {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);
-        double[][] valuesAll = detail.getValues().clone();
+        double[][] valuesAll = clone2dArray(detail.getValues());
 
         if (uncertaintyDirective.compareTo("%") == 0) {
             // index should be 1 from constructor
             valuesAll[0][1] = valuesAll[0][1] / valuesAll[0][0] * 100;
         }
 
-        double[][] values = valuesAll.clone();
+        double[][] values = clone2dArray(valuesAll);
 
         if (index > 0) {
             // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
@@ -128,7 +129,7 @@ public class VariableNodeForSummary extends ExpressionTree {
 
         return retVal;
     }
-
+   
     /**
      *
      * @return
