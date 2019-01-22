@@ -113,6 +113,7 @@ public abstract class ParametersModel implements
         return retVal;
     }
 
+    @Override
     abstract public ParametersModel clone();
 
     public void generateCorrelationsFromCovariances() {
