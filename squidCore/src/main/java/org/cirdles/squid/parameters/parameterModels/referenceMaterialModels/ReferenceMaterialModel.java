@@ -33,8 +33,8 @@ public class ReferenceMaterialModel extends ParametersModel {
 
     private static final long serialVersionUID = 8791002391578871182L;
 
-    private ValueModel[] concentrations;
-    private boolean[] dataMeasured;
+    ValueModel[] concentrations;
+    boolean[] dataMeasured;
     private ValueModel[] dates;
     private ConcurrentMap<String, BigDecimal> parDerivTerms;
     private boolean referenceDates;
