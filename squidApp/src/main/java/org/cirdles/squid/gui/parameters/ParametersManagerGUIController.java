@@ -707,13 +707,7 @@ public class ParametersManagerGUIController implements Initializable {
                 if (table.equals(physConstCorrTable) || table.equals(refMatCorrTable) || table.equals(commonPbCorrTable)) {
                     col.setCellFactory(column -> EditCell.createStringEditCell());
                     col.setOnEditCommit(value -> {
-                        String newValue = value.getNewValue();
-                        if (newValue.endsWith("E") || newValue.isEmpty()) {
-                            newValue = newValue + "0";
-                        }
-                        if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                            newValue = "0" + newValue;
-                        }
+                        String newValue = correctColumnCommittedValue(value.getNewValue());
                         if (Double.parseDouble(newValue) <= 1
                                 && Double.parseDouble(newValue) >= -1
                                 && value.getTablePosition().getColumn() != value.getTablePosition().getRow() + 1) {
@@ -813,14 +807,7 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setSortable(false);
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
-
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<DataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -858,14 +845,7 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
         absCol.setOnEditCommit(value -> {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
-
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<DataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -904,14 +884,7 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
         pctCol.setOnEditCommit(value -> {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
-
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<DataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -948,6 +921,23 @@ public class ParametersManagerGUIController implements Initializable {
         return columns;
     }
 
+    private String correctColumnCommittedValue(String value) {
+        String newValue = value;
+        if (newValue.endsWith("E") || newValue.isEmpty()) {
+            newValue = newValue + "0";
+        }
+        if (newValue.startsWith("E") || newValue.startsWith(".")) {
+            newValue = "0" + newValue;
+        }
+        if (newValue.startsWith("-")) {
+            newValue = "-0" + newValue.substring(1);
+        }
+        if (newValue.endsWith("-")) {
+            newValue = newValue + "0";
+        }
+        return newValue;
+    }
+
     private void setUpRefMatDataModelColumns() {
         refMatDataTable.getColumns().clear();
         int precision = refMatDataSigFigs.getValue();
@@ -964,14 +954,7 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setSortable(false);
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
-
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<RefMatDataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -996,15 +979,8 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
-        absCol.setOnEditCommit(value ->
-        {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
+        absCol.setOnEditCommit(value -> {
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<RefMatDataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -1029,15 +1005,8 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
-        pctCol.setOnEditCommit(value ->
-        {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
+        pctCol.setOnEditCommit(value -> {
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<RefMatDataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
