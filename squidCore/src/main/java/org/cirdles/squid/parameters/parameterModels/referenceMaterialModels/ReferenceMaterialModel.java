@@ -33,8 +33,8 @@ public class ReferenceMaterialModel extends ParametersModel {
 
     private static final long serialVersionUID = 8791002391578871182L;
 
-    ValueModel[] concentrations;
-    boolean[] dataMeasured;
+    private ValueModel[] concentrations;
+    private boolean[] dataMeasured;
     private ValueModel[] dates;
     private ConcurrentMap<String, BigDecimal> parDerivTerms;
     private boolean referenceDates;
@@ -43,7 +43,7 @@ public class ReferenceMaterialModel extends ParametersModel {
     public ReferenceMaterialModel() {
         super();
         referenceDates = false;
-        dates = new ValueModel[0];
+        generateBaseDates();
         parDerivTerms = new ConcurrentHashMap<>();
         generateDefaultValueModels();
         initializeDefaultConcentrations();
@@ -202,11 +202,11 @@ public class ReferenceMaterialModel extends ParametersModel {
     }
 
     public void generateBaseDates() {
-        values = new ValueModel[4];
-        values[0] = new Age206_238r();
-        values[1] = new Age207_206r();
-        values[2] = new Age207_235r();
-        values[3] = new Age208_232r();
+        dates = new ValueModel[4];
+        dates[0] = new Age206_238r();
+        dates[1] = new Age207_206r();
+        dates[2] = new Age207_235r();
+        dates[3] = new Age208_232r();
     }
 
     public void calculateApparentDates() {
