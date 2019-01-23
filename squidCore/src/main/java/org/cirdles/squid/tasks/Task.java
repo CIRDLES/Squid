@@ -109,6 +109,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -225,11 +226,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param reportsEngine
      */
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
+        SquidUserPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
         this.name = name;
-        this.type = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences().getTaskType();
+        this.type = squidUserPreferences.getTaskType();
         this.description = "";
-        this.authorName = "";
-        this.labName = "";
+        this.authorName = squidUserPreferences.getAuthorName();
+        this.labName = squidUserPreferences.getLabName();
         this.provenance = "";
         this.dateRevised = 0l;
         this.filterForRefMatSpotNames = "";

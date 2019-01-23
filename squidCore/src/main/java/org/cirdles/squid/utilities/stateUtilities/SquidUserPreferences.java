@@ -48,8 +48,8 @@ public class SquidUserPreferences implements Serializable {
         this.geochronPassWord = "longpassword";
 
         this.taskType = TaskTypeEnum.GEOCHRON;
-        this.authorName = "NONE";
-        this.labName = "NONE";
+        this.authorName = "";
+        this.labName = "";
     }
 
     /**
@@ -110,7 +110,7 @@ public class SquidUserPreferences implements Serializable {
      */
     public String getAuthorName() {
         if (authorName == null) {
-            authorName = "NONE";
+            authorName = "";
         }
         return authorName;
     }
@@ -127,7 +127,7 @@ public class SquidUserPreferences implements Serializable {
      */
     public String getLabName() {
         if (labName == null) {
-            labName = "NONE";
+            labName = "";
         }
         return labName;
     }
