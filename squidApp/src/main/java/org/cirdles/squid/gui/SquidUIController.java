@@ -831,6 +831,8 @@ public class SquidUIController implements Initializable {
     }
 
     private void showUI(Node myManager) {
+        SquidPersistentState.getExistingPersistentState().updateUserPreferences();
+        
         for (Node manager : mainPane.getChildren()) {
             manager.setVisible(false);
         }

@@ -34,8 +34,10 @@ public class SquidUserPreferences implements Serializable {
     // instance variables
     private String geochronUserName;
     private String geochronPassWord;
-    
+
     private TaskTypeEnum taskType;
+    private String authorName;
+    private String labName;
 
     /**
      * Creates a new instance of ReduxPreferences
@@ -44,8 +46,10 @@ public class SquidUserPreferences implements Serializable {
 
         this.geochronUserName = "username";
         this.geochronPassWord = "longpassword";
-        
+
         this.taskType = TaskTypeEnum.GEOCHRON;
+        this.authorName = "NONE";
+        this.labName = "NONE";
     }
 
     /**
@@ -83,20 +87,56 @@ public class SquidUserPreferences implements Serializable {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public TaskTypeEnum getTaskType() {
+        if (taskType == null) {
+            taskType = TaskTypeEnum.GEOCHRON;
+        }
         return taskType;
     }
 
     /**
-     * 
-     * @param taskType 
+     *
+     * @param taskType
      */
     public void setTaskType(TaskTypeEnum taskType) {
         this.taskType = taskType;
     }
-    
-    
+
+    /**
+     * @return the authorName
+     */
+    public String getAuthorName() {
+        if (authorName == null) {
+            authorName = "NONE";
+        }
+        return authorName;
+    }
+
+    /**
+     * @param authorName the authorName to set
+     */
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    /**
+     * @return the labName
+     */
+    public String getLabName() {
+        if (labName == null) {
+            labName = "NONE";
+        }
+        return labName;
+    }
+
+    /**
+     * @param labName the labName to set
+     */
+    public void setLabName(String labName) {
+        this.labName = labName;
+    }
+
 }

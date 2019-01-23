@@ -17,6 +17,8 @@ package org.cirdles.squid.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,7 +44,7 @@ import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 public class PreferencesManagerController implements Initializable {
 
     private SquidUserPreferences squidUserPreferences;
-    
+
     @FXML
     private GridPane taskManagerGridPane;
     @FXML
@@ -95,21 +97,35 @@ public class PreferencesManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        titleLabel.setStyle(STYLE_MANAGER_TITLE);       
+        titleLabel.setStyle(STYLE_MANAGER_TITLE);
         squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
-        ((RadioButton)taskManagerGridPane.lookup("#" + squidUserPreferences.getTaskType().getName())).setSelected(true);
-    }    
+        ((RadioButton) taskManagerGridPane.lookup("#" + squidUserPreferences.getTaskType().getName())).setSelected(true);
+
+        authorsNameTextField.setText(squidUserPreferences.getAuthorName());
+        labNameTextField.setText(squidUserPreferences.getLabName());
+        
+        setupListeners();
+    }
 
     @FXML
     private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
         squidUserPreferences.setTaskType(Squid3Constants.TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
-        SquidPersistentState.getExistingPersistentState().updateUserPreferences();
     }
 
     @FXML
     private void generalTaskTypeRadioButtonAction(ActionEvent event) {
         squidUserPreferences.setTaskType(Squid3Constants.TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
-        SquidPersistentState.getExistingPersistentState().updateUserPreferences();
+    }
+
+    private void setupListeners() {
+
+        authorsNameTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            squidUserPreferences.setAuthorName(newValue);
+        });
+
+        labNameTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            squidUserPreferences.setLabName(newValue);
+        });
     }
 
     @FXML
@@ -143,5 +159,5 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
     }
-    
+
 }
