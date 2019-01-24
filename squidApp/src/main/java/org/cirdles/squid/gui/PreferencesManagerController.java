@@ -27,12 +27,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 
@@ -58,9 +61,9 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private TextField labNameTextField;
     @FXML
-    private ComboBox<?> refMatModelComboBox;
+    private ComboBox<ParametersModel> refMatModelComboBox;
     @FXML
-    private ComboBox<?> concRefMatModelComboBox;
+    private ComboBox<ParametersModel> concRefMatModelComboBox;
     @FXML
     private RadioButton pb204RadioButton;
     @FXML
@@ -84,11 +87,11 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private CheckBox autoExcludeSpotsCheckBox;
     @FXML
-    private Spinner<?> assignedExternalErrSpinner;
+    private Spinner<Double> assignedExternalErrSpinner;
     @FXML
-    private ComboBox<?> commonPbModelComboBox;
+    private ComboBox<ParametersModel> commonPbModelComboBox;
     @FXML
-    private ComboBox<?> physConstModelComboBox;
+    private ComboBox<ParametersModel> physConstModelComboBox;
     @FXML
     private Label titleLabel;
 
@@ -99,22 +102,51 @@ public class PreferencesManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
         squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
+
         ((RadioButton) taskManagerGridPane.lookup("#" + squidUserPreferences.getTaskType().getName())).setSelected(true);
 
         authorsNameTextField.setText(squidUserPreferences.getAuthorName());
         labNameTextField.setText(squidUserPreferences.getLabName());
-        
+
+        if (squidUserPreferences.isUseSBM()) {
+            yesSBMRadioButton.setSelected(true);
+        } else {
+            noSBMRadioButton.setSelected(true);
+        }
+
+        if (squidUserPreferences.isUserLinFits()) {
+            linearRegressionRatioCalcRadioButton.setSelected(true);
+        } else {
+            spotAverageRatioCalcRadioButton.setSelected(true);
+        }
+
+        ((RadioButton) taskManagerGridPane.lookup("#" + squidUserPreferences.getSelectedIndexIsotope().getName())).setSelected(true);
+
+        autoExcludeSpotsCheckBox.setSelected(squidUserPreferences.isSquidAllowsAutoExclusionOfSpots());
+
+        SpinnerValueFactory<Double> valueFactory
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, squidUserPreferences.getExtPErr(), 0.05);
+        assignedExternalErrSpinner.setValueFactory(valueFactory);
+        assignedExternalErrSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Double> observable,//
+                    Double oldValue, Double newValue) {
+                squidUserPreferences.setExtPErr(assignedExternalErrSpinner.getValue());
+            }
+        });
+
         setupListeners();
     }
 
     @FXML
     private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setTaskType(Squid3Constants.TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
+        squidUserPreferences.setTaskType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
     }
 
     @FXML
     private void generalTaskTypeRadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setTaskType(Squid3Constants.TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
+        squidUserPreferences.setTaskType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
     }
 
     private void setupListeners() {
@@ -130,34 +162,42 @@ public class PreferencesManagerController implements Initializable {
 
     @FXML
     private void pb204RadioButtonAction(ActionEvent event) {
+        squidUserPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb204RadioButton.getId()));
     }
 
     @FXML
     private void pb207RadioButtonAction(ActionEvent event) {
+        squidUserPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb207RadioButton.getId()));
     }
 
     @FXML
     private void pb208RadioButtonAction(ActionEvent event) {
+        squidUserPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb208RadioButton.getId()));
     }
 
     @FXML
     private void yesSBMRadioButtonAction(ActionEvent event) {
+        squidUserPreferences.setUseSBM(true);
     }
 
     @FXML
     private void noSBMRadioButtonActions(ActionEvent event) {
+        squidUserPreferences.setUseSBM(false);
     }
 
     @FXML
     private void linearRegressionRatioCalcRadioButtonAction(ActionEvent event) {
+        squidUserPreferences.setUserLinFits(true);
     }
 
     @FXML
     private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
+        squidUserPreferences.setUserLinFits(false);
     }
 
     @FXML
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
+        squidUserPreferences.setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
     }
 
 }

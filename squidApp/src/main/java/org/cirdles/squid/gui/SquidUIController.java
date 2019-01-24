@@ -587,6 +587,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void quitAction(ActionEvent event) {
+        SquidPersistentState.getExistingPersistentState().updateUserPreferences();
         confirmSaveOnProjectClose();
         Platform.exit();
     }

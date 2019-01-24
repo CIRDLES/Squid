@@ -238,8 +238,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.filterForConcRefMatSpotNames = "";
         this.filtersForUnknownNames = new HashMap<>();
 
-        this.useSBM = true;
-        this.userLinFits = false;
+        this.useSBM = squidUserPreferences.isUseSBM();
+        this.userLinFits = squidUserPreferences.isUserLinFits();
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
         this.parentNuclide = "";
@@ -272,7 +272,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SquidProject.setProjectChanged(true);
 
         this.useCalculated_pdMeanParentEleA = false;
-        this.selectedIndexIsotope = IndexIsoptopesEnum.PB_204;
+        this.selectedIndexIsotope = squidUserPreferences.getSelectedIndexIsotope();
 
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
@@ -284,9 +284,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.prawnChanged = false;
 
-        this.squidAllowsAutoExclusionOfSpots = true;
+        this.squidAllowsAutoExclusionOfSpots = squidUserPreferences.isSquidAllowsAutoExclusionOfSpots();
 
-        this.extPErr = 0.75;
+        this.extPErr = squidUserPreferences.getExtPErr();
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
         this.referenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
