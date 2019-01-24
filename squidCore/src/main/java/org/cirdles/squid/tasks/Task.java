@@ -35,6 +35,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -107,6 +108,8 @@ import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -124,7 +127,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      */
     protected String name;
-    protected String type;
+    protected TaskTypeEnum type;
     protected String description;
     protected String authorName;
     protected String labName;
@@ -190,9 +193,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean showQt1y;
     protected boolean showQt1z;
 
-    protected boolean squidAllowsAutoExclusionOfSpots;
+    private boolean squidAllowsAutoExclusionOfSpots;
 
-    protected double extPErr;
+    private double extPErr;
 
     protected ParametersModel physicalConstantsModel;
     protected ParametersModel referenceMaterialModel;
@@ -223,19 +226,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param reportsEngine
      */
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
+        SquidUserPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
         this.name = name;
-        this.type = "geochron";
+        this.type = squidUserPreferences.getTaskType();
         this.description = "";
-        this.authorName = "";
-        this.labName = "";
+        this.authorName = squidUserPreferences.getAuthorName();
+        this.labName = squidUserPreferences.getLabName();
         this.provenance = "";
         this.dateRevised = 0l;
         this.filterForRefMatSpotNames = "";
         this.filterForConcRefMatSpotNames = "";
         this.filtersForUnknownNames = new HashMap<>();
 
-        this.useSBM = true;
-        this.userLinFits = false;
+        this.useSBM = squidUserPreferences.isUseSBM();
+        this.userLinFits = squidUserPreferences.isUserLinFits();
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
         this.parentNuclide = "";
@@ -268,7 +272,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SquidProject.setProjectChanged(true);
 
         this.useCalculated_pdMeanParentEleA = false;
-        this.selectedIndexIsotope = IndexIsoptopesEnum.PB_204;
+        this.selectedIndexIsotope = squidUserPreferences.getSelectedIndexIsotope();
 
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
@@ -280,13 +284,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.prawnChanged = false;
 
-        this.squidAllowsAutoExclusionOfSpots = true;
+        this.squidAllowsAutoExclusionOfSpots = squidUserPreferences.isSquidAllowsAutoExclusionOfSpots();
 
-        this.extPErr = 0.75;
+        this.extPErr = squidUserPreferences.getExtPErr();
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
         this.referenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
-        this.concentrationReferenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
+        this.concentrationReferenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatConcDefault();
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         this.physicalConstantsModelChanged = false;
@@ -412,19 +416,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public String printTaskAudit() {
-        // backward compatible 
-        // TODO: Remove after 2/1/2018
-        if (concentrationReferenceMaterialSpots == null) {
-            concentrationReferenceMaterialSpots = new ArrayList<>();
-        }
-        if (filterForConcRefMatSpotNames == null) {
-            filterForConcRefMatSpotNames = "";
-        }
-
         StringBuilder summary = new StringBuilder();
 
         summary.append(" ")
-                .append("Prawn File provides ")
+                .append("Prawn Source File provides ")
                 .append(String.valueOf(squidSpeciesModelList.size()))
                 .append(" Species:");
 
@@ -1768,7 +1763,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the type
      */
     @Override
-    public String getType() {
+    public TaskTypeEnum getType() {
         return type;
     }
 
@@ -1776,7 +1771,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param type the type to set
      */
     @Override
-    public void setType(String type) {
+    public void setType(TaskTypeEnum type) {
         this.type = type;
     }
 
@@ -2354,6 +2349,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setPrawnChanged(boolean prawnChanged) {
         this.prawnChanged = prawnChanged;
+    }
+
+    /**
+     * @param squidAllowsAutoExclusionOfSpots the squidAllowsAutoExclusionOfSpots to set
+     */
+    @Override
+    public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots) {
+        this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
     }
 
     /**

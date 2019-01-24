@@ -25,7 +25,7 @@ import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
@@ -107,8 +107,8 @@ public class PrawnFileHandlerIT {
 
         prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(PRAWN_FILE_RESOURCE);
 
-        ShrimpDataFileInterface prawnFileData = 
-                prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
+        ShrimpDataFileInterface prawnFileData
+                = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
 
         List<SquidSpeciesModel> squidSpeciesModelList = new ArrayList<>();
         squidSpeciesModelList.add(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O", false, "No", false));
@@ -136,6 +136,18 @@ public class PrawnFileHandlerIT {
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
 
         TaskInterface task = new Task();
+        // overcome user preferences
+        task.setType(Squid3Constants.TaskTypeEnum.GEOCHRON);
+        task.setUseSBM(true);
+        task.setUserLinFits(false);
+        task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        task.setSquidAllowsAutoExclusionOfSpots(true);
+        task.setExtPErr(0.75);
+        task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
+        task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
+        task.setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+        task.setConcentrationReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+
         SquidSessionModel squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, 2, "T", "", new HashMap<>());
         List<ShrimpFractionExpressionInterface> shrimpFractions = task.processRunFractions(prawnFileData, squidSessionModel);
 
@@ -165,18 +177,15 @@ public class PrawnFileHandlerIT {
     public void testingOutputForZ6266Permutation1() throws Exception {
 
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 4-,7-,8-corr reference materials and unknowns.");
-        
+
         CalamariFileUtilities.initSampleParametersModels();
-        
+
         File prawnFile = RESOURCE_EXTRACTOR
                 .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266);
 
         SquidProject squidProject = new SquidProject();
         ShrimpDataFileInterface prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
         squidProject.setPrawnFile(prawnFileData);
-
-        squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
-        squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
 
         File squidTaskFile = RESOURCE_EXTRACTOR
                 .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1);
@@ -185,6 +194,18 @@ public class PrawnFileHandlerIT {
         squidProject.setDelimiterForUnknownNames("-");
         squidProject.getTask().setFilterForRefMatSpotNames("6266");
         squidProject.getTask().setFilterForConcRefMatSpotNames("6266");
+
+        // overcome user preferences
+        squidProject.getTask().setType(Squid3Constants.TaskTypeEnum.GEOCHRON);
+        squidProject.getTask().setUseSBM(true);
+        squidProject.getTask().setUserLinFits(false);
+        squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(true);
+        squidProject.getTask().setExtPErr(0.75);
+        squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
+        squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
+        squidProject.getTask().setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+        squidProject.getTask().setConcentrationReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
 
         squidProject.getTask().applyTaskIsotopeLabelsToMassStations();
 
@@ -199,7 +220,8 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
         assertThat(reportTableFile).hasSameContentAs(expectedReport);
-
+        
+        // change selected index isotope
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProject.getTask().setChanged(true);
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
@@ -211,7 +233,6 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
         assertThat(reportTableFile).hasSameContentAs(expectedReport);
-
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         squidProject.getTask().setChanged(true);
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
@@ -223,7 +244,6 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
         assertThat(reportTableFile).hasSameContentAs(expectedReport);
-
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProject.getTask().setChanged(true);
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
@@ -236,7 +256,6 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
         assertThat(reportTableFile).hasSameContentAs(expectedReport);
-
     }
 
 }

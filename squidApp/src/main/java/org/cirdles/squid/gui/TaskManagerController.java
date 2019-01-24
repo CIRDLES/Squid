@@ -35,6 +35,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -135,7 +136,7 @@ public class TaskManagerController implements Initializable {
         labNameTextField.setText(task.getLabName());
         provenanceTextField.setText(task.getProvenance());
 
-        if (task.getType().compareToIgnoreCase("GEOCHRON") != 0) {
+        if (task.getType().compareTo(Squid3Constants.TaskTypeEnum.GEOCHRON) != 0) {
             generalTaskTypeRadioButton.setSelected(true);
         } else {
             geochronTaskTypeRadioButton.setSelected(true);
@@ -289,13 +290,13 @@ public class TaskManagerController implements Initializable {
 
     @FXML
     private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
-        task.setType("geochron");
+        task.setType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
         task.setChanged(true);
     }
 
     @FXML
     private void generalTaskTypeRadioButtonAction(ActionEvent event) {
-        task.setType("general");
+        task.setType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
         task.setChanged(true);
     }
 

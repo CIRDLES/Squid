@@ -155,13 +155,12 @@
             </Menu>
             <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Resources">
               <items>
-                  <MenuItem disable="true" mnemonicParsing="false" text="User Preferences" />
+                  <MenuItem mnemonicParsing="false" onAction="#showPreferencesManagerAction" text="User Preferences" />
                   <Menu mnemonicParsing="false" text="Parameter Models">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
                         <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
                       <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
-                        <MenuItem mnemonicParsing="false" onAction="#openDefaultSquidLabDataModels" text="Manage Default Models" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Online Resources">
@@ -177,7 +176,7 @@
                       <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Developer Tools">
+                  <Menu mnemonicParsing="false" text="Developer Tools" visible="false">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#listBuiltinExpressionsAction" text="List Built-in Expressions" />
                     </items>
