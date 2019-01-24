@@ -156,9 +156,6 @@ public class SquidUIController implements Initializable {
     private Menu manageVisualizationsMenu;
     @FXML
     private Menu squidLabDataMenu;
-
-    //    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
-    //    private CustomMenuItem reportCustomUnknownsBySamplesMenuItem;
     @FXML
     private Menu unknownsmenu;
     @FXML
@@ -1188,7 +1185,6 @@ public class SquidUIController implements Initializable {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.commonPb);
     }
 
-    @FXML
     private void openDefaultSquidLabDataModels() {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
     }

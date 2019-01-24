@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,7 +34,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
@@ -137,6 +138,7 @@ public class PreferencesManagerController implements Initializable {
         });
 
         setupListeners();
+        setUpParametersModelsComboBoxes();
     }
 
     @FXML
@@ -158,6 +160,52 @@ public class PreferencesManagerController implements Initializable {
         labNameTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             squidUserPreferences.setLabName(newValue);
         });
+    }
+
+    private void setUpParametersModelsComboBoxes() {
+        // ReferenceMaterials
+        refMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
+        refMatModelComboBox.getSelectionModel().select(squidLabData.getRefMatDefault());
+
+        refMatModelComboBox.valueProperty()
+                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
+                    squidLabData.setRefMatDefault(newValue);
+                    squidLabData.storeState();
+                });
+
+        // ConcentrationReferenceMaterials
+        concRefMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
+        concRefMatModelComboBox.getSelectionModel().select(squidLabData.getRefMatConcDefault());
+
+        concRefMatModelComboBox.valueProperty()
+                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
+                    squidLabData.setRefMatConcDefault(newValue);
+                    squidLabData.storeState();
+                });
+
+        // PhysicalConstantsModels
+        physConstModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        physConstModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels()));
+        physConstModelComboBox.getSelectionModel().select(squidLabData.getPhysConstDefault());
+
+        physConstModelComboBox.valueProperty()
+                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
+                    squidLabData.setPhysConstDefault(newValue);
+                    squidLabData.storeState();
+                });
+
+        // CommonPbModels
+        commonPbModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
+        commonPbModelComboBox.getSelectionModel().select(squidLabData.getCommonPbDefault());
+
+        commonPbModelComboBox.valueProperty()
+                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
+                    squidLabData.setCommonPbDefault(newValue);
+                    squidLabData.storeState();
+                });
     }
 
     @FXML

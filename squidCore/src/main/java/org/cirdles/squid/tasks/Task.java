@@ -193,9 +193,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean showQt1y;
     protected boolean showQt1z;
 
-    protected boolean squidAllowsAutoExclusionOfSpots;
+    private boolean squidAllowsAutoExclusionOfSpots;
 
-    protected double extPErr;
+    private double extPErr;
 
     protected ParametersModel physicalConstantsModel;
     protected ParametersModel referenceMaterialModel;
@@ -290,7 +290,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
         this.referenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
-        this.concentrationReferenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
+        this.concentrationReferenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatConcDefault();
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         this.physicalConstantsModelChanged = false;
@@ -2349,6 +2349,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setPrawnChanged(boolean prawnChanged) {
         this.prawnChanged = prawnChanged;
+    }
+
+    /**
+     * @param squidAllowsAutoExclusionOfSpots the squidAllowsAutoExclusionOfSpots to set
+     */
+    @Override
+    public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots) {
+        this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
     }
 
     /**

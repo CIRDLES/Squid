@@ -487,6 +487,10 @@ public interface TaskInterface {
      * @return the squidAllowsAutoExclusionOfSpots
      */
     public boolean isSquidAllowsAutoExclusionOfSpots();
+    /**
+     * @param squidAllowsAutoExclusionOfSpots the squidAllowsAutoExclusionOfSpots to set
+     */
+    public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots);
 
     /**
      * @param extPErr the extPErr to set

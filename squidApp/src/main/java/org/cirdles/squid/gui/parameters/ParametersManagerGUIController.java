@@ -52,14 +52,6 @@ import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataWi
 public class ParametersManagerGUIController implements Initializable {
 
     @FXML
-    public Tab defaultModelsTab;
-    @FXML
-    public ChoiceBox<String> defaultRefMatCB;
-    @FXML
-    public ChoiceBox<String> defaultCommonPbCB;
-    @FXML
-    public ChoiceBox<String> defaultPhysConstCB;
-    @FXML
     public CheckBox refMatReferenceDatesCheckbox;
     @FXML
     public Tab refMatCorrTab;
@@ -77,8 +69,6 @@ public class ParametersManagerGUIController implements Initializable {
     public TableView<DataModel> refDatesTable;
     @FXML
     public TabPane refMatTabPane;
-    @FXML
-    private ChoiceBox<String> defaultRefMatConcCB;
     @FXML
     private MenuItem editCopyOfCurrPhysConst;
     @FXML
@@ -332,19 +322,12 @@ public class ParametersManagerGUIController implements Initializable {
         setUpCommonPbCB();
 
         setUpTabs();
-        setUpDefaultModelsTabCBs();
         setUpApparentDatesTabSelection();
         setUpLaboratoryName();
         setUpDatesCheckboxVisibilityListener();
     }
 
     private void setUpTabs() {
-        defaultModelsTab.setOnSelectionChanged(val -> {
-            if (defaultModelsTab.isSelected()) {
-                setUpDefaultModelsTabItems();
-                chosenTab = ParametersTab.defaultModels;
-            }
-        });
         refMatTab.setOnSelectionChanged(val -> {
             if (refMatTab.isSelected()) {
                 chosenTab = ParametersTab.refMat;
@@ -369,10 +352,8 @@ public class ParametersManagerGUIController implements Initializable {
                     rootTabPane.getSelectionModel().select(refMatTab);
                 } else if (chosenTab.equals(ParametersTab.commonPb)) {
                     rootTabPane.getSelectionModel().select(commonPbTab);
-                } else {
-                    rootTabPane.getSelectionModel().select(defaultModelsTab);
-                }
-                setUpDefaultModelsTabItems();
+                } 
+
                 int selectedIndex;
                 if (!isEditingPhysConst) {
                     selectedIndex = physConstCB.getSelectionModel().getSelectedIndex();
@@ -391,77 +372,6 @@ public class ParametersManagerGUIController implements Initializable {
                 }
             }
         });
-    }
-
-    private void setUpDefaultModelsTabCBs() {
-        defaultPhysConstCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
-            int selected = defaultPhysConstCB.getSelectionModel().getSelectedIndex();
-            if (selected > -1 && selected < squidLabData.getPhysicalConstantsModels().size()) {
-                squidLabData.setPhysConstDefault(squidLabData.getPhysicalConstantsModel(selected));
-                if (!isEditingPhysConst) {
-                    int selectedIndex = physConstCB.getSelectionModel().getSelectedIndex();
-                    setUpPhysConstCBItems();
-                    physConstCB.getSelectionModel().select(selectedIndex);
-                    squidLabData.storeState();
-                }
-            }
-        });
-        defaultRefMatCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
-            int selected = defaultRefMatCB.getSelectionModel().getSelectedIndex();
-            if (selected > -1 && selected < squidLabData.getReferenceMaterials().size()) {
-                squidLabData.setRefMatDefault(squidLabData.getReferenceMaterial(selected));
-                if (!isEditingRefMat) {
-                    int selectedIndex = refMatCB.getSelectionModel().getSelectedIndex();
-                    setUpRefMatCBItems();
-                    refMatCB.getSelectionModel().select(selectedIndex);
-                    squidLabData.storeState();
-                }
-            }
-        });
-        defaultRefMatConcCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
-            int selected = defaultRefMatConcCB.getSelectionModel().getSelectedIndex();
-            if (selected > -1 && selected < squidLabData.getReferenceMaterials().size()) {
-                squidLabData.setRefMatConcDefault(squidLabData.getReferenceMaterial(selected));
-                squidLabData.storeState();
-            }
-        });
-        defaultCommonPbCB.getSelectionModel().selectedIndexProperty().addListener(val -> {
-            int selected = defaultCommonPbCB.getSelectionModel().getSelectedIndex();
-            if (selected > -1 && selected < squidLabData.getCommonPbModels().size()) {
-                squidLabData.setCommonPbDefault(squidLabData.getcommonPbModel(selected));
-                if (!isEditingCommonPb) {
-                    int selectedIndex = commonPbCB.getSelectionModel().getSelectedIndex();
-                    setUpCommonPbCBItems();
-                    commonPbCB.getSelectionModel().select(selectedIndex);
-                    squidLabData.storeState();
-                }
-            }
-        });
-    }
-
-    private void setUpDefaultModelsTabItems() {
-        ObservableList<String> items = FXCollections.observableArrayList();
-        for (ParametersModel model : squidLabData.getPhysicalConstantsModels()) {
-            items.add(model.getModelNameWithVersion());
-        }
-        defaultPhysConstCB.setItems(items);
-        defaultPhysConstCB.getSelectionModel().select(squidLabData.getPhysConstDefault().getModelNameWithVersion());
-
-        items = FXCollections.observableArrayList();
-        for (ParametersModel model : squidLabData.getReferenceMaterials()) {
-            items.add(model.getModelNameWithVersion());
-        }
-        defaultRefMatCB.setItems(items);
-        defaultRefMatCB.getSelectionModel().select(squidLabData.getRefMatDefault().getModelNameWithVersion());
-        defaultRefMatConcCB.setItems(items);
-        defaultRefMatConcCB.getSelectionModel().select(squidLabData.getRefMatConcDefault().getModelNameWithVersion());
-
-        items = FXCollections.observableArrayList();
-        for (ParametersModel model : squidLabData.getCommonPbModels()) {
-            items.add(model.getModelNameWithVersion());
-        }
-        defaultCommonPbCB.setItems(items);
-        defaultCommonPbCB.getSelectionModel().select(squidLabData.getCommonPbDefault().getModelNameWithVersion());
     }
 
     private void setUpPhysConst() {
