@@ -265,16 +265,19 @@
                                                             <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                                 <children>
                                                                     <Label text="Units: "/>
-                                                                    <RadioButton fx:id="refDatesARadioButton" text="a">
+                                                                    <RadioButton fx:id="refDatesARadioButton" text="a"
+                                                                    onAction="#refDatesARadioButtonOnAction" selected="true">
                                                                         <toggleGroup>
                                                                             <ToggleGroup
                                                                                     fx:id="refDatesUnitsToggleGroup"/>
                                                                         </toggleGroup>
                                                                     </RadioButton>
                                                                     <RadioButton fx:id="refDatesKARadioButton" text="Ka"
-                                                                                 toggleGroup="$refDatesUnitsToggleGroup"/>
+                                                                                 toggleGroup="$refDatesUnitsToggleGroup"
+                                                                                onAction="#refDatesKARadioButtonOnAction"/>
                                                                     <RadioButton fx:id="refDatesMARadioButton" text="Ma"
-                                                                                 toggleGroup="$refDatesUnitsToggleGroup"/>
+                                                                                 toggleGroup="$refDatesUnitsToggleGroup"
+                                                                                onAction="#refDatesMARadioButtonOnAction"/>
                                                                 </children>
                                                             </HBox>
                                                         </children>

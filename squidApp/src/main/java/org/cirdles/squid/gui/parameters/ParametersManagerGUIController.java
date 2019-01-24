@@ -289,6 +289,8 @@ public class ParametersManagerGUIController implements Initializable {
 
     public static ParametersTab chosenTab = ParametersTab.physConst;
 
+    private Units refDatesUnits;
+
     /**
      * Initializes the controller class.
      *
@@ -298,6 +300,8 @@ public class ParametersManagerGUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setUpSigFigSpinners();
+
+        refDatesUnits = Units.a;
 
         isEditingCurrCommonPbModel = false;
         isEditingCurrPhysConst = false;
@@ -2272,12 +2276,12 @@ public class ParametersManagerGUIController implements Initializable {
             ObservableList<DataModel> items = refDatesTable.getItems();
             for (DataModel mod : items) {
                 boolean found = false;
+                BigDecimal divisor = new BigDecimal(getRefDatesDivisorOrMultiplier());
                 for (int i = 0; !found && i < ((ReferenceMaterialModel) refMatModel).getDates().length; i++) {
                     ValueModel valMod = ((ReferenceMaterialModel) refMatModel).getDateByName(mod.getName());
-                    mod.setOneSigmaABS(refDatesNotation.format(round(valMod.getOneSigmaABS(), precision)));
-                    mod.setOneSigmaPCT(refDatesNotation.format(round(valMod.getOneSigmaPCT(), precision)));
-                    mod.setValue(refDatesNotation.format(round(valMod.getValue(), precision)));
-
+                    mod.setOneSigmaABS(refDatesNotation.format(round(valMod.getOneSigmaABS(), precision).divide(divisor)));
+                    mod.setOneSigmaPCT(refDatesNotation.format(round(valMod.getOneSigmaPCT(), precision).divide(divisor)));
+                    mod.setValue(refDatesNotation.format(round(valMod.getValue(), precision).divide(divisor)));
                 }
             }
             refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
@@ -2312,6 +2316,18 @@ public class ParametersManagerGUIController implements Initializable {
             int precision = commonPbCovSigFigs.getValue();
             corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, precision, commonPbCovNotation);
         });
+    }
+
+    private int getRefDatesDivisorOrMultiplier() {
+        int divisor;
+        if(refDatesUnits == Units.a) {
+            divisor = 1;
+        } else if (refDatesUnits == Units.ka) {
+            divisor = 1000;
+        } else {
+            divisor = 1000000;
+        }
+        return divisor;
     }
 
     private void corrCovPrecisionOrNotationAction(ParametersModel model,
@@ -2697,6 +2713,25 @@ public class ParametersManagerGUIController implements Initializable {
         }
         refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
         refDatesTable.refresh();
+    }
+
+    @FXML
+    public void refDatesKARadioButtonOnAction(ActionEvent actionEvent) {
+        refDatesUnits = Units.ka;
+    }
+
+    @FXML
+    public void refDatesMARadioButtonOnAction(ActionEvent actionEvent) {
+        refDatesUnits = Units.ma;
+    }
+
+    @FXML
+    public void refDatesARadioButtonOnAction(ActionEvent actionEvent) {
+        refDatesUnits = Units.a;
+    }
+
+    public enum  Units {
+        a, ka, ma
     }
 
     public class DataModel {
