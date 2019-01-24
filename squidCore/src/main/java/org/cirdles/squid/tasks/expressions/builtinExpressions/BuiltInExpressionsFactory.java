@@ -222,16 +222,6 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> generateReferenceMaterialValues() {
         SortedSet<Expression> referenceMaterialValues = new TreeSet<>();
 
-//        Expression expressionStdUConcPpm = buildExpression(STD_U_CONC_PPM,
-//                "903", true, true, true);
-//        expressionStdUConcPpm.setReferenceMaterialValue(true);
-//        referenceMaterialValues.add(expressionStdUConcPpm);
-
-//        Expression expressionStdThConcPpm = buildExpression(STD_TH_CONC_PPM,
-//                "0", true, true, true);
-//        expressionStdThConcPpm.setReferenceMaterialValue(true);
-//        referenceMaterialValues.add(expressionStdThConcPpm);
-
         Expression expressionStdAgeUPb = buildExpression(STD_AGE_U_PB,
                 "559.1e6", true, true, true);
         expressionStdAgeUPb.setReferenceMaterialValue(true);
@@ -334,7 +324,7 @@ public abstract class BuiltInExpressionsFactory {
 
         // ppmU calcs belong to both cases of isDirectAltPD
         Expression expressionPpmU = buildExpression(SQUID_PPM_PARENT_EQN_NAME_U,
-                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * StdUConcPpm", true, true, false);
+                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * " + STD_U_CONC_PPM, true, true, false);
         concentrationExpressionsOrdered.add(expressionPpmU);
 
         if (!isDirectAltPD) {

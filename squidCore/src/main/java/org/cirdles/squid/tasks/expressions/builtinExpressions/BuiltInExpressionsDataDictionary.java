@@ -62,7 +62,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String SCOMM_86_NAME = "sComm_86";
     public static final String SCOMM_68_NAME = "sComm_68";
     
-    public static final String STD_U_CONC_PPM = "StdUConcPpm";
+    public static final String STD_U_CONC_PPM = "StdUConcPpm"; // confirmed unique
     public static final String STD_TH_CONC_PPM = "StdThConcPpm";
     public static final String STD_AGE_U_PB = "StdAgeUPb";
     public static final String STD_AGE_TH_PB = "StdAgeThPb";
