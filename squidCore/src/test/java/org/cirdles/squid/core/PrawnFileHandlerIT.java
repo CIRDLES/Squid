@@ -187,6 +187,14 @@ public class PrawnFileHandlerIT {
         ShrimpDataFileInterface prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
         squidProject.setPrawnFile(prawnFileData);
 
+        File squidTaskFile = RESOURCE_EXTRACTOR
+                .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1);
+        squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
+
+        squidProject.setDelimiterForUnknownNames("-");
+        squidProject.getTask().setFilterForRefMatSpotNames("6266");
+        squidProject.getTask().setFilterForConcRefMatSpotNames("6266");
+
         // overcome user preferences
         squidProject.getTask().setType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         squidProject.getTask().setUseSBM(true);
@@ -198,14 +206,6 @@ public class PrawnFileHandlerIT {
         squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         squidProject.getTask().setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
         squidProject.getTask().setConcentrationReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
-
-        File squidTaskFile = RESOURCE_EXTRACTOR
-                .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1);
-        squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
-
-        squidProject.setDelimiterForUnknownNames("-");
-        squidProject.getTask().setFilterForRefMatSpotNames("6266");
-        squidProject.getTask().setFilterForConcRefMatSpotNames("6266");
 
         squidProject.getTask().applyTaskIsotopeLabelsToMassStations();
 
@@ -219,8 +219,9 @@ public class PrawnFileHandlerIT {
         File expectedReport = RESOURCE_EXTRACTOR
                 .extractResourceAsFile(reportTableFile.getName());
 
-//        assertThat(reportTableFile).hasSameContentAs(expectedReport);
-
+        assertThat(reportTableFile).hasSameContentAs(expectedReport);
+        
+        // change selected index isotope
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProject.getTask().setChanged(true);
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
@@ -232,7 +233,6 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
 //        assertThat(reportTableFile).hasSameContentAs(expectedReport);
-
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         squidProject.getTask().setChanged(true);
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
@@ -244,7 +244,6 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
 //        assertThat(reportTableFile).hasSameContentAs(expectedReport);
-
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProject.getTask().setChanged(true);
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
@@ -257,7 +256,6 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
 //        assertThat(reportTableFile).hasSameContentAs(expectedReport);
-
     }
 
 }
