@@ -266,7 +266,8 @@
                                                                 <children>
                                                                     <Label text="Units: "/>
                                                                     <RadioButton fx:id="refDatesARadioButton" text="a"
-                                                                    onAction="#refDatesARadioButtonOnAction" selected="true">
+                                                                                 onAction="#refDatesARadioButtonOnAction"
+                                                                                 selected="true">
                                                                         <toggleGroup>
                                                                             <ToggleGroup
                                                                                     fx:id="refDatesUnitsToggleGroup"/>
@@ -274,10 +275,10 @@
                                                                     </RadioButton>
                                                                     <RadioButton fx:id="refDatesKARadioButton" text="Ka"
                                                                                  toggleGroup="$refDatesUnitsToggleGroup"
-                                                                                onAction="#refDatesKARadioButtonOnAction"/>
+                                                                                 onAction="#refDatesKARadioButtonOnAction"/>
                                                                     <RadioButton fx:id="refDatesMARadioButton" text="Ma"
                                                                                  toggleGroup="$refDatesUnitsToggleGroup"
-                                                                                onAction="#refDatesMARadioButtonOnAction"/>
+                                                                                 onAction="#refDatesMARadioButtonOnAction"/>
                                                                 </children>
                                                             </HBox>
                                                         </children>

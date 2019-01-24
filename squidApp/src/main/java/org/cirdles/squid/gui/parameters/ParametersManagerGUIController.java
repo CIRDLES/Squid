@@ -685,7 +685,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpRefDates() {
         int precision = refDatesSigFigSpinner.getValue();
         refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
-        refDatesTable.setItems(getDataModelObList(((ReferenceMaterialModel) refMatModel).getDates(), refDatesNotation, precision));
+        refDatesTable.setItems(getDataRefDatesModelObList());
     }
 
     private void setUpRefMatData() {
@@ -747,15 +747,25 @@ public class ParametersManagerGUIController implements Initializable {
             if (Double.parseDouble(newValue) != 0) {
                 newBigDec = new BigDecimal(newValue);
             }
-            valMod.setValue(newBigDec);
-            mod.setValue(format.format(round(valMod.getValue(), precision)));
-            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-            value.getTableView().refresh();
-            if (table.equals(physConstDataTable)) {
-                setUpPhysConstCovariancesAndCorrelations();
-            } else if (table.equals(commonPbDataTable)) {
-                setUpCommonPbCovariancesAndCorrelations();
+            if (table.equals(refDatesTable)) {
+                BigDecimal operand = new BigDecimal(getRefDatesDivisorOrMultiplier());
+                valMod.setValue(newBigDec.multiply(operand));
+                mod.setValue(format.format(round(valMod.getValue(), precision).divide(operand)));
+                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision).divide(operand)));
+                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision).divide(operand)));
+                value.getTableView().refresh();
+            } else {
+                valMod.setValue(newBigDec);
+                mod.setValue(format.format(round(valMod.getValue(), precision)));
+                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+                value.getTableView().refresh();
+
+                if (table.equals(physConstDataTable)) {
+                    setUpPhysConstCovariancesAndCorrelations();
+                } else if (table.equals(commonPbDataTable)) {
+                    setUpCommonPbCovariancesAndCorrelations();
+                }
             }
 
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
@@ -785,18 +795,27 @@ public class ParametersManagerGUIController implements Initializable {
             if (Double.parseDouble(newValue) != 0) {
                 newBigDec = new BigDecimal(newValue);
             }
-            valMod.setOneSigma(newBigDec);
-            valMod.setUncertaintyType("ABS");
-            mod.setValue(format.format(round(valMod.getValue(), precision)));
-            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-            value.getTableView().refresh();
-            if (table.equals(physConstDataTable)) {
-                setUpPhysConstCovariancesAndCorrelations();
-            } else if (table.equals(commonPbDataTable)) {
-                setUpCommonPbCovariancesAndCorrelations();
+            if (table.equals(refDatesTable)) {
+                BigDecimal operand = new BigDecimal(getRefDatesDivisorOrMultiplier());
+                valMod.setOneSigma(newBigDec.multiply(operand));
+                valMod.setUncertaintyType("ABS");
+                mod.setValue(format.format(round(valMod.getValue(), precision).divide(operand)));
+                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision).divide(operand)));
+                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision).divide(operand)));
+                value.getTableView().refresh();
+            } else {
+                valMod.setOneSigma(newBigDec);
+                valMod.setUncertaintyType("ABS");
+                mod.setValue(format.format(round(valMod.getValue(), precision)));
+                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+                value.getTableView().refresh();
+                if (table.equals(physConstDataTable)) {
+                    setUpPhysConstCovariancesAndCorrelations();
+                } else if (table.equals(commonPbDataTable)) {
+                    setUpCommonPbCovariancesAndCorrelations();
+                }
             }
-
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
         });
         columns.add(absCol);
@@ -824,16 +843,26 @@ public class ParametersManagerGUIController implements Initializable {
             if (Double.parseDouble(newValue) != 0) {
                 newBigDec = new BigDecimal(newValue);
             }
-            valMod.setOneSigma(newBigDec);
-            valMod.setUncertaintyType("PCT");
-            mod.setValue(format.format(round(valMod.getValue(), precision)));
-            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
-            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
-            value.getTableView().refresh();
-            if (table.equals(physConstDataTable)) {
-                setUpPhysConstCovariancesAndCorrelations();
-            } else if (table.equals(commonPbDataTable)) {
-                setUpCommonPbCovariancesAndCorrelations();
+            if (table.equals(refDatesTable)) {
+                BigDecimal operand = new BigDecimal(getRefDatesDivisorOrMultiplier());
+                valMod.setOneSigma(newBigDec.multiply(operand));
+                valMod.setUncertaintyType("PCT");
+                mod.setValue(format.format(round(valMod.getValue(), precision).divide(operand)));
+                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision).divide(operand)));
+                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision).divide(operand)));
+                value.getTableView().refresh();
+            } else {
+                valMod.setOneSigma(newBigDec);
+                valMod.setUncertaintyType("PCT");
+                mod.setValue(format.format(round(valMod.getValue(), precision)));
+                mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+                mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
+                value.getTableView().refresh();
+                if (table.equals(physConstDataTable)) {
+                    setUpPhysConstCovariancesAndCorrelations();
+                } else if (table.equals(commonPbDataTable)) {
+                    setUpCommonPbCovariancesAndCorrelations();
+                }
             }
 
             table.getColumns().setAll(getDataModelColumns(table, format, precision));
@@ -962,6 +991,23 @@ public class ParametersManagerGUIController implements Initializable {
             String value = numberFormat.format(round(valMod.getValue(), precision));
             String oneSigmaABS = numberFormat.format(round(valMod.getOneSigmaABS(), precision));
             String oneSigmaPCT = numberFormat.format(round(valMod.getOneSigmaPCT(), precision));
+            DataModel mod = new DataModel(getRatioVisibleName(valMod.getName()), value,
+                    oneSigmaABS, oneSigmaPCT);
+            obList.add(mod);
+        }
+        return obList;
+    }
+
+    private ObservableList<DataModel> getDataRefDatesModelObList() {
+        ValueModel[] values = ((ReferenceMaterialModel) refMatModel).getDates();
+        int precision = refDatesSigFigSpinner.getValue();
+        BigDecimal divisor = new BigDecimal(getRefDatesDivisorOrMultiplier());
+        final ObservableList<DataModel> obList = FXCollections.observableArrayList();
+        for (int i = 0; i < values.length; i++) {
+            ValueModel valMod = values[i];
+            String value = refDatesNotation.format(round(valMod.getValue(), precision).divide(divisor));
+            String oneSigmaABS = refDatesNotation.format(round(valMod.getOneSigmaABS(), precision).divide(divisor));
+            String oneSigmaPCT = refDatesNotation.format(round(valMod.getOneSigmaPCT(), precision).divide(divisor));
             DataModel mod = new DataModel(getRatioVisibleName(valMod.getName()), value,
                     oneSigmaABS, oneSigmaPCT);
             obList.add(mod);
@@ -2320,7 +2366,7 @@ public class ParametersManagerGUIController implements Initializable {
 
     private int getRefDatesDivisorOrMultiplier() {
         int divisor;
-        if(refDatesUnits == Units.a) {
+        if (refDatesUnits == Units.a) {
             divisor = 1;
         } else if (refDatesUnits == Units.ka) {
             divisor = 1000;
@@ -2718,19 +2764,22 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     public void refDatesKARadioButtonOnAction(ActionEvent actionEvent) {
         refDatesUnits = Units.ka;
+        setUpRefDates();
     }
 
     @FXML
     public void refDatesMARadioButtonOnAction(ActionEvent actionEvent) {
         refDatesUnits = Units.ma;
+        setUpRefDates();
     }
 
     @FXML
     public void refDatesARadioButtonOnAction(ActionEvent actionEvent) {
         refDatesUnits = Units.a;
+        setUpRefDates();
     }
 
-    public enum  Units {
+    public enum Units {
         a, ka, ma
     }
 
