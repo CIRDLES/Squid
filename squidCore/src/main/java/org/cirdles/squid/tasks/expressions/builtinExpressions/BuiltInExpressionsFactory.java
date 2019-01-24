@@ -21,6 +21,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_230;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_234;
@@ -198,18 +199,38 @@ public abstract class BuiltInExpressionsFactory {
         return parameterValues;
     }
 
+    public static SortedSet<Expression> updateConcReferenceMaterialValuesFromModel(ParametersModel concReferenceMaterialModel) {
+        SortedSet<Expression> parameterValues = new TreeSet<>();
+        
+        String notes = "from Conc. Reference Material model: " + concReferenceMaterialModel.getModelNameWithVersion();
+        
+        Expression expressionStdUConcPpm = buildExpression(STD_U_CONC_PPM,
+                String.valueOf(((ReferenceMaterialModel)concReferenceMaterialModel).getConcentrationByName("concU").getValue().doubleValue()), true, true, true);
+        expressionStdUConcPpm.setReferenceMaterialValue(true);
+        expressionStdUConcPpm.setNotes(notes);
+        parameterValues.add(expressionStdUConcPpm);
+        
+        Expression expressionStdThConcPpm = buildExpression(STD_TH_CONC_PPM,
+                String.valueOf(((ReferenceMaterialModel)concReferenceMaterialModel).getConcentrationByName("concTh").getValue().doubleValue()), true, true, true);
+        expressionStdThConcPpm.setReferenceMaterialValue(true);
+        expressionStdThConcPpm.setNotes(notes);
+        parameterValues.add(expressionStdThConcPpm);
+        
+        return parameterValues;
+    }
+    
     public static SortedSet<Expression> generateReferenceMaterialValues() {
         SortedSet<Expression> referenceMaterialValues = new TreeSet<>();
 
-        Expression expressionStdUConcPpm = buildExpression(STD_U_CONC_PPM,
-                "903", true, true, true);
-        expressionStdUConcPpm.setReferenceMaterialValue(true);
-        referenceMaterialValues.add(expressionStdUConcPpm);
+//        Expression expressionStdUConcPpm = buildExpression(STD_U_CONC_PPM,
+//                "903", true, true, true);
+//        expressionStdUConcPpm.setReferenceMaterialValue(true);
+//        referenceMaterialValues.add(expressionStdUConcPpm);
 
-        Expression expressionStdThConcPpm = buildExpression(STD_TH_CONC_PPM,
-                "0", true, true, true);
-        expressionStdThConcPpm.setReferenceMaterialValue(true);
-        referenceMaterialValues.add(expressionStdThConcPpm);
+//        Expression expressionStdThConcPpm = buildExpression(STD_TH_CONC_PPM,
+//                "0", true, true, true);
+//        expressionStdThConcPpm.setReferenceMaterialValue(true);
+//        referenceMaterialValues.add(expressionStdThConcPpm);
 
         Expression expressionStdAgeUPb = buildExpression(STD_AGE_U_PB,
                 "559.1e6", true, true, true);

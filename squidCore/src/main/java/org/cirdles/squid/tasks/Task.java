@@ -80,6 +80,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.samRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
@@ -318,8 +319,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> generateReferenceMaterialValues = generateReferenceMaterialValues();
         taskExpressionsOrdered.addAll(generateReferenceMaterialValues);
 
-        SortedSet<Expression> generateParameterValues = updateCommonLeadParameterValuesFromModel(commonPbModel);
-        taskExpressionsOrdered.addAll(generateParameterValues);
+        SortedSet<Expression> generateConcReferenceMaterialValues = updateConcReferenceMaterialValuesFromModel(concentrationReferenceMaterialModel);
+        taskExpressionsOrdered.addAll(generateConcReferenceMaterialValues);
+        
+        SortedSet<Expression> generateCommonLeadParameterValues = updateCommonLeadParameterValuesFromModel(commonPbModel);
+        taskExpressionsOrdered.addAll(generateCommonLeadParameterValues);
 
         SortedSet<Expression> generatePhysicalConstantsValues = updatePhysicalConstantsParameterValuesFromModel(physicalConstantsModel);
         taskExpressionsOrdered.addAll(generatePhysicalConstantsValues);
@@ -606,7 +610,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void updateParametersFromModels() {
         boolean doUpdateAll
-                = commonPbModelChanged || physicalConstantsModelChanged;// temp || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
+                = commonPbModelChanged || physicalConstantsModelChanged || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
 
         if (commonPbModelChanged) {
             SortedSet<Expression> updatedCommonPbExpressions
@@ -632,6 +636,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 updateAffectedExpressions(exp, false);
             }
             physicalConstantsModelChanged = false;
+        }
+        
+        if (referenceMaterialModelChanged) {
+            
+            referenceMaterialModelChanged = false;
+        }
+        
+        if (concentrationReferenceMaterialModelChanged) {
+            SortedSet<Expression> updatedConcReferenceMaterialExpressions
+                    = BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel(concentrationReferenceMaterialModel);
+            Iterator<Expression> updatedConcReferenceMaterialExpressionsIterator = updatedConcReferenceMaterialExpressions.iterator();
+            while (updatedConcReferenceMaterialExpressionsIterator.hasNext()) {
+                Expression exp = updatedConcReferenceMaterialExpressionsIterator.next();
+                removeExpression(exp, false);
+                addExpression(exp, false);
+                updateAffectedExpressions(exp, false);
+            }
+         
+            concentrationReferenceMaterialModelChanged = false;
         }
 
         if (doUpdateAll) {
