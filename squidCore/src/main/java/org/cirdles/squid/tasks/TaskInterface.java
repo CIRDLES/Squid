@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.shrimp.MassStationDetail;
@@ -131,7 +132,7 @@ public interface TaskInterface {
     /**
      * @return the type
      */
-    String getType();
+    TaskTypeEnum getType();
 
     /**
      * @return the mapOfIndexToMassStationDetails
@@ -215,7 +216,7 @@ public interface TaskInterface {
     /**
      * @param type the type to set
      */
-    public void setType(String type);
+    public void setType(TaskTypeEnum type);
 
     public void setupSquidSessionSpecsAndReduceAndReport();
 
@@ -486,6 +487,10 @@ public interface TaskInterface {
      * @return the squidAllowsAutoExclusionOfSpots
      */
     public boolean isSquidAllowsAutoExclusionOfSpots();
+    /**
+     * @param squidAllowsAutoExclusionOfSpots the squidAllowsAutoExclusionOfSpots to set
+     */
+    public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots);
 
     /**
      * @param extPErr the extPErr to set

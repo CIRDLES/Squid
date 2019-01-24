@@ -65,8 +65,6 @@ public class SquidLabData implements Serializable {
                 retVal = SquidLabData.deserialize(file);
                 if (retVal == null){
                     // bad labdata
-                    // save off old lab data
-                    // announce to user
                     retVal = new SquidLabData();
                 }
             } else {

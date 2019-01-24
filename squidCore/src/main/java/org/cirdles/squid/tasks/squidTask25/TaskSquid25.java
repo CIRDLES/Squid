@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
@@ -46,7 +47,7 @@ public class TaskSquid25 implements Serializable {
 
     private String squidVersion;
     private String squidTaskFileName;
-    private String taskType;
+    private TaskTypeEnum taskType;
     private String taskName;
     private String taskDescription;
     private String labName;
@@ -90,7 +91,7 @@ public class TaskSquid25 implements Serializable {
                 int firstRow = Integer.parseInt(lines[1].split("\t")[1]) - 1;
 
                 taskSquid25.squidTaskFileName = lines[firstRow].split("\t")[1];
-                taskSquid25.taskType = lines[firstRow + 1].split("\t")[1];
+                taskSquid25.taskType = TaskTypeEnum.valueOf( lines[firstRow + 1].split("\t")[1].toUpperCase());
                 taskSquid25.taskName = lines[firstRow + 2].split("\t")[1];
                 taskSquid25.taskDescription = lines[firstRow + 3].split("\t")[1];
 
@@ -469,7 +470,7 @@ public class TaskSquid25 implements Serializable {
     /**
      * @return the taskType
      */
-    public String getTaskType() {
+    public TaskTypeEnum getTaskType() {
         return taskType;
     }
 
