@@ -832,7 +832,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private String correctColumnCommittedValue(String value) {
-        String newValue = value;
+        String newValue = value.replaceAll("e", "E");
         if (newValue.endsWith("E") || newValue.isEmpty()) {
             newValue = newValue + "0";
         }
