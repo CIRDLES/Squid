@@ -57,6 +57,15 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME_S;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_7_6;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_PB_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_TH_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_U_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_RAD_8_6_FACT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_TH_CONC_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_TH_PB_RATIO;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_U_CONC_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_U_PB_RATIO;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -192,47 +201,47 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> generateReferenceMaterialValues() {
         SortedSet<Expression> referenceMaterialValues = new TreeSet<>();
 
-        Expression expressionStdUConcPpm = buildExpression("StdUConcPpm",
+        Expression expressionStdUConcPpm = buildExpression(STD_U_CONC_PPM,
                 "903", true, true, true);
         expressionStdUConcPpm.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStdUConcPpm);
 
-        Expression expressionStdThConcPpm = buildExpression("StdThConcPpm",
+        Expression expressionStdThConcPpm = buildExpression(STD_TH_CONC_PPM,
                 "0", true, true, true);
         expressionStdThConcPpm.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStdThConcPpm);
 
-        Expression expressionStdAgeUPb = buildExpression("StdAgeUPb",
+        Expression expressionStdAgeUPb = buildExpression(STD_AGE_U_PB,
                 "559.1e6", true, true, true);
         expressionStdAgeUPb.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStdAgeUPb);
 
-        Expression expressionStdAgeThPb = buildExpression("StdAgeThPb",
+        Expression expressionStdAgeThPb = buildExpression(STD_AGE_TH_PB,
                 "559.1e6", true, true, true);
         expressionStdAgeThPb.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStdAgeThPb);
 
-        Expression expressionStdAgePbPb = buildExpression("StdAgePbPb",
+        Expression expressionStdAgePbPb = buildExpression(STD_AGE_PB_PB,
                 "559.1e6", true, true, true);
         expressionStdAgePbPb.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStdAgePbPb);
 
-        Expression expressionStdUPbRatio = buildExpression("StdUPbRatio",
+        Expression expressionStdUPbRatio = buildExpression(STD_U_PB_RATIO,
                 "EXP(lambda238 * StdAgeUPb)-1", true, true, true);
         expressionStdUPbRatio.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStdUPbRatio);
 
-        Expression expressionStdThPbRatio = buildExpression("StdThPbRatio",
+        Expression expressionStdThPbRatio = buildExpression(STD_TH_PB_RATIO,
                 "EXP(lambda232 * StdAgeThPb)-1", true, true, true);
         expressionStdThPbRatio.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStdThPbRatio);
 
-        Expression expressionStd_76 = buildExpression("Std_76",
+        Expression expressionStd_76 = buildExpression(STD_7_6,
                 "Pb76( StdAgePbPb )", true, true, true);
         expressionStd_76.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStd_76);
 
-        Expression expressionStdRad86fact = buildExpression("StdRad86fact",
+        Expression expressionStdRad86fact = buildExpression(STD_RAD_8_6_FACT,
                 "StdThPbRatio / StdUPbRatio", true, true, true);
         expressionStdRad86fact.setReferenceMaterialValue(true);
         referenceMaterialValues.add(expressionStdRad86fact);
