@@ -45,7 +45,7 @@
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Reference Materials" />
                 <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Manage Sample Naming" />
-                  <MenuItem mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
+                  <MenuItem fx:id="auditRawDataMenuItem" mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Prawn File as ..." />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -155,13 +155,12 @@
             </Menu>
             <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Resources">
               <items>
-                  <MenuItem disable="true" mnemonicParsing="false" text="User Preferences" />
+                  <MenuItem mnemonicParsing="false" onAction="#showPreferencesManagerAction" text="User Preferences" />
                   <Menu mnemonicParsing="false" text="Parameter Models">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
                         <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
                       <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
-                        <MenuItem mnemonicParsing="false" onAction="#openDefaultSquidLabDataModels" text="Manage Default Models" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Online Resources">
@@ -177,7 +176,7 @@
                       <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Developer Tools">
+                  <Menu mnemonicParsing="false" text="Developer Tools" visible="false">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#listBuiltinExpressionsAction" text="List Built-in Expressions" />
                     </items>
@@ -211,7 +210,7 @@
                      <children>
                         <VBox alignment="CENTER">
                            <children>
-                              <Label fx:id="chinese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28;" text="墨斗鱼">
+                              <Label fx:id="chinese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans; -fx-font-weight: bold;" text="墨斗鱼">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -221,7 +220,7 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="584.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28;" text="いか">
+                              <Label fx:id="japanese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans; -fx-font-weight: bold;" text="いか">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -234,9 +233,9 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="605.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="korean" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28;" text="오징어">
+                              <Label fx:id="korean" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="오징어">
                                  <font>
-                                    <Font name="System Bold" size="14.0" />
+                                    <Font name="SansSerif Bold" size="14.0" />
                                  </font>
                               </Label>
                               <Label style="-fx-text-fill: white;" text="Korean" />
@@ -247,7 +246,7 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="734.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="200.0" style="-fx-text-fill: white; -fx-font-size: 28;" text="kałamarnica">
+                              <Label fx:id="japanese1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="200.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="kałamarnica">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -257,7 +256,7 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="823.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese11" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28;" text="lula">
+                              <Label fx:id="japanese11" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="lula">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -267,9 +266,9 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="912.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese111" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28;" text="кальмар">
+                              <Label fx:id="japanese111" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="кальмар">
                                  <font>
-                                    <Font name="System Bold" size="14.0" />
+                                    <Font name="Lucida Sans Demibold" size="14.0" />
                                  </font>
                               </Label>
                               <Label style="-fx-text-fill: white;" text="Russian" />
@@ -277,7 +276,7 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="1001.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese1111" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28;" text="calamar">
+                              <Label fx:id="japanese1111" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="calamar">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>

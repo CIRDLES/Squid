@@ -248,7 +248,7 @@ public interface ExpressionTreeInterface {
         }
         return retVal;
     }
-
+    
     public default int argumentCount() {
         int retVal = 0;
 

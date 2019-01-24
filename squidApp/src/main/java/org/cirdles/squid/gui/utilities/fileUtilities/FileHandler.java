@@ -86,7 +86,7 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File selectPrawnFile(Window ownerWindow)
+    public static File selectPrawnXMLFile(Window ownerWindow)
             throws IOException, JAXBException, SAXException {
         File retVal = null;
 
@@ -109,7 +109,7 @@ public class FileHandler {
         return retVal;
     }
 
-    public static List<File> selectForJoinTwoPrawnFiles(Window ownerWindow)
+    public static List<File> selectForJoinTwoPrawnXMLFiles(Window ownerWindow)
             throws IOException, JAXBException, SAXException {
         List<File> retVal = new ArrayList<>();
 
@@ -134,7 +134,7 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File savePrawnFile(SquidProject squidProject, Window ownerWindow)
+    public static File savePrawnXMLFile(SquidProject squidProject, Window ownerWindow)
             throws IOException, JAXBException, SAXException {
 
         File retVal = null;
@@ -144,12 +144,12 @@ public class FileHandler {
         if (squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder().exists()) {
             fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
         }
-        fileChooser.setInitialFileName(squidProject.getPrawnXMLFileName().toUpperCase(Locale.US).replace(".XML", "-REV.xml"));
+        fileChooser.setInitialFileName(squidProject.getPrawnSourceFileName().toUpperCase(Locale.US).replace(".XML", "-REV.xml"));
 
         File prawnXMLFileNew = fileChooser.showSaveDialog(ownerWindow);
 
         if (prawnXMLFileNew != null) {
-            squidProject.savePrawnFile(prawnXMLFileNew);
+            squidProject.savePrawnXMLFile(prawnXMLFileNew);
             retVal = prawnXMLFileNew;
         }
 

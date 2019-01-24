@@ -58,7 +58,7 @@ public class CalamariReportsEngine implements Serializable {
     private String reportNamePrefix;
 
     private File folderToWriteCalamariReports;
-    private String nameOfPrawnXMLFile;
+    private String nameOfPrawnSourceFile;
 
     private File ionIntegrations_PerScan;
     private File sBMIntegrations_PerScan;
@@ -94,7 +94,7 @@ public class CalamariReportsEngine implements Serializable {
         this.reportNamePrefix = "";
 
         this.folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
-        this.nameOfPrawnXMLFile = "";
+        this.nameOfPrawnSourceFile = "";
 
         this.refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
         this.unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
@@ -166,10 +166,10 @@ public class CalamariReportsEngine implements Serializable {
                 = "_" + (shrimpFractionUnknown.isUseSBM() ? "SBM" : "NOSBM")
                 + "_" + (shrimpFractionUnknown.isUserLinFits() ? "LINREG" : "SPOTAV");
 
-        if (nameOfPrawnXMLFile.length() >= DEFAULT_PRAWNFILE_NAME.length()) {
-            reportNamePrefix = nameOfPrawnXMLFile.substring(0, DEFAULT_PRAWNFILE_NAME.length()) + "_" + reportParameterValues + "_";
+        if (nameOfPrawnSourceFile.length() >= DEFAULT_PRAWNFILE_NAME.length()) {
+            reportNamePrefix = nameOfPrawnSourceFile.substring(0, DEFAULT_PRAWNFILE_NAME.length()) + "_" + reportParameterValues + "_";
         } else {
-            reportNamePrefix = nameOfPrawnXMLFile + "_" + reportParameterValues + "_";
+            reportNamePrefix = nameOfPrawnSourceFile + "_" + reportParameterValues + "_";
         }
 
         if (doWriteReportFiles) {
@@ -177,7 +177,7 @@ public class CalamariReportsEngine implements Serializable {
                     = folderToWriteCalamariReports.getCanonicalPath()
                     + File.separator + "PROJECT-" + squidProject.getProjectName()
                     + File.separator + "TASK-" + squidProject.getTask().getName()
-                    + File.separator + "PRAWN-" + nameOfPrawnXMLFile
+                    + File.separator + "PRAWN-" + nameOfPrawnSourceFile
                     + File.separator + sdfTime.format(new Date())
                     + reportParameterValues
                     + File.separator;
@@ -1014,10 +1014,10 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     /**
-     * @param nameOfPrawnXMLFile the nameOfPrawnXMLFile to set
+     * @param nameOfPrawnSourceFile the nameOfPrawnSourceFile to set
      */
-    public void setNameOfPrawnXMLFile(String nameOfPrawnXMLFile) {
-        this.nameOfPrawnXMLFile = nameOfPrawnXMLFile;
+    public void setNameOfPrawnSourceFile(String nameOfPrawnSourceFile) {
+        this.nameOfPrawnSourceFile = nameOfPrawnSourceFile;
     }
 
     /**

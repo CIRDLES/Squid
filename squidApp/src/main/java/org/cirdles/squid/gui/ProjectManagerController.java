@@ -112,7 +112,7 @@ public class ProjectManagerController implements Initializable {
         analystNameText.setText(squidProject.getAnalystName());
         projectNotesText.setText(squidProject.getProjectNotes());
 
-        orignalPrawnFileName.setText(squidProject.getPrawnXMLFilePath());
+        orignalPrawnFileName.setText(squidProject.getPrawnSourceFilePath());
 
         softwareVersionLabel.setText(
                 "Software Version: "

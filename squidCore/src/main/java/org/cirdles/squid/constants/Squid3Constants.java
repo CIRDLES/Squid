@@ -109,22 +109,26 @@ public final class Squid3Constants {
     public static final double LAMBDA235 = 9.8485E-10;
     public static final double LAMBDA238 = 1.55125E-10;
     public static final double PRESENT_R238_235S = 137.88;
-    
-    public static final double SCOMM_64 = 17.821;
-    public static final double SCOMM_74 = 15.5773361;
-    public static final double SCOMM_84 = 37.5933995;
-    public static final double SCOMM_76 = 0.8741;
-    public static final double SCOMM_86 = 2.1095;
 
     public enum IndexIsoptopesEnum {
-        PB_204("204"),
-        PB_207("207"),
-        PB_208("208");
+        PB_204("PB_204", "204"),
+        PB_207("PB_207", "207"),
+        PB_208("PB_208", "208");
 
+        private final String name;
         private final String isotope;
 
-        private IndexIsoptopesEnum(String isotope) {
+        private IndexIsoptopesEnum(String name, String isotope) {
+            this.name = name;
             this.isotope = isotope;
+        }
+
+        /**
+         * 
+         * @return 
+         */
+        public String getName() {
+            return name;
         }
 
         /**
@@ -137,7 +141,21 @@ public final class Squid3Constants {
         public String getIsotopeCorrectionPrefixString() {
             return isotope.substring(2, 3) + "-corr ";
         }
+    }
 
+    public enum TaskTypeEnum {
+        GEOCHRON("GEOCHRON"),
+        GENERAL("GENERAL");
+
+        private final String name;
+
+        private TaskTypeEnum(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     /**
@@ -243,6 +261,5 @@ public final class Squid3Constants {
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
     public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "\u1D41";
     public final static String SUPERSCRIPT_DASH_FOR_DASH = "\u02C9";
-    
 
 }

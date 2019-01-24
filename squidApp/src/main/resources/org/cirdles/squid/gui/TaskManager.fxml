@@ -34,12 +34,12 @@
          <children>
             <TextField fx:id="taskNameTextField" promptText="Task name" HBox.hgrow="ALWAYS" />
             <Label text="Type:" />
-            <RadioButton fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
+            <RadioButton id="GEOCHRON" fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
                <toggleGroup>
                   <ToggleGroup fx:id="taskTypeToggleGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
+            <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
          </children>
       </HBox>
       <Label text="Description:" GridPane.rowIndex="2" />
@@ -123,7 +123,7 @@
             </HBox>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Comm Pb:" textAlignment="RIGHT" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="50.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Assumed Comm Pb:" textAlignment="RIGHT" wrapText="true" />
                   <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
                   <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
                   <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
