@@ -75,13 +75,13 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePlaceholderExpressions;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateReferenceMaterialValues;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.overCountMeans;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.samRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
@@ -316,7 +316,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void generateBuiltInExpressions() {
 
-        SortedSet<Expression> generateReferenceMaterialValues = generateReferenceMaterialValues();
+        SortedSet<Expression> generateReferenceMaterialValues = updateReferenceMaterialValuesFromModel(referenceMaterialModel);
         taskExpressionsOrdered.addAll(generateReferenceMaterialValues);
 
         SortedSet<Expression> generateConcReferenceMaterialValues = updateConcReferenceMaterialValuesFromModel(concentrationReferenceMaterialModel);
@@ -639,7 +639,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         
         if (referenceMaterialModelChanged) {
-            
+            SortedSet<Expression> updatedReferenceMaterialExpressions
+                    = BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel(referenceMaterialModel);
+            Iterator<Expression> updatedReferenceMaterialExpressionsIterator = updatedReferenceMaterialExpressions.iterator();
+            while (updatedReferenceMaterialExpressionsIterator.hasNext()) {
+                Expression exp = updatedReferenceMaterialExpressionsIterator.next();
+                removeExpression(exp, false);
+                addExpression(exp, false);
+                updateAffectedExpressions(exp, false);
+            }            
             referenceMaterialModelChanged = false;
         }
         
@@ -652,8 +660,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 removeExpression(exp, false);
                 addExpression(exp, false);
                 updateAffectedExpressions(exp, false);
-            }
-         
+            }        
             concentrationReferenceMaterialModelChanged = false;
         }
 

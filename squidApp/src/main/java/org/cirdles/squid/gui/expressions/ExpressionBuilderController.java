@@ -758,7 +758,7 @@ public class ExpressionBuilderController implements Initializable {
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
-                        selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsEditable.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -2952,7 +2952,7 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         String mainText = expression.buildShortSignatureString();
-                        String postPend = (expression.isParameterValue())? " (see Notes)" : "";
+                        String postPend = (expression.isParameterValue() || (expression.isReferenceMaterialValue()))? " (see Notes)" : "";
                         setText(mainText + postPend);
                         if (showImage) {
                             ImageView imageView;
