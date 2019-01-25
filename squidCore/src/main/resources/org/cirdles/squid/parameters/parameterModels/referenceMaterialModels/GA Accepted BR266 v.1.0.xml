@@ -37,7 +37,7 @@
     </org.cirdles.squid.parameters.valueModels.Age208__232r>
   </values>
   <rhos/>
-  <isEditable>true</isEditable>
+  <isEditable>false</isEditable>
   <concentrations>
     <ValueModel>
       <name>concU</name>
@@ -54,6 +54,36 @@
       <oneSigma>0</oneSigma>
     </ValueModel>
   </concentrations>
+  <dates>
+    <org.cirdles.squid.parameters.valueModels.Age206__238r>
+      <name>age206_238r</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>559100000</value>
+      <oneSigma>0</oneSigma>
+    </org.cirdles.squid.parameters.valueModels.Age206__238r>
+    <org.cirdles.squid.parameters.valueModels.Age207__206r>
+      <name>age207_206r</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>559100000</value>
+      <oneSigma>0</oneSigma>
+    </org.cirdles.squid.parameters.valueModels.Age207__206r>
+    <org.cirdles.squid.parameters.valueModels.Age207__235r>
+      <name>age207_235r</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>0</value>
+      <oneSigma>0</oneSigma>
+    </org.cirdles.squid.parameters.valueModels.Age207__235r>
+    <org.cirdles.squid.parameters.valueModels.Age208__232r>
+      <name>age208_232r</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>559100000</value>
+      <oneSigma>0</oneSigma>
+    </org.cirdles.squid.parameters.valueModels.Age208__232r>
+  </dates>
   <dataMeasured>
     <boolean>false</boolean>
     <boolean>false</boolean>

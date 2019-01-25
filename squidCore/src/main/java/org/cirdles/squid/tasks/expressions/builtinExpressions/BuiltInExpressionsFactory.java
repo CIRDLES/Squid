@@ -21,11 +21,15 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_230;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_234;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
+import static org.cirdles.squid.parameters.util.RadDates.age206_238r;
+import static org.cirdles.squid.parameters.util.RadDates.age207_206r;
+import static org.cirdles.squid.parameters.util.RadDates.age208_232r;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
@@ -57,6 +61,15 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME_S;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_7_6;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_PB_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_TH_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_U_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_RAD_8_6_FACT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_TH_CONC_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_TH_PB_RATIO;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_U_CONC_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_U_PB_RATIO;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -110,42 +123,41 @@ public abstract class BuiltInExpressionsFactory {
 
     public static SortedSet<Expression> updatePhysicalConstantsParameterValuesFromModel(ParametersModel physicalConstantsModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
-        
+
         String notes = "from Physical Constants model: " + physicalConstantsModel.getModelNameWithVersion();
         Expression expressionslambda230 = buildExpression(LAMBDA_230.getName(),
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_230.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda230.setParameterValue(true);
         expressionslambda230.setNotes(notes);
         parameterValues.add(expressionslambda230);
-        
+
         Expression expressionslambda232 = buildExpression(LAMBDA_232.getName(),
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_232.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda232.setParameterValue(true);
         expressionslambda232.setNotes(notes);
         parameterValues.add(expressionslambda232);
- 
+
         Expression expressionslambda234 = buildExpression(LAMBDA_234.getName(),
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_234.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda234.setParameterValue(true);
         expressionslambda234.setNotes(notes);
         parameterValues.add(expressionslambda234);
- 
+
         Expression expressionslambda235 = buildExpression(LAMBDA_235.getName(),
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_235.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda235.setParameterValue(true);
         expressionslambda235.setNotes(notes);
         parameterValues.add(expressionslambda235);
- 
+
         Expression expressionslambda238 = buildExpression(LAMBDA_238.getName(),
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_238.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda238.setParameterValue(true);
         expressionslambda238.setNotes(notes);
         parameterValues.add(expressionslambda238);
- 
-        
+
         return parameterValues;
     }
-    
+
     public static SortedSet<Expression> updateCommonLeadParameterValuesFromModel(ParametersModel commonPbModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
@@ -155,7 +167,7 @@ public abstract class BuiltInExpressionsFactory {
         expressionsComm_64.setParameterValue(true);
         expressionsComm_64.setNotes(notes);
         parameterValues.add(expressionsComm_64);
-        
+
         Expression expressionsComm_74 = buildExpression(SCOMM_74_NAME,
                 String.valueOf(commonPbModel.getDatumByName(R207_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_74.setParameterValue(true);
@@ -189,52 +201,78 @@ public abstract class BuiltInExpressionsFactory {
         return parameterValues;
     }
 
-    public static SortedSet<Expression> generateReferenceMaterialValues() {
+    public static SortedSet<Expression> updateConcReferenceMaterialValuesFromModel(ParametersModel concReferenceMaterialModel) {
+        SortedSet<Expression> parameterValues = new TreeSet<>();
+
+        String notes = "from Conc. Reference Material model: " + concReferenceMaterialModel.getModelNameWithVersion();
+
+        Expression expressionStdUConcPpm = buildExpression(STD_U_CONC_PPM,
+                String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
+                        .getConcentrationByName("concU").getValue().doubleValue()), true, true, true);
+        expressionStdUConcPpm.setReferenceMaterialValue(true);
+        expressionStdUConcPpm.setNotes(notes);
+        parameterValues.add(expressionStdUConcPpm);
+
+        Expression expressionStdThConcPpm = buildExpression(STD_TH_CONC_PPM,
+                String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
+                        .getConcentrationByName("concTh").getValue().doubleValue()), true, true, true);
+        expressionStdThConcPpm.setReferenceMaterialValue(true);
+        expressionStdThConcPpm.setNotes(notes);
+        parameterValues.add(expressionStdThConcPpm);
+
+        return parameterValues;
+    }
+
+    public static SortedSet<Expression> updateReferenceMaterialValuesFromModel(ParametersModel referenceMaterialModel) {
         SortedSet<Expression> referenceMaterialValues = new TreeSet<>();
 
-        Expression expressionStdUConcPpm = buildExpression("StdUConcPpm",
-                "903", true, true, true);
-        expressionStdUConcPpm.setReferenceMaterialValue(true);
-        referenceMaterialValues.add(expressionStdUConcPpm);
+        String notes = "from Reference Material model: " + referenceMaterialModel.getModelNameWithVersion();
 
-        Expression expressionStdThConcPpm = buildExpression("StdThConcPpm",
-                "0", true, true, true);
-        expressionStdThConcPpm.setReferenceMaterialValue(true);
-        referenceMaterialValues.add(expressionStdThConcPpm);
-
-        Expression expressionStdAgeUPb = buildExpression("StdAgeUPb",
-                "559.1e6", true, true, true);
+        Expression expressionStdAgeUPb = buildExpression(STD_AGE_U_PB,
+                String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
+                        .getDateByName(age206_238r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgeUPb.setReferenceMaterialValue(true);
+        expressionStdAgeUPb.setNotes(notes);
         referenceMaterialValues.add(expressionStdAgeUPb);
 
-        Expression expressionStdAgeThPb = buildExpression("StdAgeThPb",
-                "559.1e6", true, true, true);
+        Expression expressionStdAgeThPb = buildExpression(STD_AGE_TH_PB,
+                String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
+                        .getDateByName(age208_232r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgeThPb.setReferenceMaterialValue(true);
+        expressionStdAgeThPb.setNotes(notes);
         referenceMaterialValues.add(expressionStdAgeThPb);
 
-        Expression expressionStdAgePbPb = buildExpression("StdAgePbPb",
-                "559.1e6", true, true, true);
+        Expression expressionStdAgePbPb = buildExpression(STD_AGE_PB_PB,
+                String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
+                        .getDateByName(age207_206r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgePbPb.setReferenceMaterialValue(true);
+        expressionStdAgePbPb.setNotes(notes);
         referenceMaterialValues.add(expressionStdAgePbPb);
 
-        Expression expressionStdUPbRatio = buildExpression("StdUPbRatio",
+        notes = "Calculated from Reference Material model: " + referenceMaterialModel.getModelNameWithVersion();
+
+        Expression expressionStdUPbRatio = buildExpression(STD_U_PB_RATIO,
                 "EXP(lambda238 * StdAgeUPb)-1", true, true, true);
         expressionStdUPbRatio.setReferenceMaterialValue(true);
+        expressionStdUPbRatio.setNotes(notes);
         referenceMaterialValues.add(expressionStdUPbRatio);
 
-        Expression expressionStdThPbRatio = buildExpression("StdThPbRatio",
+        Expression expressionStdThPbRatio = buildExpression(STD_TH_PB_RATIO,
                 "EXP(lambda232 * StdAgeThPb)-1", true, true, true);
         expressionStdThPbRatio.setReferenceMaterialValue(true);
+        expressionStdThPbRatio.setNotes(notes);
         referenceMaterialValues.add(expressionStdThPbRatio);
 
-        Expression expressionStd_76 = buildExpression("Std_76",
+        Expression expressionStd_76 = buildExpression(STD_7_6,
                 "Pb76( StdAgePbPb )", true, true, true);
         expressionStd_76.setReferenceMaterialValue(true);
+        expressionStd_76.setNotes(notes);
         referenceMaterialValues.add(expressionStd_76);
 
-        Expression expressionStdRad86fact = buildExpression("StdRad86fact",
+        Expression expressionStdRad86fact = buildExpression(STD_RAD_8_6_FACT,
                 "StdThPbRatio / StdUPbRatio", true, true, true);
         expressionStdRad86fact.setReferenceMaterialValue(true);
+        expressionStdRad86fact.setNotes(notes);
         referenceMaterialValues.add(expressionStdRad86fact);
 
         return referenceMaterialValues;
@@ -304,7 +342,7 @@ public abstract class BuiltInExpressionsFactory {
 
         // ppmU calcs belong to both cases of isDirectAltPD
         Expression expressionPpmU = buildExpression(SQUID_PPM_PARENT_EQN_NAME_U,
-                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * StdUConcPpm", true, true, false);
+                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * " + STD_U_CONC_PPM, true, true, false);
         concentrationExpressionsOrdered.add(expressionPpmU);
 
         if (!isDirectAltPD) {

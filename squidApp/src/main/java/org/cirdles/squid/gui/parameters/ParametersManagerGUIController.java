@@ -617,13 +617,7 @@ public class ParametersManagerGUIController implements Initializable {
                 if (table.equals(physConstCorrTable) || table.equals(refMatCorrTable) || table.equals(commonPbCorrTable)) {
                     col.setCellFactory(column -> EditCell.createStringEditCell());
                     col.setOnEditCommit(value -> {
-                        String newValue = value.getNewValue();
-                        if (newValue.endsWith("E") || newValue.isEmpty()) {
-                            newValue = newValue + "0";
-                        }
-                        if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                            newValue = "0" + newValue;
-                        }
+                        String newValue = correctColumnCommittedValue(value.getNewValue());
                         if (Double.parseDouble(newValue) <= 1
                                 && Double.parseDouble(newValue) >= -1
                                 && value.getTablePosition().getColumn() != value.getTablePosition().getRow() + 1) {
@@ -723,14 +717,7 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setSortable(false);
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
-
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<DataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -768,14 +755,7 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
         absCol.setOnEditCommit(value -> {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
-
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<DataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -814,14 +794,7 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
         pctCol.setOnEditCommit(value -> {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
-
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<DataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -858,6 +831,23 @@ public class ParametersManagerGUIController implements Initializable {
         return columns;
     }
 
+    private String correctColumnCommittedValue(String value) {
+        String newValue = value;
+        if (newValue.endsWith("E") || newValue.isEmpty()) {
+            newValue = newValue + "0";
+        }
+        if (newValue.startsWith("E") || newValue.startsWith(".")) {
+            newValue = "0" + newValue;
+        }
+        if (newValue.startsWith("-")) {
+            newValue = "-0" + newValue.substring(1);
+        }
+        if (newValue.endsWith("-")) {
+            newValue = newValue + "0";
+        }
+        return newValue;
+    }
+
     private void setUpRefMatDataModelColumns() {
         refMatDataTable.getColumns().clear();
         int precision = refMatDataSigFigs.getValue();
@@ -874,14 +864,7 @@ public class ParametersManagerGUIController implements Initializable {
         valCol.setSortable(false);
         valCol.setCellFactory(column -> EditCell.createStringEditCell());
         valCol.setOnEditCommit(value -> {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
-
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<RefMatDataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -906,15 +889,8 @@ public class ParametersManagerGUIController implements Initializable {
         absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
         absCol.setSortable(false);
         absCol.setCellFactory(column -> EditCell.createStringEditCell());
-        absCol.setOnEditCommit(value ->
-        {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
+        absCol.setOnEditCommit(value -> {
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<RefMatDataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -939,15 +915,8 @@ public class ParametersManagerGUIController implements Initializable {
         pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
         pctCol.setSortable(false);
         pctCol.setCellFactory(column -> EditCell.createStringEditCell());
-        pctCol.setOnEditCommit(value ->
-        {
-            String newValue = value.getNewValue();
-            if (newValue.endsWith("E") || newValue.isEmpty()) {
-                newValue = newValue + "0";
-            }
-            if (newValue.startsWith("E") || newValue.startsWith(".")) {
-                newValue = "0" + newValue;
-            }
+        pctCol.setOnEditCommit(value -> {
+            String newValue = correctColumnCommittedValue(value.getNewValue());
             ObservableList<RefMatDataModel> items = value.getTableView().getItems();
             DataModel mod = items.get(value.getTablePosition().getRow());
             String ratioName = getRatioHiddenName(mod.getName());
@@ -1173,15 +1142,16 @@ public class ParametersManagerGUIController implements Initializable {
                 if (physConstModels.contains(importedMod)) {
 
                     ButtonType renameButton = new ButtonType("Rename");
+                    ButtonType changeVersionButton = new ButtonType("Change Version");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (physConstModels.get(physConstModels.indexOf(importedMod)).isEditable()) {
                         alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
-                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                                + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
                         alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
-                                + "What would you like to do?", renameButton, cancelButton);
+                                + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
@@ -1224,8 +1194,44 @@ public class ParametersManagerGUIController implements Initializable {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
                                 }
                             });
+                        } else if (p.equals(changeVersionButton)) {
+                            TextInputDialog dialog = new TextInputDialog();
+                            dialog.setTitle("Change Version");
+                            dialog.setHeaderText("Change Version " + importedMod.getModelName());
+                            dialog.setContentText("Enter the new version:");
+                            Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                            TextField newName = null;
+                            for (Node n : dialog.getDialogPane().getChildren()) {
+                                if (n instanceof TextField) {
+                                    newName = (TextField) n;
+                                }
+                            }
+                            if (okBtn != null && newName != null) {
+                                newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    importedMod.setModelName(newValue);
+                                    okBtn.setDisable(physConstModels.contains(importedMod) || newValue.isEmpty());
+                                });
+                            }
+                            dialog.initStyle(StageStyle.UNDECORATED);
+                            dialog.initOwner(squidLabDataStage.getScene().getWindow());
+                            dialog.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - 200) / 2);
+                            dialog.setY(squidLabDataStage.getY() + (squidLabDataStage.getHeight() - 150) / 2);
+                            dialog.showAndWait().ifPresent(d -> {
+                                importedMod.setVersion(dialog.getResult());
+                                if (!physConstModels.contains(importedMod)) {
+                                    importedMod.setIsEditable(true);
+                                    physConstModels.add(importedMod);
+                                    physConstCB.getItems().add(importedMod.getModelNameWithVersion());
+                                    physConstCB.getSelectionModel().selectLast();
+                                    physConstModel = importedMod;
+                                    setUpPhysConst();
+                                    squidLabData.storeState();
+                                } else {
+                                    SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
+                                }
+                            });
                         } else if (p.equals(overwriteButton)) {
-                            commonPbModels.remove(importedMod);
+                            physConstModels.remove(importedMod);
                             importedMod.setIsEditable(true);
                             physConstModels.add(importedMod);
                             physConstCB.getItems().add(importedMod.getModelNameWithVersion());
@@ -1297,15 +1303,16 @@ public class ParametersManagerGUIController implements Initializable {
                 if (refMatModels.contains(importedMod)) {
 
                     ButtonType renameButton = new ButtonType("Rename");
+                    ButtonType changeVersionButton = new ButtonType("Change Version");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (refMatModels.get(refMatModels.indexOf(importedMod)).isEditable()) {
                         alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
-                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                                + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
                         alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
-                                + "What would you like to do?", renameButton, cancelButton);
+                                + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataStage.getScene().getWindow());
@@ -1346,6 +1353,42 @@ public class ParametersManagerGUIController implements Initializable {
                                     squidLabData.storeState();
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
+                                }
+                            });
+                        } else if (p.equals(changeVersionButton)) {
+                            TextInputDialog dialog = new TextInputDialog();
+                            dialog.setTitle("Change Version");
+                            dialog.setHeaderText("Change Version " + importedMod.getModelName());
+                            dialog.setContentText("Enter the new version:");
+                            Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                            TextField newName = null;
+                            for (Node n : dialog.getDialogPane().getChildren()) {
+                                if (n instanceof TextField) {
+                                    newName = (TextField) n;
+                                }
+                            }
+                            if (okBtn != null && newName != null) {
+                                newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    importedMod.setModelName(newValue);
+                                    okBtn.setDisable(refMatModels.contains(importedMod) || newValue.isEmpty());
+                                });
+                            }
+                            dialog.initStyle(StageStyle.UNDECORATED);
+                            dialog.initOwner(squidLabDataStage.getScene().getWindow());
+                            dialog.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - 200) / 2);
+                            dialog.setY(squidLabDataStage.getY() + (squidLabDataStage.getHeight() - 150) / 2);
+                            dialog.showAndWait().ifPresent(d -> {
+                                importedMod.setVersion(dialog.getResult());
+                                if (!refMatModels.contains(importedMod)) {
+                                    importedMod.setIsEditable(true);
+                                    refMatModels.add(importedMod);
+                                    refMatCB.getItems().add(importedMod.getModelNameWithVersion());
+                                    refMatCB.getSelectionModel().selectLast();
+                                    refMatModel = importedMod;
+                                    setUpRefMat();
+                                    squidLabData.storeState();
+                                } else {
+                                    SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
                             });
                         } else if (p.equals(overwriteButton)) {
@@ -1391,15 +1434,16 @@ public class ParametersManagerGUIController implements Initializable {
                 if (physConstModels.contains(importedMod)) {
 
                     ButtonType renameButton = new ButtonType("Rename");
+                    ButtonType changeVersionButton = new ButtonType("Change Version");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (physConstModels.get(physConstModels.indexOf(importedMod)).isEditable()) {
                         alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
-                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                                + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
                         alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
-                                + "What would you like to do?", renameButton, cancelButton);
+                                + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
@@ -1440,6 +1484,42 @@ public class ParametersManagerGUIController implements Initializable {
                                     squidLabData.storeState();
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
+                                }
+                            });
+                        } else if (p.equals(changeVersionButton)) {
+                            TextInputDialog dialog = new TextInputDialog();
+                            dialog.setTitle("Change Version");
+                            dialog.setHeaderText("Change Version " + importedMod.getModelName());
+                            dialog.setContentText("Enter the new version:");
+                            Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                            TextField newName = null;
+                            for (Node n : dialog.getDialogPane().getChildren()) {
+                                if (n instanceof TextField) {
+                                    newName = (TextField) n;
+                                }
+                            }
+                            if (okBtn != null && newName != null) {
+                                newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    importedMod.setModelName(newValue);
+                                    okBtn.setDisable(physConstModels.contains(importedMod) || newValue.isEmpty());
+                                });
+                            }
+                            dialog.initStyle(StageStyle.UNDECORATED);
+                            dialog.initOwner(squidLabDataStage.getScene().getWindow());
+                            dialog.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - 200) / 2);
+                            dialog.setY(squidLabDataStage.getY() + (squidLabDataStage.getHeight() - 150) / 2);
+                            dialog.showAndWait().ifPresent(d -> {
+                                importedMod.setVersion(dialog.getResult());
+                                if (!physConstModels.contains(importedMod)) {
+                                    importedMod.setIsEditable(true);
+                                    physConstModels.add(importedMod);
+                                    physConstCB.getItems().add(importedMod.getModelNameWithVersion());
+                                    physConstCB.getSelectionModel().selectLast();
+                                    physConstModel = importedMod;
+                                    setUpPhysConst();
+                                    squidLabData.storeState();
+                                } else {
+                                    SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
                             });
                         } else if (p.equals(overwriteButton)) {
@@ -1485,15 +1565,16 @@ public class ParametersManagerGUIController implements Initializable {
                 if (refMatModels.contains(importedMod)) {
 
                     ButtonType renameButton = new ButtonType("Rename");
+                    ButtonType changeVersionButton = new ButtonType("Change Version");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (refMatModels.get(refMatModels.indexOf(importedMod)).isEditable()) {
                         alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
-                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                                + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
                         alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
-                                + "What would you like to do?", renameButton, cancelButton);
+                                + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
@@ -1534,6 +1615,42 @@ public class ParametersManagerGUIController implements Initializable {
                                     squidLabData.storeState();
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
+                                }
+                            });
+                        } else if (p.equals(changeVersionButton)) {
+                            TextInputDialog dialog = new TextInputDialog();
+                            dialog.setTitle("Change Version");
+                            dialog.setHeaderText("Change Version " + importedMod.getModelName());
+                            dialog.setContentText("Enter the new version:");
+                            Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                            TextField newName = null;
+                            for (Node n : dialog.getDialogPane().getChildren()) {
+                                if (n instanceof TextField) {
+                                    newName = (TextField) n;
+                                }
+                            }
+                            if (okBtn != null && newName != null) {
+                                newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    importedMod.setModelName(newValue);
+                                    okBtn.setDisable(refMatModels.contains(importedMod) || newValue.isEmpty());
+                                });
+                            }
+                            dialog.initStyle(StageStyle.UNDECORATED);
+                            dialog.initOwner(squidLabDataStage.getScene().getWindow());
+                            dialog.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - 200) / 2);
+                            dialog.setY(squidLabDataStage.getY() + (squidLabDataStage.getHeight() - 150) / 2);
+                            dialog.showAndWait().ifPresent(d -> {
+                                importedMod.setVersion(dialog.getResult());
+                                if (!refMatModels.contains(importedMod)) {
+                                    importedMod.setIsEditable(true);
+                                    refMatModels.add(importedMod);
+                                    refMatCB.getItems().add(importedMod.getModelNameWithVersion());
+                                    refMatCB.getSelectionModel().selectLast();
+                                    refMatModel = importedMod;
+                                    setUpRefMat();
+                                    squidLabData.storeState();
+                                } else {
+                                    SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
                             });
                         } else if (p.equals(overwriteButton)) {
@@ -2218,15 +2335,16 @@ public class ParametersManagerGUIController implements Initializable {
                 if (commonPbModels.contains(importedMod)) {
 
                     ButtonType renameButton = new ButtonType("Rename");
+                    ButtonType changeVersionButton = new ButtonType("Change Version");
                     ButtonType cancelButton = new ButtonType("Cancel");
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (commonPbModels.get(commonPbModels.indexOf(importedMod)).isEditable()) {
                         alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
-                                + "What would you like to do?", overwriteButton, renameButton, cancelButton);
+                                + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
                         alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
-                                + "What would you like to do?", renameButton, cancelButton);
+                                + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
                     alert.initOwner(squidLabDataWindow);
@@ -2267,6 +2385,42 @@ public class ParametersManagerGUIController implements Initializable {
                                     squidLabData.storeState();
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
+                                }
+                            });
+                        } else if (p.equals(changeVersionButton)) {
+                            TextInputDialog dialog = new TextInputDialog();
+                            dialog.setTitle("Change Version");
+                            dialog.setHeaderText("Change Version " + importedMod.getModelName());
+                            dialog.setContentText("Enter the new version:");
+                            Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                            TextField newName = null;
+                            for (Node n : dialog.getDialogPane().getChildren()) {
+                                if (n instanceof TextField) {
+                                    newName = (TextField) n;
+                                }
+                            }
+                            if (okBtn != null && newName != null) {
+                                newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    importedMod.setModelName(newValue);
+                                    okBtn.setDisable(commonPbModels.contains(importedMod) || newValue.isEmpty());
+                                });
+                            }
+                            dialog.initStyle(StageStyle.UNDECORATED);
+                            dialog.initOwner(squidLabDataStage.getScene().getWindow());
+                            dialog.setX(squidLabDataStage.getX() + (squidLabDataStage.getWidth() - 200) / 2);
+                            dialog.setY(squidLabDataStage.getY() + (squidLabDataStage.getHeight() - 150) / 2);
+                            dialog.showAndWait().ifPresent(d -> {
+                                importedMod.setVersion(dialog.getResult());
+                                if (!commonPbModels.contains(importedMod)) {
+                                    importedMod.setIsEditable(true);
+                                    commonPbModels.add(importedMod);
+                                    commonPbCB.getItems().add(importedMod.getModelNameWithVersion());
+                                    commonPbCB.getSelectionModel().selectLast();
+                                    commonPbModel = importedMod;
+                                    setUpCommonPb();
+                                    squidLabData.storeState();
+                                } else {
+                                    SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
                             });
                         } else if (p.equals(overwriteButton)) {

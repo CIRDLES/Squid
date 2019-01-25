@@ -74,12 +74,12 @@
             <Label style="-fx-font-size: 14;" text="Ratio Calculation Method:" GridPane.rowIndex="1" />
             <Label style="-fx-font-size: 14;" text="Preferred index isotope:" GridPane.rowIndex="3" />
             <Label layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
-            <Label style="-fx-font-size: 14;" text="Parameter Models (not live):" GridPane.rowIndex="5" />
+            <Label style="-fx-font-size: 14;" text="Reference Material Models:" GridPane.rowIndex="5" />
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10;" text="Ref Mat:" textAlignment="RIGHT" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="50.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Ref Mat:" textAlignment="RIGHT" />
                   <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Reference Material Model" />
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10;" text="Conc Ref Mat:" textAlignment="RIGHT" translateX="10.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Conc Ref Mat:" textAlignment="RIGHT" translateX="10.0" />
                   <ComboBox fx:id="concRefMatModelComboBox" layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="325.0" promptText="Concentration Reference Material Model" translateX="10.0" />
                </children>
             </HBox>
@@ -129,7 +129,7 @@
                   <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
                </children>
             </HBox>
-            <Label style="-fx-font-size: 14;" text="Parameter Models (live):" GridPane.rowIndex="6" />
+            <Label style="-fx-font-size: 14;" text="Parameter Models:" GridPane.rowIndex="6" />
          </children>
       </GridPane>
       <Label text="Audit:" GridPane.rowIndex="6" />
