@@ -105,9 +105,6 @@ public final class Squid3Constants {
     public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
 
     // holding spot until models are implemented
-    public static final double LAMBDA232 = 4.9475E-11;
-    public static final double LAMBDA235 = 9.8485E-10;
-    public static final double LAMBDA238 = 1.55125E-10;
     public static final double PRESENT_R238_235S = 137.88;
 
     public enum IndexIsoptopesEnum {

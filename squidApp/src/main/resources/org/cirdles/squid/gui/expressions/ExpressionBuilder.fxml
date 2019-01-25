@@ -69,12 +69,12 @@
                               <ListView fx:id="ratioExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" text="Reference Material Values">
+                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12;" text="Reference Material Values (see Task Mgr)">
                            <content>
                               <ListView fx:id="referenceMaterialsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" text="Parameters (from Models in Task Mgr)">
+                        <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" text="Parameters (see Task Mgr)">
                            <content>
                               <ListView fx:id="parametersListView" />
                            </content>
