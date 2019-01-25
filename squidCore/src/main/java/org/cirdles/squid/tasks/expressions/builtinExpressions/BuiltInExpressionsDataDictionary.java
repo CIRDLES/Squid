@@ -61,6 +61,17 @@ public class BuiltInExpressionsDataDictionary {
     public static final String SCOMM_76_NAME = "sComm_76";
     public static final String SCOMM_86_NAME = "sComm_86";
     public static final String SCOMM_68_NAME = "sComm_68";
+    
+    public static final String STD_U_CONC_PPM = "StdUConcPpm"; // confirmed unique
+    public static final String STD_TH_CONC_PPM = "StdThConcPpm";
+    public static final String STD_AGE_U_PB = "StdAgeUPb";
+    public static final String STD_AGE_TH_PB = "StdAgeThPb";
+    public static final String STD_AGE_PB_PB = "StdAgePbPb";   
+    public static final String STD_U_PB_RATIO = "StdUPbRatio";
+    public static final String STD_TH_PB_RATIO = "StdThPbRatio";
+    public static final String STD_7_6 = "Std_76";
+    public static final String STD_RAD_8_6_FACT = "StdRad86fact";
+    
 
     public static String R206_204B = "r206_204b";
     public static String R207_204B = "r207_204b";
