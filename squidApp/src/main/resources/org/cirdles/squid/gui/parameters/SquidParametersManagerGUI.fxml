@@ -266,8 +266,7 @@
                                                                 <children>
                                                                     <Label text="Units: "/>
                                                                     <RadioButton fx:id="refDatesARadioButton" text="a"
-                                                                                 onAction="#refDatesARadioButtonOnAction"
-                                                                                 selected="true">
+                                                                                 onAction="#refDatesARadioButtonOnAction">
                                                                         <toggleGroup>
                                                                             <ToggleGroup
                                                                                     fx:id="refDatesUnitsToggleGroup"/>
@@ -278,7 +277,8 @@
                                                                                  onAction="#refDatesKARadioButtonOnAction"/>
                                                                     <RadioButton fx:id="refDatesMARadioButton" text="Ma"
                                                                                  toggleGroup="$refDatesUnitsToggleGroup"
-                                                                                 onAction="#refDatesMARadioButtonOnAction"/>
+                                                                                 onAction="#refDatesMARadioButtonOnAction"
+                                                                                 selected="true"/>
                                                                 </children>
                                                             </HBox>
                                                         </children>

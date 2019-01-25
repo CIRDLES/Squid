@@ -301,7 +301,7 @@ public class ParametersManagerGUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setUpSigFigSpinners();
 
-        refDatesUnits = Units.a;
+        refDatesUnits = Units.ma;
 
         isEditingCurrCommonPbModel = false;
         isEditingCurrPhysConst = false;
