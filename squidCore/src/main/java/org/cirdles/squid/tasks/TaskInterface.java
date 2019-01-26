@@ -31,6 +31,13 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 
 /**
  *
@@ -237,6 +244,8 @@ public interface TaskInterface {
      */
     public List<Expression> getTaskExpressionsOrdered();
 
+    public List<Expression> getCustomTaskExpressions();
+
     /**
      *
      * @param expression Name of the expression to test
@@ -370,6 +379,60 @@ public interface TaskInterface {
      */
     public void setParentNuclide(String parentNuclide);
 
+    public default void toggleParentNuclide() {
+
+        List<Expression> customExpressions = getCustomTaskExpressions();
+
+        Expression parentPPM = getExpressionByName(SQUID_PPM_PARENT_EQN_NAME);
+        Expression parentPPMmean = getExpressionByName(SQUID_MEAN_PPM_PARENT_NAME);
+
+        getTaskExpressionsOrdered().clear();
+
+        // TODO: expressions need to come from preferences and/or models
+        Expression uThU = BuiltInExpressionsFactory.buildExpression(
+                SQUID_PRIMARY_UTH_EQN_NAME_U, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
+        uThU.setSquidSwitchNU(true);
+        Expression uThTh = BuiltInExpressionsFactory.buildExpression(
+                SQUID_PRIMARY_UTH_EQN_NAME_TH, "[\"208/248\"]", true, true, false);
+        uThTh.setSquidSwitchNU(true);
+        if (isPbU()) {
+            setParentNuclide("232");
+            getTaskExpressionsOrdered().add(uThTh);
+            if (isDirectAltPD()){
+                getTaskExpressionsOrdered().add(uThU);
+            }
+        } else {
+            setParentNuclide("238");
+            getTaskExpressionsOrdered().add(uThU);
+            if (isDirectAltPD()){
+                getTaskExpressionsOrdered().add(uThTh);
+            }
+        }
+
+        generateBuiltInExpressions();
+
+        Expression thU = BuiltInExpressionsFactory.buildExpression(
+                SQUID_TH_U_EQN_NAME, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+        thU.setSquidSwitchNU(true);
+        getTaskExpressionsOrdered().add(thU);
+
+        Expression thUS = BuiltInExpressionsFactory.buildExpression(
+                SQUID_TH_U_EQN_NAME_S, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+        thUS.setSquidSwitchNU(true);
+        getTaskExpressionsOrdered().add(thUS);
+
+        getTaskExpressionsOrdered().add(parentPPM);
+        getTaskExpressionsOrdered().add(parentPPMmean);
+
+        getTaskExpressionsOrdered().addAll(customExpressions);
+
+        setChanged(true);
+
+        updateAllExpressions(true);
+        updateAllExpressions(true);
+        setupSquidSessionSpecsAndReduceAndReport();
+    }
+
     public default boolean isPbU() {
         return (getParentNuclide().contains("238"));
     }
@@ -487,8 +550,10 @@ public interface TaskInterface {
      * @return the squidAllowsAutoExclusionOfSpots
      */
     public boolean isSquidAllowsAutoExclusionOfSpots();
+
     /**
-     * @param squidAllowsAutoExclusionOfSpots the squidAllowsAutoExclusionOfSpots to set
+     * @param squidAllowsAutoExclusionOfSpots the
+     * squidAllowsAutoExclusionOfSpots to set
      */
     public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots);
 

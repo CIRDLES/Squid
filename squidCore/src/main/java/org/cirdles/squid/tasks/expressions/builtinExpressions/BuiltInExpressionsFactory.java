@@ -1592,7 +1592,7 @@ public abstract class BuiltInExpressionsFactory {
         return samRadiogenicCols;
     }
 
-    private static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc, boolean isSummaryCalc) {
+    public static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc, boolean isSummaryCalc) {
         Expression expression = new Expression(name, excelExpression);
         expression.setSquidSwitchNU(false);
 

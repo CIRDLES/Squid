@@ -316,12 +316,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void generateBuiltInExpressions() {
 
-        SortedSet<Expression> generateReferenceMaterialValues = updateReferenceMaterialValuesFromModel((ReferenceMaterialModel)referenceMaterialModel);
+        SortedSet<Expression> generateReferenceMaterialValues = updateReferenceMaterialValuesFromModel((ReferenceMaterialModel) referenceMaterialModel);
         taskExpressionsOrdered.addAll(generateReferenceMaterialValues);
 
-        SortedSet<Expression> generateConcReferenceMaterialValues = updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel)concentrationReferenceMaterialModel);
+        SortedSet<Expression> generateConcReferenceMaterialValues = updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel) concentrationReferenceMaterialModel);
         taskExpressionsOrdered.addAll(generateConcReferenceMaterialValues);
-        
+
         SortedSet<Expression> generateCommonLeadParameterValues = updateCommonLeadParameterValuesFromModel(commonPbModel);
         taskExpressionsOrdered.addAll(generateCommonLeadParameterValues);
 
@@ -637,30 +637,30 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
             physicalConstantsModelChanged = false;
         }
-        
+
         if (referenceMaterialModelChanged) {
             SortedSet<Expression> updatedReferenceMaterialExpressions
-                    = BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel((ReferenceMaterialModel)referenceMaterialModel);
+                    = BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel((ReferenceMaterialModel) referenceMaterialModel);
             Iterator<Expression> updatedReferenceMaterialExpressionsIterator = updatedReferenceMaterialExpressions.iterator();
             while (updatedReferenceMaterialExpressionsIterator.hasNext()) {
                 Expression exp = updatedReferenceMaterialExpressionsIterator.next();
                 removeExpression(exp, false);
                 addExpression(exp, false);
                 updateAffectedExpressions(exp, false);
-            }            
+            }
             referenceMaterialModelChanged = false;
         }
-        
+
         if (concentrationReferenceMaterialModelChanged) {
             SortedSet<Expression> updatedConcReferenceMaterialExpressions
-                    = BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel)concentrationReferenceMaterialModel);
+                    = BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel) concentrationReferenceMaterialModel);
             Iterator<Expression> updatedConcReferenceMaterialExpressionsIterator = updatedConcReferenceMaterialExpressions.iterator();
             while (updatedConcReferenceMaterialExpressionsIterator.hasNext()) {
                 Expression exp = updatedConcReferenceMaterialExpressionsIterator.next();
                 removeExpression(exp, false);
                 addExpression(exp, false);
                 updateAffectedExpressions(exp, false);
-            }        
+            }
             concentrationReferenceMaterialModelChanged = false;
         }
 
@@ -2160,6 +2160,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return taskExpressionsOrdered;
     }
 
+    @Override
+    public List<Expression> getCustomTaskExpressions() {
+        List<Expression> customTaskExpressions = new ArrayList<>();
+        for (Expression expression : taskExpressionsOrdered) {
+            if (expression.isCustom()) {
+                customTaskExpressions.add(expression);
+            }
+        }
+        return customTaskExpressions;
+    }
+
     /**
      * @param changed the changed to set
      */
@@ -2382,7 +2393,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @param squidAllowsAutoExclusionOfSpots the squidAllowsAutoExclusionOfSpots to set
+     * @param squidAllowsAutoExclusionOfSpots the
+     * squidAllowsAutoExclusionOfSpots to set
      */
     @Override
     public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots) {
