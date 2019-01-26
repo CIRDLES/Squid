@@ -316,10 +316,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void generateBuiltInExpressions() {
 
-        SortedSet<Expression> generateReferenceMaterialValues = updateReferenceMaterialValuesFromModel(referenceMaterialModel);
+        SortedSet<Expression> generateReferenceMaterialValues = updateReferenceMaterialValuesFromModel((ReferenceMaterialModel)referenceMaterialModel);
         taskExpressionsOrdered.addAll(generateReferenceMaterialValues);
 
-        SortedSet<Expression> generateConcReferenceMaterialValues = updateConcReferenceMaterialValuesFromModel(concentrationReferenceMaterialModel);
+        SortedSet<Expression> generateConcReferenceMaterialValues = updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel)concentrationReferenceMaterialModel);
         taskExpressionsOrdered.addAll(generateConcReferenceMaterialValues);
         
         SortedSet<Expression> generateCommonLeadParameterValues = updateCommonLeadParameterValuesFromModel(commonPbModel);
@@ -640,7 +640,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         
         if (referenceMaterialModelChanged) {
             SortedSet<Expression> updatedReferenceMaterialExpressions
-                    = BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel(referenceMaterialModel);
+                    = BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel((ReferenceMaterialModel)referenceMaterialModel);
             Iterator<Expression> updatedReferenceMaterialExpressionsIterator = updatedReferenceMaterialExpressions.iterator();
             while (updatedReferenceMaterialExpressionsIterator.hasNext()) {
                 Expression exp = updatedReferenceMaterialExpressionsIterator.next();
@@ -653,7 +653,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         
         if (concentrationReferenceMaterialModelChanged) {
             SortedSet<Expression> updatedConcReferenceMaterialExpressions
-                    = BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel(concentrationReferenceMaterialModel);
+                    = BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel)concentrationReferenceMaterialModel);
             Iterator<Expression> updatedConcReferenceMaterialExpressionsIterator = updatedConcReferenceMaterialExpressions.iterator();
             while (updatedConcReferenceMaterialExpressionsIterator.hasNext()) {
                 Expression exp = updatedConcReferenceMaterialExpressionsIterator.next();

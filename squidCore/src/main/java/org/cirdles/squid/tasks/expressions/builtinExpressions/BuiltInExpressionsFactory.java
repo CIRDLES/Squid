@@ -201,7 +201,7 @@ public abstract class BuiltInExpressionsFactory {
         return parameterValues;
     }
 
-    public static SortedSet<Expression> updateConcReferenceMaterialValuesFromModel(ParametersModel concReferenceMaterialModel) {
+    public static SortedSet<Expression> updateConcReferenceMaterialValuesFromModel(ReferenceMaterialModel concReferenceMaterialModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
         String notes = "from Conc. Reference Material model: " + concReferenceMaterialModel.getModelNameWithVersion();
@@ -223,7 +223,7 @@ public abstract class BuiltInExpressionsFactory {
         return parameterValues;
     }
 
-    public static SortedSet<Expression> updateReferenceMaterialValuesFromModel(ParametersModel referenceMaterialModel) {
+    public static SortedSet<Expression> updateReferenceMaterialValuesFromModel(ReferenceMaterialModel referenceMaterialModel) {
         SortedSet<Expression> referenceMaterialValues = new TreeSet<>();
 
         String notes = "from Reference Material model: " + referenceMaterialModel.getModelNameWithVersion();
@@ -1064,7 +1064,7 @@ public abstract class BuiltInExpressionsFactory {
 
         }
 
-        if (parentNuclide.contains("232") & !isDirectAltPD) {
+        if (parentNuclide.contains("232") && !isDirectAltPD) {
             // perm3 only
             Expression expression4corr206238 = buildExpression("4-corr 206*/238",
                     "ValueModel("
@@ -1134,7 +1134,7 @@ public abstract class BuiltInExpressionsFactory {
             stdRadiogenicCols.add(expression7corr206238);
 
             // perm1 only
-            if (!parentNuclide.contains("232") & !isDirectAltPD) {
+            if (!parentNuclide.contains("232") && !isDirectAltPD) {
                 Expression expression8corr206238 = buildExpression("8-corr 206*/238",
                         "ValueModel("
                         + "[\"8-corr 206Pb/238Ucalibr.const\"] / [\"8-corr 206Pb/238Ucalibr.const WM\"][0] * StdUPbRatio,"
