@@ -1025,16 +1025,11 @@ public class ParametersManagerGUIController implements Initializable {
         final ObservableList<DataModel> obList = FXCollections.observableArrayList();
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
-            try {
-                String value = notation.format(round(valMod.getValue(), precision).divide(operand));
-                String oneSigmaABS = notation.format(round(valMod.getOneSigmaABS(), precision).divide(operand));
-                String oneSigmaPCT = notation.format(round(valMod.getOneSigmaPCT(), precision));
-                DataModel mod = new DataModel(getRatioVisibleName(valMod.getName()), value, oneSigmaABS, oneSigmaPCT);
-                obList.add(mod);
-            } catch (ArithmeticException e) {
-                e.getMessage();
-                System.out.println("Operand: " + operand.toString() + "\nValue: " + valMod.getValue());
-            }
+            String value = notation.format(round(valMod.getValue(), precision).divide(operand));
+            String oneSigmaABS = notation.format(round(valMod.getOneSigmaABS(), precision).divide(operand));
+            String oneSigmaPCT = notation.format(round(valMod.getOneSigmaPCT(), precision));
+            DataModel mod = new DataModel(getRatioVisibleName(valMod.getName()), value, oneSigmaABS, oneSigmaPCT);
+            obList.add(mod);
         }
         return obList;
     }
