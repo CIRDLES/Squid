@@ -370,6 +370,6 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public boolean isCustom() {
-        return !getExpressionTree().isSquidSpecialUPbThExpression() && !isSquidSwitchNU();
+        return !getExpressionTree().isSquidSpecialUPbThExpression();// && !isSquidSwitchNU();
     }
 }

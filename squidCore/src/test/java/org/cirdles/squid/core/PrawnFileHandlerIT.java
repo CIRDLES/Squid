@@ -220,7 +220,7 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
         assertThat(reportTableFile).hasSameContentAs(expectedReport);
-        
+
         // change selected index isotope
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProject.getTask().setChanged(true);
@@ -233,6 +233,8 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
         assertThat(reportTableFile).hasSameContentAs(expectedReport);
+        
+        // change selected index isotope
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         squidProject.getTask().setChanged(true);
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
@@ -244,10 +246,92 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(reportTableFile.getName());
 
         assertThat(reportTableFile).hasSameContentAs(expectedReport);
+        
+        // change selected index isotope
         squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProject.getTask().setChanged(true);
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_RefMat.csv");
+        reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
+        report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
+        ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
+
+        expectedReport = RESOURCE_EXTRACTOR
+                .extractResourceAsFile(reportTableFile.getName());
+
+        assertThat(reportTableFile).hasSameContentAs(expectedReport);
+    }
+
+    /**
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testingOutputForZ6266Permutation2() throws Exception {
+
+        System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm2 with 4-,7-corr reference materials and unknowns.");
+
+        CalamariFileUtilities.initSampleParametersModels();
+
+        File prawnFile = RESOURCE_EXTRACTOR
+                .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266);
+
+        SquidProject squidProject = new SquidProject();
+        ShrimpDataFileInterface prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
+        squidProject.setPrawnFile(prawnFileData);
+
+        File squidTaskFile = RESOURCE_EXTRACTOR
+                .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266_TASK_PERM2);
+        squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
+
+        squidProject.setDelimiterForUnknownNames("-");
+        squidProject.getTask().setFilterForRefMatSpotNames("6266");
+        squidProject.getTask().setFilterForConcRefMatSpotNames("6266");
+
+        // overcome user preferences
+        squidProject.getTask().setType(Squid3Constants.TaskTypeEnum.GEOCHRON);
+        squidProject.getTask().setUseSBM(true);
+        squidProject.getTask().setUserLinFits(false);
+        squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(true);
+        squidProject.getTask().setExtPErr(0.75);
+        squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
+        squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
+        squidProject.getTask().setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+        squidProject.getTask().setConcentrationReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+
+        squidProject.getTask().applyTaskIsotopeLabelsToMassStations();
+
+        File reportsFolder = temporaryFolderPerm1.getRoot();
+        ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProject.getTask());
+
+        File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_4Corr_Unknowns.csv");
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), true);
+        ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
+
+        File expectedReport = RESOURCE_EXTRACTOR
+                .extractResourceAsFile(reportTableFile.getName());
+
+        assertThat(reportTableFile).hasSameContentAs(expectedReport);
+
+        // change selected index isotope
+        squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+        squidProject.getTask().setChanged(true);
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_7Corr_Unknowns.csv");
+        report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), true);
+        ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
+
+        expectedReport = RESOURCE_EXTRACTOR
+                .extractResourceAsFile(reportTableFile.getName());
+
+        assertThat(reportTableFile).hasSameContentAs(expectedReport);
+
+        // change selected index isotope
+        squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProject.getTask().setChanged(true);
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_RefMat.csv");
         reportSettings = new ReportSettings("TEST", true, squidProject.getTask());
         report = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), true);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
