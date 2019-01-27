@@ -352,7 +352,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(reductionManagerUI);
         mainPane.getChildren().remove(reducedDataReportManagerUI);
         mainPane.getChildren().remove(topsoilPlotUI);
-        
+
         mainPane.getChildren().remove(preferencesManagerUI);
 
         saveSquidProjectMenuItem.setDisable(true);
@@ -383,11 +383,11 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
     }
-    
+
     @FXML
     public void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
         prepareForNewProject();
-        
+
         try {
             File opFileNew = FileHandler.selectOPFile(primaryStageWindow);
             if (opFileNew != null) {
@@ -403,12 +403,12 @@ public class SquidUIController implements Initializable {
             if (message == null) {
                 message = iOException.getCause().getMessage();
             }
-            
+
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
                     + message,
                     primaryStageWindow);
-        }       
+        }
     }
 
     @FXML
@@ -525,10 +525,10 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
     }
-    
-    private void customizePrawnFileMenu(){
+
+    private void customizePrawnFileMenu() {
         boolean opSourceFile = squidProject.getPrawnSourceFileName().toUpperCase().endsWith(".OP");
-        
+
         auditRawDataMenuItem.setDisable(opSourceFile);
         savePrawnFileCopyMenuItem.setDisable(opSourceFile);
         choosePrawnFileMenuItem.setDisable(opSourceFile);
@@ -803,8 +803,8 @@ public class SquidUIController implements Initializable {
             //System.out.println("reducedDataReportManagerUI >>>>   " + iOException.getMessage());
         }
     }
-    
-        private void launchPreferencesManager() {
+
+    private void launchPreferencesManager() {
         mainPane.getChildren().remove(preferencesManagerUI);
         try {
             preferencesManagerUI = FXMLLoader.load(getClass().getResource("PreferencesManager.fxml"));
@@ -817,7 +817,7 @@ public class SquidUIController implements Initializable {
 
             mainPane.getChildren().add(preferencesManagerUI);
             showUI(preferencesManagerUI);
-            
+
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("PreferencesManager >>>>   " + iOException.getMessage());
         }
@@ -830,7 +830,7 @@ public class SquidUIController implements Initializable {
 
     private void showUI(Node myManager) {
         SquidPersistentState.getExistingPersistentState().updateUserPreferences();
-        
+
         for (Node manager : mainPane.getChildren()) {
             manager.setVisible(false);
         }
@@ -1294,7 +1294,6 @@ public class SquidUIController implements Initializable {
         launchExpressionBuilder();
 
         showUI(expressionBuilderUI);
-
     }
 
     @FXML
@@ -1302,23 +1301,18 @@ public class SquidUIController implements Initializable {
         File folder = FileHandler.setCustomExpressionFolder(primaryStageWindow);
         if (folder != null) {
             folder.mkdirs();
-            for (Expression expression : squidProject.getTask().getTaskExpressionsOrdered()) {
-                if (expression.isCustom()) {
-                    try {
-                        expression.serializeXMLObject(folder.getAbsolutePath() + File.separator
-                                + FileNameFixer.fixFileName(expression.getName()) + ".xml");
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
+            for (Expression expression : squidProject.getTask().getCustomTaskExpressions()) {
+                try {
+                    expression.serializeXMLObject(folder.getAbsolutePath() + File.separator
+                            + FileNameFixer.fixFileName(expression.getName()) + ".xml");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             }
         } else {
             System.out.println("custom expression folder not created");
         }
     }
-
-
-
 
     @FXML
     private void choosePrawnFileMenuItemAction(ActionEvent event) {
@@ -1362,28 +1356,28 @@ public class SquidUIController implements Initializable {
             ParametersModel physConst = task.getPhysicalConstantsModel();
             ParametersModel commonPbModel = task.getCommonPbModel();
 
-            if(physConst == null) {
+            if (physConst == null) {
                 task.setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
             } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
                 squidLabData.addPhysicalConstantsModel(physConst);
                 squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
             }
 
-            if(refMat == null) {
+            if (refMat == null) {
                 task.setReferenceMaterial(squidLabData.getRefMatDefault());
             } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
                 squidLabData.addReferenceMaterial(refMat);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
 
-            if(refMatConc == null) {
+            if (refMatConc == null) {
                 task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
             } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
                 squidLabData.addReferenceMaterial(refMatConc);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
 
-            if(commonPbModel == null) {
+            if (commonPbModel == null) {
                 task.setCommonPbModel(squidLabData.getCommonPbDefault());
             } else if (!squidLabData.getCommonPbModels().contains(commonPbModel)) {
                 squidLabData.addcommonPbModel(commonPbModel);

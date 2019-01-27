@@ -36,7 +36,7 @@
                   <ToggleGroup fx:id="taskTypeToggleGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
+            <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" disable="true" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
          </children>
       </HBox>
       <Label text="Author:" GridPane.rowIndex="3" />
