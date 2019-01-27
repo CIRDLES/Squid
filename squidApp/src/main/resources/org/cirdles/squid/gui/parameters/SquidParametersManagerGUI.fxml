@@ -639,6 +639,28 @@
                                                                                  prefWidth="80.0"/>
                                                                     </children>
                                                                 </HBox>
+                                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                                    <children>
+                                                                        <Label text="Units: "/>
+                                                                        <RadioButton fx:id="physConstDataARadioButton"
+                                                                                     text="a"
+                                                                                     onAction="#physConstDataARadioButtonOnAction"
+                                                                                     selected="true">
+                                                                            <toggleGroup>
+                                                                                <ToggleGroup
+                                                                                        fx:id="physConstDataUnitsToggleGroup"/>
+                                                                            </toggleGroup>
+                                                                        </RadioButton>
+                                                                        <RadioButton fx:id="physConstDataKARadioButton"
+                                                                                     text="Ka"
+                                                                                     toggleGroup="$physConstDataUnitsToggleGroup"
+                                                                                     onAction="#physConstDataKARadioButtonOnAction"/>
+                                                                        <RadioButton fx:id="physConstDataMARadioButton"
+                                                                                     text="Ma"
+                                                                                     toggleGroup="$physConstDataUnitsToggleGroup"
+                                                                                     onAction="#physConstDataMARadioButtonOnAction"/>
+                                                                    </children>
+                                                                </HBox>
                                                             </children>
                                                         </HBox>
                                                     </children>
