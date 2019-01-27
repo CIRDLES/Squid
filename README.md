@@ -9,7 +9,8 @@ Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
 We encourage you to download
 and evaluate the latest release, the ".jar" file found <a href="https://github.com/CIRDLES/Squid/releases" target="_blank">here</a>.  
-Squid requires <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">Java 1.8</a>.
+Squid requires <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">Java 1.8</a>.  Java 1.9 and 1.10 are no longer supported and Java 1.11 and 1.12 involve major architectural changes that we have elected to avoid until 2024-2025.  You can read [here](https://en.wikipedia.org/wiki/Java_version_history) about the community's plans for Java.
+
 
 To contribute issues and feedback, please join GitHub <a href="https://github.com/" target="_blank">here</a>. While using Squid3,
 the help menu provides a link that
