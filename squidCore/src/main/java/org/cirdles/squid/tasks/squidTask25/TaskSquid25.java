@@ -143,7 +143,6 @@ public class TaskSquid25 implements Serializable {
 
                     if (taskSquid25.parentNuclide.contains("232")) {
                         primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
-//                        primaryUThPbEqn[1] = primaryUThPbEqn[1];
                         primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
                     }
 
@@ -245,8 +244,7 @@ public class TaskSquid25 implements Serializable {
                 if (constantNamesSource.length > 1) {
                     countOfConstants = Integer.valueOf(constantNamesSource[1]);
                 }
-//                taskSquid25.constantNames = new ArrayList<>();
-//                taskSquid25.constantValues = new ArrayList<>();
+
                 for (int i = 0; i < countOfConstants; i++) {
                     taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
                     taskSquid25.constantValues.add(constantValuesSource[i + 2]);
