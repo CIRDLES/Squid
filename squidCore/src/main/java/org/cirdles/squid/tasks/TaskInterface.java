@@ -19,6 +19,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -379,8 +380,15 @@ public interface TaskInterface {
      */
     public void setParentNuclide(String parentNuclide);
 
-    public default void toggleParentNuclide() {
-
+    public default void applyDirectives() {
+        // need to remove stored expression results on fractions to clear the decks
+        getShrimpFractions().forEach((spot) -> {
+            spot.getTaskExpressionsForScansEvaluated().clear();
+            spot.getTaskExpressionsEvaluationsPerSpot().clear();
+        });
+        // clear task expressions
+        setTaskExpressionsEvaluationsPerSpotSet(new TreeMap<>(String.CASE_INSENSITIVE_ORDER));
+        
         List<Expression> customExpressions = getCustomTaskExpressions();
 
         Expression parentPPM = getExpressionByName(SQUID_PPM_PARENT_EQN_NAME);
@@ -395,31 +403,32 @@ public interface TaskInterface {
         Expression uThTh = BuiltInExpressionsFactory.buildExpression(
                 SQUID_PRIMARY_UTH_EQN_NAME_TH, "[\"208/248\"]", true, true, false);
         uThTh.setSquidSwitchNU(true);
+
         if (isPbU()) {
-            setParentNuclide("232");
-            getTaskExpressionsOrdered().add(uThTh);
-            if (isDirectAltPD()){
-                getTaskExpressionsOrdered().add(uThU);
+            getTaskExpressionsOrdered().add(uThU);
+            if (isDirectAltPD()) {
+                getTaskExpressionsOrdered().add(uThTh);
             }
         } else {
-            setParentNuclide("238");
-            getTaskExpressionsOrdered().add(uThU);
-            if (isDirectAltPD()){
-                getTaskExpressionsOrdered().add(uThTh);
+            getTaskExpressionsOrdered().add(uThTh);
+            if (isDirectAltPD()) {
+                getTaskExpressionsOrdered().add(uThU);
             }
         }
 
+        if (!isDirectAltPD()) {
+            Expression thU = BuiltInExpressionsFactory.buildExpression(
+                    SQUID_TH_U_EQN_NAME, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+            thU.setSquidSwitchNU(true);
+            getTaskExpressionsOrdered().add(thU);
+
+            Expression thUS = BuiltInExpressionsFactory.buildExpression(
+                    SQUID_TH_U_EQN_NAME_S, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+            thUS.setSquidSwitchNU(true);
+            getTaskExpressionsOrdered().add(thUS);
+        }
+
         generateBuiltInExpressions();
-
-        Expression thU = BuiltInExpressionsFactory.buildExpression(
-                SQUID_TH_U_EQN_NAME, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
-        thU.setSquidSwitchNU(true);
-        getTaskExpressionsOrdered().add(thU);
-
-        Expression thUS = BuiltInExpressionsFactory.buildExpression(
-                SQUID_TH_U_EQN_NAME_S, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
-        thUS.setSquidSwitchNU(true);
-        getTaskExpressionsOrdered().add(thUS);
 
         getTaskExpressionsOrdered().add(parentPPM);
         getTaskExpressionsOrdered().add(parentPPMmean);
@@ -429,9 +438,12 @@ public interface TaskInterface {
         setChanged(true);
 
         updateAllExpressions(true);
+        processAndSortExpressions();
         updateAllExpressions(true);
         setupSquidSessionSpecsAndReduceAndReport();
     }
+    
+    public void processAndSortExpressions();
 
     public default boolean isPbU() {
         return (getParentNuclide().contains("238"));

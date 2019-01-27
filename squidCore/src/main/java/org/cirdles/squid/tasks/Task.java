@@ -849,6 +849,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         //System.out.println("<>><<><>>>>>>>>>>>>>>>>\n\n");
     }
 
+    @Override
     public void processAndSortExpressions() {
 
         reorderExpressions();

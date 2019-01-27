@@ -223,6 +223,10 @@ public class TaskManagerController implements Initializable {
         ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
+        pb208RadioButton.setVisible(
+                ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected()
+                && ((RadioButton) taskManagerGridPane.lookup("#indirect")).isSelected());
+
         uncorrConstPbUlabel.setText(SQUID_PRIMARY_UTH_EQN_NAME_U + ":");
         Expression UTh_U = task.getExpressionByName(SQUID_PRIMARY_UTH_EQN_NAME_U);
         uncorrConstPbUExpressionLabel.setText((UTh_U == null) ? "Not Used" : UTh_U.getExcelExpressionString());
@@ -280,7 +284,16 @@ public class TaskManagerController implements Initializable {
 
     @FXML
     private void toggleParentNuclideAction(ActionEvent event) {
-        task.toggleParentNuclide();
+        task.setParentNuclide(((RadioButton) event.getSource()).getId());
+        task.applyDirectives();
+        populateDirectives();
+        taskAuditTextArea.setText(task.printTaskAudit());
+    }
+
+    @FXML
+    private void toggleDirectAltAction(ActionEvent event) {
+        task.setDirectAltPD(((RadioButton) event.getSource()).getId().compareToIgnoreCase("DIRECT") == 0);
+        task.applyDirectives();
         populateDirectives();
         taskAuditTextArea.setText(task.printTaskAudit());
     }
@@ -386,20 +399,28 @@ public class TaskManagerController implements Initializable {
 
     @FXML
     private void pb204RadioButtonAction(ActionEvent event) {
+        updateDirectiveButtons();
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         task.setChanged(true);
     }
 
     @FXML
     private void pb207RadioButtonAction(ActionEvent event) {
+        updateDirectiveButtons();
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         task.setChanged(true);
     }
 
     @FXML
-    private void pb208RadioButtonAction(ActionEvent event) {
+    private void pb208RadioButtonAction(ActionEvent event) {               
+        updateDirectiveButtons();
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         task.setChanged(true);
+    }
+    
+    private void updateDirectiveButtons(){
+        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(pb208RadioButton.isSelected());
+        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(pb208RadioButton.isSelected());
     }
 
     @FXML
