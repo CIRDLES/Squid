@@ -54,7 +54,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
        textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!newValue.matches("-?[0-9]*\\.?[0-9]*(E|(E-))?[0-9]*")) {
+                if(!newValue.matches("-?[0-9]*\\.?[0-9]*(E|(E-)|e|(e-))?[0-9]*")) {
                     textField.setText(oldValue);
                 }
             }
