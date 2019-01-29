@@ -20,6 +20,10 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_64_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_74_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_84_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_7_6;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
@@ -43,14 +47,13 @@ public class StdPb86radCor7per extends Function {
     public StdPb86radCor7per() {
 
         name = "stdPb86radCor7per";
-        argumentCount = 8;
+        argumentCount = 4;
         precedence = 10;
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"stdPb86radCor7per"}};
         labelsForInputValues = new String[]{
-            "208/206RatioAnd1\u03C3 abs","207/206RatioAnd1\u03C3 abs","radPb86cor7","pb46cor7,"
-                + "sComm_64, sComm_74, sComm_84"};
+            "208/206RatioAnd1\u03C3 abs", "207/206RatioAnd1\u03C3 abs", "radPb86cor7", "pb46cor7"};
     }
 
     /**
@@ -76,17 +79,19 @@ public class StdPb86radCor7per extends Function {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] radPb86cor7 = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
             double[] pb46cor7 = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
-            double[] std_76 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
-            double[] sComm_64 = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
-            double[] sComm_74 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
-            double[] sComm_84 = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
+
             // convert uncertainties to percents for function call
             double pb208_206Unct = pb208_206RatioAndUnct[1] / pb208_206RatioAndUnct[0] * 100.0;
             double pb207_206Unct = pb207_206RatioAndUnct[1] / pb207_206RatioAndUnct[0] * 100.0;
 
+            double std_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(STD_7_6).getValues()[0][0];
+            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_64_NAME).getValues()[0][0];
+            double sComm_74 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_74_NAME).getValues()[0][0];
+            double sComm_84 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_84_NAME).getValues()[0][0];
+
             double[] stdPb86radCor7per = org.cirdles.ludwig.squid25.PbUTh_2.stdPb86radCor7per(
                     pb208_206RatioAndUnct[0], pb208_206Unct, pb207_206RatioAndUnct[0], pb207_206Unct,
-                    radPb86cor7[0], pb46cor7[0], std_76[0], sComm_64[0], sComm_74[0], sComm_84[0]);
+                    radPb86cor7[0], pb46cor7[0], std_76, sComm_64, sComm_74, sComm_84);
 
             retVal = new Object[][]{{stdPb86radCor7per[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
