@@ -33,6 +33,9 @@ import static org.cirdles.squid.parameters.util.RadDates.age208_232r;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L1033;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L859;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA230;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA232;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA234;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
@@ -113,11 +116,11 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface PRESENT_R238_235S = new ConstantNode(PRESENT_R238_235S_NAME, Squid3Constants.PRESENT_R238_235S);
         parameters.put(PRESENT_R238_235S.getName(), PRESENT_R238_235S);
 
-        ExpressionTreeInterface L859 = new ConstantNode("L859", 0.859);
-        parameters.put("L859", L859);
+        ExpressionTreeInterface L859exp = new ConstantNode(L859, 0.859);
+        parameters.put(L859, L859exp);
 
-        ExpressionTreeInterface L1033 = new ConstantNode("L1033", 1.033);
-        parameters.put("L1033", L1033);
+        ExpressionTreeInterface L1033exp = new ConstantNode(L1033, 1.033);
+        parameters.put(L1033, L1033exp);
 
         ExpressionTreeInterface extPErr = new ConstantNode(SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, 0.75);
         parameters.put(SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, extPErr);
@@ -129,7 +132,7 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
         String notes = "from Physical Constants model: " + physicalConstantsModel.getModelNameWithVersion();
-        Expression expressionslambda230 = buildExpression(LAMBDA_230.getName(),
+        Expression expressionslambda230 = buildExpression(LAMBDA230,
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_230.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda230.setParameterValue(true);
         expressionslambda230.setNotes(notes);
@@ -354,11 +357,11 @@ public abstract class BuiltInExpressionsFactory {
             // handles SecondaryParentPpmFromThU
             //String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
             Expression expressionPpmTh = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
-                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / L1033", true, false, false);
+                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + L1033, true, false, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
 
             Expression expressionPpmThS = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH_S,
-                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME_S + "\"] / L1033", false, true, false);
+                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME_S + "\"] / " + L1033, false, true, false);
             concentrationExpressionsOrdered.add(expressionPpmThS);
 
             if (!parentNuclide.contains("232")) {
@@ -1361,17 +1364,17 @@ public abstract class BuiltInExpressionsFactory {
 
         // ppm values of radiogenic Pb
         Expression expression4corrPPM206 = buildExpression("4-corr ppm 206*",
-                "[\"" + SQUID_TOTAL_206_238_NAME_S + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * L859 *\n"
+                "[\"" + SQUID_TOTAL_206_238_NAME_S + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * " + L859 + " *\n"
                 + " ( 1 - [\"204/206\"] * " + SCOMM_64_NAME + " )", false, true, false);
         samRadiogenicCols.add(expression4corrPPM206);
 
         Expression expression7corrPPM206 = buildExpression("7-corr ppm 206*",
-                "[\"" + SQUID_TOTAL_206_238_NAME_S + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * L859 *\n"
+                "[\"" + SQUID_TOTAL_206_238_NAME_S + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * " + L859 + " *\n"
                 + " ( 1 - [\"7-corr 204Pb/206Pb\"] * " + SCOMM_64_NAME + " )", false, true, false);
         samRadiogenicCols.add(expression7corrPPM206);
 
         Expression expression8corrPPM206 = buildExpression("8-corr ppm 206*",
-                "[\"" + SQUID_TOTAL_206_238_NAME_S + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * L859 *\n"
+                "[\"" + SQUID_TOTAL_206_238_NAME_S + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * " + L859 + " *\n"
                 + " ( 1 - [\"8-corr 204Pb/206Pb\"] * " + SCOMM_64_NAME + " )", false, true, false);
         samRadiogenicCols.add(expression8corrPPM206);
 
