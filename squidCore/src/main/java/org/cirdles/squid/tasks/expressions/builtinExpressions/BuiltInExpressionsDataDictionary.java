@@ -71,6 +71,12 @@ public class BuiltInExpressionsDataDictionary {
     public static final String STD_TH_PB_RATIO = "StdThPbRatio";
     public static final String STD_7_6 = "Std_76";
     public static final String STD_RAD_8_6_FACT = "StdRad86fact";
+    
+    // **********************  LAMBDAs *************************************
+    public static final String LAMBDA232 = "lambda232";
+    public static final String LAMBDA234 = "lambda234";
+    public static final String LAMBDA235 = "lambda235";
+    public static final String LAMBDA238 = "lambda238";
 
     public static final String R206_204B = "r206_204b";
     public static final String R207_204B = "r207_204b";
