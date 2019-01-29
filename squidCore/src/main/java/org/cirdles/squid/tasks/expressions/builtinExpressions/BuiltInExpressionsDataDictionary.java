@@ -22,7 +22,7 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
 public class BuiltInExpressionsDataDictionary {
 
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
-    public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "UncorrPb/Uconst";
+    public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "Uncorr 206Pb/238U Calib Const";
     public static final String SQUID_PRIMARY_UTH_EQN_NAME_TH = "UncorrPb/Thconst";
     // Squid2.5 Th/U equation (-3)
     public static final String SQUID_TH_U_EQN_NAME = "232Th/238U";
@@ -71,6 +71,18 @@ public class BuiltInExpressionsDataDictionary {
     public static final String STD_TH_PB_RATIO = "StdThPbRatio";
     public static final String STD_7_6 = "Std_76";
     public static final String STD_RAD_8_6_FACT = "StdRad86fact";
+    
+    // **********************  LAMBDAs *************************************
+    public static final String LAMBDA230 = "lambda230";
+    public static final String LAMBDA232 = "lambda232";
+    public static final String LAMBDA234 = "lambda234";
+    public static final String LAMBDA235 = "lambda235";
+    public static final String LAMBDA238 = "lambda238";
+    
+    // **********************  MISC *************************************
+    public static final String L859 = "L859";
+    public static final String L1033 = "L1033";
+
 
     public static final String R206_204B = "r206_204b";
     public static final String R207_204B = "r207_204b";

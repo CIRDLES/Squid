@@ -18,10 +18,12 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA232;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_64_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_84_NAME;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
@@ -47,12 +49,12 @@ public class Pb46cor8 extends Function {
     public Pb46cor8() {
 
         name = "pb46cor8";
-        argumentCount = 5;
+        argumentCount = 3;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb46cor8"}};
-        labelsForInputValues = new String[]{"208/206RatioAnd1\u03C3 abs","232Th/238U","208corr206Pb/238UAge, sComm_64, sComm_84"};
+        labelsForInputValues = new String[]{"208/206RatioAnd1\u03C3 abs","232Th/238U","208corr206Pb/238UAge"};
     }
 
     /**
@@ -80,17 +82,17 @@ public class Pb46cor8 extends Function {
             double[] pb208_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] thU = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] pb208corr206_238Age = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
-            double[] sComm_64 = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
-            double[] sComm_84 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
 
-            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_232.getName()).getValues()[0][0];
-            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
+            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_64_NAME).getValues()[0][0];
+            double sComm_84 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_84_NAME).getValues()[0][0];
+            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA232).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] pb46cor8 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor8(
                     pb208_206RatioAndUnct[0], 
                     thU[0], 
-                    sComm_64[0], 
-                    sComm_84[0], 
+                    sComm_64, 
+                    sComm_84, 
                     pb208corr206_238Age[0], lambda232, lambda238);
             retVal = new Object[][]{{pb46cor8[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {

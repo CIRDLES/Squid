@@ -63,6 +63,7 @@ import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotTeraWasserburg;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_U_PB;
 
 /**
  *
@@ -380,7 +381,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
                 correction + " " + calibrConstAgeBaseName + " Age",
-                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get("StdAgeUPb").getValues()[0][0],
+                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(STD_AGE_U_PB).getValues()[0][0],
                 this);//559.1 * 1e6);
 
         refreshPlot();
