@@ -411,23 +411,24 @@ public class TaskSquid25 implements Serializable {
         // misc edits
         if (retVal.matches("^.*(?i)corr\\S.*")) {
             if (!retVal.contains("corr.")) {
-                retVal = retVal.replace("corr", "corr ");
+                retVal = retVal.replace("corr", "cor_");
             }
-            retVal = retVal.replace("corr2", "corr 2");
+            retVal = retVal.replace("corr 2", "cor_2");
+            retVal = retVal.replace("corr2", "cor_2");
         }
         if (retVal.matches("^.*\\S(?i)age.*")) {
             retVal = retVal.replace("Age", " Age");
             retVal = retVal.replace("age", " Age");
         }
 
-        if (retVal.contains("\"4corr")) {
-            retVal = retVal.replace("\"4corr", "\"4-corr");
+        if (retVal.contains("\"4-cor")) {
+            retVal = retVal.replace("\"4-cor", "\"4cor");
         }
-        if (retVal.contains("\"7corr")) {
-            retVal = retVal.replace("\"7corr", "\"7-corr");
+        if (retVal.contains("\"7-corr")) {
+            retVal = retVal.replace("\"7-cor", "\"7cor");
         }
-        if (retVal.contains("\"8corr")) {
-            retVal = retVal.replace("\"8corr", "\"8-corr");
+        if (retVal.contains("\"8-corr")) {
+            retVal = retVal.replace("\"8-cor", "\"8cor");
         }
 
         return retVal;

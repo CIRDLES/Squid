@@ -63,6 +63,9 @@ import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotTeraWasserburg;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_U_PB;
 
 /**
@@ -148,9 +151,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
-        corr4_RadioButton.setUserData("4-corr");
-        corr7_RadioButton.setUserData("7-corr");
-        corr8_RadioButton.setUserData("8-corr");
+        corr4_RadioButton.setUserData(PB4CORR);
+        corr7_RadioButton.setUserData(PB7CORR);
+        corr8_RadioButton.setUserData(PB8CORR);
 
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
@@ -374,13 +377,13 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         // get details
         spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction
-                        + " " + calibrConstAgeBaseName + "calibr.const WM");
+                        + calibrConstAgeBaseName + "calibr.const WM");
         plot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
-                correction + " " + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
+                correction + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + " " + calibrConstAgeBaseName + " Age",
+                correction + calibrConstAgeBaseName + "_Age",
                 squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(STD_AGE_U_PB).getValues()[0][0],
                 this);//559.1 * 1e6);
 

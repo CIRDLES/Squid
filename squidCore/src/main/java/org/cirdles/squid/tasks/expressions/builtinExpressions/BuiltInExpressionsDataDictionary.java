@@ -60,14 +60,14 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R208_206B = "r208_206b";
 
     // ********************** COR PREFIX *********************************************
-    public static final String COR_RM = "-corr ";
-    public static final String PB4COR_RM = "4" + COR_RM;
-    public static final String PB7COR_RM = "7" + COR_RM;
-    public static final String PB8COR_RM = "8" + COR_RM;
+    public static final String COR_ = "cor_";
+    public static final String PB4CORR = "4" + COR_;
+    public static final String PB7CORR = "7" + COR_;
+    public static final String PB8CORR = "8" + COR_;
 
     // ********************** AGES *********************************************
-    public static final String PB4COR206_238AGE = PB4COR_RM + "206Pb/238U Age";
-    public static final String PB4COR208_232AGE = PB4COR_RM + "208Pb/232Th Age";
+    public static final String PB4COR206_238AGE = PB4CORR + "206Pb/238U_Age";
+    public static final String PB4COR208_232AGE = PB4CORR + "208Pb/232Th_Age";
 
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "Uncorr 206Pb/238U Calib Const";

@@ -33,10 +33,10 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 
 /**
  *
@@ -273,12 +273,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else {
             // perm2 and 4
             columnSpec[1] = "204corr";
-            columnSpec[6] = PB4COR_RM + SQUID_TH_U_EQN_NAME;
+            columnSpec[6] = PB4CORR + SQUID_TH_U_EQN_NAME;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[1] = "207corr";
-            columnSpec[6] = PB7COR_RM + SQUID_TH_U_EQN_NAME;
+            columnSpec[6] = PB7CORR + SQUID_TH_U_EQN_NAME;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
@@ -324,12 +324,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else {
             // perm2 and 4
             columnSpec[1] = "204corr";
-            columnSpec[6] = PB4COR_RM + SQUID_PPM_PARENT_EQN_NAME_TH;
+            columnSpec[6] = PB4CORR + SQUID_PPM_PARENT_EQN_NAME_TH;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[1] = "207corr";
-            columnSpec[6] = PB7COR_RM + SQUID_PPM_PARENT_EQN_NAME_TH;
+            columnSpec[6] = PB7CORR + SQUID_PPM_PARENT_EQN_NAME_TH;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
@@ -372,12 +372,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else {
             // perm2 and 4
             columnSpec[0] = "204corr";
-            columnSpec[6] = PB4COR_RM + OVER_COUNT_4_6_8;
+            columnSpec[6] = PB4CORR + OVER_COUNT_4_6_8;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
-            columnSpec[6] = PB7COR_RM + OVER_COUNT_4_6_8;
+            columnSpec[6] = PB7CORR + OVER_COUNT_4_6_8;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
@@ -420,12 +420,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else {
             // perm2 and 4
             columnSpec[0] = "204corr";
-            columnSpec[6] = PB4COR_RM + OVER_COUNTS_PERSEC_4_8;
+            columnSpec[6] = PB4CORR + OVER_COUNTS_PERSEC_4_8;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
-            columnSpec[6] = PB7COR_RM + OVER_COUNTS_PERSEC_4_8;
+            columnSpec[6] = PB7CORR + OVER_COUNTS_PERSEC_4_8;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
@@ -468,12 +468,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else {
             // perm2 and 4
             columnSpec[0] = "204corr";
-            columnSpec[6] = PB4COR_RM + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
+            columnSpec[6] = PB4CORR + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
-            columnSpec[6] = PB7COR_RM + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
+            columnSpec[6] = PB7CORR + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }

@@ -22,13 +22,13 @@ import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR_RM;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_76_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_86_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 
 /**
  *
@@ -57,7 +57,7 @@ public class Rad8corConcRho extends Function {
         labelsForOutputValues = new String[][]{{"rho"}};
         labelsForInputValues = new String[]{
             "Total 206/238, Total 206/238 1%Unct,"
-            + PB8COR_RM + "206*/238,"
+            + PB8CORR + "206*/238,"
             + "Total 208/232, Total 208/232 1%Unct, "
             + "Total 207/206, Total 207/206 1%Unct,"
             + "Total 208/206, Total 208/206 1%Unct,"

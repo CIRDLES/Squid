@@ -56,11 +56,9 @@ import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
@@ -115,6 +113,9 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 
 /**
  *
@@ -1058,36 +1059,36 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) {
-        String xCorr206238Name = "-corr " + SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM";
-        String xCorr208232Name = "-corr " + SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM";
+        String xCorr206238Name = COR_ + SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM";
+        String xCorr208232Name = COR_ + SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM";
         for (Expression listedExp : taskExpressionsOrdered) {
             if (listedExp.getName().compareToIgnoreCase("4" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4COR_RM + "206Pb/238Ucalibr.const\"], "
-                        + "[%\"" + PB4COR_RM + "206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4CORR + "206Pb/238Ucalibr.const\"], "
+                        + "[%\"" + PB4CORR + "206Pb/238Ucalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("7" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7COR_RM + "206Pb/238Ucalibr.const\"], "
-                        + "[%\"" + PB7COR_RM + "206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7CORR + "206Pb/238Ucalibr.const\"], "
+                        + "[%\"" + PB7CORR + "206Pb/238Ucalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("8" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB8COR_RM + "206Pb/238Ucalibr.const\"], "
-                        + "[%\"" + PB8COR_RM + "206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB8CORR + "206Pb/238Ucalibr.const\"], "
+                        + "[%\"" + PB8CORR + "206Pb/238Ucalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("4" + xCorr208232Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4COR_RM + "208Pb/232Thcalibr.const\"], "
-                        + "[%\"" + PB4COR_RM + "208Pb/232Thcalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4CORR + "208Pb/232Thcalibr.const\"], "
+                        + "[%\"" + PB4CORR + "208Pb/232Thcalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("7" + xCorr208232Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7COR_RM + "208Pb/232Thcalibr.const\"], "
-                        + "[%\"" + PB7COR_RM + "208Pb/232Thcalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7CORR + "208Pb/232Thcalibr.const\"], "
+                        + "[%\"" + PB7CORR + "208Pb/232Thcalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);

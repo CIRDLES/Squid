@@ -33,13 +33,13 @@ public class TopsoilDataFactory {
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
 
         // default is for reference materials
-        String ratioBase75 = " 207*/235";
-        String ratioBase68 = " 206*/238";
-        String errCorr = " errcorr";
+        String ratioBase75 = "207*/235";
+        String ratioBase68 = "206*/238";
+        String errCorr = "errcorr";
         if (isUnknown) {
-            ratioBase75 = " 207*/235S";
-            ratioBase68 = " 206*/238S";
-            errCorr = " errcorrS";
+            ratioBase75 = "207*/235S";
+            ratioBase68 = "206*/238S";
+            errCorr = "errcorrS";
         }
 
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase75, ratioBase68, errCorr);
