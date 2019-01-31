@@ -17,6 +17,7 @@ package org.cirdles.squid.constants;
 
 import java.util.HashMap;
 import java.util.Map;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_RM;
 
 /**
  *
@@ -136,7 +137,7 @@ public final class Squid3Constants {
         }
 
         public String getIsotopeCorrectionPrefixString() {
-            return isotope.substring(2, 3) + "-corr ";
+            return isotope.substring(2, 3) + COR_RM;
         }
     }
 

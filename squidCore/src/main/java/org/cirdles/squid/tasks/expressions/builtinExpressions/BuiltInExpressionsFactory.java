@@ -42,6 +42,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206_204B;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_204B;
@@ -259,13 +262,13 @@ public abstract class BuiltInExpressionsFactory {
         notes = "Calculated from Reference Material model: " + referenceMaterialModel.getModelNameWithVersion();
 
         Expression expressionStdUPbRatio = buildExpression(STD_U_PB_RATIO,
-                "EXP(" + LAMBDA238 + " * " + STD_AGE_U_PB + ")-1", true, true, true);
+                "EXP(" + LAMBDA238 + "*" + STD_AGE_U_PB + ")-1", true, true, true);
         expressionStdUPbRatio.setReferenceMaterialValue(true);
         expressionStdUPbRatio.setNotes(notes);
         referenceMaterialValues.add(expressionStdUPbRatio);
 
         Expression expressionStdThPbRatio = buildExpression(STD_TH_PB_RATIO,
-                "EXP(" + LAMBDA232 + " * " + STD_AGE_TH_PB + ")-1", true, true, true);
+                "EXP(" + LAMBDA232 + "*" + STD_AGE_TH_PB + ")-1", true, true, true);
         expressionStdThPbRatio.setReferenceMaterialValue(true);
         expressionStdThPbRatio.setNotes(notes);
         referenceMaterialValues.add(expressionStdThPbRatio);
@@ -277,7 +280,7 @@ public abstract class BuiltInExpressionsFactory {
         referenceMaterialValues.add(expressionStd_76);
 
         Expression expressionStdRad86fact = buildExpression(STD_RAD_8_6_FACT,
-                "" + STD_TH_PB_RATIO + " / " + STD_U_PB_RATIO + "", true, true, true);
+                "" + STD_TH_PB_RATIO + "/" + STD_U_PB_RATIO + "", true, true, true);
         expressionStdRad86fact.setReferenceMaterialValue(true);
         expressionStdRad86fact.setNotes(notes);
         referenceMaterialValues.add(expressionStdRad86fact);
@@ -349,7 +352,7 @@ public abstract class BuiltInExpressionsFactory {
 
         // ppmU calcs belong to both cases of isDirectAltPD
         Expression expressionPpmU = buildExpression(SQUID_PPM_PARENT_EQN_NAME_U,
-                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"] / [\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"] * " + STD_U_CONC_PPM, true, true, false);
+                "[\"" + SQUID_PPM_PARENT_EQN_NAME + "\"]/[\"" + SQUID_MEAN_PPM_PARENT_NAME + "\"]*" + STD_U_CONC_PPM, true, true, false);
         concentrationExpressionsOrdered.add(expressionPpmU);
 
         if (!isDirectAltPD) {
@@ -357,11 +360,11 @@ public abstract class BuiltInExpressionsFactory {
             // handles SecondaryParentPpmFromThU
             //String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
             Expression expressionPpmTh = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH,
-                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"] / " + L1033, true, false, false);
+                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"]*[\"" + SQUID_TH_U_EQN_NAME + "\"]/" + L1033, true, false, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
 
             Expression expressionPpmThS = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH_S,
-                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * [\"" + SQUID_TH_U_EQN_NAME_S + "\"] / " + L1033, false, true, false);
+                    "[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"]*[\"" + SQUID_TH_U_EQN_NAME_S + "\"]/" + L1033, false, true, false);
             concentrationExpressionsOrdered.add(expressionPpmThS);
 
             if (!parentNuclide.contains("232")) {
@@ -382,10 +385,10 @@ public abstract class BuiltInExpressionsFactory {
 
             // math for ThUfromA1A2 follows here
             // for 204Pb ref material
-            String exp238 = "( EXP ( " + LAMBDA238 + " * [\"4-corr 206Pb/238U Age\"] ) - 1 )";
-            String exp232 = "( EXP ( " + LAMBDA232 + " * [\"4-corr 208Pb/232Th Age\"] ) - 1 )";
+            String exp238 = "(EXP(" + LAMBDA238 + "*[\"" + PB4COR206_238AGE + "\"])-1)";
+            String exp232 = "(EXP(" + LAMBDA232 + "*[\"" + PB4COR208_232AGE + "\"])-1)";
 
-            Expression expression4corrSQUID_TH_U_EQN_NAME = buildExpression("4-corr " + SQUID_TH_U_EQN_NAME,
+            Expression expression4corrSQUID_TH_U_EQN_NAME = buildExpression(PB4COR_RM + SQUID_TH_U_EQN_NAME,
                     "ValueModel("
                     + "[\"4-corr 208Pb*/206Pb*\"] * " + exp238 + " / " + exp232 + ","
                     + "SQRT( [%\"4-corr 208Pb*/206Pb*\"]^2 + \n"
@@ -394,8 +397,8 @@ public abstract class BuiltInExpressionsFactory {
                     + "false)", true, false, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAME);
 
-            Expression expression4corrPpmTh = buildExpression("4-corr " + SQUID_PPM_PARENT_EQN_NAME_TH,
-                    "[\"4-corr " + SQUID_TH_U_EQN_NAME + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * 0.9678", true, false, false);
+            Expression expression4corrPpmTh = buildExpression(PB4COR_RM + SQUID_PPM_PARENT_EQN_NAME_TH,
+                    "[\"" + PB4COR_RM + SQUID_TH_U_EQN_NAME + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * 0.9678", true, false, false);
             concentrationExpressionsOrdered.add(expression4corrPpmTh);
 
             // for 207Pb ref material
@@ -419,11 +422,11 @@ public abstract class BuiltInExpressionsFactory {
                     "[\"" + SQUID_TH_U_EQN_NAME_S + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * 0.9678", false, true, false);
             concentrationExpressionsOrdered.add(expressionPpmThS);
 
-            Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression("4-corr " + SQUID_TH_U_EQN_NAME_S,
+            Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression(PB4COR_RM + SQUID_TH_U_EQN_NAME_S,
                     "ValueModel("
-                    + "[\"208/206\"] * [\"4-corr " + SQUID_TOTAL_206_238_NAME_S + "\"] / [\"4-corr " + SQUID_TOTAL_208_232_NAME_S + "\"],"
-                    + "SQRT( [%\"208/206\"]^2 + [%\"4-corr " + SQUID_TOTAL_206_238_NAME_S + "\"]^2 + \n"
-                    + "[%\"4-corr " + SQUID_TOTAL_208_232_NAME_S + "\"]^2 ),"
+                    + "[\"208/206\"] * [\"" + PB4COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"] / [\"" + PB4COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"],"
+                    + "SQRT( [%\"208/206\"]^2 + [%\"" + PB4COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"]^2 + \n"
+                    + "[%\"" + PB4COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"]^2 ),"
                     + "false)", false, true, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAMEs);
 
@@ -514,18 +517,18 @@ public abstract class BuiltInExpressionsFactory {
 
         } else {
             // isDirectAltPD true
-            Expression expression4CorrOverCount4_6_8 = buildExpression("4-corr " + OVER_COUNT_4_6_8,
-                    "( [\"208/206\"] - " + STD_RAD_8_6_FACT + " * [\"4-corr " + SQUID_TH_U_EQN_NAME + "\"] ) "
-                    + "/ (" + SCOMM_84_NAME + " - " + STD_RAD_8_6_FACT + " * [\"4-corr " + SQUID_TH_U_EQN_NAME + "\"] * " + SCOMM_64_NAME + " )", true, false, false);
+            Expression expression4CorrOverCount4_6_8 = buildExpression(PB4COR_RM + OVER_COUNT_4_6_8,
+                    "( [\"208/206\"] - " + STD_RAD_8_6_FACT + " * [\"" + PB4COR_RM + SQUID_TH_U_EQN_NAME + "\"] ) "
+                    + "/ (" + SCOMM_84_NAME + " - " + STD_RAD_8_6_FACT + " * [\"" + PB4COR_RM + SQUID_TH_U_EQN_NAME + "\"] * " + SCOMM_64_NAME + " )", true, false, false);
             overCountExpressionsOrdered.add(expression4CorrOverCount4_6_8);
 
-            Expression expression4CorrOverCountPerSec4_8 = buildExpression("4-corr " + OVER_COUNTS_PERSEC_4_8,
-                    "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"4-corr " + OVER_COUNT_4_6_8 + "\"]"
+            Expression expression4CorrOverCountPerSec4_8 = buildExpression(PB4COR_RM + OVER_COUNTS_PERSEC_4_8,
+                    "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"" + PB4COR_RM + OVER_COUNT_4_6_8 + "\"]"
                     + " * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
             overCountExpressionsOrdered.add(expression4CorrOverCountPerSec4_8);
 
-            Expression expression4CorrOverCount8CorrCalib = buildExpression("4-corr " + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
-                    "100 * ( (1 - " + SCOMM_64_NAME + " * [\"204/206\"]) / (1 - " + SCOMM_64_NAME + " * [\"4-corr " + OVER_COUNT_4_6_8 + "\"]) - 1 ) ", true, false, false);
+            Expression expression4CorrOverCount8CorrCalib = buildExpression("" + PB4COR_RM + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
+                    "100 * ( (1 - " + SCOMM_64_NAME + " * [\"204/206\"]) / (1 - " + SCOMM_64_NAME + " * [\"" + PB4COR_RM + OVER_COUNT_4_6_8 + "\"]) - 1 ) ", true, false, false);
             overCountExpressionsOrdered.add(expression4CorrOverCount8CorrCalib);
 
             Expression expression7CorrOverCount4_6_8 = buildExpression("7-corr " + OVER_COUNT_4_6_8,
@@ -696,7 +699,7 @@ public abstract class BuiltInExpressionsFactory {
         meansAndAgesForRefMaterials.add(expression4corr206Pb238UcalibrconstWM);
 
         // age calc
-        Expression expression4corr206Pb238UAge = buildExpression("4-corr 206Pb/238U Age",
+        Expression expression4corr206Pb238UAge = buildExpression(PB4COR206_238AGE,
                 "ValueModel("
                 + "LN( 1.0 + [\"4-corr 206Pb/238Ucalibr.const\"] / [\"4-corr 206Pb/238Ucalibr.const WM\"][0] * " + STD_U_PB_RATIO + " ) / " + LAMBDA238 + ","
                 + "[%\"4-corr 206Pb/238Ucalibr.const\"] / 100 * ( EXP(" + LAMBDA238 + " * \n"
@@ -811,7 +814,7 @@ public abstract class BuiltInExpressionsFactory {
         meansAndAgesForRefMaterials.add(expression4corr208Pb232ThcalibrconstWM);
 
         // age calc
-        Expression expression4corr208Pb232ThAge = buildExpression("4-corr 208Pb/232Th Age",
+        Expression expression4corr208Pb232ThAge = buildExpression(PB4COR208_232AGE,
                 "ValueModel("
                 + "LN( 1.0 + [\"4-corr 208Pb/232Thcalibr.const\"] / [\"4-corr 208Pb/232Thcalibr.const WM\"][0] * " + STD_TH_PB_RATIO + " ) / " + LAMBDA232 + ","
                 + "[%\"4-corr 208Pb/232Thcalibr.const\"] / 100 * ( EXP(" + LAMBDA232 + " * "
@@ -946,7 +949,7 @@ public abstract class BuiltInExpressionsFactory {
         // Case Perm1 and Perm2, i.e. has uranium as parent nuclide ***************************
         if (!parentNuclide.contains("232")) {
             // see email from Bodorkos 20 July 2018 [\"UncorrPb/Uconst\"]
-            Expression expression4corrTotal206Pb238U = buildExpression("4-corr " + SQUID_TOTAL_206_238_NAME,
+            Expression expression4corrTotal206Pb238U = buildExpression(PB4COR_RM + SQUID_TOTAL_206_238_NAME,
                     "ValueModel("
                     + "[\"" + SQUID_PRIMARY_UTH_EQN_NAME_U + "\"] / [\"4-corr 206Pb/238Ucalibr.const WM\"][0] * " + STD_U_PB_RATIO + ","
                     + "SQRT([%\"" + SQUID_PRIMARY_UTH_EQN_NAME_U + "\"]^2 + [\"4-corr ExtPerrU\"] ^ 2),"
@@ -970,7 +973,7 @@ public abstract class BuiltInExpressionsFactory {
                 stdRadiogenicCols.add(expression8corrTotal206Pb238U);
 
                 // special case
-                Expression expression4corrTotal208Pb232Th = buildExpression("4-corr " + SQUID_TOTAL_208_232_NAME,
+                Expression expression4corrTotal208Pb232Th = buildExpression(PB4COR_RM + SQUID_TOTAL_208_232_NAME,
                         "ValueModel("
                         + "[\"" + SQUID_TOTAL_206_238_NAME + "\"] * [\"208/206\"] / [\"" + SQUID_TH_U_EQN_NAME + "\"],"
                         + "SQRT([%\"208/206\"]^2 + [%\"" + SQUID_TOTAL_206_238_NAME + "\"]^2 + [%\"" + SQUID_TH_U_EQN_NAME + "\"]^2),"
@@ -993,7 +996,7 @@ public abstract class BuiltInExpressionsFactory {
 
             } else {
                 // perm2 only
-                Expression expression4corrTotal208Pb232Th = buildExpression("4-corr " + SQUID_TOTAL_208_232_NAME,
+                Expression expression4corrTotal208Pb232Th = buildExpression(PB4COR_RM + SQUID_TOTAL_208_232_NAME,
                         "ValueModel("
                         + "[\"" + SQUID_PRIMARY_UTH_EQN_NAME_TH + "\"] / [\"4-corr 208Pb/232Thcalibr.const WM\"][0] * " + STD_TH_PB_RATIO + ","
                         + "SQRT([%\"" + SQUID_PRIMARY_UTH_EQN_NAME_TH + "\"]^2 + [\"4-corr ExtPerrT\"] ^ 2),"
@@ -1009,7 +1012,7 @@ public abstract class BuiltInExpressionsFactory {
             }
         } else {
             // perm3 and perm4
-            Expression expression4corrTotal208Pb232Th = buildExpression("4-corr " + SQUID_TOTAL_208_232_NAME,
+            Expression expression4corrTotal208Pb232Th = buildExpression(PB4COR_RM + SQUID_TOTAL_208_232_NAME,
                     "ValueModel("
                     + "[\"" + SQUID_PRIMARY_UTH_EQN_NAME_TH + "\"] / [\"4-corr 208Pb/232Thcalibr.const WM\"][0] * " + STD_TH_PB_RATIO + ","
                     + "SQRT([%\"" + SQUID_PRIMARY_UTH_EQN_NAME_TH + "\"]^2 + [\"4-corr ExtPerrT\"] ^ 2),"
@@ -1025,7 +1028,7 @@ public abstract class BuiltInExpressionsFactory {
 
             // perm3 special case - needs confirmation
             if (!isDirectAltPD) {
-                Expression expression4corrTotal238U206Pb = buildExpression("4-corr " + SQUID_TOTAL_206_238_NAME,
+                Expression expression4corrTotal238U206Pb = buildExpression(PB4COR_RM + SQUID_TOTAL_206_238_NAME,
                         "ValueModel("
                         + "[\"" + SQUID_TOTAL_208_232_NAME + "\"] / [\"208/206\"] * [\"" + SQUID_TH_U_EQN_NAME + "\"],"
                         + "SQRT( [%\"208/206\"]^2 + [%\"" + SQUID_TOTAL_208_232_NAME + "\"]^2 + \n"
@@ -1046,7 +1049,7 @@ public abstract class BuiltInExpressionsFactory {
         }
         // perm4
         if (parentNuclide.contains("232") && isDirectAltPD) {
-            Expression expression4corrTotal206Pb238U = buildExpression("4-corr " + SQUID_TOTAL_206_238_NAME,
+            Expression expression4corrTotal206Pb238U = buildExpression(PB4COR_RM + SQUID_TOTAL_206_238_NAME,
                     "ValueModel("
                     + "[\"" + SQUID_PRIMARY_UTH_EQN_NAME_U + "\"] / [\"4-corr 206Pb/238Ucalibr.const WM\"][0] * " + STD_U_PB_RATIO + ","
                     + "SQRT([%\"" + SQUID_PRIMARY_UTH_EQN_NAME_U + "\"]^2 + [\"4-corr ExtPerrU\"] ^ 2),"
@@ -1232,7 +1235,7 @@ public abstract class BuiltInExpressionsFactory {
         if (!parentNuclide.contains("232")) {
             // this is same as for RM above, so add "S" for Sample
             // see email from Bodorkos 20 July 2018 [\"UncorrPb/Uconst\"]
-            Expression expression4corrTotal206Pb238US = buildExpression("4-corr " + SQUID_TOTAL_206_238_NAME_S,
+            Expression expression4corrTotal206Pb238US = buildExpression(PB4COR_RM + SQUID_TOTAL_206_238_NAME_S,
                     "ValueModel("
                     + "[\"" + SQUID_PRIMARY_UTH_EQN_NAME_U + "\"] / [\"4-corr 206Pb/238Ucalibr.const WM\"][0] * " + STD_U_PB_RATIO + ","
                     + "SQRT([%\"" + SQUID_PRIMARY_UTH_EQN_NAME_U + "\"]^2 + [\"4-corr ExtPerrU\"] ^ 2),"
@@ -1258,7 +1261,7 @@ public abstract class BuiltInExpressionsFactory {
                 samRadiogenicCols.add(expression8corrTotal206Pb238US);
 
                 // special case
-                Expression expression4corrTotal208Pb232ThS = buildExpression("4-corr " + SQUID_TOTAL_208_232_NAME_S,
+                Expression expression4corrTotal208Pb232ThS = buildExpression(PB4COR_RM + SQUID_TOTAL_208_232_NAME_S,
                         "ValueModel("
                         + "[\"" + SQUID_TOTAL_206_238_NAME_S + "\"] * [\"208/206\"] / [\"" + SQUID_TH_U_EQN_NAME_S + "\"],"
                         + "SQRT([%\"208/206\"]^2 + [%\"" + SQUID_TOTAL_206_238_NAME_S + "\"]^2 + [%\"" + SQUID_TH_U_EQN_NAME_S + "\"]^2),"
@@ -1280,7 +1283,7 @@ public abstract class BuiltInExpressionsFactory {
                 samRadiogenicCols.add(expression8corrTotal208Pb232ThS);
             } else {
                 // perm2
-                Expression expression4corrTotal208Pb232ThS = buildExpression("4-corr " + SQUID_TOTAL_208_232_NAME_S,
+                Expression expression4corrTotal208Pb232ThS = buildExpression(PB4COR_RM + SQUID_TOTAL_208_232_NAME_S,
                         "ValueModel("
                         + "[\"" + SQUID_PRIMARY_UTH_EQN_NAME_TH + "\"] / [\"4-corr 208Pb/232Thcalibr.const WM\"][0] * " + STD_TH_PB_RATIO + ","
                         + "SQRT([%\"" + SQUID_PRIMARY_UTH_EQN_NAME_TH + "\"]^2 + [\"4-corr ExtPerrT\"] ^ 2),"
@@ -1296,7 +1299,7 @@ public abstract class BuiltInExpressionsFactory {
             }
         } else {
             // perm3 and perm4
-            Expression expression4corrTotal208Pb232ThS = buildExpression("4-corr " + SQUID_TOTAL_208_232_NAME_S,
+            Expression expression4corrTotal208Pb232ThS = buildExpression(PB4COR_RM + SQUID_TOTAL_208_232_NAME_S,
                     "ValueModel("
                     + "[\"" + SQUID_PRIMARY_UTH_EQN_NAME_TH + "\"] / [\"4-corr 208Pb/232Thcalibr.const WM\"][0] * " + STD_TH_PB_RATIO + ","
                     + "SQRT([%\"" + SQUID_PRIMARY_UTH_EQN_NAME_TH + "\"]^2 + [\"4-corr ExtPerrT\"] ^ 2),"
@@ -1312,7 +1315,7 @@ public abstract class BuiltInExpressionsFactory {
 
             // perm3 special case - needs confirmation
             if (!isDirectAltPD) {
-                Expression expression4corrTotal238U206PbS = buildExpression("4-corr " + SQUID_TOTAL_206_238_NAME_S,
+                Expression expression4corrTotal238U206PbS = buildExpression(PB4COR_RM + SQUID_TOTAL_206_238_NAME_S,
                         "ValueModel("
                         + "[\"" + SQUID_TOTAL_208_232_NAME_S + "\"] / [\"208/206\"] * [\"" + SQUID_TH_U_EQN_NAME_S + "\"],"
                         + "SQRT( [%\"208/206\"]^2 + [%\"" + SQUID_TOTAL_208_232_NAME_S + "\"]^2 + \n"
@@ -1333,7 +1336,7 @@ public abstract class BuiltInExpressionsFactory {
         // perm4
         if (parentNuclide.contains("232") && isDirectAltPD) {
             // this is same as for RM above, so add "S" for Sample
-            Expression expression4corrTotal206Pb238US = buildExpression("4-corr " + SQUID_TOTAL_206_238_NAME_S,
+            Expression expression4corrTotal206Pb238US = buildExpression(PB4COR_RM + SQUID_TOTAL_206_238_NAME_S,
                     "ValueModel("
                     + "[\"" + SQUID_PRIMARY_UTH_EQN_NAME_U + "\"] / [\"4-corr 206Pb/238Ucalibr.const WM\"][0] * " + STD_U_PB_RATIO + ","
                     + "SQRT([%\"" + SQUID_PRIMARY_UTH_EQN_NAME_U + "\"]^2 + [\"4-corr ExtPerrU\"] ^ 2),"

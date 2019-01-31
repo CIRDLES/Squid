@@ -89,4 +89,12 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R207_206B = "r207_206b";
     public static final String R208_204B = "r208_204b";
     public static final String R208_206B = "r208_206b";
+        
+    // ********************** COR PREFIX *********************************************
+    public static final String COR_RM = "-corr ";
+    public static final String PB4COR_RM = "4" + COR_RM;
+    
+        // ********************** AGES *********************************************
+    public static final String PB4COR206_238AGE = PB4COR_RM + "206Pb/238U Age";
+    public static final String PB4COR208_232AGE = PB4COR_RM + "208Pb/232Th Age";
 }

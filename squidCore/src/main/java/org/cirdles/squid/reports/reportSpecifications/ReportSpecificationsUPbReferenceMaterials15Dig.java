@@ -19,6 +19,9 @@ package org.cirdles.squid.reports.reportSpecifications;
 
 import java.util.HashMap;
 import java.util.Map;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
@@ -97,19 +100,19 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"4-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206Pb/238Ucalibr.const", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"4-corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206Pb/238U Age", "ABS",
+        {"4-corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR206_238AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb/232Thcalibr.const", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"4-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb/232Th Age", "ABS",
+        {"4-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR208_232AGE, "ABS",
             "", "true", "false", "4", "true", "", "false", "false"
         },
-        {"4-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr " + SQUID_TOTAL_206_238_NAME, "PCT",
+        {"4-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + SQUID_TOTAL_206_238_NAME, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"4-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr " + SQUID_TOTAL_208_232_NAME, "PCT",
+        {"4-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + SQUID_TOTAL_208_232_NAME, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com206", "",
