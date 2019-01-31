@@ -97,13 +97,13 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      *
      */
     public static final String[][] ReportCategory_204PbCorrected = new String[][]{
-        {"4-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206Pb/238Ucalibr.const", "PCT",
+        {"4-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "206Pb/238Ucalibr.const", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR206_238AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"4-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb/232Thcalibr.const", "PCT",
+        {"4-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "208Pb/232Thcalibr.const", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR208_232AGE, "ABS",
@@ -115,28 +115,28 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"4-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + SQUID_TOTAL_208_232_NAME, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com206", "",
+        {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "%com206", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr %com208", "",
+        {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "%com208", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 208Pb*/206Pb*", "PCT",
+        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "208Pb*/206Pb*", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"4-corr", "207Pb", "206Pb", "age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207Pb/206Pb age", "ABS",
+        {"4-corr", "207Pb", "206Pb", "age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "207Pb/206Pb age", "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "4-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207Pb/206Pb", "PCT",
+        {"", "4-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "207Pb/206Pb", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "4-corr", "207Pb", "/235U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 207*/235", "PCT",
+        {"", "4-corr", "207Pb", "/235U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "207*/235", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "4-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr 206*/238", "PCT",
+        {"", "4-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "206*/238", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "4-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "4-corr errcorr", "",
+        {"", "4-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_RM + "errcorr", "",
             "", "true", "false", "15", "", "", "false", "false"
         }
     };
