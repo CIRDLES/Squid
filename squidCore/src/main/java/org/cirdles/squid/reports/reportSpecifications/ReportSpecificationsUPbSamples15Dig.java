@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
@@ -135,22 +136,22 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
      *
      */
     public static final String[][] ReportCategory_207PbCorrected = new String[][]{
-        {"", "7-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 204Pb/206Pb", "",
+        {"", "7-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "204Pb/206Pb", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com206S", "",
+        {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "%com206S", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com208S", "",
+        {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "%com208S", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb*/206Pb*S", "PCT",
+        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "208Pb*/206Pb*S", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "7-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr ppm 206*", "",
+        {"", "7-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "ppm 206*", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "7-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr ppm 208*", "",
+        {"", "7-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "ppm 208*", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
         {"207corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "207corr 206Pb/238U Age", "ABS",
@@ -159,10 +160,10 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"207corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "207corr 208Pb/232Th Age", "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238S", "PCT",
+        {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "206*/238S", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208*/232S", "PCT",
+        {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "208*/232S", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         }
     };

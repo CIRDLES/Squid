@@ -59,6 +59,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
@@ -1066,8 +1067,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("7" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"7-corr 206Pb/238Ucalibr.const\"], "
-                        + "[%\"7-corr 206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7COR_RM + "206Pb/238Ucalibr.const\"], "
+                        + "[%\"" + PB7COR_RM + "206Pb/238Ucalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
@@ -1084,8 +1085,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("7" + xCorr208232Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"7-corr 208Pb/232Thcalibr.const\"], "
-                        + "[%\"7-corr 208Pb/232Thcalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7COR_RM + "208Pb/232Thcalibr.const\"], "
+                        + "[%\"" + PB7COR_RM + "208Pb/232Thcalibr.const\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);

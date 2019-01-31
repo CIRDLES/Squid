@@ -93,6 +93,7 @@ public class BuiltInExpressionsDataDictionary {
     // ********************** COR PREFIX *********************************************
     public static final String COR_RM = "-corr ";
     public static final String PB4COR_RM = "4" + COR_RM;
+    public static final String PB7COR_RM = "7" + COR_RM;
     
         // ********************** AGES *********************************************
     public static final String PB4COR206_238AGE = PB4COR_RM + "206Pb/238U Age";

@@ -34,6 +34,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 
@@ -277,7 +278,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             colIndex++;
 
             columnSpec[1] = "207corr";
-            columnSpec[6] = "7-corr " + SQUID_TH_U_EQN_NAME;
+            columnSpec[6] = PB7COR_RM + SQUID_TH_U_EQN_NAME;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
@@ -328,7 +329,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             colIndex++;
 
             columnSpec[1] = "207corr";
-            columnSpec[6] = "7-corr " + SQUID_PPM_PARENT_EQN_NAME_TH;
+            columnSpec[6] = PB7COR_RM + SQUID_PPM_PARENT_EQN_NAME_TH;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
@@ -376,7 +377,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             colIndex++;
 
             columnSpec[0] = "207corr";
-            columnSpec[6] = "7-corr " + OVER_COUNT_4_6_8;
+            columnSpec[6] = PB7COR_RM + OVER_COUNT_4_6_8;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
@@ -424,7 +425,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             colIndex++;
 
             columnSpec[0] = "207corr";
-            columnSpec[6] = "7-corr " + OVER_COUNTS_PERSEC_4_8;
+            columnSpec[6] = PB7COR_RM + OVER_COUNTS_PERSEC_4_8;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
@@ -472,7 +473,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             colIndex++;
 
             columnSpec[0] = "207corr";
-            columnSpec[6] = "7-corr " + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
+            columnSpec[6] = PB7COR_RM + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }

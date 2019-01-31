@@ -22,6 +22,7 @@ import java.util.Map;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
@@ -77,7 +78,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "204", "/206", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "<OVER_COUNT_4_6_8>", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr Primary calib const. delta%", "",
+        {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "Primary calib const. delta%", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
         {"8-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "<CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA>", "",
@@ -148,34 +149,34 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      *
      */
     public static final String[][] ReportCategory_207PbCorrected = new String[][]{
-        {"7-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206Pb/238Ucalibr.const", "PCT",
+        {"7-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "206Pb/238Ucalibr.const", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"7-corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206Pb/238U Age", "ABS",
+        {"7-corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "206Pb/238U Age", "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"7-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb/232Thcalibr.const", "PCT",
+        {"7-corr", "208Pb", "/232Th", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "208Pb/232Thcalibr.const", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"7-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb/232Th Age", "ABS",
+        {"7-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "208Pb/232Th Age", "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"7-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr " + SQUID_TOTAL_206_238_NAME, "PCT",
+        {"7-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + SQUID_TOTAL_206_238_NAME, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"7-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr " + SQUID_TOTAL_208_232_NAME, "PCT",
+        {"7-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + SQUID_TOTAL_208_232_NAME, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com206", "",
+        {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "%com206", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr %com208", "",
+        {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "%com208", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 208Pb*/206Pb*", "PCT",
+        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "208Pb*/206Pb*", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "7-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "7-corr 206*/238", "PCT",
+        {"", "7-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR_RM + "206*/238", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         }
     };
