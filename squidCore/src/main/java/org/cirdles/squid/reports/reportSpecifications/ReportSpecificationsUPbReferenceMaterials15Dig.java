@@ -23,6 +23,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
@@ -189,31 +190,31 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      *
      */
     public static final String[][] ReportCategory_208PbCorrected = new String[][]{
-        {"8-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206Pb/238Ucalibr.const", "PCT",
+        {"8-corr", "206Pb", "/238U", "calCon", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "206Pb/238Ucalibr.const", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206Pb/238U Age", "ABS",
+        {"", "", "Age", "", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "206Pb/238U Age", "ABS",
             "", "true", "true", "15", "true", "", "false", "false"
         },
-        {"8-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr " + SQUID_TOTAL_206_238_NAME, "PCT",
+        {"8-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + SQUID_TOTAL_206_238_NAME, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr %com206", "",
+        {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "%com206", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"8-corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207Pb/206Pb Age", "ABS",
+        {"8-corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "207Pb/206Pb Age", "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "8-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*", "PCT",
+        {"", "8-corr", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "207*/206*", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "8-corr", "207Pb", "/235U", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/235", "PCT",
+        {"", "8-corr", "207Pb", "/235U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "207*/235", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238", "PCT",
+        {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "206*/238", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "8-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr errcorr", "",
+        {"", "8-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "errcorr", "",
             "", "true", "false", "15", "", "", "false", "false"
         }
     };

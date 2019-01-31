@@ -22,6 +22,7 @@ import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR_RM;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
@@ -61,7 +62,7 @@ public class Rad8corPb7U5WithErr extends Function {
         labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}};
         labelsForInputValues = new String[]{
             "Total 206/238, Total 206/238 1\u03C3 %,"
-            + "8-corr 206*/238,"
+            + PB8COR_RM + "206*/238,"
             + "TotPb7U5,"
             + "Total 208/232, Total 208/232 1\u03C3 %, "
             + "Total 207/206, Total 207/206 1\u03C3 %,"

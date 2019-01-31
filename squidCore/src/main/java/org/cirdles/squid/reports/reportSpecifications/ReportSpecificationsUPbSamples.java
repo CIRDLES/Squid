@@ -22,6 +22,7 @@ import java.util.Map;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
@@ -177,13 +178,13 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      *
      */
     public static final String[][] ReportCategory_208PbCorrected = new String[][]{
-        {"", "8-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 204Pb/206Pb", "",
+        {"", "8-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "204Pb/206Pb", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr %com206S", "",
+        {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "%com206S", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "8-corr", "ppm", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr ppm 206*", "",
+        {"", "8-corr", "ppm", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "ppm 206*", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
         {"208corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "208corr 206Pb/238U Age", "ABS",
@@ -195,16 +196,16 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", EXP_8CORR_238_206_STAR, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/206*S", "PCT",
+        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "207*/206*S", "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 207*/235S", "PCT",
+        {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "207*/235S", "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr 206*/238S", "PCT",
+        {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "206*/238S", "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", "8-corr errcorrS", "",
+        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR_RM + "errcorrS", "",
             "", "true", "false", "6", "", "", "false", "false"
         }
     };

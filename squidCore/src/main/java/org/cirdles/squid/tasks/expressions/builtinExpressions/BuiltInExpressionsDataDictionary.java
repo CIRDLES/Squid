@@ -21,6 +21,54 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
  */
 public class BuiltInExpressionsDataDictionary {
 
+    // **********************  SPECIAL CONSTANTS ******************************
+    public static final String PRESENT_R238_235S_NAME = "r238_235s";
+
+    // **********************  COMMON LEAD *************************************
+    public static final String SCOMM_64_NAME = "sComm_64";
+    public static final String SCOMM_74_NAME = "sComm_74";
+    public static final String SCOMM_84_NAME = "sComm_84";
+    public static final String SCOMM_76_NAME = "sComm_76";
+    public static final String SCOMM_86_NAME = "sComm_86";
+    public static final String SCOMM_68_NAME = "sComm_68";
+
+    public static final String STD_U_CONC_PPM = "StdUConcPpm"; // confirmed unique
+    public static final String STD_TH_CONC_PPM = "StdThConcPpm";
+    public static final String STD_AGE_U_PB = "StdAgeUPb";
+    public static final String STD_AGE_TH_PB = "StdAgeThPb";
+    public static final String STD_AGE_PB_PB = "StdAgePbPb";
+    public static final String STD_U_PB_RATIO = "StdUPbRatio";
+    public static final String STD_TH_PB_RATIO = "StdThPbRatio";
+    public static final String STD_7_6 = "Std_76";
+    public static final String STD_RAD_8_6_FACT = "StdRad86fact";
+
+    // **********************  LAMBDAs *************************************
+    public static final String LAMBDA230 = "lambda230";
+    public static final String LAMBDA232 = "lambda232";
+    public static final String LAMBDA234 = "lambda234";
+    public static final String LAMBDA235 = "lambda235";
+    public static final String LAMBDA238 = "lambda238";
+
+    // **********************  MISC *************************************
+    public static final String L859 = "L859";
+    public static final String L1033 = "L1033";
+
+    public static final String R206_204B = "r206_204b";
+    public static final String R207_204B = "r207_204b";
+    public static final String R207_206B = "r207_206b";
+    public static final String R208_204B = "r208_204b";
+    public static final String R208_206B = "r208_206b";
+
+    // ********************** COR PREFIX *********************************************
+    public static final String COR_RM = "-corr ";
+    public static final String PB4COR_RM = "4" + COR_RM;
+    public static final String PB7COR_RM = "7" + COR_RM;
+    public static final String PB8COR_RM = "8" + COR_RM;
+
+    // ********************** AGES *********************************************
+    public static final String PB4COR206_238AGE = PB4COR_RM + "206Pb/238U Age";
+    public static final String PB4COR208_232AGE = PB4COR_RM + "208Pb/232Th Age";
+
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "Uncorr 206Pb/238U Calib Const";
     public static final String SQUID_PRIMARY_UTH_EQN_NAME_TH = "UncorrPb/Thconst";
@@ -51,51 +99,4 @@ public class BuiltInExpressionsDataDictionary {
     public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
     public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
 
-    // **********************  SPECIAL CONSTANTS ******************************
-    public static final String PRESENT_R238_235S_NAME = "r238_235s";
-
-    // **********************  COMMON LEAD *************************************
-    public static final String SCOMM_64_NAME = "sComm_64";
-    public static final String SCOMM_74_NAME = "sComm_74";
-    public static final String SCOMM_84_NAME = "sComm_84";
-    public static final String SCOMM_76_NAME = "sComm_76";
-    public static final String SCOMM_86_NAME = "sComm_86";
-    public static final String SCOMM_68_NAME = "sComm_68";
-
-    public static final String STD_U_CONC_PPM = "StdUConcPpm"; // confirmed unique
-    public static final String STD_TH_CONC_PPM = "StdThConcPpm";
-    public static final String STD_AGE_U_PB = "StdAgeUPb";
-    public static final String STD_AGE_TH_PB = "StdAgeThPb";
-    public static final String STD_AGE_PB_PB = "StdAgePbPb";
-    public static final String STD_U_PB_RATIO = "StdUPbRatio";
-    public static final String STD_TH_PB_RATIO = "StdThPbRatio";
-    public static final String STD_7_6 = "Std_76";
-    public static final String STD_RAD_8_6_FACT = "StdRad86fact";
-    
-    // **********************  LAMBDAs *************************************
-    public static final String LAMBDA230 = "lambda230";
-    public static final String LAMBDA232 = "lambda232";
-    public static final String LAMBDA234 = "lambda234";
-    public static final String LAMBDA235 = "lambda235";
-    public static final String LAMBDA238 = "lambda238";
-    
-    // **********************  MISC *************************************
-    public static final String L859 = "L859";
-    public static final String L1033 = "L1033";
-
-
-    public static final String R206_204B = "r206_204b";
-    public static final String R207_204B = "r207_204b";
-    public static final String R207_206B = "r207_206b";
-    public static final String R208_204B = "r208_204b";
-    public static final String R208_206B = "r208_206b";
-        
-    // ********************** COR PREFIX *********************************************
-    public static final String COR_RM = "-corr ";
-    public static final String PB4COR_RM = "4" + COR_RM;
-    public static final String PB7COR_RM = "7" + COR_RM;
-    
-        // ********************** AGES *********************************************
-    public static final String PB4COR206_238AGE = PB4COR_RM + "206Pb/238U Age";
-    public static final String PB4COR208_232AGE = PB4COR_RM + "208Pb/232Th Age";
 }

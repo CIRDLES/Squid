@@ -50,7 +50,7 @@ public class TopsoilDataFactory {
     public static Map<String, Object> prepareTeraWasserburgDatum(
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
         // jan 2019 - there is a naming problem we are working on
-        // see for example : (unknowns): '4-corr 238/236' vs '8-corr 238/206*'
+        // see for example : (unknowns): '4-corr 238/206' vs '8-corr 238/206*'
         // default is for reference materials
         String ratioBase86 = " 238/206*";
         String ratioBase76 = " 207*/206*";
