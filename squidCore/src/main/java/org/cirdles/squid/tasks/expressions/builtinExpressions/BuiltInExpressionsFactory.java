@@ -406,36 +406,36 @@ public abstract class BuiltInExpressionsFactory {
             exp238 = "(EXP(" + LAMBDA238 + "*[\"" + PB7COR_RM + "206Pb/238U Age\"])-1)";
             exp232 = "(EXP(" + LAMBDA232 + "*[\"" + PB7COR_RM + "208Pb/232Th Age\"])-1)";
 
-            Expression expression7corrSQUID_TH_U_EQN_NAME = buildExpression(PB7COR_RM + "" + SQUID_TH_U_EQN_NAME,
-                    "ValueModel([\"" + PB7COR_RM + "208Pb*/206Pb*\"] * " + exp238 + " / " + exp232 + ","
-                    + "SQRT( [%\"" + PB7COR_RM + "208Pb*/206Pb*\"]^2 + \n"
-                    + "[%\"" + PB7COR_RM + "206Pb/238Ucalibr.const\"]^2 + \n"
-                    + "[%\"" + PB7COR_RM + "208Pb/232Thcalibr.const\"]^2 ),"
+            Expression expression7corrSQUID_TH_U_EQN_NAME = buildExpression(PB7COR_RM + SQUID_TH_U_EQN_NAME,
+                    "ValueModel([\"" + PB7COR_RM + "208Pb*/206Pb*\"]*" + exp238 + "/" + exp232 + ","
+                    + "SQRT([%\"" + PB7COR_RM + "208Pb*/206Pb*\"]^2+\n"
+                    + "[%\"" + PB7COR_RM + "206Pb/238Ucalibr.const\"]^2+\n"
+                    + "[%\"" + PB7COR_RM + "208Pb/232Thcalibr.const\"]^2),"
                     + "false)", true, false, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAME);
 
-            Expression expression7corrPpmTh = buildExpression(PB7COR_RM + "" + SQUID_PPM_PARENT_EQN_NAME_TH,
-                    "[\"" + PB7COR_RM + "" + SQUID_TH_U_EQN_NAME + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * 0.9678", true, false, false);
+            Expression expression7corrPpmTh = buildExpression(PB7COR_RM + SQUID_PPM_PARENT_EQN_NAME_TH,
+                    "[\"" + PB7COR_RM + SQUID_TH_U_EQN_NAME + "\"]*[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"]*0.9678", true, false, false);
             concentrationExpressionsOrdered.add(expression7corrPpmTh);
 
             // for samples
             Expression expressionPpmThS = buildExpression(SQUID_PPM_PARENT_EQN_NAME_TH_S,
-                    "[\"" + SQUID_TH_U_EQN_NAME_S + "\"] * [\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"] * 0.9678", false, true, false);
+                    "[\"" + SQUID_TH_U_EQN_NAME_S + "\"]*[\"" + SQUID_PPM_PARENT_EQN_NAME_U + "\"]*0.9678", false, true, false);
             concentrationExpressionsOrdered.add(expressionPpmThS);
 
             Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression(PB4COR_RM + SQUID_TH_U_EQN_NAME_S,
                     "ValueModel("
-                    + "[\"208/206\"] * [\"" + PB4COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"] / [\"" + PB4COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"],"
-                    + "SQRT( [%\"208/206\"]^2 + [%\"" + PB4COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"]^2 + \n"
-                    + "[%\"" + PB4COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"]^2 ),"
+                    + "[\"208/206\"]*[\"" + PB4COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"]/[\"" + PB4COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"],"
+                    + "SQRT([%\"208/206\"]^2+[%\"" + PB4COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"]^2+\n"
+                    + "[%\"" + PB4COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"]^2),"
                     + "false)", false, true, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAMEs);
 
-            Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression(PB7COR_RM + "" + SQUID_TH_U_EQN_NAME_S,
+            Expression expression7corrSQUID_TH_U_EQN_NAMEs = buildExpression(PB7COR_RM + SQUID_TH_U_EQN_NAME_S,
                     "ValueModel("
-                    + "[\"208/206\"] * [\"" + PB7COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"] / [\"" + PB7COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"],"
-                    + "SQRT( [%\"208/206\"]^2 + [%\"" + PB7COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"]^2 + \n"
-                    + "[%\"" + PB7COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"]^2 ),"
+                    + "[\"208/206\"]*[\"" + PB7COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"]/[\"" + PB7COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"],"
+                    + "SQRT( [%\"208/206\"]^2 + [%\"" + PB7COR_RM + SQUID_TOTAL_206_238_NAME_S + "\"]^2+\n"
+                    + "[%\"" + PB7COR_RM + SQUID_TOTAL_208_232_NAME_S + "\"]^2),"
                     + "false)", false, true, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAMEs);
 
@@ -443,19 +443,19 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression4CorrExtPerrU = buildExpression(PB4COR_RM + "ExtPerrU",
                 "Max(ExtPErr, "
-                + "[\"" + PB4COR_RM + "206Pb/238Ucalibr.const WM\"][1] / [\"" + PB4COR_RM + "206Pb/238Ucalibr.const WM\"][0] * 100)", true, false, true);
+                + "[\"" + PB4COR_RM + "206Pb/238Ucalibr.const WM\"][1]/[\"" + PB4COR_RM + "206Pb/238Ucalibr.const WM\"][0]*100)", true, false, true);
         Expression expression7CorrExtPerrU = buildExpression(PB7COR_RM + "ExtPerrU",
                 "Max(ExtPErr, "
-                + "[\"" + PB7COR_RM + "206Pb/238Ucalibr.const WM\"][1] / [\"" + PB7COR_RM + "206Pb/238Ucalibr.const WM\"][0] * 100)", true, false, true);
+                + "[\"" + PB7COR_RM + "206Pb/238Ucalibr.const WM\"][1]/[\"" + PB7COR_RM + "206Pb/238Ucalibr.const WM\"][0]*100)", true, false, true);
         Expression expression8CorrExtPerrU = buildExpression("8-corr ExtPerrU",
                 "Max(ExtPErr, "
-                + "[\"8-corr 206Pb/238Ucalibr.const WM\"][1] / [\"8-corr 206Pb/238Ucalibr.const WM\"][0] * 100)", true, false, true);
+                + "[\"8-corr 206Pb/238Ucalibr.const WM\"][1]/[\"8-corr 206Pb/238Ucalibr.const WM\"][0]*100)", true, false, true);
         Expression expression4CorrExtPerrT = buildExpression("" + PB4COR_RM + "ExtPerrT",
                 "Max(ExtPErr, "
-                + "[\"" + PB4COR_RM + "208Pb/232Thcalibr.const WM\"][1] / [\"" + PB4COR_RM + "208Pb/232Thcalibr.const WM\"][0] * 100)", true, false, true);
+                + "[\"" + PB4COR_RM + "208Pb/232Thcalibr.const WM\"][1]/[\"" + PB4COR_RM + "208Pb/232Thcalibr.const WM\"][0]*100)", true, false, true);
         Expression expression7CorrExtPerrT = buildExpression("" + PB7COR_RM + "ExtPerrT",
                 "Max(ExtPErr, "
-                + "[\"" + PB7COR_RM + "208Pb/232Thcalibr.const WM\"][1] / [\"" + PB7COR_RM + "208Pb/232Thcalibr.const WM\"][0] * 100)", true, false, true);
+                + "[\"" + PB7COR_RM + "208Pb/232Thcalibr.const WM\"][1]/[\"" + PB7COR_RM + "208Pb/232Thcalibr.const WM\"][0]*100)", true, false, true);
 
         // perm 2,3,4
         if (parentNuclide.contains("232") || isDirectAltPD) {
