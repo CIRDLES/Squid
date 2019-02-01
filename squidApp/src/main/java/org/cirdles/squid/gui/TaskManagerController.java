@@ -45,13 +45,13 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_T
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 
 /**
  * FXML Controller class
@@ -239,8 +239,8 @@ public class TaskManagerController implements Initializable {
         Expression thU = task.getExpressionByName(SQUID_TH_U_EQN_NAME);
         th232U238ExpressionLabel.setText((task.isDirectAltPD()) ? "Not Used" : thU.getExcelExpressionString());
 
-        parentConcLabel.setText(SQUID_PPM_PARENT_EQN_NAME + ":");
-        Expression parentPPM = task.getExpressionByName(SQUID_PPM_PARENT_EQN_NAME);
+        parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
+        Expression parentPPM = task.getExpressionByName(PARENT_ELEMENT_CONC_CONST);
         parentConcExpressionLabel.setText((parentPPM == null) ? "Not Used" : parentPPM.getExcelExpressionString());
     }
 

@@ -25,29 +25,30 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PRESENT_R238_235S_NAME = "r238_235s";
 
     // **********************  COMMON LEAD *************************************
-    public static final String SCOMM_64_NAME = "sComm_64";
-    public static final String SCOMM_74_NAME = "sComm_74";
-    public static final String SCOMM_84_NAME = "sComm_84";
-    public static final String SCOMM_76_NAME = "sComm_76";
-    public static final String SCOMM_86_NAME = "sComm_86";
-    public static final String SCOMM_68_NAME = "sComm_68";
+    public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
+    public static final String DEFCOM_68 = "DefCom_206Pb208Pb";
+    public static final String DEFCOM_74 = "DefCom_207Pb204Pb";
+    public static final String DEFCOM_76 = "DefCom_207Pb206Pb";
+    public static final String DEFCOM_84 = "DefCom_208Pb204Pb";   
+    public static final String DEFCOM_86 = "DefCom_208Pb206Pb";
+    
 
-    public static final String STD_U_CONC_PPM = "StdUConcPpm"; // confirmed unique
-    public static final String STD_TH_CONC_PPM = "StdThConcPpm";
-    public static final String STD_AGE_U_PB = "StdAgeUPb";
-    public static final String STD_AGE_TH_PB = "StdAgeThPb";
-    public static final String STD_AGE_PB_PB = "StdAgePbPb";
-    public static final String STD_U_PB_RATIO = "StdUPbRatio";
-    public static final String STD_TH_PB_RATIO = "StdThPbRatio";
-    public static final String STD_7_6 = "Std_76";
-    public static final String STD_RAD_8_6_FACT = "StdRad86fact";
+    public static final String REF_U_CONC_PPM = "Ref_U_Concen";
+    public static final String REF_TH_CONC_PPM = "Ref_Th_Concen";
+    public static final String REF_AGE_U_PB = "RefRad_206Pb238U_Age";
+    public static final String REF_AGE_TH_PB = "RefRad_208Pb232Th_Age";
+    public static final String REF_AGE_PB_PB = "RefRad_207Pb206Pb_Age";
+    public static final String REF_U_PB_RATIO = "RefRad_206Pb238U";
+    public static final String REF_TH_PB_RATIO = "RefRad_208Pb232Th";
+    public static final String REF_7_6 = "RefRad_207Pb206Pb";
+    public static final String REF_RAD_8_6_FACT = "RefRad_208Pb206Pb_Factor";
 
     // **********************  LAMBDAs *************************************
-    public static final String LAMBDA230 = "lambda230";
-    public static final String LAMBDA232 = "lambda232";
-    public static final String LAMBDA234 = "lambda234";
-    public static final String LAMBDA235 = "lambda235";
-    public static final String LAMBDA238 = "lambda238";
+    public static final String LAMBDA230 = "Lambda230";
+    public static final String LAMBDA232 = "Lambda232";
+    public static final String LAMBDA234 = "Lambda234";
+    public static final String LAMBDA235 = "Lambda235";
+    public static final String LAMBDA238 = "Lambda238";
 
     // **********************  MISC *************************************
     public static final String L859 = "L859";
@@ -84,7 +85,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String SQUID_TH_U_EQN_NAME = "232Th/238U";
     public static final String SQUID_TH_U_EQN_NAME_S = "232Th/238US";
     // name for Squid2.5 Ppm parent eqn(-4) 
-    public static final String SQUID_PPM_PARENT_EQN_NAME = "Ppm Parent Eqn";
+    public static final String PARENT_ELEMENT_CONC_CONST = "ParentElement_ConcenConst";
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";

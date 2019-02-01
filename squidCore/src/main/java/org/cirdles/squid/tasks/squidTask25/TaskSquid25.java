@@ -29,13 +29,15 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 
 /**
  *
@@ -204,7 +206,7 @@ public class TaskSquid25 implements Serializable {
                 if (ppmParentEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
-                            SQUID_PPM_PARENT_EQN_NAME,
+                            PARENT_ELEMENT_CONC_CONST,
                             true,
                             true,
                             false,
@@ -212,7 +214,7 @@ public class TaskSquid25 implements Serializable {
                             true, false));
 
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            "CalculateMeanConcStd([\"" + SQUID_PPM_PARENT_EQN_NAME + "\"])",
+                            "CalculateMeanConcStd([\"" + PARENT_ELEMENT_CONC_CONST + "\"])",
                             AV_PARENT_ELEMENT_CONC_CONST,
                             false,
                             false,
@@ -429,6 +431,13 @@ public class TaskSquid25 implements Serializable {
         }
         if (retVal.contains("\"8-corr")) {
             retVal = retVal.replace("\"8-cor", "\"8cor");
+        }
+        
+        if (retVal.contains("%com206")) {
+            retVal = retVal.replace("%com206", COM206PB_PCT);
+        }
+        if (retVal.contains("%com208")) {
+            retVal = retVal.replace("%com208", COM208PB_PCT);
         }
 
         return retVal;

@@ -66,7 +66,7 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_U_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_AGE_U_PB;
 
 /**
  *
@@ -384,7 +384,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
                 correction + calibrConstAgeBaseName + "_Age",
-                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(STD_AGE_U_PB).getValues()[0][0],
+                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(REF_AGE_U_PB).getValues()[0][0],
                 this);//559.1 * 1e6);
 
         refreshPlot();
