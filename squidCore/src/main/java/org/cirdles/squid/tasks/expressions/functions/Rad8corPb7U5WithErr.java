@@ -29,6 +29,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_76;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_86;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
 
 /**
  *
@@ -62,7 +63,7 @@ public class Rad8corPb7U5WithErr extends Function {
         labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}};
         labelsForInputValues = new String[]{
             "Total 206/238, Total 206/238 1\u03C3 %,"
-            + PB8CORR + "206*/238,"
+            + PB8CORR + R206PB_238U + ","
             + "TotPb7U5,"
             + "Total 208/232, Total 208/232 1\u03C3 %, "
             + "Total 207/206, Total 207/206 1\u03C3 %,"

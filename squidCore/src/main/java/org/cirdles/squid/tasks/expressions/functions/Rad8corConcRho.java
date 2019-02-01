@@ -29,6 +29,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_76;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_86;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
 
 /**
  *
@@ -57,7 +58,7 @@ public class Rad8corConcRho extends Function {
         labelsForOutputValues = new String[][]{{"rho"}};
         labelsForInputValues = new String[]{
             "Total 206/238, Total 206/238 1%Unct,"
-            + PB8CORR + "206*/238,"
+            + PB8CORR + R206PB_238U + ","
             + "Total 208/232, Total 208/232 1%Unct, "
             + "Total 207/206, Total 207/206 1%Unct,"
             + "Total 208/206, Total 208/206 1%Unct,"

@@ -58,6 +58,10 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R207_206B = "r207_206b";
     public static final String R208_204B = "r208_204b";
     public static final String R208_206B = "r208_206b";
+    
+    // **********************  RATIOS FOR PB CORRECTION *************************************
+    public static final String R206PB_238U_RM = "206Pb238U_RM";
+    public static final String R206PB_238U = "206Pb238U";
 
     // ********************** COR PREFIX *********************************************
     public static final String COR_ = "cor_";
@@ -91,11 +95,11 @@ public class BuiltInExpressionsDataDictionary {
     public static final String TH_CONCEN_PPM_RM = "Th_Concen_RM";
     public static final String TH_CONCEN_PPM = "Th_Concen";
 
-    public static final String SQUID_TOTAL_206_238_NAME = "Total 206Pb/238U";
-    public static final String SQUID_TOTAL_208_232_NAME = "Total 208Pb/232Th";
+    public static final String TOTAL_206_238_RM = "Total_206Pb238U_RM";
+    public static final String TOTAL_208_232_RM = "Total_208Pb232Th_RM";
 
-    public static final String SQUID_TOTAL_206_238_NAME_S = "Total 206Pb/238US";
-    public static final String SQUID_TOTAL_208_232_NAME_S = "Total 208Pb/232ThS";
+    public static final String TOTAL_206_238 = "Total_206Pb238U";
+    public static final String TOTAL_208_232 = "Total_208Pb232Th";
 
     public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";
     public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
