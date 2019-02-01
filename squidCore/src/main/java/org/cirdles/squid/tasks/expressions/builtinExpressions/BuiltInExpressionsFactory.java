@@ -77,6 +77,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_84;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_86;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_7;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_7;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_U_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_TH_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_AGE_U_PB;
@@ -495,63 +496,63 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> generateOverCountExpressions(boolean isDirectAltPD) {
         SortedSet<Expression> overCountExpressionsOrdered = new TreeSet<>();
 
-        Expression expressionOverCount4_6_7 = buildExpression("204/206 (fr. 207)",
+        Expression expressionOverCount4_6_7 = buildExpression(OVER_COUNT_4_6_7,
                 "ValueModel("
-                + "([\"207/206\"] - " + REF_7_6 + " ) / ( " + DEFCOM_74 + "  - (" + REF_7_6 + " * " + DEFCOM_64 + ")),"
-                + "ABS( [%\"207/206\"] * [\"207/206\"] / ([\"207/206\"] - " + REF_7_6 + ") ),"
+                + "([\"207/206\"]-" + REF_7_6 + ")/(" + DEFCOM_74 + "-(" + REF_7_6 + "*" + DEFCOM_64 + ")),"
+                + "ABS([%\"207/206\"]*[\"207/206\"]/([\"207/206\"]-" + REF_7_6 + ")),"
                 + "false)", true, false, false);
         overCountExpressionsOrdered.add(expressionOverCount4_6_7);
 
         Expression expressionOverCountPerSec4_7 = buildExpression(OVER_COUNTS_PERSEC_4_7,
-                "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"204/206 (fr. 207)\"] * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
+                "TotalCps([\"204\"])-TotalCps([\"BKG\"])-[\"" + OVER_COUNT_4_6_7 + "\"]*(TotalCps([\"206\"])-TotalCps([\"BKG\"]))", true, false, false);
         overCountExpressionsOrdered.add(expressionOverCountPerSec4_7);
 
         Expression expressionOverCount7CorrCalib = buildExpression(PB7CORR + "Primary calib const. delta%",
-                "100 * ( (1 - " + DEFCOM_64 + " * [\"204/206\"]) / (1 - " + DEFCOM_64 + " * [\"204/206 (fr. 207)\"]) - 1 )", true, false, false);
+                "100*((1-" + DEFCOM_64 + "*[\"204/206\"])/(1-" + DEFCOM_64 + "*[\"" + OVER_COUNT_4_6_7 + "\"])-1 )", true, false, false);
         overCountExpressionsOrdered.add(expressionOverCount7CorrCalib);
 
         // new section to accoommodate reporting corrections per Bodorkos 13 Aug 2018
         if (!isDirectAltPD) {
             Expression expressionOverCount4_6_8 = buildExpression(OVER_COUNT_4_6_8,
-                    "( [\"208/206\"] - " + REF_RAD_8_6_FACT + " * [\"" + SQUID_TH_U_EQN_NAME + "\"] ) / (" + DEFCOM_84 + " - " + REF_RAD_8_6_FACT + " * [\"" + SQUID_TH_U_EQN_NAME + "\"] * " + DEFCOM_64 + " )", true, false, false);
+                    "([\"208/206\"]-" + REF_RAD_8_6_FACT + "*[\"" + SQUID_TH_U_EQN_NAME + "\"])/(" + DEFCOM_84 + "-" + REF_RAD_8_6_FACT + "*[\"" + SQUID_TH_U_EQN_NAME + "\"]*" + DEFCOM_64 + ")", true, false, false);
             overCountExpressionsOrdered.add(expressionOverCount4_6_8);
 
             Expression expressionOverCountPerSec4_8 = buildExpression(OVER_COUNTS_PERSEC_4_8,
-                    "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"" + OVER_COUNT_4_6_8 + "\"] * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
+                    "TotalCps([\"204\"])-TotalCps([\"BKG\"])-[\"" + OVER_COUNT_4_6_8 + "\"]*(TotalCps([\"206\"])-TotalCps([\"BKG\"]))", true, false, false);
             overCountExpressionsOrdered.add(expressionOverCountPerSec4_8);
 
             Expression expressionOverCount8CorrCalib = buildExpression(CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
-                    "100 * ( (1 - " + DEFCOM_64 + " * [\"204/206\"]) / (1 - " + DEFCOM_64 + " * [\"" + OVER_COUNT_4_6_8 + "\"]) - 1 ) ", true, false, false);
+                    "100*((1-" + DEFCOM_64 + "*[\"204/206\"])/(1-" + DEFCOM_64 + "*[\"" + OVER_COUNT_4_6_8 + "\"])-1) ", true, false, false);
             overCountExpressionsOrdered.add(expressionOverCount8CorrCalib);
 
         } else {
             // isDirectAltPD true
             Expression expression4CorrOverCount4_6_8 = buildExpression(PB4CORR + OVER_COUNT_4_6_8,
-                    "( [\"208/206\"] - " + REF_RAD_8_6_FACT + " * [\"" + PB4CORR + SQUID_TH_U_EQN_NAME + "\"] ) "
-                    + "/ (" + DEFCOM_84 + " - " + REF_RAD_8_6_FACT + " * [\"" + PB4CORR + SQUID_TH_U_EQN_NAME + "\"] * " + DEFCOM_64 + " )", true, false, false);
+                    "([\"208/206\"]-" + REF_RAD_8_6_FACT + "*[\"" + PB4CORR + SQUID_TH_U_EQN_NAME + "\"])"
+                    + "/(" + DEFCOM_84 + " - " + REF_RAD_8_6_FACT + "*[\"" + PB4CORR + SQUID_TH_U_EQN_NAME + "\"]*" + DEFCOM_64 + ")", true, false, false);
             overCountExpressionsOrdered.add(expression4CorrOverCount4_6_8);
 
             Expression expression4CorrOverCountPerSec4_8 = buildExpression(PB4CORR + OVER_COUNTS_PERSEC_4_8,
-                    "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"" + PB4CORR + OVER_COUNT_4_6_8 + "\"]"
-                    + " * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
+                    "TotalCps([\"204\"])-TotalCps([\"BKG\"])-[\"" + PB4CORR + OVER_COUNT_4_6_8 + "\"]"
+                    + "*(TotalCps([\"206\"])-TotalCps([\"BKG\"]))", true, false, false);
             overCountExpressionsOrdered.add(expression4CorrOverCountPerSec4_8);
 
             Expression expression4CorrOverCount8CorrCalib = buildExpression("" + PB4CORR + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
-                    "100 * ( (1 - " + DEFCOM_64 + " * [\"204/206\"]) / (1 - " + DEFCOM_64 + " * [\"" + PB4CORR + OVER_COUNT_4_6_8 + "\"]) - 1 ) ", true, false, false);
+                    "100*((1-" + DEFCOM_64 + "*[\"204/206\"])/(1-" + DEFCOM_64 + "*[\"" + PB4CORR + OVER_COUNT_4_6_8 + "\"])-1) ", true, false, false);
             overCountExpressionsOrdered.add(expression4CorrOverCount8CorrCalib);
 
             Expression expression7CorrOverCount4_6_8 = buildExpression(PB7CORR + OVER_COUNT_4_6_8,
-                    "( [\"208/206\"] - " + REF_RAD_8_6_FACT + " * [\"" + PB7CORR + SQUID_TH_U_EQN_NAME + "\"] ) "
-                    + "/ (" + DEFCOM_84 + " - " + REF_RAD_8_6_FACT + " * [\"" + PB7CORR + SQUID_TH_U_EQN_NAME + "\"] * " + DEFCOM_64 + " )", true, false, false);
+                    "([\"208/206\"]-" + REF_RAD_8_6_FACT + "*[\"" + PB7CORR + SQUID_TH_U_EQN_NAME + "\"]) "
+                    + "/(" + DEFCOM_84 + "-" + REF_RAD_8_6_FACT + "*[\"" + PB7CORR + SQUID_TH_U_EQN_NAME + "\"]*" + DEFCOM_64 + ")", true, false, false);
             overCountExpressionsOrdered.add(expression7CorrOverCount4_6_8);
 
             Expression expression7CorrOverCountPerSec4_8 = buildExpression(PB7CORR + OVER_COUNTS_PERSEC_4_8,
-                    "TotalCps([\"204\"]) - TotalCps([\"BKG\"]) - [\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"]"
-                    + " * ( TotalCps([\"206\"]) - TotalCps([\"BKG\"]))", true, false, false);
+                    "TotalCps([\"204\"])-TotalCps([\"BKG\"])-[\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"]"
+                    + "*(TotalCps([\"206\"])-TotalCps([\"BKG\"]))", true, false, false);
             overCountExpressionsOrdered.add(expression7CorrOverCountPerSec4_8);
 
             Expression expression7CorrOverCount8CorrCalib = buildExpression(PB7CORR + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
-                    "100 * ( (1 - " + DEFCOM_64 + " * [\"204/206\"]) / (1 - " + DEFCOM_64 + " * [\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"]) - 1 ) ", true, false, false);
+                    "100*((1-" + DEFCOM_64 + "*[\"204/206\"])/(1-" + DEFCOM_64 + "*[\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"])-1) ", true, false, false);
             overCountExpressionsOrdered.add(expression7CorrOverCount8CorrCalib);
         }
 
@@ -609,7 +610,7 @@ public abstract class BuiltInExpressionsFactory {
         perSpotPbCorrectionsOrdered.add(expression4corCom206);
 
         Expression expression7corCom206RM = buildExpression(PB7CORR + COM206PB_PCT_RM,
-                "100 * " + DEFCOM_64 + " * [\"204/206 (fr. 207)\"]", true, false, false);
+                "100 * " + DEFCOM_64 + " * [\"" + OVER_COUNT_4_6_7 + "\"]", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom206RM);
 
         Expression expression8corCom206RM = buildExpression(PB8CORR + COM206PB_PCT_RM,
@@ -621,7 +622,7 @@ public abstract class BuiltInExpressionsFactory {
         perSpotPbCorrectionsOrdered.add(expression4corCom208);
 
         Expression expression7corCom208RM = buildExpression(PB7CORR + COM208PB_PCT_RM,
-                "100 * " + DEFCOM_84 + " / [\"208/206\"] * [\"204/206 (fr. 207)\"]", true, false, false);
+                "100 * " + DEFCOM_84 + " / [\"208/206\"] * [\"" + OVER_COUNT_4_6_7 + "\"]", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom208RM);
 
         // for samples
@@ -657,14 +658,14 @@ public abstract class BuiltInExpressionsFactory {
         // ref material version
         Expression expression7corr208Pb206PbRM = buildExpression(PB7CORR + R208PB206PB_RM,
                 "ValueModel("
-                + "( [\"208/206\"] / [\"204/206 (fr. 207)\"] - " + DEFCOM_84 + " ) / \n"
-                + "( 1 / [\"204/206 (fr. 207)\"] - " + DEFCOM_64 + "),"
+                + "( [\"208/206\"] / [\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_84 + " ) / \n"
+                + "( 1 / [\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_64 + "),"
                 + "StdPb86radCor7per("
                 + "[\"208/206\"], "
                 + "[\"207/206\"], "
-                + "( [\"208/206\"] / [\"204/206 (fr. 207)\"] - " + DEFCOM_84 + " ) / \n"
-                + "( 1 / [\"204/206 (fr. 207)\"] - " + DEFCOM_64 + "), "
-                + "[\"204/206 (fr. 207)\"]),"
+                + "( [\"208/206\"] / [\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_84 + " ) / \n"
+                + "( 1 / [\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_64 + "), "
+                + "[\"" + OVER_COUNT_4_6_7 + "\"]),"
                 + "false)", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression7corr208Pb206PbRM);
 
@@ -723,10 +724,10 @@ public abstract class BuiltInExpressionsFactory {
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr  206/238  *** Start
         Expression expression7corr206Pb238Ucalibrconst = buildExpression(PB7CORR + "206Pb/238Ucalibr.const",
                 "ValueModel("
-                + "(1 - [\"204/206 (fr. 207)\"] * " + DEFCOM_64 + ") * [\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
+                + "(1 - [\"" + OVER_COUNT_4_6_7 + "\"] * " + DEFCOM_64 + ") * [\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
                 + "sqrt([%\"" + UNCOR206PB238U_CALIB_CONST + "\"]^2 +\n"
-                + "( " + DEFCOM_64 + " / (1 / [\"204/206 (fr. 207)\"] - " + DEFCOM_64 + " ) )^2 * \n"
-                + "[%\"204/206 (fr. 207)\"]^2),"
+                + "( " + DEFCOM_64 + " / (1 / [\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_64 + " ) )^2 * \n"
+                + "[%\"" + OVER_COUNT_4_6_7 + "\"]^2),"
                 + "false)", true, false, false);
         meansAndAgesForRefMaterials.add(expression7corr206Pb238Ucalibrconst);
 
@@ -840,10 +841,10 @@ public abstract class BuiltInExpressionsFactory {
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr  208/232  *** Start
         Expression expression7corr208Pb232Thcalibrconst = buildExpression(PB7CORR + "208Pb/232Thcalibr.const",
                 "ValueModel("
-                + "(1 - [\"204/206 (fr. 207)\"] / [\"208/206\"] * " + DEFCOM_84 + ") * [\"" + UNCOR208PB232TH_CALIB_CONST + "\"],"
+                + "(1 - [\"" + OVER_COUNT_4_6_7 + "\"] / [\"208/206\"] * " + DEFCOM_84 + ") * [\"" + UNCOR208PB232TH_CALIB_CONST + "\"],"
                 + "sqrt([%\"" + UNCOR208PB232TH_CALIB_CONST + "\"]^2 +  \n"
-                + "( " + DEFCOM_84 + " / ( [\"208/206\"] / [\"204/206 (fr. 207)\"] - " + DEFCOM_84 + " ) )^2 * \n"
-                + "( [%\"208/206\"]^2 + [%\"204/206 (fr. 207)\"]^2 )),"
+                + "( " + DEFCOM_84 + " / ( [\"208/206\"] / [\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_84 + " ) )^2 * \n"
+                + "( [%\"208/206\"]^2 + [%\"" + OVER_COUNT_4_6_7 + "\"]^2 )),"
                 + "false)", true, false, false);
         meansAndAgesForRefMaterials.add(expression7corr208Pb232Thcalibrconst);
 

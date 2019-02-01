@@ -29,9 +29,8 @@ public class BuiltInExpressionsDataDictionary {
     public static final String DEFCOM_68 = "DefCom_206Pb208Pb";
     public static final String DEFCOM_74 = "DefCom_207Pb204Pb";
     public static final String DEFCOM_76 = "DefCom_207Pb206Pb";
-    public static final String DEFCOM_84 = "DefCom_208Pb204Pb";   
+    public static final String DEFCOM_84 = "DefCom_208Pb204Pb";
     public static final String DEFCOM_86 = "DefCom_208Pb206Pb";
-    
 
     public static final String REF_U_CONC_PPM = "Ref_U_Concen";
     public static final String REF_TH_CONC_PPM = "Ref_Th_Concen";
@@ -65,7 +64,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4CORR = "4" + COR_;
     public static final String PB7CORR = "7" + COR_;
     public static final String PB8CORR = "8" + COR_;
-    
+
     // ********************** COMMON LEAD *********************************************
     public static final String COM206PB_PCT = "Com206Pb_Pct";
     public static final String COM206PB_PCT_RM = "Com206Pb_Pct_RM";
@@ -104,12 +103,12 @@ public class BuiltInExpressionsDataDictionary {
     public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
 
     // ********************** OVER COUNTS **************************************
-    public static final String OVER_COUNT_4_6_8 = "204/206 (fr. 208)";
+    public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_From207Pb";
+    public static final String OVER_COUNT_4_6_8 = "204Pb206Pb_From208Pb";
     public static final String OVER_COUNTS_PERSEC_4_8 = "204OvCts_From208Pb";
     public static final String OVER_COUNTS_PERSEC_4_7 = "204OvCts_From207Pb";
-    
+
     public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
     public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
-    
 
 }
