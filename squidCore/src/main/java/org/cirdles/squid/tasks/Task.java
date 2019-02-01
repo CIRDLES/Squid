@@ -109,6 +109,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
@@ -1063,20 +1066,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         String xCorr208232Name = COR_ + SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM";
         for (Expression listedExp : taskExpressionsOrdered) {
             if (listedExp.getName().compareToIgnoreCase("4" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4CORR + "206Pb/238Ucalibr.const\"], "
-                        + "[%\"" + PB4CORR + "206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4COR206_238CALIB_CONST + "\"], "
+                        + "[%\"" + PB4COR206_238CALIB_CONST + "\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("7" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7CORR + "206Pb/238Ucalibr.const\"], "
-                        + "[%\"" + PB7CORR + "206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7COR206_238CALIB_CONST + "\"], "
+                        + "[%\"" + PB7COR206_238CALIB_CONST + "\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("8" + xCorr206238Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB8CORR + "206Pb/238Ucalibr.const\"], "
-                        + "[%\"" + PB8CORR + "206Pb/238Ucalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB8COR206_238CALIB_CONST + "\"], "
+                        + "[%\"" + PB8COR206_238CALIB_CONST + "\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
@@ -2234,8 +2237,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @param useCalculatedAv_ParentElement_ConcenConst the useCalculatedAv_ParentElement_ConcenConst
- to set
+     * @param useCalculatedAv_ParentElement_ConcenConst the
+     * useCalculatedAv_ParentElement_ConcenConst to set
      */
     @Override
     public void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst) {

@@ -103,11 +103,14 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_238_206;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE_RM;
 
 /**
@@ -419,7 +422,7 @@ public abstract class BuiltInExpressionsFactory {
                     "ValueModel("
                     + "[\"" + PB4CORR + R208PB206PB + "\"]*" + exp238 + "/" + exp232 + ","
                     + "SQRT([%\"" + PB4CORR + R208PB206PB + "\"]^2+\n"
-                    + "[%\"" + PB4CORR + "206Pb/238Ucalibr.const\"]^2+\n"
+                    + "[%\"" + PB4COR206_238CALIB_CONST + "\"]^2+\n"
                     + "[%\"" + PB4CORR + "208Pb/232Thcalibr.const\"]^2),"
                     + "false)", true, false, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAME);
@@ -435,7 +438,7 @@ public abstract class BuiltInExpressionsFactory {
             Expression expression7corrSQUID_TH_U_EQN_NAME = buildExpression(PB7CORR + TH_U_EXP_RM,
                     "ValueModel([\"" + PB7CORR + R208PB206PB_RM + "\"]*" + exp238 + "/" + exp232 + ","
                     + "SQRT([%\"" + PB7CORR + R208PB206PB_RM + "\"]^2+\n"
-                    + "[%\"" + PB7CORR + "206Pb/238Ucalibr.const\"]^2+\n"
+                    + "[%\"" + PB7COR206_238CALIB_CONST + "\"]^2+\n"
                     + "[%\"" + PB7CORR + "208Pb/232Thcalibr.const\"]^2),"
                     + "false)", true, false, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAME);
@@ -711,7 +714,7 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> meansAndAgesForRefMaterials = new TreeSet<>();
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 4-corr  206/238  *** Start
-        Expression expression4corr206Pb238Ucalibrconst = buildExpression(PB4CORR + "206Pb/238Ucalibr.const",
+        Expression expression4corr206Pb238Ucalibrconst = buildExpression(PB4COR206_238CALIB_CONST,
                 "ValueModel("
                 + "(1 - [\"204/206\"] * " + DEFCOM_64 + ") * [\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
                 + "sqrt([%\"" + UNCOR206PB238U_CALIB_CONST + "\"]^2 + \n"
@@ -721,24 +724,24 @@ public abstract class BuiltInExpressionsFactory {
 
         // weighted mean
         Expression expression4corr206Pb238UcalibrconstWM = buildExpression(PB4CORR + "206Pb/238Ucalibr.const WM",
-                "WtdMeanACalc( [\"" + PB4CORR + "206Pb/238Ucalibr.const\"], [%\"" + PB4CORR + "206Pb/238Ucalibr.const\"], FALSE, FALSE )", true, false, true);
+                "WtdMeanACalc( [\"" + PB4COR206_238CALIB_CONST + "\"], [%\"" + PB4COR206_238CALIB_CONST + "\"], FALSE, FALSE )", true, false, true);
         meansAndAgesForRefMaterials.add(expression4corr206Pb238UcalibrconstWM);
 
         // age calc
         Expression expression4corr206Pb238UAge = buildExpression(PB4COR206_238AGE_RM,
                 "ValueModel("
-                + "LN( 1.0 + [\"" + PB4CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB4CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ","
-                + "[%\"" + PB4CORR + "206Pb/238Ucalibr.const\"] / 100 * ( EXP(" + LAMBDA238 + " * \n"
-                + "LN( 1.0 + [\"" + PB4CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB4CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + "    ) - 1 )"
+                + "LN( 1.0 + [\"" + PB4COR206_238CALIB_CONST + "\"] / [\"" + PB4CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ","
+                + "[%\"" + PB4COR206_238CALIB_CONST + "\"] / 100 * ( EXP(" + LAMBDA238 + " * \n"
+                + "LN( 1.0 + [\"" + PB4COR206_238CALIB_CONST + "\"] / [\"" + PB4CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + "    ) - 1 )"
                 + "/ " + LAMBDA238 + " / EXP(" + LAMBDA238 + " * "
-                + "LN( 1.0 + [\"" + PB4CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB4CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + "     ),"
+                + "LN( 1.0 + [\"" + PB4COR206_238CALIB_CONST + "\"] / [\"" + PB4CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + "     ),"
                 + "true)", true, false, false);
         meansAndAgesForRefMaterials.add(expression4corr206Pb238UAge);
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 4-corr  206/238  *** END
         //
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr  206/238  *** Start
-        Expression expression7corr206Pb238Ucalibrconst = buildExpression(PB7CORR + "206Pb/238Ucalibr.const",
+        Expression expression7corr206Pb238Ucalibrconst = buildExpression(PB7COR206_238CALIB_CONST,
                 "ValueModel("
                 + "(1 - [\"" + OVER_COUNT_4_6_7 + "\"] * " + DEFCOM_64 + ") * [\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
                 + "sqrt([%\"" + UNCOR206PB238U_CALIB_CONST + "\"]^2 +\n"
@@ -749,18 +752,18 @@ public abstract class BuiltInExpressionsFactory {
 
         // weighted mean
         Expression expression7corr206Pb238UcalibrconstWM = buildExpression(PB7CORR + "206Pb/238Ucalibr.const WM",
-                "WtdMeanACalc( [\"" + PB7CORR + "206Pb/238Ucalibr.const\"], [%\"" + PB7CORR + "206Pb/238Ucalibr.const\"], FALSE, FALSE )", true, false, true);
+                "WtdMeanACalc( [\"" + PB7COR206_238CALIB_CONST + "\"], [%\"" + PB7COR206_238CALIB_CONST + "\"], FALSE, FALSE )", true, false, true);
         meansAndAgesForRefMaterials.add(expression7corr206Pb238UcalibrconstWM);
 
         // age calc
         Expression expression7corr206Pb238UAge = buildExpression(PB7COR206_238AGE_RM,
                 "ValueModel("
-                + "LN( 1.0 + [\"" + PB7CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB7CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ","
-                + "[%\"" + PB7CORR + "206Pb/238Ucalibr.const\"] / 100 * ( EXP(" + LAMBDA238 + " * "
-                + "LN( 1.0 + [\"" + PB7CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB7CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + " "
+                + "LN( 1.0 + [\"" + PB7COR206_238CALIB_CONST + "\"] / [\"" + PB7CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ","
+                + "[%\"" + PB7COR206_238CALIB_CONST + "\"] / 100 * ( EXP(" + LAMBDA238 + " * "
+                + "LN( 1.0 + [\"" + PB7COR206_238CALIB_CONST + "\"] / [\"" + PB7CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + " "
                 + ") - 1 )\n"
                 + "/ " + LAMBDA238 + " / EXP(" + LAMBDA238 + " * "
-                + "LN( 1.0 + [\"" + PB7CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB7CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ""
+                + "LN( 1.0 + [\"" + PB7COR206_238CALIB_CONST + "\"] / [\"" + PB7CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ""
                 + " ),"
                 + "true)", true, false, false);
         meansAndAgesForRefMaterials.add(expression7corr206Pb238UAge);
@@ -779,7 +782,7 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> meansAndAgesForRefMaterials = new TreeSet<>();
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 8-corr  206/238  *** Start
-        Expression expression8corr206Pb238Ucalibrconst = buildExpression(PB8CORR + "206Pb/238Ucalibr.const",
+        Expression expression8corr206Pb238Ucalibrconst = buildExpression(PB8COR206_238CALIB_CONST,
                 "ValueModel("
                 + "(1 - [\"" + OVER_COUNT_4_6_8 + "\"] * " + DEFCOM_64 + ") * [\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
                 + "SQRT( [%\"" + UNCOR206PB238U_CALIB_CONST + "\"]^2 + \n"
@@ -796,18 +799,18 @@ public abstract class BuiltInExpressionsFactory {
 
         // weighted mean
         Expression expression8corr206Pb238UcalibrconstWM = buildExpression(PB8CORR + "206Pb/238Ucalibr.const WM",
-                "WtdMeanACalc( [\"" + PB8CORR + "206Pb/238Ucalibr.const\"], [%\"" + PB8CORR + "206Pb/238Ucalibr.const\"], FALSE, FALSE )", true, false, true);
+                "WtdMeanACalc( [\"" + PB8COR206_238CALIB_CONST + "\"], [%\"" + PB8COR206_238CALIB_CONST + "\"], FALSE, FALSE )", true, false, true);
         meansAndAgesForRefMaterials.add(expression8corr206Pb238UcalibrconstWM);
 
         // age calc
         Expression expression8corr206Pb238UAge = buildExpression(PB8COR206_238AGE_RM,
                 "ValueModel("
-                + "LN( 1.0 + [\"" + PB8CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB8CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ","
-                + "[%\"" + PB8CORR + "206Pb/238Ucalibr.const\"] / 100 * ( EXP(" + LAMBDA238 + " * "
-                + "LN( 1.0 + [\"" + PB8CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB8CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ""
+                + "LN( 1.0 + [\"" + PB8COR206_238CALIB_CONST + "\"] / [\"" + PB8CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ","
+                + "[%\"" + PB8COR206_238CALIB_CONST + "\"] / 100 * ( EXP(" + LAMBDA238 + " * "
+                + "LN( 1.0 + [\"" + PB8COR206_238CALIB_CONST + "\"] / [\"" + PB8CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ""
                 + " ) - 1 )\n"
                 + "/ " + LAMBDA238 + " / EXP(" + LAMBDA238 + " * "
-                + "LN( 1.0 + [\"" + PB8CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB8CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ""
+                + "LN( 1.0 + [\"" + PB8COR206_238CALIB_CONST + "\"] / [\"" + PB8CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ""
                 + " ),"
                 + "true)", true, false, false);
         meansAndAgesForRefMaterials.add(expression8corr206Pb238UAge);
@@ -1137,8 +1140,8 @@ public abstract class BuiltInExpressionsFactory {
 
             Expression expression4corr206Pb238U = buildExpression(PB4CORR + R206PB_238U_RM,
                     "ValueModel("
-                    + "[\"" + PB4CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB4CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + ","
-                    + "[%\"" + PB4CORR + "206Pb/238Ucalibr.const\"],"
+                    + "[\"" + PB4COR206_238CALIB_CONST + "\"] / [\"" + PB4CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + ","
+                    + "[%\"" + PB4COR206_238CALIB_CONST + "\"],"
                     + "false)", true, false, false);
             stdRadiogenicCols.add(expression4corr206Pb238U);
 
@@ -1155,8 +1158,8 @@ public abstract class BuiltInExpressionsFactory {
 
             Expression expression7corr206238 = buildExpression(PB7CORR + R206PB_238U_RM,
                     "ValueModel("
-                    + "[\"" + PB7CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB7CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + ","
-                    + "[%\"" + PB7CORR + "206Pb/238Ucalibr.const\"],"
+                    + "[\"" + PB7COR206_238CALIB_CONST + "\"] / [\"" + PB7CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + ","
+                    + "[%\"" + PB7COR206_238CALIB_CONST + "\"],"
                     + "false)", true, false, false);
             stdRadiogenicCols.add(expression7corr206238);
 
@@ -1164,8 +1167,8 @@ public abstract class BuiltInExpressionsFactory {
             if (!parentNuclide.contains("232") && !isDirectAltPD) {
                 Expression expression8corr206238 = buildExpression(PB8CORR + R206PB_238U_RM,
                         "ValueModel("
-                        + "[\"" + PB8CORR + "206Pb/238Ucalibr.const\"] / [\"" + PB8CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + ","
-                        + "[%\"" + PB8CORR + "206Pb/238Ucalibr.const\"],"
+                        + "[\"" + PB8COR206_238CALIB_CONST + "\"] / [\"" + PB8CORR + "206Pb/238Ucalibr.const WM\"][0] * " + REF_U_PB_RATIO + ","
+                        + "[%\"" + PB8COR206_238CALIB_CONST + "\"],"
                         + "false)", true, false, false);
                 stdRadiogenicCols.add(expression8corr206238);
 

@@ -88,7 +88,11 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR207_206AGE_RM = PB4CORR + "207Pb206Pb_Age_RM";
     public static final String PB8COR207_206AGE_RM = PB8CORR + "207Pb206Pb_Age_RM";
     
-    
+    // ************************* CALIBRATION CONSTANTS *************************
+    private static final String R206_238CALIB_CONST = "206Pb238U_CalibConst";
+    public static final String PB4COR206_238CALIB_CONST = PB4CORR + R206_238CALIB_CONST;
+    public static final String PB7COR206_238CALIB_CONST = PB7CORR + R206_238CALIB_CONST;
+    public static final String PB8COR206_238CALIB_CONST = PB8CORR + R206_238CALIB_CONST;
 
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
