@@ -19,6 +19,8 @@ package org.cirdles.squid.reports.reportSpecifications;
 
 import java.util.HashMap;
 import java.util.Map;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_U;
@@ -30,6 +32,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB;
 
 /**
  * Modified from ET_Redux July 2018
@@ -84,13 +87,13 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
      *
      */
     public static final String[][] ReportCategory_204PbCorrected = new String[][]{
-        {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "%com206", "",
+        {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM206PB_PCT, "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "%com208", "",
+        {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM208PB_PCT, "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "208Pb*/206Pb*", "PCT",
+        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R208PB206PB, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
         {"", "4-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "ppm 206*", "",
@@ -141,13 +144,13 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "7-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + "204Pb/206Pb", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + "%com206S", "",
+        {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + COM206PB_PCT, "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + "%com208S", "",
+        {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + COM208PB_PCT, "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + "208Pb*/206Pb*S", "PCT",
+        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R208PB206PB, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
         {"", "7-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + "ppm 206*", "",
@@ -181,7 +184,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "8-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + "204Pb/206Pb", "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + "%com206S", "",
+        {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + COM206PB_PCT, "",
             "", "true", "false", "6", "", "", "false", "false"
         },
         {"", "8-corr", "ppm", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + "ppm 206*", "",

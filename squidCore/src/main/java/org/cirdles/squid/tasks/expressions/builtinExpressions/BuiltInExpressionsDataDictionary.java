@@ -64,6 +64,14 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4CORR = "4" + COR_;
     public static final String PB7CORR = "7" + COR_;
     public static final String PB8CORR = "8" + COR_;
+    
+    // ********************** COMMON LEAD *********************************************
+    public static final String COM206PB_PCT = "Com206Pb_Pct";
+    public static final String COM206PB_PCT_RM = "Com206Pb_Pct_RM";
+    public static final String COM208PB_PCT = "Com208Pb_Pct";
+    public static final String COM208PB_PCT_RM = "Com208Pb_Pct_RM";
+    public static final String R208PB206PB = "208Pb206Pb";
+    public static final String R208PB206PB_RM = "208Pb206Pb_RM";
 
     // ********************** AGES *********************************************
     public static final String PB4COR206_238AGE = PB4CORR + "206Pb/238U_Age";
@@ -77,7 +85,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String SQUID_TH_U_EQN_NAME_S = "232Th/238US";
     // name for Squid2.5 Ppm parent eqn(-4) 
     public static final String SQUID_PPM_PARENT_EQN_NAME = "Ppm Parent Eqn";
-    public static final String SQUID_MEAN_PPM_PARENT_NAME = "pdMeanParentEleA";
+    public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
     public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";

@@ -62,7 +62,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
@@ -116,6 +115,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 
 /**
  *
@@ -186,7 +186,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected boolean changed;
 
-    protected boolean useCalculated_pdMeanParentEleA;
+    protected boolean useCalculatedAv_ParentElement_ConcenConst;
 
     protected IndexIsoptopesEnum selectedIndexIsotope;
 
@@ -276,7 +276,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.changed = true;
         SquidProject.setProjectChanged(true);
 
-        this.useCalculated_pdMeanParentEleA = false;
+        this.useCalculatedAv_ParentElement_ConcenConst = false;
         this.selectedIndexIsotope = squidUserPreferences.getSelectedIndexIsotope();
 
         this.massMinuends = new ArrayList<>();
@@ -472,8 +472,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append("\".");
 
         String meanConcValue = "Not Calculated";
-        if (taskExpressionsEvaluationsPerSpotSet.get(SQUID_MEAN_PPM_PARENT_NAME) != null) {
-            meanConcValue = String.valueOf(taskExpressionsEvaluationsPerSpotSet.get(SQUID_MEAN_PPM_PARENT_NAME).getValues()[0][0]);
+        if (taskExpressionsEvaluationsPerSpotSet.get(AV_PARENT_ELEMENT_CONC_CONST) != null) {
+            meanConcValue = String.valueOf(taskExpressionsEvaluationsPerSpotSet.get(AV_PARENT_ELEMENT_CONC_CONST).getValues()[0][0]);
         }
         summary.append("\n ")
                 .append(String.valueOf(concentrationReferenceMaterialSpots.size()))
@@ -2226,20 +2226,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the useCalculated_pdMeanParentEleA
+     * @return the useCalculatedAv_ParentElement_ConcenConst
      */
     @Override
-    public boolean isUseCalculated_pdMeanParentEleA() {
-        return useCalculated_pdMeanParentEleA;
+    public boolean isUseCalculatedAv_ParentElement_ConcenConst() {
+        return useCalculatedAv_ParentElement_ConcenConst;
     }
 
     /**
-     * @param useCalculated_pdMeanParentEleA the useCalculated_pdMeanParentEleA
-     * to set
+     * @param useCalculatedAv_ParentElement_ConcenConst the useCalculatedAv_ParentElement_ConcenConst
+ to set
      */
     @Override
-    public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA) {
-        this.useCalculated_pdMeanParentEleA = useCalculated_pdMeanParentEleA;
+    public void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst) {
+        this.useCalculatedAv_ParentElement_ConcenConst = useCalculatedAv_ParentElement_ConcenConst;
     }
 
     /**
