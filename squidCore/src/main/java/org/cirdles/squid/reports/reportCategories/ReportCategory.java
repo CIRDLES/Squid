@@ -33,10 +33,10 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME_TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 
 /**
  *
@@ -297,7 +297,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             "(ppm)",
             "",
             specs[5],
-            SQUID_PPM_PARENT_EQN_NAME_TH,
+            TH_CONCEN_PPM_RM,
             specs[7],
             specs[8],
             specs[9],
@@ -324,12 +324,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else {
             // perm2 and 4
             columnSpec[1] = "204corr";
-            columnSpec[6] = PB4CORR + SQUID_PPM_PARENT_EQN_NAME_TH;
+            columnSpec[6] = PB4CORR + TH_CONCEN_PPM_RM;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[1] = "207corr";
-            columnSpec[6] = PB7CORR + SQUID_PPM_PARENT_EQN_NAME_TH;
+            columnSpec[6] = PB7CORR + TH_CONCEN_PPM_RM;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }

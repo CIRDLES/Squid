@@ -32,13 +32,13 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 
 /**
  *
@@ -397,11 +397,9 @@ public interface TaskInterface {
         getTaskExpressionsOrdered().clear();
 
         // TODO: expressions need to come from preferences and/or models
-        Expression uThU = BuiltInExpressionsFactory.buildExpression(
-                SQUID_PRIMARY_UTH_EQN_NAME_U, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
+        Expression uThU = BuiltInExpressionsFactory.buildExpression(UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
         uThU.setSquidSwitchNU(true);
-        Expression uThTh = BuiltInExpressionsFactory.buildExpression(
-                SQUID_PRIMARY_UTH_EQN_NAME_TH, "[\"208/248\"]", true, true, false);
+        Expression uThTh = BuiltInExpressionsFactory.buildExpression(UNCOR208PB232TH_CALIB_CONST, "[\"208/248\"]", true, true, false);
         uThTh.setSquidSwitchNU(true);
 
         if (isPbU()) {

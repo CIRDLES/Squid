@@ -79,8 +79,8 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR208_232AGE = PB4CORR + "208Pb/232Th_Age";
 
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
-    public static final String SQUID_PRIMARY_UTH_EQN_NAME_U = "Uncorr 206Pb/238U Calib Const";
-    public static final String SQUID_PRIMARY_UTH_EQN_NAME_TH = "UncorrPb/Thconst";
+    public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
+    public static final String UNCOR208PB232TH_CALIB_CONST = "Uncor_208Pb232Th_CalibConst";
     // Squid2.5 Th/U equation (-3)
     public static final String SQUID_TH_U_EQN_NAME = "232Th/238U";
     public static final String SQUID_TH_U_EQN_NAME_S = "232Th/238US";
@@ -88,9 +88,9 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PARENT_ELEMENT_CONC_CONST = "ParentElement_ConcenConst";
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
-    public static final String SQUID_PPM_PARENT_EQN_NAME_U = "ppmU";
-    public static final String SQUID_PPM_PARENT_EQN_NAME_TH = "ppmTh";
-    public static final String SQUID_PPM_PARENT_EQN_NAME_TH_S = "ppmThS";
+    public static final String U_CONCEN_PPM = "U_Concen";
+    public static final String TH_CONCEN_PPM_RM = "Th_Concen_RM";
+    public static final String TH_CONCEN_PPM = "Th_Concen";
 
     public static final String SQUID_TOTAL_206_238_NAME = "Total 206Pb/238U";
     public static final String SQUID_TOTAL_208_232_NAME = "Total 208Pb/232Th";
@@ -103,9 +103,13 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
 
+    // ********************** OVER COUNTS **************************************
     public static final String OVER_COUNT_4_6_8 = "204/206 (fr. 208)";
-    public static final String OVER_COUNTS_PERSEC_4_8 = "204 overcts/sec (fr. 208)";
+    public static final String OVER_COUNTS_PERSEC_4_8 = "204OvCts_From208Pb";
+    public static final String OVER_COUNTS_PERSEC_4_7 = "204OvCts_From207Pb";
+    
     public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
     public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
+    
 
 }

@@ -29,8 +29,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
@@ -38,6 +36,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 
 /**
  *
@@ -137,15 +137,15 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.task25Equations = new ArrayList<>();
 
                 // determine where uranium or thorium is primary or secondary
-                String primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_U;
-                String primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
+                String primaryUThEqnName = UNCOR206PB238U_CALIB_CONST;
+                String primaryUThEqnOtherName = UNCOR208PB232TH_CALIB_CONST;
 
                 String[] primaryUThPbEqn = lines[firstRow + 22].split("\t");
                 if (primaryUThPbEqn.length > 1) {
 
                     if (taskSquid25.parentNuclide.contains("232")) {
-                        primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
-                        primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
+                        primaryUThEqnName = UNCOR208PB232TH_CALIB_CONST;
+                        primaryUThEqnOtherName = UNCOR206PB238U_CALIB_CONST;
                     }
 
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(

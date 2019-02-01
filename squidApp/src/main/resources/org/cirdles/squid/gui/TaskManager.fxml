@@ -219,7 +219,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="uncorrConstPbUlabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="127.0" style="-fx-font-size: 10;" text="uncorrConstPbU:" textAlignment="JUSTIFY" />
+                  <Label fx:id="uncorrConstPbUlabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="163.0" style="-fx-font-size: 10;" text="uncorrConstPbU:" textAlignment="JUSTIFY" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
