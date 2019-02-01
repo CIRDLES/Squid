@@ -69,7 +69,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB7CORR = "7" + COR_;
     public static final String PB8CORR = "8" + COR_;
 
-    // ********************** COMMON LEAD *********************************************
+    // ********************** COMMON LEAD **************************************
     public static final String COM206PB_PCT = "Com206Pb_Pct";
     public static final String COM206PB_PCT_RM = "Com206Pb_Pct_RM";
     public static final String COM208PB_PCT = "Com208Pb_Pct";
@@ -100,6 +100,8 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String TOTAL_206_238 = "Total_206Pb238U";
     public static final String TOTAL_208_232 = "Total_208Pb232Th";
+    public static final String TOTAL_207_206 = "Total_207Pb206Pb";
+    public static final String TOTAL_238_206 = "Total_238U206Pb";
 
     public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";
     public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
@@ -114,5 +116,15 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
     public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
+    
+    // ********************** INTERNAL EXPRESSIONS *****************************
+    public static final String ALPHA = "Total_206Pb204Pb";
+    public static final String BETA = "Total_207Pb204Pb";
+    public static final String GAMMA = "Total_208Pb204Pb";
+    public static final String NETALPHA = "DefRad_206Pb204Pb";
+    public static final String NETBETA = "DefRad_207Pb204Pb";
+    public static final String NETGAMMA = "DefRad_208Pb204Pb";
+    public static final String RADD6 = "Rad_206Pb204Pb_Factor";
+    public static final String RADD8 = "Rad_208Pb204Pb_Factor";
 
 }

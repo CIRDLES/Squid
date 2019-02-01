@@ -33,7 +33,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_206;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_238_206;
 
 /**
  * Modified from ET_Redux July 2018
@@ -71,10 +73,10 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_208_232, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 238U/206PbS", "PCT",
+        {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_238_206, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "Total", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", "Total 207Pb/206PbS", "PCT",
+        {"", "Total", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_207_206, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         }
     };
