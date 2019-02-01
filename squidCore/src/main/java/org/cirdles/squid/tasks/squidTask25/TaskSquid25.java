@@ -29,8 +29,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
@@ -38,6 +36,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 
 /**
  *
@@ -175,7 +175,7 @@ public class TaskSquid25 implements Serializable {
                 if (ThUEqn.length > 1) {
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
-                            SQUID_TH_U_EQN_NAME,
+                            TH_U_EXP_RM,
                             true,
                             false,
                             false,
@@ -183,24 +183,13 @@ public class TaskSquid25 implements Serializable {
                             true, false));
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
                             prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
-                            SQUID_TH_U_EQN_NAME_S,
+                            TH_U_EXP,
                             false,
                             true,
                             false,
                             true,
                             true, false));
                 }
-                // this logic is moved to Ludwig Q3 in BuiltInExpressionsFactory
-//                else {
-//                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-//                            prepareSquid25ExcelEquationStringForSquid3("(0.03446*[\"254/238\"] + 0.868) * [\"248/254\"]"),
-//                            SQUID_TH_U_EQN_NAME,
-//                            true,
-//                            true,
-//                            false,
-//                            true,
-//                            true, false));
-//                }
 
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
                 if (ppmParentEqn.length > 1) {

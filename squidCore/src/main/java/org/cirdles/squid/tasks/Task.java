@@ -62,8 +62,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME;
@@ -116,6 +114,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 
 /**
  *
@@ -749,14 +749,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             // handle selected isotope-specific expressions
             // TODO: Better logic - selfaware expressionTree or polymorphism
             if (directAltPD) {
-                if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME) == 0) {
-                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME + "\"]");
+                if (listedExp.getName().compareToIgnoreCase(TH_U_EXP_RM) == 0) {
+                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + TH_U_EXP_RM + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                 }
-                if (listedExp.getName().compareToIgnoreCase(SQUID_TH_U_EQN_NAME_S) == 0) {
-                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + SQUID_TH_U_EQN_NAME_S + "\"]");
+                if (listedExp.getName().compareToIgnoreCase(TH_U_EXP) == 0) {
+                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + TH_U_EXP + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);

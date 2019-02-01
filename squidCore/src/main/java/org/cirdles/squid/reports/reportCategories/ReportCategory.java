@@ -33,10 +33,10 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 
 /**
  *
@@ -246,7 +246,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             "/238U",
             "",
             specs[5],
-            SQUID_TH_U_EQN_NAME,
+            TH_U_EXP_RM,
             specs[7],
             specs[8],
             specs[9],
@@ -273,12 +273,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else {
             // perm2 and 4
             columnSpec[1] = "204corr";
-            columnSpec[6] = PB4CORR + SQUID_TH_U_EQN_NAME;
+            columnSpec[6] = PB4CORR + TH_U_EXP_RM;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[1] = "207corr";
-            columnSpec[6] = PB7CORR + SQUID_TH_U_EQN_NAME;
+            columnSpec[6] = PB7CORR + TH_U_EXP_RM;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }

@@ -81,8 +81,8 @@ public class BuiltInExpressionsDataDictionary {
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
     public static final String UNCOR208PB232TH_CALIB_CONST = "Uncor_208Pb232Th_CalibConst";
     // Squid2.5 Th/U equation (-3)
-    public static final String SQUID_TH_U_EQN_NAME = "232Th/238U";
-    public static final String SQUID_TH_U_EQN_NAME_S = "232Th/238US";
+    public static final String TH_U_EXP_RM = "232Th238U_RM";
+    public static final String TH_U_EXP = "232Th238U";
     // name for Squid2.5 Ppm parent eqn(-4) 
     public static final String PARENT_ELEMENT_CONC_CONST = "ParentElement_ConcenConst";
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";

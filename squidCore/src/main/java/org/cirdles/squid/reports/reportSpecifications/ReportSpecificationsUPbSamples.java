@@ -22,7 +22,6 @@ import java.util.Map;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_206_238_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TOTAL_208_232_NAME_S;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
@@ -33,6 +32,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 
 /**
  * Modified from ET_Redux July 2018
@@ -61,7 +61,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", TH_CONCEN_PPM, "",
             "", "true", "false", "6", "", "concentration of Th", "true", "false"
         },
-        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TH_U_EQN_NAME_S, "PCT",
+        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", TH_U_EXP, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
         {"", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", SQUID_TOTAL_206_238_NAME_S, "PCT",
