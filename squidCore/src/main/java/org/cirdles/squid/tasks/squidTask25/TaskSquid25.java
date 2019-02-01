@@ -428,6 +428,10 @@ public class TaskSquid25 implements Serializable {
         if (retVal.contains("%com208")) {
             retVal = retVal.replace("%com208", COM208PB_PCT);
         }
+        
+        if (retVal.contains("r_206*/238")) {
+            retVal = retVal.replace("r_206*/238", "r_206Pb238U");
+        }
 
         return retVal;
     }

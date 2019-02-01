@@ -78,8 +78,17 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R208PB206PB_RM = "208Pb206Pb_RM";
 
     // ********************** AGES *********************************************
-    public static final String PB4COR206_238AGE = PB4CORR + "206Pb/238U_Age";
-    public static final String PB4COR208_232AGE = PB4CORR + "208Pb/232Th_Age";
+    public static final String PB4COR206_238AGE_RM = PB4CORR + "206Pb238U_Age_RM";
+    public static final String PB7COR206_238AGE_RM = PB7CORR + "206Pb238U_Age_RM";
+    public static final String PB8COR206_238AGE_RM = PB8CORR + "206Pb238U_Age_RM";
+    
+    public static final String PB4COR208_232AGE_RM = PB4CORR + "208Pb232Th_Age_RM";
+    public static final String PB7COR208_232AGE_RM = PB7CORR + "208Pb232Th_Age_RM";
+    
+    public static final String PB4COR207_206AGE_RM = PB4CORR + "207Pb206Pb_Age_RM";
+    public static final String PB8COR207_206AGE_RM = PB8CORR + "207Pb206Pb_Age_RM";
+    
+    
 
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
@@ -103,7 +112,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String TOTAL_207_206 = "Total_207Pb206Pb";
     public static final String TOTAL_238_206 = "Total_238U206Pb";
 
-    public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";
+    public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";// fix these
     public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
 
     public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";

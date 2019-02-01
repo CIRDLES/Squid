@@ -383,7 +383,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 correction + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + calibrConstAgeBaseName + "_Age",
+                correction + calibrConstAgeBaseName.replace("/", "") + "_Age_RM",  // TODO: FIX THIS HACK
                 squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(REF_AGE_U_PB).getValues()[0][0],
                 this);//559.1 * 1e6);
 
