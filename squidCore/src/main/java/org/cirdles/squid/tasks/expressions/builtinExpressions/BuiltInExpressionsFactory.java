@@ -947,7 +947,7 @@ public abstract class BuiltInExpressionsFactory {
         overCountMeansRefMaterials.add(expressionOverCtsDeltaP8corr);
 
         Expression expressionOverCts4corr207Pb206Pbagecorr = buildExpression("OverCts" + PB4CORR + "207Pb/206Pb agecorr",
-                "sqBiweight([\"" + PB4CORR + "207Pb/206Pb_Age\"], 9)", true, false, true);
+                "sqBiweight([\"" + PB4COR207_206AGE_RM + "\"], 9)", true, false, true);
         expressionOverCts4corr207Pb206Pbagecorr.setNotes("Robust average of 204-corrected 207/206 age");
         overCountMeansRefMaterials.add(expressionOverCts4corr207Pb206Pbagecorr);
 

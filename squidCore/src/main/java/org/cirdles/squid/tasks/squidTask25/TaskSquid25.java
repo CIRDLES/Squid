@@ -93,7 +93,7 @@ public class TaskSquid25 implements Serializable {
                 int firstRow = Integer.parseInt(lines[1].split("\t")[1]) - 1;
 
                 taskSquid25.squidTaskFileName = lines[firstRow].split("\t")[1];
-                taskSquid25.taskType = TaskTypeEnum.valueOf( lines[firstRow + 1].split("\t")[1].toUpperCase());
+                taskSquid25.taskType = TaskTypeEnum.valueOf(lines[firstRow + 1].split("\t")[1].toUpperCase());
                 taskSquid25.taskName = lines[firstRow + 2].split("\t")[1];
                 taskSquid25.taskDescription = lines[firstRow + 3].split("\t")[1];
 
@@ -114,7 +114,7 @@ public class TaskSquid25 implements Serializable {
                 }
 
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
-                if (isSquid2_20 && ratioStrings[0].toUpperCase().startsWith("HIDDEN")){
+                if (isSquid2_20 && ratioStrings[0].toUpperCase().startsWith("HIDDEN")) {
                     // special case of 2.2 where this row exists
                     firstRow++;
                     ratioStrings = lines[firstRow + 15].split("\t");
@@ -421,14 +421,14 @@ public class TaskSquid25 implements Serializable {
         if (retVal.contains("\"8-corr")) {
             retVal = retVal.replace("\"8-cor", "\"8cor");
         }
-        
+
         if (retVal.contains("%com206")) {
             retVal = retVal.replace("%com206", COM206PB_PCT);
         }
         if (retVal.contains("%com208")) {
             retVal = retVal.replace("%com208", COM208PB_PCT);
         }
-        
+
         if (retVal.contains("r_206*/238")) {
             retVal = retVal.replace("r_206*/238", "r_206Pb238U");
         }
