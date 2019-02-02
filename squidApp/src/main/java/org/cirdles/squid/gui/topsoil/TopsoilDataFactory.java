@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
 
 import static org.cirdles.topsoil.variable.Variables.*;
 
@@ -37,7 +38,7 @@ public class TopsoilDataFactory {
         String ratioBase68 = "206*/238";
         String errCorr = "errcorr";
         if (isUnknown) {
-            ratioBase75 = "207*/235S";
+            ratioBase75 = R207PB_235U;
             ratioBase68 = "206*/238S";
             errCorr = "errcorrS";
         }

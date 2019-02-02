@@ -62,6 +62,9 @@ public class BuiltInExpressionsDataDictionary {
     // **********************  RATIOS FOR PB CORRECTION *************************************
     public static final String R206PB_238U_RM = "206Pb238U_RM";
     public static final String R206PB_238U = "206Pb238U";
+    
+    public static final String R207PB_235U_RM = "207Pb235U_RM";
+    public static final String R207PB_235U = "207Pb235U";
 
     // ********************** COR PREFIX *********************************************
     public static final String COR_ = "cor_";
@@ -93,6 +96,9 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR206_238CALIB_CONST = PB4CORR + R206_238CALIB_CONST;
     public static final String PB7COR206_238CALIB_CONST = PB7CORR + R206_238CALIB_CONST;
     public static final String PB8COR206_238CALIB_CONST = PB8CORR + R206_238CALIB_CONST;
+    public static final String PB4COR206_238CALIB_CONST_WM = "WtdAv_" + PB4CORR + R206_238CALIB_CONST;
+    public static final String PB7COR206_238CALIB_CONST_WM = "WtdAv_" + PB7CORR + R206_238CALIB_CONST;
+    public static final String PB8COR206_238CALIB_CONST_WM = "WtdAv_" + PB8CORR + R206_238CALIB_CONST;
 
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
