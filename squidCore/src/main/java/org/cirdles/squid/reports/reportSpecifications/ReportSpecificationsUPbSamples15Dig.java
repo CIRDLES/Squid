@@ -23,8 +23,16 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_DISCORDANCE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
@@ -107,16 +115,16 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "4-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "ppm 208*", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"204corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "204cor_206Pb/238U Age", "ABS",
+        {"204corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR206_238AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"204corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "204cor_207Pb/206Pb Age", "ABS",
+        {"204corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR207_206AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"204corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "204cor_208Pb/232Th Age", "ABS",
+        {"204corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR208_232AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"%", "Dis-", "cor-", "dant", "", "getTaskExpressionsEvaluationsPerSpotByField", "204corr Discordance", "",
+        {"%", "Dis-", "cor-", "dant", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_DISCORDANCE, "",
             "", "true", "false", "15", "", "", "false", "false"
         },
         {"", "4-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "208*/232", "PCT",
@@ -164,10 +172,10 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "7-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + "ppm 208*", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"207corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "207cor_206Pb/238U Age", "ABS",
+        {"207corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR206_238AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"207corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "207cor_208Pb/232Th Age", "ABS",
+        {"207corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR208_232AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R206PB_238U, "PCT",
@@ -195,10 +203,10 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "8-corr", "ppm", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + "ppm 206*", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"208corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "208cor_206Pb/238U Age", "ABS",
+        {"208corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR206_238AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"208corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "208cor_207Pb/206PbS Age", "ABS",
+        {"208corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR207_206AGE, "ABS",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", EXP_8CORR_238_206_STAR, "PCT",

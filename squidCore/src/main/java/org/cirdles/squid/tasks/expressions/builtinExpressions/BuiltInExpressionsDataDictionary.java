@@ -88,14 +88,26 @@ public class BuiltInExpressionsDataDictionary {
 
     // ********************** AGES *********************************************
     public static final String PB4COR206_238AGE_RM = PB4CORR + "206Pb238U_Age_RM";
+    public static final String PB4COR206_238AGE = PB4CORR + "206Pb238U_Age";
     public static final String PB7COR206_238AGE_RM = PB7CORR + "206Pb238U_Age_RM";
+    public static final String PB7COR206_238AGE = PB7CORR + "206Pb238U_Age";
     public static final String PB8COR206_238AGE_RM = PB8CORR + "206Pb238U_Age_RM";
+    public static final String PB8COR206_238AGE = PB8CORR + "206Pb238U_Age";
 
     public static final String PB4COR208_232AGE_RM = PB4CORR + "208Pb232Th_Age_RM";
+    public static final String PB4COR208_232AGE = PB4CORR + "208Pb232Th_Age";
     public static final String PB7COR208_232AGE_RM = PB7CORR + "208Pb232Th_Age_RM";
+    public static final String PB7COR208_232AGE = PB7CORR + "208Pb232Th_Age";
 
     public static final String PB4COR207_206AGE_RM = PB4CORR + "207Pb206Pb_Age_RM";
+    public static final String PB4COR207_206AGE = PB4CORR + "207Pb206Pb_Age";
     public static final String PB8COR207_206AGE_RM = PB8CORR + "207Pb206Pb_Age_RM";
+    public static final String PB8COR207_206AGE = PB8CORR + "207Pb206Pb_Age";
+    
+    public static final String PB4COR_DISCORDANCE = PB4CORR + "Discord_Pct";
+    public static final String PB8COR_DISCORDANCE = PB8CORR + "Discord_Pct";
+    
+
 
     // ************************* ERROR CORRELATIONS ****************************  
     public static final String ERR_CORREL_RM = "ErrCorrel_RM";
