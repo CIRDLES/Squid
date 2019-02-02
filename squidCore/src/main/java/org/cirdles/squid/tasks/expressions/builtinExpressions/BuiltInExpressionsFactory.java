@@ -777,28 +777,28 @@ public abstract class BuiltInExpressionsFactory {
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr  206/238  *** Start
         Expression expression7corr206Pb238Ucalibrconst = buildExpression(PB7COR206_238CALIB_CONST,
                 "ValueModel("
-                + "(1 - [\"" + OVER_COUNT_4_6_7 + "\"] * " + DEFCOM_64 + ") * [\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
-                + "sqrt([%\"" + UNCOR206PB238U_CALIB_CONST + "\"]^2 +\n"
-                + "( " + DEFCOM_64 + " / (1 / [\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_64 + " ) )^2 * \n"
+                + "(1-[\"" + OVER_COUNT_4_6_7 + "\"]*" + DEFCOM_64 + ")*[\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
+                + "sqrt([%\"" + UNCOR206PB238U_CALIB_CONST + "\"]^2+"
+                + "(" + DEFCOM_64 + "/(1/[\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_64 + "))^2*"
                 + "[%\"" + OVER_COUNT_4_6_7 + "\"]^2),"
                 + "false)", true, false, false);
         meansAndAgesForRefMaterials.add(expression7corr206Pb238Ucalibrconst);
 
         // weighted mean
         Expression expression7corr206Pb238UcalibrconstWM = buildExpression(PB7COR206_238CALIB_CONST_WM,
-                "WtdMeanACalc( [\"" + PB7COR206_238CALIB_CONST + "\"], [%\"" + PB7COR206_238CALIB_CONST + "\"], FALSE, FALSE )", true, false, true);
+                "WtdMeanACalc([\"" + PB7COR206_238CALIB_CONST + "\"], [%\"" + PB7COR206_238CALIB_CONST + "\"], FALSE, FALSE )", true, false, true);
         meansAndAgesForRefMaterials.add(expression7corr206Pb238UcalibrconstWM);
 
         // age calc
         Expression expression7corr206Pb238UAge = buildExpression(PB7COR206_238AGE_RM,
                 "ValueModel("
-                + "LN( 1.0 + [\"" + PB7COR206_238CALIB_CONST + "\"] / [\"" + PB7COR206_238CALIB_CONST_WM + "\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ","
+                + "LN(1.0+[\"" + PB7COR206_238CALIB_CONST + "\"]/[\"" + PB7COR206_238CALIB_CONST_WM + "\"][0]*" + REF_U_PB_RATIO + ")/" + LAMBDA238 + ","
                 + "[%\"" + PB7COR206_238CALIB_CONST + "\"] / 100 * ( EXP(" + LAMBDA238 + " * "
-                + "LN( 1.0 + [\"" + PB7COR206_238CALIB_CONST + "\"] / [\"" + PB7COR206_238CALIB_CONST_WM + "\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + " "
-                + ") - 1 )\n"
-                + "/ " + LAMBDA238 + " / EXP(" + LAMBDA238 + " * "
-                + "LN( 1.0 + [\"" + PB7COR206_238CALIB_CONST + "\"] / [\"" + PB7COR206_238CALIB_CONST_WM + "\"][0] * " + REF_U_PB_RATIO + " ) / " + LAMBDA238 + ""
-                + " ),"
+                + "LN(1.0+[\"" + PB7COR206_238CALIB_CONST + "\"]/[\"" + PB7COR206_238CALIB_CONST_WM + "\"][0]*" + REF_U_PB_RATIO + ")/" + LAMBDA238
+                + ")-1)\n"
+                + "/" + LAMBDA238 + "/EXP(" + LAMBDA238 + "*"
+                + "LN(1.0+[\"" + PB7COR206_238CALIB_CONST + "\"]/[\"" + PB7COR206_238CALIB_CONST_WM + "\"][0] * " + REF_U_PB_RATIO + ")/" + LAMBDA238
+                + "),"
                 + "true)", true, false, false);
         meansAndAgesForRefMaterials.add(expression7corr206Pb238UAge);
 
@@ -818,17 +818,17 @@ public abstract class BuiltInExpressionsFactory {
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 8-corr  206/238  *** Start
         Expression expression8corr206Pb238Ucalibrconst = buildExpression(PB8COR206_238CALIB_CONST,
                 "ValueModel("
-                + "(1 - [\"" + OVER_COUNT_4_6_8 + "\"] * " + DEFCOM_64 + ") * [\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
-                + "SQRT( [%\"" + UNCOR206PB238U_CALIB_CONST + "\"]^2 + \n"
-                + "      ( " + DEFCOM_64 + " * [\"" + UNCOR206PB238U_CALIB_CONST + "\"] * [\"" + OVER_COUNT_4_6_8 + "\"] / "
-                + "      ((1 - [\"" + OVER_COUNT_4_6_8 + "\"] * " + DEFCOM_64 + ") * [\"" + UNCOR206PB238U_CALIB_CONST + "\"]) )^2 * \n"
-                + "      ( ( [\"208/206\"] * [%\"208/206\"] /( [\"208/206\"] - " + REF_RAD_8_6_FACT + " * [\"" + TH_U_EXP_RM + "\"] ) )^2 +\n"
-                + "        ( ( 1 /( [\"208/206\"] - " + REF_RAD_8_6_FACT + " * [\"" + TH_U_EXP_RM + "\"] ) + \n"
-                + "          " + DEFCOM_64 + " / ( " + DEFCOM_84 + " - " + DEFCOM_64 + " * " + REF_RAD_8_6_FACT + " * [\"" + TH_U_EXP_RM + "\"] ) ) *\n"
-                + "          " + REF_RAD_8_6_FACT + " * [\"" + TH_U_EXP_RM + "\"] * [%\"" + TH_U_EXP_RM + "\"]\n"
-                + "        )^2\n"
-                + "      )\n"
-                + "    ), false)", true, false, false);
+                + "(1-[\"" + OVER_COUNT_4_6_8 + "\"]*" + DEFCOM_64 + ")*[\"" + UNCOR206PB238U_CALIB_CONST + "\"],"
+                + "SQRT([%\"" + UNCOR206PB238U_CALIB_CONST + "\"]^2+"
+                + "(" + DEFCOM_64 + "*[\"" + UNCOR206PB238U_CALIB_CONST + "\"]*[\"" + OVER_COUNT_4_6_8 + "\"]/"
+                + "((1-[\"" + OVER_COUNT_4_6_8 + "\"]*" + DEFCOM_64 + ")*[\"" + UNCOR206PB238U_CALIB_CONST + "\"]))^2*"
+                + "(([\"208/206\"]*[%\"208/206\"]/([\"208/206\"]-" + REF_RAD_8_6_FACT + "*[\"" + TH_U_EXP_RM + "\"]))^2+"
+                + "((1/([\"208/206\"]-" + REF_RAD_8_6_FACT + "*[\"" + TH_U_EXP_RM + "\"])+"
+                + DEFCOM_64 + "/(" + DEFCOM_84 + "-" + DEFCOM_64 + "*" + REF_RAD_8_6_FACT + "*[\"" + TH_U_EXP_RM + "\"]))*"
+                + REF_RAD_8_6_FACT + "*[\"" + TH_U_EXP_RM + "\"]*[%\"" + TH_U_EXP_RM + "\"]"
+                + ")^2"
+                + ")"
+                + "), false)", true, false, false);
         meansAndAgesForRefMaterials.add(expression8corr206Pb238Ucalibrconst);
 
         // weighted mean
