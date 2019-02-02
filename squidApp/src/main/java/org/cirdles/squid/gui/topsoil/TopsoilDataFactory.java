@@ -25,6 +25,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 
 import static org.cirdles.topsoil.variable.Variables.*;
 
@@ -55,13 +56,12 @@ public class TopsoilDataFactory {
     public static Map<String, Object> prepareTeraWasserburgDatum(
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
         // jan 2019 - there is a naming problem we are working on
-        // see for example : (unknowns): '4-corr 238/206' vs '8-corr 238/206*'
         // default is for reference materials
-        String ratioBase86 = " 238/206*";
+        String ratioBase86 = R238U_206PB;
         String ratioBase76 = R207PB_206PB_RM;
         String errCorr = ERR_CORREL_RM;
         if (isUnknown) {
-            ratioBase86 = " 238/206";
+            ratioBase86 = R238U_206PB;
             ratioBase76 = R207PB_206PB;
             errCorr = ERR_CORREL;
         }

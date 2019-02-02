@@ -32,7 +32,6 @@ import static org.cirdles.squid.parameters.util.RadDates.age207_206r;
 import static org.cirdles.squid.parameters.util.RadDates.age208_232r;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ALPHA;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L1033;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L859;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA230;
@@ -142,6 +141,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR_DISCORDANCE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB_232TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 
 /**
  *
@@ -1443,7 +1444,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "false)", false, true, false);
         samRadiogenicCols.add(expression4corr206238);
 
-        Expression expression4corr238206 = buildExpression(PB4CORR + "238/206",
+        Expression expression4corr238206 = buildExpression(PB4CORR + R238U_206PB,
                 "ValueModel("
                 + "1 / [\"" + PB4CORR + R206PB_238U + "\"],"
                 + "[%\"" + PB4CORR + R206PB_238U + "\"],"
@@ -1514,7 +1515,7 @@ public abstract class BuiltInExpressionsFactory {
                 false, true, false);
         samRadiogenicCols.add(expression207corr206Pb238UAgeWithErr);
 
-        Expression expression4corr208232 = buildExpression(PB4CORR + "208*/232",
+        Expression expression4corr208232 = buildExpression(PB4CORR + R208PB_232TH,
                 "ValueModel("
                 + "[\"" + TOTAL_208_232 + "\"]*" + RADD8 + ","
                 + "SQRT([%\"" + TOTAL_208_232 + "\"]^2+\n"
@@ -1524,9 +1525,9 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression204corr208Pb232ThAge = buildExpression(PB4COR208_232AGE,
                 "ValueModel("
-                + "(LN( 1 + [\"" + PB4CORR + "208*/232\"] ) / " + LAMBDA232 + "),"
-                + "([\"" + PB4CORR + "208*/232\"] / " + LAMBDA232 + " / "
-                + "(1 + [\"" + PB4CORR + "208*/232\"]) * [%\"" + PB4CORR + "208*/232\"] / 100),"
+                + "(LN( 1 + [\"" + PB4CORR + R208PB_232TH + "\"] ) / " + LAMBDA232 + "),"
+                + "([\"" + PB4CORR + R208PB_232TH + "\"] / " + LAMBDA232 + " / "
+                + "(1 + [\"" + PB4CORR + R208PB_232TH + "\"]) * [%\"" + PB4CORR + R208PB_232TH + "\"] / 100),"
                 + "true)", false, true, false);
         samRadiogenicCols.add(expression204corr208Pb232ThAge);
 
@@ -1551,7 +1552,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "[%\"207/206\"])", false, true, false);
         samRadiogenicCols.add(expression207corr208Pb232ThAge);
 
-        Expression expression7corr208232 = buildExpression(PB7CORR + "208*/232S",
+        Expression expression7corr208232 = buildExpression(PB7CORR + R208PB_232TH,
                 "ValueModel("
                 + "EXP ( " + LAMBDA232 + " * [\"" + PB7COR208_232AGE + "\"] ) - 1,"
                 + "" + LAMBDA232 + " * EXP( " + LAMBDA232 + " *\n"
@@ -1582,7 +1583,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "false)", false, true, false);
         samRadiogenicCols.add(expression8corr206238);
 
-        Expression expressionEXP_8CORR_238_206_STAR = buildExpression(EXP_8CORR_238_206_STAR,
+        Expression expressionEXP_8CORR_238_206_STAR = buildExpression(PB8CORR + R238U_206PB,
                 "VALUEMODEL("
                 + "1 / [\"" + PB8CORR + R206PB_238U + "\"],"
                 + "[%\"" + PB8CORR + R206PB_238U + "\"],"

@@ -60,6 +60,12 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R208_204B = "r208_204b";
     public static final String R208_206B = "r208_206b";
 
+    // ********************** COR PREFIX ***************************************
+    public static final String COR_ = "cor_";
+    public static final String PB4CORR = "4" + COR_;
+    public static final String PB7CORR = "7" + COR_;
+    public static final String PB8CORR = "8" + COR_;
+
     // **********************  RATIOS FOR PB CORRECTION ************************
     public static final String R206PB_238U_RM = "206Pb238U_RM";
     public static final String R206PB_238U = "206Pb238U";
@@ -70,11 +76,9 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R207PB_206PB_RM = "207Pb206Pb_RM";
     public static final String R207PB_206PB = "207Pb206Pb";
 
-    // ********************** COR PREFIX ***************************************
-    public static final String COR_ = "cor_";
-    public static final String PB4CORR = "4" + COR_;
-    public static final String PB7CORR = "7" + COR_;
-    public static final String PB8CORR = "8" + COR_;
+    public static final String R208PB_232TH = "208Pb232Th";
+
+    public static final String R238U_206PB = "238U206Pb";
 
     // ********************** COMMON LEAD **************************************   
     public static final String COM206PB_PCT_RM = "Com206Pb_Pct_RM";
@@ -103,11 +107,9 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR207_206AGE = PB4CORR + "207Pb206Pb_Age";
     public static final String PB8COR207_206AGE_RM = PB8CORR + "207Pb206Pb_Age_RM";
     public static final String PB8COR207_206AGE = PB8CORR + "207Pb206Pb_Age";
-    
+
     public static final String PB4COR_DISCORDANCE = PB4CORR + "Discord_Pct";
     public static final String PB8COR_DISCORDANCE = PB8CORR + "Discord_Pct";
-    
-
 
     // ************************* ERROR CORRELATIONS ****************************  
     public static final String ERR_CORREL_RM = "ErrCorrel_RM";
@@ -133,8 +135,6 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String PB4COR208_232CALIB_CONST_WM = WTDAV_PREFIX + PB4COR208_232CALIB_CONST;
     public static final String PB7COR208_232CALIB_CONST_WM = WTDAV_PREFIX + PB7COR208_232CALIB_CONST;
-
-    public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
 
     public static final String TOTAL_206_238_RM = "Total_206Pb238U_RM";
     public static final String TOTAL_208_232_RM = "Total_208Pb232Th_RM";

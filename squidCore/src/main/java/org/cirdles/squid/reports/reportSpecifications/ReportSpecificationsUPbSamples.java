@@ -22,7 +22,6 @@ import java.util.Map;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_DISCORDANCE;
@@ -34,6 +33,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB_232TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
@@ -43,6 +43,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_206;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_238_206;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 
 /**
  * Modified from ET_Redux July 2018
@@ -124,10 +125,10 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"%", "Dis-", "cor-", "dant", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_DISCORDANCE, "",
             "", "true", "false", "6", "", "", "false", "false"
         },
-        {"", "4-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "208*/232", "PCT",
+        {"", "4-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R208PB_232TH, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "4-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "238/206", "PCT",
+        {"", "4-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R238U_206PB, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
         {"", "4-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R207PB_206PB, "PCT",
@@ -178,7 +179,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R206PB_238U, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + "208*/232S", "PCT",
+        {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R208PB_232TH, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         }
     };
@@ -206,7 +207,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"208corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", "208corr 207Pb/206PbS Age", "ABS",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", EXP_8CORR_238_206_STAR, "PCT",
+        {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R238U_206PB, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
         {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R207PB_206PB, "PCT",
