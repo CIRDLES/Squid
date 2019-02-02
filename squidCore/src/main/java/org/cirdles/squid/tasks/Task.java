@@ -105,12 +105,12 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
@@ -1084,14 +1084,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("4" + xCorr208232Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4CORR + "208Pb/232Thcalibr.const\"], "
-                        + "[%\"" + PB4CORR + "208Pb/232Thcalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4COR208_232CALIB_CONST + "\"], "
+                        + "[%\"" + PB4COR208_232CALIB_CONST + "\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);
             } else if (listedExp.getName().compareToIgnoreCase("7" + xCorr208232Name) == 0) {
-                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7CORR + "208Pb/232Thcalibr.const\"], "
-                        + "[%\"" + PB7CORR + "208Pb/232Thcalibr.const\"], "
+                listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB7COR208_232CALIB_CONST + "\"], "
+                        + "[%\"" + PB7COR208_232CALIB_CONST + "\"], "
                         + !squidAllowsAutoExclusionOfSpots + ", "
                         + "FALSE )");
                 completeUpdateRefMatCalibConstWMeanExpressions(listedExp);

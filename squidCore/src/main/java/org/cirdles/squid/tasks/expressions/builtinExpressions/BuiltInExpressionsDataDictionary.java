@@ -49,17 +49,18 @@ public class BuiltInExpressionsDataDictionary {
     public static final String LAMBDA235 = "Lambda235";
     public static final String LAMBDA238 = "Lambda238";
 
-    // **********************  MISC *************************************
+    // **********************  MISC ********************************************
     public static final String L859 = "L859";
     public static final String L1033 = "L1033";
 
+    // **********************  RATIOS USED IN COMMON PB MODELS *****************
     public static final String R206_204B = "r206_204b";
     public static final String R207_204B = "r207_204b";
     public static final String R207_206B = "r207_206b";
     public static final String R208_204B = "r208_204b";
     public static final String R208_206B = "r208_206b";
     
-    // **********************  RATIOS FOR PB CORRECTION *************************************
+    // **********************  RATIOS FOR PB CORRECTION ************************
     public static final String R206PB_238U_RM = "206Pb238U_RM";
     public static final String R206PB_238U = "206Pb238U";
     
@@ -69,7 +70,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R207PB_206PB_RM = "207Pb206Pb_RM";
     public static final String R207PB_206PB = "207Pb206Pb";
 
-    // ********************** COR PREFIX *********************************************
+    // ********************** COR PREFIX ***************************************
     public static final String COR_ = "cor_";
     public static final String PB4CORR = "4" + COR_;
     public static final String PB7CORR = "7" + COR_;
@@ -99,9 +100,17 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR206_238CALIB_CONST = PB4CORR + R206_238CALIB_CONST;
     public static final String PB7COR206_238CALIB_CONST = PB7CORR + R206_238CALIB_CONST;
     public static final String PB8COR206_238CALIB_CONST = PB8CORR + R206_238CALIB_CONST;
-    public static final String PB4COR206_238CALIB_CONST_WM = "WtdAv_" + PB4CORR + R206_238CALIB_CONST;
-    public static final String PB7COR206_238CALIB_CONST_WM = "WtdAv_" + PB7CORR + R206_238CALIB_CONST;
-    public static final String PB8COR206_238CALIB_CONST_WM = "WtdAv_" + PB8CORR + R206_238CALIB_CONST;
+    public static final String PB4COR206_238CALIB_CONST_WM = "WtdAv_" + PB4COR206_238CALIB_CONST;
+    public static final String PB7COR206_238CALIB_CONST_WM = "WtdAv_" + PB7COR206_238CALIB_CONST;
+    public static final String PB8COR206_238CALIB_CONST_WM = "WtdAv_" + PB8COR206_238CALIB_CONST;
+    
+    private static final String R208_232CALIB_CONST = "208Pb232Th_CalibConst";
+    public static final String PB4COR208_232CALIB_CONST = PB4CORR + R208_232CALIB_CONST;
+    public static final String PB7COR208_232CALIB_CONST = PB7CORR + R208_232CALIB_CONST;
+    public static final String PB4COR208_232CALIB_CONST_WM = "WtdAv_" + PB4COR208_232CALIB_CONST;
+    public static final String PB7COR208_232CALIB_CONST_WM = "WtdAv_" + PB7COR208_232CALIB_CONST;
+    
+    
 
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
