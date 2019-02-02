@@ -406,13 +406,30 @@ public class TaskSquid25 implements Serializable {
         if (retVal.matches("^.*(?i)corr\\S.*")) {
             if (!retVal.contains("corr.")) {
                 retVal = retVal.replace("corr", "cor_");
+                if (retVal.contains("204cor")) {
+                    retVal = retVal.replace("204cor", "4cor");
+                }
+
+                if (retVal.contains("207cor")) {
+                    retVal = retVal.replace("207cor", "7cor");
+                }
+
+                if (retVal.contains("208cor")) {
+                    retVal = retVal.replace("208cor", "8cor");
+                }
+
+                if (retVal.matches("^.*\\S(?i)age.*")) {
+                    retVal = retVal.replace("Age", "_Age");
+                    retVal = retVal.replace("age", "_Age");
+                }
+            } else {
+                if (retVal.matches("^.*\\S(?i)age.*")) {
+                    retVal = retVal.replace("Age", " Age");
+                    retVal = retVal.replace("age", " Age");
+                }
             }
             retVal = retVal.replace("corr 2", "cor_2");
             retVal = retVal.replace("corr2", "cor_2");
-        }
-        if (retVal.matches("^.*\\S(?i)age.*")) {
-            retVal = retVal.replace("Age", " Age");
-            retVal = retVal.replace("age", " Age");
         }
 
         if (retVal.contains("\"4-cor")) {
@@ -435,19 +452,22 @@ public class TaskSquid25 implements Serializable {
         if (retVal.contains("r_206*/238")) {
             retVal = retVal.replace("r_206*/238", "r_" + R206PB_238U);
         }
-        
+
         if (retVal.contains("r_207*/206*")) {
             retVal = retVal.replace("r_207*/206*", "r_" + R207PB_206PB);
         }
-        
+
         if (retVal.contains("r_207*/235")) {
             retVal = retVal.replace("r_207*/235", "r_" + R207PB_235U);
         }
-        
+
         if (retVal.contains("r_207Pb/206Pb")) {
             retVal = retVal.replace("r_207Pb/206Pb", "r_" + R207PB_206PB);
         }
 
+        if (retVal.contains("r_206Pb/238U")) {
+            retVal = retVal.replace("r_206Pb/238U", "r_" + R206PB_238U);
+        }
 
         return retVal;
     }
