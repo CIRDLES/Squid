@@ -26,6 +26,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM;
@@ -123,7 +124,7 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "4-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "238/206", "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "4-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "207*/206*", "PCT",
+        {"", "4-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R207PB_206PB, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "4-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R207PB_235U, "PCT",
@@ -202,7 +203,7 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", EXP_8CORR_238_206_STAR, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + "207*/206*S", "PCT",
+        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R207PB_206PB, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R207PB_235U, "PCT",

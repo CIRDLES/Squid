@@ -65,6 +65,9 @@ public class BuiltInExpressionsDataDictionary {
     
     public static final String R207PB_235U_RM = "207Pb235U_RM";
     public static final String R207PB_235U = "207Pb235U";
+    
+    public static final String R207PB_206PB_RM = "207Pb206Pb_RM";
+    public static final String R207PB_206PB = "207Pb206Pb";
 
     // ********************** COR PREFIX *********************************************
     public static final String COR_ = "cor_";

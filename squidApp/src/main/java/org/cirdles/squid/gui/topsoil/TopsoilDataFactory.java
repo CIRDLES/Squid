@@ -20,6 +20,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
 
 import static org.cirdles.topsoil.variable.Variables.*;
@@ -54,11 +56,11 @@ public class TopsoilDataFactory {
         // see for example : (unknowns): '4-corr 238/206' vs '8-corr 238/206*'
         // default is for reference materials
         String ratioBase86 = " 238/206*";
-        String ratioBase76 = " 207*/206*";
+        String ratioBase76 = R207PB_206PB_RM;
         String errCorr = " errcorr";
         if (isUnknown) {
             ratioBase86 = " 238/206";
-            ratioBase76 = " 207*/206*";
+            ratioBase76 = R207PB_206PB;
             errCorr = " errcorrS";
         }
 
