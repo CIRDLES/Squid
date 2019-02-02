@@ -66,6 +66,10 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB7CORR = "7" + COR_;
     public static final String PB8CORR = "8" + COR_;
 
+    // ********************** CONCENTRATIONS ***********************************
+    public static final String CONCEN_206PB = "206Pb_Concen";
+    public static final String CONCEN_208PB = "208Pb_Concen";
+
     // **********************  RATIOS FOR PB CORRECTION ************************
     public static final String R206PB_238U_RM = "206Pb238U_RM";
     public static final String R206PB_238U = "206Pb238U";
@@ -80,15 +84,17 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String R238U_206PB = "238U206Pb";
 
+    public static final String R204PB_206PB = "204Pb206Pb";
+
+    public static final String R208PB206PB_RM = "208Pb206Pb_RM";
+    public static final String R208PB206PB = "208Pb206Pb";
+
     // ********************** COMMON LEAD **************************************   
     public static final String COM206PB_PCT_RM = "Com206Pb_Pct_RM";
     public static final String COM206PB_PCT = "Com206Pb_Pct";
 
     public static final String COM208PB_PCT_RM = "Com208Pb_Pct_RM";
     public static final String COM208PB_PCT = "Com208Pb_Pct";
-
-    public static final String R208PB206PB_RM = "208Pb206Pb_RM";
-    public static final String R208PB206PB = "208Pb206Pb";
 
     // ********************** AGES *********************************************
     public static final String PB4COR206_238AGE_RM = PB4CORR + "206Pb238U_Age_RM";
