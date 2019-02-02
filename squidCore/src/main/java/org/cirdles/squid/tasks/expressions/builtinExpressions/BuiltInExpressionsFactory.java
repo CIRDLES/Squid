@@ -894,28 +894,28 @@ public abstract class BuiltInExpressionsFactory {
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 7-corr  208/232  *** Start
         Expression expression7corr208Pb232Thcalibrconst = buildExpression(PB7COR208_232CALIB_CONST,
                 "ValueModel("
-                + "(1 - [\"" + OVER_COUNT_4_6_7 + "\"] / [\"208/206\"] * " + DEFCOM_84 + ") * [\"" + UNCOR208PB232TH_CALIB_CONST + "\"],"
-                + "sqrt([%\"" + UNCOR208PB232TH_CALIB_CONST + "\"]^2 +  \n"
-                + "( " + DEFCOM_84 + " / ( [\"208/206\"] / [\"" + OVER_COUNT_4_6_7 + "\"] - " + DEFCOM_84 + " ) )^2 * \n"
-                + "( [%\"208/206\"]^2 + [%\"" + OVER_COUNT_4_6_7 + "\"]^2 )),"
+                + "(1-[\"" + OVER_COUNT_4_6_7 + "\"]/[\"208/206\"]*" + DEFCOM_84 + ")*[\"" + UNCOR208PB232TH_CALIB_CONST + "\"],"
+                + "sqrt([%\"" + UNCOR208PB232TH_CALIB_CONST + "\"]^2+"
+                + "(" + DEFCOM_84 + "/([\"208/206\"]/[\"" + OVER_COUNT_4_6_7 + "\"]-" + DEFCOM_84 + "))^2*"
+                + "([%\"208/206\"]^2+[%\"" + OVER_COUNT_4_6_7 + "\"]^2)),"
                 + "false)", true, false, false);
         meansAndAgesForRefMaterials.add(expression7corr208Pb232Thcalibrconst);
 
         // weighted mean
         Expression expression7corr208Pb232ThcalibrconstWM = buildExpression(PB7COR208_232CALIB_CONST_WM,
-                "WtdMeanACalc( [\"" + PB7COR208_232CALIB_CONST + "\"], [%\"" + PB7COR208_232CALIB_CONST + "\"], FALSE, FALSE )", true, false, true);
+                "WtdMeanACalc([\"" + PB7COR208_232CALIB_CONST + "\"],[%\"" + PB7COR208_232CALIB_CONST + "\"],FALSE,FALSE )", true, false, true);
         meansAndAgesForRefMaterials.add(expression7corr208Pb232ThcalibrconstWM);
 
         // age calc
         Expression expression7corr208Pb232ThAge = buildExpression(PB7COR208_232AGE_RM,
                 "ValueModel("
-                + "LN( 1.0 + [\"" + PB7COR208_232CALIB_CONST + "\"] / [\"" + PB7COR208_232CALIB_CONST_WM + "\"][0] * " + REF_TH_PB_RATIO + " ) / " + LAMBDA232 + ","
-                + "[%\"" + PB7COR208_232CALIB_CONST + "\"] / 100 * ( EXP(" + LAMBDA232 + " * "
-                + "LN( 1.0 + [\"" + PB7COR208_232CALIB_CONST + "\"] / [\"" + PB7COR208_232CALIB_CONST_WM + "\"][0] * " + REF_TH_PB_RATIO + " ) / " + LAMBDA232 + ""
-                + " ) - 1 ) \n"
-                + "/ " + LAMBDA232 + " / EXP(" + LAMBDA232 + " * "
-                + "LN( 1.0 + [\"" + PB7COR208_232CALIB_CONST + "\"] / [\"" + PB7COR208_232CALIB_CONST_WM + "\"][0] * " + REF_TH_PB_RATIO + " ) / " + LAMBDA232 + ""
-                + " ),"
+                + "LN(1.0+[\"" + PB7COR208_232CALIB_CONST + "\"]/[\"" + PB7COR208_232CALIB_CONST_WM + "\"][0]*" + REF_TH_PB_RATIO + ")/" + LAMBDA232 + ","
+                + "[%\"" + PB7COR208_232CALIB_CONST + "\"]/100 * (EXP(" + LAMBDA232 + "*"
+                + "LN(1.0+[\"" + PB7COR208_232CALIB_CONST + "\"]/[\"" + PB7COR208_232CALIB_CONST_WM + "\"][0]*" + REF_TH_PB_RATIO + ")/" + LAMBDA232
+                + ")-1 )"
+                + "/" + LAMBDA232 + "/EXP(" + LAMBDA232 + "*"
+                + "LN(1.0+[\"" + PB7COR208_232CALIB_CONST + "\"]/[\"" + PB7COR208_232CALIB_CONST_WM + "\"][0]*" + REF_TH_PB_RATIO + ")/" + LAMBDA232
+                + "),"
                 + "true)", true, false, false);
         meansAndAgesForRefMaterials.add(expression7corr208Pb232ThAge);
 
@@ -944,12 +944,12 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> overCountMeans() {
         SortedSet<Expression> overCountMeansRefMaterials = new TreeSet<>();
 
-        String term1 = "(([\"207/206\"]*[%\"207/206\"])^2 \n"
-                + "+ ([\"204/206\"]*(([\"207/206\"]/[\"204/206\"]-" + DEFCOM_74 + " )"
-                + "/(1/[\"204/206\"]-" + DEFCOM_64 + ") * " + DEFCOM_64 + " - " + DEFCOM_74 + ") \n "
-                + "* [%\"204/206\"])^2)";
+        String term1 = "(([\"207/206\"]*[%\"207/206\"])^2"
+                + "+([\"204/206\"]*(([\"207/206\"]/[\"204/206\"]-" + DEFCOM_74 + ")"
+                + "/(1/[\"204/206\"]-" + DEFCOM_64 + ") * " + DEFCOM_64 + " - " + DEFCOM_74 + ") "
+                + "*[%\"204/206\"])^2)";
 
-        String term2 = "([\"207/206\"] - [\"204/206\"] * " + DEFCOM_74 + ")^2";
+        String term2 = "([\"207/206\"]-[\"204/206\"]*" + DEFCOM_74 + ")^2";
 
         Expression expression4corr207Pb206Pb = buildExpression(PB4CORR + R207PB_206PB_RM,
                 "ValueModel(([\"207/206\"]/[\"204/206\"]-" + DEFCOM_74 + " )/(1/[\"204/206\"]-" + DEFCOM_64 + "),"
