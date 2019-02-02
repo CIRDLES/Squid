@@ -59,14 +59,14 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R207_206B = "r207_206b";
     public static final String R208_204B = "r208_204b";
     public static final String R208_206B = "r208_206b";
-    
+
     // **********************  RATIOS FOR PB CORRECTION ************************
     public static final String R206PB_238U_RM = "206Pb238U_RM";
     public static final String R206PB_238U = "206Pb238U";
-    
+
     public static final String R207PB_235U_RM = "207Pb235U_RM";
     public static final String R207PB_235U = "207Pb235U";
-    
+
     public static final String R207PB_206PB_RM = "207Pb206Pb_RM";
     public static final String R207PB_206PB = "207Pb206Pb";
 
@@ -88,29 +88,35 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR206_238AGE_RM = PB4CORR + "206Pb238U_Age_RM";
     public static final String PB7COR206_238AGE_RM = PB7CORR + "206Pb238U_Age_RM";
     public static final String PB8COR206_238AGE_RM = PB8CORR + "206Pb238U_Age_RM";
-    
+
     public static final String PB4COR208_232AGE_RM = PB4CORR + "208Pb232Th_Age_RM";
     public static final String PB7COR208_232AGE_RM = PB7CORR + "208Pb232Th_Age_RM";
-    
+
     public static final String PB4COR207_206AGE_RM = PB4CORR + "207Pb206Pb_Age_RM";
     public static final String PB8COR207_206AGE_RM = PB8CORR + "207Pb206Pb_Age_RM";
-    
+
     // ************************* CALIBRATION CONSTANTS *************************
-    private static final String R206_238CALIB_CONST = "206Pb238U_CalibConst";
+    
+    public static final String CALIB_CONST_206_238_ROOT = "206Pb238U";
+    public static final String CALIB_CONST_208_232_ROOT = "208Pb232Th";
+    public static final String WTDAV_PREFIX = "WtdAv_";
+    
+    private static final String R206_238CALIB_CONST = CALIB_CONST_206_238_ROOT + "_CalibConst";
     public static final String PB4COR206_238CALIB_CONST = PB4CORR + R206_238CALIB_CONST;
     public static final String PB7COR206_238CALIB_CONST = PB7CORR + R206_238CALIB_CONST;
     public static final String PB8COR206_238CALIB_CONST = PB8CORR + R206_238CALIB_CONST;
-    public static final String PB4COR206_238CALIB_CONST_WM = "WtdAv_" + PB4COR206_238CALIB_CONST;
-    public static final String PB7COR206_238CALIB_CONST_WM = "WtdAv_" + PB7COR206_238CALIB_CONST;
-    public static final String PB8COR206_238CALIB_CONST_WM = "WtdAv_" + PB8COR206_238CALIB_CONST;
     
-    private static final String R208_232CALIB_CONST = "208Pb232Th_CalibConst";
+    public static final String PB4COR206_238CALIB_CONST_WM = WTDAV_PREFIX + PB4COR206_238CALIB_CONST;
+    public static final String PB7COR206_238CALIB_CONST_WM = WTDAV_PREFIX + PB7COR206_238CALIB_CONST;
+    public static final String PB8COR206_238CALIB_CONST_WM = WTDAV_PREFIX + PB8COR206_238CALIB_CONST;
+
+    private static final String R208_232CALIB_CONST = CALIB_CONST_208_232_ROOT + "_CalibConst";
     public static final String PB4COR208_232CALIB_CONST = PB4CORR + R208_232CALIB_CONST;
     public static final String PB7COR208_232CALIB_CONST = PB7CORR + R208_232CALIB_CONST;
-    public static final String PB4COR208_232CALIB_CONST_WM = "WtdAv_" + PB4COR208_232CALIB_CONST;
-    public static final String PB7COR208_232CALIB_CONST_WM = "WtdAv_" + PB7COR208_232CALIB_CONST;
     
-    
+    public static final String PB4COR208_232CALIB_CONST_WM = WTDAV_PREFIX + PB4COR208_232CALIB_CONST;
+    public static final String PB7COR208_232CALIB_CONST_WM = WTDAV_PREFIX + PB7COR208_232CALIB_CONST;
+
 
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
@@ -134,9 +140,6 @@ public class BuiltInExpressionsDataDictionary {
     public static final String TOTAL_207_206 = "Total_207Pb206Pb";
     public static final String TOTAL_238_206 = "Total_238U206Pb";
 
-    public static final String SQUID_CALIB_CONST_AGE_206_238_BASENAME = "206Pb/238U";// fix these
-    public static final String SQUID_CALIB_CONST_AGE_208_232_BASENAME = "208Pb/232Th";
-
     public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
 
     // ********************** OVER COUNTS **************************************
@@ -147,7 +150,7 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
     public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
-    
+
     // ********************** INTERNAL EXPRESSIONS *****************************
     public static final String ALPHA = "Total_206Pb204Pb";
     public static final String BETA = "Total_207Pb204Pb";

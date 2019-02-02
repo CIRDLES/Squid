@@ -54,8 +54,6 @@ import org.cirdles.squid.gui.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.gui.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
@@ -67,6 +65,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_AGE_U_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.WTDAV_PREFIX;
 
 /**
  *
@@ -376,8 +377,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         String calibrConstAgeBaseName = (String) plotFlavorToggleGroup.getSelectedToggle().getUserData();
         // get details
         spotSummaryDetails
-                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction
-                        + calibrConstAgeBaseName + "calibr.const WM");
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().
+                        get(WTDAV_PREFIX + correction + calibrConstAgeBaseName + "_CalibConst");
         plot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
                 correction + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
@@ -515,10 +516,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
-                plotFlavorOneRadioButton.setText(SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM");
-                plotFlavorTwoRadioButton.setText(SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM");
-                plotFlavorOneRadioButton.setUserData(SQUID_CALIB_CONST_AGE_206_238_BASENAME);
-                plotFlavorTwoRadioButton.setUserData(SQUID_CALIB_CONST_AGE_208_232_BASENAME);
+                plotFlavorOneRadioButton.setText("WtdAv_" + CALIB_CONST_206_238_ROOT + "_CalibConst");
+                plotFlavorTwoRadioButton.setText("WtdAv_" + CALIB_CONST_208_232_ROOT + "_CalibConst");
+                plotFlavorOneRadioButton.setUserData(CALIB_CONST_206_238_ROOT);
+                plotFlavorTwoRadioButton.setUserData(CALIB_CONST_208_232_ROOT);
 
                 boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
                 boolean has232 = squidProject.getTask().getParentNuclide().contains("232");

@@ -34,6 +34,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
@@ -430,8 +433,21 @@ public class TaskSquid25 implements Serializable {
         }
 
         if (retVal.contains("r_206*/238")) {
-            retVal = retVal.replace("r_206*/238", "r_206Pb238U");
+            retVal = retVal.replace("r_206*/238", "r_" + R206PB_238U);
         }
+        
+        if (retVal.contains("r_207*/206*")) {
+            retVal = retVal.replace("r_207*/206*", "r_" + R207PB_206PB);
+        }
+        
+        if (retVal.contains("r_207*/235")) {
+            retVal = retVal.replace("r_207*/235", "r_" + R207PB_235U);
+        }
+        
+        if (retVal.contains("r_207Pb/206Pb")) {
+            retVal = retVal.replace("r_207Pb/206Pb", "r_" + R207PB_206PB);
+        }
+
 
         return retVal;
     }
