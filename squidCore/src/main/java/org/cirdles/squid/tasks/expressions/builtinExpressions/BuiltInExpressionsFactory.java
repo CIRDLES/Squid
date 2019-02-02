@@ -568,7 +568,9 @@ public abstract class BuiltInExpressionsFactory {
         // new section to accommodate reporting corrections per Bodorkos 13 Aug 2018
         if (!isDirectAltPD) {
             Expression expressionOverCount4_6_8 = buildExpression(OVER_COUNT_4_6_8,
-                    "([\"208/206\"]-" + REF_RAD_8_6_FACT + "*[\"" + TH_U_EXP_RM + "\"])/(" + DEFCOM_84 + "-" + REF_RAD_8_6_FACT + "*[\"" + TH_U_EXP_RM + "\"]*" + DEFCOM_64 + ")", true, false, false);
+                    "([\"208/206\"]-" + REF_RAD_8_6_FACT + "*[\"" + TH_U_EXP_RM + "\"])/("
+                    + DEFCOM_84 + "-" + REF_RAD_8_6_FACT + "*[\"" + TH_U_EXP_RM + "\"]*"
+                    + DEFCOM_64 + ")", true, false, false);
             overCountExpressionsOrdered.add(expressionOverCount4_6_8);
 
             Expression expressionOverCountPerSec4_8 = buildExpression(OVER_COUNTS_PERSEC_4_8,
