@@ -55,7 +55,6 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
@@ -119,6 +118,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
 
 /**
  *
@@ -783,8 +783,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                 }
-                if (listedExp.getName().compareToIgnoreCase(CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA) == 0) {
-                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA + "\"]");
+                if (listedExp.getName().compareToIgnoreCase(CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT) == 0) {
+                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);

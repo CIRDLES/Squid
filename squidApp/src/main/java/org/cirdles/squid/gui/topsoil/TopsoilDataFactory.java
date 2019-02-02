@@ -20,6 +20,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
@@ -38,11 +40,11 @@ public class TopsoilDataFactory {
         // default is for reference materials
         String ratioBase75 = "207*/235";
         String ratioBase68 = "206*/238";
-        String errCorr = "errcorr";
+        String errCorr = ERR_CORREL_RM;
         if (isUnknown) {
             ratioBase75 = R207PB_235U;
             ratioBase68 = "206*/238S";
-            errCorr = "errcorrS";
+            errCorr = ERR_CORREL;
         }
 
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase75, ratioBase68, errCorr);
@@ -57,11 +59,11 @@ public class TopsoilDataFactory {
         // default is for reference materials
         String ratioBase86 = " 238/206*";
         String ratioBase76 = R207PB_206PB_RM;
-        String errCorr = " errcorr";
+        String errCorr = ERR_CORREL_RM;
         if (isUnknown) {
             ratioBase86 = " 238/206";
             ratioBase76 = R207PB_206PB;
-            errCorr = " errcorrS";
+            errCorr = ERR_CORREL;
         }
 
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase86, ratioBase76, errCorr);

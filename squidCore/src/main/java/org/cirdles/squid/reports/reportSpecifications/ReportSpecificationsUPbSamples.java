@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.EXP_8CORR_238_206_STAR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
@@ -134,7 +135,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "4-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R206PB_238U, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "errcorrS", "",
+        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + ERR_CORREL, "",
             "", "true", "false", "6", "", "", "false", "false"
         }
     };
@@ -213,7 +214,7 @@ public class ReportSpecificationsUPbSamples extends ReportSpecificationsAbstract
         {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R206PB_238U, "PCT",
             "", "true", "false", "6", "true", "", "false", "false"
         },
-        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + "errcorrS", "",
+        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + ERR_CORREL, "",
             "", "true", "false", "6", "", "", "false", "false"
         }
     };

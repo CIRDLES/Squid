@@ -30,13 +30,13 @@ import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
 
 /**
  *
@@ -441,7 +441,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             "204corr", "8-corr", "206Pb/238U", "const delta%",
             "",
             specs[5],
-            CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA,
+            CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
             specs[7],
             specs[8],
             specs[9],
@@ -468,12 +468,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else {
             // perm2 and 4
             columnSpec[0] = "204corr";
-            columnSpec[6] = PB4CORR + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
+            columnSpec[6] = PB4CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
-            columnSpec[6] = PB7CORR + CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA;
+            columnSpec[6] = PB7CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
             categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
             colIndex++;
         }

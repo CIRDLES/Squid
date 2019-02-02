@@ -23,6 +23,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_7;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_7;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
@@ -100,7 +102,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "204", "/206", "(fr. 208)", "", "getTaskExpressionsEvaluationsPerSpotByField", "<OVER_COUNT_4_6_8>", "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + "Primary calib const. delta%", "",
+        {"7-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT, "",
             "", "true", "false", "15", "", "", "false", "false"
         },
         {"8-corr", "206Pb", "/238U", "const delta%", "", "getTaskExpressionsEvaluationsPerSpotByField", "<CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA>", "",
@@ -159,7 +161,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "4-corr", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R206PB_238U_RM, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "4-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + "errcorr", "",
+        {"", "4-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + ERR_CORREL_RM, "",
             "", "true", "false", "15", "", "", "false", "false"
         }
     };
@@ -235,7 +237,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R206PB_238U_RM, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "8-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + "errcorr", "",
+        {"", "8-corr", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + ERR_CORREL_RM, "",
             "", "true", "false", "15", "", "", "false", "false"
         }
     };

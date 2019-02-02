@@ -76,13 +76,15 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB7CORR = "7" + COR_;
     public static final String PB8CORR = "8" + COR_;
 
-    // ********************** COMMON LEAD **************************************
-    public static final String COM206PB_PCT = "Com206Pb_Pct";
+    // ********************** COMMON LEAD **************************************   
     public static final String COM206PB_PCT_RM = "Com206Pb_Pct_RM";
-    public static final String COM208PB_PCT = "Com208Pb_Pct";
+    public static final String COM206PB_PCT = "Com206Pb_Pct";
+
     public static final String COM208PB_PCT_RM = "Com208Pb_Pct_RM";
-    public static final String R208PB206PB = "208Pb206Pb";
+    public static final String COM208PB_PCT = "Com208Pb_Pct";
+
     public static final String R208PB206PB_RM = "208Pb206Pb_RM";
+    public static final String R208PB206PB = "208Pb206Pb";
 
     // ********************** AGES *********************************************
     public static final String PB4COR206_238AGE_RM = PB4CORR + "206Pb238U_Age_RM";
@@ -95,17 +97,20 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR207_206AGE_RM = PB4CORR + "207Pb206Pb_Age_RM";
     public static final String PB8COR207_206AGE_RM = PB8CORR + "207Pb206Pb_Age_RM";
 
-    // ************************* CALIBRATION CONSTANTS *************************
-    
+    // ************************* ERROR CORRELATIONS ****************************  
+    public static final String ERR_CORREL_RM = "ErrCorrel_RM";
+    public static final String ERR_CORREL = "ErrCorrel";
+
+    // ************************* CALIBRATION CONSTANTS *************************   
     public static final String CALIB_CONST_206_238_ROOT = "206Pb238U";
     public static final String CALIB_CONST_208_232_ROOT = "208Pb232Th";
     public static final String WTDAV_PREFIX = "WtdAv_";
-    
+
     private static final String R206_238CALIB_CONST = CALIB_CONST_206_238_ROOT + "_CalibConst";
     public static final String PB4COR206_238CALIB_CONST = PB4CORR + R206_238CALIB_CONST;
     public static final String PB7COR206_238CALIB_CONST = PB7CORR + R206_238CALIB_CONST;
     public static final String PB8COR206_238CALIB_CONST = PB8CORR + R206_238CALIB_CONST;
-    
+
     public static final String PB4COR206_238CALIB_CONST_WM = WTDAV_PREFIX + PB4COR206_238CALIB_CONST;
     public static final String PB7COR206_238CALIB_CONST_WM = WTDAV_PREFIX + PB7COR206_238CALIB_CONST;
     public static final String PB8COR206_238CALIB_CONST_WM = WTDAV_PREFIX + PB8COR206_238CALIB_CONST;
@@ -113,11 +118,43 @@ public class BuiltInExpressionsDataDictionary {
     private static final String R208_232CALIB_CONST = CALIB_CONST_208_232_ROOT + "_CalibConst";
     public static final String PB4COR208_232CALIB_CONST = PB4CORR + R208_232CALIB_CONST;
     public static final String PB7COR208_232CALIB_CONST = PB7CORR + R208_232CALIB_CONST;
-    
+
     public static final String PB4COR208_232CALIB_CONST_WM = WTDAV_PREFIX + PB4COR208_232CALIB_CONST;
     public static final String PB7COR208_232CALIB_CONST_WM = WTDAV_PREFIX + PB7COR208_232CALIB_CONST;
 
+    public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
 
+    public static final String TOTAL_206_238_RM = "Total_206Pb238U_RM";
+    public static final String TOTAL_208_232_RM = "Total_208Pb232Th_RM";
+
+    public static final String TOTAL_206_238 = "Total_206Pb238U";
+    public static final String TOTAL_208_232 = "Total_208Pb232Th";
+    public static final String TOTAL_207_206 = "Total_207Pb206Pb";
+    public static final String TOTAL_238_206 = "Total_238U206Pb";
+
+    public static final String PBTh_EXT_1_SIGMA_ERR_PCT = "208Pb232Th_Ext1SigmaErr_Pct";
+    public static final String PBU_EXT_1_SIGMA_ERR_PCT = "206Pb238U_Ext1SigmaErr_Pct";
+    public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
+
+    // ********************** OVER COUNTS **************************************
+    public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_From207Pb";
+    public static final String OVER_COUNT_4_6_8 = "204Pb206Pb_From208Pb";
+    public static final String OVER_COUNTS_PERSEC_4_8 = "204OvCts_From208Pb";
+    public static final String OVER_COUNTS_PERSEC_4_7 = "204OvCts_From207Pb";
+
+    public static final String BIWT_PRE = "BiWt_";
+
+    public static final String BIWT_4COR_207_206_AGE = BIWT_PRE + PB4CORR + "207Pb206Pb_Age";
+
+    public static final String CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT = "7cor_PrimaryCalibConstDelta_Pct";
+    public static final String BIWT_7COR_PRIMARY_CALIB_CONST_DELTA_PCT = "BiWt_7cor_PrimaryCalibConstDelta_Pct";
+    public static final String BIWT_204_OVR_CTS_FROM_207 = BIWT_PRE + "204OvCts_From207Pb";
+
+    public static final String CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT = "8cor_PrimaryCalibConstDelta_Pct";
+    public static final String BIWT_8COR_PRIMARY_CALIB_CONST_DELTA_PCT = BIWT_PRE + "8cor_PrimaryCalibConstDelta_Pct";
+    public static final String BIWT_204_OVR_CTS_FROM_208 = BIWT_PRE + "204OvCts_From208Pb";
+
+    // ********************** INTERNAL EXPRESSIONS *****************************
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
     public static final String UNCOR208PB232TH_CALIB_CONST = "Uncor_208Pb232Th_CalibConst";
@@ -132,26 +169,6 @@ public class BuiltInExpressionsDataDictionary {
     public static final String TH_CONCEN_PPM_RM = "Th_Concen_RM";
     public static final String TH_CONCEN_PPM = "Th_Concen";
 
-    public static final String TOTAL_206_238_RM = "Total_206Pb238U_RM";
-    public static final String TOTAL_208_232_RM = "Total_208Pb232Th_RM";
-
-    public static final String TOTAL_206_238 = "Total_206Pb238U";
-    public static final String TOTAL_208_232 = "Total_208Pb232Th";
-    public static final String TOTAL_207_206 = "Total_207Pb206Pb";
-    public static final String TOTAL_238_206 = "Total_238U206Pb";
-
-    public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
-
-    // ********************** OVER COUNTS **************************************
-    public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_From207Pb";
-    public static final String OVER_COUNT_4_6_8 = "204Pb206Pb_From208Pb";
-    public static final String OVER_COUNTS_PERSEC_4_8 = "204OvCts_From208Pb";
-    public static final String OVER_COUNTS_PERSEC_4_7 = "204OvCts_From207Pb";
-
-    public static final String CORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = "8-corr Primary calib const. delta%";
-    public static final String EXP_8CORR_238_206_STAR = "8-corr 238/206*";
-
-    // ********************** INTERNAL EXPRESSIONS *****************************
     public static final String ALPHA = "Total_206Pb204Pb";
     public static final String BETA = "Total_207Pb204Pb";
     public static final String GAMMA = "Total_208Pb204Pb";
