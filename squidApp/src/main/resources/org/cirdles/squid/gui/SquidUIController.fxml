@@ -176,7 +176,7 @@
                       <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Developer Tools" visible="false">
+                  <Menu mnemonicParsing="false" text="Developer Tools">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#listBuiltinExpressionsAction" text="List Built-in Expressions" />
                     </items>

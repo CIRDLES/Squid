@@ -483,7 +483,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(" Concentration Reference Material Spots extracted by filter: \"")
                 .append(filterForConcRefMatSpotNames)
                 .append("\".\n\t\t  Mean Concentration of Primary Parent Element ")
-                .append(parentNuclide)
+//                .append(parentNuclide)
                 .append(" = ")
                 .append(meanConcValue);
 
