@@ -38,7 +38,7 @@
 }
 
 .choice-box .label{
-    -fx-font-family: "Courier New";
+    -fx-font-family: "Monospaced";
     -fx-font-weight: bolder;
     -fx-font-size: 9pt;
     -fx-text-fill: Secondary;
@@ -46,7 +46,7 @@
 
 .text-field {
     -fx-background-color: transparent;
-    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
     -fx-border-color: transparent transparent Secondary transparent;
     -fx-padding: 4 0 4 0;
@@ -71,7 +71,7 @@
 
 .label {
     -fx-font-size: 12pt;
-    -fx-font-family: "Lucida Sans", "Segoe UI";
+    -fx-font-family: "SansSerif", "Segoe UI";
     -fx-text-fill: P-Text;
     -fx-padding: 4 0 4 0;
     -fx-opacity: 100;
@@ -153,7 +153,7 @@
 .tab .tab-label {
     -fx-alignment: CENTER;
     /*-fx-text-fill: S-Text;*/
-    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
     -fx-border-radius: 0px;
@@ -223,7 +223,7 @@
     -fx-border-width: 2;
     -fx-background-radius: 0;
     -fx-background-color: Secondary;/*#72b1bf;!*#43ABC9;!*#ff8f89; !*#ff6961; !*#1d1d1d;*/
-    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
     -fx-text-fill: whitesmoke;/*  #d8d8d8;*/
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
@@ -282,7 +282,7 @@
 
 /*  https://stackoverflow.com/questions/39512621/change-javafx-tableview-font-size  */
 .table-view .column-header-background .label{
-    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 10pt;
 }
 

@@ -104,7 +104,6 @@ import org.antlr.v4.runtime.Token;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_C_FOR_CONCREFMAT;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_DASH_FOR_DASH;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_R_FOR_REFMAT;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_U_FOR_UNKNOWN;
 import org.cirdles.squid.exceptions.SquidException;
@@ -140,6 +139,7 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUIL
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MAX_FONTSIZE;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
+import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
 
 /**
  * FXML Controller class
@@ -477,6 +477,7 @@ public class ExpressionBuilderController implements Initializable {
         initExpressionSelection();
         initNodeSelection();
         initKey();
+        initPeekAreas();
 
         currentMode.set(Mode.VIEW);
 
@@ -488,6 +489,11 @@ public class ExpressionBuilderController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
+    }
+    
+    private void initPeekAreas(){
+        rmPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
+        unPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
     }
 
     private void initPropertyBindings() {
@@ -2380,10 +2386,10 @@ public class ExpressionBuilderController implements Initializable {
             text = text.replace(VISIBLEWHITESPACEPLACEHOLDER, " ");
 
             if (!text.matches("^[ \t\n\r]$")) {
-                text = nodeText.replace(SUPERSCRIPT_R_FOR_REFMAT + SUPERSCRIPT_DASH_FOR_DASH + " ", "");
-                text = text.replace(SUPERSCRIPT_C_FOR_CONCREFMAT + SUPERSCRIPT_DASH_FOR_DASH + " ", "");
+                text = nodeText.replace(SUPERSCRIPT_R_FOR_REFMAT + SUPERSCRIPT_SPACE + " ", "");
+                text = text.replace(SUPERSCRIPT_C_FOR_CONCREFMAT + SUPERSCRIPT_SPACE + " ", "");
                 text = text.replace(SUPERSCRIPT_R_FOR_REFMAT + SUPERSCRIPT_U_FOR_UNKNOWN + " ", "");
-                text = text.replace(SUPERSCRIPT_DASH_FOR_DASH + SUPERSCRIPT_U_FOR_UNKNOWN + " ", "");
+                text = text.replace(SUPERSCRIPT_SPACE + SUPERSCRIPT_U_FOR_UNKNOWN + " ", "");
                 text = text.trim();
             }
 

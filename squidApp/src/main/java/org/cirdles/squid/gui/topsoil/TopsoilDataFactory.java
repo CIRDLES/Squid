@@ -20,6 +20,12 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 
 import static org.cirdles.topsoil.variable.Variables.*;
 
@@ -33,13 +39,13 @@ public class TopsoilDataFactory {
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
 
         // default is for reference materials
-        String ratioBase75 = " 207*/235";
-        String ratioBase68 = " 206*/238";
-        String errCorr = " errcorr";
+        String ratioBase75 = "207*/235";
+        String ratioBase68 = "206*/238";
+        String errCorr = ERR_CORREL_RM;
         if (isUnknown) {
-            ratioBase75 = " 207*/235S";
-            ratioBase68 = " 206*/238S";
-            errCorr = " errcorrS";
+            ratioBase75 = R207PB_235U;
+            ratioBase68 = "206*/238S";
+            errCorr = ERR_CORREL;
         }
 
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase75, ratioBase68, errCorr);
@@ -50,15 +56,14 @@ public class TopsoilDataFactory {
     public static Map<String, Object> prepareTeraWasserburgDatum(
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
         // jan 2019 - there is a naming problem we are working on
-        // see for example : (unknowns): '4-corr 238/236' vs '8-corr 238/206*'
         // default is for reference materials
-        String ratioBase86 = " 238/206*";
-        String ratioBase76 = " 207*/206*";
-        String errCorr = " errcorr";
+        String ratioBase86 = R238U_206PB;
+        String ratioBase76 = R207PB_206PB_RM;
+        String errCorr = ERR_CORREL_RM;
         if (isUnknown) {
-            ratioBase86 = " 238/206";
-            ratioBase76 = " 207*/206*";
-            errCorr = " errcorrS";
+            ratioBase86 = R238U_206PB;
+            ratioBase76 = R207PB_206PB;
+            errCorr = ERR_CORREL;
         }
 
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase86, ratioBase76, errCorr);

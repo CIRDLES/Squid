@@ -32,13 +32,13 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 
 /**
  *
@@ -391,17 +391,15 @@ public interface TaskInterface {
         
         List<Expression> customExpressions = getCustomTaskExpressions();
 
-        Expression parentPPM = getExpressionByName(SQUID_PPM_PARENT_EQN_NAME);
-        Expression parentPPMmean = getExpressionByName(SQUID_MEAN_PPM_PARENT_NAME);
+        Expression parentPPM = getExpressionByName(PARENT_ELEMENT_CONC_CONST);
+        Expression parentPPMmean = getExpressionByName(AV_PARENT_ELEMENT_CONC_CONST);
 
         getTaskExpressionsOrdered().clear();
 
         // TODO: expressions need to come from preferences and/or models
-        Expression uThU = BuiltInExpressionsFactory.buildExpression(
-                SQUID_PRIMARY_UTH_EQN_NAME_U, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
+        Expression uThU = BuiltInExpressionsFactory.buildExpression(UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
         uThU.setSquidSwitchNU(true);
-        Expression uThTh = BuiltInExpressionsFactory.buildExpression(
-                SQUID_PRIMARY_UTH_EQN_NAME_TH, "[\"208/248\"]", true, true, false);
+        Expression uThTh = BuiltInExpressionsFactory.buildExpression(UNCOR208PB232TH_CALIB_CONST, "[\"208/248\"]", true, true, false);
         uThTh.setSquidSwitchNU(true);
 
         if (isPbU()) {
@@ -417,13 +415,11 @@ public interface TaskInterface {
         }
 
         if (!isDirectAltPD()) {
-            Expression thU = BuiltInExpressionsFactory.buildExpression(
-                    SQUID_TH_U_EQN_NAME, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+            Expression thU = BuiltInExpressionsFactory.buildExpression(TH_U_EXP_RM, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
             thU.setSquidSwitchNU(true);
             getTaskExpressionsOrdered().add(thU);
 
-            Expression thUS = BuiltInExpressionsFactory.buildExpression(
-                    SQUID_TH_U_EQN_NAME_S, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+            Expression thUS = BuiltInExpressionsFactory.buildExpression(TH_U_EXP, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
             thUS.setSquidSwitchNU(true);
             getTaskExpressionsOrdered().add(thUS);
         }
@@ -460,15 +456,14 @@ public interface TaskInterface {
     public void setDirectAltPD(boolean directAltPD);
 
     /**
-     * @return the useCalculated_pdMeanParentEleA
+     * @return the useCalculatedAv_ParentElement_ConcenConst
      */
-    public boolean isUseCalculated_pdMeanParentEleA();
+    public boolean isUseCalculatedAv_ParentElement_ConcenConst();
 
     /**
-     * @param useCalculated_pdMeanParentEleA the useCalculated_pdMeanParentEleA
-     * to set
+     * @param useCalculatedAv_ParentElement_ConcenConst
      */
-    public void setUseCalculated_pdMeanParentEleA(boolean useCalculated_pdMeanParentEleA);
+    public void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst);
 
     /**
      * @return the selectedIndexIsotope

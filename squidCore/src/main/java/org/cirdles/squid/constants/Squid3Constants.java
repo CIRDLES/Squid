@@ -17,6 +17,7 @@ package org.cirdles.squid.constants;
 
 import java.util.HashMap;
 import java.util.Map;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_;
 
 /**
  *
@@ -136,7 +137,7 @@ public final class Squid3Constants {
         }
 
         public String getIsotopeCorrectionPrefixString() {
-            return isotope.substring(2, 3) + "-corr ";
+            return isotope.substring(2, 3) + COR_;
         }
     }
 
@@ -254,9 +255,9 @@ public final class Squid3Constants {
         }
     }
 
-    public final static String SUPERSCRIPT_R_FOR_REFMAT = "\u1D3F";
+    public final static String SUPERSCRIPT_R_FOR_REFMAT = "ᴿ";//\u1D3F";
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
-    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "\u1D41";
-    public final static String SUPERSCRIPT_DASH_FOR_DASH = "\u02C9";
+    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "ᵁ";//\u1D41";
+    public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
 
 }
