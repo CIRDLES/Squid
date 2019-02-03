@@ -155,7 +155,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     public void paint(GraphicsContext g2d) {
         super.paint(g2d);
 
-        g2d.setFont(Font.font("Lucida Sans", 15));
+        g2d.setFont(Font.font("SansSerif", 15));
 
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(0.5);
@@ -168,7 +168,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         int rightOfText = 450;
         Text text = new Text("Wtd Mean of Ref Mat Pb/" + ((String) (ageLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
-        text.setFont(Font.font("Lucida Sans", 15));
+        text.setFont(Font.font("SansSerif", 15));
 
         int textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), rightOfText - textWidth, 75);
@@ -255,7 +255,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         // ticsY         
         float verticalTextShift = 3.2f;
-        g2d.setFont(Font.font("Lucida Sans", 10));
+        g2d.setFont(Font.font("SansSerif", 10));
         if (ticsY != null) {
             for (int i = 0; i < ticsY.length; i++) {
                 g2d.strokeLine(
@@ -292,7 +292,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             }
         }
 
-        g2d.setFont(Font.font("Lucida Sans", 15));
+        g2d.setFont(Font.font("SansSerif", 15));
 
         // Y - label
         text.setText("Ref Mat Age (Ma)");
@@ -321,7 +321,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.fillText(text.getText(), leftMargin + 425, topMargin + graphHeight + 80);
 
         g2d.setFill(Paint.valueOf("BLACK"));
-        g2d.setFont(Font.font("Lucida Sans", 10));
+        g2d.setFont(Font.font("SansSerif", 10));
         g2d.fillText("Mouse:", leftMargin + 0, topMargin + graphHeight + 60);
         g2d.fillText(" left = spot details", leftMargin + 0, topMargin + graphHeight + 70);
         if (spotSummaryDetails.isManualRejectionEnabled()) {
@@ -329,7 +329,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         // provide highlight and info about selected spot
-        g2d.setFont(Font.font("Lucida Sans", 12));
+        g2d.setFont(Font.font("SansSerif", 12));
         if (indexOfSelectedSpot >= 0) {
             // gray spot rectangle
             g2d.setFill(Color.rgb(0, 0, 0, 0.2));

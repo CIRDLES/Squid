@@ -36,16 +36,27 @@ import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
  */
 public final class SquidUI extends Application {
 
-    public static final String EXPRESSION_TOOLTIP_CSS_STYLE_SPECS = "-fx-background-color:cornsilk;-fx-border-width: 1;-fx-border-color: black;-fx-border-radius: 0;-fx-text-fill: black;-fx-effect:none;-fx-font-size:11px;-fx-font-weight:bold;-fx-font-family:'Courier New';";
-    public static final String SPOT_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
-    public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Arial';-fx-fixed-cell-size: 20";
-    public static final String OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-weight: bold; -fx-font-family: 'Courier New';";
-    public static final String PRESENTATION_IN_EXPRESSION_LIST_CSS_STYLE_SPECS = "-fx-font-family: 'Courier New';";
-    public static final String PEEK_LIST_CSS_STYLE_SPECS = "-fx-font-size: 11px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
-    public static final String COLORPICKER_CSS_STYLE_SPECS = "-fx-font-size: 8px; -fx-font-family: 'Courier New';";
-    public static final String SQUID_LOGO_SANS_TEXT_URL = "org/cirdles/squid/gui/images/SquidLogoSansBg.png";
-
-    public static final String SPOT_TREEVIEW_CSS_STYLE_SPECS = "-fx-font-size: 10px; -fx-font-weight: bold; -fx-font-family: 'Courier New';";
+    public static final String EXPRESSION_TOOLTIP_CSS_STYLE_SPECS = 
+            "-fx-background-color:cornsilk;-fx-border-width: 1;-fx-border-color: black;"
+            + "-fx-border-radius: 0;-fx-text-fill: black;-fx-effect:none;-fx-font-size:11px;"
+            + "-fx-font-weight:bold;-fx-font-family:'Monospaced';";
+    public static final String SPOT_LIST_CSS_STYLE_SPECS = 
+            "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Monospaced';";
+    public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = 
+            "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'SansSerif';-fx-fixed-cell-size: 20";
+    public static final String OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS = 
+            "-fx-font-weight: bold; -fx-font-family: 'Monospaced';";
+    public static final String PRESENTATION_IN_EXPRESSION_LIST_CSS_STYLE_SPECS = 
+            "-fx-font-family: 'Monospaced';";
+    public static final String PEEK_LIST_CSS_STYLE_SPECS = 
+            "-fx-font-size: 11px; -fx-font-weight: bold; -fx-font-family: 'Monospaced';";
+    public static final String COLORPICKER_CSS_STYLE_SPECS = 
+            "-fx-font-size: 8px; -fx-font-family: 'Monospaced';";
+    public static final String SPOT_TREEVIEW_CSS_STYLE_SPECS = 
+            "-fx-font-size: 10px; -fx-font-weight: bold; -fx-font-family: 'Monospaced';";
+    
+    public static final String SQUID_LOGO_SANS_TEXT_URL = 
+            "org/cirdles/squid/gui/images/SquidLogoSansBg.png";
 
     public static final int PIXEL_OFFSET_FOR_MENU = 38;
     public static Window primaryStageWindow;

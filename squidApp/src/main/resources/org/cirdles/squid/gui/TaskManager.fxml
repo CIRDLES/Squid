@@ -124,7 +124,7 @@
             </HBox>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
-                  <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="50.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Assumed Comm Pb:" textAlignment="RIGHT" wrapText="true" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="50.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Default Comm Pb:" textAlignment="RIGHT" wrapText="true" />
                   <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
                   <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
                   <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
@@ -134,7 +134,7 @@
          </children>
       </GridPane>
       <Label text="Audit:" GridPane.rowIndex="7" />
-      <TextArea fx:id="taskAuditTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <TextArea fx:id="taskAuditTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
       <HBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
             <Label fx:id="titleLabel" style="-fx-font-size: 14;" text="Task &gt; Isotopes &amp; Ratios/Manage Isotopes &gt; Isotopes &amp; Ratios/Manage Ratios" />

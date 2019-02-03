@@ -45,7 +45,7 @@ public class RatiosManagerController implements Initializable {
             + "    -fx-border-width: 1;\n"
             + "    -fx-border-color: black;\n"
             + "    -fx-background-radius: 0;\n"
-            + "    -fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+            + "    -fx-font-family: 'Monospaced', 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 8pt;\n"
             + "    -fx-text-fill: White;/*  #d8d8d8;*/\n";
@@ -61,12 +61,12 @@ public class RatiosManagerController implements Initializable {
             + "    -fx-border-color: black;\n"
             + "    -fx-background-radius: 0;\n"
             + "    -fx-background-color: #ffa06d;\n"
-            + "    -fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+            + "    -fx-font-family: 'Monospaced', 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 9pt;\n"
             + "    -fx-text-fill: Black;/*  #d8d8d8;*/\n";
 
-    private static final String STYLE_RATIO_LABEL = "-fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+    private static final String STYLE_RATIO_LABEL = "-fx-font-family: 'Monospaced', 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 7pt;\n";
 
