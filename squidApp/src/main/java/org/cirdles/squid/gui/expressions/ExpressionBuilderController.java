@@ -140,6 +140,8 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUIL
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
+import org.cirdles.squid.tasks.expressions.functions.ValueModel;
 
 /**
  * FXML Controller class
@@ -490,8 +492,8 @@ public class ExpressionBuilderController implements Initializable {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
     }
-    
-    private void initPeekAreas(){
+
+    private void initPeekAreas() {
         rmPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
         unPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
     }
@@ -659,7 +661,7 @@ public class ExpressionBuilderController implements Initializable {
                             && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                         return -1;
                         // U
-                    }else if (!o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
+                    } else if (!o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
                             && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
                             && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
                             && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
@@ -2023,8 +2025,14 @@ public class ExpressionBuilderController implements Initializable {
                     resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
                 }
             } else if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
-                // case of ratio
-                resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
+                // Check for functions of species
+                if (((ExpressionTree) expTree).getOperation() instanceof ShrimpSpeciesNodeFunction) {
+                    resultLabels = new String[][]{{((ShrimpSpeciesNodeFunction) ((ExpressionTree) expTree).getOperation()).getName()}, {}};
+                } else {
+                    // case of ratio
+                    resultLabels = new String[][]{{expTree.getName(), "1\u03C3 Abs"}, {}};
+                }
+
             } else if (((ExpressionTree) expTree).hasRatiosOfInterest()) {
                 // case of NU switch
                 String uncertaintyDirective
@@ -2035,7 +2043,13 @@ public class ExpressionBuilderController implements Initializable {
                     resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
                 }
             } else {
+                // some smarts
                 resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
+                if (((ExpressionTree) expTree).getOperation() instanceof ValueModel) {
+                    if (expTree.getName().toUpperCase().contains("AGE")){
+                        resultLabels[0][0] = "Age";
+                    }
+                } 
             }
 
             for (int i = 0; i < resultLabels[0].length; i++) {
@@ -2048,18 +2062,34 @@ public class ExpressionBuilderController implements Initializable {
             sb.append("\n");
 
             if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
-                // case of ratio
-                for (ShrimpFractionExpressionInterface spot : spots) {
-                    sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                    double[][] results
-                            = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
-                    for (int i = 0; i < results[0].length; i++) {
-                        try {
-                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
-                        } catch (Exception e) {
+                // Check for functions of species
+                if (((ExpressionTree) expTree).getOperation() instanceof ShrimpSpeciesNodeFunction) {
+                    for (ShrimpFractionExpressionInterface spot : spots) {
+                        sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+                        double[][] results
+                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+                        for (int i = 0; i < results[0].length; i++) {
+                            try {
+                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                            } catch (Exception e) {
+                            }
                         }
+                        sb.append("\n");
                     }
-                    sb.append("\n");
+                } else {
+                    // case of ratio
+                    for (ShrimpFractionExpressionInterface spot : spots) {
+                        sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+                        double[][] results
+                                = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
+                        for (int i = 0; i < results[0].length; i++) {
+                            try {
+                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                            } catch (Exception e) {
+                            }
+                        }
+                        sb.append("\n");
+                    }
                 }
             } else {
                 for (ShrimpFractionExpressionInterface spot : spots) {
@@ -2958,7 +2988,7 @@ public class ExpressionBuilderController implements Initializable {
                         setGraphic(null);
                     } else {
                         String mainText = expression.buildShortSignatureString();
-                        String postPend = (expression.isParameterValue() || (expression.isReferenceMaterialValue()))? " (see Notes)" : "";
+                        String postPend = (expression.isParameterValue() || (expression.isReferenceMaterialValue())) ? " (see Notes)" : "";
                         setText(mainText + postPend);
                         if (showImage) {
                             ImageView imageView;
