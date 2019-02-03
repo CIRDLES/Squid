@@ -74,7 +74,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private final int ROW_HEIGHT = 30;
 
     private static final String STYLE_BUTTON_LABEL
-            = "-fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+            = "-fx-font-family: 'Monospaced', 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 12pt;\n";
 

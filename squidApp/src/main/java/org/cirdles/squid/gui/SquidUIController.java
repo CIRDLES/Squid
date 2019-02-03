@@ -165,20 +165,20 @@ public class SquidUIController implements Initializable {
     @FXML
     private Label korean;
     @FXML
-    private Label japanese1;
-    @FXML
-    private Label japanese11;
-    @FXML
-    private Label japanese111;
-    @FXML
-    private Label japanese1111;
-    @FXML
     private MenuItem choosePrawnFileMenuItem;
 
     public static ParametersLauncher parametersLauncher;
     public static SquidReportTableLauncher squidReportTableLauncher;
     @FXML
     private MenuItem auditRawDataMenuItem;
+    @FXML
+    private Label polish;
+    @FXML
+    private Label portuguese;
+    @FXML
+    private Label russian;
+    @FXML
+    private Label spanish;
 
     /**
      * Initializes the controller class.

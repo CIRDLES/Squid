@@ -13,12 +13,12 @@ and open the template in the editor.
 }
 
 .table-view .table-cell {
-    -fx-font-family: "Courier New";
+    -fx-font-family: "Monospaced";
     -fx-font-size: 11pt;
 }
 
 .table-view .column-header {
-    -fx-font-family: "Arial";
+    -fx-font-family: "SansSerif";
     -fx-font-size: 9pt;
 }
 
@@ -42,13 +42,13 @@ and open the template in the editor.
 }
 
 #laboratoryTextField {
-    -fx-font-family: "Arial";
+    -fx-font-family: "SansSerif";
     -fx-font-size: 12pt;
 }
 
 .button {
     -fx-background-color: darkorange;
-    -fx-font-family: "Times New Roman";
+    -fx-font-family: "SansSerif";
     -fx-font-size: 11pt;
     -fx-text-fill: ghostwhite;
 }

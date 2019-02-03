@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <VBox minHeight="720.0" minWidth="1230.0" prefHeight="720.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
   <children>
@@ -59,7 +58,7 @@
                 <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid Task" />
                   <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Squid Task from Task Library" />
                   <MenuItem fx:id="importSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Load Squid Task from Squid 3  Task '.xml' File" />
-                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="New Squid Task from Squid 2.* Excel File" />
+                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="New Squid Task from Squid 2.* Task Excel File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="exportSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Export Squid3 Task to '.xml' File" />
               </items>
@@ -176,7 +175,7 @@
                       <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Developer Tools" visible="false">
+                  <Menu mnemonicParsing="false" text="Developer Tools">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#listBuiltinExpressionsAction" text="List Built-in Expressions" />
                     </items>
@@ -210,21 +209,13 @@
                      <children>
                         <VBox alignment="CENTER">
                            <children>
-                              <Label fx:id="chinese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans; -fx-font-weight: bold;" text="墨斗鱼">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
+                              <Label fx:id="chinese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="墨斗鱼" />
                               <Label layoutX="10.0" layoutY="10.0" style="-fx-text-fill: white;" text="Chinese" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" layoutX="584.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans; -fx-font-weight: bold;" text="いか">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
+                              <Label fx:id="japanese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="いか" />
                               <Label style="-fx-text-fill: white;" text="Japanese" />
                            </children>
                            <HBox.margin>
@@ -233,11 +224,7 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="605.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="korean" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="오징어">
-                                 <font>
-                                    <Font name="SansSerif Bold" size="14.0" />
-                                 </font>
-                              </Label>
+                              <Label fx:id="korean" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="오징어" />
                               <Label style="-fx-text-fill: white;" text="Korean" />
                            </children>
                            <HBox.margin>
@@ -246,41 +233,25 @@
                         </VBox>
                         <VBox alignment="CENTER" layoutX="734.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="200.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="kałamarnica">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
+                              <Label fx:id="polish" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="200.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="kałamarnica" />
                               <Label style="-fx-text-fill: white;" text="Polish" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" layoutX="823.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese11" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="lula">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
+                              <Label fx:id="portuguese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="lula" />
                               <Label style="-fx-text-fill: white;" text="Portuguese" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" layoutX="912.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese111" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="кальмар">
-                                 <font>
-                                    <Font name="Lucida Sans Demibold" size="14.0" />
-                                 </font>
-                              </Label>
+                              <Label fx:id="russian" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="кальмар" />
                               <Label style="-fx-text-fill: white;" text="Russian" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" layoutX="1001.0" layoutY="10.0">
                            <children>
-                              <Label fx:id="japanese1111" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: Lucida Sans;" text="calamar">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
+                              <Label fx:id="spanish" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="calamar" />
                               <Label style="-fx-text-fill: white;" text="Spanish" />
                            </children>
                         </VBox>
