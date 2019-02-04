@@ -234,7 +234,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     public void paint(GraphicsContext g2d) {
         super.paint(g2d);
 
-        g2d.setFont(Font.font("Lucida Sans", 12));
+        g2d.setFont(Font.font("SansSerif", 12));
 
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(0.5);
@@ -249,12 +249,12 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         }
 
         g2d.setFill(Paint.valueOf("BLACK"));
-        g2d.setFont(Font.font("Lucida Sans", 8));
+        g2d.setFont(Font.font("SansSerif", 8));
         g2d.fillText("Mouse:", 5, 45);
         g2d.fillText(" left = spot name", 5, 55);
         g2d.fillText(" right = spot menu", 5, 65);
 
-        g2d.setFont(Font.font("Lucida Sans", 12));
+        g2d.setFont(Font.font("SansSerif", 12));
         if (indexOfSelectedSpot >= 0) {
             // gray spot rectangle
             g2d.setFill(Color.rgb(0, 0, 0, 0.2));
@@ -290,9 +290,9 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                     g2d.strokeLine(runX, 0, runX, height);
                 }
 
-                g2d.setFont(Font.font("Lucida Sans", 7));
+                g2d.setFont(Font.font("SansSerif", 7));
                 Text text = new Text(String.valueOf(runIndices[i]));
-                text.setFont(Font.font("Lucida Sans", 7)); //       applyCss();
+                text.setFont(Font.font("SansSerif", 7)); //       applyCss();
                 g2d.setFill(Paint.valueOf("BLACK"));
                 g2d.fillText(String.valueOf(runIndices[i]), mapX(myOnPeakNormalizedAquireTimes[i]) - text.getLayoutBounds().getWidth() + 2.0f, height - 1.5);
                 g2d.setStroke(Paint.valueOf("BLACK"));
@@ -307,7 +307,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         // ticsY
         float verticalTextShift = 3.1f;
-        g2d.setFont(Font.font("Lucida Sans", 10));
+        g2d.setFont(Font.font("SansSerif", 10));
         if (ticsY != null) {
             for (int i = 0; i < ticsY.length; i++) {
                 try {

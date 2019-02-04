@@ -16,7 +16,6 @@
 package org.cirdles.squid.gui;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -45,13 +44,10 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_T
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 
 /**
  * FXML Controller class
@@ -227,20 +223,20 @@ public class TaskManagerController implements Initializable {
                 ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected()
                 && ((RadioButton) taskManagerGridPane.lookup("#indirect")).isSelected());
 
-        uncorrConstPbUlabel.setText(SQUID_PRIMARY_UTH_EQN_NAME_U + ":");
-        Expression UTh_U = task.getExpressionByName(SQUID_PRIMARY_UTH_EQN_NAME_U);
+        uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
+        Expression UTh_U = task.getExpressionByName(UNCOR206PB238U_CALIB_CONST);
         uncorrConstPbUExpressionLabel.setText((UTh_U == null) ? "Not Used" : UTh_U.getExcelExpressionString());
 
-        uncorrConstPbThlabel.setText(SQUID_PRIMARY_UTH_EQN_NAME_TH + ":");
-        Expression UTh_Th = task.getExpressionByName(SQUID_PRIMARY_UTH_EQN_NAME_TH);
+        uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
+        Expression UTh_Th = task.getExpressionByName(UNCOR208PB232TH_CALIB_CONST);
         uncorrConstPbThExpressionLabel.setText((UTh_Th == null) ? "Not Used" : UTh_Th.getExcelExpressionString());
 
-        th232U238Label.setText(SQUID_TH_U_EQN_NAME + ":");
-        Expression thU = task.getExpressionByName(SQUID_TH_U_EQN_NAME);
+        th232U238Label.setText(TH_U_EXP_RM + ":");
+        Expression thU = task.getExpressionByName(TH_U_EXP_RM);
         th232U238ExpressionLabel.setText((task.isDirectAltPD()) ? "Not Used" : thU.getExcelExpressionString());
 
-        parentConcLabel.setText(SQUID_PPM_PARENT_EQN_NAME + ":");
-        Expression parentPPM = task.getExpressionByName(SQUID_PPM_PARENT_EQN_NAME);
+        parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
+        Expression parentPPM = task.getExpressionByName(PARENT_ELEMENT_CONC_CONST);
         parentConcExpressionLabel.setText((parentPPM == null) ? "Not Used" : parentPPM.getExcelExpressionString());
     }
 

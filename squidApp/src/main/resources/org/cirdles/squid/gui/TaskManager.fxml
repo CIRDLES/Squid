@@ -124,7 +124,7 @@
             </HBox>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
-                  <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="50.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Assumed Comm Pb:" textAlignment="RIGHT" wrapText="true" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="50.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Default Comm Pb:" textAlignment="RIGHT" wrapText="true" />
                   <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
                   <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
                   <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
@@ -134,7 +134,7 @@
          </children>
       </GridPane>
       <Label text="Audit:" GridPane.rowIndex="7" />
-      <TextArea fx:id="taskAuditTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Courier New; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <TextArea fx:id="taskAuditTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
       <HBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
             <Label fx:id="titleLabel" style="-fx-font-size: 14;" text="Task &gt; Isotopes &amp; Ratios/Manage Isotopes &gt; Isotopes &amp; Ratios/Manage Ratios" />
@@ -143,10 +143,10 @@
       <Label text="Directives:" GridPane.rowIndex="6" />
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="6">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="319.0" minWidth="8.0" prefWidth="135.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="319.0" minWidth="8.0" prefWidth="165.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="743.0" minWidth="10.0" prefWidth="362.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="591.0" minWidth="10.0" prefWidth="181.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1015.0" minWidth="10.0" prefWidth="406.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="591.0" minWidth="10.0" prefWidth="165.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1015.0" minWidth="10.0" prefWidth="378.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -154,7 +154,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1">
+            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="377.0" spacing="10.0" GridPane.columnIndex="1">
                <children>
                   <RadioButton id="238" mnemonicParsing="false" onAction="#toggleParentNuclideAction" selected="true" text="206Pb/238U">
                      <toggleGroup>
@@ -214,32 +214,32 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="127.0" style="-fx-font-size: 14;" text="Primary Age:" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="127.0" style="-fx-font-size: 12;" text="Primary Age:" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="uncorrConstPbUlabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="127.0" style="-fx-font-size: 14;" text="uncorrConstPbU:" textAlignment="JUSTIFY" />
+                  <Label fx:id="uncorrConstPbUlabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="163.0" style="-fx-font-size: 10;" text="uncorrConstPbU:" textAlignment="JUSTIFY" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
                <children>
-                  <Label fx:id="uncorrConstPbThlabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="183.0" style="-fx-font-size: 14;" text="uncorrConstPbTh:" />
+                  <Label fx:id="uncorrConstPbThlabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="183.0" style="-fx-font-size: 10;" text="uncorrConstPbTh:" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="177.0" style="-fx-font-size: 14;" text="Calculate 208Pb/232Th:" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="182.0" style="-fx-font-size: 12;" text="Calculate 208Pb/232Th:" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="th232U238Label" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="124.0" style="-fx-font-size: 14;" text="232Th/238U:" textAlignment="JUSTIFY" />
+                  <Label fx:id="th232U238Label" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="179.0" style="-fx-font-size: 10;" text="232Th/238U:" textAlignment="JUSTIFY" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <children>
-                  <Label fx:id="parentConcLabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="178.0" style="-fx-font-size: 14;" text="parentConc:" />
+                  <Label fx:id="parentConcLabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="178.0" style="-fx-font-size: 10;" text="parentConc:" />
                </children>
             </HBox>
          </children>

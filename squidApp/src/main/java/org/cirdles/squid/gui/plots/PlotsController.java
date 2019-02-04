@@ -54,8 +54,6 @@ import org.cirdles.squid.gui.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.gui.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_206_238_BASENAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_CALIB_CONST_AGE_208_232_BASENAME;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
@@ -63,7 +61,13 @@ import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotTeraWasserburg;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.STD_AGE_U_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_AGE_U_PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.WTDAV_PREFIX;
 
 /**
  *
@@ -148,9 +152,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
 
-        corr4_RadioButton.setUserData("4-corr");
-        corr7_RadioButton.setUserData("7-corr");
-        corr8_RadioButton.setUserData("8-corr");
+        corr4_RadioButton.setUserData(PB4CORR);
+        corr7_RadioButton.setUserData(PB7CORR);
+        corr8_RadioButton.setUserData(PB8CORR);
 
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
@@ -373,15 +377,15 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         String calibrConstAgeBaseName = (String) plotFlavorToggleGroup.getSelectedToggle().getUserData();
         // get details
         spotSummaryDetails
-                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(correction
-                        + " " + calibrConstAgeBaseName + "calibr.const WM");
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().
+                        get(WTDAV_PREFIX + correction + calibrConstAgeBaseName + "_CalibConst");
         plot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
-                correction + " " + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
+                correction + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + " " + calibrConstAgeBaseName + " Age",
-                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(STD_AGE_U_PB).getValues()[0][0],
+                correction + calibrConstAgeBaseName.replace("/", "") + "_Age_RM",  // TODO: FIX THIS HACK
+                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(REF_AGE_U_PB).getValues()[0][0],
                 this);//559.1 * 1e6);
 
         refreshPlot();
@@ -512,10 +516,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
-                plotFlavorOneRadioButton.setText(SQUID_CALIB_CONST_AGE_206_238_BASENAME + "calibr.const WM");
-                plotFlavorTwoRadioButton.setText(SQUID_CALIB_CONST_AGE_208_232_BASENAME + "calibr.const WM");
-                plotFlavorOneRadioButton.setUserData(SQUID_CALIB_CONST_AGE_206_238_BASENAME);
-                plotFlavorTwoRadioButton.setUserData(SQUID_CALIB_CONST_AGE_208_232_BASENAME);
+                plotFlavorOneRadioButton.setText("WtdAv_" + CALIB_CONST_206_238_ROOT + "_CalibConst");
+                plotFlavorTwoRadioButton.setText("WtdAv_" + CALIB_CONST_208_232_ROOT + "_CalibConst");
+                plotFlavorOneRadioButton.setUserData(CALIB_CONST_206_238_ROOT);
+                plotFlavorTwoRadioButton.setUserData(CALIB_CONST_208_232_ROOT);
 
                 boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
                 boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
