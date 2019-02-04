@@ -22,6 +22,8 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
 public class BuiltInExpressionsDataDictionary {
 
     // **********************  SPECIAL CONSTANTS ******************************
+        // holding spot until models are implemented
+    public static final double PRESENT_R238_235S = 137.88;
     public static final String PRESENT_R238_235S_NAME = "r238_235s";
 
     // **********************  COMMON LEAD *************************************
@@ -55,8 +57,10 @@ public class BuiltInExpressionsDataDictionary {
     public static final String L09678 = "0.9678";
 
     // **********************  RATIOS USED IN BUILTINS *************************
+    public static final String R204206 = "\"204/206\"";
+    public static final String R207206 = "\"207/206\"";
     public static final String R208206 = "\"208/206\"";
-    
+
     // **********************  RATIOS USED IN COMMON PB MODELS *****************
     public static final String R206_204B = "r206_204b";
     public static final String R207_204B = "r207_204b";
