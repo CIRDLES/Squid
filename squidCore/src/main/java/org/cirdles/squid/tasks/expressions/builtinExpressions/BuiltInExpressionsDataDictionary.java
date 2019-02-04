@@ -52,7 +52,11 @@ public class BuiltInExpressionsDataDictionary {
     // **********************  MISC ********************************************
     public static final String L859 = "L859";
     public static final String L1033 = "L1033";
+    public static final String L09678 = "0.9678";
 
+    // **********************  RATIOS USED IN BUILTINS *************************
+    public static final String R208206 = "\"208/206\"";
+    
     // **********************  RATIOS USED IN COMMON PB MODELS *****************
     public static final String R206_204B = "r206_204b";
     public static final String R207_204B = "r207_204b";
@@ -152,7 +156,7 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String PBTh_EXT_1_SIGMA_ERR_PCT = "208Pb232Th_Ext1SigmaErr_Pct";
     public static final String PBU_EXT_1_SIGMA_ERR_PCT = "206Pb238U_Ext1SigmaErr_Pct";
-    public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
+    public static final String ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
 
     // ********************** OVER COUNTS **************************************
     public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_From207Pb";
