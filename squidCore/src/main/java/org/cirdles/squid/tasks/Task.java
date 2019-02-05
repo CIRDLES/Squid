@@ -483,7 +483,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(" Concentration Reference Material Spots extracted by filter: \"")
                 .append(filterForConcRefMatSpotNames)
                 .append("\".\n\t\t  Mean Concentration of Primary Parent Element ")
-//                .append(parentNuclide)
+                //                .append(parentNuclide)
                 .append(" = ")
                 .append(meanConcValue);
 
@@ -1223,10 +1223,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void buildSquidSpeciesModelListFromMassStationDetails() {
         squidSpeciesModelList = new ArrayList<>();
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
-            SquidSpeciesModel spm = new SquidSpeciesModel(
-                    entry.getKey(), entry.getValue().getMassStationLabel(), entry.getValue().getIsotopeLabel(),
-                    entry.getValue().getElementLabel(), entry.getValue().getIsBackground(), entry.getValue().getuThBearingName(),
-                    entry.getValue().isViewedAsGraph());
+            SquidSpeciesModel spm
+                    = new SquidSpeciesModel(
+                            entry.getKey(),
+                            entry.getValue().getMassStationLabel(),
+                            entry.getValue().getIsotopeLabel(),
+                            entry.getValue().getElementLabel(),
+                            entry.getValue().getIsBackground(),
+                            entry.getValue().getuThBearingName(),
+                            entry.getValue().isViewedAsGraph());
 
             squidSpeciesModelList.add(spm);
         }
