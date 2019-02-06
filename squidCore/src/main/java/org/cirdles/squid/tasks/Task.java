@@ -101,7 +101,6 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST;
@@ -776,7 +775,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                 }
-
                 if (listedExp.getName().compareToIgnoreCase(OVER_COUNTS_PERSEC_4_8) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + OVER_COUNTS_PERSEC_4_8 + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
@@ -789,7 +787,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                 }
-
             }
             if (listedExp.getName().compareToIgnoreCase(TOTAL_206_238_RM) == 0) {
                 listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + TOTAL_206_238_RM + "\"]");
@@ -850,26 +847,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         taskExpressionsOrdered.clear();
         for (Expression listedExp : expArray) {
-            //System.out.println(listedExp.getName());
             taskExpressionsOrdered.add(listedExp);
         }
-        //System.out.println("<>><<><>>>>>>>>>>>>>>>>\n\n");
     }
 
+    /**
+     * 
+     */
     @Override
     public void processAndSortExpressions() {
-
         reorderExpressions();
-
         assembleNamedExpressionsMap();
-
         buildExpressions();
     }
 
-    @Override
     /**
-     *
+     * 
+     * @param sourceExpression
+     * @param reprocessExpressions 
      */
+    @Override
     public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions) {
         for (Expression listedExp : taskExpressionsOrdered) {
             if (listedExp.getExpressionTree().usesAnotherExpression(sourceExpression.getExpressionTree())) {

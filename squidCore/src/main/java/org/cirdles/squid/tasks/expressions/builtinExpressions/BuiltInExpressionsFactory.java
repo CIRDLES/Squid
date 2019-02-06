@@ -514,7 +514,7 @@ public abstract class BuiltInExpressionsFactory {
                 "Max(ExtPErr,"
                 + "[\"" + PB7COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB7COR206_238CALIB_CONST_WM + "\"][0]*100)", true, false, true);
         Expression expression8CorrExtPerrU = buildExpression(PB8CORR + PBU_EXT_1_SIGMA_ERR_PCT,
-                "Max(ExtPErr, "
+                "Max(ExtPErr,"
                 + "[\"" + PB8COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB8COR206_238CALIB_CONST_WM + "\"][0]*100)", true, false, true);
         Expression expression4CorrExtPerrT = buildExpression("" + PB4CORR + PBTh_EXT_1_SIGMA_ERR_PCT,
                 "Max(ExtPErr,"
@@ -1217,7 +1217,7 @@ public abstract class BuiltInExpressionsFactory {
                         + "[%\"" + TOTAL_206_238_RM + "\"],"
                         + "[\"" + PB8CORR + R206PB_238U_RM + "\"],"
                         + "[\"" + TOTAL_206_238_RM + "\"]*[" +  R207206 + "]/r238_235s,"
-                        + "[\"" + TH_U_EXP_RM + "\"], "
+                        + "[\"" + TH_U_EXP_RM + "\"],"
                         + "[%\"" + TH_U_EXP_RM + "\"],"
                         + "[" +  R207206 + "],"
                         + "[%" +  R207206 + "],"
@@ -1576,7 +1576,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "[%\"" + TOTAL_206_238 + "\"]/100*[\"" + TOTAL_206_238 + "\"],"
                 + "[\"" + TOTAL_208_232 + "\"],"
                 + "[%\"" + TOTAL_208_232 + "\"]/100*[\"" + TOTAL_208_232 + "\"],"
-                + "[\"" + TH_U_EXP + "\"], "
+                + "[\"" + TH_U_EXP + "\"],"
                 + "[±\"" + TH_U_EXP + "\"])", false, true, false);
         samRadiogenicCols.add(expression208corr206Pb238UAge1SigmaErr);
 
@@ -1604,7 +1604,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "[%\"" + TOTAL_206_238 + "\"],"
                 + "[\"" + PB8CORR + R206PB_238U + "\"],"
                 + "[\"" + TOTAL_206_238 + "\"]*[" +  R207206 + "]/r238_235s,"
-                + "[\"" + TH_U_EXP + "\"], "
+                + "[\"" + TH_U_EXP + "\"],"
                 + "[%\"" + TH_U_EXP + "\"],"
                 + "[" +  R207206 + "],"
                 + "[%" +  R207206 + "],"
@@ -1614,7 +1614,7 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression8correrrcorr = buildExpression(PB8CORR + ERR_CORREL,
                 "Rad8corConcRho("
-                + "[\"" + TOTAL_206_238 + "\"], "
+                + "[\"" + TOTAL_206_238 + "\"],"
                 + "[%\"" + TOTAL_206_238 + "\"],"
                 + "[\"" + PB8CORR + R206PB_238U + "\"],"
                 + "[\"" + TH_U_EXP + "\"],"
