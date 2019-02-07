@@ -41,11 +41,11 @@ public class ExpressionPublisher {
             StringReader inputReader = new StringReader(input);
             Source inputSource = new StreamSource(inputReader);*/
 
-            File inFile = new File("infile.txt");            
+            File inFile = new File("infile.xml");            
             File outFile = new File("outfile.txt");
 
             PrintWriter writer = new PrintWriter(new FileOutputStream(inFile));
-            writer.write(input);
+            writer.write("<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"block\">" + input + "</math>");
             writer.flush();
 
             Transformer transformer = transformerFactory.newTransformer(new StreamSource("xsltml_2.0/mmltex.xsl"));
@@ -53,18 +53,22 @@ public class ExpressionPublisher {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(outFile)));
 
-            retVal = CharStreams.toString(reader).replaceAll("%", "\\%");
+            retVal = CharStreams.toString(reader);
+            retVal = retVal.replaceAll("\\%", "\\\\%");
+            //retVal = retVal.replaceAll("\\\\", "\\\\\\\\");
+            System.out.println("OutFile:" + retVal);
         } catch (TransformerException | IOException e) {
             retVal = "Transformer Exception";
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-        return retVal.replaceAll("%", "\\%");
+        return retVal;
     }
 
     public static Image createImageFromMathML(String input, boolean hasStyling) {
         String converted = getLatexFromMathML(input, hasStyling);
         TeXFormula formula = new TeXFormula(converted);
+        //System.out.println(converted.compareTo("$\\sqrt{{\\left(\\frac{\\text{Hfsens1sigabs[0]}}{\\text{Hfsens[0]}}\\right)}^{2}+{\\left(\\frac{{\\left(\\frac{{\\text{195.9}}_{\\text{HfO}}^{\\text{}}}{{\\text{195.8}}_{\\text{Zr2O}}^{\\text{}}}\\right)}^{\\text{\\%}}}{100}\\right)}^{2}}*\\text{Hfppm[0]}$"));
         return formula.createBufferedImage(1, 50, Color.BLUE, Color.LIGHT_GRAY);
     }
 
