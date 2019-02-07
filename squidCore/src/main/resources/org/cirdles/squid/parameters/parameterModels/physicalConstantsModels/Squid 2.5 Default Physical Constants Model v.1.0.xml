@@ -1,9 +1,9 @@
 <PhysicalConstantsModel>
-  <modelName>GA Physical Constants Model Squid 2</modelName>
+  <modelName>Squid 2.5 Physical Constants Model</modelName>
   <labName>Geoscience Australia</labName>
   <version>1.0</version>
   <dateCertified>2018-01-01</dateCertified>
-  <comments>This Physical Constants Model reflects the values used in Squid 2.5 in 2018 at Geoscience Australia.</comments>
+  <comments>This Physical Constants Model reflects the values used in Squid 2.5 in 2018.</comments>
   <references>See individual constants for reference.</references>
   <values>
     <ValueModel>

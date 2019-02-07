@@ -23,8 +23,8 @@ public class BuiltInExpressionsDataDictionary {
 
     // **********************  SPECIAL CONSTANTS ******************************
     // holding spot until models are implemented
-    public static final double PRESENT_R238_235S = 137.88;
-    public static final String PRESENT_R238_235S_NAME = "r238_235s";
+    public static final String PRESENT_238U235U_RM_MODEL_NAME = "r238_235s";
+    public static final String PRESENT_238U235U = "Present_238U235U";
 
     // **********************  COMMON LEAD *************************************
     public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
@@ -191,6 +191,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PARENT_ELEMENT_CONC_CONST = "ParentElement_ConcenConst";
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
+    public static final String U_CONCEN_PPM_RM = "U_Concen_RM";
     public static final String U_CONCEN_PPM = "U_Concen";
     public static final String TH_CONCEN_PPM_RM = "Th_Concen_RM";
     public static final String TH_CONCEN_PPM = "Th_Concen";

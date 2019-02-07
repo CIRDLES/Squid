@@ -22,14 +22,13 @@ import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_76;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_86;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_238U235U;
 
 /**
  *
@@ -104,7 +103,7 @@ public class Rad8corPb7U5WithErr extends Function {
             double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_76).getValues()[0][0];
             double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_86).getValues()[0][0];
             
-            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
+            double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(PRESENT_238U235U).getValues()[0][0];
             double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_232.getName()).getValues()[0][0];
             double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
             
@@ -119,7 +118,7 @@ public class Rad8corPb7U5WithErr extends Function {
                     totPb86[0],
                     totPb86per[0],
                     sComm_76, sComm_86, 
-                    PRESENT_R238_235S, lambda232, lambda238);
+                    present238U235U, lambda232, lambda238);
             retVal = new Object[][]{{rad8corPb7U5WithErr[0], rad8corPb7U5WithErr[1] * rad8corPb7U5WithErr[0] / 100.0}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
