@@ -38,6 +38,7 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
+import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
@@ -122,7 +123,7 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
 
         squidProjectZ6266.getTask().setExtPErr(0.75);
-        squidProjectZ6266.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
+        squidProjectZ6266.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         squidProjectZ6266.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         squidProjectZ6266.getTask().setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
         squidProjectZ6266.getTask().setConcentrationReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
@@ -176,7 +177,7 @@ public class PrawnFileHandlerIT {
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         task.setSquidAllowsAutoExclusionOfSpots(true);
         task.setExtPErr(0.75);
-        task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
+        task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         task.setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
         task.setConcentrationReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
