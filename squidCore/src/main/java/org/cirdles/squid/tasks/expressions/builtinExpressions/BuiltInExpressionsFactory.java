@@ -151,6 +151,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208206;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_238U235U_RM_MODEL_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_238U235U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
 
 /**
  *
@@ -433,8 +434,13 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> concentrationExpressionsOrdered = new TreeSet<>();
 
         // ppmU calcs belong to both cases of isDirectAltPD
+        // As of 7 Feb 2019 we introduce two flavors per Bodorkos - see https://github.com/CIRDLES/Squid/issues/164
+        Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
+                "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
+        concentrationExpressionsOrdered.add(expressionPpmURM);
+
         Expression expressionPpmU = buildExpression(U_CONCEN_PPM,
-                "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, true, false);
+                "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, false, true, false);
         concentrationExpressionsOrdered.add(expressionPpmU);
 
         if (!isDirectAltPD) {
@@ -442,7 +448,7 @@ public abstract class BuiltInExpressionsFactory {
             // handles SecondaryParentPpmFromThU
             //String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
             Expression expressionPpmTh_RM = buildExpression(TH_CONCEN_PPM_RM,
-                    "[\"" + U_CONCEN_PPM + "\"]*[\"" + TH_U_EXP_RM + "\"]/" + L1033, true, false, false);
+                    "[\"" + U_CONCEN_PPM_RM + "\"]*[\"" + TH_U_EXP_RM + "\"]/" + L1033, true, false, false);
             concentrationExpressionsOrdered.add(expressionPpmTh_RM);
 
             Expression expressionPpmTh = buildExpression(TH_CONCEN_PPM,
@@ -480,7 +486,7 @@ public abstract class BuiltInExpressionsFactory {
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAME);
 
             Expression expression4corrPpmTh = buildExpression(PB4CORR + TH_CONCEN_PPM_RM,
-                    "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM + "\"]*" + L09678, true, false, false);
+                    "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM_RM + "\"]*" + L09678, true, false, false);
             concentrationExpressionsOrdered.add(expression4corrPpmTh);
 
             // for 207Pb ref material
@@ -496,7 +502,7 @@ public abstract class BuiltInExpressionsFactory {
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAME);
 
             Expression expression7corrPpmTh = buildExpression(PB7CORR + TH_CONCEN_PPM_RM,
-                    "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM + "\"]*" + L09678, true, false, false);
+                    "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM_RM + "\"]*" + L09678, true, false, false);
             concentrationExpressionsOrdered.add(expression7corrPpmTh);
 
             // for samples
