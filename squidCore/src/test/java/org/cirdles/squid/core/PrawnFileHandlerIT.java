@@ -62,13 +62,7 @@ public class PrawnFileHandlerIT {
 
     private static final String PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1
             = "/org/cirdles/squid/tasks/squidTask25/SquidTask_Z6266 = 11pk Perm1.SB.xls";
-    private static final String PRAWN_FILE_RESOURCE_Z6266_TASK_PERM2
-            = "/org/cirdles/squid/tasks/squidTask25/SquidTask_Z6266 = 11pk Perm2.SB.xls";
-    private static final String PRAWN_FILE_RESOURCE_Z6266_TASK_PERM3
-            = "/org/cirdles/squid/tasks/squidTask25/SquidTask_Z6266 = 11pk Perm3.SB.xls";
-    private static final String PRAWN_FILE_RESOURCE_Z6266_TASK_PERM4
-            = "/org/cirdles/squid/tasks/squidTask25/SquidTask_Z6266 = 11pk Perm4.SB.xls";
-
+    
     private static final ResourceExtractor RESOURCE_EXTRACTOR
             = new ResourceExtractor(PrawnFileHandlerIT.class);
 

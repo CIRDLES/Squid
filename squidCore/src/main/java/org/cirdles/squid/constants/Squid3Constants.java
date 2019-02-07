@@ -256,5 +256,7 @@ public final class Squid3Constants {
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
     public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "ᵁ";//\u1D41";
     public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
+    
+    public final static double PRESENT_238U235U_DEFAULT = 137.818;
 
 }

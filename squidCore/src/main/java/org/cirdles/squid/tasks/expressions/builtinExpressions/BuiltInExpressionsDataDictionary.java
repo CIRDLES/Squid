@@ -23,8 +23,8 @@ public class BuiltInExpressionsDataDictionary {
 
     // **********************  SPECIAL CONSTANTS ******************************
     // holding spot until models are implemented
-    public static final double PRESENT_R238_235S = 137.88;
-    public static final String PRESENT_R238_235S_NAME = "r238_235s";
+    public static final String PRESENT_238U235U_RM_MODEL_NAME = "r238_235s";
+    public static final String PRESENT_238U235U = "Present_238U235U";
 
     // **********************  COMMON LEAD *************************************
     public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
