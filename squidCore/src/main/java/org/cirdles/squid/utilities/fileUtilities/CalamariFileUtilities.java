@@ -40,6 +40,7 @@ public class CalamariFileUtilities {
     private static File exampleFolder;
     private static File schemaFolder;
     public static File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
+    public static File SQUID_PARAMETER_MODELS_FOLDER;
     private static File physicalConstantsFolder;
     private static File referenceMaterialsFolder;
     private static File commonPbModelsFolder;
@@ -82,11 +83,15 @@ public class CalamariFileUtilities {
     }
 
     public static void initSampleParametersModels() {
+        
+        SQUID_PARAMETER_MODELS_FOLDER = new File("SquidParameterModels");
+        SQUID_PARAMETER_MODELS_FOLDER.mkdir();
+        
         ResourceExtractor physConstResourceExtractor = new ResourceExtractor(PhysicalConstantsModel.class);
 
-        Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("listOfSamplePhysicalConstantsModels.txt");
+        Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("listOfSquidPhysicalConstantsModels.txt");
         if (listOfPhysicalConstants != null) {
-            physicalConstantsFolder = new File("SamplePhysicalConstantsModels");
+            physicalConstantsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() +  File.separator + "SquidPhysicalConstantsModels");
             try {
                 if (physicalConstantsFolder.exists()) {
                     FileUtilities.recursiveDelete(physicalConstantsFolder.toPath());
@@ -115,9 +120,9 @@ public class CalamariFileUtilities {
 
         ResourceExtractor refMatResourceExtractor = new ResourceExtractor(ReferenceMaterialModel.class);
 
-        Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSampleReferenceMaterials.txt");
+        Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSquidReferenceMaterials.txt");
         if (listOfReferenceMaterials != null) {
-            referenceMaterialsFolder = new File("SampleReferenceMaterialModels");
+            referenceMaterialsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() +  File.separator + "SquidReferenceMaterialModels");
             try {
                 if (referenceMaterialsFolder.exists()) {
                     FileUtilities.recursiveDelete(referenceMaterialsFolder.toPath());
@@ -146,9 +151,9 @@ public class CalamariFileUtilities {
 
         ResourceExtractor commonPbResourceExtractor = new ResourceExtractor(CommonPbModel.class);
 
-        Path listOfCommonPbModels = commonPbResourceExtractor.extractResourceAsPath("listOfSampleCommonPbModels.txt");
+        Path listOfCommonPbModels = commonPbResourceExtractor.extractResourceAsPath("listOfSquidCommonPbModels.txt");
         if (listOfCommonPbModels != null) {
-            commonPbModelsFolder = new File("SampleCommonPbModels");
+            commonPbModelsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() +  File.separator + "SquidCommonPbModels");
             try {
                 if (commonPbModelsFolder.exists()) {
                     FileUtilities.recursiveDelete(commonPbModelsFolder.toPath());
