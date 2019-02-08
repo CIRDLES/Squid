@@ -44,7 +44,14 @@ public class SquidSpeciesModel implements
         this(-1, "NONE", "NONE", "NONE", false, "No", false);
     }
 
-    public SquidSpeciesModel(int massStationIndex, String massStationName, String isotopeName, String elementName, boolean isBackground, String uThBearingAbbreviation, boolean viewedAsGraph) {
+    public SquidSpeciesModel(
+            int massStationIndex, 
+            String massStationName, 
+            String isotopeName, 
+            String elementName, 
+            boolean isBackground, 
+            String uThBearingAbbreviation, 
+            boolean viewedAsGraph) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
         this.isotopeName = isotopeName;

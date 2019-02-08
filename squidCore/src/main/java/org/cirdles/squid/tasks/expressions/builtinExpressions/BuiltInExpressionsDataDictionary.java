@@ -22,7 +22,9 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
 public class BuiltInExpressionsDataDictionary {
 
     // **********************  SPECIAL CONSTANTS ******************************
-    public static final String PRESENT_R238_235S_NAME = "r238_235s";
+    // holding spot until models are implemented
+    public static final String PRESENT_238U235U_RM_MODEL_NAME = "r238_235s";
+    public static final String PRESENT_238U235U = "Present_238U235U";
 
     // **********************  COMMON LEAD *************************************
     public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
@@ -52,6 +54,12 @@ public class BuiltInExpressionsDataDictionary {
     // **********************  MISC ********************************************
     public static final String L859 = "L859";
     public static final String L1033 = "L1033";
+    public static final String L09678 = "0.9678";
+
+    // **********************  RATIOS USED IN BUILTINS *************************
+    public static final String R204206 = "\"204/206\"";
+    public static final String R207206 = "\"207/206\"";
+    public static final String R208206 = "\"208/206\"";
 
     // **********************  RATIOS USED IN COMMON PB MODELS *****************
     public static final String R206_204B = "r206_204b";
@@ -152,7 +160,7 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String PBTh_EXT_1_SIGMA_ERR_PCT = "208Pb232Th_Ext1SigmaErr_Pct";
     public static final String PBU_EXT_1_SIGMA_ERR_PCT = "206Pb238U_Ext1SigmaErr_Pct";
-    public static final String SQUID_ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
+    public static final String ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
 
     // ********************** OVER COUNTS **************************************
     public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_From207Pb";
@@ -183,6 +191,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PARENT_ELEMENT_CONC_CONST = "ParentElement_ConcenConst";
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
+    public static final String U_CONCEN_PPM_RM = "U_Concen_RM";
     public static final String U_CONCEN_PPM = "U_Concen";
     public static final String TH_CONCEN_PPM_RM = "Th_Concen_RM";
     public static final String TH_CONCEN_PPM = "Th_Concen";

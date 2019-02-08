@@ -105,9 +105,6 @@ public final class Squid3Constants {
 
     public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
 
-    // holding spot until models are implemented
-    public static final double PRESENT_R238_235S = 137.88;
-
     public enum IndexIsoptopesEnum {
         PB_204("PB_204", "204"),
         PB_207("PB_207", "207"),
@@ -259,5 +256,8 @@ public final class Squid3Constants {
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
     public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "ᵁ";//\u1D41";
     public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
+    
+    // http://science.sciencemag.org/content/335/6076/1610
+    public final static double PRESENT_238U235U_DEFAULT = 137.818;
 
 }

@@ -180,7 +180,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
                 + "</mstyle>\n"
                 + "<mstyle  mathsize='150%'>\n"
                 + "<mtext>\n"
-                + squidSpeciesModel.getElementName()
+                + squidSpeciesModel.getElementName().split("2")[0]
                 + "\n</mtext>\n"
                 + "</mstyle>\n"
                 + "<mtext/>"
