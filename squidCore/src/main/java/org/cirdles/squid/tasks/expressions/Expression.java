@@ -377,4 +377,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public boolean isCustom() {
         return !getExpressionTree().isSquidSpecialUPbThExpression();// && !isSquidSwitchNU();
     }
+    
+    public boolean isAgeExpression(){
+        return name.toUpperCase().contains("AGE");
+    }
 }

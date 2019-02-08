@@ -321,7 +321,7 @@
                                     </AnchorPane>
                                     <AnchorPane>
                                        <children>
-                                          <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" text="Peek" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" text="Peek (Display Context: Ages in Ma, concentrations in ppm)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <content>
                                                 <TabPane fx:id="spotTabPane" style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
                                                   <tabs>

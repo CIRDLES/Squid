@@ -142,7 +142,7 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUIL
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
-import org.cirdles.squid.tasks.expressions.functions.ValueModel;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
  * FXML Controller class
@@ -1608,15 +1608,15 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private String createPeekRM(Expression exp, boolean forcePercentUn) {
-        String res;
+        String result;
         if ((exp == null) || (!exp.amHealthy())) {
-            res = "No expression.";
+            result = "No expression.";
         } else {
             TaskInterface task = squidProject.getTask();
             List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
             List<ShrimpFractionExpressionInterface> concRefMatSpots = task.getConcentrationReferenceMaterialSpots();
             if (exp.getExpressionTree() instanceof ConstantNode) {
-                res = "Not used";
+                result = "Not used";
                 if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     try {
                         rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
@@ -1625,41 +1625,41 @@ public class ExpressionBuilderController implements Initializable {
                 }
             } else if (exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
                 SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
-                res = "No Summary";
+                result = "No Summary";
                 if (spotSummary != null) {
                     if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                         if (spotSummary.getSelectedSpots().size() > 0) {
-                            res = peekDetailsPerSummary(spotSummary);
+                            result = peekDetailsPerSummary(spotSummary);
                         } else {
-                            res = "No Reference Materials";
+                            result = "No Reference Materials";
                         }
                     }
                     if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                         if (spotSummary.getSelectedSpots().size() > 0) {
-                            res = peekDetailsPerSummary(spotSummary);
+                            result = peekDetailsPerSummary(spotSummary);
                         } else {
-                            res = "No Concentration Reference Materials";
+                            result = "No Concentration Reference Materials";
                         }
                     }
                 }
             } else {
-                res = "Reference Materials not processed.";
+                result = "Reference Materials not processed.";
                 if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     if (refMatSpots.size() > 0) {
-                        res = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree());
+                        result = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree());
                     } else {
-                        res = "No Reference Materials";
+                        result = "No Reference Materials";
                     }
                 } else if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                     if (concRefMatSpots.size() > 0) {
-                        res = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree());
+                        result = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree());
                     } else {
-                        res = "No Concentration Reference Materials";
+                        result = "No Concentration Reference Materials";
                     }
                 }
             }
         }
-        return res;
+        return result;
     }
 
     private String createPeekUN(Expression exp, boolean forcePercentUn) {
@@ -1881,23 +1881,42 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private String peekDetailsPerSummary(SpotSummaryDetails spotSummary) {
-        String[][] labels = ((ExpressionTree) spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues();
+        // context-sensitivity - we use Ma in Squid for display
+        boolean isAge = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("AGE");
+        boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("LAMBDA2");
+
+        String[][] labels = clone2dArray(((ExpressionTree) spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues());
+        if (isAge) {
+            labels[0][0] = "Age (Ma)";
+            if (labels[0].length > 1) {
+                labels[0][1] += " (Ma)";
+            }
+            if (labels[0].length > 2) {
+                labels[0][2] += " (Ma)";
+            }
+        }
+
+        if (isLambda) {
+            labels[0][0] = ((ExpressionTree) spotSummary.getExpressionTree()).getName() + " (Ma)";            
+        }
+
         StringBuilder sb = new StringBuilder();
         if (concRefMatSwitchCheckBox.isSelected()) {
             sb.append("Concentration Reference Materials Only\n\n");
         }
         for (int i = 0; i < labels[0].length; i++) {
             sb.append("\t");
-            sb.append(String.format("%1$-" + 13 + "s", labels[0][i]));
+            sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
             sb.append(": ");
-            sb.append(Utilities.roundedToSize(spotSummary.getValues()[0][i], 15));
+            sb.append(Utilities.roundedToSize(
+                    spotSummary.getValues()[0][i] / (isAge ? 1.0e6 : ((isLambda ? 1.0e-6 : 1.0))), 15));
             sb.append("\n");
         }
 
         // handle special cases
         if (labels.length > 1) {
             sb.append("\t");
-            sb.append(String.format("%1$-" + 13 + "s", labels[1][0]));
+            sb.append(String.format("%1$-" + 16 + "s", labels[1][0]));
             sb.append(": ");
             // print list
             if (spotSummary.getValues()[1].length == 0) {
@@ -1912,7 +1931,7 @@ public class ExpressionBuilderController implements Initializable {
 
         if (labels.length > 2) {
             sb.append("\t");
-            sb.append(String.format("%1$-" + 13 + "s", labels[2][0]));
+            sb.append(String.format("%1$-" + 16 + "s", labels[2][0]));
             sb.append(": ");
             // print list
             if (spotSummary.getValues()[2].length == 0) {
@@ -1946,6 +1965,11 @@ public class ExpressionBuilderController implements Initializable {
     private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface expTree) {
         StringBuilder sb = new StringBuilder();
         int sigDigits = 15;
+
+        // context-sensitivity - we use Ma in Squid for display
+        boolean isAge = expTree.getName().toUpperCase().contains("AGE");
+        String contextFieldName = (isAge ? "Age (Ma)" : "Value");
+        String context1SigmaAbsName = (isAge ? "1\u03C3 Abs (Ma)" : "1\u03C3 Abs");
 
 //        if (expTree instanceof ShrimpSpeciesNode) {
 //            sb.append("Please specify property of species such as totalCps.");
@@ -2012,18 +2036,21 @@ public class ExpressionBuilderController implements Initializable {
         String[][] resultLabels;
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
-
                 if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForSummary) {
                     String uncertaintyDirective
                             = ((VariableNodeForSummary) ((ExpressionTree) expTree).getChildrenET().get(0)).getUncertaintyDirective();
                     if (uncertaintyDirective.length() > 0) {
-                        resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
+                        if (uncertaintyDirective.compareTo("±") == 0) {
+                            resultLabels = new String[][]{{context1SigmaAbsName}, {}};
+                        } else {
+                            resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
+                        }
                     } else {
-                        resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
+                        resultLabels = new String[][]{{contextFieldName, context1SigmaAbsName}, {}};
                     }
                 } else {
                     // i.e., ConstantNode
-                    resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
+                    resultLabels = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
                 }
             } else if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
                 // Check for functions of species
@@ -2041,15 +2068,14 @@ public class ExpressionBuilderController implements Initializable {
                 if (uncertaintyDirective.length() > 0) {
                     resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
                 } else {
-                    resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
+                    resultLabels = new String[][]{{contextFieldName, "1\u03C3 Abs"}, {}};
                 }
             } else {
                 // some smarts
-                resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
-                if (((ExpressionTree) expTree).getOperation() instanceof ValueModel) {
-                    if (expTree.getName().toUpperCase().contains("AGE")) {
-                        resultLabels[0][0] = "Age";
-                    }
+                resultLabels = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
+                resultLabels[0][0] = contextFieldName;
+                if (resultLabels[0].length > 1) {
+                    resultLabels[0][1] = context1SigmaAbsName;
                 }
             }
 
@@ -2100,7 +2126,8 @@ public class ExpressionBuilderController implements Initializable {
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
                         for (int i = 0; i < resultLabels[0].length; i++) {
                             try {
-                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                                sb.append(String.format("%1$-" + 20 + "s",
+                                        Utilities.roundedToSize(results[0][i] / (isAge ? 1.0e6 : 1.0), sigDigits)));
                             } catch (Exception e) {
                             }
                         }
