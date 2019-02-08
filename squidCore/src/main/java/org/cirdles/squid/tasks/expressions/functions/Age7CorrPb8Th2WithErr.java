@@ -67,6 +67,12 @@ public class Age7CorrPb8Th2WithErr extends Function {
             + "Total 208/232, Total 208/232 1\u03C3 %, "
             + "Total 208/206, Total 208/206 1\u03C3 %,"
             + "\"Total 207/206, Total 207/206 1\u03C3 %"};
+        definition = "Combines LudwigLibrary's Age7CorrPb8Th2 and AgeErr7CorrPb8Th2.\n"
+                + "Age7CorrPb8Th2: Returns the 208Pb/232Th age, assuming\n"
+                + "the true 206/204 is that required to force 206/238-207/235 concordance.\n"
+                + "AgeErr7CorrPb8Th2: Returns the error of the 208Pb/232Th age.\n"
+                + "The error iscalculated numerically,\n"
+                + "by successive perturbation of the input errors.";
     }
 
     /**
@@ -100,7 +106,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
             double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_64).getValues()[0][0];
             double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_76).getValues()[0][0];
             double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_86).getValues()[0][0];
-            
+
             double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(PRESENT_238U235U).getValues()[0][0];
             double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA232).getValues()[0][0];
             double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];
