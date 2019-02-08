@@ -2047,10 +2047,10 @@ public class ExpressionBuilderController implements Initializable {
                 // some smarts
                 resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
                 if (((ExpressionTree) expTree).getOperation() instanceof ValueModel) {
-                    if (expTree.getName().toUpperCase().contains("AGE")){
+                    if (expTree.getName().toUpperCase().contains("AGE")) {
                         resultLabels[0][0] = "Age";
                     }
-                } 
+                }
             }
 
             for (int i = 0; i < resultLabels[0].length; i++) {
@@ -2441,7 +2441,7 @@ public class ExpressionBuilderController implements Initializable {
                 case LEFT_PAREN:
                 case RIGHT_PAREN:
 
-                    res = new Tooltip("Parenthese: " + text);
+                    res = new Tooltip("Parenthesis: " + text);
                     break;
 
                 case NUMBER:
@@ -2467,7 +2467,12 @@ public class ExpressionBuilderController implements Initializable {
                     if (str != null) {
                         OperationOrFunctionInterface fn = Function.operationFactory(str);
                         if (fn != null) {
-                            res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " argument(s): " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
+                            res = new Tooltip(
+                                    "Function: " + fn.getName()
+                                    + "\n\n" + fn.getArgumentCount()
+                                    + " argument(s): " + fn.printInputValues().trim()
+                                    + "\nOutputs: " + fn.printOutputValues().trim()
+                                    + "\nDefinition: " + fn.getDefinition().trim());
                         }
                     }
                     break;
@@ -3576,7 +3581,7 @@ public class ExpressionBuilderController implements Initializable {
 
             setFontSmoothingType(FontSmoothingType.LCD);
             setFont(Font.font("SansSerif"));
-            
+
             this.selectedColor = Color.RED;
             this.regularColor = Color.BLACK;
             this.opositeColor = Color.LIME;

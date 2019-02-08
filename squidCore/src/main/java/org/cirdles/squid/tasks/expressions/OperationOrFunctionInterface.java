@@ -129,4 +129,6 @@ public interface OperationOrFunctionInterface {
     public default boolean isScalarResult() {
         return (getRowCount() == 1) && (getColCount() == 1);
     }
+    
+    public String getDefinition();
 }
