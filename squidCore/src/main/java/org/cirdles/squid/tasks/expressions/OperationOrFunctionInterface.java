@@ -27,6 +27,8 @@ import org.cirdles.squid.tasks.TaskInterface;
  */
 public interface OperationOrFunctionInterface {
 
+    public static final String DEF_TAB = "           ";
+    
     /**
      *
      * @param childrenET the value of childrenET

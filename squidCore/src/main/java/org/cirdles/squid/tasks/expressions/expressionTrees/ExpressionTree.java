@@ -472,7 +472,7 @@ public class ExpressionTree
     public String toStringMathML() {
         String retVal = "";
         if (operation == null) {
-            retVal = "<mtext>No expression selected.</mtext>\n";
+            retVal = "<mtext>No expression present.</mtext>\n";
         } else {
             try {
                 retVal = operation.toStringMathML(childrenET);

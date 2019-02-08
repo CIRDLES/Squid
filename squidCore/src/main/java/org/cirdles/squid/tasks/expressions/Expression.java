@@ -188,11 +188,16 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String produceExpressionTreeAudit() {
-
         String auditReport = "";
         if (!((ExpressionTreeInterface) expressionTree).isValid()) {
-            auditReport
-                    += "Errors occurred in parsing:\n" + ((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
+            if (((ExpressionTree) expressionTree).getOperation() == null) {
+                auditReport
+                        += "No expression present.";
+            } else {
+                auditReport
+                        += "Errors occurred in parsing:\n"
+                        + ((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
+            }
         } else {
             auditExpressionTreeDependencies();
             auditReport

@@ -68,11 +68,11 @@ public class Age7CorrPb8Th2WithErr extends Function {
             + "Total 208/206, Total 208/206 1\u03C3 %,"
             + "\"Total 207/206, Total 207/206 1\u03C3 %"};
         definition = "Combines LudwigLibrary's Age7CorrPb8Th2 and AgeErr7CorrPb8Th2.\n"
-                + "Age7CorrPb8Th2: Returns the 208Pb/232Th age, assuming\n"
-                + "the true 206/204 is that required to force 206/238-207/235 concordance.\n"
-                + "AgeErr7CorrPb8Th2: Returns the error of the 208Pb/232Th age.\n"
-                + "The error iscalculated numerically,\n"
-                + "by successive perturbation of the input errors.";
+                + DEF_TAB + "Age7CorrPb8Th2: Returns the 208Pb/232Th age, assuming\n"
+                + DEF_TAB + "the true 206/204 is that required to force 206/238-207/235 concordance.\n"
+                + DEF_TAB + "AgeErr7CorrPb8Th2: Returns the error of the 208Pb/232Th age.\n"
+                + DEF_TAB + "The error iscalculated numerically,\n"
+                + DEF_TAB + "by successive perturbation of the input errors.";
     }
 
     /**

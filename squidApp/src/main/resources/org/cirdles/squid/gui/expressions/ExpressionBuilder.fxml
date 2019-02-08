@@ -144,7 +144,7 @@
                      <children>
                         <HBox spacing="5.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create blank" HBox.hgrow="NEVER" />
+                              <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create new" HBox.hgrow="NEVER" />
                               <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Copy selected" />
                               <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
                               <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />

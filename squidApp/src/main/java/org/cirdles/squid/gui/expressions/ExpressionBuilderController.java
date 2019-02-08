@@ -1162,8 +1162,8 @@ public class ExpressionBuilderController implements Initializable {
     private void newCustomExpressionAction(ActionEvent event) {
         if (currentMode.get().equals(Mode.VIEW)) {
             selectedBeforeCreateOrCopy = selectedExpression.get();
-            selectedExpression.set(null);
-            selectedExpression.set(new Expression("new_custom_expression", ""));
+            Expression exp = new Expression("new_custom_expression", "");
+            selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
             refreshSaved();
         }
