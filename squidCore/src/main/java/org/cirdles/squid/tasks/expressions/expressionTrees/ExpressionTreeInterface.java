@@ -248,7 +248,7 @@ public interface ExpressionTreeInterface {
         }
         return retVal;
     }
-    
+
     public default int argumentCount() {
         int retVal = 0;
 
@@ -272,5 +272,32 @@ public interface ExpressionTreeInterface {
                 child.auditExpressionTreeDependencies(argumentAudit);
             }
         }
+    }
+
+    public default void auditExpressionTreeTargetCompatibility(List<String> argumentAudit) {
+        argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditTargetCompatibility());
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+            child.auditExpressionTreeTargetCompatibility(argumentAudit);
+        }
+    }
+
+    public default int auditTargetCompatibility(int targetBits) {
+        int compatibleTargets = targetBits;
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+            compatibleTargets = compatibleTargets & child.makeTargetBits();
+        }
+
+        return compatibleTargets;
+    }
+
+    /**
+     *
+     * @return targetBits = 2 for both (11), 1 for RM (01), 2 for U (10)
+     */
+    public default int makeTargetBits() {
+        int targetBits
+                = (isSquidSwitchSTReferenceMaterialCalculation() ? 1 : 0)
+                + (isSquidSwitchSAUnknownCalculation() ? 2 : 0);
+        return targetBits;
     }
 }

@@ -114,9 +114,9 @@ public class ExpressionTree
 
     protected boolean squidSwitchConcentrationReferenceMaterialCalculation;
 
-    protected  String uncertaintyDirective;
+    protected String uncertaintyDirective;
 
-    protected  int index;
+    protected int index;
 
     /**
      *
@@ -362,6 +362,30 @@ public class ExpressionTree
         return audit.toString();
     }
 
+    @Override
+    public String auditTargetCompatibility() {
+        StringBuilder audit = new StringBuilder();
+
+        String targetPhrase = (squidSwitchSTReferenceMaterialCalculation && !squidSwitchSAUnknownCalculation)
+                ? "ONLY RefMat" : "";
+        if (targetPhrase.length() == 0) {
+            targetPhrase = (!squidSwitchSTReferenceMaterialCalculation && squidSwitchSAUnknownCalculation)
+                    ? "ONLY Unknowns" : "";
+        }
+        if (targetPhrase.length() == 0) {
+            targetPhrase = (squidSwitchSTReferenceMaterialCalculation && squidSwitchSAUnknownCalculation)
+                    ? "BOTH RefMat AND Unknowns" : "";
+        }
+        if (targetPhrase.length() == 0) {
+            targetPhrase = "NONE";
+        }
+
+        audit.append("   ").append(this.getName()).append(" targets ")
+                .append(targetPhrase);
+
+        return audit.toString();
+    }
+
     /**
      *
      * @param xstream
@@ -438,7 +462,6 @@ public class ExpressionTree
         return retVal;
     }
 
-
     public String getUncertaintyDirective() {
         return uncertaintyDirective;
     }
@@ -446,6 +469,7 @@ public class ExpressionTree
     public int getIndex() {
         return index;
     }
+
     /**
      *
      * @return true if instance of Function class
@@ -622,7 +646,8 @@ public class ExpressionTree
 
     /**
      *
-     * @return true if ratios-of-interest (raw ratios) included in expressionTree
+     * @return true if ratios-of-interest (raw ratios) included in
+     * expressionTree
      */
     public boolean hasRatiosOfInterest() {
         return ratiosOfInterest.size() > 0;
