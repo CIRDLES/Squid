@@ -281,6 +281,8 @@ public class ExpressionParser {
                                 retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
                                 if (retExpTreeKnown != null) {
                                     retExpTree = new VariableNodeForSummary(baseExpressionName, index);
+                                    retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
+                                    retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
                                 }
                             }
                         }

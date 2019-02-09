@@ -19,6 +19,7 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -275,7 +276,9 @@ public interface ExpressionTreeInterface {
     }
 
     public default void auditExpressionTreeTargetCompatibility(List<String> argumentAudit) {
-        argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditTargetCompatibility());
+        if (!amAnonymous() && !(this instanceof ConstantNode)) {
+            argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditTargetCompatibility());
+        }
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
             child.auditExpressionTreeTargetCompatibility(argumentAudit);
         }
@@ -284,7 +287,9 @@ public interface ExpressionTreeInterface {
     public default int auditTargetCompatibility(int targetBits) {
         int compatibleTargets = targetBits;
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
-            compatibleTargets = compatibleTargets & child.makeTargetBits();
+            if (!child.amAnonymous() && !(child instanceof ConstantNode)) {
+                compatibleTargets = compatibleTargets & child.makeTargetBits();
+            }
         }
 
         return compatibleTargets;
@@ -296,8 +301,10 @@ public interface ExpressionTreeInterface {
      */
     public default int makeTargetBits() {
         int targetBits
-                = (isSquidSwitchSTReferenceMaterialCalculation() ? 1 : 0)
+                = ((isSquidSwitchSTReferenceMaterialCalculation()||isSquidSwitchConcentrationReferenceMaterialCalculation()) ? 1 : 0)
                 + (isSquidSwitchSAUnknownCalculation() ? 2 : 0);
         return targetBits;
     }
+
+    public boolean amAnonymous();
 }

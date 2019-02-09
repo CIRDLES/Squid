@@ -1886,6 +1886,7 @@ public class ExpressionBuilderController implements Initializable {
         // context-sensitivity - we use Ma in Squid for display
         boolean isAge = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("AGE");
         boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("LAMBDA2");
+        boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("CONCEN");
 
         String[][] labels = clone2dArray(((ExpressionTree) spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues());
         if (isAge) {
@@ -1899,7 +1900,11 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         if (isLambda) {
-            labels[0][0] = ((ExpressionTree) spotSummary.getExpressionTree()).getName() + " (Ma)";            
+            labels[0][0] = ((ExpressionTree) spotSummary.getExpressionTree()).getName() + " (Ma)";
+        }
+
+        if (isConcen) {
+            labels[0][0] = "ppm";
         }
 
         StringBuilder sb = new StringBuilder();
@@ -1970,67 +1975,12 @@ public class ExpressionBuilderController implements Initializable {
 
         // context-sensitivity - we use Ma in Squid for display
         boolean isAge = expTree.getName().toUpperCase().contains("AGE");
-        String contextFieldName = (isAge ? "Age (Ma)" : "Value");
-        String context1SigmaAbsName = (isAge ? "1\u03C3 Abs (Ma)" : "1\u03C3 Abs");
+        String contextAgeFieldName = (isAge ? "Age (Ma)" : "Value");
+        String contextAge1SigmaAbsName = (isAge ? "1\u03C3 Abs (Ma)" : "1\u03C3 Abs");
+        // or it may be concentration ppm
+        boolean isConcen = expTree.getName().toUpperCase().contains("CONCEN");
+        contextAgeFieldName = (isConcen ? "ppm" : contextAgeFieldName);
 
-//        if (expTree instanceof ShrimpSpeciesNode) {
-//            sb.append("Please specify property of species such as totalCps.");
-//        } 
-//        else if (expTree instanceof VariableNodeForIsotopicRatios) {
-//            // special case where the expressionTree is a ratio
-//            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-//            // first determine if uncertainty directive is present
-//            String uncertaintyDirective = ((VariableNodeForIsotopicRatios) expTree).getUncertaintyDirective();
-//            if (uncertaintyDirective.length() > 0) {
-//                sb.append(String.format("%1$-" + 20 + "s", "1\u03C3 " + uncertaintyDirective + " " + expTree.getName()));
-//            } else {
-//                sb.append(String.format("%1$-" + 20 + "s", expTree.getName()));
-//                sb.append(String.format("%1$-" + 20 + "s", "1\u03C3 ABS"));
-//            }
-//            sb.append("\n");
-//
-//            for (ShrimpFractionExpressionInterface spot : spots) {
-//                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-//                double[][] results
-//                        = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
-//                for (int i = 0; i < (int)((uncertaintyDirective.length() == 0) ? results[0].length : 1); i++) {
-//                    try {
-//                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
-//                    } catch (Exception e) {
-//                    }
-//                }
-//                sb.append("\n");
-//            }
-//
-//        } 
-////        else 
-////        if (expTree instanceof SpotFieldNode) {
-////            // special case where the expressionTree is a field in spot (non-ratio)
-////            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-////            sb.append(String.format("%1$-" + 20 + "s", expTree.getName()));
-////            sb.append("\n");
-////
-////            for (ShrimpFractionExpressionInterface spot : spots) {
-////                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-////                List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
-////                singleSpot.add(spot);
-////
-////                try {
-////                    double[][] results
-////                            = Arrays.stream(ExpressionTreeInterface.convertObjectArrayToDoubles(expTree.eval(singleSpot, null))).toArray(double[][]::new);
-////                    for (int i = 0; i < results[0].length; i++) {
-////                        try {
-////                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
-////                        } catch (Exception e) {
-////                        }
-////                    }
-////                    sb.append("\n");
-////                } catch (SquidException squidException) {
-////                }
-////
-////            }
-////
-////        } else {
         if (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
             sb.append("Concentration Reference Materials Only\n\n");
         }
@@ -2043,12 +1993,12 @@ public class ExpressionBuilderController implements Initializable {
                             = ((VariableNodeForSummary) ((ExpressionTree) expTree).getChildrenET().get(0)).getUncertaintyDirective();
                     if (uncertaintyDirective.length() > 0) {
                         if (uncertaintyDirective.compareTo("±") == 0) {
-                            resultLabels = new String[][]{{context1SigmaAbsName}, {}};
+                            resultLabels = new String[][]{{contextAge1SigmaAbsName}, {}};
                         } else {
                             resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
                         }
                     } else {
-                        resultLabels = new String[][]{{contextFieldName, context1SigmaAbsName}, {}};
+                        resultLabels = new String[][]{{contextAgeFieldName, contextAge1SigmaAbsName}, {}};
                     }
                 } else {
                     // i.e., ConstantNode
@@ -2070,14 +2020,14 @@ public class ExpressionBuilderController implements Initializable {
                 if (uncertaintyDirective.length() > 0) {
                     resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
                 } else {
-                    resultLabels = new String[][]{{contextFieldName, "1\u03C3 Abs"}, {}};
+                    resultLabels = new String[][]{{contextAgeFieldName, "1\u03C3 Abs"}, {}};
                 }
             } else {
                 // some smarts
                 resultLabels = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
-                resultLabels[0][0] = contextFieldName;
+                resultLabels[0][0] = contextAgeFieldName;
                 if (resultLabels[0].length > 1) {
-                    resultLabels[0][1] = context1SigmaAbsName;
+                    resultLabels[0][1] = contextAge1SigmaAbsName;
                 }
             }
 

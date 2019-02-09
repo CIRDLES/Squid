@@ -60,6 +60,8 @@ public class ExpressionTree
         XMLSerializerInterface {
 
     private static final long serialVersionUID = 69881766695649050L;
+    
+    public static final String ANONYMOUS_NAME = "Anonymous";
 
     /**
      *
@@ -122,7 +124,7 @@ public class ExpressionTree
      *
      */
     public ExpressionTree() {
-        this("Anonymous");
+        this(ANONYMOUS_NAME);
     }
 
     /**
@@ -365,15 +367,16 @@ public class ExpressionTree
     @Override
     public String auditTargetCompatibility() {
         StringBuilder audit = new StringBuilder();
+        boolean referenceMaterialCalc = squidSwitchSTReferenceMaterialCalculation || squidSwitchConcentrationReferenceMaterialCalculation;
 
-        String targetPhrase = (squidSwitchSTReferenceMaterialCalculation && !squidSwitchSAUnknownCalculation)
+        String targetPhrase = (referenceMaterialCalc && !squidSwitchSAUnknownCalculation)
                 ? "ONLY RefMat" : "";
         if (targetPhrase.length() == 0) {
-            targetPhrase = (!squidSwitchSTReferenceMaterialCalculation && squidSwitchSAUnknownCalculation)
+            targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
                     ? "ONLY Unknowns" : "";
         }
         if (targetPhrase.length() == 0) {
-            targetPhrase = (squidSwitchSTReferenceMaterialCalculation && squidSwitchSAUnknownCalculation)
+            targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
                     ? "BOTH RefMat AND Unknowns" : "";
         }
         if (targetPhrase.length() == 0) {
@@ -384,6 +387,11 @@ public class ExpressionTree
                 .append(targetPhrase);
 
         return audit.toString();
+    }
+
+    @Override
+    public boolean amAnonymous() {
+        return name.compareTo(ANONYMOUS_NAME) == 0;
     }
 
     /**

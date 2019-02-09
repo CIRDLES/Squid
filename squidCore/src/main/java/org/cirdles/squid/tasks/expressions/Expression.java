@@ -138,9 +138,16 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public boolean amHealthy() {
         boolean retVal = false;
         if (expressionTree != null) {
-            retVal = expressionTree.amHealthy();
+            retVal = expressionTree.amHealthy() && haveCompatibleTargetSpots();
         }
         return retVal;
+    }
+
+    public boolean haveCompatibleTargetSpots() {
+        int goalTargetBits = expressionTree.makeTargetBits();
+        int targetBits = expressionTree.auditTargetCompatibility(goalTargetBits);
+
+        return (goalTargetBits > 0) && (goalTargetBits <= targetBits);
     }
 
     @Override
