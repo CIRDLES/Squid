@@ -26,7 +26,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="702.0" prefWidth="1220.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane fx:id="mainPane" dividerPositions="0.2348111658456486" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="702.0" prefWidth="1220.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
       <SplitPane fx:id="leftSplitPane" dividerPositions="0.75" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
          <items>
@@ -49,44 +49,50 @@
                   </HBox>
                   <Accordion fx:id="expressionsAccordion" VBox.vgrow="SOMETIMES">
                      <panes>
-                        <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" text="Custom Expressions">
+                        <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Custom Expressions">
                            <content>
                               <ListView fx:id="customExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0" text="NU-switched Expressions with Uncts">
+                        <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="NU-switched Expressions with Uncts">
                            <content>
                               <ListView fx:id="nuSwitchedExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0" text="Built-In Expressions">
+                        <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Built-In Expressions">
                            <content>
                               <ListView fx:id="builtInExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" text="Ratios with Uncertainties">
+                        <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Ratios with Uncertainties">
                            <content>
                               <ListView fx:id="ratioExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12;" text="Reference Material Values (see Task Mgr)">
+                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="Reference Material Values (see Task Mgr)">
                            <content>
                               <ListView fx:id="referenceMaterialsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" text="Parameters (see Task Mgr)">
+                        <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Parameters (see Task Mgr)">
                            <content>
                               <ListView fx:id="parametersListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" text="Unhealthy Expressions">
+                        <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" style="-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;" text="Unhealthy / Incompatible Targets Expressions">
                            <content>
                               <ListView fx:id="brokenExpressionsListView" />
                            </content>
                         </TitledPane>
                      </panes>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </Accordion>
                </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </VBox>
             <VBox prefHeight="149.0" prefWidth="275.0">
                <children>
@@ -144,7 +150,7 @@
                      <children>
                         <HBox spacing="5.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create blank" HBox.hgrow="NEVER" />
+                              <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create new" HBox.hgrow="NEVER" />
                               <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Copy selected" />
                               <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
                               <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
@@ -178,8 +184,8 @@
                   </HBox>
                   <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0">
                      <children>
-                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" opacity="0.99" text="Reference Material" />
-                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" opacity="0.99" text="Unknown Samples" />
+                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" opacity="0.99" style="-fx-text-fill: red;" text="Reference Material" />
+                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" opacity="0.99" style="-fx-text-fill: red;" text="Unknown Samples" />
                         <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" opacity="0.99" text="Conc RefMat" />
                         <CheckBox fx:id="summaryCalculationSwitchCheckBox" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
                         <CheckBox fx:id="NUSwitchCheckBox" layoutX="601.0" layoutY="10.0" mnemonicParsing="false" onAction="#NUSwitchCheckBoxAction" opacity="0.99" text="NU Switch" />
@@ -321,7 +327,7 @@
                                     </AnchorPane>
                                     <AnchorPane>
                                        <children>
-                                          <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" text="Peek" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" text="Peek (Display Context: Ages in Ma, concentrations in ppm)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <content>
                                                 <TabPane fx:id="spotTabPane" style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
                                                   <tabs>

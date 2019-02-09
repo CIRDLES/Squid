@@ -52,6 +52,9 @@ public class ConstantNode extends ExpressionTree {
             value = ((int) value) * 1.0;
         }
         this.value = value;
+        
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;
     }
 
     @Override

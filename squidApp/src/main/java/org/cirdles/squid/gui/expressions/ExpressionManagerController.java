@@ -75,6 +75,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 
 import org.cirdles.squid.gui.SquidUI;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree.ANONYMOUS_NAME;
 
 /**
  * FXML Controller class
@@ -406,7 +407,7 @@ public class ExpressionManagerController implements Initializable {
 
     private Expression parseAndAuditCurrentExcelExpression() {
         Expression exp = squidProject.getTask().generateExpressionFromRawExcelStyleText(
-                expressionNameTextField.getText().length() == 0 ? "Anonymous" : expressionNameTextField.getText(),
+                expressionNameTextField.getText().length() == 0 ? ANONYMOUS_NAME : expressionNameTextField.getText(),
                 expressionExcelTextArea.getText().trim().replace("\n", ""),
                 currentExpression.isSquidSwitchNU(), 
                 currentExpression.isReferenceMaterialValue(), 

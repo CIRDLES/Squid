@@ -1349,6 +1349,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                             Operation.divide());
 
             ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
+            ratioExpression.setSquidSwitchSTReferenceMaterialCalculation(true);
+            ratioExpression.setSquidSwitchSAUnknownCalculation(true);
         }
         return ratioExpression;
     }

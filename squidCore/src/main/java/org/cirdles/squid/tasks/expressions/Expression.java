@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 
 /**
  *
@@ -64,6 +67,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     private transient String parsingStatusReport;
     private transient List<String> argumentAudit;
+    private transient List<String> targetAudit;
 
     /**
      * Needed for XML unmarshal
@@ -101,6 +105,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
+        this.targetAudit = new ArrayList<>();
         this.notes = notes;
     }
 
@@ -133,9 +138,16 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public boolean amHealthy() {
         boolean retVal = false;
         if (expressionTree != null) {
-            retVal = expressionTree.amHealthy();
+            retVal = expressionTree.amHealthy() && haveCompatibleTargetSpots();
         }
         return retVal;
+    }
+
+    public boolean haveCompatibleTargetSpots() {
+        int goalTargetBits = expressionTree.makeTargetBits();
+        int targetBits = expressionTree.auditTargetCompatibility(goalTargetBits);
+
+        return (goalTargetBits > 0) && (goalTargetBits <= targetBits);
     }
 
     @Override
@@ -188,13 +200,35 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String produceExpressionTreeAudit() {
-
         String auditReport = "";
         if (!((ExpressionTreeInterface) expressionTree).isValid()) {
-            auditReport
-                    += "Errors occurred in parsing:\n" + ((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
+            if (((ExpressionTree) expressionTree).getOperation() == null) {
+                auditReport
+                        += "No expression present.";
+            } else {
+                auditReport
+                        += "Errors occurred in parsing:\n"
+                        + ((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
+            }
         } else {
             auditExpressionTreeDependencies();
+            auditExpressionTreeTargetCompatibility();
+
+            int goalTargetBits = expressionTree.makeTargetBits();
+            int targetBits = expressionTree.auditTargetCompatibility(goalTargetBits);
+
+            auditReport
+                    += "Target Spots: "
+                    + (String) ((goalTargetBits == 0) ? "Missing - Please select" : ((goalTargetBits > targetBits))
+                                    ? "Incompatible" : "Compatible");
+            if (targetAudit.size() > 0) {
+                auditReport += "\nTarget Spots Audit:\n";
+                for (String audit : targetAudit) {
+                    auditReport += audit + "\n";
+                }
+                auditReport += "\n";
+            }
+
             auditReport
                     += "Expression healthy: "
                     + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.US);
@@ -213,6 +247,15 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         }
 
         return auditReport;
+    }
+
+    private void auditExpressionTreeTargetCompatibility() {
+        if (((ExpressionTreeInterface) expressionTree).isValid()) {
+            if (expressionTree instanceof ExpressionTree) {
+                this.targetAudit = new ArrayList<>();
+                ((ExpressionTree) expressionTree).auditExpressionTreeTargetCompatibility(targetAudit);
+            }
+        }
     }
 
     private void auditExpressionTreeDependencies() {
@@ -371,5 +414,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public boolean isCustom() {
         return !getExpressionTree().isSquidSpecialUPbThExpression();// && !isSquidSwitchNU();
+    }
+
+    public boolean isAgeExpression() {
+        return name.toUpperCase().contains("AGE");
     }
 }
