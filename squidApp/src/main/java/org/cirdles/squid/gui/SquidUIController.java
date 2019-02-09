@@ -397,6 +397,9 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
                 customizePrawnFileMenu();
+            } else {
+                squidProject.getTask().setChanged(false);
+                SquidProject.setProjectChanged(false);
             }
         } catch (IOException iOException) {
             String message = iOException.getMessage();
@@ -424,6 +427,9 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
                 customizePrawnFileMenu();
+            } else {
+                squidProject.getTask().setChanged(false);
+                SquidProject.setProjectChanged(false);
             }
         } catch (IOException | JAXBException | SAXException | SquidException anException) {
             String message = anException.getMessage();
@@ -456,6 +462,9 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
                 customizePrawnFileMenu();
+            } else {
+                squidProject.getTask().setChanged(false);
+                SquidProject.setProjectChanged(false);
             }
         } catch (IOException | JAXBException | SAXException | SquidException anException) {
             String message = anException.getMessage();
