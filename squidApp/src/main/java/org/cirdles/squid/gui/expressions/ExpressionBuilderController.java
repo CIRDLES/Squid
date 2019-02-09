@@ -92,6 +92,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -954,7 +955,7 @@ public class ExpressionBuilderController implements Initializable {
     private void initExpressionTextFlowAndTextArea() {
 
         //Init of the textarea
-        expressionAsTextArea.setFont(Font.font("Courier New"));
+        expressionAsTextArea.setFont(Font.font("Monospaced"));
 
         expressionAsTextArea.textProperty().bindBidirectional(expressionString);
         expressionString.addListener((observable, oldValue, newValue) -> {
@@ -1744,7 +1745,7 @@ public class ExpressionBuilderController implements Initializable {
                     }
                 });
                 selectSpotsVBox.getChildren().add(mainCB);
-                mainCB.setFont(Font.font("Courier New", 11));
+                mainCB.setFont(Font.font("Monospaced", 11));
                 mainCB.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
                 mainCB.setOpacity(0.99);
 
@@ -1772,7 +1773,7 @@ public class ExpressionBuilderController implements Initializable {
                     }
                     cbs.add(cb);
 
-                    cb.setFont(Font.font("Courier New", 11));
+                    cb.setFont(Font.font("Monospaced", 11));
                     if (spotSummaryDetail.getRejectedIndices().length > i) {
                         cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
                     } else {
@@ -3551,7 +3552,6 @@ public class ExpressionBuilderController implements Initializable {
     private class ExpressionTextNode extends Text {
 
         private boolean selected = false;
-
         protected boolean isWhiteSpace;
 
         private final String text;
@@ -3574,6 +3574,9 @@ public class ExpressionBuilderController implements Initializable {
         public ExpressionTextNode(String text) {
             super(text);
 
+            setFontSmoothingType(FontSmoothingType.LCD);
+            setFont(Font.font("SansSerif"));
+            
             this.selectedColor = Color.RED;
             this.regularColor = Color.BLACK;
             this.opositeColor = Color.LIME;
@@ -3635,7 +3638,7 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         public final void updateFontSize() {
-            setFont(Font.font("Courier New", FontWeight.BOLD, fontSize + fontSizeModifier));
+            setFont(Font.font("SansSerif", FontWeight.BOLD, fontSize + fontSizeModifier));
         }
 
         private void selectOppositeParenthese() {
