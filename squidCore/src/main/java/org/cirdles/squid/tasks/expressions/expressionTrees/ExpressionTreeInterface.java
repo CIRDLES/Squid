@@ -20,6 +20,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -275,24 +276,29 @@ public interface ExpressionTreeInterface {
         }
     }
 
-    public default void auditExpressionTreeTargetCompatibility(List<String> argumentAudit) {
-        if (!amAnonymous() && !(this instanceof ConstantNode)) {
-            argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditTargetCompatibility());
+    public default void auditExpressionTreeTargetMatching(List<String> argumentAudit) {
+        if (!amAnonymous() 
+                && !(this instanceof ConstantNode)
+                && !(this instanceof VariableNodeForIsotopicRatios)) {
+            String audit = ((ExpressionTreeBuilderInterface) this).auditTargetCompatibility();
+            if (!argumentAudit.contains(audit)){
+                argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditTargetCompatibility());
+            }
         }
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
-            child.auditExpressionTreeTargetCompatibility(argumentAudit);
+            child.auditExpressionTreeTargetMatching(argumentAudit);
         }
     }
 
-    public default int auditTargetCompatibility(int targetBits) {
-        int compatibleTargets = targetBits;
+    public default int auditTargetMatching(int targetBits) {
+        int matchedTargets = targetBits;
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
             if (!child.amAnonymous() && !(child instanceof ConstantNode)) {
-                compatibleTargets = compatibleTargets & child.makeTargetBits();
+                matchedTargets = matchedTargets & child.makeTargetBits();
             }
         }
 
-        return compatibleTargets;
+        return matchedTargets;
     }
 
     /**
