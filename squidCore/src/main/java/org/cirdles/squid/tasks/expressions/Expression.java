@@ -138,14 +138,14 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public boolean amHealthy() {
         boolean retVal = false;
         if (expressionTree != null) {
-            retVal = expressionTree.amHealthy() && haveCompatibleTargetSpots();
+            retVal = expressionTree.amHealthy() && haveMatchedTargetSpots();
         }
         return retVal;
     }
 
-    public boolean haveCompatibleTargetSpots() {
+    public boolean haveMatchedTargetSpots() {
         int goalTargetBits = expressionTree.makeTargetBits();
-        int targetBits = expressionTree.auditTargetCompatibility(goalTargetBits);
+        int targetBits = expressionTree.auditTargetMatching(goalTargetBits);
 
         return (goalTargetBits > 0) && (goalTargetBits <= targetBits);
     }
@@ -215,12 +215,12 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             auditExpressionTreeTargetCompatibility();
 
             int goalTargetBits = expressionTree.makeTargetBits();
-            int targetBits = expressionTree.auditTargetCompatibility(goalTargetBits);
+            int targetBits = expressionTree.auditTargetMatching(goalTargetBits);
 
             auditReport
                     += "Target Spots: "
-                    + (String) ((goalTargetBits == 0) ? "Missing - Please select" : ((goalTargetBits > targetBits))
-                                    ? "Incompatible" : "Compatible");
+                    + (String) ((goalTargetBits == 0) ? "MISSING - Please select" : ((goalTargetBits > targetBits))
+                                    ? "NOT MATCHED" : "MATCHED");
             if (targetAudit.size() > 0) {
                 auditReport += "\nTarget Spots Audit:\n";
                 for (String audit : targetAudit) {
@@ -253,7 +253,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         if (((ExpressionTreeInterface) expressionTree).isValid()) {
             if (expressionTree instanceof ExpressionTree) {
                 this.targetAudit = new ArrayList<>();
-                ((ExpressionTree) expressionTree).auditExpressionTreeTargetCompatibility(targetAudit);
+                ((ExpressionTree) expressionTree).auditExpressionTreeTargetMatching(targetAudit);
             }
         }
     }

@@ -91,6 +91,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
@@ -201,8 +202,6 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private Text hintSelectText;
     private final TextArea expressionAsTextArea = new TextArea();
-    @FXML
-    private Label modeLabel;
     @FXML
     private ToggleGroup expressionsSortToggleGroup;
 
@@ -561,11 +560,13 @@ public class ExpressionBuilderController implements Initializable {
             }
             //Showing and hiding elements following mode
             if (oldValue == Mode.VIEW) {
-                toolBarVBox.getChildren().add(toolBarHBox);
+                //toolBarVBox.getChildren().add(toolBarHBox);
+                //toolBarHBox.setVisible(true);
                 othersAccordion.setExpandedPane(operationsTitledPane);
                 leftSplitPane.setDividerPositions(0.5);
             } else if (newValue == Mode.VIEW) {
-                toolBarVBox.getChildren().remove(toolBarHBox);
+                //toolBarVBox.getChildren().remove(toolBarHBox);
+                //toolBarHBox.setVisible(false);
                 othersAccordion.setExpandedPane(null);
                 leftSplitPane.setDividerPositions(1.0);
             }
@@ -690,6 +691,14 @@ public class ExpressionBuilderController implements Initializable {
         toggleGroup.selectToggle(dragndropRightRadio);
     }
 
+    private void customizeBrokenExpressionsTitledPane() {
+        if ((brokenExpressionsListView.getItems() == null) || (brokenExpressionsListView.getItems().isEmpty())){
+            brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: black; -fx-font-family: SansSerif;");
+        } else {
+            brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;");
+        }
+    }
+
     private void initListViews() {
         //EXPRESSIONS
         brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
@@ -706,8 +715,10 @@ public class ExpressionBuilderController implements Initializable {
                     }
                     selectInAllPanes(newValue, false);
                 }
+                customizeBrokenExpressionsTitledPane();
             }
         });
+        customizeBrokenExpressionsTitledPane();
 
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
@@ -1303,7 +1314,7 @@ public class ExpressionBuilderController implements Initializable {
             AnchorPane.setTopAnchor(expressionAsTextArea, 0.0);
             AnchorPane.setRightAnchor(expressionAsTextArea, 0.0);
             AnchorPane.setLeftAnchor(expressionAsTextArea, 0.0);
-            expressionAsTextBtn.setText("Edit with d&d");
+            expressionAsTextBtn.setText("Edit as d&d");
 
         } else {
             //Case was editing as textArea -> switch to drag and drop
@@ -1497,6 +1508,7 @@ public class ExpressionBuilderController implements Initializable {
         });
         brokenExpressionsListView.setItems(null);
         brokenExpressionsListView.setItems(items);
+        customizeBrokenExpressionsTitledPane();
 
         items = FXCollections.observableArrayList(sortedReferenceMaterialValuesList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
@@ -3622,7 +3634,7 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         public final void updateFontSize() {
-            setFont(Font.font("SansSerif", FontWeight.BOLD, fontSize + fontSizeModifier));
+            setFont(Font.font("SansSerif", FontWeight.SEMI_BOLD, fontSize + fontSizeModifier));
         }
 
         private void selectOppositeParenthese() {
