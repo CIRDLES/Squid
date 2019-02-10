@@ -75,5 +75,7 @@ public interface ExpressionTreeBuilderInterface {
     public List<ExpressionTreeInterface> getChildrenET();
     
     public String auditOperationArgumentCount();
+    
+    public String auditTargetCompatibility();
 
 }

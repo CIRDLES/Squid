@@ -84,7 +84,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     private ToolBar plotToolBar;
 
     private TreeView<SampleTreeNodeInterface> spotsTreeViewCheckBox = new CheckTreeView<>();
-    private TreeView<String> spotsTreeViewString = new TreeView<String>();
+    private TreeView<String> spotsTreeViewString = new TreeView<>();
 
     private static ObservableList<SampleTreeNodeInterface> fractionNodes;
     private static PlotDisplayInterface rootPlot;
@@ -508,7 +508,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 plotFlavorOneRadioButton.setText("Wetherill Concordia");
                 plotFlavorTwoRadioButton.setText("Tera-Wasserburg");
                 plotFlavorOneRadioButton.setDisable(false);
-                plotFlavorTwoRadioButton.setDisable(false);
+                plotFlavorTwoRadioButton.setDisable(fractionTypeSelected.compareTo(SpotTypes.REFERENCE_MATERIAL) == 0);
 
                 corr7_RadioButton.setVisible(false);
                 corr8_RadioButton.setVisible(true);

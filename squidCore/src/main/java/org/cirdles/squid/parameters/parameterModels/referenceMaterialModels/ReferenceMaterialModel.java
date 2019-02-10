@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.SQUID_PARAMETER_MODELS_FOLDER;
 
 /**
  * @author ryanb
@@ -162,8 +163,8 @@ public class ReferenceMaterialModel extends ParametersModel {
     }
 
     public static List<ParametersModel> getDefaultModels() {
-        File folder = new File("SampleReferenceMaterialModels");
-        File[] files = new File[0];
+        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidReferenceMaterialModels");
+        File[] files;
         List<ParametersModel> models = new ArrayList<>();
         if (folder.exists()) {
             files = folder.listFiles(new FilenameFilter() {

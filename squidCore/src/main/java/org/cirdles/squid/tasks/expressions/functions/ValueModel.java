@@ -43,7 +43,13 @@ public class ValueModel extends Function {
         precedence = 10;
         rowCount = 1;
         colCount = 2;
+        labelsForInputValues = new String[]{"value", "1\u03C3 uncertainty", "absolute = true, percent = false"};
         labelsForOutputValues = new String[][]{{"Value", "1\u03C3 abs"}};
+        definition = "ValueModel creates an expression encapsulating \n"
+                + DEF_TAB + "a calculated value and its 1-sigma absolute uncertainty \n"
+                + DEF_TAB + "as the first two arguments and a boolean flag (true or false) \n"
+                + DEF_TAB + "signalling whether the provided uncertainty is absolute (true) \n"
+                + DEF_TAB + "or per cent (false) as the thrid argument.";
     }
 
     /**

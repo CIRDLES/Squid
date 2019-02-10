@@ -60,6 +60,8 @@ public class ExpressionTree
         XMLSerializerInterface {
 
     private static final long serialVersionUID = 69881766695649050L;
+    
+    public static final String ANONYMOUS_NAME = "Anonymous";
 
     /**
      *
@@ -114,15 +116,15 @@ public class ExpressionTree
 
     protected boolean squidSwitchConcentrationReferenceMaterialCalculation;
 
-    protected  String uncertaintyDirective;
+    protected String uncertaintyDirective;
 
-    protected  int index;
+    protected int index;
 
     /**
      *
      */
     public ExpressionTree() {
-        this("Anonymous");
+        this(ANONYMOUS_NAME);
     }
 
     /**
@@ -362,6 +364,36 @@ public class ExpressionTree
         return audit.toString();
     }
 
+    @Override
+    public String auditTargetCompatibility() {
+        StringBuilder audit = new StringBuilder();
+        boolean referenceMaterialCalc = squidSwitchSTReferenceMaterialCalculation || squidSwitchConcentrationReferenceMaterialCalculation;
+
+        String targetPhrase = (referenceMaterialCalc && !squidSwitchSAUnknownCalculation)
+                ? "ONLY RefMat" : "";
+        if (targetPhrase.length() == 0) {
+            targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
+                    ? "ONLY Unknowns" : "";
+        }
+        if (targetPhrase.length() == 0) {
+            targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
+                    ? "BOTH RefMat AND Unknowns" : "";
+        }
+        if (targetPhrase.length() == 0) {
+            targetPhrase = "NONE";
+        }
+
+        audit.append("   ").append(this.getName()).append(" targets ")
+                .append(targetPhrase);
+
+        return audit.toString();
+    }
+
+    @Override
+    public boolean amAnonymous() {
+        return name.compareTo(ANONYMOUS_NAME) == 0;
+    }
+
     /**
      *
      * @param xstream
@@ -438,7 +470,6 @@ public class ExpressionTree
         return retVal;
     }
 
-
     public String getUncertaintyDirective() {
         return uncertaintyDirective;
     }
@@ -446,6 +477,7 @@ public class ExpressionTree
     public int getIndex() {
         return index;
     }
+
     /**
      *
      * @return true if instance of Function class
@@ -472,7 +504,7 @@ public class ExpressionTree
     public String toStringMathML() {
         String retVal = "";
         if (operation == null) {
-            retVal = "<mtext>No expression selected.</mtext>\n";
+            retVal = "<mtext>No expression present.</mtext>\n";
         } else {
             try {
                 retVal = operation.toStringMathML(childrenET);
@@ -622,7 +654,8 @@ public class ExpressionTree
 
     /**
      *
-     * @return true if ratios-of-interest (raw ratios) included in expressionTree
+     * @return true if ratios-of-interest (raw ratios) included in
+     * expressionTree
      */
     public boolean hasRatiosOfInterest() {
         return ratiosOfInterest.size() > 0;

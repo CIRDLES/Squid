@@ -43,7 +43,7 @@ public final class SquidUI extends Application {
     public static final String SPOT_LIST_CSS_STYLE_SPECS = 
             "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Monospaced';";
     public static final String EXPRESSION_LIST_CSS_STYLE_SPECS = 
-            "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'SansSerif';-fx-fixed-cell-size: 20";
+            "-fx-font-size: 12px; -fx-font-weight: 600;-fx-font-family: 'SansSerif';-fx-fixed-cell-size: 20";
     public static final String OPERATOR_IN_EXPRESSION_LIST_CSS_STYLE_SPECS = 
             "-fx-font-weight: bold; -fx-font-family: 'Monospaced';";
     public static final String PRESENTATION_IN_EXPRESSION_LIST_CSS_STYLE_SPECS = 

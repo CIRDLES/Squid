@@ -19,6 +19,8 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -248,7 +250,7 @@ public interface ExpressionTreeInterface {
         }
         return retVal;
     }
-    
+
     public default int argumentCount() {
         int retVal = 0;
 
@@ -273,4 +275,42 @@ public interface ExpressionTreeInterface {
             }
         }
     }
+
+    public default void auditExpressionTreeTargetMatching(List<String> argumentAudit) {
+        if (!amAnonymous() 
+                && !(this instanceof ConstantNode)
+                && !(this instanceof VariableNodeForIsotopicRatios)) {
+            String audit = ((ExpressionTreeBuilderInterface) this).auditTargetCompatibility();
+            if (!argumentAudit.contains(audit)){
+                argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditTargetCompatibility());
+            }
+        }
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+            child.auditExpressionTreeTargetMatching(argumentAudit);
+        }
+    }
+
+    public default int auditTargetMatching(int targetBits) {
+        int matchedTargets = targetBits;
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+            if (!child.amAnonymous() && !(child instanceof ConstantNode)) {
+                matchedTargets = matchedTargets & child.makeTargetBits();
+            }
+        }
+
+        return matchedTargets;
+    }
+
+    /**
+     *
+     * @return targetBits = 2 for both (11), 1 for RM (01), 2 for U (10)
+     */
+    public default int makeTargetBits() {
+        int targetBits
+                = ((isSquidSwitchSTReferenceMaterialCalculation()||isSquidSwitchConcentrationReferenceMaterialCalculation()) ? 1 : 0)
+                + (isSquidSwitchSAUnknownCalculation() ? 2 : 0);
+        return targetBits;
+    }
+
+    public boolean amAnonymous();
 }
