@@ -58,7 +58,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -91,7 +90,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
@@ -142,6 +140,7 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUIL
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import static org.cirdles.squid.gui.SquidUI.PEEK_LIST_CSS_STYLE_SPECS;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
@@ -988,6 +987,7 @@ public class ExpressionBuilderController implements Initializable {
 
         expressionNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                updateEditor();
                 refreshSaved();
             }
         });
@@ -1173,7 +1173,7 @@ public class ExpressionBuilderController implements Initializable {
     private void newCustomExpressionAction(ActionEvent event) {
         if (currentMode.get().equals(Mode.VIEW)) {
             selectedBeforeCreateOrCopy = selectedExpression.get();
-            Expression exp = new Expression("new_custom_expression", "");
+            Expression exp = new Expression("", "");
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
             refreshSaved();
@@ -1373,12 +1373,14 @@ public class ExpressionBuilderController implements Initializable {
     private void concRefMatCheckBoxAction(ActionEvent event) {
         unknownsSwitchCheckBox.setSelected(false);
         refMatSwitchCheckBox.setSelected(false);
+        updateEditor();
         refreshSaved();
     }
 
     @FXML
     private void summaryCalculationCheckBoxAction(ActionEvent event) {
         NUSwitchCheckBox.setSelected(false);
+        updateEditor();
         refreshSaved();
     }
 
@@ -1759,7 +1761,7 @@ public class ExpressionBuilderController implements Initializable {
                     }
                 });
                 selectSpotsVBox.getChildren().add(mainCB);
-                mainCB.setFont(Font.font("Monospaced", 11));
+                mainCB.setStyle(PEEK_LIST_CSS_STYLE_SPECS);
                 mainCB.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
                 mainCB.setOpacity(0.99);
 
@@ -1787,7 +1789,7 @@ public class ExpressionBuilderController implements Initializable {
                     }
                     cbs.add(cb);
 
-                    cb.setFont(Font.font("Monospaced", 11));
+                    cb.setStyle(PEEK_LIST_CSS_STYLE_SPECS);
                     if (spotSummaryDetail.getRejectedIndices().length > i) {
                         cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
                     } else {
@@ -1925,6 +1927,8 @@ public class ExpressionBuilderController implements Initializable {
         }
         for (int i = 0; i < labels[0].length; i++) {
             sb.append("\t");
+            // show array index in Squid3
+            sb.append("[").append(i).append("] ");
             sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
             sb.append(": ");
             sb.append(Utilities.roundedToSize(
@@ -1935,6 +1939,7 @@ public class ExpressionBuilderController implements Initializable {
         // handle special cases
         if (labels.length > 1) {
             sb.append("\t");
+            sb.append("    ");
             sb.append(String.format("%1$-" + 16 + "s", labels[1][0]));
             sb.append(": ");
             // print list
@@ -1950,6 +1955,7 @@ public class ExpressionBuilderController implements Initializable {
 
         if (labels.length > 2) {
             sb.append("\t");
+            sb.append("    ");
             sb.append(String.format("%1$-" + 16 + "s", labels[2][0]));
             sb.append(": ");
             // print list
@@ -2509,6 +2515,15 @@ public class ExpressionBuilderController implements Initializable {
                             uncertainty = "1 \u03C3 ± uncertainty\n\n";
                         }
                     }
+                    // let's see if we have an array reference in the form of SUMMARY named_expression00
+                    // this would be hard to catch with regex since ratios fit the pattern too
+                    if (exname.length() > 2) {
+                        String lastTwo = exname.substring(exname.length() - 2);
+                        if (ShuntingYard.isNumber(lastTwo)) {
+                            exname = exname.substring(0, exname.length() - 2);
+                        }
+                    }
+                    
                     Expression ex = squidProject.getTask().getExpressionByName(exname);
                     if (ex == null && text.matches("^\\.*\\d\\d$")) {
                         exname = text.replaceAll("\\d\\d$", "");

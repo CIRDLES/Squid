@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,8 +45,6 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
-import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 
 /**
  *
@@ -56,6 +53,8 @@ import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 public class Expression implements Comparable<Expression>, XMLSerializerInterface, Serializable {
 
     private static final long serialVersionUID = 2614344042503810733L;
+
+    public static final String MSG_POORLY_FORMED_EXPRESSION = "Expression missing or poorly formed.";
 
     private String name;
     private String excelExpressionString;
@@ -138,16 +137,24 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public boolean amHealthy() {
         boolean retVal = false;
         if (expressionTree != null) {
-            retVal = expressionTree.amHealthy() && haveMatchedTargetSpots();
+            retVal = expressionTree.amHealthy() && (haveMatchedTargetSpots() == 0);
         }
         return retVal;
     }
 
-    public boolean haveMatchedTargetSpots() {
+    /**
+     *
+     * @return -1 = no match, 0 = match, 1 = mismatch
+     */
+    private int haveMatchedTargetSpots() {
         int goalTargetBits = expressionTree.makeTargetBits();
-        int targetBits = expressionTree.auditTargetMatching(goalTargetBits);
+        int targetBits = expressionTree.auditTargetMatchingII(goalTargetBits);
 
-        return (goalTargetBits > 0) && (goalTargetBits <= targetBits);
+        if ((targetBits > 0) && expressionTree.isSquidSwitchSCSummaryCalculation()) {
+            targetBits = 3;
+        }
+
+        return ((goalTargetBits == 0) ? -1 : ((goalTargetBits > targetBits)) ? 1 : 0);
     }
 
     @Override
@@ -196,7 +203,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
-        expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
+        if (excelExpressionString != null) {
+            expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
+        }
     }
 
     public String produceExpressionTreeAudit() {
@@ -204,7 +213,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         if (!((ExpressionTreeInterface) expressionTree).isValid()) {
             if (((ExpressionTree) expressionTree).getOperation() == null) {
                 auditReport
-                        += "No expression present.";
+                        += MSG_POORLY_FORMED_EXPRESSION;
             } else {
                 auditReport
                         += "Errors occurred in parsing:\n"
@@ -214,12 +223,11 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             auditExpressionTreeDependencies();
             auditExpressionTreeTargetCompatibility();
 
-            int goalTargetBits = expressionTree.makeTargetBits();
-            int targetBits = expressionTree.auditTargetMatching(goalTargetBits);
+            int match = haveMatchedTargetSpots();
 
             auditReport
                     += "Target Spots: "
-                    + (String) ((goalTargetBits == 0) ? "MISSING - Please select" : ((goalTargetBits > targetBits))
+                    + (String) ((match == -1) ? "MISSING - Please select" : ((match == 1))
                                     ? "NOT MATCHED" : "MATCHED");
             if (targetAudit.size() > 0) {
                 auditReport += "\nTarget Spots Audit:\n";

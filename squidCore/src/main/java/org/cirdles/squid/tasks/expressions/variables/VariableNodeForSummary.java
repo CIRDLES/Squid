@@ -62,6 +62,9 @@ public class VariableNodeForSummary extends ExpressionTree {
             this.index = 1;
         }
         this.showIndex = index > 0;
+        
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;
     }
 
     @Override
