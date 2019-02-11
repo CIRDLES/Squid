@@ -47,6 +47,8 @@ public class SpotFieldNode extends ExpressionTree {
         this.name = fieldName;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
         this.parentET = null;
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;
     }
 
     public static SpotFieldNode buildSpotNode(String methodNameForShrimpFraction) {
