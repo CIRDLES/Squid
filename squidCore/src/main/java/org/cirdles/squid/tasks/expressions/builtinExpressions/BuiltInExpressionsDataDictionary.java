@@ -158,7 +158,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String TOTAL_207_206 = "Total_207Pb206Pb";
     public static final String TOTAL_238_206 = "Total_238U206Pb";
 
-    public static final String PBTh_EXT_1_SIGMA_ERR_PCT = "208Pb232Th_Ext1SigmaErr_Pct";
+    public static final String PBTH_EXT_1_SIGMA_ERR_PCT = "208Pb232Th_Ext1SigmaErr_Pct";
     public static final String PBU_EXT_1_SIGMA_ERR_PCT = "206Pb238U_Ext1SigmaErr_Pct";
     public static final String ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
 
@@ -189,6 +189,7 @@ public class BuiltInExpressionsDataDictionary {
     public static final String TH_U_EXP = "232Th238U";
     // name for Squid2.5 Ppm parent eqn(-4) 
     public static final String PARENT_ELEMENT_CONC_CONST = "ParentElement_ConcenConst";
+    
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String U_CONCEN_PPM_RM = "U_Concen_RM";

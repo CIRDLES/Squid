@@ -115,8 +115,10 @@ public class SpotFieldNode extends ExpressionTree {
                     methodNameForShrimpFraction,
                     new Class[]{});
             for (int i = 0; i < shrimpFractions.size(); i++) {
-                double[] value = new double[]{(double) method.invoke(shrimpFractions.get(i), new Object[]{})};
-                retVal[i] = convertArrayToObjects(value);
+                // this generalization handles various types
+                retVal[i] = new Object[]{method.invoke(shrimpFractions.get(i), new Object[]{})};
+//                double[] value = new double[]{(double) method.invoke(shrimpFractions.get(i), new Object[]{})};
+//                retVal[i] = convertArrayToObjects(value);
             }
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {

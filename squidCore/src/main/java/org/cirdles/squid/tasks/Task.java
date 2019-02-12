@@ -169,6 +169,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap;
     protected Map<String, ExpressionTreeInterface> namedConstantsMap;
     protected Map<String, ExpressionTreeInterface> namedParametersMap;
+    protected Map<String, ExpressionTreeInterface> namedLookupFieldsMap;
 
     protected List<ShrimpFractionExpressionInterface> shrimpFractions;
     protected List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
@@ -266,6 +267,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.namedLookupFieldsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         this.shrimpFractions = new ArrayList<>();
         this.referenceMaterialSpots = new ArrayList<>();
@@ -1320,8 +1322,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         // TODO: make a SpotFieldNode factory
+        // TODO: use namedLookupFieldsMap  and then populate the definition of lookup function with this list
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         namedExpressionsMap.put(expHours.getName(), expHours);
+        ExpressionTreeInterface expQt1Y = buildSpotNode("getQt1Y");
+        namedExpressionsMap.put(expQt1Y.getName(), expQt1Y);
+        ExpressionTreeInterface expQt1Z = buildSpotNode("getQt1Z");
+        namedExpressionsMap.put(expQt1Z.getName(), expQt1Z);
+        ExpressionTreeInterface expPrimaryBeam = buildSpotNode("getPrimaryBeam");
+        namedExpressionsMap.put(expPrimaryBeam.getName(), expPrimaryBeam);
+        
 
         for (SquidSpeciesModel spm : squidSpeciesModelList) {
             ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);
