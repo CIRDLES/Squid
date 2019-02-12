@@ -176,14 +176,17 @@
                         <Insets bottom="5.0" left="7.0" right="7.0" />
                      </VBox.margin>
                   </HBox>
-                  <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0">
+                  <FlowPane alignment="CENTER_LEFT" hgap="15.0" style="-fx-background-color: #eefbfb; -fx-border-width: 0.25; -fx-border-color: black;" vgap="5.0">
                      <children>
-                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" opacity="0.99" style="-fx-text-fill: red;" text="Reference Material" />
-                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" opacity="0.99" style="-fx-text-fill: red;" text="Unknown Samples" />
-                        <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" opacity="0.99" text="Conc RefMat" />
-                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
-                        <CheckBox fx:id="NUSwitchCheckBox" layoutX="601.0" layoutY="10.0" mnemonicParsing="false" onAction="#NUSwitchCheckBoxAction" opacity="0.99" text="NU Switch" />
-                        <CheckBox fx:id="specialUPbThSwitchCheckBox" disable="true" layoutX="433.0" layoutY="10.0" mnemonicParsing="false" onAction="#specialUPbThCheckBoxAction" opacity="0.99" text="Built-in Expression" />
+                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" style="-fx-text-fill: red; -fx-font-family: SansSerif; -fx-font-weight: 600;" text="Reference Material" />
+                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" style="-fx-text-fill: red; -fx-font-family: SansSerif; -fx-font-weight: 600;" text="Unknown Samples" />
+                        <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" style="-fx-font-family: SansSerif; -fx-font-weight: 600; -fx-font-size: 13;" text="Conc RefMat" />
+                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" style="-fx-font-family: SansSerif; -fx-font-size: 13; -fx-font-weight: 600;" text="Summary Calculation" />
+                        <CheckBox fx:id="NUSwitchCheckBox" disable="true" layoutX="601.0" layoutY="10.0" mnemonicParsing="false" onAction="#NUSwitchCheckBoxAction" style="-fx-font-family: SansSerif; -fx-font-size: 13; -fx-font-weight: 600;" text="NU Switch">
+                           <FlowPane.margin>
+                              <Insets left="60.0" />
+                           </FlowPane.margin></CheckBox>
+                        <CheckBox fx:id="specialUPbThSwitchCheckBox" disable="true" layoutX="433.0" layoutY="10.0" mnemonicParsing="false" onAction="#specialUPbThCheckBoxAction" style="-fx-font-family: SansSerif; -fx-font-weight: 600;" text="Built-in Expression" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="5.0" left="7.0" right="7.0" />
@@ -315,7 +318,7 @@
                                     </TitledPane>
                                  </children>
                               </AnchorPane>
-                              <SplitPane fx:id="smallSplitPane" dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0">
+                              <SplitPane fx:id="smallSplitPane" dividerPositions="0.4738598442714127" prefHeight="200.0" prefWidth="200.0">
                                  <items>
                                     <AnchorPane>
                                        <children>

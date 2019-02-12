@@ -407,9 +407,11 @@ public class ExpressionBuilderController implements Initializable {
     private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
     private final StringProperty expressionString = new SimpleStringProperty();
     private final BooleanProperty selectedExpressionIsEditable = new SimpleBooleanProperty(false);
-    //Boolean to save wether or not the expression has been save since the last modification
+    // Boolean to prevent editing of names of built-in expressions
+    private final BooleanProperty selectedExpressionIsBuiltIn = new SimpleBooleanProperty(false);
+    //Boolean to save whether or not the expression has been saved since the last modification
     private final BooleanProperty expressionIsSaved = new SimpleBooleanProperty(true);
-    //Boolean to save wether the expression is currently edited as a textArea or with drag and drop
+    //Boolean to save whether the expression is currently edited as a textArea or with drag and drop
     private final BooleanProperty editAsText = new SimpleBooleanProperty(false);
 
     private final BooleanProperty hasRatioOfInterest = new SimpleBooleanProperty(false);
@@ -508,14 +510,18 @@ public class ExpressionBuilderController implements Initializable {
         expressionClearBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionPasteBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         saveBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(expressionNameTextField.textProperty().isEmpty()).or(expressionIsSaved));
+        
         expressionAsTextBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        
+        refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
+        unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
+        concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         //specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         NUSwitchCheckBox.setDisable(true);//NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
-        expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).and(selectedExpressionIsBuiltIn.not()));
+        
+        
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull().or(currentMode.isEqualTo(Mode.CREATE)));
         cancelBtn.disableProperty().bind(selectedExpression.isNull());
         othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
@@ -710,6 +716,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -729,6 +736,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsBuiltIn.set(newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -745,6 +753,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsBuiltIn.set(true);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -761,6 +770,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -778,6 +788,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(false);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -794,6 +805,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(false);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -819,6 +831,7 @@ public class ExpressionBuilderController implements Initializable {
                         expr.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                         expr.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
                         selectedExpressionIsEditable.set(false);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(expr);
                     }
                     selectInAllPanes(null, false);
@@ -1129,6 +1142,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionString.set(null);
                 expressionString.set(newValue.getExcelExpressionString());
                 hasRatioOfInterest.set(((ExpressionTree) newValue.getExpressionTree()).hasRatiosOfInterest());
+                selectedExpressionIsBuiltIn.set(newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                 populateSpotsSelection(newValue);
             } else {
                 expressionNameTextField.clear();
@@ -1137,6 +1151,7 @@ public class ExpressionBuilderController implements Initializable {
                 unknownsSwitchCheckBox.setSelected(false);
                 concRefMatSwitchCheckBox.setSelected(false);
                 selectedExpressionIsEditable.set(false);
+                selectedExpressionIsBuiltIn.set(false);
                 expressionString.set("");
                 hasRatioOfInterest.set(false);
             }
