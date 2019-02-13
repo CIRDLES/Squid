@@ -415,11 +415,11 @@ public interface TaskInterface {
         }
 
         if (!isDirectAltPD()) {
-            Expression thU = BuiltInExpressionsFactory.buildExpression(TH_U_EXP_RM, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+            Expression thU = BuiltInExpressionsFactory.buildExpression(TH_U_EXP_RM, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, false, false);
             thU.setSquidSwitchNU(true);
             getTaskExpressionsOrdered().add(thU);
 
-            Expression thUS = BuiltInExpressionsFactory.buildExpression(TH_U_EXP, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+            Expression thUS = BuiltInExpressionsFactory.buildExpression(TH_U_EXP, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", false, true, false);
             thUS.setSquidSwitchNU(true);
             getTaskExpressionsOrdered().add(thUS);
         }

@@ -152,6 +152,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_238U235U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PBTH_EXT_1_SIGMA_ERR_PCT;
+import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
 
 /**
  *
@@ -160,8 +161,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 public abstract class BuiltInExpressionsFactory {
 
     /**
-     * TODO: these guys are hard coded for now, but need to be calculated from
-     * reference materials, physical constants, etc.
      *
      * @return
      */
@@ -196,6 +195,25 @@ public abstract class BuiltInExpressionsFactory {
         parameters.put(ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, extPErr);
 
         return parameters;
+    }
+
+    /**
+     *
+     * @return Map<String, ExpressionTreeInterface> spotLookupFields
+     */
+    public static Map<String, ExpressionTreeInterface> generateSpotLookupFields() {
+        Map<String, ExpressionTreeInterface> spotLookupFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        
+        ExpressionTreeInterface expHours = buildSpotNode("getHours");
+        spotLookupFields.put(expHours.getName(), expHours);
+        ExpressionTreeInterface expQt1Y = buildSpotNode("getQt1Y");
+        spotLookupFields.put(expQt1Y.getName(), expQt1Y);
+        ExpressionTreeInterface expQt1Z = buildSpotNode("getQt1Z");
+        spotLookupFields.put(expQt1Z.getName(), expQt1Z);
+        ExpressionTreeInterface expPrimaryBeam = buildSpotNode("getPrimaryBeam");
+        spotLookupFields.put(expPrimaryBeam.getName(), expPrimaryBeam);
+
+        return spotLookupFields;
     }
 
     public static SortedSet<Expression> updatePhysicalConstantsParameterValuesFromModel(ParametersModel physicalConstantsModel) {

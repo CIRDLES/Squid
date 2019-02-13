@@ -88,7 +88,6 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
-import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -169,7 +168,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap;
     protected Map<String, ExpressionTreeInterface> namedConstantsMap;
     protected Map<String, ExpressionTreeInterface> namedParametersMap;
-    protected Map<String, ExpressionTreeInterface> namedLookupFieldsMap;
+    private Map<String, ExpressionTreeInterface> namedSpotLookupFieldsMap;
 
     protected List<ShrimpFractionExpressionInterface> shrimpFractions;
     protected List<ShrimpFractionExpressionInterface> referenceMaterialSpots;
@@ -267,7 +266,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        this.namedLookupFieldsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.namedSpotLookupFieldsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         this.shrimpFractions = new ArrayList<>();
         this.referenceMaterialSpots = new ArrayList<>();
@@ -309,6 +308,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         generateConstants();
         generateParameters();
+        generateSpotLookupFields();
     }
 
     private void generateConstants() {
@@ -319,6 +319,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = BuiltInExpressionsFactory.generateParameters();
         namedParametersMap.putAll(parameters);
+    }
+
+    private void generateSpotLookupFields() {
+        Map<String, ExpressionTreeInterface> spotLookupFields = BuiltInExpressionsFactory.generateSpotLookupFields();
+        namedSpotLookupFieldsMap.putAll(spotLookupFields);
     }
 
     @Override
@@ -854,7 +859,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void processAndSortExpressions() {
@@ -864,9 +869,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * 
+     *
      * @param sourceExpression
-     * @param reprocessExpressions 
+     * @param reprocessExpressions
      */
     @Override
     public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions) {
@@ -1321,17 +1326,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             namedExpressionsMap.put(entry.getKey(), entry.getValue());
         }
 
-        // TODO: make a SpotFieldNode factory
-        // TODO: use namedLookupFieldsMap  and then populate the definition of lookup function with this list
-        ExpressionTreeInterface expHours = buildSpotNode("getHours");
-        namedExpressionsMap.put(expHours.getName(), expHours);
-        ExpressionTreeInterface expQt1Y = buildSpotNode("getQt1Y");
-        namedExpressionsMap.put(expQt1Y.getName(), expQt1Y);
-        ExpressionTreeInterface expQt1Z = buildSpotNode("getQt1Z");
-        namedExpressionsMap.put(expQt1Z.getName(), expQt1Z);
-        ExpressionTreeInterface expPrimaryBeam = buildSpotNode("getPrimaryBeam");
-        namedExpressionsMap.put(expPrimaryBeam.getName(), expPrimaryBeam);
-        
+        for (Map.Entry<String, ExpressionTreeInterface> entry : namedSpotLookupFieldsMap.entrySet()) {
+            namedExpressionsMap.put(entry.getKey(), entry.getValue());
+        }
 
         for (SquidSpeciesModel spm : squidSpeciesModelList) {
             ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);
@@ -2172,6 +2169,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         }
         return namedParametersMap;
+    }
+
+    /**
+     * @return the namedSpotLookupFieldsMap
+     */
+    public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap() {
+        return namedSpotLookupFieldsMap;
     }
 
     /**
