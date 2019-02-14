@@ -36,13 +36,13 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String REF_U_CONC_PPM = "Ref_U_Concen";
     public static final String REF_TH_CONC_PPM = "Ref_Th_Concen";
-    public static final String REF_AGE_U_PB = "RefRad_206Pb238U_Age";
-    public static final String REF_AGE_TH_PB = "RefRad_208Pb232Th_Age";
-    public static final String REF_AGE_PB_PB = "RefRad_207Pb206Pb_Age";
-    public static final String REF_U_PB_RATIO = "RefRad_206Pb238U";
-    public static final String REF_TH_PB_RATIO = "RefRad_208Pb232Th";
-    public static final String REF_7_6 = "RefRad_207Pb206Pb";
-    public static final String REF_RAD_8_6_FACT = "RefRad_208Pb206Pb_Factor";
+    public static final String REFRAD_AGE_U_PB = "RefRad_206Pb238U_Age";
+    public static final String REFRAD_AGE_TH_PB = "RefRad_208Pb232Th_Age";
+    public static final String REFRAD_AGE_PB_PB = "RefRad_207Pb206Pb_Age";
+    public static final String REFRAD_U_PB_RATIO = "RefRad_206Pb238U";
+    public static final String REFRAD_TH_PB_RATIO = "RefRad_208Pb232Th";
+    public static final String REFRAD_7_6 = "RefRad_207Pb206Pb";
+    public static final String REFRAD_8_6_FACT = "RefRad_208Pb206Pb_Factor";
 
     // **********************  LAMBDAs *************************************
     public static final String LAMBDA230 = "Lambda230";
@@ -173,11 +173,11 @@ public class BuiltInExpressionsDataDictionary {
     public static final String BIWT_4COR_207_206_AGE = BIWT_PRE + PB4CORR + "207Pb206Pb_Age";
 
     public static final String CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT = "7cor_PrimaryCalibConstDelta_Pct";
-    public static final String BIWT_7COR_PRIMARY_CALIB_CONST_DELTA_PCT = "BiWt_7cor_PrimaryCalibConstDelta_Pct";
+    public static final String BIWT_7COR_PRIMARY_CALIB_CONST_DELTA_PCT = BIWT_PRE + CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT;
     public static final String BIWT_204_OVR_CTS_FROM_207 = BIWT_PRE + "204OvCts_From207Pb";
 
     public static final String CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT = "8cor_PrimaryCalibConstDelta_Pct";
-    public static final String BIWT_8COR_PRIMARY_CALIB_CONST_DELTA_PCT = BIWT_PRE + "8cor_PrimaryCalibConstDelta_Pct";
+    public static final String BIWT_8COR_PRIMARY_CALIB_CONST_DELTA_PCT = BIWT_PRE + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
     public static final String BIWT_204_OVR_CTS_FROM_208 = BIWT_PRE + "204OvCts_From208Pb";
 
     // ********************** INTERNAL EXPRESSIONS *****************************
