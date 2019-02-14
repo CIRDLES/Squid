@@ -69,10 +69,10 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R208_206B = "r208_206b";
 
     // ********************** COR PREFIX ***************************************
-    public static final String COR_ = "cor_";
-    public static final String PB4CORR = "4" + COR_;
-    public static final String PB7CORR = "7" + COR_;
-    public static final String PB8CORR = "8" + COR_;
+    public static final String COR_PREFIX = "cor_";
+    public static final String PB4CORR = "4" + COR_PREFIX;
+    public static final String PB7CORR = "7" + COR_PREFIX;
+    public static final String PB8CORR = "8" + COR_PREFIX;
 
     // ********************** CONCENTRATIONS ***********************************
     public static final String CONCEN_206PB = "206Pb_Concen";

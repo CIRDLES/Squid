@@ -55,7 +55,6 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
@@ -117,6 +116,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
 
 /**
  *
@@ -770,6 +771,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
                 }
+                if (listedExp.getName().compareToIgnoreCase(U_CONCEN_PPM_RM) == 0) {
+                    listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + U_CONCEN_PPM_RM + "\"]");
+                    listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+                    listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                }
                 if (listedExp.getName().compareToIgnoreCase(TH_CONCEN_PPM_RM) == 0) {
                     listedExp.setExcelExpressionString("[\"" + selectedIndexIsotope.getIsotopeCorrectionPrefixString() + TH_CONCEN_PPM_RM + "\"]");
                     listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
@@ -1066,8 +1073,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) {
-        String xCorr206238Name = "WtdAv_" + COR_ + CALIB_CONST_206_238_ROOT + "_CalibConst";
-        String xCorr208232Name = "WtdAv_" + COR_ + CALIB_CONST_208_232_ROOT + "_CalibConst";
+        String xCorr206238Name = "WtdAv_" + COR_PREFIX + CALIB_CONST_206_238_ROOT + "_CalibConst";
+        String xCorr208232Name = "WtdAv_" + COR_PREFIX + CALIB_CONST_208_232_ROOT + "_CalibConst";
         for (Expression listedExp : taskExpressionsOrdered) {
             if (listedExp.getName().compareToIgnoreCase("4" + xCorr206238Name) == 0) {
                 listedExp.setExcelExpressionString("WtdMeanACalc( [\"" + PB4COR206_238CALIB_CONST + "\"], "

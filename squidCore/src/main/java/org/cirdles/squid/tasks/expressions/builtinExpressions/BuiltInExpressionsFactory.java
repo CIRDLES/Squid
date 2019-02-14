@@ -203,7 +203,7 @@ public abstract class BuiltInExpressionsFactory {
      */
     public static Map<String, ExpressionTreeInterface> generateSpotLookupFields() {
         Map<String, ExpressionTreeInterface> spotLookupFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        
+
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         spotLookupFields.put(expHours.getName(), expHours);
         ExpressionTreeInterface expQt1Y = buildSpotNode("getQt1Y");
@@ -401,6 +401,10 @@ public abstract class BuiltInExpressionsFactory {
                     "1", false, true, false);
             placeholderExpressions.add(expressionSQUID_TH_U_EQN_NAMEs);
 
+            Expression expressionSQUID_PPM_PARENT_EQN_NAME_U = buildExpression(U_CONCEN_PPM_RM,
+                    "1", true, false, false);
+            placeholderExpressions.add(expressionSQUID_PPM_PARENT_EQN_NAME_U);
+
             Expression expressionSQUID_PPM_PARENT_EQN_NAME_TH = buildExpression(TH_CONCEN_PPM_RM,
                     "1", true, false, false);
             placeholderExpressions.add(expressionSQUID_PPM_PARENT_EQN_NAME_TH);
@@ -453,15 +457,20 @@ public abstract class BuiltInExpressionsFactory {
 
         // ppmU calcs belong to both cases of isDirectAltPD
         // As of 7 Feb 2019 we introduce two flavors per Bodorkos - see https://github.com/CIRDLES/Squid/issues/164
-        Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
-                "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
-        concentrationExpressionsOrdered.add(expressionPpmURM);
-
+        // As of Feb 14, we will have 4cor and 7cor U_concen_RM for directAltPD = true
+//        Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
+//                "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
+//        concentrationExpressionsOrdered.add(expressionPpmURM);
         Expression expressionPpmU = buildExpression(U_CONCEN_PPM,
                 "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, false, true, false);
         concentrationExpressionsOrdered.add(expressionPpmU);
 
         if (!isDirectAltPD) {
+            // Feb 14 2019
+            Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
+                    "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
+            concentrationExpressionsOrdered.add(expressionPpmURM);
+
             // TODO: promote this and tie to physical constants model
             // handles SecondaryParentPpmFromThU
             //String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
@@ -483,9 +492,21 @@ public abstract class BuiltInExpressionsFactory {
 
         } else {
             // directlAltPD is true
-            // this code for ppmTh comes from SQ2.50 Procedral Framework: Part 5
-            // see: https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-5
 
+            // Feb 2019 per @sbododorkos
+            // for 204b ref mat
+            Expression expression4corrPpmURM = buildExpression(PB4CORR + U_CONCEN_PPM_RM,
+                    "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
+            concentrationExpressionsOrdered.add(expression4corrPpmURM);
+
+            // Feb 2019 per @sbododorkos
+            // for 207b ref mat
+            Expression expression7corrPpmURM = buildExpression(PB7CORR + U_CONCEN_PPM_RM,
+                    "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
+            concentrationExpressionsOrdered.add(expression7corrPpmURM);
+
+            // this code for ppmTh comes from SQ2.50 Procedural Framework: Part 5
+            // see: https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-5
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsU());
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsTh());
 
