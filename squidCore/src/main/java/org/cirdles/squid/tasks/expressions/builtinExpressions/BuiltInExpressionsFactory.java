@@ -31,7 +31,6 @@ import static org.cirdles.squid.parameters.util.RadDates.age206_238r;
 import static org.cirdles.squid.parameters.util.RadDates.age207_206r;
 import static org.cirdles.squid.parameters.util.RadDates.age208_232r;
 import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ALPHA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L1033;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L859;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA230;
@@ -52,7 +51,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BETA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_4COR_207_206_AGE;
@@ -69,16 +67,10 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_76;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_84;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_86;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.GAMMA;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NETALPHA;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NETBETA;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NETGAMMA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_7;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_7;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RADD6;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RADD8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_U_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_TH_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM;
@@ -153,6 +145,14 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_TH_PB_RATIO;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_7_6;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_8_6_FACT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_206PB204PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_207PB204PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_208PB204PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_206PB204PB_FACTOR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_208PB204PB_FACTOR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_204;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_204;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_204;
 
 /**
  *
@@ -1327,36 +1327,36 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> samRadiogenicCols(String parentNuclide, boolean isDirectAltPD) {
         SortedSet<Expression> samRadiogenicCols = new TreeSet<>();
 
-        Expression expressionAlpha = buildExpression(ALPHA,
+        Expression expressionAlpha = buildExpression(TOTAL_206_204,
                 "1/[" + R204206 + "]", false, true, false);
         samRadiogenicCols.add(expressionAlpha);
 
-        Expression expressionNetAlpha = buildExpression(NETALPHA,
-                ALPHA + "-" + DEFCOM_64, false, true, false);
+        Expression expressionNetAlpha = buildExpression(DEFRAD_206PB204PB,
+                TOTAL_206_204 + "-" + DEFCOM_64, false, true, false);
         samRadiogenicCols.add(expressionNetAlpha);
 
-        Expression expressionBeta = buildExpression(BETA,
+        Expression expressionBeta = buildExpression(TOTAL_207_204,
                 "[" + R207206 + "]/[" + R204206 + "]", false, true, false);
         samRadiogenicCols.add(expressionBeta);
 
-        Expression expressionNetBeta = buildExpression(NETBETA,
-                BETA + "-" + DEFCOM_74, false, true, false);
+        Expression expressionNetBeta = buildExpression(DEFRAD_207PB204PB,
+                TOTAL_207_204 + "-" + DEFCOM_74, false, true, false);
         samRadiogenicCols.add(expressionNetBeta);
 
-        Expression expressionGamma = buildExpression(GAMMA,
+        Expression expressionGamma = buildExpression(TOTAL_208_204,
                 "[" + R208206 + "]/[" + R204206 + "]", false, true, false);
         samRadiogenicCols.add(expressionGamma);
 
-        Expression expressionNetGamma = buildExpression(NETGAMMA,
-                GAMMA + "-" + DEFCOM_84, false, true, false);
+        Expression expressionNetGamma = buildExpression(DEFRAD_208PB204PB,
+                TOTAL_208_204 + "-" + DEFCOM_84, false, true, false);
         samRadiogenicCols.add(expressionNetGamma);
 
-        Expression expressionRadd6 = buildExpression(RADD6,
-                NETALPHA + "/" + ALPHA, false, true, false);
+        Expression expressionRadd6 = buildExpression(RAD_206PB204PB_FACTOR,
+                DEFRAD_206PB204PB + "/" + TOTAL_206_204, false, true, false);
         samRadiogenicCols.add(expressionRadd6);
 
-        Expression expressionRadd8 = buildExpression(RADD8,
-                NETGAMMA + "/" + GAMMA, false, true, false);
+        Expression expressionRadd8 = buildExpression(RAD_208PB204PB_FACTOR,
+                DEFRAD_208PB204PB + "/" + TOTAL_208_204, false, true, false);
         samRadiogenicCols.add(expressionRadd8);
 
         // Case Perm1 and Perm2, i.e. has uranium as parent nuclide ***************************
@@ -1506,7 +1506,7 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression4corr206238 = buildExpression(PB4CORR + R206PB_238U,
                 "ValueModel("
-                + "[\"" + TOTAL_206_238 + "\"]*" + RADD6 + ","
+                + "[\"" + TOTAL_206_238 + "\"]*" + RAD_206PB204PB_FACTOR + ","
                 + "SQRT([%\"" + TOTAL_206_238 + "\"]^2+(" + DEFCOM_64 + "*"
                 + "[%" + R204206 + "]/(1/[" + R204206 + "]-" + DEFCOM_64 + "))^2),"
                 + "false)", false, true, false);
@@ -1520,7 +1520,7 @@ public abstract class BuiltInExpressionsFactory {
         samRadiogenicCols.add(expression4corr238206);
 
         //some ages
-        String d1 = "(" + NETALPHA + "*[%\"" + TOTAL_206_238 + "\"]/100)^2";
+        String d1 = "(" + DEFRAD_206PB204PB + "*[%\"" + TOTAL_206_238 + "\"]/100)^2";
         String d3 = "([%" + R204206 + "]*" + DEFCOM_64 + "/100)^2";
         String d4 = "(([\"" + TOTAL_206_238 + "\"]*[" + R204206 + "])^2)";
         String d5 = "((1/" + LAMBDA238 + "/"
@@ -1540,14 +1540,14 @@ public abstract class BuiltInExpressionsFactory {
                 "[" + R207206 + "]", false, true, false);
         samRadiogenicCols.add(expressionTotal207Pb206PbS);
 
-        String t1 = "(([" + R207206 + "]-ABS(" + NETBETA + "/" + NETALPHA + "))*[%" + R204206 + "]"
+        String t1 = "(([" + R207206 + "]-ABS(" + DEFRAD_207PB204PB + "/" + DEFRAD_206PB204PB + "))*[%" + R204206 + "]"
                 + "/100/[" + R204206 + "])^2";
         String t3 = "([%" + R207206 + "]/[" + R204206 + "]/100*[" + R207206 + "])^2";
 
         Expression expression4corr207206 = buildExpression(PB4CORR + R207PB_206PB,
                 "ValueModel("
-                + "ABS(" + NETBETA + "/" + NETALPHA + "),"
-                + "ABS(SQRT(" + t1 + " + " + t3 + ")/" + NETALPHA + "*100/ABS(" + NETBETA + "/" + NETALPHA + ")),"
+                + "ABS(" + DEFRAD_207PB204PB + "/" + DEFRAD_206PB204PB + "),"
+                + "ABS(SQRT(" + t1 + " + " + t3 + ")/" + DEFRAD_206PB204PB + "*100/ABS(" + DEFRAD_207PB204PB + "/" + DEFRAD_206PB204PB + ")),"
                 + "false)", false, true, false);
         samRadiogenicCols.add(expression4corr207206);
 
@@ -1585,9 +1585,9 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression4corr208232 = buildExpression(PB4CORR + R208PB_232TH,
                 "ValueModel("
-                + "[\"" + TOTAL_208_232 + "\"]*" + RADD8 + ","
+                + "[\"" + TOTAL_208_232 + "\"]*" + RAD_208PB204PB_FACTOR + ","
                 + "SQRT([%\"" + TOTAL_208_232 + "\"]^2+"
-                + "(" + DEFCOM_84 + "/" + NETGAMMA + ")^2*[%" + R204206 + "]^2),"
+                + "(" + DEFCOM_84 + "/" + DEFRAD_208PB204PB + ")^2*[%" + R204206 + "]^2),"
                 + "false)", false, true, false);
         samRadiogenicCols.add(expression4corr208232);
 

@@ -153,11 +153,6 @@ public class BuiltInExpressionsDataDictionary {
     public static final String TOTAL_206_238_RM = "Total_206Pb238U_RM";
     public static final String TOTAL_208_232_RM = "Total_208Pb232Th_RM";
 
-    public static final String TOTAL_206_238 = "Total_206Pb238U";
-    public static final String TOTAL_208_232 = "Total_208Pb232Th";
-    public static final String TOTAL_207_206 = "Total_207Pb206Pb";
-    public static final String TOTAL_238_206 = "Total_238U206Pb";
-
     public static final String PBTH_EXT_1_SIGMA_ERR_PCT = "208Pb232Th_Ext1SigmaErr_Pct";
     public static final String PBU_EXT_1_SIGMA_ERR_PCT = "206Pb238U_Ext1SigmaErr_Pct";
     public static final String ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
@@ -197,13 +192,18 @@ public class BuiltInExpressionsDataDictionary {
     public static final String TH_CONCEN_PPM_RM = "Th_Concen_RM";
     public static final String TH_CONCEN_PPM = "Th_Concen";
 
-    public static final String ALPHA = "Total_206Pb204Pb";
-    public static final String BETA = "Total_207Pb204Pb";
-    public static final String GAMMA = "Total_208Pb204Pb";
-    public static final String NETALPHA = "DefRad_206Pb204Pb";
-    public static final String NETBETA = "DefRad_207Pb204Pb";
-    public static final String NETGAMMA = "DefRad_208Pb204Pb";
-    public static final String RADD6 = "Rad_206Pb204Pb_Factor";
-    public static final String RADD8 = "Rad_208Pb204Pb_Factor";
+    public static final String TOTAL_206_204 = "Total_206Pb204Pb";
+    public static final String TOTAL_207_204 = "Total_207Pb204Pb";
+    public static final String TOTAL_208_204 = "Total_208Pb204Pb";   
+    public static final String TOTAL_206_238 = "Total_206Pb238U";
+    public static final String TOTAL_208_232 = "Total_208Pb232Th";
+    public static final String TOTAL_207_206 = "Total_207Pb206Pb";
+    public static final String TOTAL_238_206 = "Total_238U206Pb";
+    
+    public static final String DEFRAD_206PB204PB = "DefRad_206Pb204Pb";
+    public static final String DEFRAD_207PB204PB = "DefRad_207Pb204Pb";
+    public static final String DEFRAD_208PB204PB = "DefRad_208Pb204Pb";
+    public static final String RAD_206PB204PB_FACTOR = "Rad_206Pb204Pb_Factor";
+    public static final String RAD_208PB204PB_FACTOR = "Rad_208Pb204Pb_Factor";
 
 }

@@ -27,6 +27,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CONCEN_206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CONCEN_208PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_64;
@@ -35,6 +37,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_76;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_84;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_86;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA230;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA232;
@@ -46,33 +49,48 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_7;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_DISCORDANCE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST_WM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR_DISCORDANCE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PBTH_EXT_1_SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PBU_EXT_1_SIGMA_ERR_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R204PB_206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB_232TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_7_6;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_8_6_FACT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_AGE_PB_PB;
@@ -83,12 +101,27 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_TH_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_U_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_206PB204PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_207PB204PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_208PB204PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_206PB204PB_FACTOR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_208PB204PB_FACTOR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_204;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_204;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_206;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_204;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_238_206;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM;
 
 /**
  *
@@ -338,16 +371,125 @@ public class BuiltInExpressionsNotes {
                 + "\n that calculate only a single 206Pb/238U calibration (\"Perm1\").");
 
         // start unknowns        
-        BUILTIN_EXPRESSION_NOTES.put("",
-                "");
-        BUILTIN_EXPRESSION_NOTES.put("",
-                "");
-        BUILTIN_EXPRESSION_NOTES.put("",
-                "");
-        BUILTIN_EXPRESSION_NOTES.put("",
-                "");
-        BUILTIN_EXPRESSION_NOTES.put("",
-                "");
+        BUILTIN_EXPRESSION_NOTES.put(TH_U_EXP,
+                "Sample spots: 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                + "\n this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + CONCEN_206PB,
+                "Sample spots: Radiogenic 206Pb content, based on the 204Pb-correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R206PB_238U,
+                "Sample spots: 204Pb-corrected 206Pb/238U.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4COR206_238AGE,
+                "Sample spots: 204Pb-corrected 206Pb/238U age.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R207PB_206PB,
+                "Sample spots: 204Pb-corrected 207Pb/206Pb.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4COR207_206AGE,
+                "Sample spots: 204Pb-corrected 207Pb/206Pb age.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R207PB_235U,
+                "Sample spots: 204Pb-corrected 207Pb/235U.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + CONCEN_208PB,
+                "Sample spots: Radiogenic 208Pb content, based on the 204Pb-correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R208PB_232TH,
+                "Sample spots: 204Pb-corrected 208Pb/232Th.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4COR208_232AGE,
+                "Sample spots: 204Pb-corrected 208Pb/232Th age.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R238U_206PB,
+                "Sample spots: 204Pb-corrected 238U/206Pb.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4COR_DISCORDANCE,
+                "Sample spots: Discordance of 204Pb-corrected 206Pb/238U and 207Pb/206Pb, "
+                + "\n defined as 100 * [ 1 - { (206Pb/238U) / exp( [ Lambda238 * {207Pb/206Pb age} ] - 1 ) } ],"
+                + "\n and expressed as a percentage.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + ERR_CORREL,
+                "Sample spots: Error correlation (for Wetherill concordia plot) between "
+                + "\n 204Pb-corrected values of 207Pb/235U and 206Pb/238U.");
+
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + R204PB_206PB,
+                "Sample spots: 204Pb/206Pb corrected for biweight mean of overcounts at mass 204, based on counts at 207Pb in the RM dataset.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + CONCEN_206PB,
+                "Sample spots: Radiogenic 206Pb content, based on the 207Pb-correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + R206PB_238U,
+                "Sample spots: 207Pb-corrected 206Pb/238U.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7COR206_238AGE,
+                "Sample spots: 207Pb-corrected 206Pb/238U age.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + CONCEN_208PB,
+                "Sample spots: Radiogenic 208Pb content, based on the 207Pb-correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + R208PB206PB,
+                "Sample spots: Radiogenic 208Pb/206Pb, based on the 207Pb-correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + R208PB_232TH,
+                "Sample spots: 207Pb-corrected 208Pb/232Th.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7COR208_232AGE,
+                "Sample spots: 207Pb-corrected 208Pb/232Th age.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + COM206PB_PCT,
+                "Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 207Pb-correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + COM208PB_PCT,
+                "Sample spots: Common 208Pb as a percentage of total 208Pb, based on the 207Pb-correction.");
+
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R204PB_206PB,
+                "Sample spots: 204Pb/206Pb corrected for biweight mean of overcounts at "
+                + "/n mass 204, based on counts at 208Pb in the RM dataset.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + CONCEN_206PB,
+                "Sample spots: Radiogenic 206Pb content, based on the 208Pb-correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R206PB_238U,
+                "Sample spots: 208Pb-corrected 206Pb/238U.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8COR206_238AGE,
+                "Sample spots: 208Pb-corrected 206Pb/238U age.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R207PB_206PB,
+                "Sample spots: 208Pb-corrected 207Pb/206Pb.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8COR207_206AGE,
+                "Sample spots: 208Pb-corrected 207Pb/206Pb age.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R207PB_235U,
+                "Sample spots: 208Pb-corrected 207Pb/235U.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R238U_206PB,
+                "CM spots: Arithmetic mean of Parent Element concentration constants "
+                + "\n (for nominated Parent Element), as measured SOLELY on CM");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + COM206PB_PCT,
+                "Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 208Pb-correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8COR_DISCORDANCE,
+                "Sample spots: Discordance of 208Pb-corrected 206Pb/238U and 207Pb/206Pb, "
+                + "\n defined as 100 * [ 1 - { (206Pb/238U) / exp( [ Lambda238 * {207Pb/206Pb age} ] - 1 ) } ], "
+                + "\nand expressed as a percentage");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + ERR_CORREL,
+                "Sample spots: Error correlation (for Wetherill concordia plot) between 208Pb-corrected "
+                + "\n values of 207Pb/235U and 206Pb/238U.");
+
+        BUILTIN_EXPRESSION_NOTES.put(DEFRAD_206PB204PB,
+                "Sample spots: Default (radiogenic 206Pb)/204Pb, defined as (Total_206Pb204Pb) - (DefCom_206Pb204Pb).");
+        BUILTIN_EXPRESSION_NOTES.put(DEFRAD_207PB204PB,
+                "Sample spots: Default (radiogenic 207Pb)/204Pb, defined as (Total_207Pb204Pb) - (DefCom_207Pb204Pb).");
+        BUILTIN_EXPRESSION_NOTES.put(DEFRAD_208PB204PB,
+                "Sample spots: Default (radiogenic 208Pb)/204Pb, defined as (Total_208Pb204Pb) - (DefCom_208Pb204Pb).");
+
+        BUILTIN_EXPRESSION_NOTES.put(RAD_206PB204PB_FACTOR,
+                "Sample spots: Radiogenic 206Pb/204Pb proportionality factor, defined as (DefRad_206Pb204Pb)/(Total_206Pb204Pb).");
+        BUILTIN_EXPRESSION_NOTES.put(RAD_208PB204PB_FACTOR,
+                "Sample spots: Radiogenic 208Pb/204Pb proportionality factor, defined as (DefRad_208Pb204Pb)/(Total_208Pb204Pb).");
+
+        BUILTIN_EXPRESSION_NOTES.put(TH_CONCEN_PPM,
+                "Sample spots: Calculated Th content.");
+
+        BUILTIN_EXPRESSION_NOTES.put(TOTAL_206_204,
+                "Sample spots: Measured 206Pb/204Pb.");
+        BUILTIN_EXPRESSION_NOTES.put(TOTAL_206_238,
+                "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(TOTAL_207_204,
+                "Sample spots: Measured 207Pb/204Pb.");
+        BUILTIN_EXPRESSION_NOTES.put(TOTAL_207_206,
+                "Sample spots: Measured 207Pb/206Pb.");
+        BUILTIN_EXPRESSION_NOTES.put(TOTAL_208_204,
+                "Sample spots: Measured 208Pb/204Pb.");
+        BUILTIN_EXPRESSION_NOTES.put(TOTAL_208_232,
+                "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(TOTAL_238_206,
+                "Sample spots: Calculated total 238U/206Pb. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+
+        BUILTIN_EXPRESSION_NOTES.put(U_CONCEN_PPM,
+                "Sample spots: Calculated U content.");
+        
+        // aliased expressions start here
+        
 
     }
 }
