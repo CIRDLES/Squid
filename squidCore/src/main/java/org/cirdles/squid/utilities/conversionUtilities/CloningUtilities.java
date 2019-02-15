@@ -36,9 +36,9 @@ public class CloningUtilities {
     }
 
     /**
-     * 
+     *
      * @param myArray
-     * @return 
+     * @return
      */
     public static int[][] clone2dArray(int[][] myArray) {
         int[][] arrayCopy = new int[myArray.length][];
@@ -50,12 +50,21 @@ public class CloningUtilities {
     }
 
     /**
-     * 
+     *
      * @param myArray
-     * @return 
+     * @return
      */
     public static boolean[][] clone2dArray(boolean[][] myArray) {
         boolean[][] arrayCopy = new boolean[myArray.length][];
+        for (int i = 0; i < myArray.length; i++) {
+            arrayCopy[i] = myArray[i].clone();
+        }
+
+        return arrayCopy;
+    }
+
+    public static String[][] clone2dArray(String[][] myArray) {
+        String[][] arrayCopy = new String[myArray.length][];
         for (int i = 0; i < myArray.length; i++) {
             arrayCopy[i] = myArray[i].clone();
         }

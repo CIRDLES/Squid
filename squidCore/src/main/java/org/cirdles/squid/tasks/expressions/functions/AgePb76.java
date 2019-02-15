@@ -52,8 +52,9 @@ public class AgePb76 extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}};
-        labelsForInputValues = new String[]{"207/206RatioAnd1\u03C3abs"};
+        labelsForInputValues = new String[]{"[\"207/206\"] (includes Ratio and 1\u03C3abs)"};
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}}; 
+        definition = "Uses LudwigLibrary 'pbpbAge' to calcluate age and 1\u03C3abs uncertainty from 207/206 ratio.";
     }
 
     /**

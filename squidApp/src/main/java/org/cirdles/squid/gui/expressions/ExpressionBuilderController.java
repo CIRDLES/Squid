@@ -91,6 +91,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
@@ -142,7 +143,7 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUIL
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
-import org.cirdles.squid.tasks.expressions.functions.ValueModel;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
  * FXML Controller class
@@ -201,8 +202,6 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private Text hintSelectText;
     private final TextArea expressionAsTextArea = new TextArea();
-    @FXML
-    private Label modeLabel;
     @FXML
     private ToggleGroup expressionsSortToggleGroup;
 
@@ -561,11 +560,13 @@ public class ExpressionBuilderController implements Initializable {
             }
             //Showing and hiding elements following mode
             if (oldValue == Mode.VIEW) {
-                toolBarVBox.getChildren().add(toolBarHBox);
+                //toolBarVBox.getChildren().add(toolBarHBox);
+                //toolBarHBox.setVisible(true);
                 othersAccordion.setExpandedPane(operationsTitledPane);
                 leftSplitPane.setDividerPositions(0.5);
             } else if (newValue == Mode.VIEW) {
-                toolBarVBox.getChildren().remove(toolBarHBox);
+                //toolBarVBox.getChildren().remove(toolBarHBox);
+                //toolBarHBox.setVisible(false);
                 othersAccordion.setExpandedPane(null);
                 leftSplitPane.setDividerPositions(1.0);
             }
@@ -690,6 +691,14 @@ public class ExpressionBuilderController implements Initializable {
         toggleGroup.selectToggle(dragndropRightRadio);
     }
 
+    private void customizeBrokenExpressionsTitledPane() {
+        if ((brokenExpressionsListView.getItems() == null) || (brokenExpressionsListView.getItems().isEmpty())){
+            brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: black; -fx-font-family: SansSerif;");
+        } else {
+            brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;");
+        }
+    }
+
     private void initListViews() {
         //EXPRESSIONS
         brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
@@ -706,8 +715,10 @@ public class ExpressionBuilderController implements Initializable {
                     }
                     selectInAllPanes(newValue, false);
                 }
+                customizeBrokenExpressionsTitledPane();
             }
         });
+        customizeBrokenExpressionsTitledPane();
 
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
@@ -1162,8 +1173,8 @@ public class ExpressionBuilderController implements Initializable {
     private void newCustomExpressionAction(ActionEvent event) {
         if (currentMode.get().equals(Mode.VIEW)) {
             selectedBeforeCreateOrCopy = selectedExpression.get();
-            selectedExpression.set(null);
-            selectedExpression.set(new Expression("new_custom_expression", ""));
+            Expression exp = new Expression("new_custom_expression", "");
+            selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
             refreshSaved();
         }
@@ -1303,7 +1314,7 @@ public class ExpressionBuilderController implements Initializable {
             AnchorPane.setTopAnchor(expressionAsTextArea, 0.0);
             AnchorPane.setRightAnchor(expressionAsTextArea, 0.0);
             AnchorPane.setLeftAnchor(expressionAsTextArea, 0.0);
-            expressionAsTextBtn.setText("Edit with d&d");
+            expressionAsTextBtn.setText("Edit as d&d");
 
         } else {
             //Case was editing as textArea -> switch to drag and drop
@@ -1347,12 +1358,14 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void referenceMaterialCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
+        updateEditor();
         refreshSaved();
     }
 
     @FXML
     private void unknownSamplesCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
+        updateEditor();
         refreshSaved();
     }
 
@@ -1495,6 +1508,7 @@ public class ExpressionBuilderController implements Initializable {
         });
         brokenExpressionsListView.setItems(null);
         brokenExpressionsListView.setItems(items);
+        customizeBrokenExpressionsTitledPane();
 
         items = FXCollections.observableArrayList(sortedReferenceMaterialValuesList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
@@ -1608,15 +1622,15 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private String createPeekRM(Expression exp, boolean forcePercentUn) {
-        String res;
+        String result;
         if ((exp == null) || (!exp.amHealthy())) {
-            res = "No expression.";
+            result = "No expression.";
         } else {
             TaskInterface task = squidProject.getTask();
             List<ShrimpFractionExpressionInterface> refMatSpots = task.getReferenceMaterialSpots();
             List<ShrimpFractionExpressionInterface> concRefMatSpots = task.getConcentrationReferenceMaterialSpots();
             if (exp.getExpressionTree() instanceof ConstantNode) {
-                res = "Not used";
+                result = "Not used";
                 if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     try {
                         rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
@@ -1625,41 +1639,41 @@ public class ExpressionBuilderController implements Initializable {
                 }
             } else if (exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
                 SpotSummaryDetails spotSummary = task.getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
-                res = "No Summary";
+                result = "No Summary";
                 if (spotSummary != null) {
                     if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                         if (spotSummary.getSelectedSpots().size() > 0) {
-                            res = peekDetailsPerSummary(spotSummary);
+                            result = peekDetailsPerSummary(spotSummary);
                         } else {
-                            res = "No Reference Materials";
+                            result = "No Reference Materials";
                         }
                     }
                     if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                         if (spotSummary.getSelectedSpots().size() > 0) {
-                            res = peekDetailsPerSummary(spotSummary);
+                            result = peekDetailsPerSummary(spotSummary);
                         } else {
-                            res = "No Concentration Reference Materials";
+                            result = "No Concentration Reference Materials";
                         }
                     }
                 }
             } else {
-                res = "Reference Materials not processed.";
+                result = "Reference Materials not processed.";
                 if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     if (refMatSpots.size() > 0) {
-                        res = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree());
+                        result = peekDetailsPerSpot(refMatSpots, exp.getExpressionTree());
                     } else {
-                        res = "No Reference Materials";
+                        result = "No Reference Materials";
                     }
                 } else if (exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                     if (concRefMatSpots.size() > 0) {
-                        res = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree());
+                        result = peekDetailsPerSpot(concRefMatSpots, exp.getExpressionTree());
                     } else {
-                        res = "No Concentration Reference Materials";
+                        result = "No Concentration Reference Materials";
                     }
                 }
             }
         }
-        return res;
+        return result;
     }
 
     private String createPeekUN(Expression exp, boolean forcePercentUn) {
@@ -1881,23 +1895,47 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private String peekDetailsPerSummary(SpotSummaryDetails spotSummary) {
-        String[][] labels = ((ExpressionTree) spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues();
+        // context-sensitivity - we use Ma in Squid for display
+        boolean isAge = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("AGE");
+        boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("LAMBDA2");
+        boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("CONCEN");
+
+        String[][] labels = clone2dArray(((ExpressionTree) spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues());
+        if (isAge) {
+            labels[0][0] = "Age (Ma)";
+            if (labels[0].length > 1) {
+                labels[0][1] += " (Ma)";
+            }
+            if (labels[0].length > 2) {
+                labels[0][2] += " (Ma)";
+            }
+        }
+
+        if (isLambda) {
+            labels[0][0] = ((ExpressionTree) spotSummary.getExpressionTree()).getName() + " (Ma)";
+        }
+
+        if (isConcen) {
+            labels[0][0] = "ppm";
+        }
+
         StringBuilder sb = new StringBuilder();
         if (concRefMatSwitchCheckBox.isSelected()) {
             sb.append("Concentration Reference Materials Only\n\n");
         }
         for (int i = 0; i < labels[0].length; i++) {
             sb.append("\t");
-            sb.append(String.format("%1$-" + 13 + "s", labels[0][i]));
+            sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
             sb.append(": ");
-            sb.append(Utilities.roundedToSize(spotSummary.getValues()[0][i], 15));
+            sb.append(Utilities.roundedToSize(
+                    spotSummary.getValues()[0][i] / (isAge ? 1.0e6 : ((isLambda ? 1.0e-6 : 1.0))), 15));
             sb.append("\n");
         }
 
         // handle special cases
         if (labels.length > 1) {
             sb.append("\t");
-            sb.append(String.format("%1$-" + 13 + "s", labels[1][0]));
+            sb.append(String.format("%1$-" + 16 + "s", labels[1][0]));
             sb.append(": ");
             // print list
             if (spotSummary.getValues()[1].length == 0) {
@@ -1912,7 +1950,7 @@ public class ExpressionBuilderController implements Initializable {
 
         if (labels.length > 2) {
             sb.append("\t");
-            sb.append(String.format("%1$-" + 13 + "s", labels[2][0]));
+            sb.append(String.format("%1$-" + 16 + "s", labels[2][0]));
             sb.append(": ");
             // print list
             if (spotSummary.getValues()[2].length == 0) {
@@ -1947,64 +1985,14 @@ public class ExpressionBuilderController implements Initializable {
         StringBuilder sb = new StringBuilder();
         int sigDigits = 15;
 
-//        if (expTree instanceof ShrimpSpeciesNode) {
-//            sb.append("Please specify property of species such as totalCps.");
-//        } 
-//        else if (expTree instanceof VariableNodeForIsotopicRatios) {
-//            // special case where the expressionTree is a ratio
-//            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-//            // first determine if uncertainty directive is present
-//            String uncertaintyDirective = ((VariableNodeForIsotopicRatios) expTree).getUncertaintyDirective();
-//            if (uncertaintyDirective.length() > 0) {
-//                sb.append(String.format("%1$-" + 20 + "s", "1\u03C3 " + uncertaintyDirective + " " + expTree.getName()));
-//            } else {
-//                sb.append(String.format("%1$-" + 20 + "s", expTree.getName()));
-//                sb.append(String.format("%1$-" + 20 + "s", "1\u03C3 ABS"));
-//            }
-//            sb.append("\n");
-//
-//            for (ShrimpFractionExpressionInterface spot : spots) {
-//                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-//                double[][] results
-//                        = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
-//                for (int i = 0; i < (int)((uncertaintyDirective.length() == 0) ? results[0].length : 1); i++) {
-//                    try {
-//                        sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
-//                    } catch (Exception e) {
-//                    }
-//                }
-//                sb.append("\n");
-//            }
-//
-//        } 
-////        else 
-////        if (expTree instanceof SpotFieldNode) {
-////            // special case where the expressionTree is a field in spot (non-ratio)
-////            sb.append(String.format("%1$-" + 15 + "s", "Spot name"));
-////            sb.append(String.format("%1$-" + 20 + "s", expTree.getName()));
-////            sb.append("\n");
-////
-////            for (ShrimpFractionExpressionInterface spot : spots) {
-////                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-////                List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
-////                singleSpot.add(spot);
-////
-////                try {
-////                    double[][] results
-////                            = Arrays.stream(ExpressionTreeInterface.convertObjectArrayToDoubles(expTree.eval(singleSpot, null))).toArray(double[][]::new);
-////                    for (int i = 0; i < results[0].length; i++) {
-////                        try {
-////                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], 15)));
-////                        } catch (Exception e) {
-////                        }
-////                    }
-////                    sb.append("\n");
-////                } catch (SquidException squidException) {
-////                }
-////
-////            }
-////
-////        } else {
+        // context-sensitivity - we use Ma in Squid for display
+        boolean isAge = expTree.getName().toUpperCase().contains("AGE");
+        String contextAgeFieldName = (isAge ? "Age (Ma)" : "Value");
+        String contextAge1SigmaAbsName = (isAge ? "1\u03C3 Abs (Ma)" : "1\u03C3 Abs");
+        // or it may be concentration ppm
+        boolean isConcen = expTree.getName().toUpperCase().contains("CONCEN");
+        contextAgeFieldName = (isConcen ? "ppm" : contextAgeFieldName);
+
         if (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
             sb.append("Concentration Reference Materials Only\n\n");
         }
@@ -2012,18 +2000,21 @@ public class ExpressionBuilderController implements Initializable {
         String[][] resultLabels;
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
-
                 if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForSummary) {
                     String uncertaintyDirective
                             = ((VariableNodeForSummary) ((ExpressionTree) expTree).getChildrenET().get(0)).getUncertaintyDirective();
                     if (uncertaintyDirective.length() > 0) {
-                        resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
+                        if (uncertaintyDirective.compareTo("±") == 0) {
+                            resultLabels = new String[][]{{contextAge1SigmaAbsName}, {}};
+                        } else {
+                            resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
+                        }
                     } else {
-                        resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
+                        resultLabels = new String[][]{{contextAgeFieldName, contextAge1SigmaAbsName}, {}};
                     }
                 } else {
                     // i.e., ConstantNode
-                    resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
+                    resultLabels = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
                 }
             } else if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
                 // Check for functions of species
@@ -2041,16 +2032,15 @@ public class ExpressionBuilderController implements Initializable {
                 if (uncertaintyDirective.length() > 0) {
                     resultLabels = new String[][]{{"1\u03C3 " + uncertaintyDirective}, {}};
                 } else {
-                    resultLabels = new String[][]{{"Value", "1\u03C3 Abs"}, {}};
+                    resultLabels = new String[][]{{contextAgeFieldName, "1\u03C3 Abs"}, {}};
                 }
             } else {
                 // some smarts
-                resultLabels = ((ExpressionTree) expTree).getOperation().getLabelsForOutputValues();
-                if (((ExpressionTree) expTree).getOperation() instanceof ValueModel) {
-                    if (expTree.getName().toUpperCase().contains("AGE")){
-                        resultLabels[0][0] = "Age";
-                    }
-                } 
+                resultLabels = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
+                resultLabels[0][0] = contextAgeFieldName;
+                if (resultLabels[0].length > 1) {
+                    resultLabels[0][1] = contextAge1SigmaAbsName;
+                }
             }
 
             for (int i = 0; i < resultLabels[0].length; i++) {
@@ -2100,7 +2090,8 @@ public class ExpressionBuilderController implements Initializable {
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
                         for (int i = 0; i < resultLabels[0].length; i++) {
                             try {
-                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                                sb.append(String.format("%1$-" + 20 + "s",
+                                        Utilities.roundedToSize(results[0][i] / (isAge ? 1.0e6 : 1.0), sigDigits)));
                             } catch (Exception e) {
                             }
                         }
@@ -2441,7 +2432,7 @@ public class ExpressionBuilderController implements Initializable {
                 case LEFT_PAREN:
                 case RIGHT_PAREN:
 
-                    res = new Tooltip("Parenthese: " + text);
+                    res = new Tooltip("Parenthesis: " + text);
                     break;
 
                 case NUMBER:
@@ -2467,7 +2458,12 @@ public class ExpressionBuilderController implements Initializable {
                     if (str != null) {
                         OperationOrFunctionInterface fn = Function.operationFactory(str);
                         if (fn != null) {
-                            res = new Tooltip("Function: " + fn.getName() + "\n\n" + fn.getArgumentCount() + " argument(s): " + fn.printInputValues().trim() + "\nOutputs: " + fn.printOutputValues().trim());
+                            res = new Tooltip(
+                                    "Function: " + fn.getName()
+                                    + "\n\n" + fn.getArgumentCount()
+                                    + " argument(s): " + fn.printInputValues().trim()
+                                    + "\nOutputs: " + fn.printOutputValues().trim()
+                                    + "\nDefinition: " + fn.getDefinition().trim());
                         }
                     }
                     break;
@@ -3576,7 +3572,7 @@ public class ExpressionBuilderController implements Initializable {
 
             setFontSmoothingType(FontSmoothingType.LCD);
             setFont(Font.font("SansSerif"));
-            
+
             this.selectedColor = Color.RED;
             this.regularColor = Color.BLACK;
             this.opositeColor = Color.LIME;
@@ -3638,7 +3634,7 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         public final void updateFontSize() {
-            setFont(Font.font("SansSerif", FontWeight.BOLD, fontSize + fontSizeModifier));
+            setFont(Font.font("SansSerif", FontWeight.SEMI_BOLD, fontSize + fontSizeModifier));
         }
 
         private void selectOppositeParenthese() {
