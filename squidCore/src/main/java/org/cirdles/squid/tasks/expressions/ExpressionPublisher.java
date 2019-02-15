@@ -4,6 +4,7 @@ import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.scilab.forge.jlatexmath.TeXFormula;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.xml.transform.Source;
@@ -15,6 +16,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 
 public class ExpressionPublisher {
 
@@ -45,7 +47,7 @@ public class ExpressionPublisher {
         } catch (TransformerException e) {
             retVal = "Transformer Exception";
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            System.out.println("Input:" + input);
         }
         return retVal;
     }
@@ -53,12 +55,66 @@ public class ExpressionPublisher {
     public static Image createImageFromMathML(String input, boolean hasStyling) {
         String converted = getLatexFromMathML(input, hasStyling);
         TeXFormula formula = new TeXFormula(converted);
-        return formula.createBufferedImage(1, 28, Color.BLUE, Color.lightGray);
+        return formula.createBufferedImage(1, 60, Color.BLUE, Color.lightGray);
+    }
+
+    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions) {
+        StringBuilder string = new StringBuilder();
+        string.append("<HTML lang=\"en\">\n<meta charset=\"utf-8\"/>\n");
+        string.append("<style>\n"
+                + "body {background-color: lightgray;}\n"
+                + "h1   {color: blue;}\n"
+                + "h2 {color: blue;}\n"
+                + "p    {color: blue;}\n"
+                + "</style>\n");
+        string.append("<body>\n");
+        string.append("<h1>Expressions</h1>\n");
+
+        File imageFolder = new File("expressionsImages");
+        imageFolder.mkdir();
+
+        for (Expression exp : expressions) {
+            BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
+            File imageFile = new File(imageFolder.getPath() + File.separator + FileNameFixer.fixFileName(exp.getName()) + ".png");
+            boolean imageCreated;
+            try {
+                ImageIO.write(image, "png", imageFile);
+                imageCreated = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                imageCreated = false;
+            }
+            string.append("<h2>" + exp.getName() + "</h2>\n");
+            if (imageCreated) {
+                string.append("<img src=\"" + imageFile.getPath() + "\" " + "width=\"" + image.getWidth() / 2.5 + "\" "
+                        + "height=\"" + image.getHeight() / 2.5 + "\"" + "/>\n");
+            }
+            string.append("<p>" + exp.getName() + " is " + (exp.isReferenceMaterialValue() ? "" : "not ") + "a reference material value\n");
+            string.append("</br>" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
+            string.append("</br>" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
+            string.append("</br>" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
+            string.append("<p>Excel Expression String: " + exp.getExcelExpressionString() + "</p>\n");
+            string.append("<p>Notes:</br>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "</br>") + "</p>\n");
+            //string.append("<p>Expression Tree Audit:</br>" + exp.produceExpressionTreeAudit().replaceAll("\n", "</br>") + "</p>\n");
+        }
+        string.append("</body>\n");
+        string.append("</HTML>");
+
+        boolean worked;
+        try {
+            PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+            writer.write(string.toString());
+            writer.flush();
+            worked = true;
+        } catch (IOException e) {
+            worked = false;
+        }
+        return worked;
     }
 
     public static boolean createHTMLDocumentFromExpression(File file, Expression exp) {
         BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
-        File imageFile = new File(exp.getName() + ".png");
+        File imageFile = new File(FileNameFixer.fixFileName(exp.getName()) + ".png");
         boolean imageCreated;
         try {
             ImageIO.write(image, "png", imageFile);
@@ -69,15 +125,16 @@ public class ExpressionPublisher {
         }
         StringBuilder string = new StringBuilder();
         string.append("<HTML lang=\"en\">\n<meta charset=\"utf-8\"/>\n");
-        string.append("<style>\n" +
-                "body {background-color: lightgray;}\n" +
-                "h1   {color: blue;}\n" +
-                "p    {color: blue;}\n" +
-                "</style>\n");        
+        string.append("<style>\n"
+                + "body {background-color: lightgray;}\n"
+                + "h1   {color: blue;}\n"
+                + "p    {color: blue;}\n"
+                + "</style>\n");
         string.append("<body>\n");
         string.append("<h1>" + exp.getName() + "</h1>\n");
         if (imageCreated) {
-            string.append("<img src=\"" + imageFile.getPath() + "\"/>\n");
+            string.append("<img src=\"" + imageFile.getPath() + "\" " + "width=\"" + image.getWidth() / 2.5 + "\" "
+                    + "height=\"" + image.getHeight() / 2.5 + "\"" + "/>\n");
         }
         string.append("<p>" + exp.getName() + " is " + (exp.isReferenceMaterialValue() ? "" : "not ") + "a reference material value\n");
         string.append("</br>" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
@@ -107,6 +164,7 @@ public class ExpressionPublisher {
         SquidProject project = (SquidProject) SquidSerializer.getSerializedObjectFromFile(squidFile.getAbsolutePath(), false);
         Expression exp = project.getTask().getExpressionByName("Hf1sabserr");
         createHTMLDocumentFromExpression(new File("test.html"), exp);
+        createHTMLDocumentFromExpressions(new File("testgroup.html"), project.getTask().getTaskExpressionsOrdered());
     }
 
 }
