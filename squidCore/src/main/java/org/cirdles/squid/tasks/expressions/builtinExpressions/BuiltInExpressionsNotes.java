@@ -487,9 +487,102 @@ public class BuiltInExpressionsNotes {
 
         BUILTIN_EXPRESSION_NOTES.put(U_CONCEN_PPM,
                 "Sample spots: Calculated U content.");
-        
-        // aliased expressions start here
-        
 
+        // aliased RM expressions start here
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + OVER_COUNTS_PERSEC_4_8,
+                "RM spots: Overcounts per second at mass 204, based on counts at 208Pb. "
+                + "\n In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                + "\n this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + OVER_COUNT_4_6_8,
+                "RM spots: 204Pb/206Pb corrected for overcounts at mass 204, based on counts at 208Pb. "
+                + "\n In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
+                + "\n on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TH_U_EXP_RM,
+                "RM spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                + "\n this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
+                "RM spots: Offset (expressed as a percentage) of the primary calibration constant, "
+                + "\n based on overcounts at mass 204 as calculated from counts at 208Pb. "
+                + "\n In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
+                + "\n on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TH_CONCEN_PPM_RM,
+                "RM spots: Calculated Th content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
+                + "\n where the CM is defined in terms of its U content, this value depends on the "
+                + "\n index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TOTAL_206_238_RM,
+                "RM spots: Calculated total 206Pb/238U. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TOTAL_208_232_RM,
+                "RM spots: Calculated total 208Pb/232Th. Always depends on the index isotope (204Pb, 207Pb, "
+                + "\n or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + U_CONCEN_PPM_RM,
+                "RM spots: Calculated U content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
+                + "\n where the CM is defined in terms of its Th content, this value depends "
+                + "\n on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + OVER_COUNTS_PERSEC_4_8,
+                "RM spots: Overcounts per second at mass 204, based on counts at 208Pb. In dual-calibration "
+                + "\n Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends on the index "
+                + "\n isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + OVER_COUNT_4_6_8,
+                "RM spots: 204Pb/206Pb corrected for overcounts at mass 204, based on counts at 208Pb. "
+                + "\n In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
+                + "\n on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TH_U_EXP_RM,
+                "RM spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                + "\n this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
+                "RM spots: Offset (expressed as a percentage) of the primary calibration constant, "
+                + "\n based on overcounts at mass 204 as calculated from counts at 208Pb. "
+                + "\n In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                + "\n this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TH_CONCEN_PPM_RM,
+                "RM spots: Calculated Th content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
+                + "\n where the CM is defined in terms of its U content, this value depends on the "
+                + "\n index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_206_238_RM,
+                "RM spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
+                + "\n or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_208_232_RM,
+                "RM spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + U_CONCEN_PPM_RM,
+                "RM spots: Calculated U content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
+                + "\n where the CM is defined in terms of its Th content, this value depends on the "
+                + "\n index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_206_238_RM,
+                "RM spots: Calculated total 206Pb/238U. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_208_232_RM,
+                "RM spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+
+        // aliased UNKNOWN expressions start here
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TH_U_EXP,
+                "Sample spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                + "\n this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TOTAL_206_238,
+                "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
+                + "\n or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TOTAL_208_232,
+                "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TH_U_EXP,
+                "Sample spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                + "\n this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_206_238,
+                "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_208_232,
+                "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_206_238,
+                "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_208_232,
+                "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
+                + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+        // note: 26 aliased expressions
     }
 }
