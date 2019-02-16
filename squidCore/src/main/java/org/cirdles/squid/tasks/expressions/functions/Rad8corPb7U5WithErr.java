@@ -66,8 +66,7 @@ public class Rad8corPb7U5WithErr extends Function {
             + "TotPb7U5,"
             + "Total 208/232, Total 208/232 1\u03C3 %, "
             + "Total 207/206, Total 207/206 1\u03C3 %,"
-            + "Total 208/206, Total 208/206 1\u03C3 %,"
-                + "sComm_76, sComm_86"};
+            + "Total 208/206, Total 208/206 1\u03C3 %"};
     }
 
     /**

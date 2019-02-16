@@ -580,9 +580,8 @@ public class BuiltInExpressionsNotes {
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_206_238,
                 "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope "
                 + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
-        BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_208_232,
+        BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_208_232,
                 "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
                 + "\n (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
-        // note: 26 aliased expressions
     }
 }

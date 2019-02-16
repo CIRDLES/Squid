@@ -45,6 +45,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsAliased.BUILTIN_EXPRESSION_ALIASEDNAMES;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
 
 /**
@@ -434,5 +435,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public boolean isAgeExpression() {
         return name.toUpperCase().contains("AGE");
+    }
+    
+    public boolean aliasedExpression(){
+        return BUILTIN_EXPRESSION_ALIASEDNAMES.contains(this.name);
     }
 }
