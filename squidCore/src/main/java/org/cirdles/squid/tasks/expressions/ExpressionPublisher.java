@@ -61,15 +61,16 @@ public class ExpressionPublisher {
 
     public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions) {
         StringBuilder string = new StringBuilder();
-        string.append("<HTML lang=\"en\">\n<meta charset=\"utf-8\"/>\n");
+        string.append("<!DOCTYPE html>\n");
+        string.append("<HTML lang=\"en\">\n<head>\n<meta charset=\"utf-8\"/>\n");
+        string.append("<title>Squid Expressions</title>\n");
         string.append("<style>\n"
                 + "body {background-color: lightgray;}\n"
                 + "h1   {color: blue;}\n"
-                + "h2   {color: blue;}\n"
                 + "p    {color: blue;}\n"
-                + "</style>\n");        
+                + "</style>\n");
+        string.append("</head>\n<body>\n");
         string.append("<h1>Expressions</h1>\n");
-        string.append("<body>\n");
 
         File imageFolder = new File("expressionsImages");
         imageFolder.mkdir();
@@ -87,16 +88,16 @@ public class ExpressionPublisher {
             }
             string.append("<h2>" + exp.getName() + "</h2>\n");
             if (imageCreated) {
-                string.append("<img src=\"" + imageFile.getPath() + "\" " + "width=\"" + image.getWidth() / 2.5 + "\" "
-                        + "height=\"" + image.getHeight() / 2.5 + "\"" + "/>\n");
+                string.append("<img src=\"" + imageFile.getPath().replaceAll("\\\\", "/") + "\" alt=\"Image not available\" width=\"" + ((int) (image.getWidth() / 2.5 + .5)) + "\" "
+                        + "height=\"" + ((int) (image.getHeight() / 2.5 + .5)) + "\"" + "/>\n");
             }
             string.append("<p>" + exp.getName() + " is " + (exp.isReferenceMaterialValue() ? "" : "not ") + "a reference material value\n");
-            string.append("</br>" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
-            string.append("</br>" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
-            string.append("</br>" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
+            string.append("&#10;" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
+            string.append("&#10;" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
+            string.append("&#10;" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
             string.append("<p>Excel Expression String: " + exp.getExcelExpressionString() + "</p>\n");
-            string.append("<p>Notes:</br>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "</br>") + "</p>\n");
-            //string.append("<p>Expression Tree Audit:</br>" + exp.produceExpressionTreeAudit().replaceAll("\n", "</br>") + "</p>\n");
+            string.append("<p>Notes:&#10;" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "&#10;") + "</p>\n");
+            //string.append("<p>Expression Tree Audit:&#10;" + exp.produceExpressionTreeAudit().replaceAll("\n", "&#10;") + "</p>\n");
         }
         string.append("</body>\n");
         string.append("</HTML>");
@@ -125,25 +126,27 @@ public class ExpressionPublisher {
             imageCreated = false;
         }
         StringBuilder string = new StringBuilder();
-        string.append("<HTML lang=\"en\">\n<meta charset=\"utf-8\"/>\n");
+        string.append("<!DOCTYPE html>\n");
+        string.append("<HTML lang=\"en\">\n<head>\n<meta charset=\"utf-8\"/>\n");
+        string.append("<title>Squid Expressions</title>\n");
         string.append("<style>\n"
                 + "body {background-color: lightgray;}\n"
                 + "h1   {color: blue;}\n"
                 + "p    {color: blue;}\n"
                 + "</style>\n");
-        string.append("<body>\n");
+        string.append("</head>\n<body>\n");
         string.append("<h1>" + exp.getName() + "</h1>\n");
         if (imageCreated) {
-            string.append("<img src=\"" + imageFile.getPath() + "\" " + "width=\"" + image.getWidth() / 2.5 + "\" "
-                    + "height=\"" + image.getHeight() / 2.5 + "\"" + "/>\n");
+            string.append("<img src=\"" + imageFile.getPath() + "\" alt=\"Image not available\" width=\"" + ((int) (image.getWidth() / 2.5 + .5)) + "\" "
+                    + "height=\"" + ((int) (image.getHeight() / 2.5 + .5)) + "\"" + "/>\n");
         }
         string.append("<p>" + exp.getName() + " is " + (exp.isReferenceMaterialValue() ? "" : "not ") + "a reference material value\n");
-        string.append("</br>" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
-        string.append("</br>" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
-        string.append("</br>" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
+        string.append("&#10;" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
+        string.append("&#10;" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
+        string.append("&#10;" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
         string.append("<p>Excel Expression String: " + exp.getExcelExpressionString() + "</p>\n");
-        string.append("<p>Notes:</br>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()) + "</p>\n");
-        //string.append("<p>Expression Tree Audit:</br>" + exp.produceExpressionTreeAudit().replaceAll("\n", "</br>") + "</p>\n");
+        string.append("<p>Notes:&#10;" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()) + "</p>\n");
+        //string.append("<p>Expression Tree Audit:&#10;" + exp.produceExpressionTreeAudit().replaceAll("\n", "&#10;") + "</p>\n");
         string.append("</body>\n");
         string.append("</HTML>\n");
 
