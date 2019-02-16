@@ -67,6 +67,7 @@ public class ExpressionPublisher {
         string.append("<style>\n"
                 + "body {background-color: lightgray;}\n"
                 + "h1   {color: blue;}\n"
+                + "h2   {color: blue}\n"
                 + "p    {color: blue;}\n"
                 + "</style>\n");
         string.append("</head>\n<body>\n");
@@ -92,12 +93,12 @@ public class ExpressionPublisher {
                         + "height=\"" + ((int) (image.getHeight() / 2.5 + .5)) + "\"" + "/>\n");
             }
             string.append("<p>" + exp.getName() + " is " + (exp.isReferenceMaterialValue() ? "" : "not ") + "a reference material value\n");
-            string.append("&#10;" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
-            string.append("&#10;" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
-            string.append("&#10;" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
+            string.append("<br/>" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
+            string.append("<br/>" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
+            string.append("<br/>" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
             string.append("<p>Excel Expression String: " + exp.getExcelExpressionString() + "</p>\n");
-            string.append("<p>Notes:&#10;" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "&#10;") + "</p>\n");
-            //string.append("<p>Expression Tree Audit:&#10;" + exp.produceExpressionTreeAudit().replaceAll("\n", "&#10;") + "</p>\n");
+            string.append("<p>Notes:<br/>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n");
+            //string.append("<p>Expression Tree Audit:<br/>" + exp.produceExpressionTreeAudit().replaceAll("\n", "<br/>") + "</p>\n");
         }
         string.append("</body>\n");
         string.append("</HTML>");
@@ -132,6 +133,7 @@ public class ExpressionPublisher {
         string.append("<style>\n"
                 + "body {background-color: lightgray;}\n"
                 + "h1   {color: blue;}\n"
+                + "h2   {color: blue}\n"
                 + "p    {color: blue;}\n"
                 + "</style>\n");
         string.append("</head>\n<body>\n");
@@ -141,12 +143,12 @@ public class ExpressionPublisher {
                     + "height=\"" + ((int) (image.getHeight() / 2.5 + .5)) + "\"" + "/>\n");
         }
         string.append("<p>" + exp.getName() + " is " + (exp.isReferenceMaterialValue() ? "" : "not ") + "a reference material value\n");
-        string.append("&#10;" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
-        string.append("&#10;" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
-        string.append("&#10;" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
+        string.append("<br/>" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n");
+        string.append("<br/>" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n");
+        string.append("<br/>" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n");
         string.append("<p>Excel Expression String: " + exp.getExcelExpressionString() + "</p>\n");
-        string.append("<p>Notes:&#10;" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()) + "</p>\n");
-        //string.append("<p>Expression Tree Audit:&#10;" + exp.produceExpressionTreeAudit().replaceAll("\n", "&#10;") + "</p>\n");
+        string.append("<p>Notes:<br/>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()) + "</p>\n");
+        //string.append("<p>Expression Tree Audit:<br/>" + exp.produceExpressionTreeAudit().replaceAll("\n", "<br/>") + "</p>\n");
         string.append("</body>\n");
         string.append("</HTML>\n");
 
