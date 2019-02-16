@@ -28,6 +28,7 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.Expression.MSG_POORLY_FORMED_EXPRESSION;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
@@ -60,7 +61,7 @@ public class ExpressionTree
         XMLSerializerInterface {
 
     private static final long serialVersionUID = 69881766695649050L;
-    
+
     public static final String ANONYMOUS_NAME = "Anonymous";
 
     /**
@@ -370,21 +371,25 @@ public class ExpressionTree
         boolean referenceMaterialCalc = squidSwitchSTReferenceMaterialCalculation || squidSwitchConcentrationReferenceMaterialCalculation;
 
         String targetPhrase = (referenceMaterialCalc && !squidSwitchSAUnknownCalculation)
-                ? "ONLY RefMat" : "";
+                ? "REFMAT:  " : "";
         if (targetPhrase.length() == 0) {
             targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
-                    ? "ONLY Unknowns" : "";
+                    ? "UNKNOWN:" : "";
         }
         if (targetPhrase.length() == 0) {
             targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
-                    ? "BOTH RefMat AND Unknowns" : "";
+                    ? "BOTH:       " : "";
         }
         if (targetPhrase.length() == 0) {
-            targetPhrase = "NONE";
+            targetPhrase = "NONE:       ";
         }
 
-        audit.append("   ").append(this.getName()).append(" targets ")
-                .append(targetPhrase);
+        if (isSquidSwitchSCSummaryCalculation()) {
+            targetPhrase = "SUMMARY:";
+        }
+
+        audit.append("    ").append(targetPhrase).append("\t\t")
+                .append(this.getName().length() == 0 ? "<please name this expression>" : this.getName());
 
         return audit.toString();
     }
@@ -399,7 +404,8 @@ public class ExpressionTree
      * @param xstream
      */
     @Override
-    public void customizeXstream(XStream xstream) {
+    public void customizeXstream(XStream xstream
+    ) {
         xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
         xstream.alias("ShrimpSpeciesNode", ShrimpSpeciesNode.class);
 
@@ -435,7 +441,8 @@ public class ExpressionTree
      * @return String
      */
     @Override
-    public String customizeXML(String xml) {
+    public String customizeXML(String xml
+    ) {
         return XMLSerializerInterface.super.customizeXML(xml);
     }
 
@@ -504,7 +511,7 @@ public class ExpressionTree
     public String toStringMathML() {
         String retVal = "";
         if (operation == null) {
-            retVal = "<mtext>No expression present.</mtext>\n";
+            retVal = "<mtext>" + MSG_POORLY_FORMED_EXPRESSION + "</mtext>\n";
         } else {
             try {
                 retVal = operation.toStringMathML(childrenET);

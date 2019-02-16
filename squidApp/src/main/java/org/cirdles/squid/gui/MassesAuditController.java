@@ -659,7 +659,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
                 int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
                 for (int j = 0; j < countOfScans; j++) {
-                    qt1y.add((double) spots.get(i).getQtlY());
+                    qt1y.add((double) spots.get(i).getQt1Y());
                 }
             }
             produceGraphOnScrolledPane(
@@ -687,7 +687,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
                 int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
                 for (int j = 0; j < countOfScans; j++) {
-                    qt1z.add((double) spots.get(i).getQtlZ());
+                    qt1z.add((double) spots.get(i).getQt1Z());
                 }
             }
             produceGraphOnScrolledPane(

@@ -175,14 +175,14 @@ public interface ShrimpFractionExpressionInterface {
     public int getStageZ();
 
     /**
-     * @return the qtlY
+     * @return the qt1Y
      */
-    public int getQtlY();
+    public int getQt1Y();
 
     /**
-     * @return the qtlZ
+     * @return the qt1Z
      */
-    public int getQtlZ();
+    public int getQt1Z();
 
     /**
      * @return the selected

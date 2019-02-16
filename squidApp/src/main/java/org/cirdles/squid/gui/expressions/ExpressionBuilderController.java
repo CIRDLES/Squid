@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui.expressions;
 
 import com.google.common.collect.Lists;
+import com.sun.javafx.binding.SelectBinding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +34,7 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -58,7 +60,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -142,7 +143,9 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUIL
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import static org.cirdles.squid.gui.SquidUI.PEEK_LIST_CSS_STYLE_SPECS;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
@@ -408,9 +411,11 @@ public class ExpressionBuilderController implements Initializable {
     private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
     private final StringProperty expressionString = new SimpleStringProperty();
     private final BooleanProperty selectedExpressionIsEditable = new SimpleBooleanProperty(false);
-    //Boolean to save wether or not the expression has been save since the last modification
+    // Boolean to prevent editing of names of built-in expressions
+    private final BooleanProperty selectedExpressionIsBuiltIn = new SimpleBooleanProperty(false);
+    //Boolean to save whether or not the expression has been saved since the last modification
     private final BooleanProperty expressionIsSaved = new SimpleBooleanProperty(true);
-    //Boolean to save wether the expression is currently edited as a textArea or with drag and drop
+    //Boolean to save whether the expression is currently edited as a textArea or with drag and drop
     private final BooleanProperty editAsText = new SimpleBooleanProperty(false);
 
     private final BooleanProperty hasRatioOfInterest = new SimpleBooleanProperty(false);
@@ -509,16 +514,23 @@ public class ExpressionBuilderController implements Initializable {
         expressionClearBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         expressionPasteBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         saveBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(expressionNameTextField.textProperty().isEmpty()).or(expressionIsSaved));
+
         expressionAsTextBtn.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+
+        refMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
+        unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
+        concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         //specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
+        summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         NUSwitchCheckBox.setDisable(true);//NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
-        expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).and(selectedExpressionIsBuiltIn.not()));
+
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull().or(currentMode.isEqualTo(Mode.CREATE)));
-        cancelBtn.disableProperty().bind(selectedExpression.isNull());
+//        cancelBtn.disableProperty().bind(selectedExpression.isNull());
+        cancelBtn.disableProperty().bind(
+                editExpressionBtn.disabledProperty().not()
+                        // .or(selectedExpressionIsEditable.not()
+                        .or(currentMode.isEqualTo(Mode.VIEW)));
         othersAccordion.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         hintHoverText.visibleProperty().bind(editAsText.not());
         hintSelectText.visibleProperty().bind(editAsText.not().and(currentMode.isNotEqualTo(Mode.VIEW)));
@@ -582,7 +594,7 @@ public class ExpressionBuilderController implements Initializable {
             }
         });
 
-        //Acording are growing only when they are expanded to avoid empty spaces
+        //Accordions are growing only when they are expanded to avoid empty spaces
         othersAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 VBox.setVgrow(othersAccordion, null);
@@ -692,7 +704,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private void customizeBrokenExpressionsTitledPane() {
-        if ((brokenExpressionsListView.getItems() == null) || (brokenExpressionsListView.getItems().isEmpty())){
+        if ((brokenExpressionsListView.getItems() == null) || (brokenExpressionsListView.getItems().isEmpty())) {
             brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: black; -fx-font-family: SansSerif;");
         } else {
             brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;");
@@ -711,6 +723,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -730,6 +743,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsBuiltIn.set(newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -746,6 +760,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsBuiltIn.set(true);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -762,6 +777,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -779,6 +795,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(false);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -795,6 +812,7 @@ public class ExpressionBuilderController implements Initializable {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
                         selectedExpressionIsEditable.set(false);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
                     }
                     selectInAllPanes(newValue, false);
@@ -820,6 +838,7 @@ public class ExpressionBuilderController implements Initializable {
                         expr.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                         expr.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
                         selectedExpressionIsEditable.set(false);
+                        selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(expr);
                     }
                     selectInAllPanes(null, false);
@@ -988,6 +1007,7 @@ public class ExpressionBuilderController implements Initializable {
 
         expressionNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                updateEditor();
                 refreshSaved();
             }
         });
@@ -1129,6 +1149,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionString.set(null);
                 expressionString.set(newValue.getExcelExpressionString());
                 hasRatioOfInterest.set(((ExpressionTree) newValue.getExpressionTree()).hasRatiosOfInterest());
+                selectedExpressionIsBuiltIn.set(newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                 populateSpotsSelection(newValue);
             } else {
                 expressionNameTextField.clear();
@@ -1137,6 +1158,7 @@ public class ExpressionBuilderController implements Initializable {
                 unknownsSwitchCheckBox.setSelected(false);
                 concRefMatSwitchCheckBox.setSelected(false);
                 selectedExpressionIsEditable.set(false);
+                selectedExpressionIsBuiltIn.set(false);
                 expressionString.set("");
                 hasRatioOfInterest.set(false);
             }
@@ -1173,10 +1195,12 @@ public class ExpressionBuilderController implements Initializable {
     private void newCustomExpressionAction(ActionEvent event) {
         if (currentMode.get().equals(Mode.VIEW)) {
             selectedBeforeCreateOrCopy = selectedExpression.get();
-            Expression exp = new Expression("new_custom_expression", "");
+            Expression exp = new Expression("", "");
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
+            selectedExpressionIsEditable.setValue(true);
             refreshSaved();
+            expressionNameTextField.requestFocus();
         }
     }
 
@@ -1190,6 +1214,7 @@ public class ExpressionBuilderController implements Initializable {
             currentMode.set(Mode.CREATE);
             refreshSaved();
             expressionIsCopied = true;
+            expressionNameTextField.requestFocus();
         }
     }
 
@@ -1315,6 +1340,7 @@ public class ExpressionBuilderController implements Initializable {
             AnchorPane.setRightAnchor(expressionAsTextArea, 0.0);
             AnchorPane.setLeftAnchor(expressionAsTextArea, 0.0);
             expressionAsTextBtn.setText("Edit as d&d");
+            expressionAsTextArea.requestFocus();
 
         } else {
             //Case was editing as textArea -> switch to drag and drop
@@ -1373,12 +1399,14 @@ public class ExpressionBuilderController implements Initializable {
     private void concRefMatCheckBoxAction(ActionEvent event) {
         unknownsSwitchCheckBox.setSelected(false);
         refMatSwitchCheckBox.setSelected(false);
+        updateEditor();
         refreshSaved();
     }
 
     @FXML
     private void summaryCalculationCheckBoxAction(ActionEvent event) {
         NUSwitchCheckBox.setSelected(false);
+        updateEditor();
         refreshSaved();
     }
 
@@ -1472,7 +1500,10 @@ public class ExpressionBuilderController implements Initializable {
                 sortedReferenceMaterialValuesList.add(exp);
             } else if (exp.isParameterValue() && exp.amHealthy()) {
                 sortedParameterValuesList.add(exp);
-            } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression() && exp.amHealthy() && !exp.isSquidSwitchNU()) {
+            } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression()
+                    && exp.amHealthy()
+                    && !exp.isSquidSwitchNU()
+                    && !exp.aliasedExpression()) {
                 sortedBuiltInExpressionsList.add(exp);
             } else if (exp.isCustom() && exp.amHealthy()) {
                 sortedCustomExpressionsList.add(exp);
@@ -1481,30 +1512,33 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
 
+        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+
         ObservableList<Expression> items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
-            return exp1.getName().compareToIgnoreCase(exp2.getName());
+            return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
         });
+
         nuSwitchedExpressionsListView.setItems(null);
         nuSwitchedExpressionsListView.setItems(items);
 
         items = FXCollections.observableArrayList(sortedBuiltInExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
-            return exp1.getName().compareToIgnoreCase(exp2.getName());
+            return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
         });
         builtInExpressionsListView.setItems(null);
         builtInExpressionsListView.setItems(items);
 
         items = FXCollections.observableArrayList(sortedCustomExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
-            return exp1.getName().compareToIgnoreCase(exp2.getName());
+            return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
         });
         customExpressionsListView.setItems(null);
         customExpressionsListView.setItems(items);
 
         items = FXCollections.observableArrayList(sortedBrokenExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
-            return exp1.getName().compareToIgnoreCase(exp2.getName());
+            return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
         });
         brokenExpressionsListView.setItems(null);
         brokenExpressionsListView.setItems(items);
@@ -1512,14 +1546,14 @@ public class ExpressionBuilderController implements Initializable {
 
         items = FXCollections.observableArrayList(sortedReferenceMaterialValuesList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
-            return exp1.getName().compareToIgnoreCase(exp2.getName());
+            return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
         });
         referenceMaterialsListView.setItems(null);
         referenceMaterialsListView.setItems(items);
 
         items = FXCollections.observableArrayList(sortedParameterValuesList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
-            return exp1.getName().compareToIgnoreCase(exp2.getName());
+            return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
         });
         parametersListView.setItems(null);
         parametersListView.setItems(items);
@@ -1574,14 +1608,17 @@ public class ExpressionBuilderController implements Initializable {
             StringBuilder args = new StringBuilder();
             args.append(op.getKey()).append("(");
             for (int i = 0; i < argumentCount; i++) {
-                args.append("ARG").append(i).append(i < (argumentCount - 1) ? "," : ")");
+                args.append("Arg").append(i).append(i < (argumentCount - 1) ? "," : ")");
             }
 
             squidFunctionStrings.add(args.toString());
         }
 
         items = FXCollections.observableArrayList(squidFunctionStrings);
-        items = items.sorted();
+        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+        items = items.sorted((String func1, String func2) -> {
+            return intuitiveStringComparator.compare(func1, func2);
+        });
         squidFunctionsListView.setItems(items);
 
         // Logic Functions ======================================================
@@ -1759,7 +1796,7 @@ public class ExpressionBuilderController implements Initializable {
                     }
                 });
                 selectSpotsVBox.getChildren().add(mainCB);
-                mainCB.setFont(Font.font("Monospaced", 11));
+                mainCB.setStyle(PEEK_LIST_CSS_STYLE_SPECS);
                 mainCB.setDisable(!spotSummaryDetail.isManualRejectionEnabled());
                 mainCB.setOpacity(0.99);
 
@@ -1787,7 +1824,7 @@ public class ExpressionBuilderController implements Initializable {
                     }
                     cbs.add(cb);
 
-                    cb.setFont(Font.font("Monospaced", 11));
+                    cb.setStyle(PEEK_LIST_CSS_STYLE_SPECS);
                     if (spotSummaryDetail.getRejectedIndices().length > i) {
                         cb.setSelected(!spotSummaryDetail.getRejectedIndices()[i]);
                     } else {
@@ -1925,6 +1962,8 @@ public class ExpressionBuilderController implements Initializable {
         }
         for (int i = 0; i < labels[0].length; i++) {
             sb.append("\t");
+            // show array index in Squid3
+            sb.append("[").append(i).append("] ");
             sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
             sb.append(": ");
             sb.append(Utilities.roundedToSize(
@@ -1935,6 +1974,7 @@ public class ExpressionBuilderController implements Initializable {
         // handle special cases
         if (labels.length > 1) {
             sb.append("\t");
+            sb.append("    ");
             sb.append(String.format("%1$-" + 16 + "s", labels[1][0]));
             sb.append(": ");
             // print list
@@ -1950,6 +1990,7 @@ public class ExpressionBuilderController implements Initializable {
 
         if (labels.length > 2) {
             sb.append("\t");
+            sb.append("    ");
             sb.append(String.format("%1$-" + 16 + "s", labels[2][0]));
             sb.append(": ");
             // print list
@@ -2509,6 +2550,15 @@ public class ExpressionBuilderController implements Initializable {
                             uncertainty = "1 \u03C3 ± uncertainty\n\n";
                         }
                     }
+                    // let's see if we have an array reference in the form of SUMMARY named_expression00
+                    // this would be hard to catch with regex since ratios fit the pattern too
+                    if (exname.length() > 2) {
+                        String lastTwo = exname.substring(exname.length() - 2);
+                        if (ShuntingYard.isNumber(lastTwo)) {
+                            exname = exname.substring(0, exname.length() - 2);
+                        }
+                    }
+
                     Expression ex = squidProject.getTask().getExpressionByName(exname);
                     if (ex == null && text.matches("^\\.*\\d\\d$")) {
                         exname = text.replaceAll("\\d\\d$", "");
@@ -2556,9 +2606,19 @@ public class ExpressionBuilderController implements Initializable {
                             res = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
                         }
                     }
+                    
+                    //case SpotLookupField
+                    if (res == null) {
+                        ExpressionTreeInterface spotLookupField = squidProject.getTask().getNamedSpotLookupFieldsMap().get(text);
+                        if (spotLookupField != null) {
+                            res = new Tooltip("Available lookup field for spots: " + spotLookupField.getName());
+                        }
+                    }
+                    
                     if (res == null && text.equals(NUMBERSTRING)) {
                         res = new Tooltip("Placeholder for number: " + NUMBERSTRING);
                     }
+                    
                     if (res == null) {
                         res = new Tooltip("Missing expression: " + exname);
                         res.setGraphic(imageView);
@@ -2622,6 +2682,7 @@ public class ExpressionBuilderController implements Initializable {
                 exp = makeExpression();
             }*/
             auditTextArea.setText(exp.produceExpressionTreeAudit());
+            auditPane.setTextFill(exp.amHealthy() ? Paint.valueOf("black") : Paint.valueOf("red"));
             graphExpressionTree(exp.getExpressionTree());
             populatePeeks(exp);
 
