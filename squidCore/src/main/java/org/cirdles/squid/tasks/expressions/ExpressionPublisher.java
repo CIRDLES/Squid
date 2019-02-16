@@ -25,6 +25,7 @@ public class ExpressionPublisher {
     public static String removeMathMLStyling(String input) {
         String output = input.replaceAll("(<.*(mstyle|mspace).*>|&nbsp;)", "");
         output = output.replaceAll("&times;", "*");
+        output = output.replaceAll("&ExponentialE;", "e");
         return output;
     }
 
@@ -64,11 +65,11 @@ public class ExpressionPublisher {
         string.append("<style>\n"
                 + "body {background-color: lightgray;}\n"
                 + "h1   {color: blue;}\n"
-                + "h2 {color: blue;}\n"
+                + "h2   {color: blue;}\n"
                 + "p    {color: blue;}\n"
-                + "</style>\n");
-        string.append("<body>\n");
+                + "</style>\n");        
         string.append("<h1>Expressions</h1>\n");
+        string.append("<body>\n");
 
         File imageFolder = new File("expressionsImages");
         imageFolder.mkdir();
