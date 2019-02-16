@@ -60,8 +60,7 @@ public class Rad8corConcRho extends Function {
             + PB8CORR + R206PB_238U + ","
             + "Total 208/232, Total 208/232 1%Unct, "
             + "Total 207/206, Total 207/206 1%Unct,"
-            + "Total 208/206, Total 208/206 1%Unct,"
-                + "sComm_76, sComm_86"};
+            + "Total 208/206, Total 208/206 1%Unct"};
     }
 
     /**

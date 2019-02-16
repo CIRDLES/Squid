@@ -277,12 +277,12 @@ public interface ExpressionTreeInterface {
     }
 
     public default void auditExpressionTreeTargetMatching(List<String> argumentAudit) {
-        if (!amAnonymous() 
+        if (!amAnonymous()
                 && !(this instanceof ConstantNode)
                 && !(this instanceof VariableNodeForIsotopicRatios)) {
             String audit = ((ExpressionTreeBuilderInterface) this).auditTargetCompatibility();
-            if (!argumentAudit.contains(audit)){
-                argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditTargetCompatibility());
+            if (!argumentAudit.contains(audit)) {
+                argumentAudit.add(audit);
             }
         }
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
@@ -290,15 +290,18 @@ public interface ExpressionTreeInterface {
         }
     }
 
-    public default int auditTargetMatching(int targetBits) {
-        int matchedTargets = targetBits;
-        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
-            if (!child.amAnonymous() && !(child instanceof ConstantNode)) {
-                matchedTargets = matchedTargets & child.makeTargetBits();
-            }
+    public default int auditTargetMatchingII(int targetBits) {
+        int audit = targetBits;
+        if (!amAnonymous()
+                && !(this instanceof ConstantNode)
+                && !(this instanceof VariableNodeForIsotopicRatios)) {
+             audit = audit & this.makeTargetBits();            
         }
-
-        return matchedTargets;
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+            audit = audit & child.auditTargetMatchingII(audit);
+        }
+        
+        return audit;
     }
 
     /**
@@ -307,8 +310,10 @@ public interface ExpressionTreeInterface {
      */
     public default int makeTargetBits() {
         int targetBits
-                = ((isSquidSwitchSTReferenceMaterialCalculation()||isSquidSwitchConcentrationReferenceMaterialCalculation()) ? 1 : 0)
+                = ((isSquidSwitchSTReferenceMaterialCalculation() || isSquidSwitchConcentrationReferenceMaterialCalculation()) ? 1 : 0)
                 + (isSquidSwitchSAUnknownCalculation() ? 2 : 0);
+        targetBits
+                = (isSquidSwitchSCSummaryCalculation() ? 3 : targetBits);
         return targetBits;
     }
 

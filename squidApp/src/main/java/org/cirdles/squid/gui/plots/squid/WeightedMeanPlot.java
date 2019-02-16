@@ -125,8 +125,11 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
             spotContextMenu.hide();
             if (spotSummaryDetails.isManualRejectionEnabled() && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
-                spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
-                        mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
+                try {
+                    spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
+                            mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
+                } catch (Exception e) {
+                }
             }
 
             repaint();

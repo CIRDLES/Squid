@@ -283,6 +283,7 @@ public class ExpressionParser {
                                     retExpTree = new VariableNodeForSummary(baseExpressionName, index);
                                     retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
                                     retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
+                                    retExpTree.setSquidSwitchSCSummaryCalculation(retExpTreeKnown.isSquidSwitchSCSummaryCalculation());
                                 }
                             }
                         }
@@ -306,6 +307,7 @@ public class ExpressionParser {
                             uncertaintyDirective);
                     retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
                     retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
+                    retExpTree.setSquidSwitchSCSummaryCalculation(retExpTreeKnown.isSquidSwitchSCSummaryCalculation());
 
                 } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
                         || (retExpTreeKnown instanceof SpotFieldNode)) {
@@ -316,10 +318,12 @@ public class ExpressionParser {
                     retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index, uncertaintyDirective);
                     retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
                     retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
+                    retExpTree.setSquidSwitchSCSummaryCalculation(retExpTreeKnown.isSquidSwitchSCSummaryCalculation());
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective, index);
                     retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
                     retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
+                    retExpTree.setSquidSwitchSCSummaryCalculation(retExpTreeKnown.isSquidSwitchSCSummaryCalculation());
                 }
                 break;
 
