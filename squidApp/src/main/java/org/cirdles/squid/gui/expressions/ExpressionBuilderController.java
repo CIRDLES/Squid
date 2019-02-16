@@ -1512,7 +1512,7 @@ public class ExpressionBuilderController implements Initializable {
             }
         }
 
-        IntuitiveStringComparator intuitiveStringComparator = new IntuitiveStringComparator();
+        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
 
         ObservableList<Expression> items = FXCollections.observableArrayList(sortedNUSwitchedExpressionsList);
         items = items.sorted((Expression exp1, Expression exp2) -> {
@@ -1615,7 +1615,7 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         items = FXCollections.observableArrayList(squidFunctionStrings);
-        IntuitiveStringComparator intuitiveStringComparator = new IntuitiveStringComparator();
+        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
         items = items.sorted((String func1, String func2) -> {
             return intuitiveStringComparator.compare(func1, func2);
         });
@@ -2606,9 +2606,19 @@ public class ExpressionBuilderController implements Initializable {
                             res = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
                         }
                     }
+                    
+                    //case SpotLookupField
+                    if (res == null) {
+                        ExpressionTreeInterface spotLookupField = squidProject.getTask().getNamedSpotLookupFieldsMap().get(text);
+                        if (spotLookupField != null) {
+                            res = new Tooltip("Available lookup field for spots: " + spotLookupField.getName());
+                        }
+                    }
+                    
                     if (res == null && text.equals(NUMBERSTRING)) {
                         res = new Tooltip("Placeholder for number: " + NUMBERSTRING);
                     }
+                    
                     if (res == null) {
                         res = new Tooltip("Missing expression: " + exname);
                         res.setGraphic(imageView);

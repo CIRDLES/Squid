@@ -575,4 +575,6 @@ public interface TaskInterface {
     public double getExtPErr();
 
     public String listBuiltInExpressions();
+    
+    public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
 }

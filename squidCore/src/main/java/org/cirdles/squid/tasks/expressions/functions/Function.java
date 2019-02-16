@@ -108,7 +108,7 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
         SQUID_FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
         SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
-        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
+//        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
         SQUID_FUNCTIONS_MAP.put("valueModel", "valueModel");
 
@@ -331,9 +331,9 @@ public abstract class Function
         return new ShrimpSpeciesNodeFunction("getTotalCps");
     }
 
-    public static OperationOrFunctionInterface lookup() {
-        return new SpotNodeLookupFunction();
-    }
+//    public static OperationOrFunctionInterface lookup() {
+//        return new SpotNodeLookupFunction();
+//    }
 
     /**
      *

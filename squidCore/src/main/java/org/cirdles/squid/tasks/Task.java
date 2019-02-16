@@ -1788,6 +1788,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ratioNames = revisedRatioNames;
     }
 
+    @Override
     public Expression getExpressionByName(String name) {
         Expression exp = null;
         for (Expression expression : taskExpressionsOrdered) {
