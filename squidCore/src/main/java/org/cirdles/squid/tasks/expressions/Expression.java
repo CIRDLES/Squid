@@ -45,6 +45,8 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsAliased.BUILTIN_EXPRESSION_ALIASEDNAMES;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
 
 /**
  *
@@ -321,9 +323,16 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String getNotes() {
-        if (notes == null) {
-            notes = "";
+        if (this.expressionTree.isSquidSpecialUPbThExpression() 
+                || this.isParameterValue()
+                || this.isReferenceMaterialValue()) {
+            notes = BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(name);
         }
+
+        if (notes == null) {
+            notes = "none yet provided";
+        }
+
         return notes;
     }
 
@@ -426,5 +435,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public boolean isAgeExpression() {
         return name.toUpperCase().contains("AGE");
+    }
+    
+    public boolean aliasedExpression(){
+        return BUILTIN_EXPRESSION_ALIASEDNAMES.contains(this.name);
     }
 }

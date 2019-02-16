@@ -775,27 +775,9 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchReductionManager() {
-        try {
-            reductionManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/ReductionManager.fxml"));
-            reductionManagerUI.setId("ReductionManager");
-
-            AnchorPane.setLeftAnchor(reductionManagerUI, 0.0);
-            AnchorPane.setRightAnchor(reductionManagerUI, 0.0);
-            AnchorPane.setTopAnchor(reductionManagerUI, 0.0);
-            AnchorPane.setBottomAnchor(reductionManagerUI, 0.0);
-
-            mainPane.getChildren().add(reductionManagerUI);
-            reductionManagerUI.setVisible(false);
-
-        } catch (IOException | RuntimeException iOException) {
-            //System.out.println("ReductionManager >>>>   " + iOException.getMessage());
-        }
-    }
-
     private void launchReducedDataReportManager() {
         try {
-            reducedDataReportManagerUI = FXMLLoader.load(getClass().getResource("dataReduction/reducedDataReportManager.fxml"));
+            reducedDataReportManagerUI = FXMLLoader.load(getClass().getResource("dataReductionReports/ReducedDataReportManager.fxml"));
             reducedDataReportManagerUI.setId("reducedDataReportManagerUI");
 
             AnchorPane.setLeftAnchor(reducedDataReportManagerUI, 0.0);
@@ -883,12 +865,6 @@ public class SquidUIController implements Initializable {
     @FXML
     private void selectRatiosMenuItemAction(ActionEvent event) {
         launchRatiosManager();
-    }
-
-    private void reduceDataMenuItemAction(ActionEvent event) {
-        mainPane.getChildren().remove(reductionManagerUI);
-        launchReductionManager();
-        showUI(reductionManagerUI);
     }
 
     @FXML
