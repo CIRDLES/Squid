@@ -1,5 +1,6 @@
 package org.cirdles.squid.tasks.expressions;
 
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
@@ -56,7 +57,7 @@ public class ExpressionPublisher {
     public static Image createImageFromMathML(String input, boolean hasStyling) {
         String converted = getLatexFromMathML(input, hasStyling);
         TeXFormula formula = new TeXFormula(converted);
-        return formula.createBufferedImage(1, 60, Color.BLUE, Color.lightGray);
+        return formula.createBufferedImage(1, 60, Color.BLUE, Color.WHITE);
     }
 
     public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions) {
@@ -65,7 +66,7 @@ public class ExpressionPublisher {
         string.append("<HTML lang=\"en\">\n<head>\n<meta charset=\"utf-8\"/>\n");
         string.append("<title>Squid Expressions</title>\n");
         string.append("<style>\n"
-                + "body {background-color: lightgray;}\n"
+                + "body {background-color: white;}\n"
                 + "h1   {color: blue;}\n"
                 + "h2   {color: blue}\n"
                 + "p    {color: blue;}\n"
@@ -131,7 +132,7 @@ public class ExpressionPublisher {
         string.append("<HTML lang=\"en\">\n<head>\n<meta charset=\"utf-8\"/>\n");
         string.append("<title>Squid Expressions</title>\n");
         string.append("<style>\n"
-                + "body {background-color: lightgray;}\n"
+                + "body {background-color: white;}\n"
                 + "h1   {color: blue;}\n"
                 + "h2   {color: blue}\n"
                 + "p    {color: blue;}\n"
@@ -164,6 +165,50 @@ public class ExpressionPublisher {
         return worked;
     }
 
+    public static boolean createPDFFromExpressions(File file, List<Expression> expressions) {
+        boolean retVal;
+
+        File htmlFile = new File("ExpressionsHTMLToPDFConversionFile.html");
+        retVal = createHTMLDocumentFromExpressions(htmlFile, expressions);
+
+        if (retVal) {
+            try {
+                OutputStream os = new FileOutputStream(file);
+                PdfRendererBuilder builder = new PdfRendererBuilder();
+                builder.withFile(htmlFile);
+                builder.toStream(os);
+                builder.run();
+                retVal = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        htmlFile.delete();
+        return retVal;
+    }
+
+    public static boolean createPDFFromExpression(File file, Expression exp) {
+        boolean retVal;
+
+        File htmlFile = new File("ExpressionHTMLToPDFConversionFile.html");
+        retVal = createHTMLDocumentFromExpression(htmlFile, exp);
+
+        if (retVal) {
+            try {
+                OutputStream os = new FileOutputStream(file);
+                PdfRendererBuilder builder = new PdfRendererBuilder();
+                builder.withFile(htmlFile);
+                builder.toStream(os);
+                builder.run();
+                retVal = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        htmlFile.delete();
+        return retVal;
+    }
+
     public static void main(String[] argv) {
         ResourceExtractor squidProjectExtractor = new ResourceExtractor(SquidProject.class);
         File squidFile = squidProjectExtractor.extractResourceAsFile("Z626611PKPERM1.squid");
@@ -171,6 +216,8 @@ public class ExpressionPublisher {
         Expression exp = project.getTask().getExpressionByName("Hf1sabserr");
         createHTMLDocumentFromExpression(new File("test.html"), exp);
         createHTMLDocumentFromExpressions(new File("testgroup.html"), project.getTask().getTaskExpressionsOrdered());
+        createPDFFromExpression(new File("test.pdf"), exp);
+        createPDFFromExpressions(new File("testgroup.pdf"), project.getTask().getTaskExpressionsOrdered());
     }
 
 }
