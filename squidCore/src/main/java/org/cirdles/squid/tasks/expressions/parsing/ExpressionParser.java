@@ -281,9 +281,7 @@ public class ExpressionParser {
                                 retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
                                 if (retExpTreeKnown != null) {
                                     retExpTree = new VariableNodeForSummary(baseExpressionName, index);
-                                    retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
-                                    retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
-                                    retExpTree.setSquidSwitchSCSummaryCalculation(retExpTreeKnown.isSquidSwitchSCSummaryCalculation());
+                                    retExpTree.copySettings(retExpTreeKnown);
                                 }
                             }
                         }
@@ -305,9 +303,7 @@ public class ExpressionParser {
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET(),
                             uncertaintyDirective);
-                    retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
-                    retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
-                    retExpTree.setSquidSwitchSCSummaryCalculation(retExpTreeKnown.isSquidSwitchSCSummaryCalculation());
+                    retExpTree.copySettings(retExpTreeKnown);
 
                 } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
                         || (retExpTreeKnown instanceof SpotFieldNode)) {
@@ -316,14 +312,10 @@ public class ExpressionParser {
 
                 } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
                     retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index, uncertaintyDirective);
-                    retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
-                    retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
-                    retExpTree.setSquidSwitchSCSummaryCalculation(retExpTreeKnown.isSquidSwitchSCSummaryCalculation());
+                    retExpTree.copySettings(retExpTreeKnown);
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective, index);
-                    retExpTree.setSquidSwitchSTReferenceMaterialCalculation(retExpTreeKnown.isSquidSwitchSTReferenceMaterialCalculation());
-                    retExpTree.setSquidSwitchSAUnknownCalculation(retExpTreeKnown.isSquidSwitchSAUnknownCalculation());
-                    retExpTree.setSquidSwitchSCSummaryCalculation(retExpTreeKnown.isSquidSwitchSCSummaryCalculation());
+                    retExpTree.copySettings(retExpTreeKnown);
                 }
                 break;
 

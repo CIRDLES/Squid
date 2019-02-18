@@ -16,7 +16,6 @@
 package org.cirdles.squid.gui.expressions;
 
 import com.google.common.collect.Lists;
-import com.sun.javafx.binding.SelectBinding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +33,6 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -59,6 +57,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -77,6 +76,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.cell.ComboBoxListCell;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -92,6 +93,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import static javafx.scene.paint.Color.RED;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
@@ -102,6 +104,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 import org.cirdles.ludwig.squid25.Utilities;
@@ -143,6 +146,7 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUIL
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import static org.cirdles.squid.gui.SquidUI.PEEK_LIST_CSS_STYLE_SPECS;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
@@ -340,6 +344,8 @@ public class ExpressionBuilderController implements Initializable {
     private VBox selectSpotsVBox;
     @FXML
     private ScrollPane expressionScrollPane;
+    @FXML
+    private ComboBox<String> unknownGroupsComboBox;
 
     //PEEK TABS
     @FXML
@@ -523,6 +529,39 @@ public class ExpressionBuilderController implements Initializable {
         //specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         NUSwitchCheckBox.setDisable(true);//NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
+
+        unknownGroupsComboBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
+        unknownGroupsComboBox.visibleProperty().bind(unknownsSwitchCheckBox.selectedProperty()
+                .and(selectedExpressionIsBuiltIn.not()));
+        unknownGroupsComboBox.setItems(FXCollections.observableArrayList(
+                (String[]) squidProject.getTask().getMapOfUnknownsBySampleNames().keySet().toArray(new String[0])));
+        unknownGroupsComboBox.setValue(SpotTypes.UNKNOWN.getPlotType());
+        unknownGroupsComboBox.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                ListCell<String> cell = new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(item);
+                        setTextFill(RED);
+                    }
+                };
+                return cell;
+            }
+        });
+        unknownGroupsComboBox.setButtonCell(new TextFieldListCell<String>(new StringConverter<String>() {
+            @Override
+            public String toString(String object) {
+                return object;
+            }
+
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+        }));
+
         expressionNameTextField.editableProperty().bind(currentMode.isNotEqualTo(Mode.VIEW).and(selectedExpressionIsBuiltIn.not()));
 
         showCurrentExpressionBtn.disableProperty().bind(selectedExpression.isNull().or(currentMode.isEqualTo(Mode.CREATE)));
@@ -779,6 +818,7 @@ public class ExpressionBuilderController implements Initializable {
                         selectedExpressionIsEditable.set(true);
                         selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
+
                     }
                     selectInAllPanes(newValue, false);
                 }
@@ -1142,6 +1182,7 @@ public class ExpressionBuilderController implements Initializable {
                 notesTextArea.setText(newValue.getNotes());
                 refMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSTReferenceMaterialCalculation());
                 unknownsSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSAUnknownCalculation());
+                unknownGroupsComboBox.setValue(((ExpressionTree) newValue.getExpressionTree()).getUnknownsGroupSampleName());
                 concRefMatSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchConcentrationReferenceMaterialCalculation());
                 summaryCalculationSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSwitchSCSummaryCalculation());
                 specialUPbThSwitchCheckBox.setSelected(((ExpressionTree) newValue.getExpressionTree()).isSquidSpecialUPbThExpression());
@@ -1156,6 +1197,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionTextFlow.getChildren().clear();
                 refMatSwitchCheckBox.setSelected(false);
                 unknownsSwitchCheckBox.setSelected(false);
+                unknownGroupsComboBox.setValue(SpotTypes.UNKNOWN.getPlotType());
                 concRefMatSwitchCheckBox.setSelected(false);
                 selectedExpressionIsEditable.set(false);
                 selectedExpressionIsBuiltIn.set(false);
@@ -1250,7 +1292,8 @@ public class ExpressionBuilderController implements Initializable {
 
         boolean nameExists = squidProject.getTask().expressionExists(new Expression(expressionNameTextField.getText(), ""));
 
-        if (!nameExists || (currentMode.get().equals(Mode.EDIT) && selectedExpression.get().getName().equals(expressionNameTextField.getText()))) {
+        if (!nameExists || (currentMode.get().equals(Mode.EDIT)
+                && selectedExpression.get().getName().equals(expressionNameTextField.getText()))) {
             save();
         } else {
             //Case name already exists -> ask for replacing
@@ -1391,6 +1434,12 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private void unknownSamplesCheckBoxAction(ActionEvent event) {
         concRefMatSwitchCheckBox.setSelected(false);
+        updateEditor();
+        refreshSaved();
+    }
+
+    @FXML
+    private void unknownGroupsComboBoxAction(ActionEvent event) {
         updateEditor();
         refreshSaved();
     }
@@ -1719,7 +1768,8 @@ public class ExpressionBuilderController implements Initializable {
             res = "No expression.";
         } else {
             TaskInterface task = squidProject.getTask();
-            List<ShrimpFractionExpressionInterface> unSpots = task.getUnknownSpots();
+            List<ShrimpFractionExpressionInterface> unSpots
+                    = task.getMapOfUnknownsBySampleNames().get(exp.getExpressionTree().getUnknownsGroupSampleName());
             if (exp.getExpressionTree() instanceof ConstantNode) {
                 res = "Not used";
                 if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
@@ -2606,7 +2656,7 @@ public class ExpressionBuilderController implements Initializable {
                             res = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
                         }
                     }
-                    
+
                     //case SpotLookupField
                     if (res == null) {
                         ExpressionTreeInterface spotLookupField = squidProject.getTask().getNamedSpotLookupFieldsMap().get(text);
@@ -2614,11 +2664,11 @@ public class ExpressionBuilderController implements Initializable {
                             res = new Tooltip("Available lookup field for spots: " + spotLookupField.getName());
                         }
                     }
-                    
+
                     if (res == null && text.equals(NUMBERSTRING)) {
                         res = new Tooltip("Placeholder for number: " + NUMBERSTRING);
                     }
-                    
+
                     if (res == null) {
                         res = new Tooltip("Missing expression: " + exname);
                         res.setGraphic(imageView);
@@ -2717,6 +2767,7 @@ public class ExpressionBuilderController implements Initializable {
         expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(concRefMatSwitchCheckBox.isSelected());
         expTree.setSquidSwitchSCSummaryCalculation(summaryCalculationSwitchCheckBox.isSelected());
         expTree.setSquidSpecialUPbThExpression(specialUPbThSwitchCheckBox.isSelected());
+        expTree.setUnknownsGroupSampleName(unknownGroupsComboBox.getValue());
 
         // to detect ratios of interest
         if (expTree instanceof BuiltInExpressionInterface) {
@@ -2751,10 +2802,12 @@ public class ExpressionBuilderController implements Initializable {
         dest.setSquidSwitchSCSummaryCalculation(source.isSquidSwitchSCSummaryCalculation());
         dest.setSquidSwitchSTReferenceMaterialCalculation(source.isSquidSwitchSTReferenceMaterialCalculation());
         dest.setSquidSpecialUPbThExpression(source.isSquidSpecialUPbThExpression());
+        dest.setUnknownsGroupSampleName(source.getUnknownsGroupSampleName());
+
     }
 
     private void save() {
-        //Saves the newly builded expression
+        //Saves the newly built expression
 
         Expression exp = makeExpression();
         TaskInterface task = squidProject.getTask();
@@ -2808,6 +2861,10 @@ public class ExpressionBuilderController implements Initializable {
                 saved = false;
             }
             if (!selectedExpression.get().getNotes().equals(notesTextArea.getText())) {
+                saved = false;
+            }
+            if (selectedExpression.get().getExpressionTree().getUnknownsGroupSampleName()
+                    .compareToIgnoreCase(unknownGroupsComboBox.getValue()) != 0) {
                 saved = false;
             }
         } else if (currentMode.get().equals(Mode.CREATE)) {

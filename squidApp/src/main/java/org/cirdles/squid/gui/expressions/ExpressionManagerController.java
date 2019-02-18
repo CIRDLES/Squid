@@ -421,6 +421,7 @@ public class ExpressionManagerController implements Initializable {
 
         if (originalExpressionTree != null) {
             graphedExpressionTree.setSquidSwitchSAUnknownCalculation(originalExpressionTree.isSquidSwitchSAUnknownCalculation());
+            graphedExpressionTree.setUnknownsGroupSampleName(originalExpressionTree.getUnknownsGroupSampleName());
             graphedExpressionTree.setSquidSwitchSTReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchSTReferenceMaterialCalculation());
             graphedExpressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(originalExpressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation());
             graphedExpressionTree.setSquidSwitchSCSummaryCalculation(originalExpressionTree.isSquidSwitchSCSummaryCalculation());

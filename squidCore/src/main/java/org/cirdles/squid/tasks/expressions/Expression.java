@@ -47,6 +47,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsAliased.BUILTIN_EXPRESSION_ALIASEDNAMES;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
 
 /**
  *
@@ -194,6 +195,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
         xstream.alias("ExpressionTree", ExpressionTreeInterface.class);
+        xstream.alias("ExpressionTree", ExpressionTreeParsedFromExcelString.class);
 
         xstream.registerConverter(new ExpressionXMLConverter());
         xstream.alias("Expression", Expression.class);

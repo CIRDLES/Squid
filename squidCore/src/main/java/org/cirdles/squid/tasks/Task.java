@@ -33,8 +33,10 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
@@ -375,6 +377,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         Comparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
         mapOfUnknownsBySampleNames = new TreeMap<>(intuitiveStringComparator);
         // walk chosen sample names (excluding reference materials) and get list of spots belonging to each
+        // first put full set
+        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getPlotType(), unknownSpots);
         for (String sampleName : filtersForUnknownNames.keySet()) {
             List<ShrimpFractionExpressionInterface> filteredList
                     = unknownSpots.stream()
@@ -511,7 +515,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     .append("\"")
                     .append("\t with ")
                     .append(mapOfUnknownsBySampleNames.get(sampleName).size())
-                    .append(" spot" + (mapOfUnknownsBySampleNames.get(sampleName).size() > 1 ? "s" : ""));
+                    .append(" spot").append(mapOfUnknownsBySampleNames.get(sampleName).size() > 1 ? "s" : "");
         }
 
         int count = 0;
@@ -923,6 +927,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         if (original != null) {
             listedExp.getExpressionTree().setSquidSwitchSAUnknownCalculation(original.isSquidSwitchSAUnknownCalculation());
+            listedExp.getExpressionTree().setUnknownsGroupSampleName(original.getUnknownsGroupSampleName());
             listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(original.isSquidSwitchSTReferenceMaterialCalculation());
             listedExp.getExpressionTree().setSquidSwitchConcentrationReferenceMaterialCalculation(original.isSquidSwitchConcentrationReferenceMaterialCalculation());
 
@@ -1532,7 +1537,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 if (((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                     spotsForExpression = concentrationReferenceMaterialSpots;
                 } else if (!((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation()) {
-                    spotsForExpression = unknownSpots;
+                    // lookup set of unknowns
+                    String unknownGroupSampleName = ((ExpressionTree) expressionTree).getUnknownsGroupSampleName();
+                    spotsForExpression = mapOfUnknownsBySampleNames.get(unknownGroupSampleName);
+
                 } else if (!((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation()) {
                     spotsForExpression = referenceMaterialSpots;
                 }

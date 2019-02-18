@@ -46,6 +46,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -128,20 +129,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     }
     public static PlotTypes plotTypeSelected = PlotTypes.CONCORDIA;
 
-    public static enum SpotTypes {
-        REFERENCE_MATERIAL("REFERENCE MATERIALS"),
-        UNKNOWN("UNKNOWNS");
-
-        private String plotType;
-
-        private SpotTypes(String plotType) {
-            this.plotType = plotType;
-        }
-
-        public String getPlotType() {
-            return plotType;
-        }
-    }
     public static SpotTypes fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
 
     @Override
@@ -174,7 +161,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
             // case of no sample names chosen
             if (mapOfSpotsBySampleNames.isEmpty()) {
-                mapOfSpotsBySampleNames.put("Super Sample", allUnknownOrRefMatShrimpFractions);
+                mapOfSpotsBySampleNames.put(SpotTypes.UNKNOWN.getPlotType(), allUnknownOrRefMatShrimpFractions);
+            } else {
+                mapOfSpotsBySampleNames.remove(SpotTypes.UNKNOWN.getPlotType());
             }
         } else {
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getReferenceMaterialSpots();
@@ -215,8 +204,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 Iterator<TreeItem<SampleTreeNodeInterface>> mySamplesIterator = mySamples.iterator();
                 while (mySamplesIterator.hasNext()) {
 
-                    CheckBoxTreeItem<SampleTreeNodeInterface> mySampleItem = 
-                            (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
+                    CheckBoxTreeItem<SampleTreeNodeInterface> mySampleItem
+                            = (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
                     mySampleItem.setSelected(newValue);
                 }
                 plot = rootPlot;
@@ -384,7 +373,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 correction + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + calibrConstAgeBaseName.replace("/", "") + "_Age_RM",  // TODO: FIX THIS HACK
+                correction + calibrConstAgeBaseName.replace("/", "") + "_Age_RM", // TODO: FIX THIS HACK
                 squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(REFRAD_AGE_U_PB).getValues()[0][0],
                 this);//559.1 * 1e6);
 
