@@ -119,8 +119,8 @@ public final class Squid3Constants {
         }
 
         /**
-         * 
-         * @return 
+         *
+         * @return
          */
         public String getName() {
             return name;
@@ -256,8 +256,23 @@ public final class Squid3Constants {
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
     public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "ᵁ";//\u1D41";
     public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
-    
+
     // http://science.sciencemag.org/content/335/6076/1610
     public final static double PRESENT_238U235U_DEFAULT = 137.818;
+
+    public static enum SpotTypes {
+        REFERENCE_MATERIAL("REFERENCE MATERIALS"),
+        UNKNOWN("UNKNOWNS");
+
+        private String plotType;
+
+        private SpotTypes(String plotType) {
+            this.plotType = plotType;
+        }
+
+        public String getPlotType() {
+            return plotType;
+        }
+    }
 
 }

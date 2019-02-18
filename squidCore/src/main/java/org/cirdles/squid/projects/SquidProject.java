@@ -30,6 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -340,7 +341,7 @@ public final class SquidProject implements Serializable {
             throws IOException {
         File reportTableFile = null;
 
-        List<ShrimpFractionExpressionInterface> spotsBySampleNames = makeListOfUnknownsBySample();
+        List<ShrimpFractionExpressionInterface> spotsBySampleNames = makeListOfUnknownsBySampleName();
         if (spotsBySampleNames.size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("UnknownsBySample", false, task);
             String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, numberStyleIsNumeric);
@@ -358,18 +359,20 @@ public final class SquidProject implements Serializable {
         return reportTableFile;
     }
 
-    public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySample() {
+    public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySampleName() {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
         List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();
 
         if (mapOfUnknownsBySampleNames.isEmpty()) {
-            mapOfUnknownsBySampleNames.put("Super Sample", task.getUnknownSpots());
+            mapOfUnknownsBySampleNames.put(SpotTypes.UNKNOWN.getPlotType(), task.getUnknownSpots());
         }
 
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfUnknownsBySampleNames.entrySet()) {
-            ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
-            listOfUnknownsBySample.add(dummyForSample);
-            listOfUnknownsBySample.addAll(entry.getValue());
+            if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getPlotType()) != 0) {
+                ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
+                listOfUnknownsBySample.add(dummyForSample);
+                listOfUnknownsBySample.addAll(entry.getValue());
+            }
         }
 
         return listOfUnknownsBySample;
