@@ -104,7 +104,8 @@ public class ExpressionXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("expressionTree");
-        context.convertAnother(expression.getExpressionTree());
+        ExpressionTreeInterface et = expression.getExpressionTree();
+        context.convertAnother(et);
         writer.endNode();
 
         writer.startNode("notes");
