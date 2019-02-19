@@ -20,7 +20,6 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
-import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -103,6 +102,12 @@ public interface ExpressionTreeInterface {
     public boolean isSquidSwitchSTReferenceMaterialCalculation();
 
     /**
+     *
+     * @param origin
+     */
+    public void copySettings(ExpressionTreeInterface origin);
+
+    /**
      * @param squidSwitchSTReferenceMaterialCalculation the
      * squidSwitchSTReferenceMaterialCalculation to set
      */
@@ -112,6 +117,16 @@ public interface ExpressionTreeInterface {
      * @return the squidSwitchSAUnknownCalculation
      */
     public boolean isSquidSwitchSAUnknownCalculation();
+
+    /**
+     * @return the unknownsGroupSampleName
+     */
+    public String getUnknownsGroupSampleName();
+
+    /**
+     * @param unknownsGroupSampleName the unknownsGroupSampleName to set
+     */
+    public void setUnknownsGroupSampleName(String unknownsGroupSampleName);
 
     /**
      * @param squidSwitchSAUnknownCalculation the
@@ -295,12 +310,12 @@ public interface ExpressionTreeInterface {
         if (!amAnonymous()
                 && !(this instanceof ConstantNode)
                 && !(this instanceof VariableNodeForIsotopicRatios)) {
-             audit = audit & this.makeTargetBits();            
+            audit = audit & this.makeTargetBits();
         }
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
             audit = audit & child.auditTargetMatchingII(audit);
         }
-        
+
         return audit;
     }
 

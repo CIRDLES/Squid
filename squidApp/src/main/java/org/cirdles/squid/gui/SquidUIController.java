@@ -38,12 +38,9 @@ import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.gui.utilities.BrowserControl;
-
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -66,6 +63,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
@@ -1136,21 +1134,21 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void referenceMaterialConcordiaAction(ActionEvent event) {
-        PlotsController.fractionTypeSelected = PlotsController.SpotTypes.REFERENCE_MATERIAL;
-        PlotsController.plotTypeSelected = PlotsController.PlotTypes.CONCORDIA;
+        PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
+        PlotsController.plotTypeSelected = PlotTypes.CONCORDIA;
         launchPlots();
     }
 
     @FXML
     private void referenceMaterialWMAction(ActionEvent event) {
-        PlotsController.fractionTypeSelected = PlotsController.SpotTypes.REFERENCE_MATERIAL;
-        PlotsController.plotTypeSelected = PlotsController.PlotTypes.WEIGHTED_MEAN;
+        PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
+        PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN;
         launchPlots();
     }
 
     @FXML
     private void unknownConcordiaAction(ActionEvent event) {
-        PlotsController.fractionTypeSelected = PlotsController.SpotTypes.UNKNOWN;
+        PlotsController.fractionTypeSelected = SpotTypes.UNKNOWN;
         PlotsController.plotTypeSelected = PlotsController.PlotTypes.CONCORDIA;
         launchPlots();
     }

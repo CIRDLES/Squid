@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -105,6 +107,8 @@ public class ExpressionTree
      */
     protected boolean squidSwitchSAUnknownCalculation;
 
+    protected String unknownsGroupSampleName;
+
     /**
      *
      */
@@ -174,6 +178,7 @@ public class ExpressionTree
         this.squidSwitchSCSummaryCalculation = false;
         this.squidSwitchSTReferenceMaterialCalculation = false;
         this.squidSwitchSAUnknownCalculation = false;
+        this.unknownsGroupSampleName = Squid3Constants.SpotTypes.UNKNOWN.getPlotType();
         this.squidSpecialUPbThExpression = false;
         this.squidSwitchConcentrationReferenceMaterialCalculation = false;
         this.rootExpressionTree = false;
@@ -188,6 +193,7 @@ public class ExpressionTree
         target.setSquidSwitchSCSummaryCalculation(squidSwitchSCSummaryCalculation);
         target.setSquidSwitchSTReferenceMaterialCalculation(squidSwitchSTReferenceMaterialCalculation);
         target.setSquidSwitchSAUnknownCalculation(squidSwitchSAUnknownCalculation);
+        target.setUnknownsGroupSampleName(unknownsGroupSampleName);
         target.setSquidSpecialUPbThExpression(squidSpecialUPbThExpression);
         target.setSquidSwitchConcentrationReferenceMaterialCalculation(squidSwitchConcentrationReferenceMaterialCalculation);
         target.setRootExpressionTree(rootExpressionTree);
@@ -374,7 +380,7 @@ public class ExpressionTree
                 ? "REFMAT:  " : "";
         if (targetPhrase.length() == 0) {
             targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
-                    ? "UNKNOWN:" : "";
+                    ? (unknownsGroupSampleName.compareTo(SpotTypes.UNKNOWN.getPlotType()) == 0 ? "UNKNOWN:" : "UNK:" + unknownsGroupSampleName) : "";
         }
         if (targetPhrase.length() == 0) {
             targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
@@ -429,6 +435,7 @@ public class ExpressionTree
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
         xstream.alias("ExpressionTree", ExpressionTreeInterface.class);
+        xstream.alias("ExpressionTree", ExpressionTreeParsedFromExcelString.class);
 
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);
@@ -715,6 +722,14 @@ public class ExpressionTree
         return name;
     }
 
+    @Override
+    public void copySettings(ExpressionTreeInterface origin) {
+        setSquidSwitchSTReferenceMaterialCalculation(origin.isSquidSwitchSTReferenceMaterialCalculation());
+        setSquidSwitchSAUnknownCalculation(origin.isSquidSwitchSAUnknownCalculation());
+        setSquidSwitchSCSummaryCalculation(origin.isSquidSwitchSCSummaryCalculation());
+        setUnknownsGroupSampleName(origin.getUnknownsGroupSampleName());
+    }
+
     /**
      * @return the squidSwitchSCSummaryCalculation
      */
@@ -764,6 +779,22 @@ public class ExpressionTree
     @Override
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
         this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @return the unknownsGroupSampleName
+     */
+    @Override
+    public String getUnknownsGroupSampleName() {
+        return unknownsGroupSampleName;
+    }
+
+    /**
+     * @param unknownsGroupSampleName the unknownsGroupSampleName to set
+     */
+    @Override
+    public void setUnknownsGroupSampleName(String unknownsGroupSampleName) {
+        this.unknownsGroupSampleName = unknownsGroupSampleName;
     }
 
     /**

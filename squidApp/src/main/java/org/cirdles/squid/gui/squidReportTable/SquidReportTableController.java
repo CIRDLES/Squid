@@ -63,7 +63,7 @@ public class SquidReportTableController implements Initializable {
             textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
         } else {
             ReportSettingsInterface reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
-            List<ShrimpFractionExpressionInterface> spotsBySampleNames = squidProject.makeListOfUnknownsBySample();
+            List<ShrimpFractionExpressionInterface> spotsBySampleNames = squidProject.makeListOfUnknownsBySampleName();
             textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
         }
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray, typeOfController);
