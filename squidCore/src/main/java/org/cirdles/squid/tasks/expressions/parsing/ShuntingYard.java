@@ -332,7 +332,7 @@ public class ShuntingYard {
                 retVal = COMMA;
             } else if (FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
-            } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]\\[\\d\\]")) {
+            } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]( )*\\[\\d\\]( )*")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
             } else if (token.matches("\\w+\\[\\d\\]") && !token.matches("\\d+\\[\\d\\]") && !token.toUpperCase().matches("TRUE\\[\\d\\]") && !token.toUpperCase().matches("FALSE\\[\\d\\]")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
