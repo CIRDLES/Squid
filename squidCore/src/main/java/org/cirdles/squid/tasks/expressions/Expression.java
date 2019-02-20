@@ -66,6 +66,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     private boolean parameterValue;
     private ExpressionTreeInterface expressionTree;
     private String notes;
+    private String sourceModelNameAndVersion;
 
     private transient String parsingStatusReport;
     private transient List<String> argumentAudit;
@@ -88,16 +89,6 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             boolean squidSwitchNU,
             boolean referenceMaterialValue,
             boolean parameterValue) {
-        this(expressionTree, excelExpressionString, squidSwitchNU, referenceMaterialValue, parameterValue, "");
-    }
-
-    public Expression(
-            ExpressionTreeInterface expressionTree,
-            String excelExpressionString,
-            boolean squidSwitchNU,
-            boolean referenceMaterialValue,
-            boolean parameterValue,
-            String notes) {
 
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
@@ -108,7 +99,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
         this.targetAudit = new ArrayList<>();
-        this.notes = notes;
+        
+        this.notes = "";
+        this.sourceModelNameAndVersion = "";
     }
 
     @Override
@@ -325,10 +318,11 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String getNotes() {
-        if (this.expressionTree.isSquidSpecialUPbThExpression() 
+        if (this.expressionTree.isSquidSpecialUPbThExpression()
                 || this.isParameterValue()
                 || this.isReferenceMaterialValue()) {
-            notes = BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(name);
+            
+            notes = "from Model: " + sourceModelNameAndVersion + "\n\n" + BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(name);
         }
 
         if (notes == null) {
@@ -340,6 +334,20 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public void setNotes(String comments) {
         this.notes = comments;
+    }
+
+    /**
+     * @return the sourceModelNameAndVersion
+     */
+    public String getSourceModelNameAndVersion() {
+        return sourceModelNameAndVersion;
+    }
+
+    /**
+     * @param sourceModelNameAndVersion the sourceModelNameAndVersion to set
+     */
+    public void setSourceModelNameAndVersion(String sourceModelNameAndVersion) {
+        this.sourceModelNameAndVersion = sourceModelNameAndVersion;
     }
 
     /**
@@ -438,8 +446,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public boolean isAgeExpression() {
         return name.toUpperCase().contains("AGE");
     }
-    
-    public boolean aliasedExpression(){
+
+    public boolean aliasedExpression() {
         return BUILTIN_EXPRESSION_ALIASEDNAMES.contains(this.name);
     }
 }

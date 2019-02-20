@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import static org.cirdles.squid.constants.Squid3Constants.PRESENT_238U235U_DEFAULT;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_230;
@@ -129,12 +128,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB_232TH;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L09678;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R204206;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207206;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208206;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_238U235U_RM_MODEL_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_238U235U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PBTH_EXT_1_SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
@@ -148,11 +144,18 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_206PB204PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_207PB204PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_208PB204PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS232TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS238U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_206PB204PB_FACTOR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_208PB204PB_FACTOR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_204;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_204;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_204;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L9678;
 
 /**
  *
@@ -173,6 +176,15 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface squidFalse = new ConstantNode("FALSE", false);
         constants.put(squidFalse.getName(), squidFalse);
 
+        ExpressionTreeInterface NukeMass206Pb = new ConstantNode(NUKEMASS206PB, 206);
+        constants.put(NUKEMASS206PB, NukeMass206Pb);
+
+        ExpressionTreeInterface NukeMass232Th = new ConstantNode(NUKEMASS232TH, 232);
+        constants.put(NUKEMASS232TH, NukeMass232Th);
+
+        ExpressionTreeInterface NukeMass238U = new ConstantNode(NUKEMASS238U, 238);
+        constants.put(NUKEMASS238U, NukeMass238U);
+
         return constants;
     }
 
@@ -184,12 +196,12 @@ public abstract class BuiltInExpressionsFactory {
      */
     public static Map<String, ExpressionTreeInterface> generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-        ExpressionTreeInterface L859exp = new ConstantNode(L859, 0.859);
-        parameters.put(L859, L859exp);
-
-        ExpressionTreeInterface L1033exp = new ConstantNode(L1033, 1.033);
-        parameters.put(L1033, L1033exp);
+//
+//        ExpressionTreeInterface L859exp = new ConstantNode(L859, 0.859);
+//        parameters.put(L859, L859exp);
+//
+//        ExpressionTreeInterface L1033exp = new ConstantNode(L1033, 1.033);
+//        parameters.put(L1033, L1033exp);
 
         ExpressionTreeInterface extPErr = new ConstantNode(ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, 0.75);
         parameters.put(ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, extPErr);
@@ -219,35 +231,35 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> updatePhysicalConstantsParameterValuesFromModel(ParametersModel physicalConstantsModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
-        String notes = "from Physical Constants model: " + physicalConstantsModel.getModelNameWithVersion();
+        String sourceModelNameAndVersion = physicalConstantsModel.getModelNameWithVersion();
         Expression expressionslambda230 = buildExpression(LAMBDA230,
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_230.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda230.setParameterValue(true);
-        expressionslambda230.setNotes(notes);
+        expressionslambda230.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionslambda230);
 
         Expression expressionslambda232 = buildExpression(LAMBDA232,
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_232.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda232.setParameterValue(true);
-        expressionslambda232.setNotes(notes);
+        expressionslambda232.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionslambda232);
 
         Expression expressionslambda234 = buildExpression(LAMBDA234,
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_234.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda234.setParameterValue(true);
-        expressionslambda234.setNotes(notes);
+        expressionslambda234.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionslambda234);
 
         Expression expressionslambda235 = buildExpression(LAMBDA235,
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_235.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda235.setParameterValue(true);
-        expressionslambda235.setNotes(notes);
+        expressionslambda235.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionslambda235);
 
         Expression expressionslambda238 = buildExpression(LAMBDA238,
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_238.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda238.setParameterValue(true);
-        expressionslambda238.setNotes(notes);
+        expressionslambda238.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionslambda238);
 
         return parameterValues;
@@ -256,41 +268,42 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> updateCommonLeadParameterValuesFromModel(ParametersModel commonPbModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
-        String notes = "from Common Pb model: " + commonPbModel.getModelNameWithVersion();
+        String sourceModelNameAndVersion = commonPbModel.getModelNameWithVersion();
+
         Expression expressionsComm_64 = buildExpression(DEFCOM_64,
                 String.valueOf(commonPbModel.getDatumByName(R206_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_64.setParameterValue(true);
-        expressionsComm_64.setNotes(notes);
+        expressionsComm_64.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsComm_64);
 
         Expression expressionsComm_74 = buildExpression(DEFCOM_74,
                 String.valueOf(commonPbModel.getDatumByName(R207_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_74.setParameterValue(true);
-        expressionsComm_74.setNotes(notes);
+        expressionsComm_74.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsComm_74);
 
         Expression expressionsComm_84 = buildExpression(DEFCOM_84,
                 String.valueOf(commonPbModel.getDatumByName(R208_204B).getValue().doubleValue()), true, true, true);
         expressionsComm_84.setParameterValue(true);
-        expressionsComm_84.setNotes(notes);
+        expressionsComm_84.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsComm_84);
 
         Expression expressionsComm_76 = buildExpression(DEFCOM_76,
                 String.valueOf(commonPbModel.getDatumByName(R207_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_76.setParameterValue(true);
-        expressionsComm_76.setNotes(notes);
+        expressionsComm_76.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsComm_76);
 
         Expression expressionsComm_86 = buildExpression(DEFCOM_86,
                 String.valueOf(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_86.setParameterValue(true);
-        expressionsComm_86.setNotes(notes);
+        expressionsComm_86.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsComm_86);
 
         Expression expressionsComm_68 = buildExpression(DEFCOM_68,
                 "1.0/" + String.valueOf(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue()), true, true, true);
         expressionsComm_68.setParameterValue(true);
-        expressionsComm_68.setNotes(notes);
+        expressionsComm_68.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsComm_68);
 
         return parameterValues;
@@ -299,20 +312,20 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> updateConcReferenceMaterialValuesFromModel(ReferenceMaterialModel concReferenceMaterialModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
-        String notes = "from Conc. Reference Material model: " + concReferenceMaterialModel.getModelNameWithVersion();
+        String sourceModelNameAndVersion = concReferenceMaterialModel.getModelNameWithVersion();
 
         Expression expressionStdUConcPpm = buildExpression(REF_U_CONC_PPM,
                 String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
                         .getConcentrationByName("concU").getValue().doubleValue()), true, true, true);
         expressionStdUConcPpm.setReferenceMaterialValue(true);
-        expressionStdUConcPpm.setNotes(notes);
+        expressionStdUConcPpm.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionStdUConcPpm);
 
         Expression expressionStdThConcPpm = buildExpression(REF_TH_CONC_PPM,
                 String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
                         .getConcentrationByName("concTh").getValue().doubleValue()), true, true, true);
         expressionStdThConcPpm.setReferenceMaterialValue(true);
-        expressionStdThConcPpm.setNotes(notes);
+        expressionStdThConcPpm.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionStdThConcPpm);
 
         return parameterValues;
@@ -321,69 +334,87 @@ public abstract class BuiltInExpressionsFactory {
     public static SortedSet<Expression> updateReferenceMaterialValuesFromModel(ReferenceMaterialModel referenceMaterialModel) {
         SortedSet<Expression> referenceMaterialValues = new TreeSet<>();
 
-        String notes = "from Reference Material model: " + referenceMaterialModel.getModelNameWithVersion();
+        String sourceModelNameAndVersion = referenceMaterialModel.getModelNameWithVersion();
 
         Expression expressionStdAgeUPb = buildExpression(REFRAD_AGE_U_PB,
                 String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
                         .getDateByName(age206_238r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgeUPb.setReferenceMaterialValue(true);
-        expressionStdAgeUPb.setNotes(notes);
+        expressionStdAgeUPb.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdAgeUPb);
 
         Expression expressionStdAgeThPb = buildExpression(REFRAD_AGE_TH_PB,
                 String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
                         .getDateByName(age208_232r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgeThPb.setReferenceMaterialValue(true);
-        expressionStdAgeThPb.setNotes(notes);
+        expressionStdAgeThPb.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdAgeThPb);
 
         Expression expressionStdAgePbPb = buildExpression(REFRAD_AGE_PB_PB,
                 String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
                         .getDateByName(age207_206r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgePbPb.setReferenceMaterialValue(true);
-        expressionStdAgePbPb.setNotes(notes);
+        expressionStdAgePbPb.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdAgePbPb);
 
         double lookup238U235U = ((ReferenceMaterialModel) referenceMaterialModel)
-                .getDatumByName(PRESENT_238U235U_RM_MODEL_NAME).getValue().doubleValue();
+                .getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue();
         if (lookup238U235U == 0.0) {
             /*
             Noah McLean 6 Feb 2019: There should be a place to enter a r238 235s for each ref material. 
             Default for ref materials where there is no r238 235s should be 137.818, which is 
             the global average of zircon measurements.
              */
-            lookup238U235U = PRESENT_238U235U_DEFAULT;
+            lookup238U235U = REF_238U235U_DEFAULT;
         }
-        Expression expressionPresent238U235U = buildExpression(PRESENT_238U235U,
+        Expression expressionPresent238U235U = buildExpression(REF_238U235U,
                 String.valueOf(lookup238U235U), true, true, true);
         expressionPresent238U235U.setReferenceMaterialValue(true);
-        expressionPresent238U235U.setNotes(notes);
+        expressionPresent238U235U.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionPresent238U235U);
 
-        notes = "Calculated from Reference Material model: " + referenceMaterialModel.getModelNameWithVersion();
+        sourceModelNameAndVersion = referenceMaterialModel.getModelNameWithVersion();
+
+        Expression expressionL859 = buildExpression(L859, "0.859" /*"(" + REF_238U235U + "-1)/" + REF_238U235U + "*" + NUKEMASS206PB + "/" + NUKEMASS238U*/,
+                 true, true, true);
+        expressionL859.setReferenceMaterialValue(true);
+        expressionL859.setSourceModelNameAndVersion(sourceModelNameAndVersion);
+        referenceMaterialValues.add(expressionL859);
+
+        Expression expressionL1033 = buildExpression(L1033, "1.033" /*"(" + NUKEMASS238U + "/" + NUKEMASS232TH + ")*" +  REF_238U235U +"/(" + REF_238U235U + "-1)"*/,
+                 true, true, true);
+        expressionL1033.setReferenceMaterialValue(true);
+        expressionL1033.setSourceModelNameAndVersion(sourceModelNameAndVersion);
+        referenceMaterialValues.add(expressionL1033);
+
+        Expression expressionL9678 = buildExpression(L9678, "0.9678" /*REF_238U235U + "/(" + REF_238U235U + "+1)*" + NUKEMASS232TH + "/" + NUKEMASS238U*/,
+                 true, true, true);
+        expressionL9678.setReferenceMaterialValue(true);
+        expressionL9678.setSourceModelNameAndVersion(sourceModelNameAndVersion);
+        referenceMaterialValues.add(expressionL9678);
 
         Expression expressionStdUPbRatio = buildExpression(REFRAD_U_PB_RATIO,
                 "EXP(" + LAMBDA238 + "*" + REFRAD_AGE_U_PB + ")-1", true, true, true);
         expressionStdUPbRatio.setReferenceMaterialValue(true);
-        expressionStdUPbRatio.setNotes(notes);
+        expressionStdUPbRatio.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdUPbRatio);
 
         Expression expressionStdThPbRatio = buildExpression(REFRAD_TH_PB_RATIO,
                 "EXP(" + LAMBDA232 + "*" + REFRAD_AGE_TH_PB + ")-1", true, true, true);
         expressionStdThPbRatio.setReferenceMaterialValue(true);
-        expressionStdThPbRatio.setNotes(notes);
+        expressionStdThPbRatio.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdThPbRatio);
 
         Expression expressionStd_76 = buildExpression(REFRAD_7_6,
                 "Pb76(" + REFRAD_AGE_PB_PB + ")", true, true, true);
         expressionStd_76.setReferenceMaterialValue(true);
-        expressionStd_76.setNotes(notes);
+        expressionStd_76.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStd_76);
 
         Expression expressionStdRad86fact = buildExpression(REFRAD_8_6_FACT,
                 REFRAD_TH_PB_RATIO + "/" + REFRAD_U_PB_RATIO + "", true, true, true);
         expressionStdRad86fact.setReferenceMaterialValue(true);
-        expressionStdRad86fact.setNotes(notes);
+        expressionStdRad86fact.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdRad86fact);
 
         return referenceMaterialValues;
@@ -525,7 +556,7 @@ public abstract class BuiltInExpressionsFactory {
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAME);
 
             Expression expression4corrPpmTh = buildExpression(PB4CORR + TH_CONCEN_PPM_RM,
-                    "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM_RM + "\"]*" + L09678, true, false, false);
+                    "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
             concentrationExpressionsOrdered.add(expression4corrPpmTh);
 
             // for 207Pb ref material
@@ -541,12 +572,12 @@ public abstract class BuiltInExpressionsFactory {
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAME);
 
             Expression expression7corrPpmTh = buildExpression(PB7CORR + TH_CONCEN_PPM_RM,
-                    "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM_RM + "\"]*" + L09678, true, false, false);
+                    "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
             concentrationExpressionsOrdered.add(expression7corrPpmTh);
 
             // for samples
             Expression expressionPpmTh = buildExpression(TH_CONCEN_PPM,
-                    "[\"" + TH_U_EXP + "\"]*[\"" + U_CONCEN_PPM + "\"]*" + L09678, false, true, false);
+                    "[\"" + TH_U_EXP + "\"]*[\"" + U_CONCEN_PPM + "\"]*" + L9678, false, true, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
 
             Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression(PB4CORR + TH_U_EXP,
@@ -1205,7 +1236,7 @@ public abstract class BuiltInExpressionsFactory {
 
             Expression expression4corr207Pb235U = buildExpression("" + PB4CORR + R207PB_235U_RM,
                     "ValueModel("
-                    + "[\"" + PB4CORR + R207PB_206PB_RM + "\"]*[\"" + PB4CORR + R206PB_238U_RM + "\"]*" + PRESENT_238U235U + ","
+                    + "[\"" + PB4CORR + R207PB_206PB_RM + "\"]*[\"" + PB4CORR + R206PB_238U_RM + "\"]*" + REF_238U235U + ","
                     + "sqrt([%\"" + PB4CORR + R206PB_238U_RM + "\"]^2+[%\"" + PB4CORR + R207PB_206PB_RM + "\"]^2),"
                     + "false)", true, false, false);
             stdRadiogenicCols.add(expression4corr207Pb235U);
@@ -1246,7 +1277,7 @@ public abstract class BuiltInExpressionsFactory {
 
             Expression expression4corr207Pb235U = buildExpression(PB4CORR + R207PB_235U_RM,
                     "ValueModel("
-                    + "[\"" + PB4CORR + R207PB_206PB_RM + "\"]*[\"" + PB4CORR + R206PB_238U_RM + "\"]*" + PRESENT_238U235U + ","
+                    + "[\"" + PB4CORR + R207PB_206PB_RM + "\"]*[\"" + PB4CORR + R206PB_238U_RM + "\"]*" + REF_238U235U + ","
                     + "sqrt([%\"" + PB4CORR + R206PB_238U_RM + "\"]^2+[%\"" + PB4CORR + R207PB_206PB_RM + "\"]^2),"
                     + "false)", true, false, false);
             stdRadiogenicCols.add(expression4corr207Pb235U);
@@ -1276,7 +1307,7 @@ public abstract class BuiltInExpressionsFactory {
                         + "[\"" + TOTAL_206_238_RM + "\"],"
                         + "[%\"" + TOTAL_206_238_RM + "\"],"
                         + "[\"" + PB8CORR + R206PB_238U_RM + "\"],"
-                        + "[\"" + TOTAL_206_238_RM + "\"]*[" + R207206 + "]/" + PRESENT_238U235U + ","
+                        + "[\"" + TOTAL_206_238_RM + "\"]*[" + R207206 + "]/" + REF_238U235U + ","
                         + "[\"" + TH_U_EXP_RM + "\"],"
                         + "[%\"" + TH_U_EXP_RM + "\"],"
                         + "[" + R207206 + "],"
@@ -1300,7 +1331,7 @@ public abstract class BuiltInExpressionsFactory {
 
                 Expression expression8corr207206 = buildExpression(PB8CORR + R207PB_206PB_RM,
                         "ValueModel("
-                        + "[\"" + PB8CORR + R207PB_235U_RM + "\"]/[\"" + PB8CORR + R206PB_238U_RM + "\"]/" + PRESENT_238U235U + ","
+                        + "[\"" + PB8CORR + R207PB_235U_RM + "\"]/[\"" + PB8CORR + R206PB_238U_RM + "\"]/" + REF_238U235U + ","
                         + "SQRT([%\"" + PB8CORR + R207PB_235U_RM + "\"]^2+[%\"" + PB8CORR + R206PB_238U_RM + "\"]^2-"
                         + "2*[%\"" + PB8CORR + R207PB_235U_RM + "\"]*[%\"" + PB8CORR + R206PB_238U_RM + "\"]*[\"" + PB8CORR + ERR_CORREL_RM + "\"]),"
                         + "false)", true, false, false);
@@ -1559,7 +1590,7 @@ public abstract class BuiltInExpressionsFactory {
         // QUESTIONS HERE ABOUT LOGIC
         Expression expression4corr207235 = buildExpression(PB4CORR + R207PB_235U,
                 "ValueModel("
-                + "([\"" + PB4CORR + R207PB_206PB + "\"]*[\"" + PB4CORR + R206PB_238U + "\"]*" + PRESENT_238U235U + "),"
+                + "([\"" + PB4CORR + R207PB_206PB + "\"]*[\"" + PB4CORR + R206PB_238U + "\"]*" + REF_238U235U + "),"
                 + "SQRT([%\"" + PB4CORR + R207PB_206PB + "\"]^2+"
                 + "[%\"" + PB4CORR + R206PB_238U + "\"]^2),"
                 + "false)", false, true, false);
@@ -1663,7 +1694,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "[\"" + TOTAL_206_238 + "\"],"
                 + "[%\"" + TOTAL_206_238 + "\"],"
                 + "[\"" + PB8CORR + R206PB_238U + "\"],"
-                + "[\"" + TOTAL_206_238 + "\"]*[" + R207206 + "]/" + PRESENT_238U235U + ","
+                + "[\"" + TOTAL_206_238 + "\"]*[" + R207206 + "]/" + REF_238U235U + ","
                 + "[\"" + TH_U_EXP + "\"],"
                 + "[%\"" + TH_U_EXP + "\"],"
                 + "[" + R207206 + "],"
@@ -1687,7 +1718,7 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression8corr207206 = buildExpression(PB8CORR + R207PB_206PB,
                 "ValueModel("
-                + "[\"" + PB8CORR + R207PB_235U + "\"]/[\"" + PB8CORR + R206PB_238U + "\"]/" + PRESENT_238U235U + ","
+                + "[\"" + PB8CORR + R207PB_235U + "\"]/[\"" + PB8CORR + R206PB_238U + "\"]/" + REF_238U235U + ","
                 + "SQRT([%\"" + PB8CORR + R207PB_235U + "\"]^2+[%\"" + PB8CORR + R206PB_238U + "\"]^2-"
                 + "2*[%\"" + PB8CORR + R207PB_235U + "\"]*[%\"" + PB8CORR + R206PB_238U + "\"]*[\"" + PB8CORR + ERR_CORREL + "\"]),"
                 + "false)", false, true, false);

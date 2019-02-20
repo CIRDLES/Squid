@@ -23,8 +23,13 @@ public class BuiltInExpressionsDataDictionary {
 
     // **********************  SPECIAL CONSTANTS ******************************
     // holding spot until models are implemented
-    public static final String PRESENT_238U235U_RM_MODEL_NAME = "r238_235s";
-    public static final String PRESENT_238U235U = "Present_238U235U";
+    public static final String REF_238U235U_RM_MODEL_NAME = "r238_235s";
+    public static final String REF_238U235U = "Ref_238U235U";
+    
+    public static final String NUKEMASS206PB = "NukeMass206Pb";
+    public static final String NUKEMASS232TH = "NukeMass232Th";
+    public static final String NUKEMASS238U = "NukeMass238U";
+    
 
     // **********************  COMMON LEAD *************************************
     public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
@@ -54,7 +59,7 @@ public class BuiltInExpressionsDataDictionary {
     // **********************  MISC ********************************************
     public static final String L859 = "L859";
     public static final String L1033 = "L1033";
-    public static final String L09678 = "0.9678";
+    public static final String L9678 = "L9678";
 
     // **********************  RATIOS USED IN BUILTINS *************************
     public static final String R204206 = "\"204/206\"";
@@ -158,8 +163,8 @@ public class BuiltInExpressionsDataDictionary {
     public static final String ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
 
     // ********************** OVER COUNTS **************************************
-    public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_From207Pb";
-    public static final String OVER_COUNT_4_6_8 = "204Pb206Pb_From208Pb";
+    public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_OvCtCorFrom207Pb";
+    public static final String OVER_COUNT_4_6_8 = "204Pb206Pb_OvCtCorFrom208Pb";
     public static final String OVER_COUNTS_PERSEC_4_8 = "204OvCts_From208Pb";
     public static final String OVER_COUNTS_PERSEC_4_7 = "204OvCts_From207Pb";
 

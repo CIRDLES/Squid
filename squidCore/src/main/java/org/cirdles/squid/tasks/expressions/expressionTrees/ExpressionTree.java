@@ -338,7 +338,7 @@ public class ExpressionTree
                 if (this.amHealthy()) {
                     audit.append(this.getName()).append(" is healthy ").append(this.getClass().getSimpleName());
                 } else if (this.getParentET() == null) {// only if ConstantNode is top of tree vs within an already autided expressiontree
-                    audit.append("    ").append(this.getName()); // = Missing Expression becasue if unhealthy, it was forced to be a constantNode
+                    audit.append("    ").append(this.getName()); // = Missing Expression because if unhealthy, it was forced to be a constantNode
                 }
             }
         } else {
