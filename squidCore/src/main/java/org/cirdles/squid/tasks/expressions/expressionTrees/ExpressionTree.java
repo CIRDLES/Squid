@@ -377,21 +377,25 @@ public class ExpressionTree
         boolean referenceMaterialCalc = squidSwitchSTReferenceMaterialCalculation || squidSwitchConcentrationReferenceMaterialCalculation;
 
         String targetPhrase = (referenceMaterialCalc && !squidSwitchSAUnknownCalculation)
-                ? "REFMAT:  " : "";
+                ? "REFMAT:      " : "";
         if (targetPhrase.length() == 0) {
             targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
-                    ? (unknownsGroupSampleName.compareTo(SpotTypes.UNKNOWN.getPlotType()) == 0 ? "UNKNOWN:" : "UNK:" + unknownsGroupSampleName) : "";
+                    ? (unknownsGroupSampleName
+                            .compareTo(SpotTypes.UNKNOWN.getPlotType()) == 0 ? "UNKNOWN:    " : ("UNK(" + unknownsGroupSampleName) + "):") : "";
         }
         if (targetPhrase.length() == 0) {
             targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
-                    ? "BOTH:       " : "";
+                    ? "BOTH:           " : "";
         }
         if (targetPhrase.length() == 0) {
             targetPhrase = "NONE:       ";
         }
 
         if (isSquidSwitchSCSummaryCalculation()) {
-            targetPhrase = "SUMMARY:";
+            targetPhrase = "SUMMARY(" 
+                    + (referenceMaterialCalc? "R" : "")
+                    + (squidSwitchSAUnknownCalculation? "U" : "")
+                    + "):";
         }
 
         audit.append("    ").append(targetPhrase).append("\t\t")
@@ -725,6 +729,7 @@ public class ExpressionTree
     @Override
     public void copySettings(ExpressionTreeInterface origin) {
         setSquidSwitchSTReferenceMaterialCalculation(origin.isSquidSwitchSTReferenceMaterialCalculation());
+        setSquidSwitchConcentrationReferenceMaterialCalculation(origin.isSquidSwitchConcentrationReferenceMaterialCalculation());
         setSquidSwitchSAUnknownCalculation(origin.isSquidSwitchSAUnknownCalculation());
         setSquidSwitchSCSummaryCalculation(origin.isSquidSwitchSCSummaryCalculation());
         setUnknownsGroupSampleName(origin.getUnknownsGroupSampleName());

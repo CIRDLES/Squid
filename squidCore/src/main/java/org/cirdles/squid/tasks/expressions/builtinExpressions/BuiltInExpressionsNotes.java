@@ -114,6 +114,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L1033;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L859;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L9678;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS232TH;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS238U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_206PB204PB_FACTOR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_208PB204PB_FACTOR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
@@ -143,6 +146,13 @@ public class BuiltInExpressionsNotes {
                 + "The coefficient is used in conjunction with the 206Pb/238U age equation.");
         BUILTIN_EXPRESSION_NOTES.put(L9678,
                 "Concentration coefficient linking present-day 232Th content to present-day total U content.");
+
+        BUILTIN_EXPRESSION_NOTES.put(NUKEMASS206PB,
+                "Atomic mass in amu.");
+        BUILTIN_EXPRESSION_NOTES.put(NUKEMASS232TH,
+                "Atomic mass in amu.");
+        BUILTIN_EXPRESSION_NOTES.put(NUKEMASS238U,
+                "Atomic mass in amu.");
 
         BUILTIN_EXPRESSION_NOTES.put(REF_238U235U,
                 "Reference 238U/235U of Isotopic RM.");
