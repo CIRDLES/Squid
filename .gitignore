@@ -49,6 +49,11 @@ LudwigLibraryJavadoc/
 Schema/
 /Schema/
 
+squidCore/expressionsImages
+squidCore/testgroup.pdf
+squidCore/test.pdf
+squidCore/Hf1sabserr.png
+
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
 !squidApp/src/main/resources/org/cirdles/squid/gui/content/*.txt
