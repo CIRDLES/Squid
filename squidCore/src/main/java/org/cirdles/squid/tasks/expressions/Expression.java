@@ -99,7 +99,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
         this.targetAudit = new ArrayList<>();
-        
+
         this.notes = "";
         this.sourceModelNameAndVersion = "";
     }
@@ -318,10 +318,11 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String getNotes() {
-        if (this.expressionTree.isSquidSpecialUPbThExpression()
-                || this.isParameterValue()
+        if (this.expressionTree.isSquidSpecialUPbThExpression()) {
+            notes = BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(name);
+        }
+        if (this.isParameterValue()
                 || this.isReferenceMaterialValue()) {
-            
             notes = "from Model: " + sourceModelNameAndVersion + "\n\n" + BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(name);
         }
 

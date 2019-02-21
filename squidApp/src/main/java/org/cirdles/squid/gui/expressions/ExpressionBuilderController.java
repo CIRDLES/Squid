@@ -150,6 +150,8 @@ import static org.cirdles.squid.gui.SquidUI.PEEK_LIST_CSS_STYLE_SPECS;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
+import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardContextMenu;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 
 /**
  * FXML Controller class
@@ -157,6 +159,9 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
  * @author James F. Bowring
  */
 public class ExpressionBuilderController implements Initializable {
+
+    // handle for closing stage when Squid closes
+    public static final Stage EXPRESSION_NOTES_STAGE = new Stage();
 
     //BUTTONS
     @FXML
@@ -391,7 +396,6 @@ public class ExpressionBuilderController implements Initializable {
     private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
     private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
 
-    private final Stage notesStage = new Stage();
     private final TextArea notesTextArea = new TextArea();
 
     {
@@ -402,8 +406,8 @@ public class ExpressionBuilderController implements Initializable {
         AnchorPane.setRightAnchor(notesTextArea, 0.0);
         AnchorPane.setLeftAnchor(notesTextArea, 0.0);
         notesTextArea.setWrapText(true);
-        notesStage.setScene(new Scene(pane, 600, 150));
-        notesStage.setAlwaysOnTop(true);
+        EXPRESSION_NOTES_STAGE.setScene(new Scene(pane, 600, 150));
+        EXPRESSION_NOTES_STAGE.setAlwaysOnTop(true);
     }
 
     private final ObjectProperty<String> dragOperationOrFunctionSource = new SimpleObjectProperty<>();
@@ -505,9 +509,9 @@ public class ExpressionBuilderController implements Initializable {
 
     private void initPeekAreas() {
         rmPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
-        createPeekContextMenu(rmPeekTextArea);
+        createCopyToClipboardContextMenu(rmPeekTextArea);
         unPeekTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
-        createPeekContextMenu(unPeekTextArea);
+        createCopyToClipboardContextMenu(unPeekTextArea);
     }
 
     private void initPropertyBindings() {
@@ -588,13 +592,13 @@ public class ExpressionBuilderController implements Initializable {
         notesTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
             refreshSaved();
         });
-        notesStage.titleProperty().bind(new SimpleStringProperty("Notes on ").concat(expressionNameTextField.textProperty()));
-        notesStage.setOnCloseRequest((event) -> {
+        EXPRESSION_NOTES_STAGE.titleProperty().bind(new SimpleStringProperty("Notes on ").concat(expressionNameTextField.textProperty()));
+        EXPRESSION_NOTES_STAGE.setOnCloseRequest((event) -> {
             showNotesBtn.setText("Show notes");
         });
         mainPane.visibleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == false) {
-                notesStage.hide();
+                EXPRESSION_NOTES_STAGE.hide();
             }
         });
 
@@ -1413,13 +1417,13 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void showNotesAction() {
-        if (!notesStage.isShowing()) {
+        if (!EXPRESSION_NOTES_STAGE.isShowing()) {
             showNotesBtn.setText("Hide notes");
-            notesStage.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
-            notesStage.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
-            notesStage.show();
+            EXPRESSION_NOTES_STAGE.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 600) / 2);
+            EXPRESSION_NOTES_STAGE.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+            EXPRESSION_NOTES_STAGE.show();
         } else {
-            notesStage.hide();
+            EXPRESSION_NOTES_STAGE.hide();
             showNotesBtn.setText("Show notes");
         }
     }
@@ -2219,30 +2223,6 @@ public class ExpressionBuilderController implements Initializable {
         return valueModel[1] / valueModel[0] * 100;
     }
 
-    private void createPeekContextMenu(TextArea textArea) {
-        final Clipboard clipboard = Clipboard.getSystemClipboard();
-        final ClipboardContent content = new ClipboardContent();
-
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem copyAll = new MenuItem("Copy all");
-        copyAll.setOnAction((evt) -> {
-//            System.out.println(textArea.getText());
-            content.putString(textArea.getText());
-            clipboard.setContent(content);
-        });
-        MenuItem copyAsCsv = new MenuItem("Copy all as CSV");
-        copyAsCsv.setOnAction((evt) -> {
-            String csv = textArea.getText().replaceAll("\\s*\\R", ",\n");
-            csv = csv.replaceAll("\\s*,", ",");
-//            System.out.println(csv.replaceAll(" +", ", "));
-            content.putString(csv);
-            clipboard.setContent(content);
-        });
-        contextMenu.getItems().addAll(copyAll, copyAsCsv);
-
-        textArea.setContextMenu(contextMenu);
-    }
-
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {
         List<MenuItem> itemsForThisNode = new ArrayList<>();
 
@@ -2295,6 +2275,7 @@ public class ExpressionBuilderController implements Initializable {
             wrap.getItems().add(menuItem);
         }
 
+        // provide special modification for uncertainty
         if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode)
                 && etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\]( )*(\\[\\d\\]( )*)?$")) {
             String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\]( )*(\\[\\d\\]( )*)?)", "");
@@ -2326,6 +2307,53 @@ public class ExpressionBuilderController implements Initializable {
                     updateExpressionTextFlowChildren();
                 });
                 itemsForThisNode.add(new Menu("Set uncertainty...", null, menuItem1, menuItem2, menuItem3));
+            }
+        }
+
+        // provide special modification for array access for summary expressions
+        if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode)
+                && etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\]( )*(\\[\\d\\]( )*)?$")) {
+            String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\]( )*(\\[\\d\\]( )*)?)", "");
+            Expression ex = squidProject.getTask().getExpressionByName(text);
+            if (((ex != null) && (ex.getExpressionTree().isSquidSwitchSCSummaryCalculation()))) {
+                String[] outputLabels
+                        = ((ExpressionTreeBuilderInterface) ex.getExpressionTree()).getOperation().getLabelsForOutputValues()[0];
+                MenuItem[] menuItems = new MenuItem[outputLabels.length + 1];
+                for (int i = 0; i < outputLabels.length; i++) {
+                    final int ii = i;
+                    MenuItem menuItemI = new MenuItem("[" + ii + "] = " + outputLabels[ii]);
+                    menuItemI.setOnAction((evt) -> {
+                        ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText()
+                                .replaceAll("(\"\\]( )*(\\[\\d\\])?)", "\"\\]\\[" + ii + "\\]"));
+                        etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                        expressionTextFlow.getChildren().remove(etn);
+                        expressionTextFlow.getChildren().add(etn2);
+                        updateExpressionTextFlowChildren();
+                    });
+                    menuItems[i] = menuItemI;
+                }
+//                MenuItem menuItem1 = new MenuItem("[1]");
+//                menuItem1.setOnAction((evt) -> {
+//                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText()
+//                            .replaceAll("(\"\\]( )*(\\[\\d\\])?)", "\"\\]\\[1\\]"));
+//                    etn2.setOrdinalIndex(etn.getOrdinalIndex());
+//                    expressionTextFlow.getChildren().remove(etn);
+//                    expressionTextFlow.getChildren().add(etn2);
+//                    updateExpressionTextFlowChildren();
+//                });
+
+                MenuItem menuItemN = new MenuItem("None - same as '[0]'");
+                menuItemN.setOnAction((evt) -> {
+                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText()
+                            .replaceAll("(\"\\]( )*(\\[\\d\\])?)", "\"\\]"));
+                    etn2.setOrdinalIndex(etn.getOrdinalIndex());
+                    expressionTextFlow.getChildren().remove(etn);
+                    expressionTextFlow.getChildren().add(etn2);
+                    updateExpressionTextFlowChildren();
+                });
+
+                menuItems[outputLabels.length] = menuItemN;
+                itemsForThisNode.add(new Menu("Select summary value by index ...", null, menuItems));
             }
         }
 
