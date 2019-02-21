@@ -1,6 +1,7 @@
 package org.cirdles.squid.tasks.expressions;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder.PageSizeUnits;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
@@ -25,6 +26,7 @@ import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 public class ExpressionPublisher {
 
     private static final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    private static final double IMAGE_DPI = 200.0;
     private static final double SIZE_MULTIPLIER = .4;
 
     public static String removeMathMLStyling(String input) {
@@ -59,9 +61,10 @@ public class ExpressionPublisher {
     }
 
     public static Image createImageFromMathML(String input, boolean hasStyling) {
+        TeXFormula.setDPITarget((float) IMAGE_DPI);
         String converted = getLatexFromMathML(input, hasStyling);
         TeXFormula formula = new TeXFormula(converted);
-        return formula.createBufferedImage(1, 60, Color.BLUE, Color.WHITE);
+        return formula.createBufferedImage(1, 20, Color.BLUE, Color.WHITE);
     }
 
     private static String getStartHTML() {
@@ -117,9 +120,9 @@ public class ExpressionPublisher {
             }
             string.append("<h2>" + exp.getName() + "</h2>\n");
             if (imageCreated) {
-                string.append("<img src=\"" + imageFile.getPath().replaceAll("\\\\", "/") + "\" alt=\"Image not available\" width=\""
-                        + ((int) (image.getWidth() * SIZE_MULTIPLIER + .5)) + "\" "
-                        + "height=\"" + ((int) (image.getHeight() * SIZE_MULTIPLIER + .5)) + "\"" + "/>\n");
+                string.append("<img src=\"" + imageFile.getPath().replaceAll("\\\\", "/") + "\" alt=\"Image not available\" "
+                        + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
+                        + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
             }
             string.append(getExpressionInfoHTML(exp));
         }
@@ -156,8 +159,9 @@ public class ExpressionPublisher {
 
         string.append("<h1>" + exp.getName() + "</h1>\n");
         if (imageCreated) {
-            string.append("<img src=\"" + imageFile.getPath() + "\" alt=\"Image not available\" width=\"" + ((int) (image.getWidth() * SIZE_MULTIPLIER + .5)) + "\" "
-                    + "height=\"" + ((int) (image.getHeight() * SIZE_MULTIPLIER + .5)) + "\"" + "/>\n");
+            string.append("<img src=\"" + imageFile.getPath() + "\" alt=\"Image not available\" "
+                    + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
+                    + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
         }
         string.append(getExpressionInfoHTML(exp));
 
@@ -186,16 +190,15 @@ public class ExpressionPublisher {
             try {
                 OutputStream os = new FileOutputStream(file);
                 PdfRendererBuilder builder = new PdfRendererBuilder();
-                double max = Collections.max(Arrays.asList(widths)) * SIZE_MULTIPLIER;
+                double max = Collections.max(Arrays.asList(widths)) / IMAGE_DPI + .5;
                 double width = (max > PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH) ? max : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH;
-               // builder.useDefaultPageSize((float) width, PdfRendererBuilder.PAGE_SIZE_LETTER_HEIGHT, PdfRendererBuilder.PageSizeUnits.INCHES);
+                builder.useDefaultPageSize((float) width, PdfRendererBuilder.PAGE_SIZE_LETTER_HEIGHT, PdfRendererBuilder.PageSizeUnits.INCHES);
                 builder.withFile(htmlFile);
                 builder.toStream(os);
                 builder.run();
                 retVal = true;
             } catch (Exception e) {
                 e.printStackTrace();
-                retVal = false;
             }
         }
         htmlFile.delete();
@@ -214,8 +217,9 @@ public class ExpressionPublisher {
             try {
                 OutputStream os = new FileOutputStream(file);
                 PdfRendererBuilder builder = new PdfRendererBuilder();
-                builder.useDefaultPageSize((width.v > PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH)
-                        ? width.v : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH,
+                double actualWidth = width.v / IMAGE_DPI + .5;
+                builder.useDefaultPageSize((actualWidth > PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH)
+                        ? (float) actualWidth : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH,
                         PdfRendererBuilder.PAGE_SIZE_LETTER_HEIGHT, PdfRendererBuilder.PageSizeUnits.INCHES);
                 builder.withFile(htmlFile);
                 builder.toStream(os);
@@ -223,7 +227,6 @@ public class ExpressionPublisher {
                 retVal = true;
             } catch (Exception e) {
                 e.printStackTrace();
-                retVal = false;
             }
         }
         htmlFile.delete();
