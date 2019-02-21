@@ -63,6 +63,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
@@ -583,9 +585,7 @@ public class SquidUIController implements Initializable {
                     }
                 }
             });
-
             SquidProject.setProjectChanged(false);
-
         }
     }
 
@@ -593,6 +593,10 @@ public class SquidUIController implements Initializable {
     private void quitAction(ActionEvent event) {
         SquidPersistentState.getExistingPersistentState().updateUserPreferences();
         confirmSaveOnProjectClose();
+        try {
+            ExpressionBuilderController.EXPRESSION_NOTES_STAGE.close();
+        } catch (Exception e) {
+        }
         Platform.exit();
     }
 
@@ -1372,5 +1376,27 @@ public class SquidUIController implements Initializable {
     @FXML
     private void showPreferencesManagerAction(ActionEvent event) {
         launchPreferencesManager();
+    }
+
+    public static void createCopyToClipboardContextMenu(TextArea textArea) {
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem copyAll = new MenuItem("Copy all");
+        copyAll.setOnAction((evt) -> {
+            content.putString(textArea.getText());
+            clipboard.setContent(content);
+        });
+        MenuItem copyAsCsv = new MenuItem("Copy all as CSV");
+        copyAsCsv.setOnAction((evt) -> {
+            String csv = textArea.getText().replaceAll("\\s*\\R", ",\n");
+            csv = csv.replaceAll("\\s*,", ",");
+            content.putString(csv);
+            clipboard.setContent(content);
+        });
+        contextMenu.getItems().addAll(copyAll, copyAsCsv);
+
+        textArea.setContextMenu(contextMenu);
     }
 }

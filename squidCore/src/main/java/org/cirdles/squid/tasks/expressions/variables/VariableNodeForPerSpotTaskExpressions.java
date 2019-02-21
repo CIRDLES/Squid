@@ -91,8 +91,8 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     public boolean isValid() {
         return (name.length() > 0);
     }
-    
-        @Override
+
+    @Override
     public boolean usesOtherExpression() {
         return true;
     }
@@ -136,10 +136,10 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                             // index should be 1 from constructor
                             values[1] = values[1] / values[0] * 100;
                         }
-                        
+
                         // july 2018
-                        if (task.expressionIsNuSwitched(name)){
-                            values[1]= org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1], 12);
+                        if (task.expressionIsNuSwitched(name)) {
+                            values[1] = org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1], 12);
                         }
 
                         if (index > 0) {
@@ -147,6 +147,11 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                             for (int j = index; j < values.length; j++) {
                                 values[j - index] = values[j];
                             }
+                        }
+                    } else {
+                        // return 0 for uncertainty if none exists
+                        if (uncertaintyDirective.length() > 0) {
+                            values[0] = 0.0;
                         }
                     }
 

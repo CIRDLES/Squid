@@ -3,8 +3,8 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="reducedUnknownsReportAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="640.0" minWidth="1000.0" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.cirdles.squid.gui.dataReductionReports.ReducedDataReportManagerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="640.0" minWidth="1000.0" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dataReductionReports.ReducedDataReportManagerController">
     <children>
-      <TextArea fx:id="reducedUnknownsReportTextArea" editable="false" layoutX="-1.0" layoutY="-2.0" style="-fx-font-family: Courier New; -fx-font-size: 11;" text="Reduced Unknowns Report" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <TextArea fx:id="reportTextArea" editable="false" layoutX="-1.0" layoutY="-2.0" style="-fx-font-family: Monospaced; -fx-font-size: 11;" text="Report" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>
