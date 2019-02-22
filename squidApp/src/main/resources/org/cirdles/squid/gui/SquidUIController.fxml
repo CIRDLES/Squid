@@ -93,7 +93,7 @@
         </Menu>
             <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
               <items>
-                  <Menu mnemonicParsing="false" text="Built-in Report Tables">
+                  <Menu mnemonicParsing="false" text="Quick View Report Tables">
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
                           <items>

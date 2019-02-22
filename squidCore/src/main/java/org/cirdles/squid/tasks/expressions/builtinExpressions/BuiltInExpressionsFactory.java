@@ -172,19 +172,13 @@ public abstract class BuiltInExpressionsFactory {
         Map<String, ExpressionTreeInterface> constants = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         ExpressionTreeInterface squidTrue = new ConstantNode("TRUE", true);
+        squidTrue.setSquidSpecialUPbThExpression(true);
         constants.put(squidTrue.getName(), squidTrue);
 
         ExpressionTreeInterface squidFalse = new ConstantNode("FALSE", false);
+        squidFalse.setSquidSpecialUPbThExpression(true);
         constants.put(squidFalse.getName(), squidFalse);
 
-//        ExpressionTreeInterface NukeMass206Pb = new ConstantNode(NUKEMASS206PB, 206);
-//        constants.put(NUKEMASS206PB, NukeMass206Pb);
-//
-//        ExpressionTreeInterface NukeMass232Th = new ConstantNode(NUKEMASS232TH, 232);
-//        constants.put(NUKEMASS232TH, NukeMass232Th);
-//
-//        ExpressionTreeInterface NukeMass238U = new ConstantNode(NUKEMASS238U, 238);
-//        constants.put(NUKEMASS238U, NukeMass238U);
         return constants;
     }
 
@@ -196,12 +190,6 @@ public abstract class BuiltInExpressionsFactory {
      */
     public static Map<String, ExpressionTreeInterface> generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-//
-//        ExpressionTreeInterface L859exp = new ConstantNode(L859, 0.859);
-//        parameters.put(L859, L859exp);
-//
-//        ExpressionTreeInterface L1033exp = new ConstantNode(L1033, 1.033);
-//        parameters.put(L1033, L1033exp);
 
         ExpressionTreeInterface extPErr = new ConstantNode(ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, 0.75);
         parameters.put(ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR, extPErr);
@@ -232,6 +220,7 @@ public abstract class BuiltInExpressionsFactory {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
         String sourceModelNameAndVersion = physicalConstantsModel.getModelNameWithVersion();
+        
         Expression expressionslambda230 = buildExpression(LAMBDA230,
                 String.valueOf(physicalConstantsModel.getDatumByName(LAMBDA_230.getName()).getValue().doubleValue()), true, true, true);
         expressionslambda230.setParameterValue(true);
@@ -262,23 +251,23 @@ public abstract class BuiltInExpressionsFactory {
         expressionslambda238.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionslambda238);
 
-        Expression expressionsNUKEMASS206PB = buildExpression(NUKEMASS206PB,"206"
-                /*String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
-                        .getMolarMasses().get("gmol206").doubleValue())*/, true, true, true);
+        Expression expressionsNUKEMASS206PB = buildExpression(NUKEMASS206PB, String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
+                        .getMolarMasses().get("gmol206").doubleValue()),
+                 true, true, true);
         expressionsNUKEMASS206PB.setParameterValue(true);
         expressionsNUKEMASS206PB.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsNUKEMASS206PB);
 
-        Expression expressionsNUKEMASS232TH = buildExpression(NUKEMASS232TH,"232"
-                /*String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
-                        .getMolarMasses().get("gmol232").doubleValue())*/, true, true, true);
+        Expression expressionsNUKEMASS232TH = buildExpression(NUKEMASS232TH, String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
+                        .getMolarMasses().get("gmol232").doubleValue()),
+                 true, true, true);
         expressionsNUKEMASS232TH.setParameterValue(true);
         expressionsNUKEMASS232TH.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsNUKEMASS232TH);
 
-        Expression expressionsNUKEMASS238U = buildExpression(NUKEMASS238U,"238"
-                /*String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
-                        .getMolarMasses().get("gmol238").doubleValue())*/, true, true, true);
+        Expression expressionsNUKEMASS238U = buildExpression(NUKEMASS238U, String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
+                        .getMolarMasses().get("gmol238").doubleValue()),
+                 true, true, true);
         expressionsNUKEMASS238U.setParameterValue(true);
         expressionsNUKEMASS238U.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsNUKEMASS238U);
@@ -396,19 +385,22 @@ public abstract class BuiltInExpressionsFactory {
 
         sourceModelNameAndVersion = referenceMaterialModel.getModelNameWithVersion();
 
-        Expression expressionL859 = buildExpression(L859, "0.859" /*"(" + REF_238U235U + "-1)/" + REF_238U235U + "*" + NUKEMASS206PB + "/" + NUKEMASS238U*/,
+        Expression expressionL859 = buildExpression(L859, 
+                "(" + REF_238U235U + "-1)/" + REF_238U235U + "*" + NUKEMASS206PB + "/" + NUKEMASS238U,
                 true, true, true);
         expressionL859.setReferenceMaterialValue(true);
         expressionL859.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionL859);
 
-        Expression expressionL1033 = buildExpression(L1033, "1.033" /*"(" + NUKEMASS238U + "/" + NUKEMASS232TH + ")*" +  REF_238U235U +"/(" + REF_238U235U + "-1)"*/,
+        Expression expressionL1033 = buildExpression(L1033, 
+                "(" + NUKEMASS238U + "/" + NUKEMASS232TH + ")*" +  REF_238U235U +"/(" + REF_238U235U + "-1)",
                 true, true, true);
         expressionL1033.setReferenceMaterialValue(true);
         expressionL1033.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionL1033);
 
-        Expression expressionL9678 = buildExpression(L9678, "0.9678" /*REF_238U235U + "/(" + REF_238U235U + "+1)*" + NUKEMASS232TH + "/" + NUKEMASS238U*/,
+        Expression expressionL9678 = buildExpression(L9678, 
+                REF_238U235U + "/(" + REF_238U235U + "+1)*" + NUKEMASS232TH + "/" + NUKEMASS238U,
                 true, true, true);
         expressionL9678.setReferenceMaterialValue(true);
         expressionL9678.setSourceModelNameAndVersion(sourceModelNameAndVersion);

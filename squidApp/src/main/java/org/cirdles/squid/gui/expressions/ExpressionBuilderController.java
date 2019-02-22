@@ -2280,7 +2280,9 @@ public class ExpressionBuilderController implements Initializable {
                 && etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\]( )*(\\[\\d\\]( )*)?$")) {
             String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\]( )*(\\[\\d\\]( )*)?)", "");
             Expression ex = squidProject.getTask().getExpressionByName(text);
-            if (((ex != null) && (!ex.getExpressionTree().isSquidSwitchSCSummaryCalculation()))
+            if (((ex != null) 
+                    && (!ex.getExpressionTree().isSquidSwitchSCSummaryCalculation())
+                    && ((ExpressionTreeBuilderInterface) ex.getExpressionTree()).getOperation().getLabelsForOutputValues()[0].length > 1)
                     || squidProject.getTask().getRatioNames().contains(text)) {
                 MenuItem menuItem1 = new MenuItem("1 \u03C3 (%)");
                 menuItem1.setOnAction((evt) -> {
@@ -2298,7 +2300,7 @@ public class ExpressionBuilderController implements Initializable {
                     expressionTextFlow.getChildren().add(etn2);
                     updateExpressionTextFlowChildren();
                 });
-                MenuItem menuItem3 = new MenuItem("none");
+                MenuItem menuItem3 = new MenuItem("Use value");
                 menuItem3.setOnAction((evt) -> {
                     ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[\""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
@@ -2306,7 +2308,7 @@ public class ExpressionBuilderController implements Initializable {
                     expressionTextFlow.getChildren().add(etn2);
                     updateExpressionTextFlowChildren();
                 });
-                itemsForThisNode.add(new Menu("Set uncertainty...", null, menuItem1, menuItem2, menuItem3));
+                itemsForThisNode.add(new Menu("Select uncertainty...", null, menuItem1, menuItem2, menuItem3));
             }
         }
 
@@ -2332,15 +2334,6 @@ public class ExpressionBuilderController implements Initializable {
                     });
                     menuItems[i] = menuItemI;
                 }
-//                MenuItem menuItem1 = new MenuItem("[1]");
-//                menuItem1.setOnAction((evt) -> {
-//                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText()
-//                            .replaceAll("(\"\\]( )*(\\[\\d\\])?)", "\"\\]\\[1\\]"));
-//                    etn2.setOrdinalIndex(etn.getOrdinalIndex());
-//                    expressionTextFlow.getChildren().remove(etn);
-//                    expressionTextFlow.getChildren().add(etn2);
-//                    updateExpressionTextFlowChildren();
-//                });
 
                 MenuItem menuItemN = new MenuItem("None - same as '[0]'");
                 menuItemN.setOnAction((evt) -> {

@@ -531,10 +531,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append((String) ((taskExpressionsOrdered.size() - count) > 0
                 ? String.valueOf(taskExpressionsOrdered.size() - count) : "None")).append(" excluded.");
 
-        summary.append("\n\n Task Constants (imported with task or hard-coded): \n");
+        summary.append("\n\n Task Constants imported with task: \n");
         if (namedConstantsMap.size() > 0) {
             for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
-                summary.append("\t").append(entry.getKey()).append(" = ").append(((ConstantNode) entry.getValue()).getValue()).append("\n");
+                if (!entry.getValue().isSquidSpecialUPbThExpression()) {
+                    summary.append("\t").append(entry.getKey()).append(" = ").append(((ConstantNode) entry.getValue()).getValue()).append("\n");
+                }
             }
         } else {
             summary.append(" No constants supplied.");

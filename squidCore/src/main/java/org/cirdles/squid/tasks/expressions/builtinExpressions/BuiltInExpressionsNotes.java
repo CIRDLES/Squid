@@ -17,6 +17,7 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
 import java.util.Map;
 import java.util.TreeMap;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
@@ -623,5 +624,14 @@ public class BuiltInExpressionsNotes {
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_208_232,
                 "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
                 + " (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+
+        BUILTIN_EXPRESSION_NOTES.put(ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR,
+                "User-defined minimum value for external (spot-to-spot) 1sigma uncertainty (expressed as a percentage), "
+                + "intended to supersede any smaller value of WtdAv_Xcor_DaughterParent_CalibConst[2] "
+                + "(i.e. the third element of the WtdAv vector output) calculated from any RM dataset of "
+                + "WtdAv_Xcor_DaughterParent_CalibConst values. In this context, Xcor denotes the index isotope "
+                + "used for the common Pb correction in the RM (i.e. 204Pb, 207Pb, or in the case of U-Pb Tasks "
+                + "that calculate only a single 206Pb/238U calibration (i.e. \"Perm1\"), possibly 208Pb), "
+                + "and DaughterParent denotes the relevant isotopic system (i.e. 206Pb/238U or 208Pb/232Th).");
     }
 }

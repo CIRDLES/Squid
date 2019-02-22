@@ -408,13 +408,13 @@ public class TaskManagerController implements Initializable {
     }
 
     @FXML
-    private void pb208RadioButtonAction(ActionEvent event) {               
+    private void pb208RadioButtonAction(ActionEvent event) {
         updateDirectiveButtons();
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         task.setChanged(true);
     }
-    
-    private void updateDirectiveButtons(){
+
+    private void updateDirectiveButtons() {
         ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(pb208RadioButton.isSelected());
         ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(pb208RadioButton.isSelected());
     }

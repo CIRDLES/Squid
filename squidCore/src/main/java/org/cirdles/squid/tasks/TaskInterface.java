@@ -388,7 +388,7 @@ public interface TaskInterface {
         });
         // clear task expressions
         setTaskExpressionsEvaluationsPerSpotSet(new TreeMap<>(String.CASE_INSENSITIVE_ORDER));
-        
+
         List<Expression> customExpressions = getCustomTaskExpressions();
 
         Expression parentPPM = getExpressionByName(PARENT_ELEMENT_CONC_CONST);
@@ -397,9 +397,11 @@ public interface TaskInterface {
         getTaskExpressionsOrdered().clear();
 
         // TODO: expressions need to come from preferences and/or models
-        Expression uThU = BuiltInExpressionsFactory.buildExpression(UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
+        Expression uThU = BuiltInExpressionsFactory.buildExpression(
+                UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
         uThU.setSquidSwitchNU(true);
-        Expression uThTh = BuiltInExpressionsFactory.buildExpression(UNCOR208PB232TH_CALIB_CONST, "[\"208/248\"]", true, true, false);
+        Expression uThTh = BuiltInExpressionsFactory.buildExpression(
+                UNCOR208PB232TH_CALIB_CONST, "[\"208/248\"]", true, true, false);
         uThTh.setSquidSwitchNU(true);
 
         if (isPbU()) {
@@ -437,8 +439,10 @@ public interface TaskInterface {
         processAndSortExpressions();
         updateAllExpressions(true);
         setupSquidSessionSpecsAndReduceAndReport();
+        // prepares for second pass when needed
+        setChanged(true);
     }
-    
+
     public void processAndSortExpressions();
 
     public default boolean isPbU() {
@@ -575,6 +579,6 @@ public interface TaskInterface {
     public double getExtPErr();
 
     public String listBuiltInExpressions();
-    
+
     public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
 }
