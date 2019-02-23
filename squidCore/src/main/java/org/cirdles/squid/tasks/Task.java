@@ -216,6 +216,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean referenceMaterialModelChanged;
     protected boolean commonPbModelChanged;
     protected boolean concentrationReferenceMaterialModelChanged;
+            
+    protected Map<String, String> specialSquidFourExpressionsMap;
 
     public Task() {
         this("New Task", null, null);
@@ -308,6 +310,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.referenceMaterialModelChanged = false;
         this.commonPbModelChanged = false;
         this.concentrationReferenceMaterialModelChanged = false;
+        
+        this.specialSquidFourExpressionsMap = new TreeMap<>();
 
         generateConstants();
         generateParameters();
@@ -2515,6 +2519,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public ParametersModel getCommonPbModel() {
         return commonPbModel;
+    }
+
+    /**
+     * @return the specialSquidFourExpressionsMap
+     */
+    public Map<String, String> getSpecialSquidFourExpressionsMap() {
+        return specialSquidFourExpressionsMap;
+    }
+
+    /**
+     * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap to set
+     */
+    public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap) {
+        this.specialSquidFourExpressionsMap = specialSquidFourExpressionsMap;
     }
 
 }

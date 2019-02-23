@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -67,6 +69,8 @@ public class TaskSquid25 implements Serializable {
     private List<TaskSquid25Equation> task25Equations;
     private List<String> constantNames;
     private List<String> constantValues;
+
+    private Map<String, String> specialSquidFourExpressionsMap;
 
     private static TaskSquid25 taskSquid25;
 
@@ -144,86 +148,34 @@ public class TaskSquid25 implements Serializable {
                 String primaryUThEqnName = UNCOR206PB238U_CALIB_CONST;
                 String primaryUThEqnOtherName = UNCOR208PB232TH_CALIB_CONST;
 
+                taskSquid25.specialSquidFourExpressionsMap = new TreeMap<>();
+
                 String[] primaryUThPbEqn = lines[firstRow + 22].split("\t");
                 if (primaryUThPbEqn.length > 1) {
-
                     if (taskSquid25.parentNuclide.contains("232")) {
                         primaryUThEqnName = UNCOR208PB232TH_CALIB_CONST;
                         primaryUThEqnOtherName = UNCOR206PB238U_CALIB_CONST;
                     }
-
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]),
-                            primaryUThEqnName,
-                            true,
-                            true,
-                            false,
-                            true,
-                            true, false));
+                    taskSquid25.specialSquidFourExpressionsMap.put(
+                            primaryUThEqnName, prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]));
                 }
 
                 String[] secondaryUThPbEqn = lines[firstRow + 23].split("\t");
                 if (secondaryUThPbEqn.length > 1) {
-                    // this is the case of DirectAltPd = TRUE
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]),
-                            primaryUThEqnOtherName,
-                            true,
-                            true,
-                            false,
-                            true,
-                            true, false));
+                    taskSquid25.specialSquidFourExpressionsMap.put(
+                            primaryUThEqnOtherName, prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]));
                 }
 
                 String[] ThUEqn = lines[firstRow + 24].split("\t");
                 if (ThUEqn.length > 1) {
-                    String thuExpression = prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]);
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            thuExpression,
-                            TH_U_EXP_RM,
-                            true,
-                            false,
-                            false,
-                            true,
-                            true, false));
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            thuExpression,
-                            TH_U_EXP,
-                            false,
-                            true,
-                            false,
-                            true,
-                            true, false));
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            thuExpression,
-                            TH_U_EXP_DEFAULT,
-                            false,
-                            true,
-                            false,
-                            true,
-                            true, false));
+                    taskSquid25.specialSquidFourExpressionsMap.put(
+                            TH_U_EXP_DEFAULT, prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]));
                 }
 
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
                 if (ppmParentEqn.length > 1) {
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
-                            PARENT_ELEMENT_CONC_CONST,
-                            true,
-                            true,
-                            false,
-                            true,
-                            true, false));
-
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            "CalculateMeanConcStd([\"" + PARENT_ELEMENT_CONC_CONST + "\"])",
-                            AV_PARENT_ELEMENT_CONC_CONST,
-                            false,
-                            false,
-                            true,
-                            false,
-                            true, true));
-
+                    taskSquid25.specialSquidFourExpressionsMap.put(
+                            PARENT_ELEMENT_CONC_CONST, prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]));
                 }
 
                 String[] equations = lines[firstRow + 26].split("\t");
@@ -231,7 +183,7 @@ public class TaskSquid25 implements Serializable {
 
                 String[] equationNames = lines[firstRow + 27].split("\t");
 
-                // these sqitches split into an array of length equations mius 1 in Squid2.20 due to missing count entry
+                // these switches split into an array of length equations mius 1 in Squid2.20 due to missing count entry
                 String[] switchST = lines[firstRow + 28].split("\t");
 
                 String[] switchSA = lines[firstRow + 29].split("\t");
@@ -281,20 +233,6 @@ public class TaskSquid25 implements Serializable {
                                 false, false));
                     }
                 }
-
-//                String[] constantNamesSource = lines[firstRow + 40].split("\t");
-//                String[] constantValuesSource = lines[firstRow + 41].split("\t");
-//
-//                int countOfConstants = 0;
-//                if (constantNamesSource.length > 1) {
-//                    countOfConstants = Integer.valueOf(constantNamesSource[1]);
-//                }
-//                taskSquid25.constantNames = new ArrayList<>();
-//                taskSquid25.constantValues = new ArrayList<>();
-//                for (int i = 0; i < countOfConstants; i++) {
-//                    taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
-//                    taskSquid25.constantValues.add(constantValuesSource[i + 2]);
-//                }
             }
         } catch (IOException iOException) {
         }
@@ -612,6 +550,13 @@ public class TaskSquid25 implements Serializable {
      */
     public List<String> getConstantValues() {
         return constantValues;
+    }
+
+    /**
+     * @return the specialSquidFourExpressionsMap
+     */
+    public Map<String, String> getSpecialSquidFourExpressionsMap() {
+        return specialSquidFourExpressionsMap;
     }
 
 }

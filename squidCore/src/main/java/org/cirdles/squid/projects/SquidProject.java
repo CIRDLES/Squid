@@ -181,8 +181,6 @@ public final class SquidProject implements Serializable {
         this.task.setParentNuclide(taskSquid25.getParentNuclide());
         this.task.setDirectAltPD(taskSquid25.isDirectAltPD());
 
-        this.task.generateBuiltInExpressions();
-
         // determine index of background mass as specified in task
         for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
             if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
@@ -194,7 +192,7 @@ public final class SquidProject implements Serializable {
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
-
+        
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
             Expression expression = this.task.generateExpressionFromRawExcelStyleText(task25Eqn.getEquationName(),
@@ -220,7 +218,10 @@ public final class SquidProject implements Serializable {
             ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
             task.getNamedConstantsMap().put(constant.getName(), constant);
         }
-
+        
+        this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
+        this.task.applyDirectives();
+        
         initializeTaskAndReduceData();
     }
 

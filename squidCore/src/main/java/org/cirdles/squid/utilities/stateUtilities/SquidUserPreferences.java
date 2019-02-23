@@ -18,9 +18,19 @@
 package org.cirdles.squid.utilities.stateUtilities;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.TreeMap;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
 
 /**
  *
@@ -51,8 +61,8 @@ public class SquidUserPreferences implements Serializable {
     private String delimiterForUnknownNames;
     private String parentNuclide;
     private boolean directAltPD;
-    private String uncor206PB238UCalibConstDefaultExpression;
-    private String uncor208PB232THCalibConstDefaultExpression;
+    
+    private Map<String, String> specialSquidFourExpressionsMap;
 
     /**
      * Creates a new instance of ReduxPreferences
@@ -76,6 +86,13 @@ public class SquidUserPreferences implements Serializable {
         this.extPErr = 0.75;
         
         this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName().trim();
+        
+        this.specialSquidFourExpressionsMap = new TreeMap<>();
+        this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION);
+        this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION);
+        this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
+        this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
+        
     }
 
     /**
@@ -278,6 +295,20 @@ public class SquidUserPreferences implements Serializable {
      */
     public void setDirectAltPD(boolean directAltPD) {
         this.directAltPD = directAltPD;
+    }
+
+    /**
+     * @return the specialSquidFourExpressionsMap
+     */
+    public Map<String, String> getSpecialSquidFourExpressionsMap() {
+        return specialSquidFourExpressionsMap;
+    }
+
+    /**
+     * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap to set
+     */
+    public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap) {
+        this.specialSquidFourExpressionsMap = specialSquidFourExpressionsMap;
     }
 
 }

@@ -43,6 +43,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
 
 /**
  *
@@ -384,39 +385,11 @@ public interface TaskInterface {
      */
     public void setParentNuclide(String parentNuclide);
 
+    /**
+     * 
+     */
     public default void applyDirectives() {
-        // todo change dictionary to preferences
         SquidUserPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
-        // save the magic 4 expressions
-        String uThU_Expression;
-        if (getExpressionByName(UNCOR206PB238U_CALIB_CONST) != null) {
-            uThU_Expression = getExpressionByName(UNCOR206PB238U_CALIB_CONST).getExcelExpressionString();
-        } else {
-            uThU_Expression = BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
-        }
-
-        String uThTh_Expression;
-        if (getExpressionByName(UNCOR208PB232TH_CALIB_CONST) != null) {
-            uThTh_Expression = getExpressionByName(UNCOR208PB232TH_CALIB_CONST).getExcelExpressionString();
-        } else {
-            uThTh_Expression = BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
-        }
-
-        String parentPPM_Expression;
-        if (getExpressionByName(PARENT_ELEMENT_CONC_CONST) != null) {
-            parentPPM_Expression = getExpressionByName(PARENT_ELEMENT_CONC_CONST).getExcelExpressionString();
-        } else {
-            parentPPM_Expression = BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
-        }
-
-        String parentPPMmean_Expression;
-        if (getExpressionByName(AV_PARENT_ELEMENT_CONC_CONST) != null) {
-            parentPPMmean_Expression = getExpressionByName(AV_PARENT_ELEMENT_CONC_CONST).getExcelExpressionString();
-        } else {
-            parentPPMmean_Expression = BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
-        }
-        
-        Expression originalTHU = getExpressionByName(TH_U_EXP_DEFAULT);
 
         // need to remove stored expression results on fractions to clear the decks   
         getShrimpFractions().forEach((spot) -> {
@@ -430,21 +403,42 @@ public interface TaskInterface {
 
         getTaskExpressionsOrdered().clear();
 
-        // write the magic 4 expressions
-        // TODO: expressions need to come from preferences and/or models
+        // write the magic 4 expressions plus parent mean exp
+        String parentPPM_Expression = getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
+        if ((parentPPM_Expression == null) ||(parentPPM_Expression.length()) == 0) {
+            parentPPM_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
+        }
+        if (parentPPM_Expression.length() == 0) {
+            parentPPM_Expression = BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+        }
         Expression parentPPM = BuiltInExpressionsFactory.buildExpression(
                 PARENT_ELEMENT_CONC_CONST, parentPPM_Expression, true, true, false);
         parentPPM.setSquidSwitchNU(true);
 
+        String parentPPMmean_Expression = BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
         Expression parentPPMmean = BuiltInExpressionsFactory.buildExpression(
                 AV_PARENT_ELEMENT_CONC_CONST, parentPPMmean_Expression, true, true, true);
         parentPPMmean.setSquidSwitchNU(false);
         parentPPMmean.getExpressionTree().setSquidSwitchConcentrationReferenceMaterialCalculation(true);
 
+        String uThU_Expression = getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
+        if ((uThU_Expression == null) ||(uThU_Expression.length()) == 0) {
+            uThU_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
+        }
+        if (uThU_Expression.length() == 0) {
+            uThU_Expression = BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+        }
         Expression uThU = BuiltInExpressionsFactory.buildExpression(
                 UNCOR206PB238U_CALIB_CONST, uThU_Expression, true, true, false);
         uThU.setSquidSwitchNU(true);
 
+        String uThTh_Expression = getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
+        if ((uThTh_Expression == null) ||(uThTh_Expression.length()) == 0) {
+            uThTh_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
+        }
+        if (uThTh_Expression.length() == 0) {
+            uThTh_Expression = BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+        }
         Expression uThTh = BuiltInExpressionsFactory.buildExpression(
                 UNCOR208PB232TH_CALIB_CONST, uThTh_Expression, true, true, false);
         uThTh.setSquidSwitchNU(true);
@@ -460,15 +454,15 @@ public interface TaskInterface {
                 getTaskExpressionsOrdered().add(uThU);
             }
         }
-     
-        if (!isDirectAltPD()) {
-            String thU_DEFAULT_Expression;
-            if (originalTHU != null) {
-                thU_DEFAULT_Expression = originalTHU.getExcelExpressionString();
-            } else {
-                thU_DEFAULT_Expression = BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
-            }
 
+        if (!isDirectAltPD()) {
+            String thU_DEFAULT_Expression = getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
+            if ((thU_DEFAULT_Expression == null) ||(thU_DEFAULT_Expression.length()) == 0) {
+                thU_DEFAULT_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
+            }
+            if (thU_DEFAULT_Expression.length() == 0) {
+                thU_DEFAULT_Expression = TH_U_EXP_DEFAULT_EXPRESSION;
+            }
             Expression thU_RM = BuiltInExpressionsFactory.buildExpression(TH_U_EXP_RM, thU_DEFAULT_Expression, true, false, false);
             thU_RM.setSquidSwitchNU(true);
             getTaskExpressionsOrdered().add(thU_RM);
@@ -482,7 +476,6 @@ public interface TaskInterface {
 
         getTaskExpressionsOrdered().add(parentPPM);
         getTaskExpressionsOrdered().add(parentPPMmean);
-        getTaskExpressionsOrdered().add(originalTHU);
 
         getTaskExpressionsOrdered().addAll(customExpressions);
 
@@ -634,4 +627,15 @@ public interface TaskInterface {
     public String listBuiltInExpressions();
 
     public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
+
+    /**
+     * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap
+     * to set
+     */
+    public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap);
+
+    /**
+     * @return the specialSquidFourExpressionsMap
+     */
+    public Map<String, String> getSpecialSquidFourExpressionsMap();
 }
