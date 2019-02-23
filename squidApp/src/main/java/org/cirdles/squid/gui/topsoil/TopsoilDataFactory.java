@@ -20,6 +20,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.topsoil.variable.BooleanVariable;
+import org.cirdles.topsoil.variable.DependentVariable;
+import org.cirdles.topsoil.variable.IndependentVariable;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
@@ -30,7 +34,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 
-import static org.cirdles.topsoil.variable.Variables.*;
 
 /**
  *
@@ -85,17 +88,17 @@ public class TopsoilDataFactory {
                     new Class[]{String.class});
 
             double[] xAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + xAxisRatio}))[0].clone();
-            datum.put(X.getName(), xAxisValueAndUnct[0]);
-            datum.put(SIGMA_X.getName(), 1.0 * xAxisValueAndUnct[1]);
+            datum.put(IndependentVariable.X.getName(), xAxisValueAndUnct[0]);
+            datum.put(DependentVariable.SIGMA_X.getName(), 1.0 * xAxisValueAndUnct[1]);
 
             double[] yAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + yAxisRatio}))[0].clone();
-            datum.put(Y.getName(), yAxisValueAndUnct[0]);
-            datum.put(SIGMA_Y.getName(), 1.0 * yAxisValueAndUnct[1]);
+            datum.put(IndependentVariable.Y.getName(), yAxisValueAndUnct[0]);
+            datum.put(DependentVariable.SIGMA_Y.getName(), 1.0 * yAxisValueAndUnct[1]);
 
             double plotRho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + rho}))[0].clone()[0];
-            datum.put(RHO.getName(), plotRho);
+            datum.put(IndependentVariable.RHO.getName(), plotRho);
 
-            datum.put("Selected", true);
+            datum.put(BooleanVariable.SELECTED.getName(), true);
 
             datum.put("AGE", 0.0);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
