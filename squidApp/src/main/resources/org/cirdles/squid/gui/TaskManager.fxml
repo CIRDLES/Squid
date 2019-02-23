@@ -196,7 +196,7 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <children>
                   <Label fx:id="th232U238ExpressionLabel" alignment="CENTER" prefHeight="25.0" prefWidth="365.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-size: 11;" text="expression" />
                </children>
@@ -204,7 +204,7 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <children>
                   <Label fx:id="parentConcExpressionLabel" alignment="CENTER" prefHeight="25.0" prefWidth="365.0" style="-fx-background-color: white; -fx-border-color: black; -fx-font-size: 11;" text="expression" />
                </children>

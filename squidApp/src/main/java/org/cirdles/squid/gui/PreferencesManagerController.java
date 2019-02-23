@@ -16,10 +16,12 @@
 package org.cirdles.squid.gui;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,11 +34,18 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 
@@ -95,6 +104,32 @@ public class PreferencesManagerController implements Initializable {
     private ComboBox<ParametersModel> physConstModelComboBox;
     @FXML
     private Label titleLabel;
+    @FXML
+    private ToggleGroup primaryAgeToggleGroup;
+    @FXML
+    private ToggleGroup dirctALTtoggleGroup;
+    @FXML
+    private Label parentConcExpressionLabel;
+    @FXML
+    private Label uncorrConstPbUlabel;
+    @FXML
+    private Label uncorrConstPbThlabel;
+    @FXML
+    private Label th232U238Label;
+    @FXML
+    private Label parentConcLabel;
+    @FXML
+    private ComboBox<String> delimeterComboBox;
+    @FXML
+    private Label defaultMassesListLabel;
+    @FXML
+    private Label defaultRatiosListLabel;
+    @FXML
+    private TextField uncorrConstPbUExpressionText;
+    @FXML
+    private TextField uncorrConstPbThExpressionText;
+    @FXML
+    private TextField uncorrConstPbUExpressionText1;
 
     /**
      * Initializes the controller class.
@@ -139,6 +174,28 @@ public class PreferencesManagerController implements Initializable {
 
         setupListeners();
         setUpParametersModelsComboBoxes();
+
+        // samples
+        ObservableList<String> delimetersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimetersEnum.names());
+        delimeterComboBox.setItems(delimetersList);
+        // set value before adding listener
+        delimeterComboBox.getSelectionModel().select(squidUserPreferences.getDelimiterForUnknownNames());
+        delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> ov,
+                    final String oldvalue, final String newvalue) {
+                squidUserPreferences.setDelimiterForUnknownNames(newvalue);
+            }
+        });
+
+        // directives
+        uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
+
+        uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
+
+        th232U238Label.setText(TH_U_EXP_RM + ":");
+
+        parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
+
     }
 
     @FXML
@@ -246,6 +303,24 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
         squidUserPreferences.setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
+    }
+
+    @FXML
+    private void toggleParentNuclideAction(ActionEvent event) {
+        squidUserPreferences.setParentNuclide(((RadioButton) event.getSource()).getId());
+    }
+
+    @FXML
+    private void toggleDirectAltAction(ActionEvent event) {
+        squidUserPreferences.setDirectAltPD(((RadioButton) event.getSource()).getId().compareToIgnoreCase("DIRECT") == 0);
+    }
+
+    @FXML
+    private void defaultMassesAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void defaultRatiosAction(ActionEvent event) {
     }
 
 }

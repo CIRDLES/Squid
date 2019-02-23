@@ -464,7 +464,6 @@ public abstract class BuiltInExpressionsFactory {
             Expression expressionCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA = buildExpression(CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
                     "1", true, false, false);
             placeholderExpressions.add(expressionCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA);
-
         }
 
         // placeholder expressions

@@ -1548,7 +1548,8 @@ public class ExpressionBuilderController implements Initializable {
         List<Expression> sortedParameterValuesList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
-            if (exp.amHealthy() && exp.isSquidSwitchNU()) {
+            if (exp.amHealthy() && exp.isSquidSwitchNU()
+                    && !exp.aliasedExpression()) {
                 sortedNUSwitchedExpressionsList.add(exp);
             } else if (exp.isReferenceMaterialValue() && exp.amHealthy()) {
                 sortedReferenceMaterialValuesList.add(exp);
@@ -2253,12 +2254,6 @@ public class ExpressionBuilderController implements Initializable {
         menuItem = new MenuItem("parentheses");
         menuItem.setOnAction((evt) -> {
             wrapInParentheses(etn.getOrdinalIndex(), etn.getOrdinalIndex());
-        });
-        wrap.getItems().add(menuItem);
-
-        menuItem = new MenuItem("brackets");
-        menuItem.setOnAction((evt) -> {
-            wrapInBrackets(etn.getOrdinalIndex(), etn.getOrdinalIndex());
         });
         wrap.getItems().add(menuItem);
 
@@ -3090,10 +3085,6 @@ public class ExpressionBuilderController implements Initializable {
 
     private void wrapInParentheses(double ordLeft, double ordRight) {
         wrap(ordLeft, ordRight, "(", ")");
-    }
-
-    private void wrapInBrackets(double ordLeft, double ordRight) {
-        wrap(ordLeft, ordRight, "[", "]");
     }
 
     private void wrapInBracketsAndQuotes(double ordLeft, double ordRight) {

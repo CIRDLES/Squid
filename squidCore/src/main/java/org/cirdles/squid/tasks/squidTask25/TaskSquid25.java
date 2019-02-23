@@ -41,6 +41,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 
 /**
  *
@@ -176,8 +177,9 @@ public class TaskSquid25 implements Serializable {
 
                 String[] ThUEqn = lines[firstRow + 24].split("\t");
                 if (ThUEqn.length > 1) {
+                    String thuExpression = prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]);
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
+                            thuExpression,
                             TH_U_EXP_RM,
                             true,
                             false,
@@ -185,8 +187,16 @@ public class TaskSquid25 implements Serializable {
                             true,
                             true, false));
                     taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
+                            thuExpression,
                             TH_U_EXP,
+                            false,
+                            true,
+                            false,
+                            true,
+                            true, false));
+                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
+                            thuExpression,
+                            TH_U_EXP_DEFAULT,
                             false,
                             true,
                             false,
@@ -254,7 +264,7 @@ public class TaskSquid25 implements Serializable {
                     }
 
                     String excelExpression = prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]);
-                    if (excelExpression.length() > 0) {                        
+                    if (excelExpression.length() > 0) {
                         //detect if name contains "Age" or "abs" - undo change to % for errors
                         if ((equationNames[i + 2].toUpperCase().contains("ABS")) || (equationNames[i + 2].toUpperCase().contains("AGE"))) {
                             if (excelExpression.startsWith("[%\"")) {

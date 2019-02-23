@@ -25,6 +25,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238_RM;
@@ -79,5 +80,7 @@ public class BuiltInExpressionsAliased {
         BUILTIN_EXPRESSION_ALIASEDNAMES.add(PB4CORR + TOTAL_208_232);
         BUILTIN_EXPRESSION_ALIASEDNAMES.add(PB7CORR + TOTAL_208_232);
         BUILTIN_EXPRESSION_ALIASEDNAMES.add(PB8CORR + TOTAL_208_232);
+        
+        BUILTIN_EXPRESSION_ALIASEDNAMES.add(TH_U_EXP_DEFAULT);
     }
 }

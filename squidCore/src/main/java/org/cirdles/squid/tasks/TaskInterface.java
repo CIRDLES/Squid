@@ -32,6 +32,7 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
@@ -39,6 +40,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 
 /**
  *
@@ -381,7 +385,40 @@ public interface TaskInterface {
     public void setParentNuclide(String parentNuclide);
 
     public default void applyDirectives() {
-        // need to remove stored expression results on fractions to clear the decks
+        // todo change dictionary to preferences
+        SquidUserPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
+        // save the magic 4 expressions
+        String uThU_Expression;
+        if (getExpressionByName(UNCOR206PB238U_CALIB_CONST) != null) {
+            uThU_Expression = getExpressionByName(UNCOR206PB238U_CALIB_CONST).getExcelExpressionString();
+        } else {
+            uThU_Expression = BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+        }
+
+        String uThTh_Expression;
+        if (getExpressionByName(UNCOR208PB232TH_CALIB_CONST) != null) {
+            uThTh_Expression = getExpressionByName(UNCOR208PB232TH_CALIB_CONST).getExcelExpressionString();
+        } else {
+            uThTh_Expression = BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+        }
+
+        String parentPPM_Expression;
+        if (getExpressionByName(PARENT_ELEMENT_CONC_CONST) != null) {
+            parentPPM_Expression = getExpressionByName(PARENT_ELEMENT_CONC_CONST).getExcelExpressionString();
+        } else {
+            parentPPM_Expression = BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+        }
+
+        String parentPPMmean_Expression;
+        if (getExpressionByName(AV_PARENT_ELEMENT_CONC_CONST) != null) {
+            parentPPMmean_Expression = getExpressionByName(AV_PARENT_ELEMENT_CONC_CONST).getExcelExpressionString();
+        } else {
+            parentPPMmean_Expression = BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+        }
+        
+        Expression originalTHU = getExpressionByName(TH_U_EXP_DEFAULT);
+
+        // need to remove stored expression results on fractions to clear the decks   
         getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
@@ -391,17 +428,25 @@ public interface TaskInterface {
 
         List<Expression> customExpressions = getCustomTaskExpressions();
 
-        Expression parentPPM = getExpressionByName(PARENT_ELEMENT_CONC_CONST);
-        Expression parentPPMmean = getExpressionByName(AV_PARENT_ELEMENT_CONC_CONST);
-
         getTaskExpressionsOrdered().clear();
 
+        // write the magic 4 expressions
         // TODO: expressions need to come from preferences and/or models
+        Expression parentPPM = BuiltInExpressionsFactory.buildExpression(
+                PARENT_ELEMENT_CONC_CONST, parentPPM_Expression, true, true, false);
+        parentPPM.setSquidSwitchNU(true);
+
+        Expression parentPPMmean = BuiltInExpressionsFactory.buildExpression(
+                AV_PARENT_ELEMENT_CONC_CONST, parentPPMmean_Expression, true, true, true);
+        parentPPMmean.setSquidSwitchNU(false);
+        parentPPMmean.getExpressionTree().setSquidSwitchConcentrationReferenceMaterialCalculation(true);
+
         Expression uThU = BuiltInExpressionsFactory.buildExpression(
-                UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
+                UNCOR206PB238U_CALIB_CONST, uThU_Expression, true, true, false);
         uThU.setSquidSwitchNU(true);
+
         Expression uThTh = BuiltInExpressionsFactory.buildExpression(
-                UNCOR208PB232TH_CALIB_CONST, "[\"208/248\"]", true, true, false);
+                UNCOR208PB232TH_CALIB_CONST, uThTh_Expression, true, true, false);
         uThTh.setSquidSwitchNU(true);
 
         if (isPbU()) {
@@ -415,21 +460,29 @@ public interface TaskInterface {
                 getTaskExpressionsOrdered().add(uThU);
             }
         }
-
+     
         if (!isDirectAltPD()) {
-            Expression thU = BuiltInExpressionsFactory.buildExpression(TH_U_EXP_RM, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, false, false);
+            String thU_DEFAULT_Expression;
+            if (originalTHU != null) {
+                thU_DEFAULT_Expression = originalTHU.getExcelExpressionString();
+            } else {
+                thU_DEFAULT_Expression = BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
+            }
+
+            Expression thU_RM = BuiltInExpressionsFactory.buildExpression(TH_U_EXP_RM, thU_DEFAULT_Expression, true, false, false);
+            thU_RM.setSquidSwitchNU(true);
+            getTaskExpressionsOrdered().add(thU_RM);
+
+            Expression thU = BuiltInExpressionsFactory.buildExpression(TH_U_EXP, thU_DEFAULT_Expression, false, true, false);
             thU.setSquidSwitchNU(true);
             getTaskExpressionsOrdered().add(thU);
-
-            Expression thUS = BuiltInExpressionsFactory.buildExpression(TH_U_EXP, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", false, true, false);
-            thUS.setSquidSwitchNU(true);
-            getTaskExpressionsOrdered().add(thUS);
         }
 
         generateBuiltInExpressions();
 
         getTaskExpressionsOrdered().add(parentPPM);
         getTaskExpressionsOrdered().add(parentPPMmean);
+        getTaskExpressionsOrdered().add(originalTHU);
 
         getTaskExpressionsOrdered().addAll(customExpressions);
 

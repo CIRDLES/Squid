@@ -47,6 +47,12 @@ public class SquidUserPreferences implements Serializable {
     private boolean squidAllowsAutoExclusionOfSpots;
     
     private double extPErr;
+    
+    private String delimiterForUnknownNames;
+    private String parentNuclide;
+    private boolean directAltPD;
+    private String uncor206PB238UCalibConstDefaultExpression;
+    private String uncor208PB232THCalibConstDefaultExpression;
 
     /**
      * Creates a new instance of ReduxPreferences
@@ -68,6 +74,8 @@ public class SquidUserPreferences implements Serializable {
         this.squidAllowsAutoExclusionOfSpots = true;
         
         this.extPErr = 0.75;
+        
+        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName().trim();
     }
 
     /**
@@ -228,6 +236,48 @@ public class SquidUserPreferences implements Serializable {
      */
     public void setExtPErr(double extPErr) {
         this.extPErr = extPErr;
+    }
+
+    /**
+     * @return the delimiterForUnknownNames
+     */
+    public String getDelimiterForUnknownNames() {
+        return delimiterForUnknownNames;
+    }
+
+    /**
+     * @param delimiterForUnknownNames the delimiterForUnknownNames to set
+     */
+    public void setDelimiterForUnknownNames(String delimiterForUnknownNames) {
+        this.delimiterForUnknownNames = delimiterForUnknownNames;
+    }
+
+    /**
+     * @return the parentNuclide
+     */
+    public String getParentNuclide() {
+        return parentNuclide;
+    }
+
+    /**
+     * @param parentNuclide the parentNuclide to set
+     */
+    public void setParentNuclide(String parentNuclide) {
+        this.parentNuclide = parentNuclide;
+    }
+
+    /**
+     * @return the directAltPD
+     */
+    public boolean isDirectAltPD() {
+        return directAltPD;
+    }
+
+    /**
+     * @param directAltPD the directAltPD to set
+     */
+    public void setDirectAltPD(boolean directAltPD) {
+        this.directAltPD = directAltPD;
     }
 
 }

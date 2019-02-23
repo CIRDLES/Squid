@@ -25,11 +25,10 @@ public class BuiltInExpressionsDataDictionary {
     // holding spot until models are implemented
     public static final String REF_238U235U_RM_MODEL_NAME = "r238_235s";
     public static final String REF_238U235U = "Ref_238U235U";
-    
+
     public static final String NUKEMASS206PB = "NukeMass206Pb";
     public static final String NUKEMASS232TH = "NukeMass232Th";
     public static final String NUKEMASS238U = "NukeMass238U";
-    
 
     // **********************  COMMON LEAD *************************************
     public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
@@ -183,14 +182,25 @@ public class BuiltInExpressionsDataDictionary {
     // ********************** INTERNAL EXPRESSIONS *****************************
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
+    public static final String UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION = "[\"206/238\"]/[\"254/238\"]^Expo_Used";
+
     public static final String UNCOR208PB232TH_CALIB_CONST = "Uncor_208Pb232Th_CalibConst";
+    public static final String UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION = "[\"208/248\"]";
+
     // Squid2.5 Th/U equation (-3)
+    // TH_U_EXP is overwritten for perm2 and perm4
+    public static final String TH_U_EXP_DEFAULT = "232Th238U_DEFAULT";
+    public static final String TH_U_EXP_DEFAULT_EXPRESSION = "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]";
     public static final String TH_U_EXP_RM = "232Th238U_RM";
     public static final String TH_U_EXP = "232Th238U";
+
     // name for Squid2.5 Ppm parent eqn(-4) 
     public static final String PARENT_ELEMENT_CONC_CONST = "ParentElement_ConcenConst";
-    
+    public static final String PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION = "[\"238/195.8\"]/[\"254/238\"]^0.66";
+
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
+    public static final String AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION = "CalculateMeanConcStd([\"" + PARENT_ELEMENT_CONC_CONST + "\"])";
+
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String U_CONCEN_PPM_RM = "U_Concen_RM";
     public static final String U_CONCEN_PPM = "U_Concen";
@@ -199,12 +209,12 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String TOTAL_206_204 = "Total_206Pb204Pb";
     public static final String TOTAL_207_204 = "Total_207Pb204Pb";
-    public static final String TOTAL_208_204 = "Total_208Pb204Pb";   
+    public static final String TOTAL_208_204 = "Total_208Pb204Pb";
     public static final String TOTAL_206_238 = "Total_206Pb238U";
     public static final String TOTAL_208_232 = "Total_208Pb232Th";
     public static final String TOTAL_207_206 = "Total_207Pb206Pb";
     public static final String TOTAL_238_206 = "Total_238U206Pb";
-    
+
     public static final String DEFRAD_206PB204PB = "DefRad_206Pb204Pb";
     public static final String DEFRAD_207PB204PB = "DefRad_207Pb204Pb";
     public static final String DEFRAD_208PB204PB = "DefRad_208Pb204Pb";
