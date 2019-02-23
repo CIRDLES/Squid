@@ -1,7 +1,6 @@
 package org.cirdles.squid.tasks.expressions;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder.PageSizeUnits;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
@@ -64,7 +63,7 @@ public class ExpressionPublisher {
         TeXFormula.setDPITarget((float) IMAGE_DPI);
         String converted = getLatexFromMathML(input, hasStyling);
         TeXFormula formula = new TeXFormula(converted);
-        return formula.createBufferedImage(1, 20, Color.BLUE, Color.WHITE);
+        return formula.createBufferedImage(1, 20, Color.BLACK, Color.WHITE);
     }
 
     private static String getStartHTML() {
@@ -72,10 +71,48 @@ public class ExpressionPublisher {
                 + "<HTML lang=\"en\">\n<head>\n<meta charset=\"utf-8\"/>\n"
                 + "<title>Squid Expressions</title>\n"
                 + "<style>\n"
-                + "body {background-color: white;}\n"
-                + "h1   {color: blue;}\n"
-                + "h2   {color: blue}\n"
-                + "p    {color: blue;}\n"
+                + "body {    height: 240px;\n"
+                + "    background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, "
+                + "0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0,"
+                + " 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), "
+                + "-webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%,"
+                + " transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, "
+                + "rgba(0, 0, 0, 0.0980392) 0), white;\n"
+                + "    background: -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) "
+                + "25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, "
+                + "rgba(0, 0, 0, 0.0980392) 0), -moz-linear-gradient(45deg, rgba(0, 0, 0, "
+                + "0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) "
+                + "75%, rgba(0, 0, 0, 0.0980392) 0), white;\n"
+                + "    background: linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, "
+                + "transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0,"
+                + " 0, 0, 0.0980392) 0), linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%,"
+                + " transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, "
+                + "0, 0.0980392) 0), white;\n"
+                + "    background-repeat: repeat, repeat;\n"
+                + "    background-position: 0px 0, 5px 5px;\n"
+                + "    -webkit-transform-origin: 0 0 0;\n"
+                + "    transform-origin: 0 0 0;\n"
+                + "    -webkit-background-origin: padding-box, padding-box;\n"
+                + "    background-origin: padding-box, padding-box;\n"
+                + "    -webkit-background-clip: border-box, border-box;\n"
+                + "    background-clip: border-box, border-box;\n"
+                + "    -webkit-background-size: 10px 10px, 10px 10px;\n"
+                + "    background-size: 10px 10px, 10px 10px;\n"
+                + "    -webkit-box-shadow: none;\n"
+                + "    box-shadow: none;\n"
+                + "    text-shadow: none;\n"
+                + "    -webkit-transition: none;\n"
+                + "    -moz-transition: none;\n"
+                + "    -o-transition: none;\n"
+                + "    transition: none;\n"
+                + "    -webkit-transform: scaleX(1) scaleY(1) scaleZ(1);\n"
+                + "    transform: scaleX(1) scaleY(1) scaleZ(1);}\n"
+                + "h1   {color: black;}\n"
+                + "h2   {color: black}\n"
+                + "p    {color: black;}\n"
+                + "img {border-style: solid;\n"
+                + "     border-width: 1px;\n"
+                + "     border-color: black;}\n"
                 + "</style>\n"
                 + "</head>\n<body>\n"
                 + "<h1>Expressions</h1>\n";
@@ -90,8 +127,8 @@ public class ExpressionPublisher {
                 + "<br/>" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n"
                 + "<br/>" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n"
                 + "<br/>" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n"
-                + "<p>Excel Expression String: " + exp.getExcelExpressionString() + "</p>\n"
-                + "<p>Notes:<br/>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n";
+                + "<h3>Excel Expression String:</h3><p>" + exp.getExcelExpressionString() + "</p>\n"
+                + "<h3>Notes:</h3><p style=\"page-break-after: always\">" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n";
     }
 
     public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions, Integer[] widths) {
