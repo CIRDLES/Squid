@@ -129,6 +129,13 @@ public class SquidPersistentState implements Serializable {
             instance = new SquidPersistentState();
         }
 
+        // check to update SquidUserPreferences
+        SquidUserPreferences sup = instance.getSquidUserPreferences();
+        if (sup.getNamedExpressionsMap() == null){
+            sup = new SquidUserPreferences();
+            instance.setSquidUserPreferences(sup);
+        }
+        
         return instance;
     }
 

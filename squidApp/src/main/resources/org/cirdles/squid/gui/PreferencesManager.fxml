@@ -14,6 +14,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.PreferencesManagerController">
   <columnConstraints>
@@ -160,6 +162,7 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
@@ -177,7 +180,7 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
                   <TextField fx:id="uncorrConstPbUExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
                </children>
@@ -198,7 +201,7 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <children>
                   <TextField fx:id="parentConcExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
                </children>
@@ -211,12 +214,12 @@
                   <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="127.0" style="-fx-font-size: 12;" text="Primary Age:" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="1">
+            <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
                <children>
                   <Label fx:id="uncorrConstPbUlabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="163.0" style="-fx-font-size: 10;" text="uncorrConstPbU:" textAlignment="JUSTIFY" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
+            <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="3">
                <children>
                   <Label fx:id="uncorrConstPbThlabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="183.0" style="-fx-font-size: 10;" text="uncorrConstPbTh:" />
                </children>
@@ -226,17 +229,17 @@
                   <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="182.0" style="-fx-font-size: 12;" text="Calculate 208Pb/232Th:" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <children>
                   <Label fx:id="th232U238Label" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="165.0" style="-fx-font-size: 10;" text="232Th/238U:" textAlignment="JUSTIFY" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <children>
                   <Label fx:id="parentConcLabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="165.0" style="-fx-font-size: 10;" text="parentConc:" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <TextField fx:id="uncorrConstPbThExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
                </children>
@@ -247,9 +250,9 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <children>
-                  <TextField fx:id="uncorrConstPbUExpressionText1" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+                  <TextField fx:id="pb208Th232ExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -258,6 +261,11 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: Hold Shift key and click expression to see audit." GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Text>
          </children>
       </GridPane>
       <Label text="Masses:" GridPane.rowIndex="7" />

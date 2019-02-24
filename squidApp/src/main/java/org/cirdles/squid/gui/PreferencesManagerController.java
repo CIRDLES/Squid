@@ -17,12 +17,18 @@ package org.cirdles.squid.gui;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -33,19 +39,29 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
+import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
+import static org.cirdles.squid.gui.SquidUI.HEALTHY_URL;
+import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 
@@ -109,8 +125,6 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private ToggleGroup dirctALTtoggleGroup;
     @FXML
-    private Label parentConcExpressionLabel;
-    @FXML
     private Label uncorrConstPbUlabel;
     @FXML
     private Label uncorrConstPbThlabel;
@@ -129,7 +143,24 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private TextField uncorrConstPbThExpressionText;
     @FXML
-    private TextField uncorrConstPbUExpressionText1;
+    private TextField parentConcExpressionText;
+    @FXML
+    private TextField pb208Th232ExpressionText;
+
+    private Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    private Map<String, Tooltip> tooltipsMap = new HashMap<>();
+
+    private final String healthyStyle
+            = "-fx-background-image:url('\"" + HEALTHY_URL 
+            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;" 
+            + " -fx-background-size: 16px 16px;";
+    private final String unHealthyStyle
+            = "-fx-background-image:url('\"" + UNHEALTHY_URL 
+            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;" 
+            + " -fx-background-size: 16px 16px;";
+
+    private Map<KeyCode, Boolean> keyMap = new HashMap<>();
 
     /**
      * Initializes the controller class.
@@ -187,14 +218,48 @@ public class PreferencesManagerController implements Initializable {
             }
         });
 
-        // directives
+        squidUserPreferences.buildNamedExpressionsMap();
+        namedExpressionsMap = squidUserPreferences.getNamedExpressionsMap();
+
+        populateDirectives();
+        showPermutationPlayers();
+    }
+
+    private void populateDirectives() {
+        ((RadioButton) taskManagerGridPane.lookup("#" + squidUserPreferences.getParentNuclide())).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + (String) (squidUserPreferences.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
+
+        pb208RadioButton.setVisible(
+                ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected()
+                && ((RadioButton) taskManagerGridPane.lookup("#indirect")).isSelected());
+
         uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
+        String UTh_U = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
+        uncorrConstPbUExpressionText.setText(UTh_U);
+        uncorrConstPbUExpressionText.setUserData(UNCOR206PB238U_CALIB_CONST);
+        uncorrConstPbUExpressionText.setStyle(
+                makeExpression(UNCOR206PB238U_CALIB_CONST, UTh_U).amHealthy() ? healthyStyle : unHealthyStyle);
 
         uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
+        String UTh_Th = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
+        uncorrConstPbThExpressionText.setText(UTh_Th);
+        uncorrConstPbThExpressionText.setUserData(UNCOR208PB232TH_CALIB_CONST);
+        uncorrConstPbThExpressionText.setStyle(
+                makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th).amHealthy() ? healthyStyle : unHealthyStyle);
 
         th232U238Label.setText(TH_U_EXP_RM + ":");
+        String thU = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
+        pb208Th232ExpressionText.setText(thU);
+        pb208Th232ExpressionText.setUserData(TH_U_EXP_DEFAULT);
+        pb208Th232ExpressionText.setStyle(
+                makeExpression(TH_U_EXP_DEFAULT, thU).amHealthy() ? healthyStyle : unHealthyStyle);
 
         parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
+        String parentPPM = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
+        parentConcExpressionText.setText(parentPPM);
+        parentConcExpressionText.setUserData(PARENT_ELEMENT_CONC_CONST);
+        parentConcExpressionText.setStyle(
+                makeExpression(PARENT_ELEMENT_CONC_CONST, parentPPM).amHealthy() ? healthyStyle : unHealthyStyle);
 
     }
 
@@ -217,6 +282,118 @@ public class PreferencesManagerController implements Initializable {
         labNameTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             squidUserPreferences.setLabName(newValue);
         });
+
+        final StringProperty uncorrConstPbUExpressionString = new SimpleStringProperty();
+        uncorrConstPbUExpressionText.textProperty().bindBidirectional(uncorrConstPbUExpressionString);
+        uncorrConstPbUExpressionString.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Expression exp = makeExpression(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionString.get());
+                squidUserPreferences.getSpecialSquidFourExpressionsMap()
+                        .put(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionString.get());
+                Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
+                audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+                tooltipsMap.put(UNCOR206PB238U_CALIB_CONST, audit).hide();
+                updateExpressionHealthFlag(uncorrConstPbUExpressionText, exp.amHealthy());
+            }
+        });
+        uncorrConstPbUExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredEventHandler);
+        uncorrConstPbUExpressionText.setOnMouseExited(mouseExitedEventHandler);
+
+        final StringProperty uncorrConstPbThExpressionString = new SimpleStringProperty();
+        uncorrConstPbThExpressionText.textProperty().bindBidirectional(uncorrConstPbThExpressionString);
+        uncorrConstPbThExpressionString.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Expression exp = makeExpression(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionString.get());
+                squidUserPreferences.getSpecialSquidFourExpressionsMap()
+                        .put(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionString.get());
+                Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
+                audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+                tooltipsMap.put(UNCOR208PB232TH_CALIB_CONST, audit).hide();
+                updateExpressionHealthFlag(uncorrConstPbThExpressionText, exp.amHealthy());
+            }
+        });
+        uncorrConstPbThExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredEventHandler);
+        uncorrConstPbThExpressionText.setOnMouseExited(mouseExitedEventHandler);
+
+        final StringProperty pb208Th232ExpressionString = new SimpleStringProperty();
+        pb208Th232ExpressionText.textProperty().bindBidirectional(pb208Th232ExpressionString);
+        pb208Th232ExpressionString.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Expression exp = makeExpression(TH_U_EXP_DEFAULT, pb208Th232ExpressionString.get());
+                squidUserPreferences.getSpecialSquidFourExpressionsMap()
+                        .put(TH_U_EXP_DEFAULT, pb208Th232ExpressionString.get());
+                Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
+                audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+                tooltipsMap.put(TH_U_EXP_DEFAULT, audit).hide();
+                updateExpressionHealthFlag(pb208Th232ExpressionText, exp.amHealthy());
+            }
+        });
+        pb208Th232ExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredEventHandler);
+        pb208Th232ExpressionText.setOnMouseExited(mouseExitedEventHandler);
+
+        final StringProperty parentConcExpressionString = new SimpleStringProperty();
+        parentConcExpressionText.textProperty().bindBidirectional(parentConcExpressionString);
+        parentConcExpressionString.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Expression exp = makeExpression(PARENT_ELEMENT_CONC_CONST, parentConcExpressionString.get());
+                squidUserPreferences.getSpecialSquidFourExpressionsMap()
+                        .put(PARENT_ELEMENT_CONC_CONST, parentConcExpressionString.get());
+                Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
+                audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+                tooltipsMap.put(PARENT_ELEMENT_CONC_CONST, audit).hide();
+                updateExpressionHealthFlag(parentConcExpressionText, exp.amHealthy());
+            }
+        });
+        parentConcExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredEventHandler);
+        parentConcExpressionText.setOnMouseExited(mouseExitedEventHandler);
+    }
+
+    EventHandler<MouseEvent> mouseEnteredEventHandler = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            showToolTip(event, ((TextField) event.getSource()), tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()));
+        }
+    };
+
+    EventHandler<MouseEvent> mouseExitedEventHandler = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()).hide();
+        }
+    };
+
+    private void showToolTip(MouseEvent event, TextField textField, Tooltip tooltip) {
+        if (tooltip != null) {
+            tooltip.hide();
+            if (event.isShiftDown()) {
+                tooltip.show(textField, 225, 225);
+            }
+        }
+    }
+
+    private Expression makeExpression(String expressionName, final String expressionString) {
+        //Creates a new expression from the modifications
+
+        String fullText = expressionString;
+        Expression exp = new Expression(expressionName, fullText);
+
+        exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+
+        ExpressionTreeInterface expTree = exp.getExpressionTree();
+
+        expTree.setSquidSwitchSTReferenceMaterialCalculation(true);
+        expTree.setSquidSwitchSAUnknownCalculation(true);
+        expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
+        expTree.setSquidSwitchSCSummaryCalculation(false);
+        expTree.setSquidSpecialUPbThExpression(true);
+        expTree.setUnknownsGroupSampleName(UNKNOWN.getPlotType());
+
+        // to detect ratios of interest
+        if (expTree instanceof BuiltInExpressionInterface) {
+            ((BuiltInExpressionInterface) expTree).buildExpression();
+        }
+
+        return exp;
     }
 
     private void setUpParametersModelsComboBoxes() {
@@ -308,11 +485,13 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private void toggleParentNuclideAction(ActionEvent event) {
         squidUserPreferences.setParentNuclide(((RadioButton) event.getSource()).getId());
+        showPermutationPlayers();
     }
 
     @FXML
     private void toggleDirectAltAction(ActionEvent event) {
         squidUserPreferences.setDirectAltPD(((RadioButton) event.getSource()).getId().compareToIgnoreCase("DIRECT") == 0);
+        showPermutationPlayers();
     }
 
     @FXML
@@ -323,4 +502,37 @@ public class PreferencesManagerController implements Initializable {
     private void defaultRatiosAction(ActionEvent event) {
     }
 
+    private void showPermutationPlayers() {
+        boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();
+        boolean directPicked = ((RadioButton) taskManagerGridPane.lookup("#direct")).isSelected();
+
+        boolean perm1 = uPicked && !directPicked;
+        boolean perm2 = uPicked && directPicked;
+        boolean perm3 = !uPicked && !directPicked;
+        boolean perm4 = !uPicked && directPicked;
+
+        updateExpressionStyle(uncorrConstPbUExpressionText, (perm1 || perm2 || perm4));
+        updateExpressionStyle(uncorrConstPbThExpressionText, (perm2 || perm3 || perm4));
+        updateExpressionStyle(pb208Th232ExpressionText, (perm1 || perm3));
+        updateExpressionStyle(parentConcExpressionText, (perm1 || perm2 || perm3 || perm4));
+    }
+
+    private void updateExpressionStyle(TextField expressionText, boolean player) {
+        String playerStyle = EXPRESSION_LIST_CSS_STYLE_SPECS
+                + "-fx-background-color: white;-fx-border-color: red;-fx-border-width: 2;";
+        String notPlayerStyle = EXPRESSION_LIST_CSS_STYLE_SPECS
+                + "-fx-background-color: white;-fx-border-color: black;";
+
+        boolean unhealthy = expressionText.getStyle().contains("wrongx_icon");
+
+        expressionText.setStyle((player ? playerStyle : notPlayerStyle) + (unhealthy ? unHealthyStyle : healthyStyle));
+    }
+
+    private void updateExpressionHealthFlag(TextField expressionText, boolean healthy) {
+        if (healthy) {
+            expressionText.setStyle(expressionText.getStyle().replace("wrongx_icon", "icon_checkmark"));
+        } else {
+            expressionText.setStyle(expressionText.getStyle().replace("icon_checkmark", "wrongx_icon"));
+        }
+    }
 }

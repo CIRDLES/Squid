@@ -43,6 +43,10 @@ public class SquidSpeciesModel implements
     public SquidSpeciesModel() {
         this(-1, "NONE", "NONE", "NONE", false, "No", false);
     }
+    
+    public SquidSpeciesModel(String isotopeName) {
+        this(-1, "NONE", isotopeName, "NONE", false, "No", false);
+    }
 
     public SquidSpeciesModel(
             int massStationIndex, 

@@ -146,7 +146,9 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUIL
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import static org.cirdles.squid.gui.SquidUI.HEALTHY;
 import static org.cirdles.squid.gui.SquidUI.PEEK_LIST_CSS_STYLE_SPECS;
+import static org.cirdles.squid.gui.SquidUI.UNHEALTHY;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -212,9 +214,10 @@ public class ExpressionBuilderController implements Initializable {
     private Text hintHoverText;
     @FXML
     private Text hintSelectText;
-    private final TextArea expressionAsTextArea = new TextArea();
     @FXML
     private ToggleGroup expressionsSortToggleGroup;
+
+    private final TextArea expressionAsTextArea = new TextArea();
 
     {
         expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSION_BUILDER_DEFAULT_FONTSIZE));
@@ -392,9 +395,6 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private int fontSizeModifier = 0;
-
-    private final Image HEALTHY = new Image("org/cirdles/squid/gui/images/icon_checkmark.png");
-    private final Image UNHEALTHY = new Image("org/cirdles/squid/gui/images/wrongx_icon.png");
 
     private final TextArea notesTextArea = new TextArea();
 
@@ -2275,7 +2275,7 @@ public class ExpressionBuilderController implements Initializable {
                 && etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\]( )*(\\[\\d\\]( )*)?$")) {
             String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\]( )*(\\[\\d\\]( )*)?)", "");
             Expression ex = squidProject.getTask().getExpressionByName(text);
-            if (((ex != null) 
+            if (((ex != null)
                     && (!ex.getExpressionTree().isSquidSwitchSCSummaryCalculation())
                     && ((ExpressionTreeBuilderInterface) ex.getExpressionTree()).getOperation().getLabelsForOutputValues()[0].length > 1)
                     || squidProject.getTask().getRatioNames().contains(text)) {

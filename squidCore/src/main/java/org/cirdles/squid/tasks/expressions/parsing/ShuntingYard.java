@@ -50,8 +50,9 @@ public class ShuntingYard {
         infixList.add("0");
         infixList.add("\n");
         infixList.add("]");
+        infixList.add("xxx");
 
-        //System.out.println("Shunt " + infixToPostfix(infixList));
+        System.out.println("Shunt " + infixToPostfix(infixList));
     }
 
     /**

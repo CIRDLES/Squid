@@ -67,7 +67,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Manage Isotopes" />
                   <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Manage Ratios" />
-                  <Menu disable="true" mnemonicParsing="false" text="Load a Default Ratio Set">
+                  <Menu disable="true" mnemonicParsing="false" text="Load a Default Ratio Set" visible="false">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
                         <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
