@@ -540,15 +540,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             summary.append(" No constants supplied.");
         }
 
-        summary.append("\n Task Parameters (currently hard-coded, except ExtPErr, which is set above.): \n");
-        if (namedParametersMap.size() > 0) {
-            for (Map.Entry<String, ExpressionTreeInterface> entry : namedParametersMap.entrySet()) {
-                summary.append("\t").append(entry.getKey()).append(" = ").append((double) ((ConstantNode) entry.getValue()).getValue()).append("\n");
-            }
-        } else {
-            summary.append(" No Parameters supplied.");
-        }
-
         return summary.toString();
     }
 

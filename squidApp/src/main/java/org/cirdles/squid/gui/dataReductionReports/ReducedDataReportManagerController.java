@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
@@ -32,9 +31,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 public class ReducedDataReportManagerController implements Initializable {
 
     @FXML
-    private AnchorPane reducedUnknownsReportAnchorPane;
-    @FXML
-    private TextArea reducedUnknownsReportTextArea;
+    private TextArea reportTextArea;
 
     /**
      * Initializes the controller class.
@@ -42,10 +39,11 @@ public class ReducedDataReportManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
       
-        reducedUnknownsReportTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
+        reportTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
          // todo: fix demeters law violation
         squidProject.getTask().produceSummaryReportsForGUI();
-        reducedUnknownsReportTextArea.setText(
-                squidProject.getPrawnFileHandler().getReportsEngine().produceCalamariReportByFlavor(SquidUI.calamariReportFlavor).replaceAll(",", ""));
+        reportTextArea.setText(
+                squidProject.getPrawnFileHandler().getReportsEngine()
+                        .produceCalamariReportByFlavor(SquidUI.calamariReportFlavor).replaceAll(",", ""));
     }
 }
