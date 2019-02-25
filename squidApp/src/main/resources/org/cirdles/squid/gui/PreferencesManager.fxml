@@ -150,7 +150,6 @@
       <VBox GridPane.rowIndex="10">
          <children>
             <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="105.0" text="Directives:" />
-            <Label graphicTextGap="0.0" style="-fx-font-size: 12;" text="Note: Expressions not audited here." textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="10">
@@ -261,7 +260,7 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: Hold Shift key and click expression to see audit." GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: Hold Shift key and click expression to see audit." textAlignment="RIGHT" wrappingWidth="574.55224609375" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="11.0" />
                </font>

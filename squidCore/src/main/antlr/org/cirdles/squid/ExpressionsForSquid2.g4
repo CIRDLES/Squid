@@ -57,7 +57,7 @@ stat:   block
 expr:   FUNCTION WS* '(' exprList+ WS* ')'    // func call like f(), f(x), f(1,2) switched ? to + to require 1 arg min
     |   expr expr
     |   '(' expr ')'
-    |   ID '[' INT ']'         // array index like a[i], a[i][j]
+//    |   ID '[' INT ']'         // array index like a[i], a[i][j] see below
     |   '-' expr                // unary minus
     |   '!' expr                // boolean not
     |   expr ('*'|'/') expr
@@ -141,7 +141,7 @@ FUNCTION :
     V A L U E M O D E L 
 ;
 
-ARRAY_CALL : (ID | NAMED_EXPRESSION) ((' ')* '[' INT ']' (' ')*);       // array index like a[i]
+ARRAY_CALL : (ID | NAMED_EXPRESSION) ((' ')* '[' INT ']' (' ')*);       // array index like a[1]
 
 //NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.')* PARENS* (' %err')* '"' ']' ;
 NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.' | '_' | '%' | '-')* PARENS* (' %err')* '"' ']' ;
