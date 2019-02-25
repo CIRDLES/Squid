@@ -16,9 +16,10 @@
 package org.cirdles.squid.gui;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,6 +32,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -41,8 +45,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
@@ -135,10 +146,6 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private ComboBox<String> delimeterComboBox;
     @FXML
-    private Label defaultMassesListLabel;
-    @FXML
-    private Label defaultRatiosListLabel;
-    @FXML
     private TextField uncorrConstPbUExpressionText;
     @FXML
     private TextField uncorrConstPbThExpressionText;
@@ -152,15 +159,23 @@ public class PreferencesManagerController implements Initializable {
     private Map<String, Tooltip> tooltipsMap = new HashMap<>();
 
     private final String healthyStyle
-            = "-fx-background-image:url('\"" + HEALTHY_URL 
-            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;" 
+            = "-fx-background-image:url('\"" + HEALTHY_URL
+            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
             + " -fx-background-size: 16px 16px;";
     private final String unHealthyStyle
-            = "-fx-background-image:url('\"" + UNHEALTHY_URL 
-            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;" 
+            = "-fx-background-image:url('\"" + UNHEALTHY_URL
+            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
             + " -fx-background-size: 16px 16px;";
 
     private Map<KeyCode, Boolean> keyMap = new HashMap<>();
+    @FXML
+    private TextFlow defaultMassesListTextFlow;
+    @FXML
+    private TextFlow defaultRatiosListTextFlow;
+    @FXML
+    private Button undoRatioButton;
+    
+    private List<VBox> undoList = new ArrayList<>();
 
     /**
      * Initializes the controller class.
@@ -218,11 +233,74 @@ public class PreferencesManagerController implements Initializable {
             }
         });
 
-        squidUserPreferences.buildNamedExpressionsMap();
-        namedExpressionsMap = squidUserPreferences.getNamedExpressionsMap();
+        populateMasses();
+        populateRatios();
+
+        namedExpressionsMap = squidUserPreferences.buildNamedExpressionsMap();
 
         populateDirectives();
         showPermutationPlayers();
+        
+        undoRatioButton.setVisible(false);
+    }
+
+    private void populateMasses() {
+        defaultMassesListTextFlow.setPadding(new Insets(0, 0, 0, 10));
+        List<String> nominalMasses = squidUserPreferences.getNominalMasses();
+        int count = 1;
+        for (String nominalMass : nominalMasses) {
+            Text massText = new Text(nominalMass);
+            massText.setFont(new Font("Monospaced Bold", 14));
+            massText.setTranslateY(5);
+            massText.setTranslateX(15 * count++);
+            defaultMassesListTextFlow.getChildren().add(massText);
+        }
+    }
+
+    private void populateRatios() {
+        List<String> ratioNamesR = squidUserPreferences.getRequiredRatioNames();
+        int count = 1;
+        for (String ratioName : ratioNamesR) {
+            VBox ratio = makeRatioVBox(ratioName);
+            ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
+
+            ratio.setTranslateX(1 * count++);
+            defaultRatiosListTextFlow.getChildren().add(ratio);
+        }
+
+        List<String> ratioNames = squidUserPreferences.getRatioNames();
+        for (String ratioName : ratioNames) {
+            VBox ratio = makeRatioVBox(ratioName);
+            ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;");
+            ratio.setTranslateX(1 * count++);
+            ratio.setOnMouseClicked((MouseEvent event) -> {
+                if (event.getButton() == MouseButton.SECONDARY && event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                    namedExpressionsMap.remove(ratioName);
+                    defaultRatiosListTextFlow.getChildren().remove(ratio);
+                    undoList.add(ratio);
+                    undoRatioButton.setVisible(true);
+                    squidUserPreferences.removeRatioName(ratioName);
+                    refreshExpressionAudits();
+                }
+            });
+
+            defaultRatiosListTextFlow.getChildren().add(ratio);
+        } 
+    }
+
+    private VBox makeRatioVBox(String ratioName) {
+        String[] numDen = ratioName.split("/");
+        Text num = new Text(numDen[0]);
+        num.setFont(new Font("Monospaced Bold", 12));
+        Text den = new Text(numDen[1]);
+        den.setFont(new Font("Monospaced Bold", 12));
+        Shape line = new Line(0, 0, 35, 0);
+
+        VBox ratio = new VBox(num, line, den);
+        ratio.setAlignment(Pos.CENTER);
+        ratio.setPadding(new Insets(1, 3, 1, 3));
+
+        return ratio;
     }
 
     private void populateDirectives() {
@@ -290,13 +368,11 @@ public class PreferencesManagerController implements Initializable {
                 Expression exp = makeExpression(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionString.get());
                 squidUserPreferences.getSpecialSquidFourExpressionsMap()
                         .put(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionString.get());
-                Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
-                audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
-                tooltipsMap.put(UNCOR206PB238U_CALIB_CONST, audit).hide();
+                tooltipMapPut(exp, UNCOR206PB238U_CALIB_CONST);
                 updateExpressionHealthFlag(uncorrConstPbUExpressionText, exp.amHealthy());
             }
         });
-        uncorrConstPbUExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredEventHandler);
+        uncorrConstPbUExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredExpressionEventHandler);
         uncorrConstPbUExpressionText.setOnMouseExited(mouseExitedEventHandler);
 
         final StringProperty uncorrConstPbThExpressionString = new SimpleStringProperty();
@@ -306,13 +382,11 @@ public class PreferencesManagerController implements Initializable {
                 Expression exp = makeExpression(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionString.get());
                 squidUserPreferences.getSpecialSquidFourExpressionsMap()
                         .put(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionString.get());
-                Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
-                audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
-                tooltipsMap.put(UNCOR208PB232TH_CALIB_CONST, audit).hide();
+                tooltipMapPut(exp, UNCOR208PB232TH_CALIB_CONST);
                 updateExpressionHealthFlag(uncorrConstPbThExpressionText, exp.amHealthy());
             }
         });
-        uncorrConstPbThExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredEventHandler);
+        uncorrConstPbThExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredExpressionEventHandler);
         uncorrConstPbThExpressionText.setOnMouseExited(mouseExitedEventHandler);
 
         final StringProperty pb208Th232ExpressionString = new SimpleStringProperty();
@@ -322,13 +396,11 @@ public class PreferencesManagerController implements Initializable {
                 Expression exp = makeExpression(TH_U_EXP_DEFAULT, pb208Th232ExpressionString.get());
                 squidUserPreferences.getSpecialSquidFourExpressionsMap()
                         .put(TH_U_EXP_DEFAULT, pb208Th232ExpressionString.get());
-                Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
-                audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
-                tooltipsMap.put(TH_U_EXP_DEFAULT, audit).hide();
+                tooltipMapPut(exp, TH_U_EXP_DEFAULT);
                 updateExpressionHealthFlag(pb208Th232ExpressionText, exp.amHealthy());
             }
         });
-        pb208Th232ExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredEventHandler);
+        pb208Th232ExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredExpressionEventHandler);
         pb208Th232ExpressionText.setOnMouseExited(mouseExitedEventHandler);
 
         final StringProperty parentConcExpressionString = new SimpleStringProperty();
@@ -338,17 +410,44 @@ public class PreferencesManagerController implements Initializable {
                 Expression exp = makeExpression(PARENT_ELEMENT_CONC_CONST, parentConcExpressionString.get());
                 squidUserPreferences.getSpecialSquidFourExpressionsMap()
                         .put(PARENT_ELEMENT_CONC_CONST, parentConcExpressionString.get());
-                Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
-                audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
-                tooltipsMap.put(PARENT_ELEMENT_CONC_CONST, audit).hide();
+                tooltipMapPut(exp, PARENT_ELEMENT_CONC_CONST);
+
                 updateExpressionHealthFlag(parentConcExpressionText, exp.amHealthy());
             }
         });
-        parentConcExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredEventHandler);
+        parentConcExpressionText.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEnteredExpressionEventHandler);
         parentConcExpressionText.setOnMouseExited(mouseExitedEventHandler);
     }
 
-    EventHandler<MouseEvent> mouseEnteredEventHandler = new EventHandler<MouseEvent>() {
+    private void refreshExpressionAudits() {
+        Expression exp = makeExpression(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionText.getText());
+        tooltipMapPut(exp, UNCOR206PB238U_CALIB_CONST);
+        updateExpressionHealthFlag(uncorrConstPbUExpressionText, exp.amHealthy());
+
+        exp = makeExpression(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionText.getText());
+        tooltipMapPut(exp, UNCOR208PB232TH_CALIB_CONST);
+        updateExpressionHealthFlag(uncorrConstPbThExpressionText, exp.amHealthy());
+
+        exp = makeExpression(TH_U_EXP_DEFAULT, pb208Th232ExpressionText.getText());
+        tooltipMapPut(exp, TH_U_EXP_DEFAULT);
+        updateExpressionHealthFlag(pb208Th232ExpressionText, exp.amHealthy());
+
+        exp = makeExpression(PARENT_ELEMENT_CONC_CONST, parentConcExpressionText.getText());
+        tooltipMapPut(exp, PARENT_ELEMENT_CONC_CONST);
+        updateExpressionHealthFlag(parentConcExpressionText, exp.amHealthy());
+
+    }
+
+    private void tooltipMapPut(Expression exp, String expressionText) {
+        Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
+        audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+        Tooltip result = tooltipsMap.put(expressionText, audit);
+        if (result != null) {
+            result.hide();
+        }
+    }
+
+    EventHandler<MouseEvent> mouseEnteredExpressionEventHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
             showToolTip(event, ((TextField) event.getSource()), tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()));
@@ -534,5 +633,9 @@ public class PreferencesManagerController implements Initializable {
         } else {
             expressionText.setStyle(expressionText.getStyle().replace("icon_checkmark", "wrongx_icon"));
         }
+    }
+
+    @FXML
+    private void undoRatioButtonAction(ActionEvent event) {
     }
 }

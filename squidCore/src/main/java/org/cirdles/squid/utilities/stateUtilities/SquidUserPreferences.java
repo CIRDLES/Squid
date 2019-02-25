@@ -18,6 +18,7 @@
 package org.cirdles.squid.utilities.stateUtilities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -74,9 +75,8 @@ public class SquidUserPreferences implements Serializable {
     private final List<String> requiredNominalMasses;
     private List<String> ratioNames;
     private final List<String> requiredRatioNames;
-    private Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
 
-    private Map<String, ExpressionTreeInterface> namedExpressionsMap;
+    private Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
 
     /**
      * Creates a new instance of ReduxPreferences
@@ -110,16 +110,19 @@ public class SquidUserPreferences implements Serializable {
         this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
         this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
 
-        // Default to 11 - mass
-        this.nominalMasses = Arrays.asList(new String[]{"BKG", "190", "195.8", "195.9", "238", "248", "254"});
-        this.requiredNominalMasses = Arrays.asList(new String[]{"204", "206", "207", "208"});
-        this.ratioNames = Arrays.asList(new String[]{"190/195.8", "195.9/195.8", "238/195.8", "248/195.8"});
-        this.requiredRatioNames = Arrays.asList(new String[]{
-            "204/206", "207/206", "208/206", "206/238", "254/238", "208/248", "206/254", "248/254"});
+        // Default to 11 - mass  
+        String[] requiredNominalMassesArray = new String[]{"204", "206", "207", "208"};
+        this.requiredNominalMasses = new ArrayList<>(Arrays.asList(requiredNominalMassesArray));
+        String[] nominalMassesArray = new String[]{"BKG", "190", "195.8", "195.9", "238", "248", "254"};
+        this.nominalMasses = new ArrayList<>(Arrays.asList(nominalMassesArray));
+
+        String[] requiredRatioNamesArray = new String[]{"204/206", "207/206", "208/206"};
+        this.requiredRatioNames = new ArrayList<>(Arrays.asList(requiredRatioNamesArray));
+        String[] ratioNamesArray = new String[]{
+            "190/195.8", "195.9/195.8", "238/195.8", "248/195.8", "206/238", "254/238", "208/248", "206/254", "248/254"};
+        this.ratioNames = new ArrayList<>(Arrays.asList(ratioNamesArray));
 
         buildShrimpSpeciesNodeMap();
-        buildNamedExpressionsMap();
-
     }
 
     private void buildShrimpSpeciesNodeMap() {
@@ -136,8 +139,8 @@ public class SquidUserPreferences implements Serializable {
         }
     }
 
-    public void buildNamedExpressionsMap() {
-        namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public Map<String, ExpressionTreeInterface> buildNamedExpressionsMap() {
+        Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 0; i < requiredRatioNames.size(); i++) {
             String[] numDem = requiredRatioNames.get(i).split("/");
             ExpressionTreeInterface ratio = new ExpressionTree(
@@ -160,6 +163,7 @@ public class SquidUserPreferences implements Serializable {
             ratio.setSquidSwitchSTReferenceMaterialCalculation(true);
             namedExpressionsMap.put(ratioNames.get(i), ratio);
         }
+        return namedExpressionsMap;
     }
 
     /**
@@ -408,6 +412,14 @@ public class SquidUserPreferences implements Serializable {
         this.ratioNames = ratioNames;
     }
 
+    public void removeRatioName(String ratioName) {
+        try {
+            this.ratioNames.remove((String) ratioName);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     /**
      * @return the requiredNominalMasses
      */
@@ -420,13 +432,6 @@ public class SquidUserPreferences implements Serializable {
      */
     public List<String> getRequiredRatioNames() {
         return requiredRatioNames;
-    }
-
-    /**
-     * @return the namedExpressionsMap
-     */
-    public Map<String, ExpressionTreeInterface> getNamedExpressionsMap() {
-        return namedExpressionsMap;
     }
 
 }

@@ -60,7 +60,7 @@ public class SquidPersistentState implements Serializable {
     private File MRUExpressionGraphFile;
     private List<String> MRUExpressionGraphList;
     private String MRUExpressionGraphFolderPath;
-   
+
     private File opFile;
 
     private File customExpressionsFile;
@@ -109,8 +109,8 @@ public class SquidPersistentState implements Serializable {
         } catch (SquidException squidException) {
         }
     }
-    
-    public void updateUserPreferences(){
+
+    public void updateUserPreferences() {
         serializeSelf();
     }
 
@@ -131,11 +131,11 @@ public class SquidPersistentState implements Serializable {
 
         // check to update SquidUserPreferences
         SquidUserPreferences sup = instance.getSquidUserPreferences();
-        if (sup.getNamedExpressionsMap() == null){
+        if (sup.getRatioNames() == null) {
             sup = new SquidUserPreferences();
             instance.setSquidUserPreferences(sup);
         }
-        
+
         return instance;
     }
 

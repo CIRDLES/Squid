@@ -35,6 +35,7 @@ import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
@@ -44,6 +45,8 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
 
 /**
  *
@@ -415,7 +418,7 @@ public interface TaskInterface {
                 PARENT_ELEMENT_CONC_CONST, parentPPM_Expression, true, true, false);
         parentPPM.setSquidSwitchNU(true);
 
-        String parentPPMmean_Expression = BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+        String parentPPMmean_Expression = AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
         Expression parentPPMmean = BuiltInExpressionsFactory.buildExpression(
                 AV_PARENT_ELEMENT_CONC_CONST, parentPPMmean_Expression, true, true, true);
         parentPPMmean.setSquidSwitchNU(false);
@@ -426,7 +429,7 @@ public interface TaskInterface {
             uThU_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
         }
         if (uThU_Expression.length() == 0) {
-            uThU_Expression = BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+            uThU_Expression = UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
         }
         Expression uThU = BuiltInExpressionsFactory.buildExpression(
                 UNCOR206PB238U_CALIB_CONST, uThU_Expression, true, true, false);
@@ -437,7 +440,7 @@ public interface TaskInterface {
             uThTh_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
         }
         if (uThTh_Expression.length() == 0) {
-            uThTh_Expression = BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+            uThTh_Expression = UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
         }
         Expression uThTh = BuiltInExpressionsFactory.buildExpression(
                 UNCOR208PB232TH_CALIB_CONST, uThTh_Expression, true, true, false);

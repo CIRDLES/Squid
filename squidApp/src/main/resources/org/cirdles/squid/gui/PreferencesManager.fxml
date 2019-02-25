@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 
 <GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.PreferencesManagerController">
   <columnConstraints>
@@ -32,7 +33,7 @@
     <RowConstraints percentHeight="32.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="60.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="10.0" valignment="TOP" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="60.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
     <RowConstraints maxHeight="296.0" minHeight="21.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
@@ -276,10 +277,10 @@
                   <Label prefHeight="33.0" prefWidth="202.0" style="-fx-font-family: Monospaced; -fx-font-weight: bold; -fx-font-size: 14;" text="   204   206   207   208" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#defaultMassesAction" prefHeight="30.0" prefWidth="68.0" style="-fx-padding: 0 0 0 0;" text="Default:" />
-                  <Label fx:id="defaultMassesListLabel" prefHeight="30.0" prefWidth="985.0" style="-fx-font-family: Monospaced; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: black; -fx-background-color: white;" />
+                  <TextFlow fx:id="defaultMassesListTextFlow" prefHeight="30.0" prefWidth="985.0" style="-fx-background-color: white; -fx-border-color: black;" />
                </children>
             </HBox>
          </children>
@@ -287,16 +288,15 @@
       <Label text="Ratios:" GridPane.rowIndex="9" />
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label text="Provided:" />
-                  <Label prefHeight="33.0" prefWidth="253.0" style="-fx-font-family: Monospaced; -fx-font-weight: bold; -fx-font-size: 14;" text="   204/206   207/206   208/206" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#defaultRatiosAction" prefHeight="30.0" prefWidth="68.0" style="-fx-padding: 0 0 0 0;" text="Default:" />
-                  <Label fx:id="defaultRatiosListLabel" prefHeight="30.0" prefWidth="985.0" style="-fx-font-family: Monospaced; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: black; -fx-background-color: white;" />
+                  <TextFlow fx:id="defaultRatiosListTextFlow" prefHeight="30.0" prefWidth="962.0" style="-fx-background-color: white; -fx-border-color: black;" />
+                  <Button fx:id="undoRatioButton" mnemonicParsing="false" onAction="#undoRatioButtonAction" prefHeight="30.0" prefWidth="45.0" style="-fx-padding: 1 1 1 1;" text="Undo">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Button>
                </children>
             </HBox>
          </children>
