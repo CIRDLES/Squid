@@ -1,5 +1,5 @@
 /*
- * SquidUserPreferences.java
+ * SquidTaskPreferences.java
  *
  * Copyright 2017 James F. Bowring and CIRDLES.org.
  *
@@ -15,11 +15,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.cirdles.squid.utilities.stateUtilities;
+package org.cirdles.squid.tasks.taskPreferences;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -44,44 +46,45 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
  *
  * @author James F. Bowring
  */
-public class SquidUserPreferences implements Serializable {
+public class SquidTaskPreferences implements Serializable {
 
     // NOTE: java.utils.Properties should be considered for use here JFB
     // Jan 2019 - considered and rejected as too simplistic
     // Class variables
-    private static final long serialVersionUID = -936841271782482788L;
+    protected static final long serialVersionUID = -936841271782482788L;
 
     // instance variables
-    private String geochronUserName;
-    private String geochronPassWord;
+    protected String geochronUserName;
+    protected String geochronPassWord;
 
-    private TaskTypeEnum taskType;
-    private String authorName;
-    private String labName;
-    private boolean useSBM;
-    private boolean userLinFits;
-    private Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
+    protected TaskTypeEnum taskType;
+    protected String authorName;
+    protected String labName;
+    protected boolean useSBM;
+    protected boolean userLinFits;
+    protected Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
 
-    private boolean squidAllowsAutoExclusionOfSpots;
+    protected boolean squidAllowsAutoExclusionOfSpots;
 
-    private double extPErr;
+    protected double extPErrU;
+    protected double extPErrTh;
 
-    private String delimiterForUnknownNames;
-    private String parentNuclide;
-    private boolean directAltPD;
+    protected String delimiterForUnknownNames;
+    protected String parentNuclide;
+    protected boolean directAltPD;
 
-    private Map<String, String> specialSquidFourExpressionsMap;
-    private List<String> nominalMasses;
-    private final List<String> requiredNominalMasses;
-    private List<String> ratioNames;
-    private final List<String> requiredRatioNames;
+    protected Map<String, String> specialSquidFourExpressionsMap;
+    protected List<String> nominalMasses;
+    protected List<String> requiredNominalMasses;
+    protected List<String> ratioNames;
+    protected List<String> requiredRatioNames;
 
-    private Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
+    protected Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
 
     /**
      * Creates a new instance of ReduxPreferences
      */
-    public SquidUserPreferences() {
+    public SquidTaskPreferences() {
 
         this.geochronUserName = "username";
         this.geochronPassWord = "longpassword";
@@ -97,7 +100,8 @@ public class SquidUserPreferences implements Serializable {
 
         this.squidAllowsAutoExclusionOfSpots = true;
 
-        this.extPErr = 0.75;
+        this.extPErrU = 0.75;
+        this.extPErrTh = 0.75;
 
         this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName().trim();
 
@@ -111,9 +115,9 @@ public class SquidUserPreferences implements Serializable {
         this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
 
         // Default to 11 - mass  
-        String[] requiredNominalMassesArray = new String[]{"204", "206", "207", "208"};
+        String[] requiredNominalMassesArray = new String[]{"BKG", "204", "206", "207", "208"};
         this.requiredNominalMasses = new ArrayList<>(Arrays.asList(requiredNominalMassesArray));
-        String[] nominalMassesArray = new String[]{"BKG", "190", "195.8", "195.9", "238", "248", "254"};
+        String[] nominalMassesArray = new String[]{"190", "195.8", "195.9", "238", "248", "254"};
         this.nominalMasses = new ArrayList<>(Arrays.asList(nominalMassesArray));
 
         String[] requiredRatioNamesArray = new String[]{"204/206", "207/206", "208/206"};
@@ -314,17 +318,31 @@ public class SquidUserPreferences implements Serializable {
     }
 
     /**
-     * @return the extPErr
+     * @return the extPErrU
      */
-    public double getExtPErr() {
-        return extPErr;
+    public double getExtPErrU() {
+        return extPErrU;
     }
 
     /**
-     * @param extPErr the extPErr to set
+     * @param extPErrU the extPErrU to set
      */
-    public void setExtPErr(double extPErr) {
-        this.extPErr = extPErr;
+    public void setExtPErrU(double extPErrU) {
+        this.extPErrU = extPErrU;
+    }
+
+    /**
+     * @return the extPErrTh
+     */
+    public double getExtPErrTh() {
+        return extPErrTh;
+    }
+
+    /**
+     * @param extPErrTh the extPErrTh to set
+     */
+    public void setExtPErrTh(double extPErrTh) {
+        this.extPErrTh = extPErrTh;
     }
 
     /**
@@ -388,7 +406,16 @@ public class SquidUserPreferences implements Serializable {
      * @return the nominalMasses
      */
     public List<String> getNominalMasses() {
-        return nominalMasses;
+        Collections.sort(nominalMasses, new Comparator<String>() {
+            @Override
+            public int compare(String mass1, String mass2) {
+                return mass1.compareTo(mass2);
+            }
+        });
+
+        List<String> retVal = new ArrayList<>();
+        retVal.addAll(nominalMasses);
+        return retVal;
     }
 
     /**
@@ -398,11 +425,39 @@ public class SquidUserPreferences implements Serializable {
         this.nominalMasses = nominalMasses;
     }
 
+    public void removeNominalMass(String nominalMass) {
+        this.nominalMasses.remove(nominalMass);
+        // check if present in any ratios and zap them too
+        List<String> removals = new ArrayList<>();
+        for (String ratio : ratioNames) {
+            String[] numDen = ratio.split("/");
+            if ((numDen[0].compareTo(nominalMass) == 0) || (numDen[1].compareTo(nominalMass) == 0)) {
+                removals.add(ratio);
+            }
+        }
+        ratioNames.removeAll(removals);
+    }
+
+    public void addNominalMass(String nominalMass) {
+        if (!nominalMasses.contains(nominalMass)) {
+            this.nominalMasses.add(nominalMass);
+        }
+    }
+
     /**
      * @return the ratioNames
      */
     public List<String> getRatioNames() {
-        return ratioNames;
+        Collections.sort(ratioNames, new Comparator<String>() {
+            @Override
+            public int compare(String ratio1, String ratio2) {
+                return ratio1.compareTo(ratio2);
+            }
+        });
+        
+        List<String> retVal = new ArrayList<>();
+        retVal.addAll(ratioNames);
+        return retVal;
     }
 
     /**
@@ -413,10 +468,12 @@ public class SquidUserPreferences implements Serializable {
     }
 
     public void removeRatioName(String ratioName) {
-        try {
-            this.ratioNames.remove((String) ratioName);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        this.ratioNames.remove(ratioName);
+    }
+
+    public void addRatioName(String ratioName) {
+        if (!ratioNames.contains(ratioName)) {
+            this.ratioNames.add(ratioName);
         }
     }
 
@@ -424,14 +481,24 @@ public class SquidUserPreferences implements Serializable {
      * @return the requiredNominalMasses
      */
     public List<String> getRequiredNominalMasses() {
-        return requiredNominalMasses;
+        List<String> retVal = new ArrayList<String>();
+        retVal.addAll(requiredNominalMasses);
+        return retVal;
     }
 
     /**
      * @return the requiredRatioNames
      */
     public List<String> getRequiredRatioNames() {
-        return requiredRatioNames;
-    }
+        Collections.sort(requiredRatioNames, new Comparator<String>() {
+            @Override
+            public int compare(String ratio1, String ratio2) {
+                return ratio1.compareTo(ratio2);
+            }
+        });
 
+        List<String> retVal = new ArrayList<String>();
+        retVal.addAll(requiredRatioNames);
+        return retVal;
+    }
 }

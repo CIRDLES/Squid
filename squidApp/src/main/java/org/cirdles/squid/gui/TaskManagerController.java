@@ -102,8 +102,6 @@ public class TaskManagerController implements Initializable {
     @FXML
     private CheckBox autoExcludeSpotsCheckBox;
     @FXML
-    private Spinner<Double> assignedExternalErrSpinner;
-    @FXML
     private ComboBox<ParametersModel> refMatModelComboBox;
     @FXML
     private ComboBox<ParametersModel> commonPbModelComboBox;
@@ -131,6 +129,10 @@ public class TaskManagerController implements Initializable {
     private Label parentConcExpressionLabel;
     @FXML
     private Label parentConcLabel;
+    @FXML
+    private Spinner<Double> assignedExternalErrUSpinner;
+    @FXML
+    private Spinner<Double> assignedExternalErrThSpinner;
 
     /**
      * Initializes the controller class.
@@ -198,15 +200,28 @@ public class TaskManagerController implements Initializable {
 
         autoExcludeSpotsCheckBox.setSelected(task.isSquidAllowsAutoExclusionOfSpots());
 
-        SpinnerValueFactory<Double> valueFactory
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErr(), 0.05);
-        assignedExternalErrSpinner.setValueFactory(valueFactory);
-        assignedExternalErrSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+        SpinnerValueFactory<Double> valueFactoryU
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrU(), 0.05);
+        assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
+        assignedExternalErrUSpinner.valueProperty().addListener(new ChangeListener<Double>() {
 
             @Override
             public void changed(ObservableValue<? extends Double> observable,//
                     Double oldValue, Double newValue) {
-                task.setExtPErr(assignedExternalErrSpinner.getValue());
+                task.setExtPErrTh(assignedExternalErrUSpinner.getValue());
+                taskAuditTextArea.setText(task.printTaskAudit());
+            }
+        });
+
+        SpinnerValueFactory<Double> valueFactoryTh
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrTh(), 0.05);
+        assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
+        assignedExternalErrThSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Double> observable,//
+                    Double oldValue, Double newValue) {
+                task.setExtPErrU(assignedExternalErrThSpinner.getValue());
                 taskAuditTextArea.setText(task.printTaskAudit());
             }
         });

@@ -17,6 +17,7 @@
  */
 package org.cirdles.squid.utilities.stateUtilities;
 
+import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -39,7 +40,7 @@ public class SquidPersistentState implements Serializable {
     private static final int MRU_COUNT = 10;
 
     // instance variables
-    private SquidUserPreferences squidUserPreferences;
+    private SquidTaskPreferences squidUserPreferences;
 
     private File MRUProjectFile;
     private List<String> MRUProjectList;
@@ -72,7 +73,7 @@ public class SquidPersistentState implements Serializable {
 
         initMRULists();
 
-        squidUserPreferences = new SquidUserPreferences();
+        squidUserPreferences = new SquidTaskPreferences();
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
@@ -129,10 +130,10 @@ public class SquidPersistentState implements Serializable {
             instance = new SquidPersistentState();
         }
 
-        // check to update SquidUserPreferences
-        SquidUserPreferences sup = instance.getSquidUserPreferences();
+        // check to update SquidTaskPreferences
+        SquidTaskPreferences sup = instance.getSquidUserPreferences();
         if (sup.getRatioNames() == null) {
-            sup = new SquidUserPreferences();
+            sup = new SquidTaskPreferences();
             instance.setSquidUserPreferences(sup);
         }
 
@@ -157,14 +158,14 @@ public class SquidPersistentState implements Serializable {
     /**
      * @return the squidUserPreferences
      */
-    public SquidUserPreferences getSquidUserPreferences() {
+    public SquidTaskPreferences getSquidUserPreferences() {
         return squidUserPreferences;
     }
 
     /**
      * @param squidUserPreferences the squidUserPreferences to set
      */
-    public void setSquidUserPreferences(SquidUserPreferences squidUserPreferences) {
+    public void setSquidUserPreferences(SquidTaskPreferences squidUserPreferences) {
         this.squidUserPreferences = squidUserPreferences;
     }
 

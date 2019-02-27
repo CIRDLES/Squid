@@ -118,8 +118,10 @@
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
-                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned Pb/U external 1sigma % err  (ExtPErr):" translateX="20.0" />
-                  <Spinner fx:id="assignedExternalErrSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned Pb/U external 1sigma % err for Uranium:" translateX="20.0" />
+                  <Spinner fx:id="assignedExternalErrUSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text=" for Thorium:" translateX="35.0" />
+                  <Spinner fx:id="assignedExternalErrThSpinner" prefHeight="27.0" prefWidth="75.0" translateX="40.0" />
                </children>
             </HBox>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">

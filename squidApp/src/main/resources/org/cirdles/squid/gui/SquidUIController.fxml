@@ -154,7 +154,7 @@
             </Menu>
             <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Resources">
               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#showPreferencesManagerAction" text="User Preferences" />
+                  <MenuItem mnemonicParsing="false" onAction="#showPreferencesManagerAction" text="Task Preferences" />
                   <Menu mnemonicParsing="false" text="Parameter Models">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />

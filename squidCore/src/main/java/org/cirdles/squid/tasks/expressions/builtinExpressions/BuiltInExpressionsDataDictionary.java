@@ -159,7 +159,8 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String PBTH_EXT_1_SIGMA_ERR_PCT = "208Pb232Th_Ext1SigmaErr_Pct";
     public static final String PBU_EXT_1_SIGMA_ERR_PCT = "206Pb238U_Ext1SigmaErr_Pct";
-    public static final String ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
+    public static final String MIN_206PB238U_EXT_1SIGMA_ERR_PCT = "Min_206Pb238U_Ext1SigmaErr_Pct";
+    public static final String MIN_208PB232TH_EXT_1SIGMA_ERR_PCT = "Min_208Pb232Th_Ext1SigmaErr_Pct";
 
     // ********************** OVER COUNTS **************************************
     public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_OvCtCorFrom207Pb";
@@ -182,7 +183,7 @@ public class BuiltInExpressionsDataDictionary {
     // ********************** INTERNAL EXPRESSIONS *****************************
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
-    public static final String UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION = "[\"206/238\"]/[\"254/238\"]^Expo_Used";
+    public static final String UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION = "[\"206/238\"]/[\"254/238\"]^1.8";//Expo_Used";
 
     public static final String UNCOR208PB232TH_CALIB_CONST = "Uncor_208Pb232Th_CalibConst";
     public static final String UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION = "[\"208/248\"]";

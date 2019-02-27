@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -18,12 +19,13 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.PreferencesManagerController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" prefHeight="640.0" prefWidth="1357.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.PreferencesManagerController">
   <columnConstraints>
-    <ColumnConstraints halignment="RIGHT" hgrow="NEVER" prefWidth="100.0" />
-    <ColumnConstraints hgrow="ALWAYS" />
+    <ColumnConstraints halignment="RIGHT" hgrow="NEVER" percentWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
   </columnConstraints>
   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
@@ -31,18 +33,18 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
     <RowConstraints percentHeight="32.0" valignment="TOP" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="60.0" valignment="TOP" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="10.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="10.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
     <RowConstraints maxHeight="296.0" minHeight="21.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <HBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+      <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
-            <Label fx:id="titleLabel" text="User Preferences: Set Defaults for new Tasks" />
+            <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="548.0" text="Task Preferences: Set Defaults for new Tasks" />
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <RadioButton id="GEOCHRON" fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
                <toggleGroup>
@@ -55,23 +57,23 @@
             <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" disable="true" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
          </children>
       </HBox>
-      <Label text="Author:" GridPane.rowIndex="2" />
-      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Label text="Author:" GridPane.rowIndex="3" />
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <children>
             <TextField fx:id="authorsNameTextField" promptText="Author's Name" HBox.hgrow="ALWAYS" />
             <Label text="Lab Name:" />
             <TextField fx:id="labNameTextField" promptText="Lab Name:" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <Label text="Samples:" GridPane.rowIndex="4" />
-      <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <Label text="Samples:" GridPane.rowIndex="5" />
+      <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>
             <Label prefHeight="28.0" prefWidth="256.0" style="-fx-font-size: 14;" text="     Select Name Delimeter OR # Chars:  " />
             <ComboBox fx:id="delimeterComboBox" prefHeight="28.0" prefWidth="65.0" style="-fx-font-size: 14; -fx-font-weight: bold;" />
          </children>
       </HBox>
-      <Label text="Parameters:" GridPane.rowIndex="6" />
-      <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+      <Label text="Parameters:" GridPane.rowIndex="7" />
+      <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
         <columnConstraints>
           <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="259.0" minWidth="243.0" prefWidth="259.0" />
           <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0" />
@@ -133,9 +135,14 @@
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
-                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned Pb/U external 1sigma % err  (ExtPErr):" translateX="20.0" />
-                  <Spinner fx:id="assignedExternalErrSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned external 1sigma % err for Uranium:" translateX="20.0" />
+                  <Spinner fx:id="assignedExternalErrUSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="for Thorium:" translateX="35.0" />
+                  <Spinner fx:id="assignedExternalErrThSpinner" prefHeight="27.0" prefWidth="75.0" translateX="40.0" />
                </children>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
             </HBox>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
@@ -148,12 +155,13 @@
             <Label style="-fx-font-size: 14;" text="Default Parameter Models:" GridPane.rowIndex="6" />
          </children>
       </GridPane>
-      <VBox GridPane.rowIndex="10">
+      <VBox GridPane.rowIndex="11">
          <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="105.0" text="Directives:" />
+            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" text="Directives:" />
+            <Label prefHeight="73.0" prefWidth="123.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Red boxes outline the expressions used for the selected combination of Primary Age and Direct / Indirect." textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
-      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="10">
+      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="11">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="319.0" minWidth="8.0" prefWidth="165.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="743.0" minWidth="10.0" prefWidth="362.0" />
@@ -268,40 +276,36 @@
             </Text>
          </children>
       </GridPane>
-      <Label text="Masses:" GridPane.rowIndex="7" />
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+      <Label text="Mass Labels:" GridPane.rowIndex="8" />
+      <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1157.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label text="Provided:" />
-                  <Label prefHeight="33.0" prefWidth="202.0" style="-fx-font-family: Monospaced; -fx-font-weight: bold; -fx-font-size: 14;" text="   204   206   207   208" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#defaultMassesAction" prefHeight="30.0" prefWidth="68.0" style="-fx-padding: 0 0 0 0;" text="Default:" />
-                  <TextFlow fx:id="defaultMassesListTextFlow" prefHeight="30.0" prefWidth="985.0" style="-fx-background-color: white; -fx-border-color: black;" />
-               </children>
-            </HBox>
+            <Button fx:id="chooseMassesButton" mnemonicParsing="false" onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
+            <TextFlow fx:id="defaultMassesListTextFlow" prefHeight="30.0" prefWidth="988.0" style="-fx-background-color: white; -fx-border-color: black;" />
          </children>
-      </VBox>
-      <Label text="Ratios:" GridPane.rowIndex="9" />
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
+      </HBox>
+      <Label text="Ratios:" GridPane.rowIndex="10" />
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#defaultRatiosAction" prefHeight="30.0" prefWidth="68.0" style="-fx-padding: 0 0 0 0;" text="Default:" />
-                  <TextFlow fx:id="defaultRatiosListTextFlow" prefHeight="30.0" prefWidth="962.0" style="-fx-background-color: white; -fx-border-color: black;" />
-                  <Button fx:id="undoRatioButton" mnemonicParsing="false" onAction="#undoRatioButtonAction" prefHeight="30.0" prefWidth="45.0" style="-fx-padding: 1 1 1 1;" text="Undo">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </Button>
-               </children>
-            </HBox>
+            <Button fx:id="chooseRatiosButton" mnemonicParsing="false" onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
+            <TextFlow fx:id="defaultRatiosListTextFlow" prefHeight="30.0" prefWidth="990.0" style="-fx-background-color: white; -fx-border-color: black;" />
          </children>
-      </VBox>
-      <Label text="Type:" GridPane.rowIndex="1" />
+      </HBox>
+      <Label text="Type:" GridPane.rowIndex="2" />
+      <Label prefHeight="28.0" prefWidth="65.0" text="Reset to:" GridPane.rowIndex="1" />
+      <ToolBar prefHeight="42.0" prefWidth="744.0" styleClass="backgroundCalamari" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <items>
+            <Button mnemonicParsing="false" onAction="#blankTaskAction" prefHeight="30.0" text="Blank" />
+            <Button mnemonicParsing="false" onAction="#currentTaskAction" prefHeight="30.0" text="Current Task" />
+            <Button mnemonicParsing="false" onAction="#mass9TaskAction" prefHeight="30.0" text="Default 9-mass" />
+            <Button mnemonicParsing="false" onAction="#mass10TaskAction" prefHeight="30.0" text="Default 10-mass" />
+            <Button mnemonicParsing="false" onAction="#mass11TaskAction" prefHeight="30.0" text="Default 11-mass" />
+         </items>
+      </ToolBar>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: To remove mass or ratio, click it in the list.  To restore or add a mass or ratio, click the button on the left." textAlignment="RIGHT" wrappingWidth="574.55224609375" GridPane.columnIndex="1" GridPane.rowIndex="9">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
    </children>
    <padding>
       <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />

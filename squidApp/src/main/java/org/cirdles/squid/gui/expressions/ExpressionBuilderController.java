@@ -147,8 +147,10 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import static org.cirdles.squid.gui.SquidUI.HEALTHY;
+import static org.cirdles.squid.gui.SquidUI.HEALTHY_URL;
 import static org.cirdles.squid.gui.SquidUI.PEEK_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY;
+import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_URL;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -2806,6 +2808,9 @@ public class ExpressionBuilderController implements Initializable {
             auditTextArea.setText(exp.produceExpressionTreeAudit());
             auditPane.setTextFill(exp.amHealthy() ? Paint.valueOf("black") : Paint.valueOf("red"));
             auditPane.setText(exp.amHealthy() ? "Audit" : "Audit - ALERT !!!");
+            auditPane.setGraphic(exp.amHealthy() ? new ImageView(HEALTHY) : new ImageView(UNHEALTHY));
+            ((ImageView)auditPane.getGraphic()).setFitHeight(16);
+            ((ImageView)auditPane.getGraphic()).setFitWidth(16);
             graphExpressionTree(exp.getExpressionTree());
             populatePeeks(exp);
 

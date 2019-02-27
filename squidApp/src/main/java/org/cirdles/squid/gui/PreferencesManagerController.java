@@ -34,26 +34,36 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
@@ -74,7 +84,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
+import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
+import org.cirdles.squid.tasks.taskPreferences.TaskPreferences11Mass;
+import org.cirdles.squid.tasks.taskPreferences.TaskPreferencesBlank;
 
 /**
  * FXML Controller class
@@ -83,7 +95,10 @@ import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
  */
 public class PreferencesManagerController implements Initializable {
 
-    private SquidUserPreferences squidUserPreferences;
+    private SquidTaskPreferences squidUserPreferences;
+
+    // handle for closing stage when Squid closes
+    public static final Stage ADD_RATIOS_STAGE = new Stage();
 
     @FXML
     private GridPane taskManagerGridPane;
@@ -124,8 +139,6 @@ public class PreferencesManagerController implements Initializable {
     @FXML
     private CheckBox autoExcludeSpotsCheckBox;
     @FXML
-    private Spinner<Double> assignedExternalErrSpinner;
-    @FXML
     private ComboBox<ParametersModel> commonPbModelComboBox;
     @FXML
     private ComboBox<ParametersModel> physConstModelComboBox;
@@ -153,6 +166,14 @@ public class PreferencesManagerController implements Initializable {
     private TextField parentConcExpressionText;
     @FXML
     private TextField pb208Th232ExpressionText;
+    @FXML
+    private TextFlow defaultMassesListTextFlow;
+    @FXML
+    private TextFlow defaultRatiosListTextFlow;
+    @FXML
+    private Button chooseMassesButton;
+    @FXML
+    private Button chooseRatiosButton;
 
     private Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
@@ -167,15 +188,96 @@ public class PreferencesManagerController implements Initializable {
             + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
             + " -fx-background-size: 16px 16px;";
 
-    private Map<KeyCode, Boolean> keyMap = new HashMap<>();
+    private final List<StackPane> undoMassesList = new ArrayList<>();
+    private final List<VBox> undoRatiosList = new ArrayList<>();
+    private ContextMenu massesCM;
+    private ContextMenu ratiosCM;
+
+    private final VBox addNumeratorVBox = new VBox();
+    private ToggleGroup numTG = new ToggleGroup();
+    private final VBox addDenominatorVBox = new VBox();
+    private ToggleGroup denTG = new ToggleGroup();
+    private final HBox numDemHBox = new HBox(addNumeratorVBox, addDenominatorVBox);
+    private final Label instructions = new Label("   Choose numerator and denominator");
+    private final Button addBtn = new Button("Add ratio");
+    private final HBox addBtnHBox = new HBox(addBtn);
+    private final Label numLabel = new Label("");
+    private final Label divLabel = new Label("/");
+    private final Label denLabel = new Label("");
+    private final HBox infoLabelHBox = new HBox(numLabel, divLabel, denLabel);
+    private final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox);
+    private final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
     @FXML
-    private TextFlow defaultMassesListTextFlow;
+    private Spinner<Double> assignedExternalErrThSpinner;
     @FXML
-    private TextFlow defaultRatiosListTextFlow;
-    @FXML
-    private Button undoRatioButton;
-    
-    private List<VBox> undoList = new ArrayList<>();
+    private Spinner<Double> assignedExternalErrUSpinner;
+
+    {
+        addBtnHBox.setAlignment(Pos.CENTER);
+        addBtn.setStyle(
+                "-fx-padding: 5 22 5 22;\n"
+                + "    -fx-border-color: #e2e2e2;"
+                + "    -fx-border-width: 2;"
+                + "    -fx-background-radius: 0;"
+                + "    -fx-background-color: #FB6D42;"
+                + "    -fx-font-family: SansSerif;"
+                + "    -fx-font-size: 11pt;"
+                + "    -fx-text-fill: whitesmoke;"
+                + "    -fx-background-insets: 0 0 0 0, 0, 1, 2;");
+
+        addBtn.setOnMouseClicked((event) -> {
+            squidUserPreferences.addRatioName(numLabel.getText() + "/" + denLabel.getText());
+            //undoRatiosList.remove(VBOX???
+            namedExpressionsMap = squidUserPreferences.buildNamedExpressionsMap();
+            populateRatios();
+            refreshExpressionAudits();
+            updateAddButton();
+        });
+
+        updateAddButton();
+
+        numLabel.setStyle("-fx-font-family: SansSerif bold;-fx-font-size: 18");
+        divLabel.setStyle("-fx-font-family: SansSerif bold;-fx-font-size: 18");
+        denLabel.setStyle("-fx-font-family: SansSerif bold;-fx-font-size: 18");
+
+        infoLabelHBox.setAlignment(Pos.CENTER);
+        AnchorPane pane = new AnchorPane(menuVBox);
+        AnchorPane.setBottomAnchor(menuVBox, 0.0);
+        AnchorPane.setTopAnchor(menuVBox, 0.0);
+        AnchorPane.setRightAnchor(menuVBox, 0.0);
+        AnchorPane.setLeftAnchor(menuVBox, 0.0);
+
+        numTG.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            public void changed(ObservableValue<? extends Toggle> ob, Toggle o, Toggle n) {
+                RadioButton rb = (RadioButton) numTG.getSelectedToggle();
+                if (rb != null) {
+                    numLabel.setText(rb.getText());
+                    updateAddButton();
+                }
+            }
+        });
+        denTG.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            public void changed(ObservableValue<? extends Toggle> ob, Toggle o, Toggle n) {
+                RadioButton rb = (RadioButton) denTG.getSelectedToggle();
+                if (rb != null) {
+                    denLabel.setText(rb.getText());
+                    updateAddButton();
+                }
+            }
+        });
+        ADD_RATIOS_STAGE.setScene(new Scene(pane, 250, 500));
+        ADD_RATIOS_STAGE.setAlwaysOnTop(true);
+
+    }
+
+    private void updateAddButton() {
+        String num = numLabel.getText();
+        String den = denLabel.getText();
+        boolean valid = (num.compareTo(den) != 0)
+                && !squidUserPreferences.getRatioNames().contains(num + "/" + den)
+                && num.length() > 0 && den.length() > 0;
+        addBtn.setDisable(!valid);
+    }
 
     /**
      * Initializes the controller class.
@@ -183,6 +285,11 @@ public class PreferencesManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
+
+        initPreferences();
+    }
+
+    private void initPreferences() {
         squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
 
         ((RadioButton) taskManagerGridPane.lookup("#" + squidUserPreferences.getTaskType().getName())).setSelected(true);
@@ -206,15 +313,27 @@ public class PreferencesManagerController implements Initializable {
 
         autoExcludeSpotsCheckBox.setSelected(squidUserPreferences.isSquidAllowsAutoExclusionOfSpots());
 
-        SpinnerValueFactory<Double> valueFactory
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, squidUserPreferences.getExtPErr(), 0.05);
-        assignedExternalErrSpinner.setValueFactory(valueFactory);
-        assignedExternalErrSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+        SpinnerValueFactory<Double> valueFactoryU
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, squidUserPreferences.getExtPErrU(), 0.05);
+        assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
+        assignedExternalErrUSpinner.valueProperty().addListener(new ChangeListener<Double>() {
 
             @Override
             public void changed(ObservableValue<? extends Double> observable,//
                     Double oldValue, Double newValue) {
-                squidUserPreferences.setExtPErr(assignedExternalErrSpinner.getValue());
+                squidUserPreferences.setExtPErrU(assignedExternalErrUSpinner.getValue());
+            }
+        });
+
+        SpinnerValueFactory<Double> valueFactoryTh
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, squidUserPreferences.getExtPErrTh(), 0.05);
+        assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
+        assignedExternalErrThSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Double> observable,//
+                    Double oldValue, Double newValue) {
+                squidUserPreferences.setExtPErrTh(assignedExternalErrThSpinner.getValue());
             }
         });
 
@@ -240,30 +359,60 @@ public class PreferencesManagerController implements Initializable {
 
         populateDirectives();
         showPermutationPlayers();
-        
-        undoRatioButton.setVisible(false);
+
+        chooseMassesButton.setOnMouseClicked((event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                massesCM = createChooseMassesContextMenu();
+                massesCM.show(chooseMassesButton, Side.TOP, 0, -50);
+            }
+        });
+
+        chooseRatiosButton.setOnMouseClicked((event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                ratiosCM = createChooseRatiosContextMenu();
+                ratiosCM.show(chooseRatiosButton, Side.TOP, 0, -50);
+            }
+        });
     }
 
     private void populateMasses() {
-        defaultMassesListTextFlow.setPadding(new Insets(0, 0, 0, 10));
-        List<String> nominalMasses = squidUserPreferences.getNominalMasses();
+        defaultMassesListTextFlow.getChildren().clear();
+        defaultMassesListTextFlow.setMaxHeight(30);
+        List<String> nominalMassesR = squidUserPreferences.getRequiredNominalMasses();
         int count = 1;
+        for (String nominalMass : nominalMassesR) {
+            StackPane massText = makeMassStackPane(nominalMass, "pink");
+            massText.setTranslateX(1 * count++);
+            defaultMassesListTextFlow.getChildren().add(massText);
+        }
+
+        List<String> nominalMasses = squidUserPreferences.getNominalMasses();
         for (String nominalMass : nominalMasses) {
-            Text massText = new Text(nominalMass);
-            massText.setFont(new Font("Monospaced Bold", 14));
-            massText.setTranslateY(5);
-            massText.setTranslateX(15 * count++);
+            StackPane massText = makeMassStackPane(nominalMass, "white");
+            massText.setTranslateX(1 * count++);
+            massText.setOnMouseClicked((MouseEvent event) -> {
+                if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                    defaultMassesListTextFlow.getChildren().remove(massText);
+                    undoMassesList.add(0, massText);
+                    squidUserPreferences.removeNominalMass(nominalMass);
+                    namedExpressionsMap = squidUserPreferences.buildNamedExpressionsMap();
+                    populateRatios();
+                    refreshExpressionAudits();
+                }
+            });
+
             defaultMassesListTextFlow.getChildren().add(massText);
         }
     }
 
     private void populateRatios() {
+        defaultRatiosListTextFlow.getChildren().clear();
+        defaultRatiosListTextFlow.setMaxHeight(30);
         List<String> ratioNamesR = squidUserPreferences.getRequiredRatioNames();
         int count = 1;
         for (String ratioName : ratioNamesR) {
             VBox ratio = makeRatioVBox(ratioName);
             ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
-
             ratio.setTranslateX(1 * count++);
             defaultRatiosListTextFlow.getChildren().add(ratio);
         }
@@ -274,18 +423,32 @@ public class PreferencesManagerController implements Initializable {
             ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;");
             ratio.setTranslateX(1 * count++);
             ratio.setOnMouseClicked((MouseEvent event) -> {
-                if (event.getButton() == MouseButton.SECONDARY && event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
                     namedExpressionsMap.remove(ratioName);
                     defaultRatiosListTextFlow.getChildren().remove(ratio);
-                    undoList.add(ratio);
-                    undoRatioButton.setVisible(true);
+                    undoRatiosList.add(0, ratio);
                     squidUserPreferences.removeRatioName(ratioName);
                     refreshExpressionAudits();
                 }
             });
 
             defaultRatiosListTextFlow.getChildren().add(ratio);
-        } 
+        }
+    }
+
+    private StackPane makeMassStackPane(String massName, String color) {
+        Text massText = new Text(massName);
+        massText.setFont(new Font("Monospaced Bold", 12));
+        Shape circle = new Ellipse(15, 15, 20, 14);
+        circle.setFill(Paint.valueOf(color));
+        circle.setStroke(Paint.valueOf("black"));
+        circle.setStrokeWidth(1);
+
+        StackPane mass = new StackPane(circle, massText);
+        mass.setUserData(massName);
+        mass.setAlignment(Pos.CENTER);
+
+        return mass;
     }
 
     private VBox makeRatioVBox(String ratioName) {
@@ -297,6 +460,7 @@ public class PreferencesManagerController implements Initializable {
         Shape line = new Line(0, 0, 35, 0);
 
         VBox ratio = new VBox(num, line, den);
+        ratio.setUserData(ratioName);
         ratio.setAlignment(Pos.CENTER);
         ratio.setPadding(new Insets(1, 3, 1, 3));
 
@@ -471,10 +635,7 @@ public class PreferencesManagerController implements Initializable {
     }
 
     private Expression makeExpression(String expressionName, final String expressionString) {
-        //Creates a new expression from the modifications
-
-        String fullText = expressionString;
-        Expression exp = new Expression(expressionName, fullText);
+        Expression exp = new Expression(expressionName, expressionString);
 
         exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
 
@@ -593,14 +754,6 @@ public class PreferencesManagerController implements Initializable {
         showPermutationPlayers();
     }
 
-    @FXML
-    private void defaultMassesAction(ActionEvent event) {
-    }
-
-    @FXML
-    private void defaultRatiosAction(ActionEvent event) {
-    }
-
     private void showPermutationPlayers() {
         boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();
         boolean directPicked = ((RadioButton) taskManagerGridPane.lookup("#direct")).isSelected();
@@ -636,6 +789,120 @@ public class PreferencesManagerController implements Initializable {
     }
 
     @FXML
-    private void undoRatioButtonAction(ActionEvent event) {
+    private void chooseMassesAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void chooseRatiosAction(ActionEvent event) {
+    }
+
+    private RadioButton makeMassRadioButton(String mass, ToggleGroup tg) {
+        RadioButton nrb = new RadioButton(mass);
+        nrb.setToggleGroup(tg);
+        nrb.setStyle("-fx-font-family: SanSerif Bold;-fx-font-size:14");
+        nrb.setPrefSize(100, 30);
+        nrb.setPadding(new Insets(0, 0, 0, 40));
+        return nrb;
+    }
+
+    private ContextMenu createChooseRatiosContextMenu() {
+        List<MenuItem> itemsForThisNode = new ArrayList<>();
+
+        MenuItem menuItem = new MenuItem("Add ratio");
+        if (!ADD_RATIOS_STAGE.isShowing()) {
+            menuItem.setOnAction((evt) -> {
+                numLabel.setText("");
+                denLabel.setText("");
+                addBtn.setDisable(true);
+                List<String> masses = squidUserPreferences.getRequiredNominalMasses();
+                masses.remove("BKG");
+                masses.addAll(squidUserPreferences.getNominalMasses());
+                addNumeratorVBox.getChildren().clear();
+                addDenominatorVBox.getChildren().clear();
+                for (String mass : masses) {
+                    addNumeratorVBox.getChildren().add(makeMassRadioButton(mass, numTG));
+                    addDenominatorVBox.getChildren().add(makeMassRadioButton(mass, denTG));
+                }
+                ADD_RATIOS_STAGE.setX(SquidUI.primaryStageWindow.getX() + 800);//(SquidUI.primaryStageWindow.getWidth() - 600) / 2);
+                ADD_RATIOS_STAGE.setY(SquidUI.primaryStageWindow.getY() + 100);//(SquidUI.primaryStageWindow.getHeight() - 250) / 2);
+                ADD_RATIOS_STAGE.show();//AndWait();
+            });
+        }
+        itemsForThisNode.add(menuItem);
+
+        menuItem = new MenuItem("Restore ratio");
+        menuItem.setDisable(undoRatiosList.isEmpty());
+        menuItem.setOnAction((evt) -> {
+            if (undoRatiosList.size() > 0) {
+                VBox last = undoRatiosList.get(0);
+                undoRatiosList.remove(last);
+                squidUserPreferences.addRatioName((String) last.getUserData());
+                namedExpressionsMap = squidUserPreferences.buildNamedExpressionsMap();
+                populateRatios();
+                refreshExpressionAudits();
+            }
+        });
+        itemsForThisNode.add(menuItem);
+
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().setAll(itemsForThisNode);
+        return contextMenu;
+    }
+
+    private ContextMenu createChooseMassesContextMenu() {
+        List<MenuItem> itemsForThisNode = new ArrayList<>();
+
+        TextField massName = new TextField();
+        massName.setPrefWidth(40);
+        massName.textProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
+            massName.setPrefWidth((massName.getText().trim().length() + 2) * massName.getFont().getSize());
+        });
+        MenuItem menuItem = new MenuItem("Add mass", massName);
+        menuItem.setOnAction((evt) -> {
+            String mass = massName.getText();
+            squidUserPreferences.addNominalMass(mass);
+            populateMasses();
+        });
+        itemsForThisNode.add(menuItem);
+
+        menuItem = new MenuItem("Restore mass");
+        menuItem.setDisable(undoMassesList.isEmpty());
+        menuItem.setOnAction((evt) -> {
+            if (undoMassesList.size() > 0) {
+                StackPane last = undoMassesList.get(0);
+                undoMassesList.remove(last);
+                squidUserPreferences.addNominalMass((String) last.getUserData());
+                populateMasses();
+            }
+        });
+        itemsForThisNode.add(menuItem);
+
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().setAll(itemsForThisNode);
+        return contextMenu;
+    }
+
+    @FXML
+    private void blankTaskAction(ActionEvent event) {
+        SquidPersistentState.getExistingPersistentState().setSquidUserPreferences(new TaskPreferencesBlank());
+        initPreferences();
+    }
+
+    @FXML
+    private void mass11TaskAction(ActionEvent event) {
+        SquidPersistentState.getExistingPersistentState().setSquidUserPreferences(new TaskPreferences11Mass());
+        initPreferences();
+    }
+
+    @FXML
+    private void currentTaskAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void mass9TaskAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void mass10TaskAction(ActionEvent event) {
     }
 }

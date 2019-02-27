@@ -130,7 +130,7 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setUserLinFits(false);
         squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
 
-        squidProjectZ6266.getTask().setExtPErr(0.75);
+        squidProjectZ6266.getTask().setExtPErrU(0.75);
         squidProjectZ6266.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         squidProjectZ6266.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         squidProjectZ6266.getTask().setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
@@ -184,7 +184,7 @@ public class PrawnFileHandlerIT {
         task.setUserLinFits(false);
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         task.setSquidAllowsAutoExclusionOfSpots(true);
-        task.setExtPErr(0.75);
+        task.setExtPErrU(0.75);
         task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         task.setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));

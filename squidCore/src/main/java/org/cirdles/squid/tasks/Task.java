@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
-import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
@@ -99,7 +98,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.utilities.stateUtilities.SquidUserPreferences;
+import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
@@ -117,9 +116,10 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
 
 /**
  *
@@ -205,7 +205,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private boolean squidAllowsAutoExclusionOfSpots;
 
-    private double extPErr;
+    // MIN_206PB238U_EXT_1SIGMA_ERR_PCT
+    private double extPErrU;
+    // MIN_208PB232TH_EXT_1SIGMA_ERR_PCT
+    private double extPErrTh;
 
     protected ParametersModel physicalConstantsModel;
     protected ParametersModel referenceMaterialModel;
@@ -216,7 +219,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean referenceMaterialModelChanged;
     protected boolean commonPbModelChanged;
     protected boolean concentrationReferenceMaterialModelChanged;
-            
+
     protected Map<String, String> specialSquidFourExpressionsMap;
 
     public Task() {
@@ -238,7 +241,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param reportsEngine
      */
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
-        SquidUserPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
+        SquidTaskPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
         this.name = name;
         this.type = squidUserPreferences.getTaskType();
         this.description = "";
@@ -299,7 +302,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.squidAllowsAutoExclusionOfSpots = squidUserPreferences.isSquidAllowsAutoExclusionOfSpots();
 
-        this.extPErr = squidUserPreferences.getExtPErr();
+        this.extPErrU = squidUserPreferences.getExtPErrU();
+        this.extPErrTh = squidUserPreferences.getExtPErrTh();
 
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
         this.referenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
@@ -310,7 +314,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.referenceMaterialModelChanged = false;
         this.commonPbModelChanged = false;
         this.concentrationReferenceMaterialModelChanged = false;
-        
+
         this.specialSquidFourExpressionsMap = new TreeMap<>();
 
         generateConstants();
@@ -2449,24 +2453,43 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @param extPErr the extPErr to set
+     * @param extPErrU the extPErrU to set
      */
     @Override
-    public void setExtPErr(double extPErr) {
-        this.extPErr = extPErr;
-        if (namedParametersMap.containsKey(ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR)) {
-            ExpressionTreeInterface constant = namedParametersMap.get(ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR);
-            ((ConstantNode) constant).setValue(extPErr);
+    public void setExtPErrU(double extPErrU) {
+        this.extPErrU = extPErrU;
+        if (namedParametersMap.containsKey(MIN_206PB238U_EXT_1SIGMA_ERR_PCT)) {
+            ExpressionTreeInterface constant = namedParametersMap.get(MIN_206PB238U_EXT_1SIGMA_ERR_PCT);
+            ((ConstantNode) constant).setValue(extPErrU);
         }
         this.changed = true;
     }
 
     /**
-     * @return the extPErr
+     * @return the extPErrU
      */
     @Override
-    public double getExtPErr() {
-        return extPErr;
+    public double getExtPErrU() {
+        return extPErrU;
+    }
+
+    /**
+     * @return the extPErrTh
+     */
+    public double getExtPErrTh() {
+        return extPErrTh;
+    }
+
+    /**
+     * @param extPErrTh the extPErrTh to set
+     */
+    public void setExtPErrTh(double extPErrTh) {
+        this.extPErrTh = extPErrTh;
+        if (namedParametersMap.containsKey(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT)) {
+            ExpressionTreeInterface constant = namedParametersMap.get(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT);
+            ((ConstantNode) constant).setValue(extPErrTh);
+        }
+        this.changed = true;
     }
 
     @Override
@@ -2529,7 +2552,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap to set
+     * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap
+     * to set
      */
     public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap) {
         this.specialSquidFourExpressionsMap = specialSquidFourExpressionsMap;
