@@ -138,6 +138,7 @@ public final class SquidProject implements Serializable {
         this.task = new Task(
                 "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
         this.task.setChanged(true);
+        this.task.applyDirectives();
         initializeTaskAndReduceData();
     }
 
@@ -168,7 +169,7 @@ public final class SquidProject implements Serializable {
 
         this.task = new Task(
                 taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
-        this.task.setType(taskSquid25.getTaskType());
+        this.task.setTaskType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setProvenance(taskSquid25.getSquidTaskFileName());
         this.task.setAuthorName(taskSquid25.getAuthorName());

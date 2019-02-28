@@ -2159,13 +2159,16 @@ public class ExpressionBuilderController implements Initializable {
                 if (((ExpressionTree) expTree).getOperation() instanceof ShrimpSpeciesNodeFunction) {
                     for (ShrimpFractionExpressionInterface spot : spots) {
                         sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                        double[][] results
-                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-                        for (int i = 0; i < resultLabels[0].length; i++) {
-                            try {
-                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
-                            } catch (Exception e) {
+                        try {
+                            double[][] results
+                                    = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+                            for (int i = 0; i < resultLabels[0].length; i++) {
+                                try {
+                                    sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                                } catch (Exception e) {
+                                }
                             }
+                        } catch (Exception e) {
                         }
                         sb.append("\n");
                     }

@@ -15,11 +15,21 @@
  */
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class BuiltInExpressionsDataDictionary {
+
+    // **********************  REQUIRED   **************************************
+    public static final String DEFAULT_BACKGROUND_MASS_LABEL = "BKG";
+
+    public static List<String> REQUIRED_NOMINAL_MASSES
+            = new ArrayList<>(Arrays.asList(new String[]{DEFAULT_BACKGROUND_MASS_LABEL, "204", "206", "207", "208"}));
 
     // **********************  SPECIAL CONSTANTS ******************************
     // holding spot until models are implemented

@@ -26,10 +26,10 @@ public class TaskPreferencesBlank extends SquidTaskPreferences {
 
     public TaskPreferencesBlank() { 
 
-        String[] nominalMassesArray = new String[]{};
-        this.nominalMasses = new ArrayList<>(Arrays.asList(nominalMassesArray));
+        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{}));
 
-        String[] ratioNamesArray = new String[]{};
-        this.ratioNames = new ArrayList<>(Arrays.asList(ratioNamesArray));
+        this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
+        
+        indexOfBackgroundSpecies = -1;
     }
 }

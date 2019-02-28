@@ -72,6 +72,7 @@ import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
+import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
 /**
@@ -139,8 +140,6 @@ public class SquidUIController implements Initializable {
     public static Node topsoilPlotUI;
 
     @FXML
-    private MenuItem newSquid3TaskMenuItem;
-    @FXML
     private MenuItem importSquid25TaskMenuItem;
     @FXML
     private MenuItem exportSquid3TaskMenuItem;
@@ -179,6 +178,8 @@ public class SquidUIController implements Initializable {
     private Label russian;
     @FXML
     private Label spanish;
+    @FXML
+    private MenuItem newSquid3TaskFromPrefsMenuItem;
 
     /**
      * Initializes the controller class.
@@ -218,7 +219,7 @@ public class SquidUIController implements Initializable {
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
         //Task menu
-        newSquid3TaskMenuItem.setDisable(true);
+        newSquid3TaskFromPrefsMenuItem.setDisable(false);
         selectSquid3TaskFromLibraryMenu.setDisable(true);
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(true);
@@ -886,11 +887,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    @FXML
-    private void newSquid3TaskMenuItemAction(ActionEvent event) {
-        squidProject.createNewTask();
-        launchTaskManager();
-    }
+ 
 
     @FXML
     private void importSquid25TaskMenuItemAction(ActionEvent event) {
@@ -1399,4 +1396,13 @@ public class SquidUIController implements Initializable {
 
         textArea.setContextMenu(contextMenu);
     }
+
+    @FXML
+    private void newSquid3TaskFromPrefsMenuItemAction(ActionEvent event) {
+        squidProject.createNewTask();
+        squidProject.getTask().updateTaskFromPreferences(
+                SquidPersistentState.getExistingPersistentState().getSquidUserPreferences());
+        launchTaskManager();
+    }
+
 }

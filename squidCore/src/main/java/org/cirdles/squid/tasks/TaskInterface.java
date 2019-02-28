@@ -148,7 +148,7 @@ public interface TaskInterface {
     /**
      * @return the type
      */
-    TaskTypeEnum getType();
+    TaskTypeEnum getTaskType();
 
     /**
      * @return the mapOfIndexToMassStationDetails
@@ -232,7 +232,7 @@ public interface TaskInterface {
     /**
      * @param type the type to set
      */
-    public void setType(TaskTypeEnum type);
+    public void setTaskType(TaskTypeEnum type);
 
     public void setupSquidSessionSpecsAndReduceAndReport();
 
@@ -651,4 +651,6 @@ public interface TaskInterface {
      * @return the specialSquidFourExpressionsMap
      */
     public Map<String, String> getSpecialSquidFourExpressionsMap();
+    
+    public void updateTaskFromPreferences(SquidTaskPreferences taskPreferences);
 }

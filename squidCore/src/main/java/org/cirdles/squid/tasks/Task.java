@@ -19,6 +19,8 @@ package org.cirdles.squid.tasks;
 import com.thoughtworks.xstream.XStream;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
@@ -120,6 +121,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 
 /**
  *
@@ -136,7 +139,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      */
     protected String name;
-    protected TaskTypeEnum type;
+    protected TaskTypeEnum taskType;
     protected String description;
     protected String authorName;
     protected String labName;
@@ -156,6 +159,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
+    protected List<String> requiredNominalMasses;
+    protected List<String> requiredRatioNames;
     protected Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
     protected SquidSessionModel squidSessionModel;
     protected List<SquidSpeciesModel> squidSpeciesModelList;
@@ -222,6 +227,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected Map<String, String> specialSquidFourExpressionsMap;
 
+    protected String delimiterForUnknownNames;
+
     public Task() {
         this("New Task", null, null);
     }
@@ -243,7 +250,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
         SquidTaskPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
         this.name = name;
-        this.type = squidUserPreferences.getTaskType();
+        this.taskType = squidUserPreferences.getTaskType();
         this.description = "";
         this.authorName = squidUserPreferences.getAuthorName();
         this.labName = squidUserPreferences.getLabName();
@@ -257,11 +264,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.userLinFits = squidUserPreferences.isUserLinFits();
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
-        this.parentNuclide = "";
+        this.parentNuclide = "238";
         this.directAltPD = false;
 
         this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
+        this.requiredNominalMasses = new ArrayList<>();
+        this.requiredRatioNames = new ArrayList<>();
+
         this.squidSessionModel = null;
         this.squidSpeciesModelList = new ArrayList<>();
         this.squidRatiosModelList = new ArrayList<>();
@@ -317,9 +327,51 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.specialSquidFourExpressionsMap = new TreeMap<>();
 
+        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
+
         generateConstants();
         generateParameters();
         generateSpotLookupFields();
+    }
+
+    @Override
+    public void updateTaskFromPreferences(SquidTaskPreferences taskPreferences) {
+
+        Method[] gettersAndSetters = taskPreferences.getClass().getMethods();
+
+        for (int i = 0; i < gettersAndSetters.length; i++) {
+            String methodName = gettersAndSetters[i].getName();
+            try {
+                if (methodName.startsWith("get") && !methodName.contains("Class")) {
+                    this.getClass().getMethod(
+                            methodName.replaceFirst("get", "set"),
+                            gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskPreferences, new Object[0]));
+                } else if (methodName.startsWith("is")) {
+                    this.getClass().getMethod(
+                            methodName.replaceFirst("is", "set"),
+                            gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskPreferences, new Object[0]));
+                }
+            } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                System.out.println(">>>  " + methodName + "     " + e.getMessage());
+            }
+        }
+
+        List<String> allMasses = new ArrayList<>();
+        allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        allMasses.addAll(nominalMasses);
+        nominalMasses = allMasses;
+        Collections.sort(nominalMasses);
+
+        nominalMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
+        if (indexOfBackgroundSpecies >= 0) {
+            nominalMasses.add(indexOfBackgroundSpecies, DEFAULT_BACKGROUND_MASS_LABEL);
+        }
+
+        List<String> allRatios = new ArrayList<>();
+        allRatios.addAll(requiredRatioNames);
+        allRatios.addAll(ratioNames);
+        ratioNames = allRatios;
+        Collections.sort(ratioNames);
     }
 
     private void generateConstants() {
@@ -1148,7 +1200,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
                     if (nominalMasses.size() > 0) {
                         if (indexOfTaskBackgroundMass == index) {
-                            massStationDetail.setTaskIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
+                            massStationDetail.setTaskIsotopeLabel(DEFAULT_BACKGROUND_MASS_LABEL);
                         } else {
                             massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
                         }
@@ -1178,7 +1230,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
             if ((ssm.getMassStationIndex() == indexOfTaskBackgroundMass) && (indexOfTaskBackgroundMass != indexOfBackgroundSpecies)) {
                 // changing mass station background to match task background
-                massStationDetail.setIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
+                massStationDetail.setIsotopeLabel(DEFAULT_BACKGROUND_MASS_LABEL);
                 selectBackgroundSpeciesReturnPreviousIndex(ssm);
                 indexOfBackgroundSpecies = indexOfTaskBackgroundMass;
             } else {
@@ -1568,7 +1620,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         ExpressionTreeInterface expressionTree = expression.getExpressionTree();
 
-        // determine type of expressionTree
+        // determine taskType of expressionTree
         // Summary expression test
         if (((ExpressionTree) expressionTree).isSquidSwitchSCSummaryCalculation()) {
             List<ShrimpFractionExpressionInterface> spotsUsedForCalculation = new ArrayList<>();
@@ -1701,7 +1753,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
             listOfMassStationDetails.add(entry.getValue());
             if (entry.getValue().getIsBackground()) {
-                entry.getValue().setIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
+                entry.getValue().setIsotopeLabel(DEFAULT_BACKGROUND_MASS_LABEL);
                 indexOfBackgroundSpecies = entry.getKey();
             }
         }
@@ -1826,19 +1878,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the type
+     * @return the taskType
      */
     @Override
-    public TaskTypeEnum getType() {
-        return type;
+    public TaskTypeEnum getTaskType() {
+        return taskType;
     }
 
     /**
-     * @param type the type to set
+     * @param taskType the taskType to set
      */
     @Override
-    public void setType(TaskTypeEnum type) {
-        this.type = type;
+    public void setTaskType(TaskTypeEnum taskType) {
+        this.taskType = taskType;
     }
 
     /**
@@ -2097,6 +2149,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setRatioNames(List<String> ratioNames) {
         this.ratioNames = ratioNames;
+    }
+
+    /**
+     * @return the requiredNominalMasses
+     */
+    public List<String> getRequiredNominalMasses() {
+        return requiredNominalMasses;
+    }
+
+    /**
+     * @param requiredNominalMasses the requiredNominalMasses to set
+     */
+    public void setRequiredNominalMasses(List<String> requiredNominalMasses) {
+        this.requiredNominalMasses = requiredNominalMasses;
+    }
+
+    /**
+     * @return the requiredRatioNames
+     */
+    public List<String> getRequiredRatioNames() {
+        return requiredRatioNames;
+    }
+
+    /**
+     * @param requiredRatioNames the requiredRatioNames to set
+     */
+    public void setRequiredRatioNames(List<String> requiredRatioNames) {
+        this.requiredRatioNames = requiredRatioNames;
     }
 
     /**
@@ -2557,6 +2637,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap) {
         this.specialSquidFourExpressionsMap = specialSquidFourExpressionsMap;
+    }
+
+    /**
+     * @return the delimiterForUnknownNames
+     */
+    public String getDelimiterForUnknownNames() {
+        return delimiterForUnknownNames;
+    }
+
+    /**
+     * @param delimiterForUnknownNames the delimiterForUnknownNames to set
+     */
+    public void setDelimiterForUnknownNames(String delimiterForUnknownNames) {
+        this.delimiterForUnknownNames = delimiterForUnknownNames;
     }
 
 }

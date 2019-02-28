@@ -26,11 +26,11 @@ public class TaskPreferences11Mass extends SquidTaskPreferences {
 
     public TaskPreferences11Mass() { 
 
-        String[] nominalMassesArray = new String[]{"190", "195.8", "195.9", "238", "248", "254"};
-        this.nominalMasses = new ArrayList<>(Arrays.asList(nominalMassesArray));
+        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{"190", "195.8", "195.9", "238", "248", "254"}));
 
-        String[] ratioNamesArray = new String[]{
-            "190/195.8", "195.9/195.8", "238/195.8", "248/195.8", "206/238", "254/238", "208/248", "206/254", "248/254"};
-        this.ratioNames = new ArrayList<>(Arrays.asList(ratioNamesArray));
+        this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
+            "190/195.8", "195.9/195.8", "238/195.8", "248/195.8", "206/238", "254/238", "208/248", "206/254", "248/254"}));
+        
+        indexOfBackgroundSpecies = 4;
     }
 }

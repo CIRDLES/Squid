@@ -31,6 +31,7 @@ import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
@@ -54,9 +55,6 @@ public class SquidTaskPreferences implements Serializable {
     protected static final long serialVersionUID = -936841271782482788L;
 
     // instance variables
-    protected String geochronUserName;
-    protected String geochronPassWord;
-
     protected TaskTypeEnum taskType;
     protected String authorName;
     protected String labName;
@@ -75,9 +73,10 @@ public class SquidTaskPreferences implements Serializable {
 
     protected Map<String, String> specialSquidFourExpressionsMap;
     protected List<String> nominalMasses;
-    protected List<String> requiredNominalMasses;
     protected List<String> ratioNames;
     protected List<String> requiredRatioNames;
+    
+    protected int indexOfBackgroundSpecies;
 
     protected Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
 
@@ -85,10 +84,6 @@ public class SquidTaskPreferences implements Serializable {
      * Creates a new instance of ReduxPreferences
      */
     public SquidTaskPreferences() {
-
-        this.geochronUserName = "username";
-        this.geochronPassWord = "longpassword";
-
         this.taskType = TaskTypeEnum.GEOCHRON;
         this.authorName = "";
         this.labName = "";
@@ -115,26 +110,24 @@ public class SquidTaskPreferences implements Serializable {
         this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
 
         // Default to 11 - mass  
-        String[] requiredNominalMassesArray = new String[]{"BKG", "204", "206", "207", "208"};
-        this.requiredNominalMasses = new ArrayList<>(Arrays.asList(requiredNominalMassesArray));
-        String[] nominalMassesArray = new String[]{"190", "195.8", "195.9", "238", "248", "254"};
-        this.nominalMasses = new ArrayList<>(Arrays.asList(nominalMassesArray));
+        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{
+            "190", "195.8", "195.9", "238", "248", "254"}));
 
-        String[] requiredRatioNamesArray = new String[]{"204/206", "207/206", "208/206"};
-        this.requiredRatioNames = new ArrayList<>(Arrays.asList(requiredRatioNamesArray));
-        String[] ratioNamesArray = new String[]{
-            "190/195.8", "195.9/195.8", "238/195.8", "248/195.8", "206/238", "254/238", "208/248", "206/254", "248/254"};
-        this.ratioNames = new ArrayList<>(Arrays.asList(ratioNamesArray));
+        this.requiredRatioNames = new ArrayList<>(Arrays.asList(new String[]{"204/206", "207/206", "208/206"}));
+        this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
+            "190/195.8", "195.9/195.8", "238/195.8", "248/195.8", "206/238", "254/238", "208/248", "206/254", "248/254"}));
+        
+        indexOfBackgroundSpecies = 4;
 
         buildShrimpSpeciesNodeMap();
     }
 
     private void buildShrimpSpeciesNodeMap() {
         shrimpSpeciesNodeMap = new TreeMap<>();
-        for (int i = 0; i < requiredNominalMasses.size(); i++) {
+        for (int i = 0; i < REQUIRED_NOMINAL_MASSES.size(); i++) {
             shrimpSpeciesNodeMap.put(
-                    requiredNominalMasses.get(i),
-                    ShrimpSpeciesNode.buildShrimpSpeciesNode(new SquidSpeciesModel(requiredNominalMasses.get(i)), "getPkInterpScanArray"));
+                    REQUIRED_NOMINAL_MASSES.get(i),
+                    ShrimpSpeciesNode.buildShrimpSpeciesNode(new SquidSpeciesModel(REQUIRED_NOMINAL_MASSES.get(i)), "getPkInterpScanArray"));
         }
         for (int i = 0; i < nominalMasses.size(); i++) {
             shrimpSpeciesNodeMap.put(
@@ -168,40 +161,6 @@ public class SquidTaskPreferences implements Serializable {
             namedExpressionsMap.put(ratioNames.get(i), ratio);
         }
         return namedExpressionsMap;
-    }
-
-    /**
-     * @return the geochronUserName
-     */
-    public String getGeochronUserName() {
-        if (geochronUserName == null) {
-            geochronUserName = "username";
-        }
-        return geochronUserName;
-    }
-
-    /**
-     * @param geochronUserName the geochronUserName to set
-     */
-    public void setGeochronUserName(String geochronUserName) {
-        this.geochronUserName = geochronUserName;
-    }
-
-    /**
-     * @return the geochronPassWord
-     */
-    public String getGeochronPassWord() {
-        if (geochronPassWord == null) {
-            geochronPassWord = "longpassword";
-        }
-        return geochronPassWord;
-    }
-
-    /**
-     * @param geochronPassWord the geochronPassWord to set
-     */
-    public void setGeochronPassWord(String geochronPassWord) {
-        this.geochronPassWord = geochronPassWord;
     }
 
     /**
@@ -454,7 +413,7 @@ public class SquidTaskPreferences implements Serializable {
                 return ratio1.compareTo(ratio2);
             }
         });
-        
+
         List<String> retVal = new ArrayList<>();
         retVal.addAll(ratioNames);
         return retVal;
@@ -478,15 +437,6 @@ public class SquidTaskPreferences implements Serializable {
     }
 
     /**
-     * @return the requiredNominalMasses
-     */
-    public List<String> getRequiredNominalMasses() {
-        List<String> retVal = new ArrayList<String>();
-        retVal.addAll(requiredNominalMasses);
-        return retVal;
-    }
-
-    /**
      * @return the requiredRatioNames
      */
     public List<String> getRequiredRatioNames() {
@@ -500,5 +450,19 @@ public class SquidTaskPreferences implements Serializable {
         List<String> retVal = new ArrayList<String>();
         retVal.addAll(requiredRatioNames);
         return retVal;
+    }
+
+    /**
+     * @return the indexOfBackgroundSpecies
+     */
+    public int getIndexOfBackgroundSpecies() {
+        return indexOfBackgroundSpecies;
+    }
+
+    /**
+     * @param indexOfBackgroundSpecies the indexOfBackgroundSpecies to set
+     */
+    public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies) {
+        this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
     }
 }

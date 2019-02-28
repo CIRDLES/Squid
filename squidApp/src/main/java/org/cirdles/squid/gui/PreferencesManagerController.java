@@ -17,6 +17,7 @@ package org.cirdles.squid.gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,9 @@ import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
@@ -95,7 +98,7 @@ import org.cirdles.squid.tasks.taskPreferences.TaskPreferencesBlank;
  */
 public class PreferencesManagerController implements Initializable {
 
-    private SquidTaskPreferences squidUserPreferences;
+    private SquidTaskPreferences squidTaskPreferences;
 
     // handle for closing stage when Squid closes
     public static final Stage ADD_RATIOS_STAGE = new Stage();
@@ -226,9 +229,9 @@ public class PreferencesManagerController implements Initializable {
                 + "    -fx-background-insets: 0 0 0 0, 0, 1, 2;");
 
         addBtn.setOnMouseClicked((event) -> {
-            squidUserPreferences.addRatioName(numLabel.getText() + "/" + denLabel.getText());
+            squidTaskPreferences.addRatioName(numLabel.getText() + "/" + denLabel.getText());
             //undoRatiosList.remove(VBOX???
-            namedExpressionsMap = squidUserPreferences.buildNamedExpressionsMap();
+            namedExpressionsMap = squidTaskPreferences.buildNamedExpressionsMap();
             populateRatios();
             refreshExpressionAudits();
             updateAddButton();
@@ -274,7 +277,7 @@ public class PreferencesManagerController implements Initializable {
         String num = numLabel.getText();
         String den = denLabel.getText();
         boolean valid = (num.compareTo(den) != 0)
-                && !squidUserPreferences.getRatioNames().contains(num + "/" + den)
+                && !squidTaskPreferences.getRatioNames().contains(num + "/" + den)
                 && num.length() > 0 && den.length() > 0;
         addBtn.setDisable(!valid);
     }
@@ -290,50 +293,50 @@ public class PreferencesManagerController implements Initializable {
     }
 
     private void initPreferences() {
-        squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
+        squidTaskPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
 
-        ((RadioButton) taskManagerGridPane.lookup("#" + squidUserPreferences.getTaskType().getName())).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + squidTaskPreferences.getTaskType().getName())).setSelected(true);
 
-        authorsNameTextField.setText(squidUserPreferences.getAuthorName());
-        labNameTextField.setText(squidUserPreferences.getLabName());
+        authorsNameTextField.setText(squidTaskPreferences.getAuthorName());
+        labNameTextField.setText(squidTaskPreferences.getLabName());
 
-        if (squidUserPreferences.isUseSBM()) {
+        if (squidTaskPreferences.isUseSBM()) {
             yesSBMRadioButton.setSelected(true);
         } else {
             noSBMRadioButton.setSelected(true);
         }
 
-        if (squidUserPreferences.isUserLinFits()) {
+        if (squidTaskPreferences.isUserLinFits()) {
             linearRegressionRatioCalcRadioButton.setSelected(true);
         } else {
             spotAverageRatioCalcRadioButton.setSelected(true);
         }
 
-        ((RadioButton) taskManagerGridPane.lookup("#" + squidUserPreferences.getSelectedIndexIsotope().getName())).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + squidTaskPreferences.getSelectedIndexIsotope().getName())).setSelected(true);
 
-        autoExcludeSpotsCheckBox.setSelected(squidUserPreferences.isSquidAllowsAutoExclusionOfSpots());
+        autoExcludeSpotsCheckBox.setSelected(squidTaskPreferences.isSquidAllowsAutoExclusionOfSpots());
 
         SpinnerValueFactory<Double> valueFactoryU
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, squidUserPreferences.getExtPErrU(), 0.05);
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, squidTaskPreferences.getExtPErrU(), 0.05);
         assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
         assignedExternalErrUSpinner.valueProperty().addListener(new ChangeListener<Double>() {
 
             @Override
             public void changed(ObservableValue<? extends Double> observable,//
                     Double oldValue, Double newValue) {
-                squidUserPreferences.setExtPErrU(assignedExternalErrUSpinner.getValue());
+                squidTaskPreferences.setExtPErrU(assignedExternalErrUSpinner.getValue());
             }
         });
 
         SpinnerValueFactory<Double> valueFactoryTh
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, squidUserPreferences.getExtPErrTh(), 0.05);
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, squidTaskPreferences.getExtPErrTh(), 0.05);
         assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
         assignedExternalErrThSpinner.valueProperty().addListener(new ChangeListener<Double>() {
 
             @Override
             public void changed(ObservableValue<? extends Double> observable,//
                     Double oldValue, Double newValue) {
-                squidUserPreferences.setExtPErrTh(assignedExternalErrThSpinner.getValue());
+                squidTaskPreferences.setExtPErrTh(assignedExternalErrThSpinner.getValue());
             }
         });
 
@@ -344,18 +347,18 @@ public class PreferencesManagerController implements Initializable {
         ObservableList<String> delimetersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimetersEnum.names());
         delimeterComboBox.setItems(delimetersList);
         // set value before adding listener
-        delimeterComboBox.getSelectionModel().select(squidUserPreferences.getDelimiterForUnknownNames());
+        delimeterComboBox.getSelectionModel().select(squidTaskPreferences.getDelimiterForUnknownNames());
         delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                     final String oldvalue, final String newvalue) {
-                squidUserPreferences.setDelimiterForUnknownNames(newvalue);
+                squidTaskPreferences.setDelimiterForUnknownNames(newvalue);
             }
         });
 
         populateMasses();
         populateRatios();
 
-        namedExpressionsMap = squidUserPreferences.buildNamedExpressionsMap();
+        namedExpressionsMap = squidTaskPreferences.buildNamedExpressionsMap();
 
         populateDirectives();
         showPermutationPlayers();
@@ -378,29 +381,35 @@ public class PreferencesManagerController implements Initializable {
     private void populateMasses() {
         defaultMassesListTextFlow.getChildren().clear();
         defaultMassesListTextFlow.setMaxHeight(30);
-        List<String> nominalMassesR = squidUserPreferences.getRequiredNominalMasses();
-        int count = 1;
-        for (String nominalMass : nominalMassesR) {
-            StackPane massText = makeMassStackPane(nominalMass, "pink");
-            massText.setTranslateX(1 * count++);
-            defaultMassesListTextFlow.getChildren().add(massText);
+        List<String> allMasses = new ArrayList<>();
+        allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        allMasses.addAll(squidTaskPreferences.getNominalMasses());
+        Collections.sort(allMasses);
+        if (!squidTaskPreferences.getNominalMasses().isEmpty()) {
+            allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
+            if (squidTaskPreferences.getIndexOfBackgroundSpecies() >= 0) {
+                allMasses.add(squidTaskPreferences.getIndexOfBackgroundSpecies(), DEFAULT_BACKGROUND_MASS_LABEL);
+            }
         }
-
-        List<String> nominalMasses = squidUserPreferences.getNominalMasses();
-        for (String nominalMass : nominalMasses) {
-            StackPane massText = makeMassStackPane(nominalMass, "white");
+        int count = 1;
+        for (String mass : allMasses) {
+            StackPane massText;
+            if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
+                massText = makeMassStackPane(mass, "pink");
+            } else {
+                massText = makeMassStackPane(mass, "white");
+                massText.setOnMouseClicked((MouseEvent event) -> {
+                    if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                        defaultMassesListTextFlow.getChildren().remove(massText);
+                        undoMassesList.add(0, massText);
+                        squidTaskPreferences.removeNominalMass(mass);
+                        namedExpressionsMap = squidTaskPreferences.buildNamedExpressionsMap();
+                        populateRatios();
+                        refreshExpressionAudits();
+                    }
+                });
+            }
             massText.setTranslateX(1 * count++);
-            massText.setOnMouseClicked((MouseEvent event) -> {
-                if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-                    defaultMassesListTextFlow.getChildren().remove(massText);
-                    undoMassesList.add(0, massText);
-                    squidUserPreferences.removeNominalMass(nominalMass);
-                    namedExpressionsMap = squidUserPreferences.buildNamedExpressionsMap();
-                    populateRatios();
-                    refreshExpressionAudits();
-                }
-            });
-
             defaultMassesListTextFlow.getChildren().add(massText);
         }
     }
@@ -408,7 +417,7 @@ public class PreferencesManagerController implements Initializable {
     private void populateRatios() {
         defaultRatiosListTextFlow.getChildren().clear();
         defaultRatiosListTextFlow.setMaxHeight(30);
-        List<String> ratioNamesR = squidUserPreferences.getRequiredRatioNames();
+        List<String> ratioNamesR = squidTaskPreferences.getRequiredRatioNames();
         int count = 1;
         for (String ratioName : ratioNamesR) {
             VBox ratio = makeRatioVBox(ratioName);
@@ -417,7 +426,7 @@ public class PreferencesManagerController implements Initializable {
             defaultRatiosListTextFlow.getChildren().add(ratio);
         }
 
-        List<String> ratioNames = squidUserPreferences.getRatioNames();
+        List<String> ratioNames = squidTaskPreferences.getRatioNames();
         for (String ratioName : ratioNames) {
             VBox ratio = makeRatioVBox(ratioName);
             ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;");
@@ -427,7 +436,7 @@ public class PreferencesManagerController implements Initializable {
                     namedExpressionsMap.remove(ratioName);
                     defaultRatiosListTextFlow.getChildren().remove(ratio);
                     undoRatiosList.add(0, ratio);
-                    squidUserPreferences.removeRatioName(ratioName);
+                    squidTaskPreferences.removeRatioName(ratioName);
                     refreshExpressionAudits();
                 }
             });
@@ -468,36 +477,36 @@ public class PreferencesManagerController implements Initializable {
     }
 
     private void populateDirectives() {
-        ((RadioButton) taskManagerGridPane.lookup("#" + squidUserPreferences.getParentNuclide())).setSelected(true);
-        ((RadioButton) taskManagerGridPane.lookup("#" + (String) (squidUserPreferences.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + squidTaskPreferences.getParentNuclide())).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + (String) (squidTaskPreferences.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
         pb208RadioButton.setVisible(
                 ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected()
                 && ((RadioButton) taskManagerGridPane.lookup("#indirect")).isSelected());
 
         uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
-        String UTh_U = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
+        String UTh_U = squidTaskPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
         uncorrConstPbUExpressionText.setText(UTh_U);
         uncorrConstPbUExpressionText.setUserData(UNCOR206PB238U_CALIB_CONST);
         uncorrConstPbUExpressionText.setStyle(
                 makeExpression(UNCOR206PB238U_CALIB_CONST, UTh_U).amHealthy() ? healthyStyle : unHealthyStyle);
 
         uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
-        String UTh_Th = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
+        String UTh_Th = squidTaskPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
         uncorrConstPbThExpressionText.setText(UTh_Th);
         uncorrConstPbThExpressionText.setUserData(UNCOR208PB232TH_CALIB_CONST);
         uncorrConstPbThExpressionText.setStyle(
                 makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th).amHealthy() ? healthyStyle : unHealthyStyle);
 
         th232U238Label.setText(TH_U_EXP_RM + ":");
-        String thU = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
+        String thU = squidTaskPreferences.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
         pb208Th232ExpressionText.setText(thU);
         pb208Th232ExpressionText.setUserData(TH_U_EXP_DEFAULT);
         pb208Th232ExpressionText.setStyle(
                 makeExpression(TH_U_EXP_DEFAULT, thU).amHealthy() ? healthyStyle : unHealthyStyle);
 
         parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
-        String parentPPM = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
+        String parentPPM = squidTaskPreferences.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
         parentConcExpressionText.setText(parentPPM);
         parentConcExpressionText.setUserData(PARENT_ELEMENT_CONC_CONST);
         parentConcExpressionText.setStyle(
@@ -507,22 +516,22 @@ public class PreferencesManagerController implements Initializable {
 
     @FXML
     private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setTaskType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
+        squidTaskPreferences.setTaskType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
     }
 
     @FXML
     private void generalTaskTypeRadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setTaskType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
+        squidTaskPreferences.setTaskType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
     }
 
     private void setupListeners() {
 
         authorsNameTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            squidUserPreferences.setAuthorName(newValue);
+            squidTaskPreferences.setAuthorName(newValue);
         });
 
         labNameTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            squidUserPreferences.setLabName(newValue);
+            squidTaskPreferences.setLabName(newValue);
         });
 
         final StringProperty uncorrConstPbUExpressionString = new SimpleStringProperty();
@@ -530,7 +539,7 @@ public class PreferencesManagerController implements Initializable {
         uncorrConstPbUExpressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Expression exp = makeExpression(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionString.get());
-                squidUserPreferences.getSpecialSquidFourExpressionsMap()
+                squidTaskPreferences.getSpecialSquidFourExpressionsMap()
                         .put(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionString.get());
                 tooltipMapPut(exp, UNCOR206PB238U_CALIB_CONST);
                 updateExpressionHealthFlag(uncorrConstPbUExpressionText, exp.amHealthy());
@@ -544,7 +553,7 @@ public class PreferencesManagerController implements Initializable {
         uncorrConstPbThExpressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Expression exp = makeExpression(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionString.get());
-                squidUserPreferences.getSpecialSquidFourExpressionsMap()
+                squidTaskPreferences.getSpecialSquidFourExpressionsMap()
                         .put(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionString.get());
                 tooltipMapPut(exp, UNCOR208PB232TH_CALIB_CONST);
                 updateExpressionHealthFlag(uncorrConstPbThExpressionText, exp.amHealthy());
@@ -558,7 +567,7 @@ public class PreferencesManagerController implements Initializable {
         pb208Th232ExpressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Expression exp = makeExpression(TH_U_EXP_DEFAULT, pb208Th232ExpressionString.get());
-                squidUserPreferences.getSpecialSquidFourExpressionsMap()
+                squidTaskPreferences.getSpecialSquidFourExpressionsMap()
                         .put(TH_U_EXP_DEFAULT, pb208Th232ExpressionString.get());
                 tooltipMapPut(exp, TH_U_EXP_DEFAULT);
                 updateExpressionHealthFlag(pb208Th232ExpressionText, exp.amHealthy());
@@ -572,7 +581,7 @@ public class PreferencesManagerController implements Initializable {
         parentConcExpressionString.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Expression exp = makeExpression(PARENT_ELEMENT_CONC_CONST, parentConcExpressionString.get());
-                squidUserPreferences.getSpecialSquidFourExpressionsMap()
+                squidTaskPreferences.getSpecialSquidFourExpressionsMap()
                         .put(PARENT_ELEMENT_CONC_CONST, parentConcExpressionString.get());
                 tooltipMapPut(exp, PARENT_ELEMENT_CONC_CONST);
 
@@ -704,53 +713,53 @@ public class PreferencesManagerController implements Initializable {
 
     @FXML
     private void pb204RadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb204RadioButton.getId()));
+        squidTaskPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb204RadioButton.getId()));
     }
 
     @FXML
     private void pb207RadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb207RadioButton.getId()));
+        squidTaskPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb207RadioButton.getId()));
     }
 
     @FXML
     private void pb208RadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb208RadioButton.getId()));
+        squidTaskPreferences.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb208RadioButton.getId()));
     }
 
     @FXML
     private void yesSBMRadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setUseSBM(true);
+        squidTaskPreferences.setUseSBM(true);
     }
 
     @FXML
     private void noSBMRadioButtonActions(ActionEvent event) {
-        squidUserPreferences.setUseSBM(false);
+        squidTaskPreferences.setUseSBM(false);
     }
 
     @FXML
     private void linearRegressionRatioCalcRadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setUserLinFits(true);
+        squidTaskPreferences.setUserLinFits(true);
     }
 
     @FXML
     private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
-        squidUserPreferences.setUserLinFits(false);
+        squidTaskPreferences.setUserLinFits(false);
     }
 
     @FXML
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
-        squidUserPreferences.setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
+        squidTaskPreferences.setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
     }
 
     @FXML
     private void toggleParentNuclideAction(ActionEvent event) {
-        squidUserPreferences.setParentNuclide(((RadioButton) event.getSource()).getId());
+        squidTaskPreferences.setParentNuclide(((RadioButton) event.getSource()).getId());
         showPermutationPlayers();
     }
 
     @FXML
     private void toggleDirectAltAction(ActionEvent event) {
-        squidUserPreferences.setDirectAltPD(((RadioButton) event.getSource()).getId().compareToIgnoreCase("DIRECT") == 0);
+        squidTaskPreferences.setDirectAltPD(((RadioButton) event.getSource()).getId().compareToIgnoreCase("DIRECT") == 0);
         showPermutationPlayers();
     }
 
@@ -814,9 +823,10 @@ public class PreferencesManagerController implements Initializable {
                 numLabel.setText("");
                 denLabel.setText("");
                 addBtn.setDisable(true);
-                List<String> masses = squidUserPreferences.getRequiredNominalMasses();
-                masses.remove("BKG");
-                masses.addAll(squidUserPreferences.getNominalMasses());
+                List<String> masses = new ArrayList<>();
+                masses.addAll(REQUIRED_NOMINAL_MASSES);
+                masses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
+                masses.addAll(squidTaskPreferences.getNominalMasses());
                 addNumeratorVBox.getChildren().clear();
                 addDenominatorVBox.getChildren().clear();
                 for (String mass : masses) {
@@ -836,8 +846,8 @@ public class PreferencesManagerController implements Initializable {
             if (undoRatiosList.size() > 0) {
                 VBox last = undoRatiosList.get(0);
                 undoRatiosList.remove(last);
-                squidUserPreferences.addRatioName((String) last.getUserData());
-                namedExpressionsMap = squidUserPreferences.buildNamedExpressionsMap();
+                squidTaskPreferences.addRatioName((String) last.getUserData());
+                namedExpressionsMap = squidTaskPreferences.buildNamedExpressionsMap();
                 populateRatios();
                 refreshExpressionAudits();
             }
@@ -860,8 +870,28 @@ public class PreferencesManagerController implements Initializable {
         MenuItem menuItem = new MenuItem("Add mass", massName);
         menuItem.setOnAction((evt) -> {
             String mass = massName.getText();
-            squidUserPreferences.addNominalMass(mass);
+            if (mass.length() > 0) {
+                squidTaskPreferences.addNominalMass(mass);
+            }
             populateMasses();
+        });
+        itemsForThisNode.add(menuItem);
+
+        TextField bkgIndexString = new TextField();
+        bkgIndexString.setPrefWidth(40);
+        bkgIndexString.textProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
+            bkgIndexString.setPrefWidth((bkgIndexString.getText().trim().length() + 2) * bkgIndexString.getFont().getSize());
+        });
+        menuItem = new MenuItem("Place BKG label at position 1, 2, 3, ...", bkgIndexString);
+        menuItem.setOnAction((evt) -> {
+            String index = bkgIndexString.getText();
+            try {
+                int bkgIndex = Math.abs(Integer.parseInt(index));
+                squidTaskPreferences.setIndexOfBackgroundSpecies(bkgIndex - 1);
+                populateMasses();
+            } catch (NumberFormatException numberFormatException) {
+                // do nothing
+            }
         });
         itemsForThisNode.add(menuItem);
 
@@ -871,7 +901,7 @@ public class PreferencesManagerController implements Initializable {
             if (undoMassesList.size() > 0) {
                 StackPane last = undoMassesList.get(0);
                 undoMassesList.remove(last);
-                squidUserPreferences.addNominalMass((String) last.getUserData());
+                squidTaskPreferences.addNominalMass((String) last.getUserData());
                 populateMasses();
             }
         });

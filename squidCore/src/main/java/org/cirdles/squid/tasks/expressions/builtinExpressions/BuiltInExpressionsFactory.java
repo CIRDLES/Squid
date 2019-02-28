@@ -155,9 +155,12 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L9678;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 
 /**
  *
@@ -193,7 +196,7 @@ public abstract class BuiltInExpressionsFactory {
         // over written by task
         ExpressionTreeInterface extPErrU = new ConstantNode(MIN_206PB238U_EXT_1SIGMA_ERR_PCT, 0.75);
         parameters.put(MIN_206PB238U_EXT_1SIGMA_ERR_PCT, extPErrU);
-        
+
         ExpressionTreeInterface extPErrTh = new ConstantNode(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT, 0.75);
         parameters.put(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT, extPErrTh);
 
@@ -215,6 +218,12 @@ public abstract class BuiltInExpressionsFactory {
         spotLookupFields.put(expQt1Z.getName(), expQt1Z);
         ExpressionTreeInterface expPrimaryBeam = buildSpotNode("getPrimaryBeam");
         spotLookupFields.put(expPrimaryBeam.getName(), expPrimaryBeam);
+
+        // special case for BKG to provide for lookup in built-in expressions returning ZERO if no BKG
+        ShrimpSpeciesNode spm
+                = ShrimpSpeciesNode.buildShrimpSpeciesNode(
+                        new SquidSpeciesModel(DEFAULT_BACKGROUND_MASS_LABEL), "getPkInterpScanArray");
+        spotLookupFields.put(DEFAULT_BACKGROUND_MASS_LABEL, spm);
 
         return spotLookupFields;
     }
@@ -667,7 +676,7 @@ public abstract class BuiltInExpressionsFactory {
         overCountExpressionsOrdered.add(expressionOverCount4_6_7);
 
         Expression expressionOverCountPerSec4_7 = buildExpression(OVER_COUNTS_PERSEC_4_7,
-                "TotalCps([\"204\"])-TotalCps([\"BKG\"])-[\"" + OVER_COUNT_4_6_7 + "\"]*(TotalCps([\"206\"])-TotalCps([\"BKG\"]))", true, false, false);
+                "TotalCps([\"204\"])-TotalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])-[\"" + OVER_COUNT_4_6_7 + "\"]*(TotalCps([\"206\"])-TotalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"]))", true, false, false);
         overCountExpressionsOrdered.add(expressionOverCountPerSec4_7);
 
         Expression expressionOverCount7CorrCalib = buildExpression(CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT,
@@ -683,7 +692,7 @@ public abstract class BuiltInExpressionsFactory {
             overCountExpressionsOrdered.add(expressionOverCount4_6_8);
 
             Expression expressionOverCountPerSec4_8 = buildExpression(OVER_COUNTS_PERSEC_4_8,
-                    "TotalCps([\"204\"])-TotalCps([\"BKG\"])-[\"" + OVER_COUNT_4_6_8 + "\"]*(TotalCps([\"206\"])-TotalCps([\"BKG\"]))", true, false, false);
+                    "TotalCps([\"204\"])-TotalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])-[\"" + OVER_COUNT_4_6_8 + "\"]*(TotalCps([\"206\"])-TotalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"]))", true, false, false);
             overCountExpressionsOrdered.add(expressionOverCountPerSec4_8);
 
             Expression expressionOverCount8CorrCalib = buildExpression(CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
@@ -698,8 +707,8 @@ public abstract class BuiltInExpressionsFactory {
             overCountExpressionsOrdered.add(expression4CorrOverCount4_6_8);
 
             Expression expression4CorrOverCountPerSec4_8 = buildExpression(PB4CORR + OVER_COUNTS_PERSEC_4_8,
-                    "TotalCps([\"204\"])-TotalCps([\"BKG\"])-[\"" + PB4CORR + OVER_COUNT_4_6_8 + "\"]"
-                    + "*(TotalCps([\"206\"])-TotalCps([\"BKG\"]))", true, false, false);
+                    "TotalCps([\"204\"])-TotalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])-[\"" + PB4CORR + OVER_COUNT_4_6_8 + "\"]"
+                    + "*(TotalCps([\"206\"])-TotalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"]))", true, false, false);
             overCountExpressionsOrdered.add(expression4CorrOverCountPerSec4_8);
 
             Expression expression4CorrOverCount8CorrCalib = buildExpression("" + PB4CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
@@ -712,8 +721,8 @@ public abstract class BuiltInExpressionsFactory {
             overCountExpressionsOrdered.add(expression7CorrOverCount4_6_8);
 
             Expression expression7CorrOverCountPerSec4_8 = buildExpression(PB7CORR + OVER_COUNTS_PERSEC_4_8,
-                    "TotalCps([\"204\"])-TotalCps([\"BKG\"])-[\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"]"
-                    + "*(TotalCps([\"206\"])-TotalCps([\"BKG\"]))", true, false, false);
+                    "TotalCps([\"204\"])-TotalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])-[\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"]"
+                    + "*(TotalCps([\"206\"])-TotalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"]))", true, false, false);
             overCountExpressionsOrdered.add(expression7CorrOverCountPerSec4_8);
 
             Expression expression7CorrOverCount8CorrCalib = buildExpression(PB7CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,

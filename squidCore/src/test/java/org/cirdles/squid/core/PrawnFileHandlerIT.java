@@ -125,12 +125,13 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setFilterForConcRefMatSpotNames("6266");
 
         // overcome user preferences
-        squidProjectZ6266.getTask().setType(Squid3Constants.TaskTypeEnum.GEOCHRON);
+        squidProjectZ6266.getTask().setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         squidProjectZ6266.getTask().setUseSBM(true);
         squidProjectZ6266.getTask().setUserLinFits(false);
         squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
 
         squidProjectZ6266.getTask().setExtPErrU(0.75);
+        squidProjectZ6266.getTask().setExtPErrTh(0.75);
         squidProjectZ6266.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         squidProjectZ6266.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         squidProjectZ6266.getTask().setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
@@ -179,7 +180,7 @@ public class PrawnFileHandlerIT {
 
         TaskInterface task = new Task();
         // overcome user preferences
-        task.setType(Squid3Constants.TaskTypeEnum.GEOCHRON);
+        task.setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         task.setUseSBM(true);
         task.setUserLinFits(false);
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);

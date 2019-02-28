@@ -17,8 +17,8 @@ package org.cirdles.squid.shrimp;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.Serializable;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 /**
  *
@@ -127,7 +127,7 @@ public class SquidSpeciesModel implements
     public String getIsotopeName() {
         String retVal = isotopeName;
         if (isBackground) {
-            retVal = SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
+            retVal = DEFAULT_BACKGROUND_MASS_LABEL;
         }
         return retVal;
     }
@@ -136,7 +136,7 @@ public class SquidSpeciesModel implements
      * @param isotopeName the isotopeName to set
      */
     public void setIsotopeName(String isotopeName) {
-        if (isotopeName.compareToIgnoreCase(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL) != 0) {
+        if (isotopeName.compareToIgnoreCase(DEFAULT_BACKGROUND_MASS_LABEL) != 0) {
             this.isotopeName = isotopeName;
         }
     }

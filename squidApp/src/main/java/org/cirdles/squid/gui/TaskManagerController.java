@@ -45,9 +45,14 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
 
 /**
  * FXML Controller class
@@ -147,11 +152,11 @@ public class TaskManagerController implements Initializable {
             task.setupSquidSessionSpecsAndReduceAndReport();
             populateTaskFields();
             setupListeners();
+            setUpParametersModelsComboBoxes();
         } else {
             taskAuditTextArea.setText("No Task information available");
         }
-
-        setUpParametersModelsComboBoxes();
+  
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
     }
 
@@ -163,7 +168,7 @@ public class TaskManagerController implements Initializable {
         labNameTextField.setText(task.getLabName());
         provenanceTextField.setText(task.getProvenance());
 
-        if (task.getType().compareTo(Squid3Constants.TaskTypeEnum.GEOCHRON) != 0) {
+        if (task.getTaskType().compareTo(Squid3Constants.TaskTypeEnum.GEOCHRON) != 0) {
             generalTaskTypeRadioButton.setSelected(true);
         } else {
             geochronTaskTypeRadioButton.setSelected(true);
@@ -234,25 +239,41 @@ public class TaskManagerController implements Initializable {
         ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
-        pb208RadioButton.setVisible(
-                ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected()
-                && ((RadioButton) taskManagerGridPane.lookup("#indirect")).isSelected());
+        boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();
+        boolean directPicked = ((RadioButton) taskManagerGridPane.lookup("#direct")).isSelected();
 
+        pb208RadioButton.setVisible(uPicked && !directPicked);
+        boolean perm1 = uPicked && !directPicked;
+        boolean perm2 = uPicked && directPicked;
+        boolean perm3 = !uPicked && !directPicked;
+        boolean perm4 = !uPicked && directPicked;
+
+        /*
+        updateExpressionStyle(uncorrConstPbUExpressionText, (perm1 || perm2 || perm4));
+        updateExpressionStyle(uncorrConstPbThExpressionText, (perm2 || perm3 || perm4));
+        updateExpressionStyle(pb208Th232ExpressionText, (perm1 || perm3));
+        updateExpressionStyle(parentConcExpressionText, (perm1 || perm2 || perm3 || perm4));
+        
+         */
         uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
         Expression UTh_U = task.getExpressionByName(UNCOR206PB238U_CALIB_CONST);
-        uncorrConstPbUExpressionLabel.setText((UTh_U == null) ? "Not Used" : UTh_U.getExcelExpressionString());
+        String UTh_U_ExpressionString = (UTh_U == null) ? UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION : UTh_U.getExcelExpressionString();
+        uncorrConstPbUExpressionLabel.setText((perm1 || perm2 || perm4) ? UTh_U_ExpressionString : "Not Used");
 
         uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
         Expression UTh_Th = task.getExpressionByName(UNCOR208PB232TH_CALIB_CONST);
-        uncorrConstPbThExpressionLabel.setText((UTh_Th == null) ? "Not Used" : UTh_Th.getExcelExpressionString());
+        String UTh_Th_ExpressionString = (UTh_Th == null) ? UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION : UTh_Th.getExcelExpressionString();
+        uncorrConstPbThExpressionLabel.setText((perm2 || perm3 || perm4) ? UTh_Th_ExpressionString : "Not Used");
 
         th232U238Label.setText(TH_U_EXP_RM + ":");
-        Expression thU = task.getExpressionByName(TH_U_EXP_RM);
-        th232U238ExpressionLabel.setText((task.isDirectAltPD()) ? "Not Used" : thU.getExcelExpressionString());
+        Expression thU = task.getExpressionByName(TH_U_EXP_DEFAULT);
+        String thU_ExpressionString = (thU == null) ? TH_U_EXP_DEFAULT_EXPRESSION : thU.getExcelExpressionString();
+        th232U238ExpressionLabel.setText((perm1 || perm3) ? thU_ExpressionString : "Not Used");
 
         parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
         Expression parentPPM = task.getExpressionByName(PARENT_ELEMENT_CONC_CONST);
-        parentConcExpressionLabel.setText((parentPPM == null) ? "Not Used" : parentPPM.getExcelExpressionString());
+        String parentPPM_ExpressionString = (parentPPM == null) ? PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION : parentPPM.getExcelExpressionString();
+        parentConcExpressionLabel.setText((perm1 || perm2 || perm3 || perm4) ? parentPPM_ExpressionString : "Not Used");
     }
 
     private void setupListeners() {
@@ -374,13 +395,13 @@ public class TaskManagerController implements Initializable {
 
     @FXML
     private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
-        task.setType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
+        task.setTaskType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
         task.setChanged(true);
     }
 
     @FXML
     private void generalTaskTypeRadioButtonAction(ActionEvent event) {
-        task.setType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
+        task.setTaskType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
         task.setChanged(true);
     }
 
