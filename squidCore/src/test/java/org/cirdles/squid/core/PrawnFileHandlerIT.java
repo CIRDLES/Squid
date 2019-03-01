@@ -221,7 +221,7 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         // force defaults for testing
         squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
-                .put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
+                .put(PARENT_ELEMENT_CONC_CONST, "[\"238/195.8\"]/[\"254/238\"]^0.66");
         squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
                 .put(UNCOR206PB238U_CALIB_CONST, UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION);
         squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()

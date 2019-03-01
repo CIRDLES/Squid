@@ -17,6 +17,7 @@ package org.cirdles.squid.tasks.taskPreferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.TreeMap;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
@@ -31,21 +32,21 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class TaskPreferences11Mass extends SquidTaskPreferences {
+public class TaskPreferences9Mass extends SquidTaskPreferences {
 
-    public TaskPreferences11Mass() {
+    public TaskPreferences9Mass() {
 
         this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{
-            DEFAULT_BACKGROUND_MASS_LABEL, "190", "195.8", "195.9", "238", "248", "254"}));
+            DEFAULT_BACKGROUND_MASS_LABEL, "196", "238", "248", "254"}));
 
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
-            "190/195.8", "195.9/195.8", "238/195.8", "248/195.8", "206/238", "254/238", "208/248", "206/254", "248/254"}));
+            "238/196", "206/238", "254/238", "248/254", "206/254"}));
 
-        indexOfBackgroundSpecies = 4;
-
-        this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION);
+        indexOfBackgroundSpecies = 2;
+        
+        this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^2");
         this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, "");
-        this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
-        this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, "[\"238/195.8\"]/[\"254/238\"]^0.66");
+        this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]");
+        this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, "[\"238/196\"]/[\"254/238\"]^0.66");
     }
 }

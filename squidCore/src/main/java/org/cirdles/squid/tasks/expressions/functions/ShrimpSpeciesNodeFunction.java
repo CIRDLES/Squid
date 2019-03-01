@@ -61,9 +61,6 @@ public class ShrimpSpeciesNodeFunction extends Function {
         shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
         shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
 
-        if (shrimpSpeciesNode.getName().compareTo("BKG")==0){
-            System.out.println();
-        }
         Object[][] results = shrimpSpeciesNode.eval(shrimpFractions, task);
         // added feb 2019 to handle BKG when forced
         if (results[0] == null){

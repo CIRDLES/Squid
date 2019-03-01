@@ -74,12 +74,14 @@ import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_URL;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
@@ -88,7 +90,9 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInte
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
+import org.cirdles.squid.tasks.taskPreferences.TaskPreferences10Mass;
 import org.cirdles.squid.tasks.taskPreferences.TaskPreferences11Mass;
+import org.cirdles.squid.tasks.taskPreferences.TaskPreferences9Mass;
 import org.cirdles.squid.tasks.taskPreferences.TaskPreferencesBlank;
 
 /**
@@ -214,6 +218,8 @@ public class PreferencesManagerController implements Initializable {
     private Spinner<Double> assignedExternalErrThSpinner;
     @FXML
     private Spinner<Double> assignedExternalErrUSpinner;
+    @FXML
+    private Button fromCurrentTaskBtn;
 
     {
         addBtnHBox.setAlignment(Pos.CENTER);
@@ -385,12 +391,14 @@ public class PreferencesManagerController implements Initializable {
         allMasses.addAll(REQUIRED_NOMINAL_MASSES);
         allMasses.addAll(squidTaskPreferences.getNominalMasses());
         Collections.sort(allMasses);
-        if (!squidTaskPreferences.getNominalMasses().isEmpty()) {
-            allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
-            if (squidTaskPreferences.getIndexOfBackgroundSpecies() >= 0) {
-                allMasses.add(squidTaskPreferences.getIndexOfBackgroundSpecies(), DEFAULT_BACKGROUND_MASS_LABEL);
-            }
+        allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
+        if (squidTaskPreferences.getIndexOfBackgroundSpecies() >= 0) {
+            allMasses.add(
+                    (allMasses.size() > squidTaskPreferences.getIndexOfBackgroundSpecies()
+                    ? squidTaskPreferences.getIndexOfBackgroundSpecies() : allMasses.size()),
+                    DEFAULT_BACKGROUND_MASS_LABEL);
         }
+
         int count = 1;
         for (String mass : allMasses) {
             StackPane massText;
@@ -417,7 +425,7 @@ public class PreferencesManagerController implements Initializable {
     private void populateRatios() {
         defaultRatiosListTextFlow.getChildren().clear();
         defaultRatiosListTextFlow.setMaxHeight(30);
-        List<String> ratioNamesR = squidTaskPreferences.getRequiredRatioNames();
+        List<String> ratioNamesR = REQUIRED_RATIO_NAMES;
         int count = 1;
         for (String ratioName : ratioNamesR) {
             VBox ratio = makeRatioVBox(ratioName);
@@ -448,6 +456,10 @@ public class PreferencesManagerController implements Initializable {
     private StackPane makeMassStackPane(String massName, String color) {
         Text massText = new Text(massName);
         massText.setFont(new Font("Monospaced Bold", 12));
+        if (massName.compareTo(DEFAULT_BACKGROUND_MASS_LABEL) == 0) {
+            massText.setFill(Paint.valueOf("red"));
+        }
+
         Shape circle = new Ellipse(15, 15, 20, 14);
         circle.setFill(Paint.valueOf(color));
         circle.setStroke(Paint.valueOf("black"));
@@ -477,6 +489,7 @@ public class PreferencesManagerController implements Initializable {
     }
 
     private void populateDirectives() {
+        fromCurrentTaskBtn.setDisable(squidProject == null);
         ((RadioButton) taskManagerGridPane.lookup("#" + squidTaskPreferences.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (squidTaskPreferences.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
@@ -630,7 +643,10 @@ public class PreferencesManagerController implements Initializable {
     EventHandler<MouseEvent> mouseExitedEventHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()).hide();
+            try {
+                tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()).hide();
+            } catch (Exception e) {
+            }
         }
     };
 
@@ -666,48 +682,61 @@ public class PreferencesManagerController implements Initializable {
     }
 
     private void setUpParametersModelsComboBoxes() {
+        // does double duty setting labdata defaults
         // ReferenceMaterials
         refMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
         refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
-        refMatModelComboBox.getSelectionModel().select(squidLabData.getRefMatDefault());
+        refMatModelComboBox.getSelectionModel().select(squidTaskPreferences.getReferenceMaterialModel());
 
         refMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    squidLabData.setRefMatDefault(newValue);
-                    squidLabData.storeState();
+                    if ((newValue != null) && (oldValue != null)) {
+                        squidLabData.setRefMatDefault(newValue);
+                        squidLabData.storeState();
+                        squidTaskPreferences.setReferenceMaterialModel(newValue);
+                    }
                 });
 
         // ConcentrationReferenceMaterials
         concRefMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
         concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
-        concRefMatModelComboBox.getSelectionModel().select(squidLabData.getRefMatConcDefault());
+        concRefMatModelComboBox.getSelectionModel().select(squidTaskPreferences.getConcentrationReferenceMaterialModel());
 
         concRefMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    squidLabData.setRefMatConcDefault(newValue);
-                    squidLabData.storeState();
+                    if ((newValue != null) && (oldValue != null)) {
+                        squidLabData.setRefMatConcDefault(newValue);
+                        squidLabData.storeState();
+                        squidTaskPreferences.setConcentrationReferenceMaterialModel(newValue);
+                    }
                 });
 
         // PhysicalConstantsModels
         physConstModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
         physConstModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels()));
-        physConstModelComboBox.getSelectionModel().select(squidLabData.getPhysConstDefault());
+        physConstModelComboBox.getSelectionModel().select(squidTaskPreferences.getPhysicalConstantsModel());
 
         physConstModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    squidLabData.setPhysConstDefault(newValue);
-                    squidLabData.storeState();
+                    if ((newValue != null) && (oldValue != null)) {
+                        squidLabData.setPhysConstDefault(newValue);
+                        squidLabData.storeState();
+                        squidTaskPreferences.setPhysicalConstantsModel(newValue);
+                    }
                 });
 
         // CommonPbModels
         commonPbModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
         commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
-        commonPbModelComboBox.getSelectionModel().select(squidLabData.getCommonPbDefault());
+        commonPbModelComboBox.getSelectionModel().select(squidTaskPreferences.getCommonPbModel());
 
         commonPbModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    squidLabData.setCommonPbDefault(newValue);
-                    squidLabData.storeState();
+                    if ((newValue != null) && (oldValue != null)) {
+                        squidLabData.setCommonPbDefault(newValue);
+                        squidLabData.storeState();
+                        squidTaskPreferences.setCommonPbModel(newValue);
+                    }
                 });
     }
 
@@ -926,13 +955,19 @@ public class PreferencesManagerController implements Initializable {
 
     @FXML
     private void currentTaskAction(ActionEvent event) {
+        SquidUIController.squidProject.getTask().updatePreferencesFromTask(squidTaskPreferences);
+        initPreferences();
     }
 
     @FXML
     private void mass9TaskAction(ActionEvent event) {
+        SquidPersistentState.getExistingPersistentState().setSquidUserPreferences(new TaskPreferences9Mass());
+        initPreferences();
     }
 
     @FXML
     private void mass10TaskAction(ActionEvent event) {
+        SquidPersistentState.getExistingPersistentState().setSquidUserPreferences(new TaskPreferences10Mass());
+        initPreferences();
     }
 }

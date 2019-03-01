@@ -72,7 +72,7 @@ import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
-import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
 /**
@@ -887,8 +887,6 @@ public class SquidUIController implements Initializable {
         }
     }
 
- 
-
     @FXML
     private void importSquid25TaskMenuItemAction(ActionEvent event) {
         try {
@@ -1399,10 +1397,23 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void newSquid3TaskFromPrefsMenuItemAction(ActionEvent event) {
-        squidProject.createNewTask();
-        squidProject.getTask().updateTaskFromPreferences(
-                SquidPersistentState.getExistingPersistentState().getSquidUserPreferences());
-        launchTaskManager();
+        // check the mass count
+        boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
+                == (SquidPersistentState.getExistingPersistentState().getSquidUserPreferences().getNominalMasses().size()
+                + REQUIRED_NOMINAL_MASSES.size()));
+        if (valid) {
+            squidProject.createNewTask();
+            squidProject.getTask().updateTaskFromPreferences(
+                    SquidPersistentState.getExistingPersistentState().getSquidUserPreferences());
+            launchTaskManager();
+        } else {
+            SquidMessageDialog.showWarningDialog(
+                    "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size() 
+                            + " masses, but the task preferences have " 
+                            + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getSquidUserPreferences().getNominalMasses().size()) 
+                            + ".",
+                                null);
+        }
     }
 
 }

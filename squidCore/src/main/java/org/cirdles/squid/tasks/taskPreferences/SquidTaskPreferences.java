@@ -28,10 +28,13 @@ import java.util.TreeMap;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
@@ -42,6 +45,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
  *
@@ -74,11 +78,15 @@ public class SquidTaskPreferences implements Serializable {
     protected Map<String, String> specialSquidFourExpressionsMap;
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
-    protected List<String> requiredRatioNames;
-    
+
     protected int indexOfBackgroundSpecies;
 
     protected Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
+    
+    protected ParametersModel physicalConstantsModel;
+    protected ParametersModel referenceMaterialModel;
+    protected ParametersModel commonPbModel;
+    protected ParametersModel concentrationReferenceMaterialModel;
 
     /**
      * Creates a new instance of ReduxPreferences
@@ -108,16 +116,18 @@ public class SquidTaskPreferences implements Serializable {
         this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION);
         this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
         this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
-
-        // Default to 11 - mass  
-        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{
-            "190", "195.8", "195.9", "238", "248", "254"}));
-
-        this.requiredRatioNames = new ArrayList<>(Arrays.asList(new String[]{"204/206", "207/206", "208/206"}));
-        this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
-            "190/195.8", "195.9/195.8", "238/195.8", "248/195.8", "206/238", "254/238", "208/248", "206/254", "248/254"}));
         
-        indexOfBackgroundSpecies = 4;
+        this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
+        this.referenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
+        this.concentrationReferenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatConcDefault();
+        this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
+
+        // Default to blank  
+        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{DEFAULT_BACKGROUND_MASS_LABEL}));
+
+        this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
+
+        indexOfBackgroundSpecies = 5;
 
         buildShrimpSpeciesNodeMap();
     }
@@ -138,16 +148,16 @@ public class SquidTaskPreferences implements Serializable {
 
     public Map<String, ExpressionTreeInterface> buildNamedExpressionsMap() {
         Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (int i = 0; i < requiredRatioNames.size(); i++) {
-            String[] numDem = requiredRatioNames.get(i).split("/");
+        for (int i = 0; i < REQUIRED_RATIO_NAMES.size(); i++) {
+            String[] numDem = REQUIRED_RATIO_NAMES.get(i).split("/");
             ExpressionTreeInterface ratio = new ExpressionTree(
-                    requiredRatioNames.get(i),
+                    REQUIRED_RATIO_NAMES.get(i),
                     shrimpSpeciesNodeMap.get(numDem[0]),
                     shrimpSpeciesNodeMap.get(numDem[1]),
                     Operation.divide());
             ratio.setSquidSwitchSAUnknownCalculation(true);
             ratio.setSquidSwitchSTReferenceMaterialCalculation(true);
-            namedExpressionsMap.put(requiredRatioNames.get(i), ratio);
+            namedExpressionsMap.put(REQUIRED_RATIO_NAMES.get(i), ratio);
         }
         for (int i = 0; i < ratioNames.size(); i++) {
             String[] numDem = ratioNames.get(i).split("/");
@@ -365,12 +375,7 @@ public class SquidTaskPreferences implements Serializable {
      * @return the nominalMasses
      */
     public List<String> getNominalMasses() {
-        Collections.sort(nominalMasses, new Comparator<String>() {
-            @Override
-            public int compare(String mass1, String mass2) {
-                return mass1.compareTo(mass2);
-            }
-        });
+        Collections.sort(nominalMasses, String::compareTo);
 
         List<String> retVal = new ArrayList<>();
         retVal.addAll(nominalMasses);
@@ -407,12 +412,7 @@ public class SquidTaskPreferences implements Serializable {
      * @return the ratioNames
      */
     public List<String> getRatioNames() {
-        Collections.sort(ratioNames, new Comparator<String>() {
-            @Override
-            public int compare(String ratio1, String ratio2) {
-                return ratio1.compareTo(ratio2);
-            }
-        });
+        Collections.sort(ratioNames, String::compareTo);
 
         List<String> retVal = new ArrayList<>();
         retVal.addAll(ratioNames);
@@ -437,22 +437,6 @@ public class SquidTaskPreferences implements Serializable {
     }
 
     /**
-     * @return the requiredRatioNames
-     */
-    public List<String> getRequiredRatioNames() {
-        Collections.sort(requiredRatioNames, new Comparator<String>() {
-            @Override
-            public int compare(String ratio1, String ratio2) {
-                return ratio1.compareTo(ratio2);
-            }
-        });
-
-        List<String> retVal = new ArrayList<String>();
-        retVal.addAll(requiredRatioNames);
-        return retVal;
-    }
-
-    /**
      * @return the indexOfBackgroundSpecies
      */
     public int getIndexOfBackgroundSpecies() {
@@ -464,5 +448,61 @@ public class SquidTaskPreferences implements Serializable {
      */
     public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies) {
         this.indexOfBackgroundSpecies = indexOfBackgroundSpecies;
+    }
+
+    /**
+     * @return the physicalConstantsModel
+     */
+    public ParametersModel getPhysicalConstantsModel() {
+        return physicalConstantsModel;
+    }
+
+    /**
+     * @param physicalConstantsModel the physicalConstantsModel to set
+     */
+    public void setPhysicalConstantsModel(ParametersModel physicalConstantsModel) {
+        this.physicalConstantsModel = physicalConstantsModel;
+    }
+
+    /**
+     * @return the referenceMaterialModel
+     */
+    public ParametersModel getReferenceMaterialModel() {
+        return referenceMaterialModel;
+    }
+
+    /**
+     * @param referenceMaterialModel the referenceMaterialModel to set
+     */
+    public void setReferenceMaterialModel(ParametersModel referenceMaterialModel) {
+        this.referenceMaterialModel = referenceMaterialModel;
+    }
+
+    /**
+     * @return the commonPbModel
+     */
+    public ParametersModel getCommonPbModel() {
+        return commonPbModel;
+    }
+
+    /**
+     * @param commonPbModel the commonPbModel to set
+     */
+    public void setCommonPbModel(ParametersModel commonPbModel) {
+        this.commonPbModel = commonPbModel;
+    }
+
+    /**
+     * @return the concentrationReferenceMaterialModel
+     */
+    public ParametersModel getConcentrationReferenceMaterialModel() {
+        return concentrationReferenceMaterialModel;
+    }
+
+    /**
+     * @param concentrationReferenceMaterialModel the concentrationReferenceMaterialModel to set
+     */
+    public void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel) {
+        this.concentrationReferenceMaterialModel = concentrationReferenceMaterialModel;
     }
 }

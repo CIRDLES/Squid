@@ -26,13 +26,13 @@
   </columnConstraints>
   <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
     <RowConstraints valignment="CENTER" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
     <RowConstraints percentHeight="32.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="10.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
@@ -44,7 +44,7 @@
             <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="548.0" text="Task Preferences: Set Defaults for new Tasks" />
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
             <RadioButton id="GEOCHRON" fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
                <toggleGroup>
@@ -57,23 +57,28 @@
             <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" disable="true" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
          </children>
       </HBox>
-      <Label text="Author:" GridPane.rowIndex="3" />
-      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <Label text="Author:" GridPane.rowIndex="2" />
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <TextField fx:id="authorsNameTextField" promptText="Author's Name" HBox.hgrow="ALWAYS" />
             <Label text="Lab Name:" />
             <TextField fx:id="labNameTextField" promptText="Lab Name:" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <Label text="Samples:" GridPane.rowIndex="5" />
-      <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+      <Label text="Samples:" GridPane.rowIndex="4" />
+      <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
          <children>
             <Label prefHeight="28.0" prefWidth="256.0" style="-fx-font-size: 14;" text="     Select Name Delimeter OR # Chars:  " />
             <ComboBox fx:id="delimeterComboBox" prefHeight="28.0" prefWidth="65.0" style="-fx-font-size: 14; -fx-font-weight: bold;" />
          </children>
       </HBox>
-      <Label text="Parameters:" GridPane.rowIndex="7" />
-      <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+      <VBox GridPane.rowIndex="6">
+         <children>
+            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="158.0" text="Parameters:" />
+            <Label prefHeight="73.0" prefWidth="160.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Parameter preferences are used for both imported and new tasks." textAlignment="CENTER" wrapText="true" />
+         </children>
+      </VBox>
+      <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
         <columnConstraints>
           <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="259.0" minWidth="243.0" prefWidth="259.0" />
           <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0" />
@@ -157,8 +162,8 @@
       </GridPane>
       <VBox GridPane.rowIndex="11">
          <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" text="Directives:" />
-            <Label prefHeight="73.0" prefWidth="123.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Red boxes outline the expressions used for the selected combination of Primary Age and Direct / Indirect." textAlignment="CENTER" wrapText="true" />
+            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="156.0" text="Directives:" />
+            <Label prefHeight="73.0" prefWidth="156.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Red boxes outline the expressions used for the selected combination of Primary Age and Direct / Indirect." textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="11">
@@ -290,18 +295,18 @@
             <TextFlow fx:id="defaultRatiosListTextFlow" prefHeight="30.0" prefWidth="990.0" style="-fx-background-color: white; -fx-border-color: black;" />
          </children>
       </HBox>
-      <Label text="Type:" GridPane.rowIndex="2" />
-      <Label prefHeight="28.0" prefWidth="65.0" text="Reset to:" GridPane.rowIndex="1" />
-      <ToolBar prefHeight="42.0" prefWidth="744.0" styleClass="backgroundCalamari" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label text="Type:" GridPane.rowIndex="1" />
+      <ToolBar prefHeight="42.0" prefWidth="744.0" styleClass="backgroundCalamari" GridPane.columnIndex="1" GridPane.rowIndex="7">
          <items>
+            <Label prefHeight="28.0" prefWidth="188.0" style="-fx-font-size: 14;" text="Reset Masses &amp; Ratios from:" />
             <Button mnemonicParsing="false" onAction="#blankTaskAction" prefHeight="30.0" text="Blank" />
-            <Button mnemonicParsing="false" onAction="#currentTaskAction" prefHeight="30.0" text="Current Task" />
+            <Button fx:id="fromCurrentTaskBtn" mnemonicParsing="false" onAction="#currentTaskAction" prefHeight="30.0" text="Current Task" />
             <Button mnemonicParsing="false" onAction="#mass9TaskAction" prefHeight="30.0" text="Default 9-mass" />
             <Button mnemonicParsing="false" onAction="#mass10TaskAction" prefHeight="30.0" text="Default 10-mass" />
             <Button mnemonicParsing="false" onAction="#mass11TaskAction" prefHeight="30.0" text="Default 11-mass" />
          </items>
       </ToolBar>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: To remove mass or ratio, click it in the list.  To restore or add a mass or ratio, click the button on the left." textAlignment="RIGHT" wrappingWidth="574.55224609375" GridPane.columnIndex="1" GridPane.rowIndex="9">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" text="Note: Pink masses and ratios are required.  Hint: To remove mass or ratio, click it in the list.  To restore or add a mass or ratio, and to set the mass station for BKG, click the button on the left." textAlignment="RIGHT" wrappingWidth="1066.55224609375" GridPane.columnIndex="1" GridPane.rowIndex="9">
          <font>
             <Font size="11.0" />
          </font>

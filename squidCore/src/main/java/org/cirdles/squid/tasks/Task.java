@@ -16,6 +16,7 @@
  */
 package org.cirdles.squid.tasks;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import com.thoughtworks.xstream.XStream;
 
 import java.io.*;
@@ -123,6 +124,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 
 /**
  *
@@ -159,8 +161,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
-    protected List<String> requiredNominalMasses;
-    protected List<String> requiredRatioNames;
     protected Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails;
     protected SquidSessionModel squidSessionModel;
     protected List<SquidSpeciesModel> squidSpeciesModelList;
@@ -269,8 +269,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
-        this.requiredNominalMasses = new ArrayList<>();
-        this.requiredRatioNames = new ArrayList<>();
 
         this.squidSessionModel = null;
         this.squidSpeciesModelList = new ArrayList<>();
@@ -368,10 +366,57 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         List<String> allRatios = new ArrayList<>();
-        allRatios.addAll(requiredRatioNames);
+        allRatios.addAll(REQUIRED_RATIO_NAMES);
         allRatios.addAll(ratioNames);
         ratioNames = allRatios;
         Collections.sort(ratioNames);
+    }
+
+    @Override
+    public void updatePreferencesFromTask(SquidTaskPreferences taskPreferences) {
+
+        Method[] gettersAndSetters = taskPreferences.getClass().getMethods();
+
+        for (int i = 0; i < gettersAndSetters.length; i++) {
+            String methodName = gettersAndSetters[i].getName();
+            try {
+                if (methodName.startsWith("get") && !methodName.contains("Class")) {
+                    Method methSetPref = taskPreferences.getClass().getMethod(
+                            methodName.replaceFirst("get", "set"),
+                            gettersAndSetters[i].getReturnType());               
+                    Method methGetTask = this.getClass().getMethod(
+                            methodName);
+                    methSetPref.invoke(taskPreferences, methGetTask.invoke(this, new Object[0]));
+                } else if (methodName.startsWith("is")) {
+                    Method methSetPref = taskPreferences.getClass().getMethod(
+                            methodName.replaceFirst("is", "set"),
+                            gettersAndSetters[i].getReturnType());               
+                    Method methGetTask = this.getClass().getMethod(
+                            methodName);
+                    methSetPref.invoke(taskPreferences, methGetTask.invoke(this, new Object[0]));
+                }
+            } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                System.out.println(">>>  " + methodName + "     " + e.getMessage());
+            }
+        }
+        
+        // housekeeping
+        List<String> myNominalMasses = new ArrayList<>();
+        myNominalMasses.addAll(nominalMasses);
+        myNominalMasses.removeAll(REQUIRED_NOMINAL_MASSES);
+        try {
+            myNominalMasses.remove(indexOfBackgroundSpecies - 1);
+        } catch (Exception e) {
+        }
+        myNominalMasses.add(DEFAULT_BACKGROUND_MASS_LABEL);
+        taskPreferences.setNominalMasses(myNominalMasses);
+        
+        List<String> myRatioNames = new ArrayList<>();
+        myRatioNames.addAll(ratioNames);
+        myRatioNames.removeAll(REQUIRED_RATIO_NAMES);
+        taskPreferences.setRatioNames(myRatioNames);
+
+
     }
 
     private void generateConstants() {
@@ -2149,34 +2194,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setRatioNames(List<String> ratioNames) {
         this.ratioNames = ratioNames;
-    }
-
-    /**
-     * @return the requiredNominalMasses
-     */
-    public List<String> getRequiredNominalMasses() {
-        return requiredNominalMasses;
-    }
-
-    /**
-     * @param requiredNominalMasses the requiredNominalMasses to set
-     */
-    public void setRequiredNominalMasses(List<String> requiredNominalMasses) {
-        this.requiredNominalMasses = requiredNominalMasses;
-    }
-
-    /**
-     * @return the requiredRatioNames
-     */
-    public List<String> getRequiredRatioNames() {
-        return requiredRatioNames;
-    }
-
-    /**
-     * @param requiredRatioNames the requiredRatioNames to set
-     */
-    public void setRequiredRatioNames(List<String> requiredRatioNames) {
-        this.requiredRatioNames = requiredRatioNames;
     }
 
     /**

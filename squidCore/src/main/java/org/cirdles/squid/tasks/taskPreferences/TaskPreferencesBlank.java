@@ -17,6 +17,11 @@ package org.cirdles.squid.tasks.taskPreferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 
 /**
  *
@@ -26,10 +31,15 @@ public class TaskPreferencesBlank extends SquidTaskPreferences {
 
     public TaskPreferencesBlank() { 
 
-        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{}));
+        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{DEFAULT_BACKGROUND_MASS_LABEL}));
 
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
         
-        indexOfBackgroundSpecies = -1;
+        indexOfBackgroundSpecies = 5;
+        
+        this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, "");
+        this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, "");
+        this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, "");
+        this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, "");
     }
 }
