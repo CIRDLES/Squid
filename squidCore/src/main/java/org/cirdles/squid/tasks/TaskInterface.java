@@ -392,7 +392,7 @@ public interface TaskInterface {
      *
      */
     public default void applyDirectives() {
-        SquidTaskPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
+        SquidTaskPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences();
 
         // need to remove stored expression results on fractions to clear the decks   
         getShrimpFractions().forEach((spot) -> {
@@ -418,12 +418,6 @@ public interface TaskInterface {
                 PARENT_ELEMENT_CONC_CONST, parentPPM_Expression, true, true, false);
         parentPPM.setSquidSwitchNU(true);
         getSpecialSquidFourExpressionsMap().put(PARENT_ELEMENT_CONC_CONST, parentPPM_Expression);
-
-        String parentPPMmean_Expression = AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
-        Expression parentPPMmean = BuiltInExpressionsFactory.buildExpression(
-                AV_PARENT_ELEMENT_CONC_CONST, parentPPMmean_Expression, true, true, true);
-        parentPPMmean.setSquidSwitchNU(false);
-        parentPPMmean.getExpressionTree().setSquidSwitchConcentrationReferenceMaterialCalculation(true);
 
         String uThU_Expression = getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
         if ((uThU_Expression == null) || (uThU_Expression.length()) == 0) {
@@ -481,11 +475,12 @@ public interface TaskInterface {
         generateBuiltInExpressions();
 
         getTaskExpressionsOrdered().add(parentPPM);
-        getTaskExpressionsOrdered().add(parentPPMmean);
 
         getTaskExpressionsOrdered().addAll(customExpressions);
 
         setChanged(true);
+        
+        updateRefMatCalibConstWMeanExpressions(isSquidAllowsAutoExclusionOfSpots());
 
         updateAllExpressions(true);
         processAndSortExpressions();
@@ -658,4 +653,14 @@ public interface TaskInterface {
     public void updateTaskFromPreferences(SquidTaskPreferences taskPreferences);
 
     public void updatePreferencesFromTask(SquidTaskPreferences taskPreferences);
+    
+        /**
+     * @return the delimiterForUnknownNames
+     */
+    public String getDelimiterForUnknownNames();
+
+    /**
+     * @param delimiterForUnknownNames the delimiterForUnknownNames to set
+     */
+    public void setDelimiterForUnknownNames(String delimiterForUnknownNames);
 }

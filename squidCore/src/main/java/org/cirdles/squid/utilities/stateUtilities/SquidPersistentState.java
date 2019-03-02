@@ -40,7 +40,7 @@ public class SquidPersistentState implements Serializable {
     private static final int MRU_COUNT = 10;
 
     // instance variables
-    private SquidTaskPreferences squidUserPreferences;
+    private SquidTaskPreferences squidTaskPreferences;
 
     private File MRUProjectFile;
     private List<String> MRUProjectList;
@@ -73,7 +73,7 @@ public class SquidPersistentState implements Serializable {
 
         initMRULists();
 
-        squidUserPreferences = new SquidTaskPreferences();
+        squidTaskPreferences = new SquidTaskPreferences();
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
@@ -131,10 +131,10 @@ public class SquidPersistentState implements Serializable {
         }
 
         // check to update SquidTaskPreferences
-        SquidTaskPreferences sup = instance.getSquidUserPreferences();
+        SquidTaskPreferences sup = instance.getSquidTaskPreferences();
         if (sup.getRatioNames() == null) {
             sup = new SquidTaskPreferences();
-            instance.setSquidUserPreferences(sup);
+            instance.setSquidTaskPreferences(sup);
         }
 
         return instance;
@@ -156,17 +156,17 @@ public class SquidPersistentState implements Serializable {
     }
 
     /**
-     * @return the squidUserPreferences
+     * @return the squidTaskPreferences
      */
-    public SquidTaskPreferences getSquidUserPreferences() {
-        return squidUserPreferences;
+    public SquidTaskPreferences getSquidTaskPreferences() {
+        return squidTaskPreferences;
     }
 
     /**
-     * @param squidUserPreferences the squidUserPreferences to set
+     * @param squidTaskPreferences the squidTaskPreferences to set
      */
-    public void setSquidUserPreferences(SquidTaskPreferences squidUserPreferences) {
-        this.squidUserPreferences = squidUserPreferences;
+    public void setSquidTaskPreferences(SquidTaskPreferences squidTaskPreferences) {
+        this.squidTaskPreferences = squidTaskPreferences;
     }
 
     // General methods *********************************************************

@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -138,6 +139,8 @@ public class TaskManagerController implements Initializable {
     private Spinner<Double> assignedExternalErrUSpinner;
     @FXML
     private Spinner<Double> assignedExternalErrThSpinner;
+    @FXML
+    private ComboBox<String> delimeterComboBox;
 
     /**
      * Initializes the controller class.
@@ -156,7 +159,7 @@ public class TaskManagerController implements Initializable {
         } else {
             taskAuditTextArea.setText("No Task information available");
         }
-  
+
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
     }
 
@@ -228,6 +231,18 @@ public class TaskManagerController implements Initializable {
                     Double oldValue, Double newValue) {
                 task.setExtPErrU(assignedExternalErrThSpinner.getValue());
                 taskAuditTextArea.setText(task.printTaskAudit());
+            }
+        });
+
+        // samples
+        ObservableList<String> delimetersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimetersEnum.names());
+        delimeterComboBox.setItems(delimetersList);
+        // set value before adding listener
+        delimeterComboBox.getSelectionModel().select(task.getDelimiterForUnknownNames());
+        delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> ov,
+                    final String oldvalue, final String newvalue) {
+                task.setDelimiterForUnknownNames(newvalue);
             }
         });
 

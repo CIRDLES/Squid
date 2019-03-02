@@ -299,7 +299,7 @@ public class PreferencesManagerController implements Initializable {
     }
 
     private void initPreferences() {
-        squidTaskPreferences = SquidPersistentState.getExistingPersistentState().getSquidUserPreferences();
+        squidTaskPreferences = SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences();
 
         ((RadioButton) taskManagerGridPane.lookup("#" + squidTaskPreferences.getTaskType().getName())).setSelected(true);
 
@@ -943,13 +943,13 @@ public class PreferencesManagerController implements Initializable {
 
     @FXML
     private void blankTaskAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().setSquidUserPreferences(new TaskPreferencesBlank());
+        SquidPersistentState.getExistingPersistentState().setSquidTaskPreferences(new TaskPreferencesBlank());
         initPreferences();
     }
 
     @FXML
     private void mass11TaskAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().setSquidUserPreferences(new TaskPreferences11Mass());
+        SquidPersistentState.getExistingPersistentState().setSquidTaskPreferences(new TaskPreferences11Mass());
         initPreferences();
     }
 
@@ -961,13 +961,13 @@ public class PreferencesManagerController implements Initializable {
 
     @FXML
     private void mass9TaskAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().setSquidUserPreferences(new TaskPreferences9Mass());
+        SquidPersistentState.getExistingPersistentState().setSquidTaskPreferences(new TaskPreferences9Mass());
         initPreferences();
     }
 
     @FXML
     private void mass10TaskAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().setSquidUserPreferences(new TaskPreferences10Mass());
+        SquidPersistentState.getExistingPersistentState().setSquidTaskPreferences(new TaskPreferences10Mass());
         initPreferences();
     }
 }

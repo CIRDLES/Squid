@@ -53,6 +53,7 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
  *
@@ -96,7 +97,8 @@ public final class SquidProject implements Serializable {
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
 
         this.filtersForUnknownNames = new HashMap<>();
-        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
+        this.delimiterForUnknownNames
+                = SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences().getDelimiterForUnknownNames();
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -193,7 +195,7 @@ public final class SquidProject implements Serializable {
         // first pass
         this.task.setChanged(true);
         this.task.setupSquidSessionSpecsAndReduceAndReport();
-        
+
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
             Expression expression = this.task.generateExpressionFromRawExcelStyleText(task25Eqn.getEquationName(),
@@ -219,10 +221,10 @@ public final class SquidProject implements Serializable {
             ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
             task.getNamedConstantsMap().put(constant.getName(), constant);
         }
-        
+
         this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
         this.task.applyDirectives();
-        
+
         initializeTaskAndReduceData();
     }
 

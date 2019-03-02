@@ -228,6 +228,7 @@ public class PrawnFileHandlerIT {
                 .put(UNCOR208PB232TH_CALIB_CONST, UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION);
         squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
                 .put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
+        squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_4Corr_Unknowns.csv");
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);

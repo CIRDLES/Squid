@@ -212,7 +212,8 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION = "[\"238/196\"]/[\"254/238\"]^0.66";
 
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
-    public static final String AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION = "CalculateMeanConcStd([\"" + PARENT_ELEMENT_CONC_CONST + "\"])";
+    public static final String AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION 
+            = "CalculateMeanConcStd([\"" + PARENT_ELEMENT_CONC_CONST + "\"])";
 
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String U_CONCEN_PPM_RM = "U_Concen_RM";

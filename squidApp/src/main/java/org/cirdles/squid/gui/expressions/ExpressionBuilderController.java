@@ -2560,8 +2560,8 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private Tooltip createFloatingTooltip(String nodeText) {
-        Tooltip res = tooltipsMap.get(nodeText);
-        if (nodeText != null && res == null) {
+        Tooltip tooltip = tooltipsMap.get(nodeText);
+        if (nodeText != null && tooltip == null) {
             String text = nodeText.replace(INVISIBLENEWLINEPLACEHOLDER, "\n");
             text = text.replace(VISIBLENEWLINEPLACEHOLDER, "\n");
             text = text.replace(INVISIBLETABPLACEHOLDER, "\t");
@@ -2588,18 +2588,18 @@ public class ExpressionBuilderController implements Initializable {
                 case OPERATOR_M:
                 case OPERATOR_E:
 
-                    res = new Tooltip("Operation: " + text + " (" + OPERATIONS_MAP.get(text) + ")");
+                    tooltip = new Tooltip("Operation: " + text + " (" + OPERATIONS_MAP.get(text) + ")");
                     break;
 
                 case LEFT_PAREN:
                 case RIGHT_PAREN:
 
-                    res = new Tooltip("Parenthesis: " + text);
+                    tooltip = new Tooltip("Parenthesis: " + text);
                     break;
 
                 case NUMBER:
 
-                    res = new Tooltip("Number: " + text);
+                    tooltip = new Tooltip("Number: " + text);
                     break;
 
                 case NAMED_CONSTANT:
@@ -2610,7 +2610,7 @@ public class ExpressionBuilderController implements Initializable {
                         constant = (ConstantNode) squidProject.getTask().getNamedParametersMap().get(text);
                     }
                     if (constant != null) {
-                        res = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
+                        tooltip = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
                     }
                     break;
 
@@ -2620,7 +2620,7 @@ public class ExpressionBuilderController implements Initializable {
                     if (str != null) {
                         OperationOrFunctionInterface fn = Function.operationFactory(str);
                         if (fn != null) {
-                            res = new Tooltip(
+                            tooltip = new Tooltip(
                                     "Function: " + fn.getName()
                                     + "\n\n" + fn.getArgumentCount()
                                     + " argument(s): " + fn.printInputValues().trim()
@@ -2632,7 +2632,7 @@ public class ExpressionBuilderController implements Initializable {
 
                 case COMMA:
 
-                    res = new Tooltip("Comma: " + text);
+                    tooltip = new Tooltip("Comma: " + text);
                     break;
 
                 case FORMATTER:
@@ -2651,7 +2651,7 @@ public class ExpressionBuilderController implements Initializable {
                         default:
                             tooltipText += "unknown";
                     }
-                    res = new Tooltip(tooltipText);
+                    tooltip = new Tooltip(tooltipText);
                     break;
 
                 case NAMED_EXPRESSION_INDEXED:
@@ -2694,7 +2694,7 @@ public class ExpressionBuilderController implements Initializable {
                     //case expression
                     if (ex != null) {
                         boolean isCustom = ex.isCustom();
-                        res = new Tooltip(
+                        tooltip = new Tooltip(
                                 (isCustom ? "Custom expression: " : "Expression: ")
                                 + "  " + ex.getName()
                                 + "\n\nExpression string: "
@@ -2705,11 +2705,11 @@ public class ExpressionBuilderController implements Initializable {
                                 + "\nNotes:\n"
                                 + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                         if (!ex.amHealthy()) {
-                            res.setGraphic(imageView);
+                            tooltip.setGraphic(imageView);
                         }
                     }
                     //case ratio
-                    if (res == null) {
+                    if (tooltip == null) {
                         for (SquidRatiosModel r : squidProject.getTask().getSquidRatiosModelList()) {
                             if (exname.equalsIgnoreCase(r.getRatioName())) {
                                 Expression exp = new Expression(
@@ -2718,49 +2718,57 @@ public class ExpressionBuilderController implements Initializable {
                                 exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                                 exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
                                 exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
-                                res = new Tooltip(("Ratio: " + r.getRatioName() + "\n\n" + uncertainty) + createPeekForTooltip(exp));
+                                tooltip = new Tooltip(("Ratio: " + r.getRatioName() + "\n\n" + uncertainty) + createPeekForTooltip(exp));
                                 break;
                             }
                         }
                     }
                     //case constant
-                    if (res == null) {
+                    if (tooltip == null) {
                         constant = (ConstantNode) squidProject.getTask().getNamedConstantsMap().get(text);
                         if (constant == null) {
                             constant = (ConstantNode) squidProject.getTask().getNamedParametersMap().get(text);
                         }
                         if (constant != null) {
-                            res = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
+                            tooltip = new Tooltip("Named constant: " + constant.getName() + "\n\nValue: " + constant.getValue());
                         }
                     }
 
                     //case SpotLookupField
-                    if (res == null) {
+                    if (tooltip == null) {
                         ExpressionTreeInterface spotLookupField = squidProject.getTask().getNamedSpotLookupFieldsMap().get(text);
                         if (spotLookupField != null) {
-                            res = new Tooltip("Available lookup field for spots: " + spotLookupField.getName());
+                            tooltip = new Tooltip("Available lookup field for spots: " + spotLookupField.getName());
                         }
                     }
 
-                    if (res == null && text.equals(NUMBERSTRING)) {
-                        res = new Tooltip("Placeholder for number: " + NUMBERSTRING);
+                    if (tooltip == null && text.equals(NUMBERSTRING)) {
+                        tooltip = new Tooltip("Placeholder for number: " + NUMBERSTRING);
                     }
 
-                    if (res == null) {
-                        res = new Tooltip("Missing expression: " + exname);
-                        res.setGraphic(imageView);
+                    // case of mass labels or isotopes
+                    if (tooltip == null){
+                        if (squidProject.getTask().getNominalMasses().contains(exname)){
+                            tooltip = new Tooltip("Mass label: " + exname);
+                        }
                     }
+                    
+                    if (tooltip == null) {
+                        tooltip = new Tooltip("Missing expression: " + exname);
+                        tooltip.setGraphic(imageView);
+                    }
+                    
                     break;
 
             }
-            if (res == null) {
-                res = new Tooltip("Unrecognized node: " + text);
-                res.setGraphic(imageView);
+            if (tooltip == null) {
+                tooltip = new Tooltip("Unrecognized node: " + text);
+                tooltip.setGraphic(imageView);
             }
-            res.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
-            tooltipsMap.put(text, res);
+            tooltip.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+            tooltipsMap.put(text, tooltip);
         }
-        return res;
+        return tooltip;
     }
 
     private void updateExpressionTextFlowChildren() {

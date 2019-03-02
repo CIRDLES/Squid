@@ -133,7 +133,6 @@ public class SquidUIController implements Initializable {
     private static ScrollPane ratiosManagerUI;
 
     private static SplitPane expressionBuilderUI;
-    private static Pane expressionManagerUI;
 
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
@@ -180,6 +179,8 @@ public class SquidUIController implements Initializable {
     private Label spanish;
     @FXML
     private MenuItem newSquid3TaskFromPrefsMenuItem;
+    @FXML
+    private SeparatorMenuItem dataSeparatorMenuItem;
 
     /**
      * Initializes the controller class.
@@ -348,7 +349,6 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(ratiosManagerUI);
 
         mainPane.getChildren().remove(expressionBuilderUI);
-        mainPane.getChildren().remove(expressionManagerUI);
 
         mainPane.getChildren().remove(reductionManagerUI);
         mainPane.getChildren().remove(reducedDataReportManagerUI);
@@ -397,7 +397,7 @@ public class SquidUIController implements Initializable {
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
-                customizePrawnFileMenu();
+                customizeDataMenu();
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
@@ -427,7 +427,7 @@ public class SquidUIController implements Initializable {
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
-                customizePrawnFileMenu();
+                customizeDataMenu();
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
@@ -462,7 +462,7 @@ public class SquidUIController implements Initializable {
                 squidProject.setupPrawnXMLFileByJoin(prawnXMLFilesNew);
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
-                customizePrawnFileMenu();
+                customizeDataMenu();
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
@@ -523,25 +523,24 @@ public class SquidUIController implements Initializable {
                 buildProjectMenuMRU();
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
-                customizePrawnFileMenu();
+                customizeDataMenu();
             } else {
                 saveSquidProjectMenuItem.setDisable(true);
                 SquidUI.updateStageTitle("");
                 throw new IOException();
             }
         }
-
         // this updates output folder for reports to current version
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
-
     }
 
-    private void customizePrawnFileMenu() {
+    private void customizeDataMenu() {
         boolean opSourceFile = squidProject.getPrawnSourceFileName().toUpperCase().endsWith(".OP");
 
-        auditRawDataMenuItem.setDisable(opSourceFile);
-        savePrawnFileCopyMenuItem.setDisable(opSourceFile);
-        choosePrawnFileMenuItem.setDisable(opSourceFile);
+        auditRawDataMenuItem.setVisible(!opSourceFile);
+        savePrawnFileCopyMenuItem.setVisible(!opSourceFile);
+        choosePrawnFileMenuItem.setVisible(!opSourceFile);
+        dataSeparatorMenuItem.setVisible(!opSourceFile);
     }
 
     @FXML
@@ -574,12 +573,7 @@ public class SquidUIController implements Initializable {
             alert.showAndWait().ifPresent((t) -> {
                 if (t.equals(ButtonType.YES)) {
                     try {
-                        if (squidProject.getTask().getRatioNames().isEmpty()) {
-                            File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
-                        } else {
-                            ProjectFileUtilities.serializeSquidProject(squidProject,
-                                    squidPersistentState.getMRUProjectFile().getCanonicalPath());
-                        }
+                        File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
                     } catch (IOException iOException) {
                         SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n",
                                 null);
@@ -678,6 +672,13 @@ public class SquidUIController implements Initializable {
     }
 
     private void launchTaskManager() {
+        // present warning if needed
+        if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
+            SquidMessageDialog.showWarningDialog("Please be sure to Manage Reference Materials and "
+                    + "Sample names using the Data menu.\n",
+                    null);
+        }
+
         mainPane.getChildren().remove(taskManagerUI);
         try {
             taskManagerUI = FXMLLoader.load(getClass().getResource("TaskManager.fxml"));
@@ -742,6 +743,11 @@ public class SquidUIController implements Initializable {
     }
 
     private void launchExpressionBuilder() {
+        // present warning if needed
+        if (!squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
+            SquidMessageDialog.showWarningDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
+                    null);
+        }
 
         try {
             expressionBuilderUI = FXMLLoader.load(getClass().getResource("expressions/ExpressionBuilder.fxml"));
@@ -757,24 +763,6 @@ public class SquidUIController implements Initializable {
 
         } catch (IOException ex) {
             Logger.getLogger(SquidUIController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void launchExpressionManager() {
-        mainPane.getChildren().remove(expressionManagerUI);
-
-        try {
-            expressionManagerUI = FXMLLoader.load(getClass().getResource("expressions/ExpressionManager.fxml"));
-            expressionManagerUI.setId("ExpressionManager");
-            VBox.setVgrow(expressionManagerUI, Priority.ALWAYS);
-            HBox.setHgrow(expressionManagerUI, Priority.ALWAYS);
-            mainPane.getChildren().add(expressionManagerUI);
-            expressionManagerUI.setVisible(false);
-
-            showUI(expressionManagerUI);
-
-        } catch (IOException | RuntimeException iOException) {
-            //System.out.println("expressionManagerUI >>>>   " + iOException.getMessage());
         }
     }
 
@@ -909,10 +897,6 @@ public class SquidUIController implements Initializable {
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
     }
 
-    @FXML
-    private void manageExpressionsMenuItemAction(ActionEvent event) {
-        launchExpressionManager();
-    }
 
     @FXML
     private void loadExpressionFromXMLFileMenuItemAction(ActionEvent event) {
@@ -1399,20 +1383,20 @@ public class SquidUIController implements Initializable {
     private void newSquid3TaskFromPrefsMenuItemAction(ActionEvent event) {
         // check the mass count
         boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
-                == (SquidPersistentState.getExistingPersistentState().getSquidUserPreferences().getNominalMasses().size()
+                == (SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences().getNominalMasses().size()
                 + REQUIRED_NOMINAL_MASSES.size()));
         if (valid) {
             squidProject.createNewTask();
             squidProject.getTask().updateTaskFromPreferences(
-                    SquidPersistentState.getExistingPersistentState().getSquidUserPreferences());
+                    SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences());
             launchTaskManager();
         } else {
             SquidMessageDialog.showWarningDialog(
-                    "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size() 
-                            + " masses, but the task preferences have " 
-                            + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getSquidUserPreferences().getNominalMasses().size()) 
-                            + ".",
-                                null);
+                    "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
+                    + " masses, but the task preferences have "
+                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences().getNominalMasses().size())
+                    + ".",
+                    null);
         }
     }
 
