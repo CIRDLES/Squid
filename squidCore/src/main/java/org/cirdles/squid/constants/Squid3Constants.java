@@ -258,7 +258,7 @@ public final class Squid3Constants {
     public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
 
     // http://science.sciencemag.org/content/335/6076/1610
-    public final static double PRESENT_238U235U_DEFAULT = 137.818;
+    public final static double REF_238U235U_DEFAULT = 137.818;
 
     public static enum SpotTypes {
         REFERENCE_MATERIAL("REFERENCE MATERIALS"),

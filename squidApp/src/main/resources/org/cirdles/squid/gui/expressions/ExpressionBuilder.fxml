@@ -99,7 +99,7 @@
                <children>
                   <HBox alignment="CENTER" style="-fx-background-color: #eefbfb;">
                      <children>
-                        <Label style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Entities" />
+                        <Label style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Expression Building Blocks" />
                      </children>
                   </HBox>
                   <Accordion fx:id="othersAccordion" nodeOrientation="LEFT_TO_RIGHT">

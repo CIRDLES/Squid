@@ -250,7 +250,8 @@ public class ExpressionParser {
             case NAMED_EXPRESSION_INDEXED:
                 // form is ["XXX"][n], remove indexing and capture value of index
                 // the single integer index is next to last character
-                // we are not supporting for ratios for now as they are show as ratios in MathML
+                // we are not supporting for ratios for now as they are shown as ratios in MathML
+                token = token.replaceAll("\\]( )*", "\\]");
                 String indexString = token.substring(token.length() - 2, token.length() - 1);
                 index = Integer.parseInt(indexString);
                 token = token.replaceFirst("\\[\\d\\]", "");
@@ -263,7 +264,11 @@ public class ExpressionParser {
                 } else if (token.startsWith("[%")) {
                     uncertaintyDirective = "%";
                 }
-                String expressionName = token.replace("[\"", "").replace("[±\"", "").replace("[%\"", "").replace("\"]", "");
+                String expressionName
+                        = token.replace("[\"", "")
+                                .replace("[±\"", "")
+                                .replace("[%\"", "")
+                                .replaceAll("\"]( )*", "");
                 ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(expressionName);
 
                 if (retExpTreeKnown == null) {
@@ -274,7 +279,7 @@ public class ExpressionParser {
                     if (expressionName.length() > 2) {
                         String lastTwo = expressionName.substring(expressionName.length() - 2);
                         if (ShuntingYard.isNumber(lastTwo)) {
-                            // index = first digit - 1 (converting from vertical 1-based excel to horiz 0-based java
+                            // index = first digit minus 1 (converting from vertical 1-based excel to horiz 0-based java
                             index = Integer.parseInt(lastTwo.substring(0, 1)) - 1;
                             String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
                             if (index >= 0) {
