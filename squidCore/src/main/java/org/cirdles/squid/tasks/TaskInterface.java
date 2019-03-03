@@ -479,7 +479,7 @@ public interface TaskInterface {
         getTaskExpressionsOrdered().addAll(customExpressions);
 
         setChanged(true);
-        
+
         updateRefMatCalibConstWMeanExpressions(isSquidAllowsAutoExclusionOfSpots());
 
         updateAllExpressions(true);
@@ -653,8 +653,8 @@ public interface TaskInterface {
     public void updateTaskFromPreferences(SquidTaskPreferences taskPreferences);
 
     public void updatePreferencesFromTask(SquidTaskPreferences taskPreferences);
-    
-        /**
+
+    /**
      * @return the delimiterForUnknownNames
      */
     public String getDelimiterForUnknownNames();

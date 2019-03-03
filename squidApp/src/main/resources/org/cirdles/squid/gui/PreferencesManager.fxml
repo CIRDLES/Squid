@@ -75,7 +75,7 @@
       <VBox GridPane.rowIndex="6">
          <children>
             <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="158.0" text="Parameters:" />
-            <Label prefHeight="73.0" prefWidth="160.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Parameter preferences are used for both imported and new tasks." textAlignment="CENTER" wrapText="true" />
+            <Label prefHeight="73.0" prefWidth="160.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Parameter preferences are used for both imported Squid2 tasks and new Squid3 tasks." textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
       <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">

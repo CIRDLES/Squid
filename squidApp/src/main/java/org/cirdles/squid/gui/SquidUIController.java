@@ -674,7 +674,7 @@ public class SquidUIController implements Initializable {
     private void launchTaskManager() {
         // present warning if needed
         if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
-            SquidMessageDialog.showWarningDialog("Please be sure to Manage Reference Materials and "
+            SquidMessageDialog.showInfoDialog("Please be sure to Manage Reference Materials and "
                     + "Sample names using the Data menu.\n",
                     null);
         }
@@ -745,7 +745,7 @@ public class SquidUIController implements Initializable {
     private void launchExpressionBuilder() {
         // present warning if needed
         if (!squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
-            SquidMessageDialog.showWarningDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
+            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
                     null);
         }
 
@@ -896,7 +896,6 @@ public class SquidUIController implements Initializable {
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
     }
-
 
     @FXML
     private void loadExpressionFromXMLFileMenuItemAction(ActionEvent event) {
@@ -1078,7 +1077,7 @@ public class SquidUIController implements Initializable {
         if (reportTableFile != null) {
             BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
-            SquidMessageDialog.showWarningDialog(
+            SquidMessageDialog.showInfoDialog(
                     "There are no reference materials chosen.\n\n",
                     primaryStageWindow);
         }
@@ -1090,7 +1089,7 @@ public class SquidUIController implements Initializable {
         if (reportTableFile != null) {
             BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
-            SquidMessageDialog.showWarningDialog(
+            SquidMessageDialog.showInfoDialog(
                     "There are no Unknowns chosen.\n\n",
                     primaryStageWindow);
         }
@@ -1102,7 +1101,7 @@ public class SquidUIController implements Initializable {
         if (reportTableFile != null) {
             BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
-            SquidMessageDialog.showWarningDialog(
+            SquidMessageDialog.showInfoDialog(
                     "There are no Unknowns chosen.\n\n",
                     primaryStageWindow);
         }
@@ -1200,15 +1199,11 @@ public class SquidUIController implements Initializable {
                         if (alert.getResult() != null && alert.getResult().equals(replaceAll)) {
                             expressions.remove(exp);
                             expressions.add(exp);
-                            squidProject.getTask().updateAffectedExpressions(exp, true);
-                            squidProject.getTask().updateAllExpressions(true);
                         } else if (alert.getResult() == null || !alert.getResult().equals(replaceNone)) {
                             alert.setContentText(exp.getName() + " exists");
                             alert.showAndWait().ifPresent((t) -> {
                                 if (t.equals(replace) || t.equals(replaceAll)) {
                                     expressions.add(exp);
-                                    squidProject.getTask().updateAffectedExpressions(exp, true);
-                                    squidProject.getTask().updateAllExpressions(true);
                                 }
                                 if (t.equals(rename)) {
                                     TextInputDialog dialog = new TextInputDialog(exp.getName());
@@ -1233,23 +1228,23 @@ public class SquidUIController implements Initializable {
                                     if (result.isPresent()) {
                                         exp.setName(result.get());
                                         expressions.add(exp);
-                                        squidProject.getTask().updateAffectedExpressions(exp, true);
-                                        squidProject.getTask().updateAllExpressions(true);
                                     }
-
                                 }
                             });
                         }
                     } else {
                         expressions.add(exp);
-                        squidProject.getTask().updateAffectedExpressions(exp, true);
-                        squidProject.getTask().updateAllExpressions(true);
                     }
                 } catch (Exception e) {
                     System.out.println(files[i].getName() + " custom expression not added");
                 }
             }
+
             squidProject.getTask().setChanged(true);
+            //two passes needed
+            squidProject.getTask().updateAllExpressions(true);
+            squidProject.getTask().updateAllExpressions(true);
+
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         } else {
             System.out.println("custom expressions folder does not exist");
@@ -1391,7 +1386,7 @@ public class SquidUIController implements Initializable {
                     SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences());
             launchTaskManager();
         } else {
-            SquidMessageDialog.showWarningDialog(
+            SquidMessageDialog.showInfoDialog(
                     "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
                     + " masses, but the task preferences have "
                     + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences().getNominalMasses().size())

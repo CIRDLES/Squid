@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_230;
@@ -1772,6 +1774,18 @@ public abstract class BuiltInExpressionsFactory {
     }
 
     public static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc, boolean isSummaryCalc) {
+        // March 2019 experiment with removing unnecessary brackets (code borrowed from SquidTask25)
+        // finally remove unnecessary ["..."]
+        Pattern squid25FunctionPattern = Pattern.compile("\\[\\\"([^]]+)\\\"\\]*", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = squid25FunctionPattern.matcher(excelExpression);
+        while (matcher.find()) {
+            String bracketed = matcher.group();
+            String unBracketed = bracketed.substring(2, bracketed.length() - 2);
+            if (unBracketed.matches("[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*")) {
+                excelExpression = excelExpression.replace(matcher.group(), unBracketed);
+            }
+        }
+
         Expression expression = new Expression(name, excelExpression);
         expression.setSquidSwitchNU(false);
 

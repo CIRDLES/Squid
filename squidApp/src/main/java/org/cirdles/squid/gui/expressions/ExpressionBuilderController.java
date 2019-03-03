@@ -2282,7 +2282,8 @@ public class ExpressionBuilderController implements Initializable {
             Expression ex = squidProject.getTask().getExpressionByName(text);
             if (((ex != null)
                     && (!ex.getExpressionTree().isSquidSwitchSCSummaryCalculation())
-                    && ((ExpressionTreeBuilderInterface) ex.getExpressionTree()).getOperation().getLabelsForOutputValues()[0].length > 1)
+                    && ((((ExpressionTreeBuilderInterface) ex.getExpressionTree()).getOperation().getLabelsForOutputValues()[0].length > 1)
+                    || ex.isSquidSwitchNU()))
                     || squidProject.getTask().getRatioNames().contains(text)) {
                 MenuItem menuItem1 = new MenuItem("1 \u03C3 (%)");
                 menuItem1.setOnAction((evt) -> {
@@ -2747,17 +2748,17 @@ public class ExpressionBuilderController implements Initializable {
                     }
 
                     // case of mass labels or isotopes
-                    if (tooltip == null){
-                        if (squidProject.getTask().getNominalMasses().contains(exname)){
+                    if (tooltip == null) {
+                        if (squidProject.getTask().getNominalMasses().contains(exname)) {
                             tooltip = new Tooltip("Mass label: " + exname);
                         }
                     }
-                    
+
                     if (tooltip == null) {
                         tooltip = new Tooltip("Missing expression: " + exname);
                         tooltip.setGraphic(imageView);
                     }
-                    
+
                     break;
 
             }
@@ -2816,12 +2817,13 @@ public class ExpressionBuilderController implements Initializable {
                 NUSwitchCheckBox.setSelected(false);
                 exp = makeExpression();
             }*/
+            boolean localAmHealthy = exp.amHealthy() && (exp.getName().length() > 0);
             auditTextArea.setText(exp.produceExpressionTreeAudit());
-            auditPane.setTextFill(exp.amHealthy() ? Paint.valueOf("black") : Paint.valueOf("red"));
-            auditPane.setText(exp.amHealthy() ? "Audit" : "Audit - ALERT !!!");
-            auditPane.setGraphic(exp.amHealthy() ? new ImageView(HEALTHY) : new ImageView(UNHEALTHY));
-            ((ImageView)auditPane.getGraphic()).setFitHeight(16);
-            ((ImageView)auditPane.getGraphic()).setFitWidth(16);
+            auditPane.setTextFill(localAmHealthy ? Paint.valueOf("black") : Paint.valueOf("red"));
+            auditPane.setText(localAmHealthy ? "Audit" : "Audit - ALERT !!!" + ((exp.getName().length() == 0) ? "  Expression needs name" : ""));
+            auditPane.setGraphic(localAmHealthy ? new ImageView(HEALTHY) : new ImageView(UNHEALTHY));
+            ((ImageView) auditPane.getGraphic()).setFitHeight(16);
+            ((ImageView) auditPane.getGraphic()).setFitWidth(16);
             graphExpressionTree(exp.getExpressionTree());
             populatePeeks(exp);
 
@@ -3370,7 +3372,12 @@ public class ExpressionBuilderController implements Initializable {
                     Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
                     db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
                     ClipboardContent cc = new ClipboardContent();
-                    cc.putString("[\"" + cell.getItem().getName() + "\"]");
+                    // detect if brackets and quotes needed
+                    if (cell.getItem().getName().matches("^[a-zA-Z0-9_$]*$")) {
+                        cc.putString(cell.getItem().getName());
+                    } else {
+                        cc.putString("[\"" + cell.getItem().getName() + "\"]");
+                    }
                     db.setContent(cc);
                     cell.setCursor(Cursor.CLOSED_HAND);
                 }

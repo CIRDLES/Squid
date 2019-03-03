@@ -415,6 +415,16 @@ public class TaskSquid25 implements Serializable {
             retVal = retVal.replace("r_206Pb/238U", "r_" + R206PB_238U);
         }
 
+        // finally remove unnecessary ["..."]
+        squid25FunctionPattern = Pattern.compile("\\[\\\"([^]]+)\\\"\\]*", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        while (matcher.find()) {
+            String bracketed = matcher.group();
+            String unBracketed = bracketed.substring(2, bracketed.length() - 2);
+            if (unBracketed.matches("[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*")) {
+                retVal = retVal.replace(matcher.group(), unBracketed);
+            }
+        }
         return retVal;
     }
 
