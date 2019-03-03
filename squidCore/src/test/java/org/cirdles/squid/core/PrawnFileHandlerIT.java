@@ -36,6 +36,14 @@ import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
@@ -116,13 +124,13 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setFilterForRefMatSpotNames("6266");
         squidProjectZ6266.getTask().setFilterForConcRefMatSpotNames("6266");
 
-        // overcome user preferences
-        squidProjectZ6266.getTask().setType(Squid3Constants.TaskTypeEnum.GEOCHRON);
+        squidProjectZ6266.getTask().setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         squidProjectZ6266.getTask().setUseSBM(true);
         squidProjectZ6266.getTask().setUserLinFits(false);
         squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
 
-        squidProjectZ6266.getTask().setExtPErr(0.75);
+        squidProjectZ6266.getTask().setExtPErrU(0.75);
+        squidProjectZ6266.getTask().setExtPErrTh(0.75);
         squidProjectZ6266.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         squidProjectZ6266.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         squidProjectZ6266.getTask().setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
@@ -170,13 +178,13 @@ public class PrawnFileHandlerIT {
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
 
         TaskInterface task = new Task();
-        // overcome user preferences
-        task.setType(Squid3Constants.TaskTypeEnum.GEOCHRON);
+
+        task.setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         task.setUseSBM(true);
         task.setUserLinFits(false);
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         task.setSquidAllowsAutoExclusionOfSpots(true);
-        task.setExtPErr(0.75);
+        task.setExtPErrU(0.75);
         task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         task.setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
@@ -210,6 +218,16 @@ public class PrawnFileHandlerIT {
     public void tA_testingOutputForZ6266Perm1_4corr() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 4cor unknowns.");
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        // force defaults for testing
+        squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
+                .put(PARENT_ELEMENT_CONC_CONST, "[\"238/195.8\"]/[\"254/238\"]^0.66");
+        squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
+                .put(UNCOR206PB238U_CALIB_CONST, UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION);
+        squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
+                .put(UNCOR208PB232TH_CALIB_CONST, UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION);
+        squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
+                .put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
+        squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_4Corr_Unknowns.csv");
         String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);

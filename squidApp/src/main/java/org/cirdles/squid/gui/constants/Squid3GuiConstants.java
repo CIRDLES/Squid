@@ -22,7 +22,7 @@ package org.cirdles.squid.gui.constants;
 public class Squid3GuiConstants {
 
     public static final String STYLE_MANAGER_TITLE
-            = "     -fx-padding: 0 0 0 0;   \n"
+            = "    -fx-padding: 0 0 0 0;   \n"
             + "    -fx-border-width: 1;\n"
             + "    -fx-border-color: black;\n"
             + "    -fx-background-radius: 0;\n"

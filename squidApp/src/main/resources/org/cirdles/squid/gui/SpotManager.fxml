@@ -18,7 +18,7 @@
                <children>
                   <HBox translateY="5.0">
                      <children>
-                        <Label fx:id="titleLabel" text="PrawnFile &gt; Manage Sample Naming" translateX="25.0" />
+                        <Label fx:id="titleLabel" text="Data &gt; Manage Sample Naming" translateX="25.0" />
                      </children>
                   </HBox>
                   <Label text="All Spots:" />

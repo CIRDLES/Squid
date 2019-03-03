@@ -62,6 +62,10 @@ public class ShrimpSpeciesNodeFunction extends Function {
         shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
 
         Object[][] results = shrimpSpeciesNode.eval(shrimpFractions, task);
+        // added feb 2019 to handle BKG when forced
+        if (results[0] == null){
+            results = new Object[][]{{0.0}};
+        }
         // restore the node to anonymous
         shrimpSpeciesNode.setMethodNameForShrimpFraction("");
         return results;

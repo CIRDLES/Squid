@@ -6,24 +6,23 @@ import org.cirdles.squid.prawn.RunTableEntryParameterNames;
 import org.cirdles.squid.prawn.SetParameterNames;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 public class OPFileHandler {
 
     private static final String[] massStationLabelsTEN
-            = new String[]{"196Zr2O", "204Pb", "BKG", "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO", "270UO2"};
+            = new String[]{"196Zr2O", "204Pb", DEFAULT_BACKGROUND_MASS_LABEL, "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO", "270UO2"};
 
     private static final String[] massStationAMUsTEN
             = new String[]{"195.8", "203.9", "204.0", "205.9", "206.9", "207.9", "238.0", "248.0", "254.0", "270.0"};
 
     private static final String[] massStationLabelsELEVEN
-            = new String[]{"YbO", "Zr2O", "HfO", "Pb204", "BKG", "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO"};
+            = new String[]{"YbO", "Zr2O", "HfO", "Pb204", DEFAULT_BACKGROUND_MASS_LABEL, "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO"};
 
     private static final String[] massStationAMUsELEVEN
             = new String[]{"189.9", "195.7", "195.8", "203.9", "203.9", "205.9", "206.9", "207.9", "237.9", "247.9", "253.9"};
