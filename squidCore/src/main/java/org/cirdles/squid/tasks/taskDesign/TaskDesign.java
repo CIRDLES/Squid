@@ -1,5 +1,5 @@
 /*
- * SquidTaskPreferences.java
+ * TaskDesign.java
  *
  * Copyright 2017 James F. Bowring and CIRDLES.org.
  *
@@ -15,7 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.cirdles.squid.tasks.taskPreferences;
+package org.cirdles.squid.tasks.taskDesign;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
  *
  * @author James F. Bowring
  */
-public class SquidTaskPreferences implements Serializable {
+public class TaskDesign implements Serializable {
 
     // NOTE: java.utils.Properties should be considered for use here JFB
     // Jan 2019 - considered and rejected as too simplistic
@@ -89,9 +89,9 @@ public class SquidTaskPreferences implements Serializable {
     protected ParametersModel concentrationReferenceMaterialModel;
 
     /**
-     * Creates a new instance of ReduxPreferences
+     * Creates a new instance of TaskDesign
      */
-    public SquidTaskPreferences() {
+    public TaskDesign() {
         this.taskType = TaskTypeEnum.GEOCHRON;
         this.authorName = "";
         this.labName = "";

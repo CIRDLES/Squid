@@ -124,7 +124,6 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setFilterForRefMatSpotNames("6266");
         squidProjectZ6266.getTask().setFilterForConcRefMatSpotNames("6266");
 
-        // overcome user preferences
         squidProjectZ6266.getTask().setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         squidProjectZ6266.getTask().setUseSBM(true);
         squidProjectZ6266.getTask().setUserLinFits(false);
@@ -179,7 +178,7 @@ public class PrawnFileHandlerIT {
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
 
         TaskInterface task = new Task();
-        // overcome user preferences
+
         task.setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         task.setUseSBM(true);
         task.setUserLinFits(false);

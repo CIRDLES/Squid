@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.taskPreferences;
+package org.cirdles.squid.tasks.taskDesign;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,15 +28,15 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class TaskPreferences9Mass extends SquidTaskPreferences {
+public class TaskDesign10Mass extends TaskDesign {
 
-    public TaskPreferences9Mass() {
+    public TaskDesign10Mass() {
 
         this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{
-            DEFAULT_BACKGROUND_MASS_LABEL, "196", "238", "248", "254"}));
+            DEFAULT_BACKGROUND_MASS_LABEL, "196", "238", "248", "254", "270"}));
 
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
-            "238/196", "206/238", "254/238", "248/254", "206/254"}));
+            "238/196", "206/238", "208/248", "254/238", "248/254", "206/254", "206/270", "270/254" }));
 
         indexOfBackgroundSpecies = 2;
         

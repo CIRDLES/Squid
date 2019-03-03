@@ -127,7 +127,7 @@ public class SquidUIController implements Initializable {
     private static HBox spotManagerUI;
 
     private static GridPane taskManagerUI;
-    private static GridPane preferencesManagerUI;
+    private static GridPane taskDesignerUI;
 
     private static VBox isotopesManagerUI;
     private static ScrollPane ratiosManagerUI;
@@ -354,7 +354,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(reducedDataReportManagerUI);
         mainPane.getChildren().remove(topsoilPlotUI);
 
-        mainPane.getChildren().remove(preferencesManagerUI);
+        mainPane.getChildren().remove(taskDesignerUI);
 
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -586,7 +586,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void quitAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().updateUserPreferences();
+        SquidPersistentState.getExistingPersistentState().updateSquidPersistentState();
         confirmSaveOnProjectClose();
         try {
             ExpressionBuilderController.EXPRESSION_NOTES_STAGE.close();
@@ -786,22 +786,22 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchPreferencesManager() {
-        mainPane.getChildren().remove(preferencesManagerUI);
+    private void launchTaskDesigner() {
+        mainPane.getChildren().remove(taskDesignerUI);
         try {
-            preferencesManagerUI = FXMLLoader.load(getClass().getResource("PreferencesManager.fxml"));
-            preferencesManagerUI.setId("PreferencesManager");
+            taskDesignerUI = FXMLLoader.load(getClass().getResource("TaskDesigner.fxml"));
+            taskDesignerUI.setId("TaskDesigner");
 
-            AnchorPane.setLeftAnchor(preferencesManagerUI, 0.0);
-            AnchorPane.setRightAnchor(preferencesManagerUI, 0.0);
-            AnchorPane.setTopAnchor(preferencesManagerUI, 0.0);
-            AnchorPane.setBottomAnchor(preferencesManagerUI, 0.0);
+            AnchorPane.setLeftAnchor(taskDesignerUI, 0.0);
+            AnchorPane.setRightAnchor(taskDesignerUI, 0.0);
+            AnchorPane.setTopAnchor(taskDesignerUI, 0.0);
+            AnchorPane.setBottomAnchor(taskDesignerUI, 0.0);
 
-            mainPane.getChildren().add(preferencesManagerUI);
-            showUI(preferencesManagerUI);
+            mainPane.getChildren().add(taskDesignerUI);
+            showUI(taskDesignerUI);
 
         } catch (IOException | RuntimeException iOException) {
-            //System.out.println("PreferencesManager >>>>   " + iOException.getMessage());
+            //System.out.println("TaskDesigner >>>>   " + iOException.getMessage());
         }
     }
 
@@ -811,7 +811,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void showUI(Node myManager) {
-        SquidPersistentState.getExistingPersistentState().updateUserPreferences();
+        SquidPersistentState.getExistingPersistentState().updateSquidPersistentState();
 
         for (Node manager : mainPane.getChildren()) {
             manager.setVisible(false);
@@ -1347,11 +1347,6 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    @FXML
-    private void showPreferencesManagerAction(ActionEvent event) {
-        launchPreferencesManager();
-    }
-
     public static void createCopyToClipboardContextMenu(TextArea textArea) {
         final Clipboard clipboard = Clipboard.getSystemClipboard();
         final ClipboardContent content = new ClipboardContent();
@@ -1378,21 +1373,25 @@ public class SquidUIController implements Initializable {
     private void newSquid3TaskFromPrefsMenuItemAction(ActionEvent event) {
         // check the mass count
         boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
-                == (SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences().getNominalMasses().size()
+                == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
                 + REQUIRED_NOMINAL_MASSES.size()));
         if (valid) {
             squidProject.createNewTask();
-            squidProject.getTask().updateTaskFromPreferences(
-                    SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences());
+            squidProject.getTask().updateTaskFromTaskDesign(
+                    SquidPersistentState.getExistingPersistentState().getTaskDesign());
             launchTaskManager();
         } else {
             SquidMessageDialog.showInfoDialog(
                     "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                    + " masses, but the task preferences have "
-                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences().getNominalMasses().size())
+                    + " masses, but the Task Designer specifies "
+                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
                     + ".",
                     null);
         }
     }
 
+    @FXML
+    private void showTaskDesignerAction(ActionEvent event) {
+        launchTaskDesigner();
+    }
 }

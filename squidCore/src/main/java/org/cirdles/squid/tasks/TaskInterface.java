@@ -42,7 +42,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
@@ -392,7 +392,7 @@ public interface TaskInterface {
      *
      */
     public default void applyDirectives() {
-        SquidTaskPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences();
+        TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
 
         // need to remove stored expression results on fractions to clear the decks   
         getShrimpFractions().forEach((spot) -> {
@@ -409,7 +409,7 @@ public interface TaskInterface {
         // write the magic 4 expressions plus parent mean exp
         String parentPPM_Expression = getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
         if ((parentPPM_Expression == null) || (parentPPM_Expression.length()) == 0) {
-            parentPPM_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
+            parentPPM_Expression = taskDesign.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
         }
         if ((parentPPM_Expression == null) || (parentPPM_Expression.length()) == 0) {
             parentPPM_Expression = BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
@@ -421,7 +421,7 @@ public interface TaskInterface {
 
         String uThU_Expression = getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
         if ((uThU_Expression == null) || (uThU_Expression.length()) == 0) {
-            uThU_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
+            uThU_Expression = taskDesign.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
         }
         if ((uThU_Expression == null) || (uThU_Expression.length()) == 0) {
             uThU_Expression = UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
@@ -433,7 +433,7 @@ public interface TaskInterface {
 
         String uThTh_Expression = getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
         if ((uThTh_Expression == null) || (uThTh_Expression.length()) == 0) {
-            uThTh_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
+            uThTh_Expression = taskDesign.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
         }
         if ((uThTh_Expression == null) || (uThTh_Expression.length()) == 0) {
             uThTh_Expression = UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
@@ -458,7 +458,7 @@ public interface TaskInterface {
         if (!isDirectAltPD()) {
             String thU_DEFAULT_Expression = getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
             if ((thU_DEFAULT_Expression == null) || (thU_DEFAULT_Expression.length()) == 0) {
-                thU_DEFAULT_Expression = squidUserPreferences.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
+                thU_DEFAULT_Expression = taskDesign.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
             }
             if ((thU_DEFAULT_Expression == null) || (thU_DEFAULT_Expression.length()) == 0) {
                 thU_DEFAULT_Expression = TH_U_EXP_DEFAULT_EXPRESSION;
@@ -650,9 +650,9 @@ public interface TaskInterface {
      */
     public Map<String, String> getSpecialSquidFourExpressionsMap();
 
-    public void updateTaskFromPreferences(SquidTaskPreferences taskPreferences);
+    public void updateTaskFromTaskDesign(TaskDesign taskDesign);
 
-    public void updatePreferencesFromTask(SquidTaskPreferences taskPreferences);
+    public void updateTaskDesignFromTask(TaskDesign taskDesign);
 
     /**
      * @return the delimiterForUnknownNames

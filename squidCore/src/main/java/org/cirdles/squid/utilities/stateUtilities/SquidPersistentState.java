@@ -17,7 +17,7 @@
  */
 package org.cirdles.squid.utilities.stateUtilities;
 
-import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -40,7 +40,7 @@ public class SquidPersistentState implements Serializable {
     private static final int MRU_COUNT = 10;
 
     // instance variables
-    private SquidTaskPreferences squidTaskPreferences;
+    private TaskDesign taskDesign;
 
     private File MRUProjectFile;
     private List<String> MRUProjectList;
@@ -73,7 +73,7 @@ public class SquidPersistentState implements Serializable {
 
         initMRULists();
 
-        squidTaskPreferences = new SquidTaskPreferences();
+        taskDesign = new TaskDesign();
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
@@ -111,7 +111,7 @@ public class SquidPersistentState implements Serializable {
         }
     }
 
-    public void updateUserPreferences() {
+    public void updateSquidPersistentState() {
         serializeSelf();
     }
 
@@ -130,11 +130,11 @@ public class SquidPersistentState implements Serializable {
             instance = new SquidPersistentState();
         }
 
-        // check to update SquidTaskPreferences
-        SquidTaskPreferences sup = instance.getSquidTaskPreferences();
+        // check to update TaskDesign
+        TaskDesign sup = instance.getTaskDesign();
         if (sup.getRatioNames() == null) {
-            sup = new SquidTaskPreferences();
-            instance.setSquidTaskPreferences(sup);
+            sup = new TaskDesign();
+            instance.setTaskDesign(sup);
         }
 
         return instance;
@@ -156,17 +156,17 @@ public class SquidPersistentState implements Serializable {
     }
 
     /**
-     * @return the squidTaskPreferences
+     * @return the taskDesign
      */
-    public SquidTaskPreferences getSquidTaskPreferences() {
-        return squidTaskPreferences;
+    public TaskDesign getTaskDesign() {
+        return taskDesign;
     }
 
     /**
-     * @param squidTaskPreferences the squidTaskPreferences to set
+     * @param taskDesign the taskDesign to set
      */
-    public void setSquidTaskPreferences(SquidTaskPreferences squidTaskPreferences) {
-        this.squidTaskPreferences = squidTaskPreferences;
+    public void setTaskDesign(TaskDesign taskDesign) {
+        this.taskDesign = taskDesign;
     }
 
     // General methods *********************************************************

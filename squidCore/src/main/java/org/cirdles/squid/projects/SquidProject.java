@@ -99,7 +99,7 @@ public final class SquidProject implements Serializable {
 
         this.filtersForUnknownNames = new HashMap<>();
         this.delimiterForUnknownNames
-                = SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences().getDelimiterForUnknownNames();
+                = SquidPersistentState.getExistingPersistentState().getTaskDesign().getDelimiterForUnknownNames();
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {

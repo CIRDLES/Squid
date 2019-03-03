@@ -98,7 +98,7 @@ import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.tasks.taskPreferences.SquidTaskPreferences;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
@@ -251,24 +251,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param reportsEngine
      */
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
-        SquidTaskPreferences squidUserPreferences = SquidPersistentState.getExistingPersistentState().getSquidTaskPreferences();
+        TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
         this.name = name;
-        this.taskType = squidUserPreferences.getTaskType();
+        this.taskType = taskDesign.getTaskType();
         this.description = "";
-        this.authorName = squidUserPreferences.getAuthorName();
-        this.labName = squidUserPreferences.getLabName();
+        this.authorName = taskDesign.getAuthorName();
+        this.labName = taskDesign.getLabName();
         this.provenance = "";
         this.dateRevised = 0l;
         this.filterForRefMatSpotNames = "";
         this.filterForConcRefMatSpotNames = "";
         this.filtersForUnknownNames = new HashMap<>();
 
-        this.useSBM = squidUserPreferences.isUseSBM();
-        this.userLinFits = squidUserPreferences.isUserLinFits();
+        this.useSBM = taskDesign.isUseSBM();
+        this.userLinFits = taskDesign.isUserLinFits();
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
-        this.parentNuclide = squidUserPreferences.getParentNuclide();//  "238";
-        this.directAltPD = squidUserPreferences.isDirectAltPD();//  false;
+        this.parentNuclide = taskDesign.getParentNuclide();//  "238";
+        this.directAltPD = taskDesign.isDirectAltPD();//  false;
 
         this.nominalMasses = new ArrayList<>();
         this.ratioNames = new ArrayList<>();
@@ -299,7 +299,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SquidProject.setProjectChanged(true);
 
         this.useCalculatedAv_ParentElement_ConcenConst = false;
-        this.selectedIndexIsotope = squidUserPreferences.getSelectedIndexIsotope();
+        this.selectedIndexIsotope = taskDesign.getSelectedIndexIsotope();
 
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
@@ -311,19 +311,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.prawnChanged = false;
 
-        this.squidAllowsAutoExclusionOfSpots = squidUserPreferences.isSquidAllowsAutoExclusionOfSpots();
+        this.squidAllowsAutoExclusionOfSpots = taskDesign.isSquidAllowsAutoExclusionOfSpots();
 
-        this.extPErrU = squidUserPreferences.getExtPErrU();
-        this.extPErrTh = squidUserPreferences.getExtPErrTh();
+        this.extPErrU = taskDesign.getExtPErrU();
+        this.extPErrTh = taskDesign.getExtPErrTh();
 
-        this.physicalConstantsModel = squidUserPreferences.getPhysicalConstantsModel();
-        this.referenceMaterialModel = squidUserPreferences.getReferenceMaterialModel();
-        this.concentrationReferenceMaterialModel = squidUserPreferences.getConcentrationReferenceMaterialModel();
-        this.commonPbModel = squidUserPreferences.getCommonPbModel();
+        this.physicalConstantsModel = taskDesign.getPhysicalConstantsModel();
+        this.referenceMaterialModel = taskDesign.getReferenceMaterialModel();
+        this.concentrationReferenceMaterialModel = taskDesign.getConcentrationReferenceMaterialModel();
+        this.commonPbModel = taskDesign.getCommonPbModel();
 
-        this.specialSquidFourExpressionsMap = squidUserPreferences.getSpecialSquidFourExpressionsMap();
+        this.specialSquidFourExpressionsMap = taskDesign.getSpecialSquidFourExpressionsMap();
 
-        this.delimiterForUnknownNames = squidUserPreferences.getDelimiterForUnknownNames();
+        this.delimiterForUnknownNames = taskDesign.getDelimiterForUnknownNames();
 
         this.physicalConstantsModelChanged = false;
         this.referenceMaterialModelChanged = false;
@@ -336,9 +336,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void updateTaskFromPreferences(SquidTaskPreferences taskPreferences) {
+    public void updateTaskFromTaskDesign(TaskDesign taskDesign) {
 
-        Method[] gettersAndSetters = taskPreferences.getClass().getMethods();
+        Method[] gettersAndSetters = taskDesign.getClass().getMethods();
 
         for (int i = 0; i < gettersAndSetters.length; i++) {
             String methodName = gettersAndSetters[i].getName();
@@ -346,11 +346,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 if (methodName.startsWith("get") && !methodName.contains("Class")) {
                     this.getClass().getMethod(
                             methodName.replaceFirst("get", "set"),
-                            gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskPreferences, new Object[0]));
+                            gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
                 } else if (methodName.startsWith("is")) {
                     this.getClass().getMethod(
                             methodName.replaceFirst("is", "set"),
-                            gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskPreferences, new Object[0]));
+                            gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
                 }
             } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
                 System.out.println(">>>  " + methodName + "     " + e.getMessage());
@@ -376,27 +376,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void updatePreferencesFromTask(SquidTaskPreferences taskPreferences) {
+    public void updateTaskDesignFromTask(TaskDesign taskDesign) {
 
-        Method[] gettersAndSetters = taskPreferences.getClass().getMethods();
+        Method[] gettersAndSetters = taskDesign.getClass().getMethods();
 
         for (int i = 0; i < gettersAndSetters.length; i++) {
             String methodName = gettersAndSetters[i].getName();
             try {
                 if (methodName.startsWith("get") && !methodName.contains("Class")) {
-                    Method methSetPref = taskPreferences.getClass().getMethod(
+                    Method methSetPref = taskDesign.getClass().getMethod(
                             methodName.replaceFirst("get", "set"),
                             gettersAndSetters[i].getReturnType());
                     Method methGetTask = this.getClass().getMethod(
                             methodName);
-                    methSetPref.invoke(taskPreferences, methGetTask.invoke(this, new Object[0]));
+                    methSetPref.invoke(taskDesign, methGetTask.invoke(this, new Object[0]));
                 } else if (methodName.startsWith("is")) {
-                    Method methSetPref = taskPreferences.getClass().getMethod(
+                    Method methSetPref = taskDesign.getClass().getMethod(
                             methodName.replaceFirst("is", "set"),
                             gettersAndSetters[i].getReturnType());
                     Method methGetTask = this.getClass().getMethod(
                             methodName);
-                    methSetPref.invoke(taskPreferences, methGetTask.invoke(this, new Object[0]));
+                    methSetPref.invoke(taskDesign, methGetTask.invoke(this, new Object[0]));
                 }
             } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
                 System.out.println(">>>  " + methodName + "     " + e.getMessage());
@@ -412,12 +412,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         } catch (Exception e) {
         }
         myNominalMasses.add(DEFAULT_BACKGROUND_MASS_LABEL);
-        taskPreferences.setNominalMasses(myNominalMasses);
+        taskDesign.setNominalMasses(myNominalMasses);
 
         List<String> myRatioNames = new ArrayList<>();
         myRatioNames.addAll(ratioNames);
         myRatioNames.removeAll(REQUIRED_RATIO_NAMES);
-        taskPreferences.setRatioNames(myRatioNames);
+        taskDesign.setRatioNames(myRatioNames);
 
     }
 
