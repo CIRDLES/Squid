@@ -113,6 +113,24 @@ public class ExpressionPublisher {
                 + "img {border-style: solid;\n"
                 + "     border-width: 1px;\n"
                 + "     border-color: black;}\n"
+                + ".header {\n"
+                + "    display: table;\n"
+                + "    table-layout: auto;\n"
+                + "}\n"
+                + ".header > div {\n"
+                + "    display: table-cell;\n"
+                + "}"
+                + ".left {\n"
+                + "    font-size: 24px;\n"
+                + "    font-family: arial;\n"
+                + "    font-weight: bold;\n"
+                + "    padding-right: 200px\n"
+                + "}\n"
+                + ".right {\n"
+                + "    font-size: 20px;\n"
+                + "    font-family: arial;\n"
+                + "    font-weight: normal;\n"
+                + "}\n"
                 + "</style>\n"
                 + "</head>\n<body>\n"
                 + "<h1>Expressions</h1>\n";
@@ -122,12 +140,27 @@ public class ExpressionPublisher {
         return "</body>\n</HTML>";
     }
 
-    private static String getExpressionInfoHTML(Expression exp) {
-        return "<p>" + exp.getName() + " is " + (exp.isReferenceMaterialValue() ? "" : "not ") + "a reference material value\n"
-                + "<br/>" + exp.getName() + " is " + (exp.isParameterValue() ? "" : "not ") + "a parameter value\n"
-                + "<br/>" + exp.getName() + " is " + (exp.amHealthy() ? "" : "not ") + "healthy\n"
-                + "<br/>" + exp.getName() + " is " + (exp.isSquidSwitchNU() ? "" : "not ") + "Squid Switch NU</p>\n"
-                + "<h3>Excel Expression String:</h3><p>" + exp.getExcelExpressionString() + "</p>\n"
+    private static String getExpressionTopHTML(Expression exp) {
+        return "<div class=\"header\">\n"
+                + "<div class=\"left\">" + exp.getName() + "</div>\n"
+                + "<div class=\"right\">\n" + (exp.isCustom() ? "Custom" : "Built-in") + "</div>\n"
+                + "</div>\n"
+                + "<label style=\"font: 18px arial\">Target: </label>\n"
+                + "<input type=\"checkbox\" " + ((exp.isReferenceMaterialValue()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
+                + "<label>RefMat</label>"
+                + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
+                + "<label>Unknown</label>"
+                + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
+                + "<label>Conc RefMat</label>"
+                + "<label style=\"font: 18px arial\">Target:</label>"
+                + "<input type=\"checkbox\" " + ((exp.isSquidSwitchNU()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
+                + "<label>NU</label>"
+                + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
+                + "<label>Summary<br/></label>\n";
+    }
+
+    private static String getExpressionBottomHTML(Expression exp) {
+        return "<h3>Excel Expression String:</h3><p>" + exp.getExcelExpressionString() + "</p>\n"
                 + "<h3>Notes:</h3><p style=\"page-break-after: always\">" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n";
     }
 
@@ -155,13 +188,13 @@ public class ExpressionPublisher {
                 e.printStackTrace();
                 imageCreated = false;
             }
-            string.append("<h2>" + exp.getName() + "</h2>\n");
+            string.append(getExpressionTopHTML(exp));
             if (imageCreated) {
                 string.append("<img src=\"" + imageFile.getPath().replaceAll("\\\\", "/") + "\" alt=\"Image not available\" "
                         + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                         + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
             }
-            string.append(getExpressionInfoHTML(exp));
+            string.append(getExpressionBottomHTML(exp));
         }
         string.append(getEndHTML());
 
@@ -194,13 +227,13 @@ public class ExpressionPublisher {
         StringBuilder string = new StringBuilder();
         string.append(getStartHTML());
 
-        string.append("<h1>" + exp.getName() + "</h1>\n");
+        string.append(getExpressionTopHTML(exp));
         if (imageCreated) {
             string.append("<img src=\"" + imageFile.getPath() + "\" alt=\"Image not available\" "
                     + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                     + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
         }
-        string.append(getExpressionInfoHTML(exp));
+        string.append(getExpressionBottomHTML(exp));
 
         string.append(getEndHTML());
 
@@ -276,9 +309,9 @@ public class ExpressionPublisher {
         SquidProject project = (SquidProject) SquidSerializer.getSerializedObjectFromFile(squidFile.getAbsolutePath(), false);
         Expression exp = project.getTask().getExpressionByName("Hf1sabserr");
         createHTMLDocumentFromExpression(new File("test.html"), exp, null);
-        createHTMLDocumentFromExpressions(new File("testgroup.html"), project.getTask().getTaskExpressionsOrdered(), null);
+        //createHTMLDocumentFromExpressions(new File("testgroup.html"), project.getTask().getTaskExpressionsOrdered(), null);
         createPDFFromExpression(new File("test.pdf"), exp);
-        createPDFFromExpressions(new File("testgroup.pdf"), project.getTask().getTaskExpressionsOrdered());
+        //createPDFFromExpressions(new File("testgroup.pdf"), project.getTask().getTaskExpressionsOrdered());
     }
 
 }
