@@ -2202,7 +2202,7 @@ public class ExpressionBuilderController implements Initializable {
                         if ((resultLabels[0].length == 1) && (results[0].length >= 1)) {
                             resultsWithPct = new double[1];
                             resultsWithPct[0] = Utilities.roundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
-                        } else if (results[0].length >= 1) {
+                        } else if (results[0].length > 1) {
                             resultsWithPct = new double[3];
                             resultsWithPct[0] = Utilities.roundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
                             resultsWithPct[1] = Utilities.roundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);

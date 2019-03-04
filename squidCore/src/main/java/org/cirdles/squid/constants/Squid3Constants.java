@@ -102,7 +102,7 @@ public final class Squid3Constants {
     }
 
     public static final String DUPLICATE_STRING = "-DUP-";
-    
+
     public enum IndexIsoptopesEnum {
         PB_204("PB_204", "204"),
         PB_207("PB_207", "207"),
@@ -143,6 +143,22 @@ public final class Squid3Constants {
         private final String name;
 
         private TaskTypeEnum(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public enum ConcentrationTypeEnum {
+        URANIUM("Uranium"),
+        THORIUM("Thorium"),
+        NONE("NONE");
+
+        private final String name;
+
+        private ConcentrationTypeEnum(String name) {
             this.name = name;
         }
 

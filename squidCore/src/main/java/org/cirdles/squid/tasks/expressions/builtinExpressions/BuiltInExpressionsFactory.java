@@ -21,6 +21,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
+import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_230;
@@ -508,9 +510,11 @@ public abstract class BuiltInExpressionsFactory {
      *
      * @param parentNuclide
      * @param isDirectAltPD
-     * @return
+     * @param concentrationTypeEnum the value of concentrationTypeEnum
+     * @return the
+     * java.util.SortedSet<org.cirdles.squid.tasks.expressions.Expression>
      */
-    public static SortedSet<Expression> generatePpmUandPpmTh(String parentNuclide, boolean isDirectAltPD) {
+    public static SortedSet<Expression> generatePpmUandPpmTh(String parentNuclide, boolean isDirectAltPD, ConcentrationTypeEnum concentrationTypeEnum) {
         SortedSet<Expression> concentrationExpressionsOrdered = new TreeSet<>();
 
         // mar 2019 move here
@@ -518,35 +522,99 @@ public abstract class BuiltInExpressionsFactory {
                 AV_PARENT_ELEMENT_CONC_CONST, AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION, true, true, true);
         parentPPMmean.setSquidSwitchNU(false);
         parentPPMmean.getExpressionTree().setSquidSwitchConcentrationReferenceMaterialCalculation(true);
+        parentPPMmean.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(false);
+        parentPPMmean.getExpressionTree().setSquidSwitchSAUnknownCalculation(false);
         concentrationExpressionsOrdered.add(parentPPMmean);
 
         // ppmU calcs belong to both cases of isDirectAltPD
-        // As of 7 Feb 2019 we introduce two flavors per Bodorkos - see https://github.com/CIRDLES/Squid/issues/164
-        // As of Feb 14, we will have 4cor and 7cor U_concen_RM for directAltPD = true
-//        Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
-//                "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
-//        concentrationExpressionsOrdered.add(expressionPpmURM);
-        Expression expressionPpmU = buildExpression(U_CONCEN_PPM,
-                "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, false, true, false);
-        concentrationExpressionsOrdered.add(expressionPpmU);
-
-        if (!isDirectAltPD) {
-            // Feb 14 2019
-            Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
-                    "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
-            concentrationExpressionsOrdered.add(expressionPpmURM);
-
-            // TODO: promote this and tie to physical constants model
-            // handles SecondaryParentPpmFromThU
-            //String uConstant = "1.033"; // 1.033 gives perfect fidelity to Squid 2.5 //((238/232) * r238_235s / (r238_235s - 1.0))";
-            Expression expressionPpmTh_RM = buildExpression(TH_CONCEN_PPM_RM,
-                    "[\"" + U_CONCEN_PPM_RM + "\"]*[\"" + TH_U_EXP_RM + "\"]/" + L1033, true, false, false);
-            concentrationExpressionsOrdered.add(expressionPpmTh_RM);
-
+        // March 2019 finally see https://github.com/CIRDLES/Squid/issues/164
+        // this code for ppmTh comes from SQ2.50 Procedural Framework: Part 5
+        // see: https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-5
+        if (concentrationTypeEnum.compareTo(THORIUM) == 0) {
             Expression expressionPpmTh = buildExpression(TH_CONCEN_PPM,
-                    "[\"" + U_CONCEN_PPM + "\"]*[\"" + TH_U_EXP + "\"]/" + L1033, false, true, false);
+                    "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_TH_CONC_PPM, false, true, false);
             concentrationExpressionsOrdered.add(expressionPpmTh);
 
+            if (!isDirectAltPD) {
+                Expression expressionPpmU = buildExpression(U_CONCEN_PPM,
+                        "[\"" + TH_CONCEN_PPM + "\"]/[\"" + TH_U_EXP + "\"]*" + L1033, false, true, false);
+                concentrationExpressionsOrdered.add(expressionPpmU);
+
+                Expression expressionPpmTh_RM = buildExpression(TH_CONCEN_PPM_RM,
+                        "[\"" + U_CONCEN_PPM_RM + "\"]*[\"" + TH_U_EXP_RM + "\"]/" + L1033, true, false, false);
+                concentrationExpressionsOrdered.add(expressionPpmTh_RM);
+
+                Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
+                        "[\"" + TH_CONCEN_PPM_RM + "\"]/[\"" + TH_U_EXP + "\"]*" + L1033, true, false, false);
+                concentrationExpressionsOrdered.add(expressionPpmURM);
+
+            } else {
+                // isDirectAltPD 
+                Expression expressionPpmU = buildExpression(U_CONCEN_PPM,
+                        "[\"" + TH_CONCEN_PPM + "\"]/[\"" + TH_U_EXP + "\"]/" + L9678, false, true, false);
+                concentrationExpressionsOrdered.add(expressionPpmU);
+
+                Expression expression4corrPpmURM = buildExpression(PB4CORR + U_CONCEN_PPM_RM,
+                        "[\"" + PB4CORR + TH_CONCEN_PPM + "\"]/[\"" + TH_U_EXP + "\"]/" + L9678, true, false, false);
+                concentrationExpressionsOrdered.add(expression4corrPpmURM);
+
+                Expression expression7corrPpmURM = buildExpression(PB7CORR + U_CONCEN_PPM_RM,
+                        "[\"" + PB7CORR + TH_CONCEN_PPM + "\"]/[\"" + TH_U_EXP + "\"]/" + L9678, true, false, false);
+                concentrationExpressionsOrdered.add(expression7corrPpmURM);
+
+                Expression expression4corrPpmTh = buildExpression(PB4CORR + TH_CONCEN_PPM_RM,
+                        "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + PB4CORR + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
+                concentrationExpressionsOrdered.add(expression4corrPpmTh);
+
+                Expression expression7corrPpmTh = buildExpression(PB7CORR + TH_CONCEN_PPM_RM,
+                        "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + PB7CORR + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
+                concentrationExpressionsOrdered.add(expression7corrPpmTh);
+
+            }
+        } else {
+            // assume Uranium ppm
+            Expression expressionPpmU = buildExpression(U_CONCEN_PPM,
+                    "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, false, true, false);
+            concentrationExpressionsOrdered.add(expressionPpmU);
+
+            if (!isDirectAltPD) {
+                Expression expressionPpmTh = buildExpression(TH_CONCEN_PPM,
+                        "[\"" + U_CONCEN_PPM + "\"]*[\"" + TH_U_EXP + "\"]/" + L1033, false, true, false);
+                concentrationExpressionsOrdered.add(expressionPpmTh);
+
+                Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
+                        "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
+                concentrationExpressionsOrdered.add(expressionPpmURM);
+
+                Expression expressionPpmTh_RM = buildExpression(TH_CONCEN_PPM_RM,
+                        "[\"" + U_CONCEN_PPM_RM + "\"]*[\"" + TH_U_EXP_RM + "\"]/" + L1033, true, false, false);
+                concentrationExpressionsOrdered.add(expressionPpmTh_RM);
+
+            } else {
+                // isDirectAltPD
+                Expression expressionPpmTh = buildExpression(TH_CONCEN_PPM,
+                        "[\"" + TH_U_EXP + "\"]*[\"" + U_CONCEN_PPM + "\"]*" + L9678, false, true, false);
+                concentrationExpressionsOrdered.add(expressionPpmTh);
+
+                Expression expression4corrPpmURM = buildExpression(PB4CORR + U_CONCEN_PPM_RM,
+                        "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
+                concentrationExpressionsOrdered.add(expression4corrPpmURM);
+
+                Expression expression7corrPpmURM = buildExpression(PB7CORR + U_CONCEN_PPM_RM,
+                        "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
+                concentrationExpressionsOrdered.add(expression7corrPpmURM);
+
+                Expression expression4corrPpmTh = buildExpression(PB4CORR + TH_CONCEN_PPM_RM,
+                        "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + PB4CORR + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
+                concentrationExpressionsOrdered.add(expression4corrPpmTh);
+
+                Expression expression7corrPpmTh = buildExpression(PB7CORR + TH_CONCEN_PPM_RM,
+                        "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + PB7CORR + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
+                concentrationExpressionsOrdered.add(expression7corrPpmTh);
+            }
+        } // end of new March 2019 section handling concentrations and bug in Squid 2.5
+
+        if (!isDirectAltPD) {
             if (!parentNuclide.contains("232")) {
                 // does contain Uranium such as 238
                 concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsU());
@@ -554,24 +622,7 @@ public abstract class BuiltInExpressionsFactory {
             } else {
                 concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsTh());
             }
-
         } else {
-            // directlAltPD is true
-
-            // Feb 2019 per @sbododorkos
-            // for 204b ref mat
-            Expression expression4corrPpmURM = buildExpression(PB4CORR + U_CONCEN_PPM_RM,
-                    "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
-            concentrationExpressionsOrdered.add(expression4corrPpmURM);
-
-            // Feb 2019 per @sbododorkos
-            // for 207b ref mat
-            Expression expression7corrPpmURM = buildExpression(PB7CORR + U_CONCEN_PPM_RM,
-                    "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_U_CONC_PPM, true, false, false);
-            concentrationExpressionsOrdered.add(expression7corrPpmURM);
-
-            // this code for ppmTh comes from SQ2.50 Procedural Framework: Part 5
-            // see: https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-5
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsU());
             concentrationExpressionsOrdered.addAll(generate204207MeansAndAgesForRefMaterialsTh());
 
@@ -589,10 +640,6 @@ public abstract class BuiltInExpressionsFactory {
                     + "false)", true, false, false);
             concentrationExpressionsOrdered.add(expression4corrSQUID_TH_U_EQN_NAME);
 
-            Expression expression4corrPpmTh = buildExpression(PB4CORR + TH_CONCEN_PPM_RM,
-                    "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
-            concentrationExpressionsOrdered.add(expression4corrPpmTh);
-
             // for 207Pb ref material
             exp238 = "(EXP(" + LAMBDA238 + "*[\"" + PB7COR206_238AGE_RM + "\"])-1)";
             exp232 = "(EXP(" + LAMBDA232 + "*[\"" + PB7COR208_232AGE_RM + "\"])-1)";
@@ -604,15 +651,6 @@ public abstract class BuiltInExpressionsFactory {
                     + "[%\"" + PB7COR208_232CALIB_CONST + "\"]^2),"
                     + "false)", true, false, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAME);
-
-            Expression expression7corrPpmTh = buildExpression(PB7CORR + TH_CONCEN_PPM_RM,
-                    "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
-            concentrationExpressionsOrdered.add(expression7corrPpmTh);
-
-            // for samples
-            Expression expressionPpmTh = buildExpression(TH_CONCEN_PPM,
-                    "[\"" + TH_U_EXP + "\"]*[\"" + U_CONCEN_PPM + "\"]*" + L9678, false, true, false);
-            concentrationExpressionsOrdered.add(expressionPpmTh);
 
             Expression expression4corrSQUID_TH_U_EQN_NAMEs = buildExpression(PB4CORR + TH_U_EXP,
                     "ValueModel("
@@ -629,7 +667,6 @@ public abstract class BuiltInExpressionsFactory {
                     + "[%\"" + PB7CORR + TOTAL_208_232 + "\"]^2),"
                     + "false)", false, true, false);
             concentrationExpressionsOrdered.add(expression7corrSQUID_TH_U_EQN_NAMEs);
-
         } // end test of directAltD
 
         Expression expression4CorrExtPerrU = buildExpression(PB4CORR + PBU_EXT_1_SIGMA_ERR_PCT,
