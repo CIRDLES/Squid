@@ -524,14 +524,16 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
                 customizeDataMenu();
+
+                // this updates output folder for reports to current version
+                CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
             } else {
                 saveSquidProjectMenuItem.setDisable(true);
                 SquidUI.updateStageTitle("");
                 throw new IOException();
             }
         }
-        // this updates output folder for reports to current version
-        CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
+
     }
 
     private void customizeDataMenu() {

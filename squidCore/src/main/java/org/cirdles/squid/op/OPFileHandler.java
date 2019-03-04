@@ -15,17 +15,23 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 
 public class OPFileHandler {
 
+    private static final String[] massStationLabelsNINE
+            = new String[]{"196Zr2O", "204Pb", DEFAULT_BACKGROUND_MASS_LABEL, "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO"};
+
+    private static final String[] massStationAMUsNINE
+            = new String[]{"196", "204", "204.1", "206", "207", "208", "238", "248", "254"};
+
     private static final String[] massStationLabelsTEN
             = new String[]{"196Zr2O", "204Pb", DEFAULT_BACKGROUND_MASS_LABEL, "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO", "270UO2"};
 
     private static final String[] massStationAMUsTEN
-            = new String[]{"195.8", "203.9", "204.0", "205.9", "206.9", "207.9", "238.0", "248.0", "254.0", "270.0"};
+            = new String[]{"196", "204", "204.1", "206", "207", "208", "238", "248", "254", "270"};
 
     private static final String[] massStationLabelsELEVEN
             = new String[]{"YbO", "Zr2O", "HfO", "Pb204", DEFAULT_BACKGROUND_MASS_LABEL, "206Pb", "207Pb", "208Pb", "238U", "248ThO", "254UO"};
 
     private static final String[] massStationAMUsELEVEN
-            = new String[]{"189.9", "195.7", "195.8", "203.9", "203.9", "205.9", "206.9", "207.9", "237.9", "247.9", "253.9"};
+            = new String[]{"190", "195.8", "195.9", "204", "204.1", "206", "207", "208", "238", "248", "254"};
 
     public ShrimpDataFileInterface convertOPFileToPrawnFile(File opFile) {
         List<OPFraction> opFractions = OPFileRunFractionParser.parseOPFile(opFile);
@@ -102,23 +108,17 @@ public class OPFileHandler {
                 // the first two are faked for now
                 PrawnFile.Run.RunTable.Entry.Par label = new PrawnFile.Run.RunTable.Entry.Par();
                 label.setName(RunTableEntryParameterNames.LABEL);
-                // TODO: make robust
-                if (opFraction.getMeasurements() == 10) {
-                    label.setValue(massStationLabelsTEN[i]);
-                } else {
-                    label.setValue(massStationLabelsELEVEN[i]);
-                }
+
+                int measCount = opFraction.getMeasurements();
+                label.setValue((measCount == 9) ? massStationLabelsNINE[i] : (measCount == 10) ? massStationLabelsTEN[i] : massStationLabelsELEVEN[i]);
                 entry.getPar().add(label);
 
                 PrawnFile.Run.RunTable.Entry.Par amu = new PrawnFile.Run.RunTable.Entry.Par();
                 amu.setName(RunTableEntryParameterNames.AMU);
-                // TODO: make robust
-                if (opFraction.getMeasurements() == 10) {
-                    amu.setValue(massStationAMUsTEN[i]);
-                } else {
-                    amu.setValue(massStationAMUsELEVEN[i]);
-                }
+
+                amu.setValue((measCount == 9) ? massStationAMUsNINE[i] : (measCount == 10) ? massStationAMUsTEN[i] : massStationAMUsELEVEN[i]);
                 entry.getPar().add(amu);
+
                 // need placeholder parameters for 
                 /*
                 <par name="trim_amu" value="0.000" />

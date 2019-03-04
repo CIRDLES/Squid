@@ -36,6 +36,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
+import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
+import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.URANIUM;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -101,11 +104,6 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
@@ -113,14 +111,12 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
@@ -232,6 +228,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected String delimiterForUnknownNames;
 
+    protected ConcentrationTypeEnum concentrationTypeEnum;
+
     public Task() {
         this("New Task", null, null);
     }
@@ -329,6 +327,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.referenceMaterialModelChanged = false;
         this.commonPbModelChanged = false;
         this.concentrationReferenceMaterialModelChanged = false;
+
+        this.concentrationTypeEnum = URANIUM;
 
         generateConstants();
         generateParameters();
@@ -465,7 +465,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         taskExpressionsOrdered.addAll(perSpotProportionsOfCommonPb);
 
         //Squid2.5 Framework: Part 4 means
-        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide, isDirectAltPD());
+        // March 2019
+        if (specialSquidFourExpressionsMap.get(PARENT_ELEMENT_CONC_CONST).matches("(.*)(232|248|264)(.*)")) {
+            concentrationTypeEnum = THORIUM;
+        } else {
+            concentrationTypeEnum = URANIUM;
+        }
+        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide, isDirectAltPD(), concentrationTypeEnum);
         taskExpressionsOrdered.addAll(perSpotConcentrations);
 
         SortedSet<Expression> overCountMeansRefMaterials = overCountMeans();
@@ -601,9 +607,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(" Concentration Reference Material Spots extracted by filter: \"")
                 .append(filterForConcRefMatSpotNames)
                 .append("\".\n\t\t  Mean Concentration of Primary Parent Element ")
-                //                .append(parentNuclide)
+                .append(concentrationTypeEnum.getName())
                 .append(" = ")
-                .append(meanConcValue);
+                .append(meanConcValue)
+                .append(" ppm.");
 
         summary.append("\n ")
                 .append(String.valueOf(unknownSpots.size()))
@@ -637,17 +644,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\t UnHealthy / Mismatched targets: ");
         summary.append((String) ((taskExpressionsOrdered.size() - count) > 0
                 ? String.valueOf(taskExpressionsOrdered.size() - count) : "None")).append(" excluded.");
-
-        if (namedConstantsMap.size() > 0) {
-            summary.append("\n\n Task Constants imported with task: \n");
-            for (Map.Entry<String, ExpressionTreeInterface> entry : namedConstantsMap.entrySet()) {
-                if (!entry.getValue().isSquidSpecialUPbThExpression()) {
-                    summary.append("\t").append(entry.getKey()).append(" = ").append(((ConstantNode) entry.getValue()).getValue()).append("\n");
-                }
-            }
-        } else {
-            summary.append(" No constants supplied.");
-        }
 
         return summary.toString();
     }
@@ -1293,7 +1289,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             for (int i = 0; i < changelings.size(); i++) {
                 int index = changelings.get(i);
                 if (excelString.contains(nominalMasses.get(index))) {
-                    //System.out.println("CHANGE " + exp.getName() + " >> " + excelString + " >> " + mapOfIndexToMassStationDetails.get(index).getIsotopeLabel());
                     excelString = excelString.replaceAll(nominalMasses.get(index), mapOfIndexToMassStationDetails.get(index).getIsotopeLabel());
                     for (int r = 0; r < ratioNames.size(); r++) {
                         if (ratioNames.get(r).contains(nominalMasses.get(index))) {

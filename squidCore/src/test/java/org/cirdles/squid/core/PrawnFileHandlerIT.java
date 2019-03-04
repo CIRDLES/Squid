@@ -44,6 +44,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign11Mass;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
@@ -71,7 +72,7 @@ public class PrawnFileHandlerIT {
 
     private static final String PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1
             = "/org/cirdles/squid/tasks/squidTask25/SquidTask_Z6266 = 11pk Perm1.SB.xls";
-    
+
     private static final ResourceExtractor RESOURCE_EXTRACTOR
             = new ResourceExtractor(PrawnFileHandlerIT.class);
 
@@ -118,7 +119,12 @@ public class PrawnFileHandlerIT {
                 .extractResourceAsFile(PRAWN_FILE_RESOURCE_Z6266_TASK_PERM1);
 
         squidProjectZ6266.setPrawnFile(prawnFileDataZ6266);
+
+        // March 2019 remove dependency on Squid25 task
         squidProjectZ6266.createTaskFromImportedSquid25Task(squidTaskFileZ6266_TASK_PERM1);
+//        TaskInterface task = new Task("test", prawnFileDataZ6266, prawnFileHandler.getReportsEngine());
+//        task.updateTaskFromTaskDesign(new TaskDesign11Mass());
+//        squidProjectZ6266.setTask(task);
 
         squidProjectZ6266.setDelimiterForUnknownNames("-");
         squidProjectZ6266.getTask().setFilterForRefMatSpotNames("6266");
