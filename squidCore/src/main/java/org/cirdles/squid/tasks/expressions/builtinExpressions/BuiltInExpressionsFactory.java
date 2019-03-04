@@ -522,6 +522,8 @@ public abstract class BuiltInExpressionsFactory {
                 AV_PARENT_ELEMENT_CONC_CONST, AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION, true, true, true);
         parentPPMmean.setSquidSwitchNU(false);
         parentPPMmean.getExpressionTree().setSquidSwitchConcentrationReferenceMaterialCalculation(true);
+        parentPPMmean.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(false);
+        parentPPMmean.getExpressionTree().setSquidSwitchSAUnknownCalculation(false);
         concentrationExpressionsOrdered.add(parentPPMmean);
 
         // ppmU calcs belong to both cases of isDirectAltPD

@@ -1164,7 +1164,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 } else {
                     expressionList.append(" ");
                 }
-                expressionList.append("\t").append(expTree.getName()).append("\n");
+                
+                expressionList.append("\t").append(expTree.getName());
+                if (taskExpressionsOrderedByTarget.get(i).aliasedExpression()){
+                    expressionList.append("  ALIASED");
+                }
+                expressionList.append("\n");
             }
         }
         return expressionList.toString();
