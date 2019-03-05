@@ -50,6 +50,8 @@ squidCore/Schema/
 LudwigLibraryJavadoc/
 Schema/
 /Schema/
+squidApp/Squid3_Reports_v?.?.?
+
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
