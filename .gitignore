@@ -40,6 +40,8 @@ test_*
 *.zip
 *.squid
 *.xls
+*.pdf
+
 EXPRESSION.HTML
 squidApp/LudwigLibraryJavadoc/
 squidApp/Schema/
