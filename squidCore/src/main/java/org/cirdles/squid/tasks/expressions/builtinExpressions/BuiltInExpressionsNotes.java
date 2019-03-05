@@ -129,6 +129,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_238_206;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
 
 /**
  *
@@ -623,5 +625,21 @@ public class BuiltInExpressionsNotes {
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_208_232,
                 "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
                 + " (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+
+        BUILTIN_EXPRESSION_NOTES.put(MIN_206PB238U_EXT_1SIGMA_ERR_PCT,
+                "User-defined minimum value for external (spot-to-spot) 1sigma uncertainty (expressed as a percentage), "
+                + "intended to supersede any smaller value of WtdAv_Xcor_206Pb238U_CalibConst[2] (i.e. the third"
+                + " element of the WtdAv vector output) calculated from any RM dataset of "
+                + "WtdAv_Xcor_206Pb238U_CalibConst values. In this context, Xcor denotes the "
+                + "index isotope used for the common Pb correction in the RM (i.e. 204Pb, 207Pb, "
+                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                + "(i.e. \"Perm1\"), possibly 208Pb).");
+
+        BUILTIN_EXPRESSION_NOTES.put(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT,
+                "User-defined minimum value for external (spot-to-spot) 1sigma uncertainty (expressed as a percentage),"
+                + " intended to supersede any smaller value of WtdAv_Xcor_208Pb232Th_CalibConst[2]"
+                + " (i.e. the third element of the WtdAv vector output) calculated from "
+                + "any RM dataset of WtdAv_Xcor_208Pb232Th_CalibConst values. In this context, "
+                + "Xcor denotes the index isotope used for the common Pb correction in the RM (i.e. 204Pb or 207Pb).");
     }
 }

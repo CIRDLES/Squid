@@ -50,7 +50,7 @@ public class TaskXMLConverter implements Converter {
     /**
      * checks the argument <code>clazz</code> against <code>Task</code>'s
      * <code>Class</code>. Used to ensure that the object about to be
-     * marshalled/unmarshalled is of the correct type.
+ marshalled/unmarshalled is of the correct taskType.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>

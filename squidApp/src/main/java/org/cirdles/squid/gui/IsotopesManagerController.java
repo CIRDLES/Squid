@@ -41,12 +41,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.UThBearingEnum;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 /**
  * FXML Controller class
@@ -153,7 +153,7 @@ public class IsotopesManagerController implements Initializable {
             @Override
             public void handle(TableColumn.CellEditEvent<MassStationDetail, String> editEvent) {
                 String editIsotopeName = editEvent.getNewValue();
-                if (editIsotopeName.compareToIgnoreCase(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL) != 0) {
+                if (editIsotopeName.compareToIgnoreCase(DEFAULT_BACKGROUND_MASS_LABEL) != 0) {
                     ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
                             .setIsotopeLabel(editIsotopeName);
                     SquidSpeciesModel ssm
@@ -188,7 +188,7 @@ public class IsotopesManagerController implements Initializable {
                 selectAsBackgroundMenuItem.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        row.getItem().setIsotopeLabel(SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL);
+                        row.getItem().setIsotopeLabel(DEFAULT_BACKGROUND_MASS_LABEL);
                         SquidSpeciesModel ssm
                                 = task.getSquidSpeciesModelList()
                                         .get(row.getItem().getMassStationIndex());
