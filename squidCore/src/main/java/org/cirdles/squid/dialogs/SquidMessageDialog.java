@@ -36,8 +36,9 @@ public class SquidMessageDialog extends Alert {
         setTitle("Squid3 Alert");
         setContentText(message);
         setHeaderText(headerText);
-        initStyle(StageStyle.DECORATED);
-        getDialogPane().setPrefSize(500, 350);
+        initStyle(StageStyle.DECORATED);        
+        getDialogPane().setPrefSize(500, 200);
+        getDialogPane().setStyle(getDialogPane().getStyle() + ";-fx-font-family: SansSerif Bold;-fx-font-size: 16");
 
     }
 
@@ -47,7 +48,7 @@ public class SquidMessageDialog extends Alert {
      * @param owner
      */
     public static void showWarningDialog(String message, Window owner) {
-        Alert alert = new SquidMessageDialog(Alert.AlertType.WARNING, message, "Squid3 warns you that:", owner);
+        Alert alert = new SquidMessageDialog(Alert.AlertType.WARNING, message, "Squid3 warns you:", owner);
         alert.showAndWait();
     }
 
@@ -57,7 +58,7 @@ public class SquidMessageDialog extends Alert {
      * @param owner
      */
     public static void showInfoDialog(String message, Window owner) {
-        Alert alert = new SquidMessageDialog(Alert.AlertType.INFORMATION, message, "Squid3 informs you that:", owner);
+        Alert alert = new SquidMessageDialog(Alert.AlertType.INFORMATION, message, "Squid3 informs you:", owner);
         alert.showAndWait();
     }
 

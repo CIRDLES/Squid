@@ -15,21 +15,32 @@
  */
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class BuiltInExpressionsDataDictionary {
 
+    // **********************  REQUIRED   **************************************
+    public static final String DEFAULT_BACKGROUND_MASS_LABEL = "BKG";
+
+    public static List<String> REQUIRED_NOMINAL_MASSES
+            = new ArrayList<>(Arrays.asList(new String[]{"204", "206", "207", "208"}));
+    public static List<String> REQUIRED_RATIO_NAMES
+            = new ArrayList<>(Arrays.asList(new String[]{"204/206", "207/206", "208/206"}));
+
     // **********************  SPECIAL CONSTANTS ******************************
     // holding spot until models are implemented
     public static final String REF_238U235U_RM_MODEL_NAME = "r238_235s";
     public static final String REF_238U235U = "Ref_238U235U";
-    
+
     public static final String NUKEMASS206PB = "NukeMass206Pb";
     public static final String NUKEMASS232TH = "NukeMass232Th";
     public static final String NUKEMASS238U = "NukeMass238U";
-    
 
     // **********************  COMMON LEAD *************************************
     public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
@@ -160,7 +171,8 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String PBTH_EXT_1_SIGMA_ERR_PCT = "208Pb232Th_Ext1SigmaErr_Pct";
     public static final String PBU_EXT_1_SIGMA_ERR_PCT = "206Pb238U_Ext1SigmaErr_Pct";
-    public static final String ASSIGNED_PBU_EXTERNAL_ONE_SIGMA_PCT_ERR = "ExtPErr";
+    public static final String MIN_206PB238U_EXT_1SIGMA_ERR_PCT = "Min_206Pb238U_Ext1SigmaErr_Pct";
+    public static final String MIN_208PB232TH_EXT_1SIGMA_ERR_PCT = "Min_208Pb232Th_Ext1SigmaErr_Pct";
 
     // ********************** OVER COUNTS **************************************
     public static final String OVER_COUNT_4_6_7 = "204Pb206Pb_OvCtCorFrom207Pb";
@@ -183,14 +195,26 @@ public class BuiltInExpressionsDataDictionary {
     // ********************** INTERNAL EXPRESSIONS *****************************
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";
+    public static final String UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION = "[\"206/238\"]/[\"254/238\"]^1.8";//Expo_Used";
+
     public static final String UNCOR208PB232TH_CALIB_CONST = "Uncor_208Pb232Th_CalibConst";
+    public static final String UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION = "[\"208/248\"]";
+
     // Squid2.5 Th/U equation (-3)
+    // TH_U_EXP is overwritten for perm2 and perm4
+    public static final String TH_U_EXP_DEFAULT = "232Th238U_DEFAULT";
+    public static final String TH_U_EXP_DEFAULT_EXPRESSION = "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]";
     public static final String TH_U_EXP_RM = "232Th238U_RM";
     public static final String TH_U_EXP = "232Th238U";
+
     // name for Squid2.5 Ppm parent eqn(-4) 
     public static final String PARENT_ELEMENT_CONC_CONST = "ParentElement_ConcenConst";
-    
+    public static final String PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION = "[\"238/196\"]/[\"254/238\"]^0.66";
+
     public static final String AV_PARENT_ELEMENT_CONC_CONST = "Av_ParentElement_ConcenConst";
+    public static final String AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION 
+            = "CalculateMeanConcStd([\"" + PARENT_ELEMENT_CONC_CONST + "\"])";
+
     // name for Squid2.5 Ppm chosen based on U or Th in Primary; then other is calculated
     public static final String U_CONCEN_PPM_RM = "U_Concen_RM";
     public static final String U_CONCEN_PPM = "U_Concen";
@@ -199,12 +223,12 @@ public class BuiltInExpressionsDataDictionary {
 
     public static final String TOTAL_206_204 = "Total_206Pb204Pb";
     public static final String TOTAL_207_204 = "Total_207Pb204Pb";
-    public static final String TOTAL_208_204 = "Total_208Pb204Pb";   
+    public static final String TOTAL_208_204 = "Total_208Pb204Pb";
     public static final String TOTAL_206_238 = "Total_206Pb238U";
     public static final String TOTAL_208_232 = "Total_208Pb232Th";
     public static final String TOTAL_207_206 = "Total_207Pb206Pb";
     public static final String TOTAL_238_206 = "Total_238U206Pb";
-    
+
     public static final String DEFRAD_206PB204PB = "DefRad_206Pb204Pb";
     public static final String DEFRAD_207PB204PB = "DefRad_207Pb204Pb";
     public static final String DEFRAD_208PB204PB = "DefRad_208Pb204Pb";
