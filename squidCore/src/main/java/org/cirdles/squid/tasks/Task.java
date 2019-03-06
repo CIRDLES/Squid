@@ -2505,6 +2505,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (mapOfUnknownsBySampleNames == null) {
             mapOfUnknownsBySampleNames = new TreeMap<>();
         }
+        // safety feature
+        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getPlotType(), unknownSpots);
         return mapOfUnknownsBySampleNames;
     }
 

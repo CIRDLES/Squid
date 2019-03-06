@@ -63,6 +63,16 @@ public final class SquidUI extends Application {
     public static final Image HEALTHY = new Image(HEALTHY_URL);
     public static final String UNHEALTHY_URL = "org/cirdles/squid/gui/images/wrongx_icon.png";
     public static final Image UNHEALTHY = new Image(UNHEALTHY_URL);
+    
+    
+    public static  final String HEALTHY_EXPRESSION_STYLE
+            = "-fx-background-image:url('\"" + HEALTHY_URL
+            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
+            + " -fx-background-size: 16px 16px;";
+    public static  final String UNHEALTHY_EXPRESSION_STYLE
+            = "-fx-background-image:url('\"" + UNHEALTHY_URL
+            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
+            + " -fx-background-size: 16px 16px;";
 
     public static final int PIXEL_OFFSET_FOR_MENU = 38;
     public static Window primaryStageWindow;
