@@ -71,8 +71,6 @@ import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.SquidUI.HEALTHY_URL;
-import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
@@ -94,6 +92,8 @@ import org.cirdles.squid.tasks.taskDesign.TaskDesign10Mass;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign11Mass;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign9Mass;
 import org.cirdles.squid.tasks.taskDesign.TaskDesignBlank;
+import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
 
 /**
  * FXML Controller class
@@ -185,15 +185,6 @@ public class TaskDesignerController implements Initializable {
     private Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private Map<String, Tooltip> tooltipsMap = new HashMap<>();
-
-    private final String healthyStyle
-            = "-fx-background-image:url('\"" + HEALTHY_URL
-            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
-            + " -fx-background-size: 16px 16px;";
-    private final String unHealthyStyle
-            = "-fx-background-image:url('\"" + UNHEALTHY_URL
-            + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
-            + " -fx-background-size: 16px 16px;";
 
     private final List<StackPane> undoMassesList = new ArrayList<>();
     private final List<VBox> undoRatiosList = new ArrayList<>();
@@ -500,29 +491,25 @@ public class TaskDesignerController implements Initializable {
         String UTh_U = taskDesigner.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
         uncorrConstPbUExpressionText.setText(UTh_U);
         uncorrConstPbUExpressionText.setUserData(UNCOR206PB238U_CALIB_CONST);
-        uncorrConstPbUExpressionText.setStyle(
-                makeExpression(UNCOR206PB238U_CALIB_CONST, UTh_U).amHealthy() ? healthyStyle : unHealthyStyle);
+        uncorrConstPbUExpressionText.setStyle(makeExpression(UNCOR206PB238U_CALIB_CONST, UTh_U).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE);
 
         uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
         String UTh_Th = taskDesigner.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
         uncorrConstPbThExpressionText.setText(UTh_Th);
         uncorrConstPbThExpressionText.setUserData(UNCOR208PB232TH_CALIB_CONST);
-        uncorrConstPbThExpressionText.setStyle(
-                makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th).amHealthy() ? healthyStyle : unHealthyStyle);
+        uncorrConstPbThExpressionText.setStyle(makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE);
 
         th232U238Label.setText(TH_U_EXP_RM + ":");
         String thU = taskDesigner.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
         pb208Th232ExpressionText.setText(thU);
         pb208Th232ExpressionText.setUserData(TH_U_EXP_DEFAULT);
-        pb208Th232ExpressionText.setStyle(
-                makeExpression(TH_U_EXP_DEFAULT, thU).amHealthy() ? healthyStyle : unHealthyStyle);
+        pb208Th232ExpressionText.setStyle(makeExpression(TH_U_EXP_DEFAULT, thU).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE);
 
         parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
         String parentPPM = taskDesigner.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
         parentConcExpressionText.setText(parentPPM);
         parentConcExpressionText.setUserData(PARENT_ELEMENT_CONC_CONST);
-        parentConcExpressionText.setStyle(
-                makeExpression(PARENT_ELEMENT_CONC_CONST, parentPPM).amHealthy() ? healthyStyle : unHealthyStyle);
+        parentConcExpressionText.setStyle(makeExpression(PARENT_ELEMENT_CONC_CONST, parentPPM).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE);
 
     }
 
@@ -814,7 +801,7 @@ public class TaskDesignerController implements Initializable {
 
         boolean unhealthy = expressionText.getStyle().contains("wrongx_icon");
 
-        expressionText.setStyle((player ? playerStyle : notPlayerStyle) + (unhealthy ? unHealthyStyle : healthyStyle));
+        expressionText.setStyle((player ? playerStyle : notPlayerStyle) + (unhealthy ? UNHEALTHY_EXPRESSION_STYLE : HEALTHY_EXPRESSION_STYLE));
     }
 
     private void updateExpressionHealthFlag(TextField expressionText, boolean healthy) {
