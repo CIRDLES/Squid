@@ -222,10 +222,10 @@
     -fx-border-color: #e2e2e2;
     -fx-border-width: 2;
     -fx-background-radius: 0;
-    -fx-background-color: Secondary;/*#72b1bf;!*#43ABC9;!*#ff8f89; !*#ff6961; !*#1d1d1d;*/
+    -fx-background-color: Secondary;
     -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
-    -fx-text-fill: whitesmoke;/*  #d8d8d8;*/
+    -fx-text-fill: whitesmoke;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
 

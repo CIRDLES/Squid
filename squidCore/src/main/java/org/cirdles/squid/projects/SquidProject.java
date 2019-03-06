@@ -53,6 +53,8 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
  *
@@ -96,7 +98,8 @@ public final class SquidProject implements Serializable {
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
 
         this.filtersForUnknownNames = new HashMap<>();
-        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
+        this.delimiterForUnknownNames
+                = SquidPersistentState.getExistingPersistentState().getTaskDesign().getDelimiterForUnknownNames();
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -138,6 +141,7 @@ public final class SquidProject implements Serializable {
         this.task = new Task(
                 "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
         this.task.setChanged(true);
+        this.task.applyDirectives();
         initializeTaskAndReduceData();
     }
 
@@ -168,7 +172,7 @@ public final class SquidProject implements Serializable {
 
         this.task = new Task(
                 taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
-        this.task.setType(taskSquid25.getTaskType());
+        this.task.setTaskType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setProvenance(taskSquid25.getSquidTaskFileName());
         this.task.setAuthorName(taskSquid25.getAuthorName());
@@ -180,8 +184,6 @@ public final class SquidProject implements Serializable {
         this.task.setFiltersForUnknownNames(filtersForUnknownNames);
         this.task.setParentNuclide(taskSquid25.getParentNuclide());
         this.task.setDirectAltPD(taskSquid25.isDirectAltPD());
-
-        this.task.generateBuiltInExpressions();
 
         // determine index of background mass as specified in task
         for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
@@ -202,6 +204,8 @@ public final class SquidProject implements Serializable {
                     task25Eqn.isEqnSwitchNU(),
                     false, false);
 
+            expression.setNotes("Custom expression imported from Squid2 task " + taskSquid25.getTaskName() + " .");
+
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
             expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
             expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
@@ -216,10 +220,29 @@ public final class SquidProject implements Serializable {
         List<String> constantNames = taskSquid25.getConstantNames();
         List<String> constantValues = taskSquid25.getConstantValues();
         for (int i = 0; i < constantNames.size(); i++) {
-            double constantDouble = Double.parseDouble(constantValues.get(i));
-            ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
-            task.getNamedConstantsMap().put(constant.getName(), constant);
+//            double constantDouble = Double.parseDouble(constantValues.get(i));
+//            ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
+//            task.getNamedConstantsMap().put(constant.getName(), constant);
+
+            // March 2019 moved imported constants to be custom expressions
+            Expression customConstant = this.task.generateExpressionFromRawExcelStyleText(constantNames.get(i),
+                    constantValues.get(i),
+                    false, false, false);
+
+            customConstant.setNotes("Custom constant imported from Squid2 task " + taskSquid25.getTaskName() + " .");
+
+            ExpressionTreeInterface expressionTree = customConstant.getExpressionTree();
+            expressionTree.setSquidSwitchSTReferenceMaterialCalculation(true);
+            expressionTree.setSquidSwitchSAUnknownCalculation(true);
+            expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
+
+            expressionTree.setSquidSwitchSCSummaryCalculation(true);
+            expressionTree.setSquidSpecialUPbThExpression(false);
+            task.getTaskExpressionsOrdered().add(customConstant);
         }
+
+        this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
+        this.task.applyDirectives();
 
         initializeTaskAndReduceData();
     }

@@ -114,9 +114,4 @@ public class OPFileRunFractionParser {
 
         return opList;
     }
-
-    public static void main(String[] args) {
-
-    }
-
 }
