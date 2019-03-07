@@ -210,7 +210,7 @@
                                     <Insets left="2.0" />
                                  </VBox.margin>
                                  <children>
-                                    <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: hold t + hover a node to show detail">
+                                    <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: hold t as you hover over a node to show detail">
                                        <font>
                                           <Font size="11.0" />
                                        </font>
