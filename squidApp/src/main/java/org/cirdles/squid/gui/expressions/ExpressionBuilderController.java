@@ -477,7 +477,7 @@ public class ExpressionBuilderController implements Initializable {
     private Map<KeyCode, Boolean> keyMap = new HashMap<>();
 
     private ObservableList<ExpressionTextNode> selectedNodes = FXCollections.observableArrayList();
-    
+
     private TaskInterface task;
 
     //INIT
@@ -672,7 +672,7 @@ public class ExpressionBuilderController implements Initializable {
         orderListViewByFlag(nuSwitchedExpressionsListView, flag);
         orderListViewByFlag(builtInExpressionsListView, flag);
         orderListViewByFlag(brokenExpressionsListView, flag);
-        
+
         // special cases
         orderListViewByFlag(referenceMaterialsListView, "NAME");
         orderListViewByFlag(parametersListView, "NAME");
@@ -1063,7 +1063,7 @@ public class ExpressionBuilderController implements Initializable {
         });
 
         expressionNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+            if ((newValue != null) && newValue.compareTo(oldValue) != 0) {
                 updateEditor();
                 refreshSaved();
             }
@@ -1603,9 +1603,9 @@ public class ExpressionBuilderController implements Initializable {
         items = FXCollections.observableArrayList(sortedParameterValuesList);
         parametersListView.setItems(null);
         parametersListView.setItems(items);
-        
+
         // sort everyone
-        String flag = ((RadioButton)expressionsSortToggleGroup.getSelectedToggle()).getId();
+        String flag = ((RadioButton) expressionsSortToggleGroup.getSelectedToggle()).getId();
         orderExpressionListsByFlag(flag);
 
     }
@@ -2811,6 +2811,9 @@ public class ExpressionBuilderController implements Initializable {
             graphExpressionTree(exp.getExpressionTree());
             populatePeeks(exp);
 
+            // output callgraph temporarily
+            System.out.println(task.printExpressionCallGraph(exp));
+
         } else {
 
             graphExpressionTree(null);
@@ -2822,6 +2825,7 @@ public class ExpressionBuilderController implements Initializable {
 
     /**
      * Creates a new expression from the modifications.
+     *
      * @param expressionName the value of expressionName
      * @param expressionString the value of expressionString
      */
