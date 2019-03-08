@@ -54,6 +54,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 
 /**
  * FXML Controller class
@@ -249,6 +252,16 @@ public class TaskManagerController implements Initializable {
         populateDirectives();
     }
 
+    /**
+     *
+     * @param expressionName
+     * @param expressionString
+     * @return
+     */
+    private Expression makeExpression(String expressionName, final String expressionString) {
+        return makeExpressionForAudit(expressionName, expressionString, task.getNamedExpressionsMap());
+    }
+
     private void populateDirectives() {
         // Directives fields
         ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
@@ -263,32 +276,36 @@ public class TaskManagerController implements Initializable {
         boolean perm3 = !uPicked && !directPicked;
         boolean perm4 = !uPicked && directPicked;
 
-        /*
-        updateExpressionStyle(uncorrConstPbUExpressionText, (perm1 || perm2 || perm4));
-        updateExpressionStyle(uncorrConstPbThExpressionText, (perm2 || perm3 || perm4));
-        updateExpressionStyle(pb208Th232ExpressionText, (perm1 || perm3));
-        updateExpressionStyle(parentConcExpressionText, (perm1 || perm2 || perm3 || perm4));
-        
-         */
         uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
         Expression UTh_U = task.getExpressionByName(UNCOR206PB238U_CALIB_CONST);
         String UTh_U_ExpressionString = (UTh_U == null) ? UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION : UTh_U.getExcelExpressionString();
         uncorrConstPbUExpressionLabel.setText((perm1 || perm2 || perm4) ? UTh_U_ExpressionString : "Not Used");
+
+        uncorrConstPbUExpressionLabel.setStyle(uncorrConstPbUExpressionLabel.getStyle()
+                + (makeExpression(UNCOR206PB238U_CALIB_CONST, UTh_U_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
         Expression UTh_Th = task.getExpressionByName(UNCOR208PB232TH_CALIB_CONST);
         String UTh_Th_ExpressionString = (UTh_Th == null) ? UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION : UTh_Th.getExcelExpressionString();
         uncorrConstPbThExpressionLabel.setText((perm2 || perm3 || perm4) ? UTh_Th_ExpressionString : "Not Used");
 
+        uncorrConstPbThExpressionLabel.setStyle(uncorrConstPbThExpressionLabel.getStyle()
+                + (makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
+
         th232U238Label.setText(TH_U_EXP_RM + ":");
         Expression thU = task.getExpressionByName(TH_U_EXP_DEFAULT);
         String thU_ExpressionString = (thU == null) ? TH_U_EXP_DEFAULT_EXPRESSION : thU.getExcelExpressionString();
         th232U238ExpressionLabel.setText((perm1 || perm3) ? thU_ExpressionString : "Not Used");
 
+        th232U238ExpressionLabel.setStyle(th232U238ExpressionLabel.getStyle()
+                + (makeExpression(TH_U_EXP_DEFAULT, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
+
         parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
         Expression parentPPM = task.getExpressionByName(PARENT_ELEMENT_CONC_CONST);
         String parentPPM_ExpressionString = (parentPPM == null) ? PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION : parentPPM.getExcelExpressionString();
-        parentConcExpressionLabel.setText((perm1 || perm2 || perm3 || perm4) ? parentPPM_ExpressionString : "Not Used");
+        parentConcExpressionLabel.setText(parentPPM_ExpressionString);
+        parentConcExpressionLabel.setStyle(parentConcExpressionLabel.getStyle()
+                + (makeExpression(PARENT_ELEMENT_CONC_CONST, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
     }
 
     private void setupListeners() {

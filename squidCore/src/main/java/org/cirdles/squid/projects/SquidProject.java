@@ -386,10 +386,6 @@ public final class SquidProject implements Serializable {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
         List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();
 
-        if (mapOfUnknownsBySampleNames.isEmpty()) {
-            mapOfUnknownsBySampleNames.put(SpotTypes.UNKNOWN.getPlotType(), task.getUnknownSpots());
-        }
-
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfUnknownsBySampleNames.entrySet()) {
             if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getPlotType()) != 0) {
                 ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
