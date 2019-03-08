@@ -27,7 +27,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainPane" dividerPositions="0.25" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="702.0" prefWidth="1220.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane fx:id="mainPane" dividerPositions="0.25" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="702.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
       <SplitPane fx:id="leftSplitPane" dividerPositions="0.75" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
          <items>
@@ -156,9 +156,9 @@
                               <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
                               <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
                               <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="HowTo Videos" HBox.hgrow="NEVER">
+                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#showDependencyGraphsAction" text="Show Dependency Graphs" HBox.hgrow="NEVER">
                                  <HBox.margin>
-                                    <Insets left="200.0" />
+                                    <Insets left="140.0" />
                                  </HBox.margin></Button>
                            </children>
                         </HBox>
@@ -210,7 +210,7 @@
                                     <Insets left="2.0" />
                                  </VBox.margin>
                                  <children>
-                                    <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: hold t + hover a node to show detail">
+                                    <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: hold t as you hover over a node to show detail">
                                        <font>
                                           <Font size="11.0" />
                                        </font>

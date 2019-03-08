@@ -124,6 +124,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 
 /**
  *
@@ -230,6 +231,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected ConcentrationTypeEnum concentrationTypeEnum;
 
+    protected Map<String, List<String>> providesExpressionsGraph;
+    protected Map<String, List<String>> requiresExpressionsGraph;
+
     public Task() {
         this("New Task", null, null);
     }
@@ -329,6 +333,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.concentrationReferenceMaterialModelChanged = false;
 
         this.concentrationTypeEnum = URANIUM;
+
+        this.providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         generateConstants();
         generateParameters();
@@ -714,6 +721,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             processAndSortExpressions();
 
             evaluateTaskExpressions();
+
+            buildExpressionDependencyGraphs();
 
             reportsEngine.clearReports();
 
@@ -1164,9 +1173,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 } else {
                     expressionList.append(" ");
                 }
-                
+
                 expressionList.append("\t").append(expTree.getName());
-                if (taskExpressionsOrderedByTarget.get(i).aliasedExpression()){
+                if (taskExpressionsOrderedByTarget.get(i).aliasedExpression()) {
                     expressionList.append("  ALIASED");
                 }
                 expressionList.append("\n");
@@ -1874,8 +1883,125 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 revisedRatioNames.add(ratioName);
             }
         }
-
         ratioNames = revisedRatioNames;
+    }
+
+    private void buildExpressionDependencyGraphs() {
+        // prep graphs
+        this.requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+        for (Expression exp : taskExpressionsOrdered) {
+            if (!exp.isParameterValue()
+                    && !exp.isReferenceMaterialValue()) {
+                List<String> calledExpressions = buildExpressionRequiresGraph(exp);
+                requiresExpressionsGraph.put(exp.getName(), calledExpressions);
+
+                // work in reverse to build providesExpressionsGraph
+                List<String> callingExpressions;
+                for (String called : calledExpressions) {
+                    if (providesExpressionsGraph.containsKey(called)) {
+                        callingExpressions = providesExpressionsGraph.get(called);
+                    } else {
+                        callingExpressions = new ArrayList<>();
+                        providesExpressionsGraph.put(called, callingExpressions);
+                    }
+                    if (!callingExpressions.contains(exp.getName())) {
+                        callingExpressions.add(exp.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    private List<String> buildExpressionRequiresGraph(Expression exp) {
+        ExpressionTreeInterface expTree = exp.getExpressionTree();
+        List<String> calledExpressions;
+        if (requiresExpressionsGraph.containsKey(exp.getName())) {
+            calledExpressions = requiresExpressionsGraph.get(exp.getName());
+        } else {
+            calledExpressions = new ArrayList<>();
+        }
+
+        // walk the tree looking for named expressions
+        walkExpressionTreeRequires(expTree, calledExpressions);
+
+        return calledExpressions;
+    }
+
+    private void walkExpressionTreeRequires(ExpressionTreeInterface expTree, List<String> calledExpressions) {
+        List<ExpressionTreeInterface> children = ((ExpressionTreeBuilderInterface) expTree).getChildrenET();
+        for (ExpressionTreeInterface child : children) {
+            String calledName = child.getName();
+            if (namedExpressionsMap.containsKey(calledName)
+                    && !(child instanceof ShrimpSpeciesNode)
+                    && (child.getName().compareTo("FALSE") != 0)
+                    && (child.getName().compareTo("TRUE") != 0)) {
+                if (!calledExpressions.contains(calledName)) {
+                    calledExpressions.add(calledName);
+                }
+            }
+            walkExpressionTreeRequires(child, calledExpressions);
+        }
+    }
+
+    @Override
+    public String printExpressionRequiresGraph(Expression exp) {
+        if ((requiresExpressionsGraph == null) || (providesExpressionsGraph == null)) {
+            buildExpressionDependencyGraphs();
+        }
+
+        List<Boolean> showEdge = new ArrayList<>();
+        showEdge.add(true);
+        return "Graph of required expressions - NEEDED BY: \n\n" 
+                + exp.getName() + "\n"
+                + printDependencyGraph(requiresExpressionsGraph.get(exp.getName()), 1, showEdge, requiresExpressionsGraph, "|-> ");
+    }
+
+    @Override
+    public String printExpressionProvidesGraph(Expression exp) {
+        if ((requiresExpressionsGraph == null) || (providesExpressionsGraph == null)) {
+            buildExpressionDependencyGraphs();
+        }
+
+        List<Boolean> showEdge = new ArrayList<>();
+        showEdge.add(true);
+        return "Graph of provided expressions - NEEDING: \n\n" 
+                + exp.getName() + "\n"
+                + printDependencyGraph(providesExpressionsGraph.get(exp.getName()), 1, showEdge, providesExpressionsGraph, "|<- ");
+    }
+
+    /**
+     *
+     * @param calledExpressions the value of calledExpressions
+     * @param depth the value of depth
+     * @param showEdge the value of showEdge
+     * @param graph the value of graph
+     * @param direction the value of direction
+     */
+    private String printDependencyGraph(
+            List<String> calledExpressions, int depth, List<Boolean> showEdge, Map<String, List<String>> graph, String direction) {
+
+        StringBuilder calls = new StringBuilder();
+        if (calledExpressions != null) {
+            for (String call : calledExpressions) {
+                for (int i = 0; i < depth; i++) {
+                    calls.append("     ");
+                    calls.append((showEdge.get(i)) ? (i == (depth - 1)) ? direction : "|" : " ");
+                    if (showEdge.get(i) && (i == (depth - 1))) {
+                        showEdge.set(i, call.compareTo(calledExpressions.get(calledExpressions.size() - 1)) != 0);
+                    }
+                }
+
+                calls.append(call).append("\n");
+                if (graph.get(call) != null) {
+                    showEdge.add(true);
+                    calls.append(printDependencyGraph(graph.get(call), depth + 1, showEdge, graph, direction));
+                }
+            }
+        }
+        showEdge.set(depth - 1, true);
+        return calls.toString();
     }
 
     @Override
