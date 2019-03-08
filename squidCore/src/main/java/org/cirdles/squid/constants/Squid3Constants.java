@@ -223,28 +223,37 @@ public final class Squid3Constants {
 
     public static enum SampleNameDelimetersEnum {
 
-        HYPHEN("-"),
-        DOT("."),
-        UNDERSCORE("_"),
-        COLON(":"),
-        ONE("1"),
-        TWO("2"),
-        THREE("3"),
-        FOUR("4"),
-        FIVE("5"),
-        SIX("6"),
-        SEVEN("7"),
-        EIGHT("8"),
-        NINE("9");
+        HYPHEN("-", false),
+        DOT(".", false),
+        UNDERSCORE("_", false),
+        COLON(":", false),
+        ONE("1", true),
+        TWO("2", true),
+        THREE("3", true),
+        FOUR("4", true),
+        FIVE("5", true),
+        SIX("6", true),
+        SEVEN("7", true),
+        EIGHT("8", true),
+        NINE("9", true);
 
         private final String name;
+        private final boolean number;
 
-        private SampleNameDelimetersEnum(String name) {
+        private SampleNameDelimetersEnum(String name, boolean isNumeric) {
             this.name = name;
+            this.number = isNumeric;
         }
 
         public String getName() {
             return name;
+        }
+
+        /**
+         * @return the number
+         */
+        public boolean isNumber() {
+            return number;
         }
 
         public static String[] names() {

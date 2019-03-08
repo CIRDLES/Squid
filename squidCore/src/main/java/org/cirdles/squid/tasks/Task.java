@@ -40,6 +40,7 @@ import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.URANIUM;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.exceptions.SquidException;
@@ -493,7 +494,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         Collections.sort(taskExpressionsOrdered);
     }
 
-    private void generateMapOfUnknownsBySampleNames() {
+    public void generateMapOfUnknownsBySampleNames() {
         Comparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
         mapOfUnknownsBySampleNames = new TreeMap<>(intuitiveStringComparator);
         // walk chosen sample names (excluding reference materials) and get list of spots belonging to each
@@ -561,7 +562,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         StringBuilder summary = new StringBuilder();
 
         summary.append(" ")
-                .append("Prawn Source File provides ")
+                .append("Data Source File provides ")
                 .append(String.valueOf(squidSpeciesModelList.size()))
                 .append(" Species:");
 
@@ -574,7 +575,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append("\n\n ")
                 .append("Task File specifies ")
                 .append(String.valueOf(nominalMasses.size()))
-                .append(" Masses matching Species found in Prawn file:");
+                .append(" Masses matching Species found in Data file:");
 
         summary.append("\n      ");
         for (int i = 0; i < nominalMasses.size(); i++) {
@@ -623,20 +624,22 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 .append(String.valueOf(unknownSpots.size()))
                 .append(" Unknown Spots");
 
-        if (mapOfUnknownsBySampleNames.isEmpty()) {
-            summary.append(". Individual samples not yet identified - see PrawnFile Menu");
+        if (mapOfUnknownsBySampleNames.size() <= 1) {
+            summary.append(". Individual samples not yet identified - see Data Menu");
         } else {
             summary.append(", organized into these samples:");
         }
 
         for (String sampleName : mapOfUnknownsBySampleNames.keySet()) {
-            summary.append("\n\t")
-                    .append("\"")
-                    .append(sampleName)
-                    .append("\"")
-                    .append("\t with ")
-                    .append(mapOfUnknownsBySampleNames.get(sampleName).size())
-                    .append(" spot").append(mapOfUnknownsBySampleNames.get(sampleName).size() > 1 ? "s" : "");
+            if (sampleName.compareTo(UNKNOWN.getPlotType()) != 0) {
+                summary.append("\n\t")
+                        .append("\"")
+                        .append(sampleName)
+                        .append("\"")
+                        .append("\t with ")
+                        .append(mapOfUnknownsBySampleNames.get(sampleName).size())
+                        .append(" spot").append(mapOfUnknownsBySampleNames.get(sampleName).size() > 1 ? "s" : "");
+            }
         }
 
         int count = 0;
@@ -1953,7 +1956,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         List<Boolean> showEdge = new ArrayList<>();
         showEdge.add(true);
-        return "Graph of required expressions - NEEDED BY: \n\n" 
+        return "Graph of required expressions - NEEDED BY: \n\n"
                 + exp.getName() + "\n"
                 + printDependencyGraph(requiresExpressionsGraph.get(exp.getName()), 1, showEdge, requiresExpressionsGraph, "|-> ");
     }
@@ -1966,7 +1969,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         List<Boolean> showEdge = new ArrayList<>();
         showEdge.add(true);
-        return "Graph of provided expressions - NEEDING: \n\n" 
+        return "Graph of provided expressions - NEEDING: \n\n"
                 + exp.getName() + "\n"
                 + printDependencyGraph(providesExpressionsGraph.get(exp.getName()), 1, showEdge, providesExpressionsGraph, "|<- ");
     }

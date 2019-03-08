@@ -30,6 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
+import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -43,7 +44,6 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
@@ -53,7 +53,6 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
@@ -335,6 +334,35 @@ public final class SquidProject implements Serializable {
         prawnFileHandler.writeRawDataFileAsXML(prawnFile, fileName);
     }
 
+    /**
+     * First guess using default delimeter
+     */
+    public void autoDivideSamples() {
+        this.filtersForUnknownNames = new HashMap<>();
+        if (task.getShrimpFractions() != null) {
+            boolean delimiterIsNumber = SampleNameDelimetersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
+            for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
+                // determine flavor
+                int delimeterIndex;
+                if (delimiterIsNumber) {
+                    delimeterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
+                } else {
+                    delimeterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
+                }
+
+                String sampleName = ((delimeterIndex == -1) || (fraction.getFractionID().length() < (delimeterIndex - 1)))
+                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimeterIndex);
+                if (filtersForUnknownNames.containsKey(sampleName)) {
+                    filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
+                } else {
+                    filtersForUnknownNames.put(sampleName, 1);
+                }
+            }
+            task.setFiltersForUnknownNames(filtersForUnknownNames);
+            task.generateMapOfUnknownsBySampleNames();
+        }
+    }
+
     // reports
     public File produceReferenceMaterialCSV(boolean numberStyleIsNumeric)
             throws IOException {
@@ -382,6 +410,11 @@ public final class SquidProject implements Serializable {
         return reportTableFile;
     }
 
+    /**
+     * Helper method to prepare for reports by sample
+     *
+     * @return
+     */
     public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySampleName() {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
         List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();

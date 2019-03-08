@@ -667,4 +667,6 @@ public interface TaskInterface {
     public String printExpressionRequiresGraph(Expression exp);
     
     public String printExpressionProvidesGraph(Expression exp);
+    
+     public void generateMapOfUnknownsBySampleNames();
 }

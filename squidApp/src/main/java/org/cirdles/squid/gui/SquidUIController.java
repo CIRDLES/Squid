@@ -393,6 +393,7 @@ public class SquidUIController implements Initializable {
             File opFileNew = FileHandler.selectOPFile(primaryStageWindow);
             if (opFileNew != null) {
                 squidProject.setupPrawnOPFile(opFileNew);
+                squidProject.autoDivideSamples();
                 //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
@@ -423,6 +424,7 @@ public class SquidUIController implements Initializable {
             File prawnSourceFileNew = FileHandler.selectPrawnXMLFile(primaryStageWindow);
             if (prawnSourceFileNew != null) {
                 squidProject.setupPrawnXMLFile(prawnSourceFileNew);
+                squidProject.autoDivideSamples();
                 squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
