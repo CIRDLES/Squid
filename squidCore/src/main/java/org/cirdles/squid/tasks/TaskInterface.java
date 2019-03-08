@@ -664,5 +664,7 @@ public interface TaskInterface {
      */
     public void setDelimiterForUnknownNames(String delimiterForUnknownNames);
 
-    public String printExpressionCallGraph(Expression exp);
+    public String printExpressionRequiresGraph(Expression exp);
+    
+    public String printExpressionProvidesGraph(Expression exp);
 }

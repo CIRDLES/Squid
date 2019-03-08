@@ -17,12 +17,15 @@ package org.cirdles.squid.gui.expressions;
 
 import com.google.common.collect.Lists;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -430,6 +433,22 @@ public class ExpressionBuilderController implements Initializable {
     private final BooleanProperty hasRatioOfInterest = new SimpleBooleanProperty(false);
 
     private final ObjectProperty<Mode> currentMode = new SimpleObjectProperty<>(Mode.EDIT);
+
+    @FXML
+    private void showDependencyGraphsAction(ActionEvent event) {
+        try {
+            Files.write(
+                    Paths.get("DEPENDENCIES.HTML"),
+                    ("<html><pre>"
+                            + task.printExpressionRequiresGraph(selectedExpression.getValue())
+                            + "\n\n"
+                            + task.printExpressionProvidesGraph(selectedExpression.getValue())
+                            + "</pre></html>").getBytes());
+            
+            BrowserControl.showURI("DEPENDENCIES.HTML");
+        } catch (IOException iOException) {
+        }
+    }
 
     private enum Mode {
 
@@ -1487,7 +1506,6 @@ public class ExpressionBuilderController implements Initializable {
         refreshSaved();
     }
 
-    @FXML
     private void howToUseAction(ActionEvent event) {
         BrowserControl.showURI("https://www.youtube.com/playlist?list=PLfF8bcNRe2WTWx2IuDaHW_XpLh36bWkUc");
     }
@@ -2810,9 +2828,6 @@ public class ExpressionBuilderController implements Initializable {
             ((ImageView) auditPane.getGraphic()).setFitWidth(16);
             graphExpressionTree(exp.getExpressionTree());
             populatePeeks(exp);
-
-            // output callgraph temporarily
-            System.out.println(task.printExpressionCallGraph(exp));
 
         } else {
 
