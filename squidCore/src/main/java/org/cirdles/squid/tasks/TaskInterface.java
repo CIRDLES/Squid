@@ -663,4 +663,8 @@ public interface TaskInterface {
      * @param delimiterForUnknownNames the delimiterForUnknownNames to set
      */
     public void setDelimiterForUnknownNames(String delimiterForUnknownNames);
+
+    public String printExpressionRequiresGraph(Expression exp);
+    
+    public String printExpressionProvidesGraph(Expression exp);
 }

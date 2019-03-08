@@ -45,8 +45,10 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsAliased.BUILTIN_EXPRESSION_ALIASEDNAMES;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
 
 /**
@@ -148,7 +150,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
         // make sure summary referes to correct target
         if ((targetBits > 0) && expressionTree.isSquidSwitchSCSummaryCalculation()) {
-            if (expressionTree.isSquidSwitchSTReferenceMaterialCalculation()||expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+            if (expressionTree.isSquidSwitchSTReferenceMaterialCalculation() || expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                 if (targetBits != 2) {
                     targetBits = 3;
                 }
@@ -213,6 +215,36 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         if (excelExpressionString != null) {
             expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
         }
+    }
+
+    /**
+     *
+     * @param expressionName the value of expressionName
+     * @param expressionString the value of expressionString
+     * @param namedExpressionsMap the value of namedExpressionsMap
+     * @return 
+     */
+    public static Expression makeExpressionForAudit(
+            String expressionName, final String expressionString, Map<String, ExpressionTreeInterface> namedExpressionsMap) {
+        Expression exp = new Expression(expressionName, expressionString);
+
+        exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+
+        ExpressionTreeInterface expTree = exp.getExpressionTree();
+
+        expTree.setSquidSwitchSTReferenceMaterialCalculation(true);
+        expTree.setSquidSwitchSAUnknownCalculation(true);
+        expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
+        expTree.setSquidSwitchSCSummaryCalculation(false);
+        expTree.setSquidSpecialUPbThExpression(true);
+        expTree.setUnknownsGroupSampleName(UNKNOWN.getPlotType());
+
+        // to detect ratios of interest
+        if (expTree instanceof BuiltInExpressionInterface) {
+            ((BuiltInExpressionInterface) expTree).buildExpression();
+        }
+
+        return exp;
     }
 
     public String produceExpressionTreeAudit() {
@@ -301,10 +333,12 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public String buildShortSignatureString() {
         StringBuilder signature = new StringBuilder();
         if (((ExpressionTree) expressionTree).isValid()) {
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? SUPERSCRIPT_R_FOR_REFMAT
-                    : ((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation() ? SUPERSCRIPT_C_FOR_CONCREFMAT : SUPERSCRIPT_SPACE);
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? SUPERSCRIPT_U_FOR_UNKNOWN : SUPERSCRIPT_SPACE);
-            signature.append(" ");
+            if (!(referenceMaterialValue || parameterValue)) {
+                signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? SUPERSCRIPT_R_FOR_REFMAT
+                        : ((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation() ? SUPERSCRIPT_C_FOR_CONCREFMAT : SUPERSCRIPT_SPACE);
+                signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? SUPERSCRIPT_U_FOR_UNKNOWN : SUPERSCRIPT_SPACE);
+                signature.append(" ");
+            }
             signature.append(name);
         } else {
             signature.append("  Parsing Error! ").append(name);

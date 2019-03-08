@@ -36,7 +36,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
@@ -57,8 +56,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
-import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 
 /**
  * FXML Controller class
@@ -254,26 +252,14 @@ public class TaskManagerController implements Initializable {
         populateDirectives();
     }
 
+    /**
+     *
+     * @param expressionName
+     * @param expressionString
+     * @return
+     */
     private Expression makeExpression(String expressionName, final String expressionString) {
-        Expression exp = new Expression(expressionName, expressionString);
-
-        exp.parseOriginalExpressionStringIntoExpressionTree(task.getNamedExpressionsMap());
-
-        ExpressionTreeInterface expTree = exp.getExpressionTree();
-
-        expTree.setSquidSwitchSTReferenceMaterialCalculation(true);
-        expTree.setSquidSwitchSAUnknownCalculation(true);
-        expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
-        expTree.setSquidSwitchSCSummaryCalculation(false);
-        expTree.setSquidSpecialUPbThExpression(true);
-        expTree.setUnknownsGroupSampleName(UNKNOWN.getPlotType());
-
-        // to detect ratios of interest
-        if (expTree instanceof BuiltInExpressionInterface) {
-            ((BuiltInExpressionInterface) expTree).buildExpression();
-        }
-
-        return exp;
+        return makeExpressionForAudit(expressionName, expressionString, task.getNamedExpressionsMap());
     }
 
     private void populateDirectives() {
@@ -295,8 +281,7 @@ public class TaskManagerController implements Initializable {
         String UTh_U_ExpressionString = (UTh_U == null) ? UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION : UTh_U.getExcelExpressionString();
         uncorrConstPbUExpressionLabel.setText((perm1 || perm2 || perm4) ? UTh_U_ExpressionString : "Not Used");
 
-        uncorrConstPbUExpressionLabel.setStyle(
-                uncorrConstPbUExpressionLabel.getStyle()
+        uncorrConstPbUExpressionLabel.setStyle(uncorrConstPbUExpressionLabel.getStyle()
                 + (makeExpression(UNCOR206PB238U_CALIB_CONST, UTh_U_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
@@ -304,8 +289,7 @@ public class TaskManagerController implements Initializable {
         String UTh_Th_ExpressionString = (UTh_Th == null) ? UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION : UTh_Th.getExcelExpressionString();
         uncorrConstPbThExpressionLabel.setText((perm2 || perm3 || perm4) ? UTh_Th_ExpressionString : "Not Used");
 
-        uncorrConstPbThExpressionLabel.setStyle(
-                uncorrConstPbThExpressionLabel.getStyle()
+        uncorrConstPbThExpressionLabel.setStyle(uncorrConstPbThExpressionLabel.getStyle()
                 + (makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         th232U238Label.setText(TH_U_EXP_RM + ":");
@@ -313,16 +297,14 @@ public class TaskManagerController implements Initializable {
         String thU_ExpressionString = (thU == null) ? TH_U_EXP_DEFAULT_EXPRESSION : thU.getExcelExpressionString();
         th232U238ExpressionLabel.setText((perm1 || perm3) ? thU_ExpressionString : "Not Used");
 
-        th232U238ExpressionLabel.setStyle(
-                th232U238ExpressionLabel.getStyle()
+        th232U238ExpressionLabel.setStyle(th232U238ExpressionLabel.getStyle()
                 + (makeExpression(TH_U_EXP_DEFAULT, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
         Expression parentPPM = task.getExpressionByName(PARENT_ELEMENT_CONC_CONST);
         String parentPPM_ExpressionString = (parentPPM == null) ? PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION : parentPPM.getExcelExpressionString();
         parentConcExpressionLabel.setText(parentPPM_ExpressionString);
-        parentConcExpressionLabel.setStyle(
-                parentConcExpressionLabel.getStyle()
+        parentConcExpressionLabel.setStyle(parentConcExpressionLabel.getStyle()
                 + (makeExpression(PARENT_ELEMENT_CONC_CONST, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
     }
 

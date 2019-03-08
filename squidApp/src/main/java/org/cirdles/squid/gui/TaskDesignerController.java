@@ -94,6 +94,7 @@ import org.cirdles.squid.tasks.taskDesign.TaskDesign9Mass;
 import org.cirdles.squid.tasks.taskDesign.TaskDesignBlank;
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 
 /**
  * FXML Controller class
@@ -645,26 +646,14 @@ public class TaskDesignerController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param expressionName
+     * @param expressionString
+     * @return
+     */
     private Expression makeExpression(String expressionName, final String expressionString) {
-        Expression exp = new Expression(expressionName, expressionString);
-
-        exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-
-        ExpressionTreeInterface expTree = exp.getExpressionTree();
-
-        expTree.setSquidSwitchSTReferenceMaterialCalculation(true);
-        expTree.setSquidSwitchSAUnknownCalculation(true);
-        expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
-        expTree.setSquidSwitchSCSummaryCalculation(false);
-        expTree.setSquidSpecialUPbThExpression(true);
-        expTree.setUnknownsGroupSampleName(UNKNOWN.getPlotType());
-
-        // to detect ratios of interest
-        if (expTree instanceof BuiltInExpressionInterface) {
-            ((BuiltInExpressionInterface) expTree).buildExpression();
-        }
-
-        return exp;
+        return makeExpressionForAudit(expressionName, expressionString, namedExpressionsMap);
     }
 
     private void setUpParametersModelsComboBoxes() {
