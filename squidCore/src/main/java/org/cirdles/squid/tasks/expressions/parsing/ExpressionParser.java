@@ -216,7 +216,12 @@ public class ExpressionParser {
         return expParent;
     }
 
-    private ExpressionTreeInterface walkTree(String token, ExpressionTreeInterface myExp) {
+    private ExpressionTreeInterface walkTree(String myToken, ExpressionTreeInterface myExp) {
+        String token = myToken.trim();
+        // remove spaces from token if not of the form '["name"]' since we allow spaces in names
+        if (!token.startsWith("[")) {
+            token = token.replaceAll(" ", "");
+        }
         TokenTypes tokenType = TokenTypes.getType(token);
         ExpressionTreeInterface exp = myExp;
         int index = 0;

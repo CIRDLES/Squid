@@ -159,10 +159,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         if (fractionTypeSelected.compareTo(SpotTypes.UNKNOWN) == 0) {
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getUnknownSpots();
             mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
-            // case of no sample names chosen
-            if (mapOfSpotsBySampleNames.isEmpty()) {
-                mapOfSpotsBySampleNames.put(SpotTypes.UNKNOWN.getPlotType(), allUnknownOrRefMatShrimpFractions);
-            } else {
+            // case of sample names chosen
+            if (mapOfSpotsBySampleNames.size() > 1) {
                 mapOfSpotsBySampleNames.remove(SpotTypes.UNKNOWN.getPlotType());
             }
         } else {
@@ -329,20 +327,23 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     @Override
     public void refreshPlot() {
-        topsoilPlotNode = plot.displayPlotAsNode();
-        plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
-        AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+        try {
+            topsoilPlotNode = plot.displayPlotAsNode();
+            plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
+            AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+            
+            VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
+            VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
+            VBox.setVgrow(plotVBox, Priority.NEVER);//ALWAYS);
 
-        VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
-        VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
-        VBox.setVgrow(plotVBox, Priority.NEVER);//ALWAYS);
-
-        plotToolBar.getItems().clear();
-        plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
-        plotToolBar.setPadding(Insets.EMPTY);
+            plotToolBar.getItems().clear();
+            plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
+            plotToolBar.setPadding(Insets.EMPTY);
+        } catch (Exception e) {
+        }
     }
 
     @Override

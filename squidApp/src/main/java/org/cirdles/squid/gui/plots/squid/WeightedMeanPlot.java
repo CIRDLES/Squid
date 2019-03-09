@@ -405,13 +405,16 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
 
-        // force y to tics
-        minY = ticsY[0].doubleValue();
-        maxY = ticsY[ticsY.length - 1].doubleValue();
-        // adjust margins
-        double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);
-        minY -= yMarginStretch;
-        maxY += yMarginStretch;
+        // check for no data
+        if (ticsY != null) {
+            // force y to tics
+            minY = ticsY[0].doubleValue();
+            maxY = ticsY[ticsY.length - 1].doubleValue();
+            // adjust margins
+            double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);
+            minY -= yMarginStretch;
+            maxY += yMarginStretch;
+        }
     }
 
     private void setupSpotInWMContextMenu() {
