@@ -2720,8 +2720,8 @@ public class ExpressionBuilderController implements Initializable {
                                 + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
                                         + (expTree.isSquidSwitchSTReferenceMaterialCalculation()? "R" : "")
                                         + (expTree.isSquidSwitchSAUnknownCalculation()? "U" : "")
-                                        + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation()? "Summary, " : "")
-                                        + (ex.isSquidSwitchNU()? "NU-switched, " : "")
+                                        + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation()? "Summary " : "")
+                                        + (ex.isSquidSwitchNU()? "NU-switched " : "")
                                         + (expTree.isSquidSpecialUPbThExpression()? "Built-In" : "")
                                 + "\n\nExpression string: "
                                 + ex.getExcelExpressionString()
