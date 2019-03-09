@@ -1,11 +1,12 @@
 package org.cirdles.squid.tasks.expressions;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import org.antlr.v4.misc.MutableInt;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.scilab.forge.jlatexmath.TeXFormula;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.xml.transform.Source;
@@ -19,8 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
-import org.antlr.v4.misc.MutableInt;
-import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
+import java.util.List;
 
 public class ExpressionPublisher {
 
@@ -125,89 +125,103 @@ public class ExpressionPublisher {
                 + "<h3>Notes:</h3><p style=\"page-break-after: always\">" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n";
     }
 
+    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions) {
+        return createHTMLDocumentFromExpressions(file, expressions, null);
+    }
+
     public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions, Integer[] widths) {
-        boolean enterWidths = widths != null;
+        if (file != null && expressions != null) {
+            boolean enterWidths = widths != null;
 
-        StringBuilder string = new StringBuilder();
-        string.append(getStartHTML());
+            StringBuilder string = new StringBuilder();
+            string.append(getStartHTML());
 
-        File imageFolder = new File("expressionsImages");
-        imageFolder.mkdir();
+            File imageFolder = new File(file.getAbsolutePath() + "ExpressionsImages");
+            imageFolder.mkdir();
 
-        for (int i = 0; i < expressions.size(); i++) {
-            Expression exp = expressions.get(i);
+            for (int i = 0; i < expressions.size(); i++) {
+                Expression exp = expressions.get(i);
+                BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
+                File imageFile = new File(imageFolder.getPath() + File.separator + FileNameFixer.fixFileName(exp.getName()) + ".png");
+                boolean imageCreated;
+                try {
+                    ImageIO.write(image, "png", imageFile);
+                    if (enterWidths) {
+                        widths[i] = image.getWidth();
+                    }
+                    imageCreated = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    imageCreated = false;
+                }
+                string.append(getExpressionTopHTML(exp));
+                if (imageCreated) {
+                    string.append("<img src=\"" + imageFile.getPath().replaceAll("\\\\", "/") + "\" alt=\"Image not available\" "
+                            + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
+                            + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
+                }
+                string.append(getExpressionBottomHTML(exp));
+            }
+            string.append(getEndHTML());
+
+            boolean worked;
+            try {
+                PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+                writer.write(string.toString());
+                writer.flush();
+                worked = true;
+            } catch (IOException e) {
+                worked = false;
+            }
+            return worked;
+        }
+        return false;
+    }
+
+    public static boolean createHTMLDocumentFromExpression(File file, Expression exp) {
+        return createHTMLDocumentFromExpression(file, exp, null);
+    }
+
+    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, MutableInt width) {
+        if (file != null && exp != null) {
             BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
-            File imageFile = new File(imageFolder.getPath() + File.separator + FileNameFixer.fixFileName(exp.getName()) + ".png");
+            File imageFile = new File(file.getAbsolutePath() + FileNameFixer.fixFileName(exp.getName()) + ".png");
             boolean imageCreated;
             try {
                 ImageIO.write(image, "png", imageFile);
-                if (enterWidths) {
-                    widths[i] = image.getWidth();
+                if (width != null) {
+                    width.v = image.getWidth();
                 }
                 imageCreated = true;
             } catch (IOException e) {
                 e.printStackTrace();
                 imageCreated = false;
             }
+            StringBuilder string = new StringBuilder();
+            string.append(getStartHTML());
+
             string.append(getExpressionTopHTML(exp));
             if (imageCreated) {
-                string.append("<img src=\"" + imageFile.getPath().replaceAll("\\\\", "/") + "\" alt=\"Image not available\" "
+                string.append("<img src=\"" + imageFile.getPath() + "\" alt=\"Image not available\" "
                         + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                         + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
             }
             string.append(getExpressionBottomHTML(exp));
-        }
-        string.append(getEndHTML());
 
-        boolean worked;
-        try {
-            PrintWriter writer = new PrintWriter(new FileOutputStream(file));
-            writer.write(string.toString());
-            writer.flush();
-            worked = true;
-        } catch (IOException e) {
-            worked = false;
-        }
-        return worked;
-    }
+            string.append(getEndHTML());
 
-    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, MutableInt width) {
-        BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
-        File imageFile = new File(FileNameFixer.fixFileName(exp.getName()) + ".png");
-        boolean imageCreated;
-        try {
-            ImageIO.write(image, "png", imageFile);
-            if (width != null) {
-                width.v = image.getWidth();
+            boolean worked;
+            try {
+                PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+                writer.write(string.toString());
+                writer.flush();
+                worked = true;
+            } catch (IOException e) {
+                worked = false;
             }
-            imageCreated = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            imageCreated = false;
+            return worked;
         }
-        StringBuilder string = new StringBuilder();
-        string.append(getStartHTML());
-
-        string.append(getExpressionTopHTML(exp));
-        if (imageCreated) {
-            string.append("<img src=\"" + imageFile.getPath() + "\" alt=\"Image not available\" "
-                    + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
-                    + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
-        }
-        string.append(getExpressionBottomHTML(exp));
-
-        string.append(getEndHTML());
-
-        boolean worked;
-        try {
-            PrintWriter writer = new PrintWriter(new FileOutputStream(file));
-            writer.write(string.toString());
-            writer.flush();
-            worked = true;
-        } catch (IOException e) {
-            worked = false;
-        }
-        return worked;
+        return false;
     }
 
     public static boolean createPDFFromExpressions(File file, List<Expression> expressions) {
@@ -250,7 +264,7 @@ public class ExpressionPublisher {
                 PdfRendererBuilder builder = new PdfRendererBuilder();
                 double actualWidth = width.v / IMAGE_DPI + .5;
                 builder.useDefaultPageSize((actualWidth > PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH)
-                        ? (float) actualWidth : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH,
+                                ? (float) actualWidth : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH,
                         PdfRendererBuilder.PAGE_SIZE_LETTER_HEIGHT, PdfRendererBuilder.PageSizeUnits.INCHES);
                 builder.withFile(htmlFile);
                 builder.toStream(os);

@@ -33,7 +33,9 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
+import org.cirdles.squid.tasks.expressions.functions.Exp;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
+import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.xml.sax.SAXException;
@@ -366,6 +368,15 @@ public class FileHandler {
         fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
         return fileChooser.showSaveDialog(ownerWindow);
+    }
+
+    public static File saveExpressionHTMLFile(Expression exp, Window ownerWindow) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save Expression HTML File '.html");
+        fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression HTML Files", "*.html"));
+        fc.setInitialFileName(FileNameFixer.fixFileName(exp.getName() + ".html"));
+
+        return fc.showSaveDialog(ownerWindow);
     }
 
     public static File selectOPFile(Window ownerWindow) throws IOException {
