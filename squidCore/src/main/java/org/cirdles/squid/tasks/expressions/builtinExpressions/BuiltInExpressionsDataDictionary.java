@@ -28,9 +28,9 @@ public class BuiltInExpressionsDataDictionary {
     // **********************  REQUIRED   **************************************
     public static final String DEFAULT_BACKGROUND_MASS_LABEL = "BKG";
 
-    public static List<String> REQUIRED_NOMINAL_MASSES
+    public static final List<String> REQUIRED_NOMINAL_MASSES
             = new ArrayList<>(Arrays.asList(new String[]{"204", "206", "207", "208"}));
-    public static List<String> REQUIRED_RATIO_NAMES
+    public static final List<String> REQUIRED_RATIO_NAMES
             = new ArrayList<>(Arrays.asList(new String[]{"204/206", "207/206", "208/206"}));
 
     // **********************  SPECIAL CONSTANTS ******************************

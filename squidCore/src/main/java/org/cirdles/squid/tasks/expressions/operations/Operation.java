@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -294,12 +295,12 @@ public abstract class Operation
      */
     @Override
     public String[][] getLabelsForOutputValues() {
-        return labelsForOutputValues;
+        return  clone2dArray(labelsForOutputValues);
     }
     
     @Override
     public String[] getLabelsForInputValues() {
-        return labelsForInputValues;
+        return labelsForInputValues.clone();
     }
 
     @Override

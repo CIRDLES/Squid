@@ -176,9 +176,7 @@ public class WtdMeanACalc extends Function {
                 + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 
@@ -224,8 +222,8 @@ public class WtdMeanACalc extends Function {
         // create a double array - selectionArray - that works as a boolean array with 1s for active values and 0s for Large errrejected
         double[] selectionArray = new double[countOfValues];
         // create two index arrays to return rejected indices
-        double[] largeErrRejIndexArray = new double[0];
-        double[] wmErrRejIndexArray = new double[0];
+        double[] largeErrRejIndexArray;
+        double[] wmErrRejIndexArray;
 
         // first get fdNmad of uncertainty column 
         double medianEr = median(oneSigmaPctUnct);

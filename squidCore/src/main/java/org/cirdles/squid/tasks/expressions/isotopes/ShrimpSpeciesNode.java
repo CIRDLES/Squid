@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Objects;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -60,6 +61,27 @@ public class ShrimpSpeciesNode extends ExpressionTree {
         this.squidSwitchSAUnknownCalculation = true;
     }
 
+    @Override
+    public boolean equals(Object obj) {       
+        boolean retVal = false;
+        if (this == obj) {
+            retVal = true;
+        } else if (obj instanceof ShrimpSpeciesNode) {
+            retVal = super.equals(obj);
+        }
+
+        return retVal; 
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.isotopeName);
+        hash = 37 * hash + Objects.hashCode(this.squidSpeciesModel);
+        hash = 37 * hash + Objects.hashCode(this.methodNameForShrimpFraction);
+        return hash;
+    }
+
     public static ShrimpSpeciesNode buildShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel, String methodNameForShrimpFraction) {
         ShrimpSpeciesNode retVal = null;
         if (squidSpeciesModel != null) {
@@ -91,7 +113,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
             }
         } else {
             // Node is top of expressiontree
-            retVal = (squidSpeciesModel instanceof SquidSpeciesModel);
+            retVal = true;
         }
 
         return retVal;

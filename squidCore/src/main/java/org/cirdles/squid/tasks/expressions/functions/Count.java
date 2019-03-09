@@ -16,9 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -32,15 +29,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 @XStreamAlias("Operation")
 public class Count extends Function {
 
-    //private static final long serialVersionUID = -198041668841495965L;
-    private void readObject(
-            ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ObjectStreamClass myObject = ObjectStreamClass.lookup(Class.forName(Count.class.getCanonicalName()));
-        long theSUID = myObject.getSerialVersionUID();
-        //System.out.println("Customized De-serialization of Count " + theSUID);
-    }
+    private static final long serialVersionUID = 7390056042084412479L;
 
     /**
      * Provides the functionality of Excel's count and returns "count" and
@@ -94,9 +83,7 @@ public class Count extends Function {
                 + "<mi>count</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 
