@@ -444,7 +444,7 @@ public class ExpressionBuilderController implements Initializable {
                             + "\n\n"
                             + task.printExpressionProvidesGraph(selectedExpression.getValue())
                             + "</pre></html>").getBytes());
-            
+
             BrowserControl.showURI("DEPENDENCIES.HTML");
         } catch (IOException iOException) {
         }
@@ -1433,9 +1433,12 @@ public class ExpressionBuilderController implements Initializable {
             AnchorPane.setLeftAnchor(expressionScrollPane, 0.0);
             expressionAsTextBtn.setText("Edit as text");
 
-            //Rebuild because CSS doesnt apply
+            //Rebuild because CSS doesn't apply
             expressionTextFlow.getChildren().clear();
-            makeTextFlowFromString(expressionString.get());
+            // remove spurious spaces from [expr]__[n] and expr  [n] ==> [][]
+            String expression = expressionString.get();
+            expression = expression.replaceAll("( )*\\[", "[");
+            makeTextFlowFromString(expression);
         }
     }
 
@@ -2286,8 +2289,10 @@ public class ExpressionBuilderController implements Initializable {
 
         // provide special modification for uncertainty
         if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode)
-                && etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\]( )*(\\[\\d\\]( )*)?$")) {
-            String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\]( )*(\\[\\d\\]( )*)?)", "");
+                && (etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\]( )*(\\[\\d\\]( )*)?$")
+                || etn.getText().trim().matches("^(\\[(±?)(%?)\")?[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*(\"\\])?( )*(\\[\\d\\]( )*)?$"))) {
+
+            String text = etn.getText().trim().replaceAll("(^(\\[(±?)(%?)\\\")?)|((\\\"\\])?( )*(\\[\\d\\]( )*)?)", "");
             Expression ex = task.getExpressionByName(text);
             if (((ex != null)
                     && (!ex.getExpressionTree().isSquidSwitchSCSummaryCalculation())
@@ -2296,7 +2301,7 @@ public class ExpressionBuilderController implements Initializable {
                     || task.getRatioNames().contains(text)) {
                 MenuItem menuItem1 = new MenuItem("1 \u03C3 (%)");
                 menuItem1.setOnAction((evt) -> {
-                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[%\""));
+                    ExpressionTextNode etn2 = new ExpressionTextNode("[%\"" + text + "\"]");//    etn.getText().trim().replaceAll("\\[(±?)(%?)\"", "[%\""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
                     expressionTextFlow.getChildren().remove(etn);
                     expressionTextFlow.getChildren().add(etn2);
@@ -2304,7 +2309,7 @@ public class ExpressionBuilderController implements Initializable {
                 });
                 MenuItem menuItem2 = new MenuItem("1 \u03C3 abs (±)");
                 menuItem2.setOnAction((evt) -> {
-                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[±\""));
+                    ExpressionTextNode etn2 = new ExpressionTextNode("[±\"" + text + "\"]");//    etn.getText().trim().replaceAll("\\[(±?)(%?)\"", "[±\""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
                     expressionTextFlow.getChildren().remove(etn);
                     expressionTextFlow.getChildren().add(etn2);
@@ -2312,7 +2317,7 @@ public class ExpressionBuilderController implements Initializable {
                 });
                 MenuItem menuItem3 = new MenuItem("Use value");
                 menuItem3.setOnAction((evt) -> {
-                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText().replaceAll("\\[(±?)(%?)\"", "[\""));
+                    ExpressionTextNode etn2 = new ExpressionTextNode("[\"" + text + "\"]");//    etn.getText().trim().replaceAll("\\[(±?)(%?)\"", "[\""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
                     expressionTextFlow.getChildren().remove(etn);
                     expressionTextFlow.getChildren().add(etn2);
@@ -2324,8 +2329,9 @@ public class ExpressionBuilderController implements Initializable {
 
         // provide special modification for array access for summary expressions
         if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode)
-                && etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\]( )*(\\[\\d\\]( )*)?$")) {
-            String text = etn.getText().trim().replaceAll("(^\\[(±?)(%?)\")|(\"\\]( )*(\\[\\d\\]( )*)?)", "");
+                && (etn.getText().trim().matches("^\\[(±?)(%?)\"(.*)\"\\]( )*(\\[\\d\\]( )*)?$")
+                || etn.getText().trim().matches("^(\\[(±?)(%?)\")?[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*(\"\\])?( )*(\\[\\d\\]( )*)?$"))) {
+            String text = etn.getText().trim().replaceAll("(^(\\[(±?)(%?)\\\")?)|((\\\"\\])?( )*(\\[\\d\\]( )*)?)", "");
             Expression ex = task.getExpressionByName(text);
             if (((ex != null) && (ex.getExpressionTree().isSquidSwitchSCSummaryCalculation()))) {
                 String[] outputLabels
@@ -2335,8 +2341,9 @@ public class ExpressionBuilderController implements Initializable {
                     final int ii = i;
                     MenuItem menuItemI = new MenuItem("[" + ii + "] = " + outputLabels[ii]);
                     menuItemI.setOnAction((evt) -> {
-                        ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText()
-                                .replaceAll("(\"\\]( )*(\\[\\d\\])?)", "\"\\]\\[" + ii + "\\]"));
+                        String placeHolder = etn.getText().trim().replaceAll("(\\[\\d\\]( )*)?", "").trim() + "&";
+                        ExpressionTextNode etn2 = new ExpressionTextNode(placeHolder
+                                .replaceAll("(\\&( )*(\\[\\d\\])?)", "\\[" + ii + "\\]"));
                         etn2.setOrdinalIndex(etn.getOrdinalIndex());
                         expressionTextFlow.getChildren().remove(etn);
                         expressionTextFlow.getChildren().add(etn2);
@@ -2347,8 +2354,9 @@ public class ExpressionBuilderController implements Initializable {
 
                 MenuItem menuItemN = new MenuItem("None - same as '[0]'");
                 menuItemN.setOnAction((evt) -> {
-                    ExpressionTextNode etn2 = new ExpressionTextNode(etn.getText()
-                            .replaceAll("(\"\\]( )*(\\[\\d\\])?)", "\"\\]"));
+                    String placeHolder = etn.getText().trim().replaceAll("(\\[\\d\\]( )*)?", "").trim() + "&";
+                    ExpressionTextNode etn2 = new ExpressionTextNode(placeHolder
+                            .replaceAll("\\&", ""));
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
                     expressionTextFlow.getChildren().remove(etn);
                     expressionTextFlow.getChildren().add(etn2);
@@ -2356,7 +2364,7 @@ public class ExpressionBuilderController implements Initializable {
                 });
 
                 menuItems[outputLabels.length] = menuItemN;
-                itemsForThisNode.add(new Menu("Select summary value by index ...", null, menuItems));
+                itemsForThisNode.add(new Menu("Select summary statistic by index ...", null, menuItems));
             }
         }
 
@@ -2381,7 +2389,7 @@ public class ExpressionBuilderController implements Initializable {
 
         // For numbers -> make an editable node
         if (etn instanceof NumberTextNode) {
-            TextField editText = new TextField(etn.getText());
+            TextField editText = new TextField(etn.getText().trim());
             editText.setPrefWidth((editText.getText().trim().length() + 2) * editText.getFont().getSize());
             editText.textProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
                 editText.setPrefWidth((editText.getText().trim().length() + 2) * editText.getFont().getSize());
@@ -2704,9 +2712,17 @@ public class ExpressionBuilderController implements Initializable {
                     //case expression
                     if (ex != null) {
                         boolean isCustom = ex.isCustom();
+                        ExpressionTreeInterface expTree = ex.getExpressionTree();
                         tooltip = new Tooltip(
                                 (isCustom ? "Custom expression: " : "Expression: ")
                                 + "  " + ex.getName()
+                                + "\n  Targets: "
+                                + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
+                                        + (expTree.isSquidSwitchSTReferenceMaterialCalculation()? "R" : "")
+                                        + (expTree.isSquidSwitchSAUnknownCalculation()? "U" : "")
+                                        + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation()? "Summary, " : "")
+                                        + (ex.isSquidSwitchNU()? "NU-switched, " : "")
+                                        + (expTree.isSquidSpecialUPbThExpression()? "Built-In" : "")
                                 + "\n\nExpression string: "
                                 + ex.getExcelExpressionString()
                                 + "\n"
@@ -2904,7 +2920,10 @@ public class ExpressionBuilderController implements Initializable {
 
     private void save() {
         //Saves the newly built expression
-        Expression exp = makeExpression(expressionNameTextField.getText(), expressionString.get());
+        // remove spurious spaces from [expr]__[n] and expr  [n] ==> [][]
+        String expression = expressionString.get();
+        expression = expression.replaceAll("( )*\\[", "[");
+        Expression exp = makeExpression(expressionNameTextField.getText(), expression);
         //Remove if an expression already exists with the same name
         task.removeExpression(exp, true);
         //Removes the old expression if the name has been changed
@@ -3733,7 +3752,7 @@ public class ExpressionBuilderController implements Initializable {
         }
     }
 
-// this node signals user can edit in context menu
+    // this node signals user can edit in context menu
     private class NumberTextNode extends ExpressionTextNode {
 
         public NumberTextNode(String text) {

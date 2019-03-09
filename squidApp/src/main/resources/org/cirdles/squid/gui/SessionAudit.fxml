@@ -20,7 +20,7 @@
       <HBox alignment="BASELINE_LEFT" prefHeight="35.0" prefWidth="1200.0" spacing="20.0">
          <children>
             <Label style="-fx-font-size: 16; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="Session Spot Name Audit" translateY="2.0" />
-            <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#duplicatesChecked" prefHeight="18.0" prefWidth="575.0" style="-fx-font-family: SansSerif; -fx-font-weight: norma;;" text="Display Duplicates Only: note that spot name duplicates are suffixed with '-DUP-n'" textFill="#ee3704" />
+            <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#duplicatesChecked" prefHeight="18.0" prefWidth="575.0" style="-fx-font-family: SansSerif; -fx-font-weight: normal;" text="Display Duplicates Only: note that spot name duplicates are suffixed with '-DUP-n'" textFill="#ee3704" />
          </children>
          <padding>
             <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
