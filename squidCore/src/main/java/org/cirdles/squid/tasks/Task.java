@@ -1294,6 +1294,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setupSquidSessionSpecsAndReduceAndReport();
     }
 
+    @Override
     public void applyTaskIsotopeLabelsToMassStations() {
         int index = 0;
         for (SquidSpeciesModel ssm : squidSpeciesModelList) {

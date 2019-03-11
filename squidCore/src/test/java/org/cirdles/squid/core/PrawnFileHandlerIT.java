@@ -151,7 +151,7 @@ public class PrawnFileHandlerIT {
                 .put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
         squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
 
-        ((Task) squidProjectZ6266.getTask()).applyTaskIsotopeLabelsToMassStations();
+        squidProjectZ6266.getTask().applyTaskIsotopeLabelsToMassStations();
     }
 
     /**
