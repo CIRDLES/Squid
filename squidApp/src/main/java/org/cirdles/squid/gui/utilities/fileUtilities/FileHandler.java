@@ -73,7 +73,7 @@ public class FileHandler {
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
         File initDirectory = new File(squidPersistentState.getMRUProjectFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
-        fileChooser.setInitialFileName(squidProject.getProjectName().toUpperCase(Locale.US) + ".squid");
+        fileChooser.setInitialFileName(squidProject.getProjectName().toUpperCase(Locale.ENGLISH) + ".squid");
 
         File projectFileNew = fileChooser.showSaveDialog(ownerWindow);
 
@@ -144,7 +144,7 @@ public class FileHandler {
         if (squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder().exists()) {
             fileChooser.setInitialDirectory(squidProject.getPrawnFileHandler().currentPrawnFileLocationFolder());
         }
-        fileChooser.setInitialFileName(squidProject.getPrawnSourceFileName().toUpperCase(Locale.US).replace(".XML", "-REV.xml"));
+        fileChooser.setInitialFileName(squidProject.getPrawnSourceFileName().toUpperCase(Locale.ENGLISH).replace(".XML", "-REV.xml"));
 
         File prawnXMLFileNew = fileChooser.showSaveDialog(ownerWindow);
 

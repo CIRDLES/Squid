@@ -17,6 +17,8 @@ package org.cirdles.squid.tasks.expressions.operations;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -54,9 +56,9 @@ public class Equal extends Operation {
 
         boolean retVal;
         try {
-            retVal = (double)childrenET.get(0).eval(shrimpFractions, task)[0][0]
-                    == (double)childrenET.get(1).eval(shrimpFractions, task)[0][0];
-        } catch (Exception e) {
+            retVal = Math.abs((double) childrenET.get(0).eval(shrimpFractions, task)[0][0]
+                    - (double) childrenET.get(1).eval(shrimpFractions, task)[0][0]) < SQUID_TINY_VALUE;
+        } catch (NullPointerException | SquidException e) {
             retVal = false;
         }
         return new Object[][]{{retVal}};

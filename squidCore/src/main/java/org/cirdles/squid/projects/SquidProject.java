@@ -462,13 +462,13 @@ public final class SquidProject implements Serializable {
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
             String spotName = runs.get(i).getPar().get(0).getValue().trim();
-            String spotNameKey = spotName.toUpperCase(Locale.US);
+            String spotNameKey = spotName.toUpperCase(Locale.ENGLISH);
             // remove existing duplicate label in case editing occurred
             int indexDUP = spotName.indexOf("-DUP");
             if (indexDUP > 0) {
                 runs.get(i).getPar().get(0).setValue(spotName.substring(0, spotName.indexOf("-DUP")));
                 spotName = runs.get(i).getPar().get(0).getValue();
-                spotNameKey = spotName.toUpperCase(Locale.US);
+                spotNameKey = spotName.toUpperCase(Locale.ENGLISH);
             }
             if (spotNameCountMap.containsKey(spotNameKey)) {
                 int count = spotNameCountMap.get(spotNameKey);

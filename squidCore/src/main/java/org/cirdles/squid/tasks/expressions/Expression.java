@@ -278,7 +278,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
             auditReport
                     += "Expression healthy: "
-                    + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.US);
+                    + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.ENGLISH);
             if (argumentAudit.size() > 0) {
                 auditReport += "\nAudit:\n";
                 for (String audit : argumentAudit) {
@@ -489,7 +489,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public boolean isAgeExpression() {
-        return name.toUpperCase().contains("AGE");
+        return name.toUpperCase(Locale.ENGLISH).contains("AGE");
     }
 
     public boolean aliasedExpression() {

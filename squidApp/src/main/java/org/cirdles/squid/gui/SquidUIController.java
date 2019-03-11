@@ -539,7 +539,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void customizeDataMenu() {
-        boolean opSourceFile = squidProject.getPrawnSourceFileName().toUpperCase().endsWith(".OP");
+        boolean opSourceFile = squidProject.getPrawnSourceFileName().toUpperCase(Locale.ENGLISH).endsWith(".OP");
 
         auditRawDataMenuItem.setVisible(!opSourceFile);
         savePrawnFileCopyMenuItem.setVisible(!opSourceFile);

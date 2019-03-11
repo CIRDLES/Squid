@@ -29,7 +29,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -381,6 +383,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         allRatios.addAll(ratioNames);
         ratioNames = allRatios;
         Collections.sort(ratioNames);
+
+        setChanged(true);
+        generateConstants();
+        generateParameters();
+        generateSpotLookupFields();
+
+        // first pass
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport();
     }
 
     @Override
@@ -415,9 +426,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         List<String> myNominalMasses = new ArrayList<>();
         myNominalMasses.addAll(nominalMasses);
         myNominalMasses.removeAll(REQUIRED_NOMINAL_MASSES);
-        try {
+        if (indexOfBackgroundSpecies >= 0 && indexOfBackgroundSpecies < myNominalMasses.size()) {
             myNominalMasses.remove(indexOfBackgroundSpecies - 1);
-        } catch (Exception e) {
         }
         myNominalMasses.add(DEFAULT_BACKGROUND_MASS_LABEL);
         taskDesign.setNominalMasses(myNominalMasses);
@@ -456,7 +466,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> generateCommonLeadParameterValues = updateCommonLeadParameterValuesFromModel(commonPbModel);
         taskExpressionsOrdered.addAll(generateCommonLeadParameterValues);
 
-        SortedSet<Expression> generatePhysicalConstantsValues = updatePhysicalConstantsParameterValuesFromModel((PhysicalConstantsModel)physicalConstantsModel);
+        SortedSet<Expression> generatePhysicalConstantsValues = updatePhysicalConstantsParameterValuesFromModel((PhysicalConstantsModel) physicalConstantsModel);
         taskExpressionsOrdered.addAll(generatePhysicalConstantsValues);
 
         SortedSet<Expression> generatePlaceholderExpressions = generatePlaceholderExpressions(parentNuclide, isDirectAltPD());
@@ -494,6 +504,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         Collections.sort(taskExpressionsOrdered);
     }
 
+    @Override
     public void generateMapOfUnknownsBySampleNames() {
         Comparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
         mapOfUnknownsBySampleNames = new TreeMap<>(intuitiveStringComparator);
@@ -753,7 +764,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         if (physicalConstantsModelChanged) {
             SortedSet<Expression> updatedPhysicalConstantsExpressions
-                    = BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel((PhysicalConstantsModel)physicalConstantsModel);
+                    = BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel((PhysicalConstantsModel) physicalConstantsModel);
             Iterator<Expression> updatedPhysicalConstantsExpressionsIterator = updatedPhysicalConstantsExpressions.iterator();
             while (updatedPhysicalConstantsExpressionsIterator.hasNext()) {
                 Expression exp = updatedPhysicalConstantsExpressionsIterator.next();
@@ -1208,8 +1219,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private void updateRefMatCalibConstWMeanExpression(String wmWxpressionName, boolean squidAllowsAutoExclusionOfSpots) {
         Expression wmExp = getExpressionByName(wmWxpressionName);
         wmExp.setExcelExpressionString(wmExp.getExcelExpressionString()
-                .replaceFirst("(?i)" + String.valueOf(squidAllowsAutoExclusionOfSpots).toUpperCase(),
-                        String.valueOf(!squidAllowsAutoExclusionOfSpots).toUpperCase()));
+                .replaceFirst("(?i)" + String.valueOf(squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH),
+                        String.valueOf(!squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH)));
         completeUpdateRefMatCalibConstWMeanExpressions(wmExp);
     }
 
@@ -1350,6 +1361,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    // temporarily de-activated while workflow specs finished
     private void alignTaskMassStationsWithPrawnFile() {
         List<String> matchedNominalMasses = new ArrayList<>();
         boolean[] recordedMatches = new boolean[mapOfIndexToMassStationDetails.size()];
@@ -1404,7 +1416,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return retVal;
     }
 
-    private void buildSquidRatiosModelListFromMassStationDetails() {
+    public void buildSquidRatiosModelListFromMassStationDetails() {
         squidRatiosModelList = new ArrayList<>();
 
         // TODO revise use of this in comparator of squidSpeciesModel
@@ -2401,6 +2413,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the namedSpotLookupFieldsMap
      */
+    @Override
     public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap() {
         return namedSpotLookupFieldsMap;
     }
@@ -2688,6 +2701,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the extPErrTh
      */
+    @Override
     public double getExtPErrTh() {
         return extPErrTh;
     }
@@ -2695,6 +2709,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param extPErrTh the extPErrTh to set
      */
+    @Override
     public void setExtPErrTh(double extPErrTh) {
         this.extPErrTh = extPErrTh;
         if (namedParametersMap.containsKey(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT)) {

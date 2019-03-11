@@ -109,7 +109,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
             if (((ExpressionTree) parentET).getOperation() instanceof ShrimpSpeciesNodeFunction) {
                 retVal = ((ShrimpSpeciesNodeFunction) ((ExpressionTree) parentET).getOperation()).getMethodNameForShrimpFraction().length() > 0;
             } else {
-                retVal = ((squidSpeciesModel instanceof SquidSpeciesModel) && methodNameForShrimpFraction.length() > 0);
+                retVal =  (methodNameForShrimpFraction.length() > 0);
             }
         } else {
             // Node is top of expressiontree

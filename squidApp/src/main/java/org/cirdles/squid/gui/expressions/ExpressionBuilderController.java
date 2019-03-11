@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
@@ -2003,9 +2004,9 @@ public class ExpressionBuilderController implements Initializable {
 
     private String peekDetailsPerSummary(SpotSummaryDetails spotSummary) {
         // context-sensitivity - we use Ma in Squid for display
-        boolean isAge = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("AGE");
-        boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("LAMBDA2");
-        boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase().contains("CONCEN");
+        boolean isAge = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("AGE");
+        boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("LAMBDA2");
+        boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("CONCEN");
 
         String[][] labels = clone2dArray(((ExpressionTree) spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues());
         if (isAge) {
@@ -2097,11 +2098,11 @@ public class ExpressionBuilderController implements Initializable {
         int sigDigits = 15;
 
         // context-sensitivity - we use Ma in Squid for display
-        boolean isAge = expTree.getName().toUpperCase().contains("AGE");
+        boolean isAge = expTree.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
         String contextAgeFieldName = (isAge ? "Age(Ma)" : "Value");
         String contextAge1SigmaAbsName = (isAge ? "1\u03C3Abs(Ma)" : "1\u03C3Abs");
         // or it may be concentration ppm
-        boolean isConcen = expTree.getName().toUpperCase().contains("CONCEN");
+        boolean isConcen = expTree.getName().toUpperCase(Locale.ENGLISH).contains("CONCEN");
         contextAgeFieldName = (isConcen ? "ppm" : contextAgeFieldName);
 
         if (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
