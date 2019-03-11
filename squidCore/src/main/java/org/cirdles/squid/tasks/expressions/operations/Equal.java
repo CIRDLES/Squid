@@ -41,6 +41,7 @@ public class Equal extends Operation {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Predicate"}};
+        definition = "Floating point absolute difference < 1.0E-30";
     }
 
     /**

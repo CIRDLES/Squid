@@ -355,7 +355,7 @@ public interface TaskInterface {
 
     public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions);
 
-    public void applyTaskIsotopeLabelsToMassStations();
+    public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
 
     public void populateTableOfSelectedRatiosFromRatiosList();
 

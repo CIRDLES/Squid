@@ -236,7 +236,7 @@ public class IsotopesManagerController implements Initializable {
 
     @FXML
     private void applyTaskIsotopeLabelsAction(ActionEvent event) {
-        task.applyTaskIsotopeLabelsToMassStations();
+        task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
         postApplicationOfLabelsUpdate();
     }
 

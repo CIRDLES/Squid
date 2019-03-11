@@ -117,7 +117,7 @@ public class PrawnFileHandlerIT {
         // March 2019 remove dependency on Squid25 task for testing of built-ins
         SquidProject.setProjectChanged(true);
         TaskInterface task = new Task("test", prawnFileDataZ6266, prawnFileHandler.getReportsEngine());
-        
+
         task.updateTaskFromTaskDesign(new TaskDesign11Mass());
 
         squidProjectZ6266.setTask(task);
@@ -150,6 +150,8 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
                 .put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
         squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
+
+        ((Task) squidProjectZ6266.getTask()).applyTaskIsotopeLabelsToMassStations();
     }
 
     /**
@@ -232,9 +234,7 @@ public class PrawnFileHandlerIT {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 4cor unknowns.");
 
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().applyTaskIsotopeLabelsToMassStations();
         squidProjectZ6266.getTask().applyDirectives();
-//        squidProjectZ6266.getTask().applyTaskIsotopeLabelsToMassStations();
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
 
