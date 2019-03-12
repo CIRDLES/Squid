@@ -55,7 +55,7 @@ public class SquidPrefixTree {
         this.parent = null;
         this.children = new ArrayList<>();
         this.node = node;
-        this.stringValue = node.getValue().toUpperCase(Locale.US);
+        this.stringValue = node.getValue().toUpperCase(Locale.ENGLISH);
         this.countOfSpecies = 0;
         this.countOfScans = 0;
         this.countOfDups = 0;
@@ -71,7 +71,7 @@ public class SquidPrefixTree {
      */
     public SquidPrefixTree insert(String myWord) {
         SquidPrefixTree target = this;
-        String word = myWord.toUpperCase(Locale.US);
+        String word = myWord.toUpperCase(Locale.ENGLISH);
         boolean hasDupString = containsDupString(word);
         for (int i = 0; i < word.length(); i++) {
             if (!hasDupString) {

@@ -33,7 +33,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 @XStreamAlias("Operation")
 public class Pb76 extends Function {
 
-////    private static final long serialVersionUID = -6711265919551953531L;
+    private static final long serialVersionUID = 5804850944957406185L;
+
     /**
      * Ludwig specifies Return radiogenic 207Pb/206Pb (secular equilibrium). All
      * calculations in annum.
@@ -99,9 +100,7 @@ public class Pb76 extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

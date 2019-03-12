@@ -45,6 +45,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
  * FXML Controller class
@@ -88,7 +89,8 @@ public class SessionAuditController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        sampleNameDelimeter = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName().trim();
+        sampleNameDelimeter = squidProject.getDelimiterForUnknownNames();
+        
         prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         setUpPrawnAuditTreeView(false);
@@ -96,7 +98,7 @@ public class SessionAuditController implements Initializable {
         ObservableList<String> delimetersList = FXCollections.observableArrayList(SampleNameDelimetersEnum.names());
         delimeterComboBox.setItems(delimetersList);
         // set value before adding listener
-        delimeterComboBox.getSelectionModel().select(squidProject.getDelimiterForUnknownNames());
+        delimeterComboBox.getSelectionModel().select(sampleNameDelimeter);
 
         delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
@@ -350,7 +352,7 @@ public class SessionAuditController implements Initializable {
     private void refreshView() {
         prawnAuditTreeCheckBox.refresh();
         if (hasDuplicates) {
-            summaryLabel.setText("  Please remove duplicate spot names");
+            summaryLabel.setText("  Please remove duplicate spot names.");
         } else {
             int totalCount = 0;
             for (String name : workingListOfSelectedNames.keySet()) {

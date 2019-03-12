@@ -319,7 +319,7 @@ public class SpotManagerController implements Initializable {
 
     @FXML
     private void filterSpotNameKeyReleased(KeyEvent event) {
-        filterRuns(filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+        filterRuns(filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
     }
 
     private void filterRuns(String filterString) {
@@ -331,14 +331,14 @@ public class SpotManagerController implements Initializable {
     @FXML
     private void setFilteredSpotsToRefMatAction(ActionEvent event) {
         squidProject.updateFilterForRefMatSpotNames(
-                filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+                filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
         updateReferenceMaterialsList(true);
     }
 
     @FXML
     private void setFilteredSpotsToConcRefMatAction(ActionEvent event) {
         squidProject.updateFilterForConcRefMatSpotNames(
-                filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+                filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
         updateConcReferenceMaterialsList(true);
     }
 

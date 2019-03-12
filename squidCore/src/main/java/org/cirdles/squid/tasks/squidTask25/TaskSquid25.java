@@ -99,7 +99,7 @@ public class TaskSquid25 implements Serializable {
                 int firstRow = Integer.parseInt(lines[1].split("\t")[1]) - 1;
 
                 taskSquid25.squidTaskFileName = lines[firstRow].split("\t")[1];
-                taskSquid25.taskType = TaskTypeEnum.valueOf(lines[firstRow + 1].split("\t")[1].toUpperCase());
+                taskSquid25.taskType = TaskTypeEnum.valueOf(lines[firstRow + 1].split("\t")[1].toUpperCase(Locale.ENGLISH));
                 taskSquid25.taskName = lines[firstRow + 2].split("\t")[1];
                 taskSquid25.taskDescription = lines[firstRow + 3].split("\t")[1];
 
@@ -120,7 +120,7 @@ public class TaskSquid25 implements Serializable {
                 }
 
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
-                if (isSquid2_20 && ratioStrings[0].toUpperCase().startsWith("HIDDEN")) {
+                if (isSquid2_20 && ratioStrings[0].toUpperCase(Locale.ENGLISH).startsWith("HIDDEN")) {
                     // special case of 2.2 where this row exists
                     firstRow++;
                     ratioStrings = lines[firstRow + 15].split("\t");
@@ -216,7 +216,7 @@ public class TaskSquid25 implements Serializable {
                     String excelExpression = prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]);
                     if (excelExpression.length() > 0) {
                         //detect if name contains "Age" or "abs" - undo change to % for errors
-                        if ((equationNames[i + 2].toUpperCase().contains("ABS")) || (equationNames[i + 2].toUpperCase().contains("AGE"))) {
+                        if ((equationNames[i + 2].toUpperCase(Locale.ENGLISH).contains("ABS")) || (equationNames[i + 2].toUpperCase(Locale.ENGLISH).contains("AGE"))) {
                             if (excelExpression.startsWith("[%\"")) {
                                 excelExpression = excelExpression.replaceFirst("\\[%\"", "\\[±\"");
                             }
@@ -344,7 +344,7 @@ public class TaskSquid25 implements Serializable {
         }
 
         // do not include calls to error functions of Age as in AgeErPb76 etc
-        if (excelString.toUpperCase(Locale.US).contains("AGEER")) {
+        if (excelString.toUpperCase(Locale.ENGLISH).contains("AGEER")) {
             retVal = "";
         }
 

@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -196,7 +197,7 @@ public abstract class ParametersModel implements
 
         for (int i = 0; i < values.length; i++) {
             for (int j = i + 1; j < values.length; j++) {
-                String key = "rho" + values[i].getName().substring(0, 1).toUpperCase()
+                String key = "rho" + values[i].getName().substring(0, 1).toUpperCase(Locale.ENGLISH)
                         + values[i].getName().substring(1) + "__" + values[j].getName();
                 rhos.put(key, BigDecimal.ZERO);
             }

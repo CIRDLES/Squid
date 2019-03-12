@@ -23,6 +23,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
  *
@@ -91,7 +92,7 @@ public class SpotSummaryDetails implements Serializable {
      * @param values
      */
     public void setValues(double[][] values) {
-        this.values = values;
+        this.values = clone2dArray(values);
     }
 
     /**
@@ -129,7 +130,7 @@ public class SpotSummaryDetails implements Serializable {
      * @param rejectedIndices the rejectedIndices to set
      */
     public void setRejectedIndices(boolean[] rejectedIndices) {
-        this.rejectedIndices = rejectedIndices;
+        this.rejectedIndices = rejectedIndices.clone();
     }
     
     public void resetRejectedIndices(){

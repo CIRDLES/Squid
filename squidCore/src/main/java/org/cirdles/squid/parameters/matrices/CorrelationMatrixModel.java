@@ -186,7 +186,7 @@ public class CorrelationMatrixModel extends AbstractMatrixModel {
 
 //        if (myMatrix.initializeMatrixModelWithVariances(varianceTerms)) {
 //            ((CorrelationMatrixModel)myMatrix).initializeCoVariances(coVariances);
-//            System.out.println(myMatrix.ToStringWithLabels());
+//            System.out.println(myMatrix.toStringWithLabels());
 //        }
 
 

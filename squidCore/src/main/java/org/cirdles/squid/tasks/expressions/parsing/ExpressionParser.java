@@ -59,8 +59,8 @@ public class ExpressionParser {
     private Map<String, ExpressionTreeInterface> namedExpressionsMap;
     private boolean eqnSwitchNU;
 
-    public ExpressionParser() {
-        this.namedExpressionsMap = new HashMap<>();
+    private ExpressionParser() {
+        this(new HashMap<>());
     }
 
     public ExpressionParser(Map<String, ExpressionTreeInterface> namedExpressionsMap) {

@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" prefHeight="640.0" prefWidth="1357.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" prefHeight="640.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
   <columnConstraints>
     <ColumnConstraints halignment="RIGHT" hgrow="NEVER" percentWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
@@ -39,9 +39,14 @@
     <RowConstraints maxHeight="296.0" minHeight="21.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+      <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="836.0" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
-            <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="548.0" text="Task Designer: Set Defaults for new Tasks" />
+            <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="816.0" text="Task Designer: Set Defaults for new Tasks" />
+            <ToolBar prefHeight="43.0" prefWidth="243.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
+              <items>
+                <Button mnemonicParsing="false" onAction="#newTaskFromThisDesignAction" text="New Task from this Design" />
+              </items>
+            </ToolBar>
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
