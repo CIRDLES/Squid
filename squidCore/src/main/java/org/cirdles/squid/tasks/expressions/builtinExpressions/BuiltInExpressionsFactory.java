@@ -233,7 +233,7 @@ public abstract class BuiltInExpressionsFactory {
         return spotLookupFields;
     }
 
-    public static SortedSet<Expression> updatePhysicalConstantsParameterValuesFromModel(ParametersModel physicalConstantsModel) {
+    public static SortedSet<Expression> updatePhysicalConstantsParameterValuesFromModel(PhysicalConstantsModel physicalConstantsModel) {
         SortedSet<Expression> parameterValues = new TreeSet<>();
 
         String sourceModelNameAndVersion = physicalConstantsModel.getModelNameWithVersion();

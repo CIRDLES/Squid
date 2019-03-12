@@ -54,7 +54,7 @@ public class AgePb76 extends Function {
         colCount = 2;
         labelsForInputValues = new String[]{"[\"207/206\"] (includes Ratio and 1\u03C3abs)"};
         labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}}; 
-        definition = "Uses LudwigLibrary 'pbpbAge' to calcluate age and 1\u03C3abs uncertainty from 207/206 ratio.";
+        definition = "Uses Ludwig Library 'pbpbAge' to calculate age and 1\u03C3abs uncertainty from 207/206 ratio.";
     }
 
     /**
@@ -104,9 +104,7 @@ public class AgePb76 extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

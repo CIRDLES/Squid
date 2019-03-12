@@ -645,8 +645,8 @@ public class ParametersManagerGUIController implements Initializable {
                                 && value.getTablePosition().getColumn() != value.getTablePosition().getRow() + 1) {
                             String colRatio = getRatioHiddenName(value.getTableColumn().getText());
                             String rowRatio = getRatioHiddenName(value.getRowValue().get(0).get());
-                            String key = "rho" + colRatio.substring(0, 1).toUpperCase() + colRatio.substring(1) + "__" + rowRatio;
-                            String reverseKey = "rho" + rowRatio.substring(0, 1).toUpperCase() + rowRatio.substring(1) + "__" + colRatio;
+                            String key = "rho" + colRatio.substring(0, 1).toUpperCase(Locale.ENGLISH) + colRatio.substring(1) + "__" + rowRatio;
+                            String reverseKey = "rho" + rowRatio.substring(0, 1).toUpperCase(Locale.ENGLISH) + rowRatio.substring(1) + "__" + colRatio;
                             model.getRhos().remove(key);
                             model.getRhos().remove(reverseKey);
                             if (Double.parseDouble(newValue) != 0) {

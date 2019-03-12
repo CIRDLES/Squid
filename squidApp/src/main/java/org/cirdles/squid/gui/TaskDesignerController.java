@@ -42,6 +42,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
@@ -67,24 +69,21 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
-import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
@@ -94,7 +93,9 @@ import org.cirdles.squid.tasks.taskDesign.TaskDesign9Mass;
 import org.cirdles.squid.tasks.taskDesign.TaskDesignBlank;
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 
 /**
  * FXML Controller class
@@ -944,5 +945,29 @@ public class TaskDesignerController implements Initializable {
     private void mass10TaskAction(ActionEvent event) {
         SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign10Mass());
         initTaskDesign();
+    }
+
+    @FXML
+    private void newTaskFromThisDesignAction(ActionEvent event) {
+        // check the mass count
+        boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
+                == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
+                + REQUIRED_NOMINAL_MASSES.size()));
+        if (valid) {
+            squidProject.createNewTask();
+            squidProject.getTask().updateTaskFromTaskDesign(
+                    SquidPersistentState.getExistingPersistentState().getTaskDesign());
+            MenuItem menuItemTaskManager = ((MenuBar)SquidUI.primaryStage.getScene()
+                    .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
+            menuItemTaskManager.fire();
+        
+        } else {
+            SquidMessageDialog.showInfoDialog(
+                    "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
+                    + " masses, but the Task Designer specifies "
+                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                    + ".",
+                    null);
+        }
     }
 }

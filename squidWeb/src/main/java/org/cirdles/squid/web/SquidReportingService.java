@@ -135,7 +135,7 @@ public class SquidReportingService {
             task.setSelectedIndexIsotope(preferredIndexIsotope);
 
             // process task           
-            task.applyTaskIsotopeLabelsToMassStations();
+            task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
 
             Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
             Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
