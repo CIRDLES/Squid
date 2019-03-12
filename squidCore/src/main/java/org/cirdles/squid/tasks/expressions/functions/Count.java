@@ -44,6 +44,8 @@ public class Count extends Function {
         colCount = 2;
         labelsForOutputValues = new String[][]{{"count"}};
         labelsForInputValues = new String[]{"numbers"};
+        summaryCalc = true;
+        definition = "Returns a count of spots targeted by the expression.";
     }
 
     /**

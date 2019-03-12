@@ -54,7 +54,7 @@ public abstract class Operation
      *
      */
     protected int precedence;
-    // establish size of array resullting from evaluation
+    // establish size of array resulting from evaluation
 
     /**
      *
@@ -77,6 +77,8 @@ public abstract class Operation
     protected String[] labelsForInputValues = new String[]{};
     
     protected String definition;
+    
+    protected boolean summaryCalc;
 
     /**
      *
@@ -306,6 +308,13 @@ public abstract class Operation
     @Override
     public String getDefinition() {
         return definition;
+    }
+
+    /**
+     * @return the summaryCalc
+     */
+    public boolean isSummaryCalc() {
+        return summaryCalc;
     }
     
     

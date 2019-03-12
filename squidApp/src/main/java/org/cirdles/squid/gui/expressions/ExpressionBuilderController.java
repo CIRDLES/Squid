@@ -2830,7 +2830,24 @@ public class ExpressionBuilderController implements Initializable {
         StringBuilder depAudit = new StringBuilder().append("Dependency Audit:\n");
         List<String> dependentExpressionNames = ((Task) task).getRequiresExpressionsGraph().get(exp.getName());
 
-        if ((dependentExpressionNames != null) && (!dependentExpressionNames.isEmpty())) {
+        if (dependentExpressionNames == null) {
+            // we may be on a new expression
+            dependentExpressionNames = new ArrayList<>();
+            List<ExpressionTreeInterface> children = ((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getChildrenET();
+            for (ExpressionTreeInterface child : children) {
+                String calledName = child.getName();
+                if (task.getNamedExpressionsMap().containsKey(calledName)
+                        && !(child instanceof ShrimpSpeciesNode)
+                        && (child.getName().compareTo("FALSE") != 0)
+                        && (child.getName().compareTo("TRUE") != 0)) {
+                    if (!dependentExpressionNames.contains(calledName)) {
+                        dependentExpressionNames.add(calledName);
+                    }
+                }
+            }
+        }
+
+        if (!dependentExpressionNames.isEmpty()) {
             for (String expressionName : dependentExpressionNames) {
 
                 depAudit.append("\t")
@@ -2853,7 +2870,7 @@ public class ExpressionBuilderController implements Initializable {
 
         depAudit.append("\n");
 
-        return depAudit.toString() + audit;
+        return (depAudit.toString() + audit);
     }
 
     public void updateEditor() {
@@ -2961,7 +2978,22 @@ public class ExpressionBuilderController implements Initializable {
         // if this is a new expression, we need the low-impact route
         // of just recreating and re-evaluating this expression
         // otherwise with a new name we need the full expressions list reevaluated
-
+        // first detect if user should have used SummaryCalculation choice
+        if (((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getOperation().isSummaryCalc()
+                && !summaryCalculationSwitchCheckBox.isSelected()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "Squid recommends choosing the Summary Calculation switch ... make it so?",
+                    ButtonType.YES,
+                    ButtonType.NO
+            );
+            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+            alert.showAndWait().ifPresent((t) -> {
+                if (t.equals(ButtonType.YES)) {
+                    exp.getExpressionTree().setSquidSwitchSCSummaryCalculation(true);
+                }
+            });
+        }
         task.removeExpression(exp, false);
         //Removes the old expression if the name has been changed
         if (currentMode.get().equals(Mode.EDIT) && !exp.getName().equalsIgnoreCase(selectedExpression.get().getName())) {

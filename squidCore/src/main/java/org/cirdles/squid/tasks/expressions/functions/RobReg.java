@@ -47,6 +47,9 @@ public class RobReg extends Function {
         colCount = 4;
         labelsForOutputValues = new String[][]{{"Slope", "SlopeErr", "Y-Intercept", "Y-IntErr"}};
         labelsForInputValues = new String[]{"xNumbers", "yNumbers"};
+        summaryCalc = true;
+        definition = "Provides the functionality of Squid's robReg by calling robustReg2 and\n"
+                + "   returning \"Slope\", \"SlopeErr\", \"Y-Intercept\", \"Y-IntErr\".";
     }
 
     /**

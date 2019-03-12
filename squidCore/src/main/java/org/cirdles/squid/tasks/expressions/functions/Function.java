@@ -78,6 +78,8 @@ public abstract class Function
     protected String[] labelsForInputValues = new String[]{};
 
     protected String definition;
+    
+    protected boolean summaryCalc;
 
     /**
      *
@@ -505,4 +507,11 @@ public abstract class Function
         return definition;
     }
 
+    
+    /**
+     * @return the summaryCalc
+     */
+    public boolean isSummaryCalc() {
+        return summaryCalc;
+    }
 }

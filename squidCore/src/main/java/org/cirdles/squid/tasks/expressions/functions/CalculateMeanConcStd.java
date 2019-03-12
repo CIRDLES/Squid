@@ -49,6 +49,8 @@ public class CalculateMeanConcStd extends Function {
         colCount = 2;
         labelsForOutputValues = new String[][]{{AV_PARENT_ELEMENT_CONC_CONST}};
         labelsForInputValues = new String[]{"numbers"};
+        summaryCalc = true;
+        definition = "Calculates the sum divided by the count, ignoring tiny values < 1.0E-30.";
     }
 
     /**

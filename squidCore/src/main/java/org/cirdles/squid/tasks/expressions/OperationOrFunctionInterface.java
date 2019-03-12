@@ -133,4 +133,9 @@ public interface OperationOrFunctionInterface {
     }
     
     public String getDefinition();
+    
+    /**
+     * @return the summaryCalc
+     */
+    public boolean isSummaryCalc();
 }

@@ -80,6 +80,7 @@ public class WtdMeanACalc extends Function {
         precedence = 4;
         rowCount = 3;
         colCount = 7;
+        summaryCalc = true;
         labelsForOutputValues = new String[][]{
             {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability", "externalFlag"},
             {"LargeRej Indices"},

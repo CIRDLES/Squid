@@ -46,6 +46,8 @@ public class Average extends Function {
         colCount = 2;
         labelsForOutputValues = new String[][]{{"average"}};
         labelsForInputValues = new String[]{"numbers"};
+        summaryCalc = true;
+        definition = "Calculates the sum divided by the count.";
     }
 
     /**

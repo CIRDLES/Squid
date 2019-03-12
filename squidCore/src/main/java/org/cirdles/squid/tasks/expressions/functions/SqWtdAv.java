@@ -50,6 +50,10 @@ public class SqWtdAv extends Function {
         rowCount = 1;
         colCount = 6;
         labelsForOutputValues = new String[][]{{"intMean", "intSigmaMean", "MSWD", "probability", "intErr68", "intMeanErr95"}};
+        summaryCalc = true;
+        definition = "Provides the basic functionality of Squid's sqWtdAv by calculating\n"
+                + "   WeightedAverage and returning intMean, intSigmaMean, MSWD, probability,\n"
+                + "   intErr68, intMeanErr95.";
     }
 
     /**
