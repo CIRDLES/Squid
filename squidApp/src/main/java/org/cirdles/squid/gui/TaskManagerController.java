@@ -383,7 +383,7 @@ public class TaskManagerController implements Initializable {
 
         refMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    task.setReferenceMaterial(newValue);
+                    task.setReferenceMaterialModel(newValue);
                     task.setChanged(true);
                     task.setupSquidSessionSpecsAndReduceAndReport();
                 });
@@ -395,7 +395,7 @@ public class TaskManagerController implements Initializable {
 
         concRefMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    task.setConcentrationReferenceMaterial(newValue);
+                    task.setConcentrationReferenceMaterialModel(newValue);
                     task.setChanged(true);
                     task.setupSquidSessionSpecsAndReduceAndReport();
                 });

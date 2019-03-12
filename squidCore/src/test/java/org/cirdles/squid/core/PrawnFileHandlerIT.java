@@ -135,8 +135,8 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setExtPErrTh(0.75);
         squidProjectZ6266.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         squidProjectZ6266.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
-        squidProjectZ6266.getTask().setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
-        squidProjectZ6266.getTask().setConcentrationReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+        squidProjectZ6266.getTask().setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+        squidProjectZ6266.getTask().setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
 
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
 
@@ -202,8 +202,8 @@ public class PrawnFileHandlerIT {
         task.setExtPErrU(0.75);
         task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
-        task.setReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
-        task.setConcentrationReferenceMaterial(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+        task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+        task.setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
 
         SquidSessionModel squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, 2, "T", "", new HashMap<>());
         List<ShrimpFractionExpressionInterface> shrimpFractions = task.processRunFractions(prawnFileData, squidSessionModel);

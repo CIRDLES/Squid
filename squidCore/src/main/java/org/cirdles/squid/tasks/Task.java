@@ -2755,7 +2755,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void setReferenceMaterial(ParametersModel refMat) {
+    public void setReferenceMaterialModel(ParametersModel refMat) {
         if (refMat instanceof ReferenceMaterialModel) {
             referenceMaterialModelChanged = !referenceMaterialModel.equals(refMat);
             referenceMaterialModel = (ReferenceMaterialModel) refMat;
@@ -2768,7 +2768,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void setConcentrationReferenceMaterial(ParametersModel refMat) {
+    public void setConcentrationReferenceMaterialModel(ParametersModel refMat) {
         if (refMat instanceof ReferenceMaterialModel) {
             concentrationReferenceMaterialModelChanged = !concentrationReferenceMaterialModel.equals(refMat);
             concentrationReferenceMaterialModel = (ReferenceMaterialModel) refMat;

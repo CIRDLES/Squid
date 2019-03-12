@@ -240,6 +240,10 @@ public class SquidUIController implements Initializable {
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
     }
+    
+    public static void launchTaskManagerStatic(){
+        
+    }
 
     private void buildProjectMenuMRU() {
         openRecentSquidProjectMenu.setDisable(false);
@@ -678,7 +682,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchTaskManager() {
+    public void launchTaskManager() {
         // present warning if needed
         if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Reference Materials and "
@@ -1332,14 +1336,14 @@ public class SquidUIController implements Initializable {
             }
 
             if (refMat == null) {
-                task.setReferenceMaterial(squidLabData.getRefMatDefault());
+                task.setReferenceMaterialModel(squidLabData.getRefMatDefault());
             } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
                 squidLabData.addReferenceMaterial(refMat);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
 
             if (refMatConc == null) {
-                task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
+                task.setConcentrationReferenceMaterialModel(squidLabData.getRefMatConcDefault());
             } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
                 squidLabData.addReferenceMaterial(refMatConc);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());

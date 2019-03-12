@@ -213,7 +213,7 @@ public interface TaskInterface {
 
     public void addExpression(Expression exp, boolean reprocessExpressions);
 
-    public void setReferenceMaterial(ParametersModel refMat);
+    public void setReferenceMaterialModel(ParametersModel refMat);
 
     public ParametersModel getReferenceMaterialModel();
 
@@ -225,7 +225,7 @@ public interface TaskInterface {
 
     public ParametersModel getCommonPbModel();
 
-    public void setConcentrationReferenceMaterial(ParametersModel refMat);
+    public void setConcentrationReferenceMaterialModel(ParametersModel refMat);
 
     public ParametersModel getConcentrationReferenceMaterialModel();
 
