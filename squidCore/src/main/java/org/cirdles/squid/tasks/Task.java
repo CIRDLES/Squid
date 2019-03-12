@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -128,6 +127,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
  *
@@ -747,6 +747,37 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             prawnChanged = false;
             changed = false;
         }
+    }
+
+    public void refreshParametersFromModels() {
+        List<ParametersModel> models = SquidLabData.getExistingSquidLabData().getCommonPbModels();
+        commonPbModel = findModelByName(models, commonPbModel);
+        commonPbModelChanged = true;
+
+        models = SquidLabData.getExistingSquidLabData().getPhysicalConstantsModels();
+        physicalConstantsModel = findModelByName(models, physicalConstantsModel);
+        physicalConstantsModelChanged = true;
+
+        models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
+        referenceMaterialModel = findModelByName(models, referenceMaterialModel);
+        referenceMaterialModelChanged = true;
+
+        concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
+        concentrationReferenceMaterialModelChanged = true;
+
+        updateParametersFromModels();
+    }
+
+    private ParametersModel findModelByName(List<ParametersModel> models, ParametersModel model) {
+        ParametersModel retVal = model;
+        for (ParametersModel pm : models) {
+            if (pm.equals(model)) {
+                retVal = pm;
+                break;
+            }
+        }
+
+        return retVal;
     }
 
     private void updateParametersFromModels() {
@@ -2843,7 +2874,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the providesExpressionsGraph
      */
     public Map<String, List<String>> getProvidesExpressionsGraph() {
-        if ((providesExpressionsGraph == null) || providesExpressionsGraph.isEmpty()){
+        if ((providesExpressionsGraph == null) || providesExpressionsGraph.isEmpty()) {
             buildExpressionDependencyGraphs();
         }
         return providesExpressionsGraph;
@@ -2853,7 +2884,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the requiresExpressionsGraph
      */
     public Map<String, List<String>> getRequiresExpressionsGraph() {
-        if ((requiresExpressionsGraph == null) || requiresExpressionsGraph.isEmpty()){
+        if ((requiresExpressionsGraph == null) || requiresExpressionsGraph.isEmpty()) {
             buildExpressionDependencyGraphs();
         }
         return requiresExpressionsGraph;

@@ -671,4 +671,6 @@ public interface TaskInterface {
     public String printExpressionProvidesGraph(Expression exp);
     
      public void generateMapOfUnknownsBySampleNames();
+     
+     public void refreshParametersFromModels();
 }
