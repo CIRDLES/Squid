@@ -732,7 +732,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpUUData() {
-        UUTable.getColumns().setAll(getRefMatDataModelColumns(UUTable,UUNotation, UUSigFigSpinner));
+        UUTable.getColumns().setAll(getRefMatDataModelColumns(UUTable, UUNotation, UUSigFigSpinner));
         int precision = UUSigFigSpinner.getValue();
         final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
         ValueModel valMod = refMatModel.getValues()[4];
@@ -2287,8 +2287,7 @@ public class ParametersManagerGUIController implements Initializable {
             physConstCorrNotation = scientificNotation;
             physConstCorrNotationButton.setText("Use Standard Notation");
         }
-        int precision = physConstCorrSigFigs.getValue();
-        corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, precision, physConstCorrNotation);
+        corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, physConstCorrSigFigs.getValue(), physConstCorrNotation);
     }
 
     @FXML
@@ -2300,8 +2299,7 @@ public class ParametersManagerGUIController implements Initializable {
             physConstCovNotation = scientificNotation;
             physConstCovNotationButton.setText("Use Standard Notation");
         }
-        int precision = physConstCovSigFigs.getValue();
-        corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, precision, physConstCovNotation);
+        corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, physConstCovSigFigs.getValue(), physConstCovNotation);
     }
 
     @FXML
@@ -2313,8 +2311,7 @@ public class ParametersManagerGUIController implements Initializable {
             refMatCorrNotation = scientificNotation;
             refMatCorrNotationButton.setText("Use Standard Notation");
         }
-        int precision = refMatCorrSigFigs.getValue();
-        corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, precision, refMatCorrNotation);
+        corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, refMatCorrSigFigs.getValue(), refMatCorrNotation);
     }
 
     @FXML
@@ -2326,89 +2323,82 @@ public class ParametersManagerGUIController implements Initializable {
             refMatCovNotation = scientificNotation;
             refMatCovNotationButton.setText("Use Standard Notation");
         }
-        int precision = refMatCovSigFigs.getValue();
-        corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, precision, refMatCovNotation);
+        corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, refMatCovSigFigs.getValue(), refMatCovNotation);
     }
 
     private void setUpSigFigSpinners() {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
 
         refMatDataSigFigs.setValueFactory(valueFactory);
-        refMatDataSigFigs.valueProperty().addListener(value -> {
-            setUpRefMatData();
-        });
+        refMatDataSigFigs.valueProperty().addListener(value ->
+                setUpRefMatData()
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         UUSigFigSpinner.setValueFactory(valueFactory);
-        UUSigFigSpinner.valueProperty().addListener(value -> {
-            setUpUUData();
-        });
+        UUSigFigSpinner.valueProperty().addListener(value ->
+                setUpUUData()
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatConcSigFigs.setValueFactory(valueFactory);
-        refMatConcSigFigs.valueProperty().addListener(value -> {
-            setUpConcentrations();
-        });
+        refMatConcSigFigs.valueProperty().addListener(value ->
+                setUpConcentrations()
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstDataSigFigs.setValueFactory(valueFactory);
-        physConstDataSigFigs.valueProperty().addListener(value -> {
-            setUpPhysConstData();
-        });
+        physConstDataSigFigs.valueProperty().addListener(value ->
+                setUpPhysConstData()
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstCorrSigFigs.setValueFactory(valueFactory);
-        physConstCorrSigFigs.valueProperty().addListener(value -> {
-            int precision = physConstCorrSigFigs.getValue();
-            corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, precision, physConstCorrNotation);
-        });
+        physConstCorrSigFigs.valueProperty().addListener(value ->
+                corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, physConstCorrSigFigs.getValue(), physConstCorrNotation)
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstCovSigFigs.setValueFactory(valueFactory);
-        physConstCovSigFigs.valueProperty().addListener(value -> {
-            int precision = physConstCovSigFigs.getValue();
-            corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, precision, physConstCovNotation);
-        });
+        physConstCovSigFigs.valueProperty().addListener(value ->
+                corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, physConstCovSigFigs.getValue(), physConstCovNotation)
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatCorrSigFigs.setValueFactory(valueFactory);
-        refMatCorrSigFigs.valueProperty().addListener(value -> {
-            int precision = refMatCorrSigFigs.getValue();
-            corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, precision, refMatCorrNotation);
-        });
+        refMatCorrSigFigs.valueProperty().addListener(value ->
+                corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, refMatCorrSigFigs.getValue(), refMatCorrNotation)
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatCovSigFigs.setValueFactory(valueFactory);
-        refMatCovSigFigs.valueProperty().addListener(value -> {
-            int precision = refMatCovSigFigs.getValue();
-            corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, precision, refMatCovNotation);
-        });
+        refMatCovSigFigs.valueProperty().addListener(value ->
+                corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, refMatCovSigFigs.getValue(), refMatCovNotation)
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refDatesSigFigSpinner.setValueFactory(valueFactory);
-        refDatesSigFigSpinner.valueProperty().addListener(value -> {
-            setUpRefDates();
-        });
+        refDatesSigFigSpinner.valueProperty().addListener(value ->
+                setUpRefDates()
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         commonPbDataSigFigs.setValueFactory(valueFactory);
-        commonPbDataSigFigs.valueProperty().addListener(value -> {
-            setUpCommonPbData();
-        });
+        commonPbDataSigFigs.valueProperty().addListener(value ->
+                setUpCommonPbData()
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         commonPbCorrSigFigs.setValueFactory(valueFactory);
-        commonPbCorrSigFigs.valueProperty().addListener(value -> {
-            int precision = commonPbCorrSigFigs.getValue();
-            corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, precision, commonPbCorrNotation);
-        });
+        commonPbCorrSigFigs.valueProperty().addListener(value ->
+                corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, commonPbCorrSigFigs.getValue(), commonPbCorrNotation)
+        );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         commonPbCovSigFigs.setValueFactory(valueFactory);
-        commonPbCovSigFigs.valueProperty().addListener(value -> {
-            int precision = commonPbCovSigFigs.getValue();
-            corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, precision, commonPbCovNotation);
-        });
+        commonPbCovSigFigs.valueProperty().addListener(value ->
+                corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, commonPbCovSigFigs.getValue(), commonPbCovNotation)
+        );
     }
 
     private String getRefDatesDivisorOrMultiplier() {
