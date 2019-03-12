@@ -62,7 +62,7 @@ public class VariableNodeForSummary extends ExpressionTree {
             this.index = 1;
         }
         this.showIndex = index > 0;
-        
+
         this.squidSwitchSTReferenceMaterialCalculation = true;
         this.squidSwitchSAUnknownCalculation = true;
     }
@@ -113,21 +113,27 @@ public class VariableNodeForSummary extends ExpressionTree {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);
-        double[][] valuesAll = clone2dArray(detail.getValues());
+        double[][] values;
 
-        if (uncertaintyDirective.compareTo("%") == 0) {
-            // index should be 1 from constructor
-            valuesAll[0][1] = valuesAll[0][1] / valuesAll[0][0] * 100;
-        }
+        if (detail != null) {
+            double[][] valuesAll = clone2dArray(detail.getValues());
 
-        double[][] values = clone2dArray(valuesAll);
-
-        if (index > 0) {
-            // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
-            values = new double[1][valuesAll[0].length - index];
-            for (int i = index; i < valuesAll[0].length; i++) {
-                values[0][i - index] = valuesAll[0][i];
+            if (uncertaintyDirective.compareTo("%") == 0) {
+                // index should be 1 from constructor
+                valuesAll[0][1] = valuesAll[0][1] / valuesAll[0][0] * 100;
             }
+
+            values = clone2dArray(valuesAll);
+
+            if (index > 0) {
+                // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
+                values = new double[1][valuesAll[0].length - index];
+                for (int i = index; i < valuesAll[0].length; i++) {
+                    values[0][i - index] = valuesAll[0][i];
+                }
+            }
+        } else {
+            values = new double[][]{{0.0, 0.0}, {0.0, 0.0}};
         }
 
         Object[][] retVal = convertArrayToObjects(values);

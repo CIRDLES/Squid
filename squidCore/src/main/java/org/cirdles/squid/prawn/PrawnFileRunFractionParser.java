@@ -157,14 +157,14 @@ public class PrawnFileRunFractionParser {
 
             // determine reference material status
             if (referenceMaterialNameFilter.length() > 0) {
-                if (fractionID.toUpperCase(Locale.US).startsWith(referenceMaterialNameFilter.toUpperCase(Locale.US))) {
+                if (fractionID.toUpperCase(Locale.US).startsWith(referenceMaterialNameFilter.toUpperCase(Locale.ENGLISH))) {
                     shrimpFraction.setReferenceMaterial(true);
                 }
             }
 
             // determine concentration reference material status
             if (concentrationReferenceMaterialNameFilter.length() > 0) {
-                if (fractionID.toUpperCase(Locale.US).startsWith(concentrationReferenceMaterialNameFilter.toUpperCase(Locale.US))) {
+                if (fractionID.toUpperCase(Locale.US).startsWith(concentrationReferenceMaterialNameFilter.toUpperCase(Locale.ENGLISH))) {
                     shrimpFraction.setConcentrationReferenceMaterial(true);
                 }
             }

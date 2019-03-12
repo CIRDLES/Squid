@@ -72,6 +72,7 @@ import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
+import org.cirdles.squid.tasks.Task;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
@@ -239,6 +240,10 @@ public class SquidUIController implements Initializable {
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
     }
+    
+    public static void launchTaskManagerStatic(){
+        
+    }
 
     private void buildProjectMenuMRU() {
         openRecentSquidProjectMenu.setDisable(false);
@@ -393,6 +398,7 @@ public class SquidUIController implements Initializable {
             File opFileNew = FileHandler.selectOPFile(primaryStageWindow);
             if (opFileNew != null) {
                 squidProject.setupPrawnOPFile(opFileNew);
+                squidProject.autoDivideSamples();
                 //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
@@ -423,6 +429,7 @@ public class SquidUIController implements Initializable {
             File prawnSourceFileNew = FileHandler.selectPrawnXMLFile(primaryStageWindow);
             if (prawnSourceFileNew != null) {
                 squidProject.setupPrawnXMLFile(prawnSourceFileNew);
+                squidProject.autoDivideSamples();
                 squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
@@ -517,6 +524,8 @@ public class SquidUIController implements Initializable {
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
                 verifySquidLabDataParameters();
+                
+                ((Task)squidProject.getTask()).buildExpressionDependencyGraphs();
 
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 SquidUI.updateStageTitle(projectFileName);
@@ -537,7 +546,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void customizeDataMenu() {
-        boolean opSourceFile = squidProject.getPrawnSourceFileName().toUpperCase().endsWith(".OP");
+        boolean opSourceFile = squidProject.getPrawnSourceFileName().toUpperCase(Locale.ENGLISH).endsWith(".OP");
 
         auditRawDataMenuItem.setVisible(!opSourceFile);
         savePrawnFileCopyMenuItem.setVisible(!opSourceFile);
@@ -673,7 +682,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchTaskManager() {
+    public void launchTaskManager() {
         // present warning if needed
         if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Reference Materials and "
@@ -1327,14 +1336,14 @@ public class SquidUIController implements Initializable {
             }
 
             if (refMat == null) {
-                task.setReferenceMaterial(squidLabData.getRefMatDefault());
+                task.setReferenceMaterialModel(squidLabData.getRefMatDefault());
             } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
                 squidLabData.addReferenceMaterial(refMat);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
 
             if (refMatConc == null) {
-                task.setConcentrationReferenceMaterial(squidLabData.getRefMatConcDefault());
+                task.setConcentrationReferenceMaterialModel(squidLabData.getRefMatConcDefault());
             } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
                 squidLabData.addReferenceMaterial(refMatConc);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());

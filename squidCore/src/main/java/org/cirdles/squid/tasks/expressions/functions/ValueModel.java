@@ -31,6 +31,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class ValueModel extends Function {
 
+    private static final long serialVersionUID = -5439896482911219791L;
+
     /**
      * This wrapper operation combines a value and its absolute uncertainty
      * under a common name to support Squid3 Expressions of the form [%"xxx"]
@@ -55,7 +57,8 @@ public class ValueModel extends Function {
     /**
      *
      * @param childrenET the value of childrenET where child 0 is the value,
-     * child 1 is the 1 sigma uncertainty and child 3 is true for ABS and false for PCT uncertainty.
+     * child 1 is the 1 sigma uncertainty and child 3 is true for ABS and false
+     * for PCT uncertainty.
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the double[][]
@@ -93,9 +96,7 @@ public class ValueModel extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 
