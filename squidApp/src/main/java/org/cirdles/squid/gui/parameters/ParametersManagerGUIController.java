@@ -86,6 +86,12 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     public RadioButton physConstDataMARadioButton;
     @FXML
+    public TableView<RefMatDataModel> UUTable;
+    @FXML
+    public Button UUNotationButton;
+    @FXML
+    public Spinner<Integer> UUSigFigSpinner;
+    @FXML
     private MenuItem editCopyOfCurrPhysConst;
     @FXML
     private MenuItem editNewEmpPhysConst;
@@ -282,6 +288,7 @@ public class ParametersManagerGUIController implements Initializable {
     private DecimalFormat physConstCovNotation;
 
     private DecimalFormat refMatDataNotation;
+    private DecimalFormat UUNotation;
     private DecimalFormat refMatConcentrationsNotation;
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
@@ -325,6 +332,7 @@ public class ParametersManagerGUIController implements Initializable {
         physConstCovNotation = scientificNotation;
 
         refMatDataNotation = scientificNotation;
+        UUNotation = scientificNotation;
         refMatConcentrationsNotation = scientificNotation;
         refMatCorrNotation = scientificNotation;
         refMatCovNotation = scientificNotation;
@@ -408,6 +416,7 @@ public class ParametersManagerGUIController implements Initializable {
     private void setUpRefMat() {
         setUpRefMatTextFields();
         setUpRefMatData();
+        setUpUUData();
         setUpConcentrations();
         setUpRefMatCovariancesAndCorrelations();
         setUpRefMatDatesSelection();
@@ -680,7 +689,7 @@ public class ParametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstData() {
         int precision = physConstDataSigFigs.getValue();
-        physConstDataTable.getColumns().setAll(getDataModelColumns(physConstDataTable, physConstDataNotation, precision));
+        physConstDataTable.getColumns().setAll(getDataModelColumns(physConstDataTable, physConstDataNotation, physConstDataSigFigs));
         physConstDataTable.setItems(getDataModelObListWithUnits(physConstModel.getValues(), precision,
                 new BigDecimal(getPhyConstDataDivisorOrMultiplier()), physConstDataNotation));
         physConstDataTable.refresh();
@@ -688,47 +697,66 @@ public class ParametersManagerGUIController implements Initializable {
 
     private void setUpCommonPbData() {
         int precision = commonPbDataSigFigs.getValue();
-        commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation, precision));
+        commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation, commonPbDataSigFigs));
         commonPbDataTable.setItems(getDataModelObList(commonPbModel.getValues(), commonPbDataNotation, precision));
         commonPbDataTable.refresh();
     }
 
     private void setUpRefDates() {
         int precision = refDatesSigFigSpinner.getValue();
-        refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
+        refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, refDatesSigFigSpinner));
         refDatesTable.setItems(getDataModelObListWithUnits(((ReferenceMaterialModel) refMatModel).getDates(), precision,
                 new BigDecimal(getRefDatesDivisorOrMultiplier()), refDatesNotation));
         refDatesTable.refresh();
     }
 
     private void setUpRefMatData() {
-        setUpRefMatDataModelColumns();
+        refMatDataTable.getColumns().setAll(getRefMatDataModelColumns(refMatDataTable, refMatDataNotation, refMatDataSigFigs));
         int precision = refMatDataSigFigs.getValue();
         final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
         ValueModel[] values = refMatModel.getValues();
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
-            Boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[i];
-            String value = refMatDataNotation.format(round(valMod.getValue(), precision));
-            String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
-            String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));
-            RefMatDataModel mod = new RefMatDataModel(getRatioVisibleName(valMod.getName()), value,
-                    oneSigmaABS, oneSigmaPCT, isMeasured);
-            obList.add(mod);
+            if (!valMod.getName().equals("r238_235s")) {
+                Boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[i];
+                String value = refMatDataNotation.format(round(valMod.getValue(), precision));
+                String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
+                String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));
+                RefMatDataModel mod = new RefMatDataModel(getRatioVisibleName(valMod.getName()), value,
+                        oneSigmaABS, oneSigmaPCT, isMeasured);
+                obList.add(mod);
+            }
         }
         refMatDataTable.setItems(obList);
         refMatDataTable.refresh();
     }
 
+    private void setUpUUData() {
+        UUTable.getColumns().setAll(getRefMatDataModelColumns(UUTable,UUNotation, UUSigFigSpinner));
+        int precision = UUSigFigSpinner.getValue();
+        final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
+        ValueModel valMod = refMatModel.getValues()[4];
+        Boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[4];
+        String value = refMatDataNotation.format(round(valMod.getValue(), precision));
+        String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
+        String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));
+        RefMatDataModel mod = new RefMatDataModel(getRatioVisibleName(valMod.getName()), value,
+                oneSigmaABS, oneSigmaPCT, isMeasured);
+        obList.add(mod);
+        UUTable.setItems(obList);
+        UUTable.refresh();
+    }
+
     private void setUpConcentrations() {
         int precision = refMatConcSigFigs.getValue();
-        refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, precision));
+        refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation, refMatConcSigFigs));
         refMatConcentrationsTable.setItems(getDataModelObList(((ReferenceMaterialModel) refMatModel).getConcentrations(), refMatConcentrationsNotation, precision));
         refMatConcentrationsTable.refresh();
     }
 
-    private List<TableColumn<DataModel, String>> getDataModelColumns(TableView<DataModel> table, DecimalFormat format, int precision) {
-        List<TableColumn<DataModel, String>> columns = new ArrayList<>();
+    private List<TableColumn<DataModel, String>> getDataModelColumns(TableView<DataModel> table, DecimalFormat format, Spinner<Integer> spinner) {
+        List<TableColumn<DataModel, String>> columns = new ArrayList<>(4);
+        int precision = spinner.getValue();
 
         TableColumn<DataModel, String> nameCol = new TableColumn<>("name");
         nameCol.setCellValueFactory(new PropertyValueFactory<DataModel, String>("name"));
@@ -784,7 +812,7 @@ public class ParametersManagerGUIController implements Initializable {
                 }
             }
 
-            table.getColumns().setAll(getDataModelColumns(table, format, precision));
+            table.getColumns().setAll(getDataModelColumns(table, format, spinner));
         });
         columns.add(valCol);
 
@@ -836,7 +864,7 @@ public class ParametersManagerGUIController implements Initializable {
                     setUpCommonPbCovariancesAndCorrelations();
                 }
             }
-            table.getColumns().setAll(getDataModelColumns(table, format, precision));
+            table.getColumns().setAll(getDataModelColumns(table, format, spinner));
         });
         columns.add(absCol);
 
@@ -889,7 +917,7 @@ public class ParametersManagerGUIController implements Initializable {
                 }
             }
 
-            table.getColumns().setAll(getDataModelColumns(table, format, precision));
+            table.getColumns().setAll(getDataModelColumns(table, format, spinner));
         });
         columns.add(pctCol);
 
@@ -913,16 +941,16 @@ public class ParametersManagerGUIController implements Initializable {
         return newValue;
     }
 
-    private void setUpRefMatDataModelColumns() {
-        refMatDataTable.getColumns().clear();
-        int precision = refMatDataSigFigs.getValue();
+    private List<TableColumn<RefMatDataModel, ?>> getRefMatDataModelColumns(TableView<RefMatDataModel> table, DecimalFormat format, Spinner<Integer> spinner) {
+        List<TableColumn<RefMatDataModel, ?>> columns = new ArrayList<>(5);
+        int precision = spinner.getValue();
 
         TableColumn<RefMatDataModel, String> nameCol = new TableColumn<>("name");
         nameCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("name"));
         nameCol.setSortable(false);
         nameCol.setCellFactory(column -> EditCell.createStringEditCell());
         nameCol.setEditable(false);
-        refMatDataTable.getColumns().add(nameCol);
+        columns.add(nameCol);
 
         TableColumn<RefMatDataModel, String> valCol = new TableColumn<>("value");
         valCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("value"));
@@ -939,16 +967,16 @@ public class ParametersManagerGUIController implements Initializable {
                 newBigDec = new BigDecimal(newValue);
             }
             valMod.setValue(newBigDec);
-            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
             value.getTableView().refresh();
             setUpRefMatCovariancesAndCorrelations();
             setUpDatesCheckBoxVisibility();
 
-            setUpRefMatDataModelColumns();
+            table.getColumns().setAll(getRefMatDataModelColumns(table, format, spinner));
         });
-        refMatDataTable.getColumns().add(valCol);
+        columns.add(valCol);
 
         TableColumn<RefMatDataModel, String> absCol = new TableColumn<>("1σ ABS");
         absCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaABS"));
@@ -966,15 +994,15 @@ public class ParametersManagerGUIController implements Initializable {
             }
             valMod.setOneSigma(newBigDec);
             valMod.setUncertaintyType("ABS");
-            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
             value.getTableView().refresh();
             setUpRefMatCovariancesAndCorrelations();
 
-            setUpRefMatDataModelColumns();
+            table.getColumns().setAll(getRefMatDataModelColumns(table, format, spinner));
         });
-        refMatDataTable.getColumns().add(absCol);
+        columns.add(absCol);
 
         TableColumn<RefMatDataModel, String> pctCol = new TableColumn<>("1σ PCT");
         pctCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, String>("oneSigmaPCT"));
@@ -992,20 +1020,22 @@ public class ParametersManagerGUIController implements Initializable {
             }
             valMod.setOneSigma(newBigDec);
             valMod.setUncertaintyType("PCT");
-            mod.setValue(refMatDataNotation.format(round(valMod.getValue(), precision)));
-            mod.setOneSigmaABS(refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision)));
-            mod.setOneSigmaPCT(refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision)));
+            mod.setValue(format.format(round(valMod.getValue(), precision)));
+            mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision)));
+            mod.setOneSigmaPCT(format.format(round(valMod.getOneSigmaPCT(), precision)));
             value.getTableView().refresh();
             setUpRefMatCovariancesAndCorrelations();
 
-            setUpRefMatDataModelColumns();
+            table.getColumns().setAll(getRefMatDataModelColumns(table, format, spinner));
         });
-        refMatDataTable.getColumns().add(pctCol);
+        columns.add(pctCol);
 
         TableColumn<RefMatDataModel, ChoiceBox> measuredCol = new TableColumn<>("measured");
         measuredCol.setCellValueFactory(new PropertyValueFactory<RefMatDataModel, ChoiceBox>("isMeasured"));
         measuredCol.setSortable(false);
-        refMatDataTable.getColumns().add(measuredCol);
+        columns.add(measuredCol);
+
+        return columns;
     }
 
     private ObservableList<DataModel> getDataModelObList(ValueModel[] values, DecimalFormat numberFormat, int precision) {
@@ -1812,6 +1842,18 @@ public class ParametersManagerGUIController implements Initializable {
             }
         }
 
+        UUTable.setEditable(isEditable);
+        UUTable.getColumns().get(0).setEditable(false);
+        ObservableList<RefMatDataModel> UUData = UUTable.getItems();
+        for (RefMatDataModel mod : UUData) {
+            if (isEditable) {
+                mod.getIsMeasured().setDisable(false);
+            } else {
+                mod.getIsMeasured().setDisable(true);
+                mod.getIsMeasured().setStyle("-fx-opacity: 1");
+            }
+        }
+
         refMatConcentrationsTable.setEditable(isEditable);
         refMatConcentrationsTable.getColumns().get(0).setEditable(false);
 
@@ -2000,6 +2042,7 @@ public class ParametersManagerGUIController implements Initializable {
             refMatModel.setDateCertified(refMatDateCertified.getText());
 
             ObservableList<RefMatDataModel> dataModels = refMatDataTable.getItems();
+            dataModels.addAll(UUTable.getItems());
             boolean[] isMeasures = new boolean[dataModels.size()];
             for (int i = 0; i < isMeasures.length; i++) {
                 RefMatDataModel mod = dataModels.get(i);
@@ -2132,8 +2175,7 @@ public class ParametersManagerGUIController implements Initializable {
             mod.setOneSigmaPCT(physConstDataNotation.format(round(bigDec, precision)));
         }
         physConstDataTable.getColumns().clear();
-        List<TableColumn<DataModel, String>> columns = getDataModelColumns(physConstDataTable, physConstDataNotation,
-                physConstDataSigFigs.getValue());
+        List<TableColumn<DataModel, String>> columns = getDataModelColumns(physConstDataTable, physConstDataNotation, physConstDataSigFigs);
         for (TableColumn<DataModel, String> col : columns) {
             physConstDataTable.getColumns().add(col);
         }
@@ -2164,9 +2206,38 @@ public class ParametersManagerGUIController implements Initializable {
             bigDec = new BigDecimal(mod.getOneSigmaPCT());
             mod.setOneSigmaPCT(refMatDataNotation.format(round(bigDec, precision)));
         }
-        setUpRefMatDataModelColumns();
+        refMatDataTable.getColumns().setAll(getRefMatDataModelColumns(refMatDataTable, refMatDataNotation, refMatDataSigFigs));
 
         refMatDataTable.refresh();
+    }
+
+    @FXML
+    public void UUNotationOnAction(ActionEvent actionEvent) {
+        if (UUNotation.equals(scientificNotation)) {
+            UUNotation = standardNotation;
+            UUNotationButton.setText("Use Scientific Notation");
+        } else {
+            UUNotation = scientificNotation;
+            UUNotationButton.setText("Use Standard Notation");
+        }
+        ObservableList<RefMatDataModel> models = UUTable.getItems();
+        int precision = UUSigFigSpinner.getValue();
+        for (int i = 0; i < models.size(); i++) {
+            DataModel mod = models.get(i);
+            BigDecimal bigDec;
+
+            bigDec = new BigDecimal(mod.getValue());
+            mod.setValue(UUNotation.format(round(bigDec, precision)));
+
+            bigDec = new BigDecimal(mod.getOneSigmaABS());
+            mod.setOneSigmaABS(UUNotation.format(round(bigDec, precision)));
+
+            bigDec = new BigDecimal(mod.getOneSigmaPCT());
+            mod.setOneSigmaPCT(UUNotation.format(round(bigDec, precision)));
+        }
+        UUTable.getColumns().setAll(getRefMatDataModelColumns(refMatDataTable, UUNotation, UUSigFigSpinner));
+
+        UUTable.refresh();
     }
 
     public static BigDecimal round(BigDecimal val, int precision) {
@@ -2202,7 +2273,7 @@ public class ParametersManagerGUIController implements Initializable {
             mod.setOneSigmaPCT(refMatConcentrationsNotation.format(round(bigDec, precision)));
         }
         refMatConcentrationsTable.getColumns().setAll(getDataModelColumns(refMatConcentrationsTable, refMatConcentrationsNotation,
-                refMatConcSigFigs.getValue()));
+                refMatConcSigFigs));
 
         refMatConcentrationsTable.refresh();
     }
@@ -2265,6 +2336,12 @@ public class ParametersManagerGUIController implements Initializable {
         refMatDataSigFigs.setValueFactory(valueFactory);
         refMatDataSigFigs.valueProperty().addListener(value -> {
             setUpRefMatData();
+        });
+
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
+        UUSigFigSpinner.setValueFactory(valueFactory);
+        UUSigFigSpinner.valueProperty().addListener(value -> {
+            setUpUUData();
         });
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
@@ -2639,7 +2716,7 @@ public class ParametersManagerGUIController implements Initializable {
             mod.setOneSigmaPCT(commonPbDataNotation.format(round(bigDec, precision)));
         }
         commonPbDataTable.getColumns().setAll(getDataModelColumns(commonPbDataTable, commonPbDataNotation,
-                commonPbDataSigFigs.getValue()));
+                commonPbDataSigFigs));
 
         commonPbDataTable.refresh();
     }
@@ -2739,7 +2816,7 @@ public class ParametersManagerGUIController implements Initializable {
             bigDec = new BigDecimal(model.getOneSigmaPCT());
             model.setOneSigmaPCT(refDatesNotation.format(round(bigDec, precision)));
         }
-        refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, precision));
+        refDatesTable.getColumns().setAll(getDataModelColumns(refDatesTable, refDatesNotation, refDatesSigFigSpinner));
         refDatesTable.refresh();
     }
 
@@ -2778,6 +2855,7 @@ public class ParametersManagerGUIController implements Initializable {
         physConstDataUnits = Units.ma;
         setUpPhysConstData();
     }
+
 
     public enum Units {
         a, ka, ma
