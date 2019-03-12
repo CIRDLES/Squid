@@ -125,8 +125,11 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
             spotContextMenu.hide();
             if (spotSummaryDetails.isManualRejectionEnabled() && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
-                spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
-                        mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
+                try {
+                    spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
+                            mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
+                } catch (Exception e) {
+                }
             }
 
             repaint();
@@ -402,13 +405,16 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
 
-        // force y to tics
-        minY = ticsY[0].doubleValue();
-        maxY = ticsY[ticsY.length - 1].doubleValue();
-        // adjust margins
-        double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);
-        minY -= yMarginStretch;
-        maxY += yMarginStretch;
+        // check for no data
+        if (ticsY != null) {
+            // force y to tics
+            minY = ticsY[0].doubleValue();
+            maxY = ticsY[ticsY.length - 1].doubleValue();
+            // adjust margins
+            double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);
+            minY -= yMarginStretch;
+            maxY += yMarginStretch;
+        }
     }
 
     private void setupSpotInWMContextMenu() {

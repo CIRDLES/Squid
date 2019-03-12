@@ -33,6 +33,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 public class VariableNodeForSummary extends ExpressionTree {
 
     private static final long serialVersionUID = -868256637199178058L;
+    private boolean showIndex;
 
     /**
      *
@@ -60,6 +61,10 @@ public class VariableNodeForSummary extends ExpressionTree {
         if (uncertaintyDirective.length() > 0) {
             this.index = 1;
         }
+        this.showIndex = index > 0;
+        
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;
     }
 
     @Override
@@ -129,7 +134,7 @@ public class VariableNodeForSummary extends ExpressionTree {
 
         return retVal;
     }
-   
+
     /**
      *
      * @return
@@ -138,7 +143,8 @@ public class VariableNodeForSummary extends ExpressionTree {
     public String toStringMathML() {
         String retVal
                 = "<mtext>\n"
-                + name + "[" + index + "]"
+                + name
+                + (showIndex ? ("[" + index + "]") : "")
                 + "</mtext>\n";
 
         if (uncertaintyDirective.length() > 0) {

@@ -75,6 +75,8 @@ public abstract class Function
      */
     protected String[] labelsForInputValues = new String[]{};
 
+    protected String definition;
+
     /**
      *
      */
@@ -106,8 +108,9 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
         SQUID_FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
         SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
-        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
+//        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
+        SQUID_FUNCTIONS_MAP.put("valueModel", "valueModel");
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
         LOGIC_FUNCTIONS_MAP.put("if", "sqIf");
@@ -125,11 +128,10 @@ public abstract class Function
         FUNCTIONS_MAP.putAll(SQUID_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(LOGIC_FUNCTIONS_MAP);
 
-        FUNCTIONS_MAP.put("valueModel", "valueModel");
     }
 
     public Function() {
-
+        this.definition = "todo";
     }
 
     /**
@@ -329,9 +331,9 @@ public abstract class Function
         return new ShrimpSpeciesNodeFunction("getTotalCps");
     }
 
-    public static OperationOrFunctionInterface lookup() {
-        return new SpotNodeLookupFunction();
-    }
+//    public static OperationOrFunctionInterface lookup() {
+//        return new SpotNodeLookupFunction();
+//    }
 
     /**
      *
@@ -486,4 +488,10 @@ public abstract class Function
     public String[] getLabelsForInputValues() {
         return labelsForInputValues;
     }
+
+    @Override
+    public String getDefinition() {
+        return definition;
+    }
+
 }

@@ -129,8 +129,8 @@ public class PrawnFileRunFractionParser {
             shrimpFraction.setStageX(stageX);
             shrimpFraction.setStageY(stageY);
             shrimpFraction.setStageZ(stageZ);
-            shrimpFraction.setQtlY(qt1Y);
-            shrimpFraction.setQtlZ(qt1Z);
+            shrimpFraction.setQt1Y(qt1Y);
+            shrimpFraction.setQt1Z(qt1Z);
             shrimpFraction.setPrimaryBeam(primaryBeam);
 
             shrimpFraction.setCountTimeSec(countTimeSec);

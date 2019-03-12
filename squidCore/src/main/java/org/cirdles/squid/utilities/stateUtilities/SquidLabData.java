@@ -26,6 +26,8 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 public class SquidLabData implements Serializable {
 
     private static final long serialVersionUID = -6819591137651731346L;
+    
+    public static final String SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1 = "Squid 2.5 Physical Constants Model";
 
     private List<ParametersModel> referenceMaterials;
     private List<ParametersModel> physicalConstantsModels;
@@ -47,7 +49,7 @@ public class SquidLabData implements Serializable {
         commonPbModels = CommonPbModel.getDefaultModels();
         commonPbModels.sort(new ParametersModelComparator());
 
-        physConstDefault = PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0");
+        physConstDefault = PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0");
         refMatDefault = ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0");
         refMatConcDefault = ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0");
         commonPbDefault = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");

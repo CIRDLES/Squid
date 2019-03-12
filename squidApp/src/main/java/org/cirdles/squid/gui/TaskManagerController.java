@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -45,9 +46,17 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 
 /**
  * FXML Controller class
@@ -102,8 +111,6 @@ public class TaskManagerController implements Initializable {
     @FXML
     private CheckBox autoExcludeSpotsCheckBox;
     @FXML
-    private Spinner<Double> assignedExternalErrSpinner;
-    @FXML
     private ComboBox<ParametersModel> refMatModelComboBox;
     @FXML
     private ComboBox<ParametersModel> commonPbModelComboBox;
@@ -131,6 +138,12 @@ public class TaskManagerController implements Initializable {
     private Label parentConcExpressionLabel;
     @FXML
     private Label parentConcLabel;
+    @FXML
+    private Spinner<Double> assignedExternalErrUSpinner;
+    @FXML
+    private Spinner<Double> assignedExternalErrThSpinner;
+    @FXML
+    private ComboBox<String> delimeterComboBox;
 
     /**
      * Initializes the controller class.
@@ -145,11 +158,11 @@ public class TaskManagerController implements Initializable {
             task.setupSquidSessionSpecsAndReduceAndReport();
             populateTaskFields();
             setupListeners();
+            setUpParametersModelsComboBoxes();
         } else {
             taskAuditTextArea.setText("No Task information available");
         }
 
-        setUpParametersModelsComboBoxes();
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
     }
 
@@ -161,7 +174,7 @@ public class TaskManagerController implements Initializable {
         labNameTextField.setText(task.getLabName());
         provenanceTextField.setText(task.getProvenance());
 
-        if (task.getType().compareTo(Squid3Constants.TaskTypeEnum.GEOCHRON) != 0) {
+        if (task.getTaskType().compareTo(Squid3Constants.TaskTypeEnum.GEOCHRON) != 0) {
             generalTaskTypeRadioButton.setSelected(true);
         } else {
             geochronTaskTypeRadioButton.setSelected(true);
@@ -198,20 +211,55 @@ public class TaskManagerController implements Initializable {
 
         autoExcludeSpotsCheckBox.setSelected(task.isSquidAllowsAutoExclusionOfSpots());
 
-        SpinnerValueFactory<Double> valueFactory
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErr(), 0.05);
-        assignedExternalErrSpinner.setValueFactory(valueFactory);
-        assignedExternalErrSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+        SpinnerValueFactory<Double> valueFactoryU
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrU(), 0.05);
+        assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
+        assignedExternalErrUSpinner.valueProperty().addListener(new ChangeListener<Double>() {
 
             @Override
             public void changed(ObservableValue<? extends Double> observable,//
                     Double oldValue, Double newValue) {
-                task.setExtPErr(assignedExternalErrSpinner.getValue());
+                task.setExtPErrTh(assignedExternalErrUSpinner.getValue());
                 taskAuditTextArea.setText(task.printTaskAudit());
             }
         });
 
+        SpinnerValueFactory<Double> valueFactoryTh
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrTh(), 0.05);
+        assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
+        assignedExternalErrThSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Double> observable,//
+                    Double oldValue, Double newValue) {
+                task.setExtPErrU(assignedExternalErrThSpinner.getValue());
+                taskAuditTextArea.setText(task.printTaskAudit());
+            }
+        });
+
+        // samples
+        ObservableList<String> delimetersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimetersEnum.names());
+        delimeterComboBox.setItems(delimetersList);
+        // set value before adding listener
+        delimeterComboBox.getSelectionModel().select(task.getDelimiterForUnknownNames());
+        delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> ov,
+                    final String oldvalue, final String newvalue) {
+                task.setDelimiterForUnknownNames(newvalue);
+            }
+        });
+
         populateDirectives();
+    }
+
+    /**
+     *
+     * @param expressionName
+     * @param expressionString
+     * @return
+     */
+    private Expression makeExpression(String expressionName, final String expressionString) {
+        return makeExpressionForAudit(expressionName, expressionString, task.getNamedExpressionsMap());
     }
 
     private void populateDirectives() {
@@ -219,25 +267,45 @@ public class TaskManagerController implements Initializable {
         ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
-        pb208RadioButton.setVisible(
-                ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected()
-                && ((RadioButton) taskManagerGridPane.lookup("#indirect")).isSelected());
+        boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();
+        boolean directPicked = ((RadioButton) taskManagerGridPane.lookup("#direct")).isSelected();
+
+        pb208RadioButton.setVisible(uPicked && !directPicked);
+        boolean perm1 = uPicked && !directPicked;
+        boolean perm2 = uPicked && directPicked;
+        boolean perm3 = !uPicked && !directPicked;
+        boolean perm4 = !uPicked && directPicked;
 
         uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
         Expression UTh_U = task.getExpressionByName(UNCOR206PB238U_CALIB_CONST);
-        uncorrConstPbUExpressionLabel.setText((UTh_U == null) ? "Not Used" : UTh_U.getExcelExpressionString());
+        String UTh_U_ExpressionString = (UTh_U == null) ? UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION : UTh_U.getExcelExpressionString();
+        uncorrConstPbUExpressionLabel.setText((perm1 || perm2 || perm4) ? UTh_U_ExpressionString : "Not Used");
+
+        uncorrConstPbUExpressionLabel.setStyle(uncorrConstPbUExpressionLabel.getStyle()
+                + (makeExpression(UNCOR206PB238U_CALIB_CONST, UTh_U_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         uncorrConstPbThlabel.setText(UNCOR208PB232TH_CALIB_CONST + ":");
         Expression UTh_Th = task.getExpressionByName(UNCOR208PB232TH_CALIB_CONST);
-        uncorrConstPbThExpressionLabel.setText((UTh_Th == null) ? "Not Used" : UTh_Th.getExcelExpressionString());
+        String UTh_Th_ExpressionString = (UTh_Th == null) ? UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION : UTh_Th.getExcelExpressionString();
+        uncorrConstPbThExpressionLabel.setText((perm2 || perm3 || perm4) ? UTh_Th_ExpressionString : "Not Used");
+
+        uncorrConstPbThExpressionLabel.setStyle(uncorrConstPbThExpressionLabel.getStyle()
+                + (makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         th232U238Label.setText(TH_U_EXP_RM + ":");
-        Expression thU = task.getExpressionByName(TH_U_EXP_RM);
-        th232U238ExpressionLabel.setText((task.isDirectAltPD()) ? "Not Used" : thU.getExcelExpressionString());
+        Expression thU = task.getExpressionByName(TH_U_EXP_DEFAULT);
+        String thU_ExpressionString = (thU == null) ? TH_U_EXP_DEFAULT_EXPRESSION : thU.getExcelExpressionString();
+        th232U238ExpressionLabel.setText((perm1 || perm3) ? thU_ExpressionString : "Not Used");
+
+        th232U238ExpressionLabel.setStyle(th232U238ExpressionLabel.getStyle()
+                + (makeExpression(TH_U_EXP_DEFAULT, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         parentConcLabel.setText(PARENT_ELEMENT_CONC_CONST + ":");
         Expression parentPPM = task.getExpressionByName(PARENT_ELEMENT_CONC_CONST);
-        parentConcExpressionLabel.setText((parentPPM == null) ? "Not Used" : parentPPM.getExcelExpressionString());
+        String parentPPM_ExpressionString = (parentPPM == null) ? PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION : parentPPM.getExcelExpressionString();
+        parentConcExpressionLabel.setText(parentPPM_ExpressionString);
+        parentConcExpressionLabel.setStyle(parentConcExpressionLabel.getStyle()
+                + (makeExpression(PARENT_ELEMENT_CONC_CONST, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
     }
 
     private void setupListeners() {
@@ -359,13 +427,13 @@ public class TaskManagerController implements Initializable {
 
     @FXML
     private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
-        task.setType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
+        task.setTaskType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
         task.setChanged(true);
     }
 
     @FXML
     private void generalTaskTypeRadioButtonAction(ActionEvent event) {
-        task.setType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
+        task.setTaskType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
         task.setChanged(true);
     }
 
@@ -408,13 +476,13 @@ public class TaskManagerController implements Initializable {
     }
 
     @FXML
-    private void pb208RadioButtonAction(ActionEvent event) {               
+    private void pb208RadioButtonAction(ActionEvent event) {
         updateDirectiveButtons();
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         task.setChanged(true);
     }
-    
-    private void updateDirectiveButtons(){
+
+    private void updateDirectiveButtons() {
         ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(pb208RadioButton.isSelected());
         ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(pb208RadioButton.isSelected());
     }

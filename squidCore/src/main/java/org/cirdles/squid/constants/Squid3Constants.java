@@ -17,7 +17,7 @@ package org.cirdles.squid.constants;
 
 import java.util.HashMap;
 import java.util.Map;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
 
 /**
  *
@@ -103,11 +103,6 @@ public final class Squid3Constants {
 
     public static final String DUPLICATE_STRING = "-DUP-";
 
-    public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
-
-    // holding spot until models are implemented
-    public static final double PRESENT_R238_235S = 137.88;
-
     public enum IndexIsoptopesEnum {
         PB_204("PB_204", "204"),
         PB_207("PB_207", "207"),
@@ -122,8 +117,8 @@ public final class Squid3Constants {
         }
 
         /**
-         * 
-         * @return 
+         *
+         * @return
          */
         public String getName() {
             return name;
@@ -137,7 +132,7 @@ public final class Squid3Constants {
         }
 
         public String getIsotopeCorrectionPrefixString() {
-            return isotope.substring(2, 3) + COR_;
+            return isotope.substring(2, 3) + COR_PREFIX;
         }
     }
 
@@ -148,6 +143,22 @@ public final class Squid3Constants {
         private final String name;
 
         private TaskTypeEnum(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public enum ConcentrationTypeEnum {
+        URANIUM("Uranium"),
+        THORIUM("Thorium"),
+        NONE("NONE");
+
+        private final String name;
+
+        private ConcentrationTypeEnum(String name) {
             this.name = name;
         }
 
@@ -259,5 +270,23 @@ public final class Squid3Constants {
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
     public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "ᵁ";//\u1D41";
     public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
+
+    // http://science.sciencemag.org/content/335/6076/1610
+    public final static double REF_238U235U_DEFAULT = 137.818;
+
+    public static enum SpotTypes {
+        REFERENCE_MATERIAL("REFERENCE MATERIALS"),
+        UNKNOWN("UNKNOWNS");
+
+        private String plotType;
+
+        private SpotTypes(String plotType) {
+            this.plotType = plotType;
+        }
+
+        public String getPlotType() {
+            return plotType;
+        }
+    }
 
 }

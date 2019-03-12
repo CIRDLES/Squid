@@ -17,6 +17,7 @@
  */
 package org.cirdles.squid.utilities.stateUtilities;
 
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -39,7 +40,7 @@ public class SquidPersistentState implements Serializable {
     private static final int MRU_COUNT = 10;
 
     // instance variables
-    private SquidUserPreferences squidUserPreferences;
+    private TaskDesign taskDesign;
 
     private File MRUProjectFile;
     private List<String> MRUProjectList;
@@ -60,7 +61,7 @@ public class SquidPersistentState implements Serializable {
     private File MRUExpressionGraphFile;
     private List<String> MRUExpressionGraphList;
     private String MRUExpressionGraphFolderPath;
-   
+
     private File opFile;
 
     private File customExpressionsFile;
@@ -72,7 +73,7 @@ public class SquidPersistentState implements Serializable {
 
         initMRULists();
 
-        squidUserPreferences = new SquidUserPreferences();
+        taskDesign = new TaskDesign();
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
@@ -109,8 +110,8 @@ public class SquidPersistentState implements Serializable {
         } catch (SquidException squidException) {
         }
     }
-    
-    public void updateUserPreferences(){
+
+    public void updateSquidPersistentState() {
         serializeSelf();
     }
 
@@ -129,10 +130,20 @@ public class SquidPersistentState implements Serializable {
             instance = new SquidPersistentState();
         }
 
+        // check to update TaskDesign
+        TaskDesign sup = instance.getTaskDesign();
+        if (sup == null) {
+            sup = new TaskDesign();
+            instance.setTaskDesign(sup);
+        } else if (sup.getRatioNames() == null) {
+            sup = new TaskDesign();
+            instance.setTaskDesign(sup);
+        }
+
         return instance;
     }
-
     //properties
+
     /**
      *
      * @return
@@ -148,17 +159,17 @@ public class SquidPersistentState implements Serializable {
     }
 
     /**
-     * @return the squidUserPreferences
+     * @return the taskDesign
      */
-    public SquidUserPreferences getSquidUserPreferences() {
-        return squidUserPreferences;
+    public TaskDesign getTaskDesign() {
+        return taskDesign;
     }
 
     /**
-     * @param squidUserPreferences the squidUserPreferences to set
+     * @param taskDesign the taskDesign to set
      */
-    public void setSquidUserPreferences(SquidUserPreferences squidUserPreferences) {
-        this.squidUserPreferences = squidUserPreferences;
+    public void setTaskDesign(TaskDesign taskDesign) {
+        this.taskDesign = taskDesign;
     }
 
     // General methods *********************************************************

@@ -50,8 +50,9 @@ public class ShuntingYard {
         infixList.add("0");
         infixList.add("\n");
         infixList.add("]");
+        infixList.add("xxx");
 
-        //System.out.println("Shunt " + infixToPostfix(infixList));
+        System.out.println("Shunt " + infixToPostfix(infixList));
     }
 
     /**
@@ -332,7 +333,7 @@ public class ShuntingYard {
                 retVal = COMMA;
             } else if (FUNCTIONS_MAP.containsKey(token)) {
                 retVal = FUNCTION;
-            } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]\\[\\d\\]")) {
+            } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]( )*\\[\\d\\]( )*")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
             } else if (token.matches("\\w+\\[\\d\\]") && !token.matches("\\d+\\[\\d\\]") && !token.toUpperCase().matches("TRUE\\[\\d\\]") && !token.toUpperCase().matches("FALSE\\[\\d\\]")) {
                 retVal = NAMED_EXPRESSION_INDEXED;

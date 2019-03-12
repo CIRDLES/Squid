@@ -56,6 +56,8 @@ public class ShrimpSpeciesNode extends ExpressionTree {
         this.squidSpeciesModel = squidSpeciesModel;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
         this.isotopeName = squidSpeciesModel.getIsotopeName();
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;
     }
 
     public static ShrimpSpeciesNode buildShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel, String methodNameForShrimpFraction) {
@@ -180,7 +182,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
                 + "</mstyle>\n"
                 + "<mstyle  mathsize='150%'>\n"
                 + "<mtext>\n"
-                + squidSpeciesModel.getElementName()
+                + squidSpeciesModel.getElementName().split("2")[0]
                 + "\n</mtext>\n"
                 + "</mstyle>\n"
                 + "<mtext/>"

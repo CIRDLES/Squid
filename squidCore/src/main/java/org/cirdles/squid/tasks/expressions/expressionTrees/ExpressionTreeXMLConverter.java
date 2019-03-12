@@ -71,7 +71,7 @@ public class ExpressionTreeXMLConverter implements Converter {
      */
     @Override
     public boolean canConvert(Class clazz) {
-        return clazz.equals(ExpressionTree.class);
+        return clazz.equals(ExpressionTree.class)||clazz.equals(ExpressionTreeParsedFromExcelString.class);
     }
 
     /**
@@ -91,7 +91,7 @@ public class ExpressionTreeXMLConverter implements Converter {
     public void marshal(Object value, HierarchicalStreamWriter writer,
             MarshallingContext context) {
 
-        ExpressionTreeInterface expressionTree = (ExpressionTree) value;
+        ExpressionTree expressionTree = (ExpressionTree) value;
 
         writer.startNode("name");
         writer.setValue(expressionTree.getName());

@@ -32,13 +32,21 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
 
 /**
  *
@@ -140,7 +148,7 @@ public interface TaskInterface {
     /**
      * @return the type
      */
-    TaskTypeEnum getType();
+    TaskTypeEnum getTaskType();
 
     /**
      * @return the mapOfIndexToMassStationDetails
@@ -224,7 +232,7 @@ public interface TaskInterface {
     /**
      * @param type the type to set
      */
-    public void setType(TaskTypeEnum type);
+    public void setTaskType(TaskTypeEnum type);
 
     public void setupSquidSessionSpecsAndReduceAndReport();
 
@@ -380,27 +388,60 @@ public interface TaskInterface {
      */
     public void setParentNuclide(String parentNuclide);
 
+    /**
+     *
+     */
     public default void applyDirectives() {
-        // need to remove stored expression results on fractions to clear the decks
+        TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
+
+        // need to remove stored expression results on fractions to clear the decks   
         getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
         });
         // clear task expressions
         setTaskExpressionsEvaluationsPerSpotSet(new TreeMap<>(String.CASE_INSENSITIVE_ORDER));
-        
-        List<Expression> customExpressions = getCustomTaskExpressions();
 
-        Expression parentPPM = getExpressionByName(PARENT_ELEMENT_CONC_CONST);
-        Expression parentPPMmean = getExpressionByName(AV_PARENT_ELEMENT_CONC_CONST);
+        List<Expression> customExpressions = getCustomTaskExpressions();
 
         getTaskExpressionsOrdered().clear();
 
-        // TODO: expressions need to come from preferences and/or models
-        Expression uThU = BuiltInExpressionsFactory.buildExpression(UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^Expo_Used", true, true, false);
+        // write the magic 4 expressions plus parent mean exp
+        String parentPPM_Expression = getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
+        if ((parentPPM_Expression == null) || (parentPPM_Expression.length()) == 0) {
+            parentPPM_Expression = taskDesign.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST);
+        }
+        if ((parentPPM_Expression == null) || (parentPPM_Expression.length()) == 0) {
+            parentPPM_Expression = BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
+        }
+        Expression parentPPM = BuiltInExpressionsFactory.buildExpression(
+                PARENT_ELEMENT_CONC_CONST, parentPPM_Expression, true, true, false);
+        parentPPM.setSquidSwitchNU(true);
+        getSpecialSquidFourExpressionsMap().put(PARENT_ELEMENT_CONC_CONST, parentPPM_Expression);
+
+        String uThU_Expression = getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
+        if ((uThU_Expression == null) || (uThU_Expression.length()) == 0) {
+            uThU_Expression = taskDesign.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
+        }
+        if ((uThU_Expression == null) || (uThU_Expression.length()) == 0) {
+            uThU_Expression = UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
+        }
+        Expression uThU = BuiltInExpressionsFactory.buildExpression(
+                UNCOR206PB238U_CALIB_CONST, uThU_Expression, true, true, false);
         uThU.setSquidSwitchNU(true);
-        Expression uThTh = BuiltInExpressionsFactory.buildExpression(UNCOR208PB232TH_CALIB_CONST, "[\"208/248\"]", true, true, false);
+        getSpecialSquidFourExpressionsMap().put(UNCOR206PB238U_CALIB_CONST, uThU_Expression);
+
+        String uThTh_Expression = getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
+        if ((uThTh_Expression == null) || (uThTh_Expression.length()) == 0) {
+            uThTh_Expression = taskDesign.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST);
+        }
+        if ((uThTh_Expression == null) || (uThTh_Expression.length()) == 0) {
+            uThTh_Expression = UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+        }
+        Expression uThTh = BuiltInExpressionsFactory.buildExpression(
+                UNCOR208PB232TH_CALIB_CONST, uThTh_Expression, true, true, false);
         uThTh.setSquidSwitchNU(true);
+        getSpecialSquidFourExpressionsMap().put(UNCOR208PB232TH_CALIB_CONST, uThTh_Expression);
 
         if (isPbU()) {
             getTaskExpressionsOrdered().add(uThU);
@@ -415,30 +456,40 @@ public interface TaskInterface {
         }
 
         if (!isDirectAltPD()) {
-            Expression thU = BuiltInExpressionsFactory.buildExpression(TH_U_EXP_RM, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
+            String thU_DEFAULT_Expression = getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
+            if ((thU_DEFAULT_Expression == null) || (thU_DEFAULT_Expression.length()) == 0) {
+                thU_DEFAULT_Expression = taskDesign.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT);
+            }
+            if ((thU_DEFAULT_Expression == null) || (thU_DEFAULT_Expression.length()) == 0) {
+                thU_DEFAULT_Expression = TH_U_EXP_DEFAULT_EXPRESSION;
+            }
+            Expression thU_RM = BuiltInExpressionsFactory.buildExpression(TH_U_EXP_RM, thU_DEFAULT_Expression, true, false, false);
+            thU_RM.setSquidSwitchNU(true);
+            getTaskExpressionsOrdered().add(thU_RM);
+
+            Expression thU = BuiltInExpressionsFactory.buildExpression(TH_U_EXP, thU_DEFAULT_Expression, false, true, false);
             thU.setSquidSwitchNU(true);
             getTaskExpressionsOrdered().add(thU);
-
-            Expression thUS = BuiltInExpressionsFactory.buildExpression(TH_U_EXP, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]", true, true, false);
-            thUS.setSquidSwitchNU(true);
-            getTaskExpressionsOrdered().add(thUS);
         }
 
         generateBuiltInExpressions();
 
         getTaskExpressionsOrdered().add(parentPPM);
-        getTaskExpressionsOrdered().add(parentPPMmean);
 
         getTaskExpressionsOrdered().addAll(customExpressions);
 
         setChanged(true);
 
+        updateRefMatCalibConstWMeanExpressions(isSquidAllowsAutoExclusionOfSpots());
+
         updateAllExpressions(true);
         processAndSortExpressions();
         updateAllExpressions(true);
         setupSquidSessionSpecsAndReduceAndReport();
+        // prepares for second pass when needed
+        setChanged(true);
     }
-    
+
     public void processAndSortExpressions();
 
     public default boolean isPbU() {
@@ -567,12 +618,53 @@ public interface TaskInterface {
     /**
      * @param extPErr the extPErr to set
      */
-    public void setExtPErr(double extPErr);
+    public void setExtPErrU(double extPErr);
 
     /**
      * @return the extPErr
      */
-    public double getExtPErr();
+    public double getExtPErrU();
+
+    /**
+     * @return the extPErrTh
+     */
+    public double getExtPErrTh();
+
+    /**
+     * @param extPErrTh the extPErrTh to set
+     */
+    public void setExtPErrTh(double extPErrTh);
 
     public String listBuiltInExpressions();
+
+    public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
+
+    /**
+     * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap
+     * to set
+     */
+    public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap);
+
+    /**
+     * @return the specialSquidFourExpressionsMap
+     */
+    public Map<String, String> getSpecialSquidFourExpressionsMap();
+
+    public void updateTaskFromTaskDesign(TaskDesign taskDesign);
+
+    public void updateTaskDesignFromTask(TaskDesign taskDesign);
+
+    /**
+     * @return the delimiterForUnknownNames
+     */
+    public String getDelimiterForUnknownNames();
+
+    /**
+     * @param delimiterForUnknownNames the delimiterForUnknownNames to set
+     */
+    public void setDelimiterForUnknownNames(String delimiterForUnknownNames);
+
+    public String printExpressionRequiresGraph(Expression exp);
+    
+    public String printExpressionProvidesGraph(Expression exp);
 }

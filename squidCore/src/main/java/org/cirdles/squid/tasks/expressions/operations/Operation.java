@@ -74,6 +74,8 @@ public abstract class Operation
      *
      */
     protected String[] labelsForInputValues = new String[]{};
+    
+    protected String definition;
 
     /**
      *
@@ -299,4 +301,11 @@ public abstract class Operation
     public String[] getLabelsForInputValues() {
         return labelsForInputValues;
     }
+
+    @Override
+    public String getDefinition() {
+        return definition;
+    }
+    
+    
 }

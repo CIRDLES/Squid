@@ -47,8 +47,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private int stageX;
     private int stageY;
     private int stageZ;
-    private int qtlY;
-    private int qtlZ;
+    private int qt1Y;
+    private int qt1Z;
     private double primaryBeam;
     private double[] countTimeSec;
     private String[] namesOfSpecies;
@@ -290,32 +290,32 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     * @return the qtlY
+     * @return the qt1Y
      */
-    public int getQtlY() {
-        return qtlY;
+    public int getQt1Y() {
+        return qt1Y;
     }
 
     /**
-     * @param qtlY the qtlY to set
+     * @param qt1Y the qt1Y to set
      */
-    public void setQtlY(int qtlY) {
-        this.qtlY = qtlY;
+    public void setQt1Y(int qt1Y) {
+        this.qt1Y = qt1Y;
     }
 
     /**
-     * @return the qtlZ
+     * @return the qt1Z
      */
     @Override
-    public int getQtlZ() {
-        return qtlZ;
+    public int getQt1Z() {
+        return qt1Z;
     }
 
     /**
-     * @param qtlZ the qtlZ to set
+     * @param qt1Z the qt1Z to set
      */
-    public void setQtlZ(int qtlZ) {
-        this.qtlZ = qtlZ;
+    public void setQt1Z(int qt1Z) {
+        this.qt1Z = qt1Z;
     }
 
     /**
