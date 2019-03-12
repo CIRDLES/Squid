@@ -17,15 +17,12 @@ package org.cirdles.squid.gui.expressions;
 
 import com.google.common.collect.Lists;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -157,6 +154,7 @@ import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardContextMenu;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 
 /**
@@ -2719,16 +2717,16 @@ public class ExpressionBuilderController implements Initializable {
                                 + "  " + ex.getName()
                                 + "\n  Targets: "
                                 + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
-                                        + (expTree.isSquidSwitchSTReferenceMaterialCalculation()? "R" : "")
-                                        + (expTree.isSquidSwitchSAUnknownCalculation()? "U" : "")
-                                        + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation()? "Summary " : "")
-                                        + (ex.isSquidSwitchNU()? "NU-switched " : "")
-                                        + (expTree.isSquidSpecialUPbThExpression()? "Built-In" : "")
+                                + (expTree.isSquidSwitchSTReferenceMaterialCalculation() ? "R" : "")
+                                + (expTree.isSquidSwitchSAUnknownCalculation() ? "U" : "")
+                                + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation() ? "Summary " : "")
+                                + (ex.isSquidSwitchNU() ? "NU-switched " : "")
+                                + (expTree.isSquidSpecialUPbThExpression() ? "Built-In" : "")
                                 + "\n\nExpression string: "
                                 + ex.getExcelExpressionString()
                                 + "\n"
                                 + uncertainty
-                                + (ex.amHealthy() ? createPeekForTooltip(ex) : ex.produceExpressionTreeAudit().trim())
+                                + (ex.amHealthy() ? createPeekForTooltip(ex) : customizeExpressionTreeAudit(ex).trim())
                                 + "\nNotes:\n"
                                 + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                         if (!ex.amHealthy()) {
@@ -2826,6 +2824,38 @@ public class ExpressionBuilderController implements Initializable {
 
     }
 
+    private String customizeExpressionTreeAudit(Expression exp) {
+        String audit = exp.produceExpressionTreeAudit().trim();
+        // add in secton reviewing health of dependent expressions
+        StringBuilder depAudit = new StringBuilder().append("Dependency Audit:\n");
+        List<String> dependentExpressionNames = ((Task) task).getRequiresExpressionsGraph().get(exp.getName());
+
+        if ((dependentExpressionNames != null) && (!dependentExpressionNames.isEmpty())) {
+            for (String expressionName : dependentExpressionNames) {
+
+                depAudit.append("\t")
+                        .append(expressionName)
+                        .append(" : ");
+                if (task.getExpressionByName(expressionName) != null) {
+                    depAudit.append(task.getExpressionByName(expressionName).amHealthy() ? "" : "UN").append("HEALTHY");
+                } else {
+                    // constant or ratio etc
+                    depAudit.append("HEALTHY");
+                }
+                depAudit.append("\n");
+
+            }
+        } else {
+            depAudit.append("\t")
+                    .append("No dependent expressions.")
+                    .append("\n");
+        }
+
+        depAudit.append("\n");
+
+        return depAudit.toString() + audit;
+    }
+
     public void updateEditor() {
 
         if (selectedExpression.isNotNull().get()) {
@@ -2836,8 +2866,9 @@ public class ExpressionBuilderController implements Initializable {
                 exp = selectedExpression.get();
             }
 
+            ((Task) task).evaluateTaskExpression(exp);
             boolean localAmHealthy = exp.amHealthy() && (exp.getName().length() > 0);
-            auditTextArea.setText(exp.produceExpressionTreeAudit());
+            auditTextArea.setText(customizeExpressionTreeAudit(exp));
             auditPane.setTextFill(localAmHealthy ? Paint.valueOf("black") : Paint.valueOf("red"));
             auditPane.setText(localAmHealthy ? "Audit" : "Audit - ALERT !!!" + ((exp.getName().length() == 0) ? "  Expression needs name" : ""));
             auditPane.setGraphic(localAmHealthy ? new ImageView(HEALTHY) : new ImageView(UNHEALTHY));
@@ -2925,13 +2956,29 @@ public class ExpressionBuilderController implements Initializable {
         String expression = expressionString.get();
         expression = expression.replaceAll("( )*\\[", "[");
         Expression exp = makeExpression(expressionNameTextField.getText(), expression);
-        //Remove if an expression already exists with the same name
-        task.removeExpression(exp, true);
+        // March 2019 change logic
+        // if the replacement expression does not change its name or
+        // if this is a new expression, we need the low-impact route
+        // of just recreating and re-evaluating this expression
+        // otherwise with a new name we need the full expressions list reevaluated
+
+        task.removeExpression(exp, false);
         //Removes the old expression if the name has been changed
         if (currentMode.get().equals(Mode.EDIT) && !exp.getName().equalsIgnoreCase(selectedExpression.get().getName())) {
-            task.removeExpression(selectedExpression.get(), true);
+            task.removeExpression(selectedExpression.get(), false);
+            task.addExpression(exp, true);
+        } else {
+            task.addExpression(exp, false);
         }
-        task.addExpression(exp, true);
+
+//        //Remove if an expression already exists with the same name
+//        task.removeExpression(exp, true);
+//        //Removes the old expression if the name has been changed
+//        if (currentMode.get().equals(Mode.EDIT) && !exp.getName().equalsIgnoreCase(selectedExpression.get().getName())) {
+//            task.removeExpression(selectedExpression.get(), true);
+//        }
+//        task.addExpression(exp, false);
+//
         //update lists
         populateExpressionListViews();
         //set the new expression as edited expression

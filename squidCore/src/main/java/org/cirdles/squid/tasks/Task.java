@@ -337,8 +337,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.concentrationTypeEnum = URANIUM;
 
-        this.providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        this.requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         generateConstants();
         generateParameters();
@@ -1065,22 +1065,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void removeExpression(Expression expression, boolean reprocessExpressions) {
         if (expression != null) {
-            // having issues with remove, so handling by hand
-            // it appears java has a bug since even when comparator and equals have correct result
-            List<Expression> taskBasket = new ArrayList<>();
-            for (Expression exp : taskExpressionsOrdered) {
-                if (!exp.equals(expression)) {
-                    taskBasket.add(exp);
+            if (namedExpressionsMap.containsKey(expression.getName())) {
+                // having issues with remove, so handling by hand
+                // it appears java has a bug since even when comparator and equals have correct result
+                List<Expression> taskBasket = new ArrayList<>();
+                for (Expression exp : taskExpressionsOrdered) {
+                    if (!exp.equals(expression)) {
+                        taskBasket.add(exp);
+                    }
                 }
-            }
-            taskExpressionsOrdered = taskBasket;
-            taskExpressionsRemoved.add(expression);
+                taskExpressionsOrdered = taskBasket;
+                taskExpressionsRemoved.add(expression);
 
-            updateAffectedExpressions(expression, reprocessExpressions);
-            updateAllExpressions(reprocessExpressions);
-            setChanged(true);
-            if (reprocessExpressions) {
-                setupSquidSessionSpecsAndReduceAndReport();
+                updateAffectedExpressions(expression, reprocessExpressions);
+                updateAllExpressions(reprocessExpressions);
+                setChanged(reprocessExpressions);
+                if (reprocessExpressions) {
+                    setupSquidSessionSpecsAndReduceAndReport();
+                }
             }
         }
     }
@@ -1099,9 +1101,29 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         updateAffectedExpressions(exp, reprocessExpressions);
         updateAllExpressions(reprocessExpressions);
-        setChanged(true);
+        setChanged(reprocessExpressions);
         if (reprocessExpressions) {
             setupSquidSessionSpecsAndReduceAndReport();
+        } else {
+            namedExpressionsMap.put(exp.getName(), exp.getExpressionTree());
+            buildExpressionDependencyGraphs();
+            evaluateTaskExpression(exp);
+            List<String> evaluated = new ArrayList<>();
+            evaluated.add(exp.getName());
+            evaluateDependentExpressions(evaluated, exp.getName());
+        }
+    }
+
+    private void evaluateDependentExpressions(List<String> evaluated, String expressionName) {
+        List<String> providedTo = providesExpressionsGraph.get(expressionName);
+        if (providedTo != null) {
+            for (String providedToName : providedTo) {
+                if (!evaluated.contains(providedToName)) {
+                    evaluated.add(providedToName);
+                    evaluateTaskExpression(getExpressionByName(providedToName));
+                    evaluateDependentExpressions(evaluated, providedToName);
+                }
+            }
         }
     }
 
@@ -1644,29 +1666,33 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         });
 
         for (Expression expression : taskExpressionsOrdered) {
-            ExpressionTreeInterface expressionTree = expression.getExpressionTree();
+            evaluateTaskExpression(expression);
+        }
+    }
 
-            if (expressionTree.amHealthy()) {// && expressionTree.isRootExpressionTree()) {
-                // determine subset of spots to be evaluated - default = all
-                List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
+    public void evaluateTaskExpression(Expression expression) {
+        ExpressionTreeInterface expressionTree = expression.getExpressionTree();
 
-                if (((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                    spotsForExpression = concentrationReferenceMaterialSpots;
-                } else if (!((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation()) {
-                    // lookup set of unknowns
-                    String unknownGroupSampleName = ((ExpressionTree) expressionTree).getUnknownsGroupSampleName();
-                    spotsForExpression = mapOfUnknownsBySampleNames.get(unknownGroupSampleName);
+        if (expressionTree.amHealthy()) {// && expressionTree.isRootExpressionTree()) {
+            // determine subset of spots to be evaluated - default = all
+            List<ShrimpFractionExpressionInterface> spotsForExpression = shrimpFractions;
 
-                } else if (!((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation()) {
-                    spotsForExpression = referenceMaterialSpots;
-                }
+            if (((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                spotsForExpression = concentrationReferenceMaterialSpots;
+            } else if (!((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation()) {
+                // lookup set of unknowns
+                String unknownGroupSampleName = ((ExpressionTree) expressionTree).getUnknownsGroupSampleName();
+                spotsForExpression = mapOfUnknownsBySampleNames.get(unknownGroupSampleName);
 
-                // now evaluate expressionTree
-                try {
-                    evaluateExpressionForSpotSet(expression, spotsForExpression);
-                } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
-                    //System.out.println("Out of bounds at evaluateTaskExpressions");
-                }
+            } else if (!((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation()) {
+                spotsForExpression = referenceMaterialSpots;
+            }
+
+            // now evaluate expressionTree
+            try {
+                evaluateExpressionForSpotSet(expression, spotsForExpression);
+            } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
+                //System.out.println("Out of bounds at evaluateTaskExpressions");
             }
         }
     }
@@ -1911,14 +1937,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ratioNames = revisedRatioNames;
     }
 
-    private void buildExpressionDependencyGraphs() {
+    public void buildExpressionDependencyGraphs() {
         // prep graphs
-        this.requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        this.providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         for (Expression exp : taskExpressionsOrdered) {
-            if (!exp.isParameterValue()
-                    && !exp.isReferenceMaterialValue()) {
+            if (true) {
                 List<String> calledExpressions = buildExpressionRequiresGraph(exp);
                 requiresExpressionsGraph.put(exp.getName(), calledExpressions);
 
@@ -2812,6 +2837,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setDelimiterForUnknownNames(String delimiterForUnknownNames) {
         this.delimiterForUnknownNames = delimiterForUnknownNames;
+    }
+
+    /**
+     * @return the providesExpressionsGraph
+     */
+    public Map<String, List<String>> getProvidesExpressionsGraph() {
+        if ((providesExpressionsGraph == null) || providesExpressionsGraph.isEmpty()){
+            buildExpressionDependencyGraphs();
+        }
+        return providesExpressionsGraph;
+    }
+
+    /**
+     * @return the requiresExpressionsGraph
+     */
+    public Map<String, List<String>> getRequiresExpressionsGraph() {
+        if ((requiresExpressionsGraph == null) || requiresExpressionsGraph.isEmpty()){
+            buildExpressionDependencyGraphs();
+        }
+        return requiresExpressionsGraph;
     }
 
 }

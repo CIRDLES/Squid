@@ -46,6 +46,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLCo
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
+import org.cirdles.squid.tasks.Task;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsAliased.BUILTIN_EXPRESSION_ALIASEDNAMES;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
@@ -275,7 +276,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
                 }
                 auditReport += "\n";
             }
-
+            
             auditReport
                     += "Expression healthy: "
                     + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.ENGLISH);
