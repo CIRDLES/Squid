@@ -493,4 +493,9 @@ public class TaskManagerController implements Initializable {
         task.updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
     }
 
+    @FXML
+    private void refreshModelsAction(ActionEvent event) {
+        task.refreshParametersFromModels();
+    }
+
 }
