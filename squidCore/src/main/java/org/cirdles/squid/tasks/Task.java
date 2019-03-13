@@ -749,7 +749,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
-    private void updateParametersFromModels() {
+    public void updateParametersFromModels() {
         boolean doUpdateAll
                 = commonPbModelChanged || physicalConstantsModelChanged || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
 
