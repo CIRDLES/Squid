@@ -46,6 +46,8 @@ public class Average extends Function {
         colCount = 2;
         labelsForOutputValues = new String[][]{{"average"}};
         labelsForInputValues = new String[]{"numbers"};
+        summaryCalc = true;
+        definition = "Calculates the sum divided by the count.";
     }
 
     /**
@@ -92,9 +94,7 @@ public class Average extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

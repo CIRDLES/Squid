@@ -341,7 +341,7 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
 
 //        if (myMatrix.initializeMatrixModelWithVariances(varianceTerms)) {
 //            ((CovarianceMatrixModel)myMatrix).initializeCoVariances(coVariances);
-//            System.out.println(myMatrix.ToStringWithLabels());
+//            System.out.println(myMatrix.toStringWithLabels());
 //        }
 
 

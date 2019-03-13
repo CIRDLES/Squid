@@ -383,7 +383,7 @@ public class TaskManagerController implements Initializable {
 
         refMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    task.setReferenceMaterial(newValue);
+                    task.setReferenceMaterialModel(newValue);
                     task.setChanged(true);
                     task.setupSquidSessionSpecsAndReduceAndReport();
                 });
@@ -395,7 +395,7 @@ public class TaskManagerController implements Initializable {
 
         concRefMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    task.setConcentrationReferenceMaterial(newValue);
+                    task.setConcentrationReferenceMaterialModel(newValue);
                     task.setChanged(true);
                     task.setupSquidSessionSpecsAndReduceAndReport();
                 });
@@ -491,6 +491,11 @@ public class TaskManagerController implements Initializable {
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
         // this will cause weighted mean expressions to be changed with boolean flag
         task.updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
+    }
+
+    @FXML
+    private void refreshModelsAction(ActionEvent event) {
+        task.refreshParametersFromModels();
     }
 
 }

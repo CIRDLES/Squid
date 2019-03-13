@@ -87,7 +87,7 @@ public class RunsViewModel {
 
         @Override
         public boolean test(PrawnFile.Run run) {
-            return run.getPar().get(0).getValue().toUpperCase(Locale.US).trim().startsWith(spotName);
+            return run.getPar().get(0).getValue().toUpperCase(Locale.ENGLISH).trim().startsWith(spotName);
         }
     }
 
