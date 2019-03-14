@@ -41,8 +41,8 @@
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="836.0" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
-            <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="816.0" text="Task Designer: Set Defaults for new Tasks" />
-            <ToolBar prefHeight="43.0" prefWidth="243.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
+            <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="717.0" text="Task Designer: Set Defaults for new Tasks" />
+            <ToolBar prefHeight="43.0" prefWidth="346.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
               <items>
                 <Button mnemonicParsing="false" onAction="#newTaskFromThisDesignAction" text="New Task from this Design" />
               </items>
