@@ -147,23 +147,12 @@
          <children>
             <ToolBar VBox.vgrow="NEVER">
                <items>
-                  <VBox fx:id="toolBarVBox" alignment="CENTER_LEFT">
-                     <children>
-                        <HBox spacing="5.0" VBox.vgrow="ALWAYS">
-                           <children>
-                              <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create new" HBox.hgrow="NEVER" />
-                              <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Create copy" />
-                              <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
-                              <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
-                              <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#showDependencyGraphsAction" text="Show Dependency Graphs" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets left="140.0" />
-                                 </HBox.margin></Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
+                  <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create new" />
+                  <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Create copy" />
+                  <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
+                  <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
+                  <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#showDependencyGraphsAction" text="Show Dependency Graphs" translateX="125.0" />
                </items>
             </ToolBar>
             <VBox fx:id="editorVBox" VBox.vgrow="ALWAYS">

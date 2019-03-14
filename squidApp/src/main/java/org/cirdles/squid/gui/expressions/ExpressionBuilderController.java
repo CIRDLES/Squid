@@ -348,8 +348,6 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     private HBox toolBarHBox;
     @FXML
-    private VBox toolBarVBox;
-    @FXML
     private VBox selectSpotsVBox;
     @FXML
     private ScrollPane expressionScrollPane;

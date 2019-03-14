@@ -22,7 +22,7 @@
 grammar ExpressionsForSquid2;
 
 @header {
-    package org.cirdles.squid;
+   package org.cirdles.squid; //- this causes problems with maven by wrtiitng twice
 } 
 
 /*file:   (functionDecl | varDecl)+ ;
