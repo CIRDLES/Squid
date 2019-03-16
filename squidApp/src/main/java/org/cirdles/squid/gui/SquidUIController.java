@@ -25,23 +25,27 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.plots.PlotsController;
 import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
+import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
@@ -63,16 +67,12 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
-import org.cirdles.squid.tasks.Task;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
@@ -87,6 +87,8 @@ public class SquidUIController implements Initializable {
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
     public static final SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
+    @FXML
+    private Menu openRecentOPFileMenu;
     @FXML
     private MenuItem newSquidProjectFromOPFileMenuItem;
     @FXML
@@ -213,6 +215,7 @@ public class SquidUIController implements Initializable {
         newSquidProjectByJoinMenuItem.setDisable(false);
         openSquidProjectMenuItem.setDisable(false);
         buildProjectMenuMRU();
+        buildOPFileMenuMRU();
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
         projectManagerMenuItem.setDisable(true);
@@ -240,9 +243,9 @@ public class SquidUIController implements Initializable {
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
     }
-    
-    public static void launchTaskManagerStatic(){
-        
+
+    public static void launchTaskManagerStatic() {
+
     }
 
     private void buildProjectMenuMRU() {
@@ -262,6 +265,26 @@ public class SquidUIController implements Initializable {
                 }
             });
             openRecentSquidProjectMenu.getItems().add(menuItem);
+        }
+    }
+
+    private void buildOPFileMenuMRU() {
+        openRecentOPFileMenu.setDisable(false);
+
+        openRecentOPFileMenu.getItems().clear();
+        List<String> mruOPFileList = squidPersistentState.getMRUOPFileList();
+        for (String opFileName : mruOPFileList) {
+            MenuItem menuItem = new MenuItem(opFileName);
+            menuItem.setOnAction((ActionEvent t) -> {
+                try {
+                    openOPFile(menuItem.getText());
+                } catch (IOException iOException) {
+                    squidPersistentState.removeOPFileNameFromMRU(menuItem.getText());
+                    squidPersistentState.cleanOPFileListMRU();
+                    openRecentOPFileMenu.getItems().remove(menuItem);
+                }
+            });
+            openRecentOPFileMenu.getItems().add(menuItem);
         }
     }
 
@@ -391,23 +414,9 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
-        prepareForNewProject();
-
+    private void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
         try {
-            File opFileNew = FileHandler.selectOPFile(primaryStageWindow);
-            if (opFileNew != null) {
-                squidProject.setupPrawnOPFile(opFileNew);
-                squidProject.autoDivideSamples();
-                //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
-                SquidUI.updateStageTitle("");
-                launchProjectManager();
-                saveSquidProjectMenuItem.setDisable(true);
-                customizeDataMenu();
-            } else {
-                squidProject.getTask().setChanged(false);
-                SquidProject.setProjectChanged(false);
-            }
+            openOPFile(FileHandler.selectOPFile(primaryStageWindow));
         } catch (IOException iOException) {
             String message = iOException.getMessage();
             if (message == null) {
@@ -416,8 +425,30 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
+        }
+    }
+
+    private void openOPFile(String path) throws IOException {
+        openOPFile(new File(path));
+    }
+
+    private void openOPFile(File file) throws IOException {
+        prepareForNewProject();
+        if (file != null) {
+            squidProject.setupPrawnOPFile(file);
+            squidProject.autoDivideSamples();
+            //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
+            SquidUI.updateStageTitle("");
+            launchProjectManager();
+            saveSquidProjectMenuItem.setDisable(true);
+            customizeDataMenu();
+            squidPersistentState.updateOPFileListMRU(file);
+            buildOPFileMenuMRU();
+        } else {
+            squidProject.getTask().setChanged(false);
+            SquidProject.setProjectChanged(false);
         }
     }
 
@@ -447,7 +478,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
     }
@@ -458,9 +489,9 @@ public class SquidUIController implements Initializable {
 
         SquidMessageDialog.showInfoDialog(
                 "To join two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
-                + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
-                + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
-                + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
+                        + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
+                        + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
+                        + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
                 primaryStageWindow);
 
         try {
@@ -482,7 +513,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open and join the selected files:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
 
@@ -524,8 +555,8 @@ public class SquidUIController implements Initializable {
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
                 verifySquidLabDataParameters();
-                
-                ((Task)squidProject.getTask()).buildExpressionDependencyGraphs();
+
+                ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
 
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 SquidUI.updateStageTitle(projectFileName);
@@ -686,7 +717,7 @@ public class SquidUIController implements Initializable {
         // present warning if needed
         if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Reference Materials and "
-                    + "Sample names using the Data menu.\n",
+                            + "Sample names using the Data menu.\n",
                     null);
         }
 
@@ -1309,7 +1340,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected Prawn File:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
     }
@@ -1394,9 +1425,9 @@ public class SquidUIController implements Initializable {
         } else {
             SquidMessageDialog.showInfoDialog(
                     "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                    + " masses, but the Task Designer specifies "
-                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
-                    + ".",
+                            + " masses, but the Task Designer specifies "
+                            + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                            + ".",
                     null);
         }
     }
