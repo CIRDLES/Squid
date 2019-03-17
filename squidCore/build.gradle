@@ -30,8 +30,8 @@ dependencies {
     compile "com.github.cirdles:LudwigLibrary:6569c60873"
     compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.9'
     
-    antlr "org.antlr:antlr4:4.7.2"
-    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.2'
+    antlr "org.antlr:antlr4:4.7.1"
+    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.1'
     
     // https://mvnrepository.com/artifact/org.apache.poi/poi
     compile group: 'org.apache.poi', name: 'poi', version: '3.16'
