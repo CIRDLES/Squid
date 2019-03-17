@@ -2,10 +2,10 @@ package org.cirdles.squid.op;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.sql.Time;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,7 +13,7 @@ public class OPFileRunFractionParser {
     public static List<OPFraction> parseOPFile(File file) {
         List<OPFraction> opList = new ArrayList<>();
         try {
-            FileInputStream fis = new FileInputStream(file);
+            InputStreamReader fis = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8); //new FileInputStream(file);
             Scanner scanner = new Scanner(fis);
 
             while (scanner.hasNextLine()) {

@@ -47,6 +47,9 @@ public class RobReg extends Function {
         colCount = 4;
         labelsForOutputValues = new String[][]{{"Slope", "SlopeErr", "Y-Intercept", "Y-IntErr"}};
         labelsForInputValues = new String[]{"xNumbers", "yNumbers"};
+        summaryCalc = true;
+        definition = "Provides the functionality of Squid's robReg by calling robustReg2 and\n"
+                + "   returning \"Slope\", \"SlopeErr\", \"Y-Intercept\", \"Y-IntErr\".";
     }
 
     /**
@@ -93,9 +96,7 @@ public class RobReg extends Function {
                 + "<mi>RobReg</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

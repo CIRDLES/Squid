@@ -37,9 +37,10 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 @XStreamAlias("Operation")
 public class Rad8corConcRho extends Function {
 
-    //private static final long serialVersionUID = -6711265919551953531L;
+    private static final long serialVersionUID = 1126819217616132995L;
+
     /**
-     Ludwig specifies: Returns the error correlation for 208-corrected
+     * Ludwig specifies: Returns the error correlation for 208-corrected
      * 206PbSTAR/238U-207PbSTAR/235U ratio-pairs.
      *
      * @see
@@ -67,9 +68,9 @@ public class Rad8corConcRho extends Function {
      *
      * Requires that children 0 - 8 are VariableNodes that evaluate to a double
      * array with column 1 representing the values for Total 206/238, Total
-     * 206/238 1%Unct, 8-corr 206/238, Total 208/232, Total 208/232 1%Unct, Total 207/206, Total
-     * 207/206 1%Unct, Total 208/206, Total 208/206 1%Unct with a row for each
-     * member of shrimpFractions.
+     * 206/238 1%Unct, 8-corr 206/238, Total 208/232, Total 208/232 1%Unct,
+     * Total 207/206, Total 207/206 1%Unct, Total 208/206, Total 208/206 1%Unct
+     * with a row for each member of shrimpFractions.
      *
      * @param childrenET list containing child 0-8
      * @param shrimpFractions a list of shrimpFractions
@@ -91,10 +92,10 @@ public class Rad8corConcRho extends Function {
             double[] totPb76per = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
             double[] totPb86 = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
             double[] totPb86per = convertObjectArrayToDoubles(childrenET.get(8).eval(shrimpFractions, task)[0]);
-            
+
             double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_76).getValues()[0][0];
             double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_86).getValues()[0][0];
-            
+
             double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
             double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_232.getName()).getValues()[0][0];
             double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
@@ -108,9 +109,9 @@ public class Rad8corConcRho extends Function {
                     totPb76per[0],
                     totPb86[0],
                     totPb86per[0],
-                    sComm_76, sComm_86, 
+                    sComm_76, sComm_86,
                     present238U235U, lambda232, lambda238);
-            
+
             retVal = new Object[][]{{rad8corConcRho[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0}};
@@ -131,9 +132,7 @@ public class Rad8corConcRho extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

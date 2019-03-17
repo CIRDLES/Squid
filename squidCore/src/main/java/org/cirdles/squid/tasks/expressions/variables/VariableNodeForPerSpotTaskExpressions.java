@@ -163,6 +163,10 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
             }
         } else {
             healthy = false;
+            double[] values = new double[]{0.0, 0.0};
+            for (int i = 0; i < shrimpFractions.size(); i++) {
+                retVal[i] = convertArrayToObjects(values);
+            }
         }
 
         return retVal;

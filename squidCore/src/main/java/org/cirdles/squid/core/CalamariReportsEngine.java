@@ -16,10 +16,12 @@
 package org.cirdles.squid.core;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -37,10 +39,7 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.reports.reportSettings.ReportSettings;
-import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 
@@ -987,7 +986,7 @@ public class CalamariReportsEngine implements Serializable {
         PrintWriter outputWriter;
 
         try {
-            outputWriter = new PrintWriter(new FileWriter(reportTableFile));
+            outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));          
             outputWriter.write(squidProject.getTask().printTaskSummary());
             outputWriter.flush();
             outputWriter.close();

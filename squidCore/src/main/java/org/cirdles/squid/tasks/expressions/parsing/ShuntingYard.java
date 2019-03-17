@@ -16,7 +16,9 @@
 package org.cirdles.squid.tasks.expressions.parsing;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Stack;
 import java.util.regex.Pattern;
 import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
@@ -157,24 +159,20 @@ public class ShuntingYard {
                             keepLooking = false;
                             if (peek.compareTo(TokenTypes.LEFT_PAREN) == 0) {
                                 operatorStack.pop();
-                                try {
+                                if (!operatorStack.empty()) {
                                     String func;
-//                                    try {
                                     peek = TokenTypes.getType(operatorStack.peek());
                                     if (peek.compareTo(TokenTypes.FUNCTION) == 0) {
                                         func = operatorStack.pop();
                                         int a = argCount.pop();
                                         boolean w = wereValues.pop();
                                         if (w) {
-                                            a++;
-//                                                String funcWithArgCount = func + ":" + String.valueOf(a);
+                                            // opted to specifiy count of arguments in function definition
+//                                            a++;
+//                                            String funcWithArgCount = func + ":" + String.valueOf(a);
                                             outputQueue.add(func);// temp simplify(funcWithArgCount);
                                         }
                                     }
-//                                    } catch (Exception e) {
-//                                    }
-//                                    outputQueue.add(func);// temp simplify(funcWithArgCount);
-                                } catch (Exception e) {
                                 }
                             }
                         }
@@ -335,7 +333,9 @@ public class ShuntingYard {
                 retVal = FUNCTION;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]( )*\\[\\d\\]( )*")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
-            } else if (token.matches("\\w+\\[\\d\\]") && !token.matches("\\d+\\[\\d\\]") && !token.toUpperCase().matches("TRUE\\[\\d\\]") && !token.toUpperCase().matches("FALSE\\[\\d\\]")) {
+            } else if (token.matches("\\w+\\[\\d\\]") && !token.matches("\\d+\\[\\d\\]") 
+                    && !token.toUpperCase(Locale.ENGLISH).matches("TRUE\\[\\d\\]") 
+                    && !token.toUpperCase(Locale.ENGLISH).matches("FALSE\\[\\d\\]")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]")) {
                 retVal = NAMED_EXPRESSION;

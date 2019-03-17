@@ -72,7 +72,7 @@ public final class PrawnFileUtilities {
             String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(5, RoundingMode.HALF_UP).toPlainString();
             String elementLabel = massStationLabel.replace(isotopeLabel, "");
 
-            boolean isBackground = massStationLabel.toUpperCase(Locale.US).contains("KG");
+            boolean isBackground = massStationLabel.toUpperCase(Locale.ENGLISH).contains("KG");
             String uThBearingName = UThBearingEnum.N.getName();
             if (elementLabel.matches("(.*)(238|254|270|u|U)(.*)")){
                 uThBearingName = UThBearingEnum.U.getName();
