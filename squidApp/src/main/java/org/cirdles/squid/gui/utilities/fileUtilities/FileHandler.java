@@ -370,6 +370,7 @@ public class FileHandler {
         return fileChooser.showSaveDialog(ownerWindow);
     }
 
+    /*
     public static File saveExpressionHTMLFile(Expression exp, Window ownerWindow) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Save Expression HTML File '.html");
@@ -378,6 +379,7 @@ public class FileHandler {
 
         return fc.showSaveDialog(ownerWindow);
     }
+    */
 
     public static File selectOPFile(Window ownerWindow) throws IOException {
         File retVal;

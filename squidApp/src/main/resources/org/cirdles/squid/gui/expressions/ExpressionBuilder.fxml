@@ -321,7 +321,7 @@
                                                 </Text>
                                                 <CheckBox fx:id="showGraphCheckBox" mnemonicParsing="false" selected="true" text="Show here" />
                                                 <CheckBox fx:id="graphBrowserCheckBox" mnemonicParsing="false" text="Show in browser" />
-                                                <Button fx:id="saveExpressionHTMLButton" mnemonicParsing="false" onAction="#saveExpressionHTMLOnAction" text="Save HTML" />
+                                                <Button fx:id="saveExpressionHTMLButton" mnemonicParsing="false" onAction="#saveExpressionHTMLOnAction" text="Show HTML" />
                                              </children>
                                           </HBox>
                                        </graphic>

@@ -47,7 +47,7 @@ public class ExpressionPublisher {
             StringReader inputReader = new StringReader(input);
             Source inputSource = new StreamSource(inputReader);
 
-            Transformer transformer = transformerFactory.newTransformer(new StreamSource("xsltml_2.0/mmltex.xsl"));
+            Transformer transformer = transformerFactory.newTransformer(new StreamSource("XSLTML/mmltex.xsl"));
             transformer.transform(inputSource, result);
 
             retVal = resultWriter.toString().replaceAll("\\%", "\\\\%");

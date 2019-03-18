@@ -73,6 +73,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -622,7 +623,9 @@ public class ExpressionBuilderController implements Initializable {
     @FXML
     public void saveExpressionHTMLOnAction(ActionEvent actionEvent) {
         Expression exp = makeExpression(expressionNameTextField.getText(), expressionString.get());
-        ExpressionPublisher.createHTMLDocumentFromExpression(FileHandler.saveExpressionHTMLFile(exp, primaryStageWindow), exp);
+        File expressionFile = new File("Expression_HTML.html");
+        ExpressionPublisher.createHTMLDocumentFromExpression(expressionFile, exp);
+        BrowserControl.showURI(expressionFile.getAbsolutePath());
     }
 
     @FXML
