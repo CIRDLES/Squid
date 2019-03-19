@@ -624,7 +624,7 @@ public class ExpressionBuilderController implements Initializable {
     public void saveExpressionHTMLOnAction(ActionEvent actionEvent) {
         Expression exp = makeExpression(expressionNameTextField.getText(), expressionString.get());
         File expressionFile = new File("Expression_HTML.html");
-        ExpressionPublisher.createHTMLDocumentFromExpression(expressionFile, exp);
+        ExpressionPublisher.createHTMLDocumentFromExpression(expressionFile, exp, squidProject.getTask());
         BrowserControl.showURI(expressionFile.getAbsolutePath());
     }
 

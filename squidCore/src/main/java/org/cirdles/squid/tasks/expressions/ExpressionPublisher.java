@@ -4,6 +4,8 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.antlr.v4.misc.MutableInt;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.scilab.forge.jlatexmath.TeXFormula;
@@ -121,15 +123,25 @@ public class ExpressionPublisher {
     }
 
     private static String getExpressionBottomHTML(Expression exp) {
+        return getExpressionBottomHTML(exp, null);
+    }
+
+    private static String getExpressionBottomHTML(Expression exp, TaskInterface task) {
         return "<h3>Excel Expression String:</h3><p>" + exp.getExcelExpressionString() + "</p>\n"
-                + "<h3>Notes:</h3><p style=\"page-break-after: always\">" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n";
+                + "<h3>Notes:</h3><p>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n"
+                + ((task != null) ? "<pre>" + task.printExpressionRequiresGraph(exp)
+                + "</pre>\n" + "<pre>" + task.printExpressionProvidesGraph(exp) + "</pre>" : "").replaceAll("\n", "<br/>");
     }
 
     public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions) {
         return createHTMLDocumentFromExpressions(file, expressions, null);
     }
 
-    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions, Integer[] widths) {
+    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions, TaskInterface task) {
+        return createHTMLDocumentFromExpressions(file, expressions, task, null);
+    }
+
+    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions, TaskInterface task, Integer[] widths) {
         if (file != null && expressions != null) {
             boolean enterWidths = widths != null;
 
@@ -160,7 +172,7 @@ public class ExpressionPublisher {
                             + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                             + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
                 }
-                string.append(getExpressionBottomHTML(exp));
+                string.append(getExpressionBottomHTML(exp, task));
             }
             string.append(getEndHTML());
 
@@ -182,7 +194,11 @@ public class ExpressionPublisher {
         return createHTMLDocumentFromExpression(file, exp, null);
     }
 
-    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, MutableInt width) {
+    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, TaskInterface task) {
+        return createHTMLDocumentFromExpression(file, exp, task, null);
+    }
+
+    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, TaskInterface task, MutableInt width) {
         if (file != null && exp != null) {
             BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
             File imageFile = new File(file.getAbsolutePath() + FileNameFixer.fixFileName(exp.getName()) + ".png");
@@ -206,7 +222,7 @@ public class ExpressionPublisher {
                         + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                         + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
             }
-            string.append(getExpressionBottomHTML(exp));
+            string.append(getExpressionBottomHTML(exp, task));
 
             string.append(getEndHTML());
 
@@ -229,7 +245,7 @@ public class ExpressionPublisher {
         Integer[] widths = new Integer[expressions.size()];
 
         File htmlFile = new File("ExpressionsHTMLToPDFConversionFile.html");
-        retVal = createHTMLDocumentFromExpressions(htmlFile, expressions, widths);
+        retVal = createHTMLDocumentFromExpressions(htmlFile, expressions, null, widths);
 
         if (retVal) {
             try {
@@ -256,7 +272,7 @@ public class ExpressionPublisher {
         MutableInt width = new MutableInt(0);
 
         File htmlFile = new File("ExpressionHTMLToPDFConversionFile.html");
-        retVal = createHTMLDocumentFromExpression(htmlFile, exp, width);
+        retVal = createHTMLDocumentFromExpression(htmlFile, exp, null, width);
 
         if (retVal) {
             try {
