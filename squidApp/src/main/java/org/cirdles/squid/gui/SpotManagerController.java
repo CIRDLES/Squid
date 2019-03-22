@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui;
 
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -27,18 +28,33 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import static javafx.scene.paint.Color.RED;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.parametersLauncher;
+import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
+import org.cirdles.squid.gui.parameters.ParametersLauncher;
+import org.cirdles.squid.gui.parameters.ParametersManagerGUIController;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
+import static org.cirdles.squid.parameters.util.RadDates.age206_238r;
+import static org.cirdles.squid.parameters.util.RadDates.age207_206r;
+import static org.cirdles.squid.parameters.util.RadDates.age208_232r;
 import org.cirdles.squid.prawn.PrawnFile;
 
 /**
@@ -95,6 +111,26 @@ public class SpotManagerController implements Initializable {
     private Label concrmCountLabel;
     @FXML
     private Label titleLabel;
+    @FXML
+    private ComboBox<ParametersModel> refMatModelComboBox;
+    @FXML
+    private Label pbb206U238AgeLabel;
+    @FXML
+    private Label pb207Pb206AgeLabel;
+    @FXML
+    private Label pb208Th232AgeLabel;
+    @FXML
+    private Button viewRMmodelButton;
+    @FXML
+    private ComboBox<ParametersModel> concRefMatModelComboBox;
+    @FXML
+    private Label uPpmLabel;
+    @FXML
+    private Label thPpmLabel;
+    @FXML
+    private Button viewCMmodelButton;
+    @FXML
+    private ComboBox<String> sampleNameComboBox;
 
     /**
      * Initializes the controller class.
@@ -110,11 +146,44 @@ public class SpotManagerController implements Initializable {
         setFilteredSpotsAsConcRefMatButton.setDisable(true);
 
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
-        
+
+        setUpSampleNamesComboBox();
+        setUpParametersModelsComboBoxes();
+
         try {
             setUpPrawnFile();
         } catch (SquidException squidException) {
         }
+    }
+
+    private void setUpSampleNamesComboBox() {
+        sampleNameComboBox.setItems(FXCollections.observableArrayList(
+                (String[]) squidProject.getFiltersForUnknownNames().keySet().toArray(new String[0])));
+        sampleNameComboBox.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                ListCell<String> cell = new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(item);
+                        //setTextFill(RED);
+                    }
+                };
+                return cell;
+            }
+        });
+
+        sampleNameComboBox.valueProperty()
+                .addListener(new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if ((newValue != null) && (newValue.length() > 0)) {
+                            filterSpotNameText.setText(newValue);
+                            filterRuns(filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
+                        }
+                    }
+                });
     }
 
     private void setUpPrawnFile() throws SquidException {
@@ -172,7 +241,7 @@ public class SpotManagerController implements Initializable {
 
         shrimpRefMatList.setCellFactory(
                 (lv)
-                -> new RunsViewModel.ShrimpFractionListCell()
+                -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
         );
 
         shrimpRefMatList.setContextMenu(createRefMatSpotsViewContextMenu());
@@ -182,7 +251,7 @@ public class SpotManagerController implements Initializable {
 
         shrimpConcentrationRefMatList.setCellFactory(
                 (lv)
-                -> new RunsViewModel.ShrimpFractionListCell()
+                -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
         );
 
         shrimpConcentrationRefMatList.setContextMenu(createConcRefMatSpotsViewContextMenu());
@@ -273,6 +342,7 @@ public class SpotManagerController implements Initializable {
         MenuItem menuItem = new MenuItem("Clear list.");
         menuItem.setOnAction((evt) -> {
             squidProject.updateFilterForRefMatSpotNames("");
+            squidProject.setReferenceMaterialModel(new ReferenceMaterialModel());
             updateReferenceMaterialsList(true);
         });
         contextMenu.getItems().add(menuItem);
@@ -284,6 +354,7 @@ public class SpotManagerController implements Initializable {
         MenuItem menuItem = new MenuItem("Clear list.");
         menuItem.setOnAction((evt) -> {
             squidProject.updateFilterForConcRefMatSpotNames("");
+            squidProject.setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
             updateConcReferenceMaterialsList(true);
         });
         contextMenu.getItems().add(menuItem);
@@ -304,22 +375,72 @@ public class SpotManagerController implements Initializable {
         headerLabelRefMat.setText(
                 String.format("%1$-" + 21 + "s", "Ref Mat Name")
                 + String.format("%1$-" + 12 + "s", "Date")
-                + String.format("%1$-" + 12 + "s", "Time")
-                + String.format("%1$-" + 6 + "s", "Peaks")
-                + String.format("%1$-" + 6 + "s", "Scans"));
+                + String.format("%1$-" + 12 + "s", "Time"));
 
         headerLabelConcRefMat.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabelConcRefMat.setText(
                 String.format("%1$-" + 21 + "s", "Ref Mat Name")
                 + String.format("%1$-" + 12 + "s", "Date")
-                + String.format("%1$-" + 12 + "s", "Time")
-                + String.format("%1$-" + 6 + "s", "Peaks")
-                + String.format("%1$-" + 6 + "s", "Scans"));
+                + String.format("%1$-" + 12 + "s", "Time"));
+    }
+
+    private void setUpParametersModelsComboBoxes() {
+        // ReferenceMaterials
+        refMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
+
+        refMatModelComboBox.valueProperty()
+                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
+                    pbb206U238AgeLabel.setText(
+                            ((ReferenceMaterialModel) newValue).getDateByName(age206_238r.getName())
+                                    .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                    pb207Pb206AgeLabel.setText(
+                            ((ReferenceMaterialModel) newValue).getDateByName(age207_206r.getName())
+                                    .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                    pb208Th232AgeLabel.setText(
+                            ((ReferenceMaterialModel) newValue).getDateByName(age208_232r.getName())
+                                    .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+
+                    squidProject.setReferenceMaterialModel(newValue);
+                    squidProject.getTask().setChanged(true);
+
+                    viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+                });
+
+        updateViewRM();
+
+        // ConcentrationReferenceMaterials
+        concRefMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
+
+        concRefMatModelComboBox.valueProperty()
+                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
+                    uPpmLabel.setText(
+                            ((ReferenceMaterialModel) newValue).getConcentrationByName("concU")
+                                    .getValue().setScale(3, RoundingMode.HALF_UP).toString());
+                    thPpmLabel.setText(
+                            ((ReferenceMaterialModel) newValue).getConcentrationByName("concTh")
+                                    .getValue().setScale(3, RoundingMode.HALF_UP).toString());
+
+                    squidProject.setConcentrationReferenceMaterialModel(newValue);
+                    squidProject.getTask().setChanged(true);
+
+                    viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
+                });
+
+        updateViewCM();
     }
 
     @FXML
     private void filterSpotNameKeyReleased(KeyEvent event) {
-        filterRuns(filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+        filterRuns(filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
+        if ((sampleNameComboBox.getSelectionModel().getSelectedItem() != null)
+                && (!filterSpotNameText.getText().startsWith(sampleNameComboBox.getSelectionModel().getSelectedItem()))) {
+            try {
+                sampleNameComboBox.getSelectionModel().clearSelection();
+            } catch (Exception e) {
+            }
+        }
     }
 
     private void filterRuns(String filterString) {
@@ -331,14 +452,14 @@ public class SpotManagerController implements Initializable {
     @FXML
     private void setFilteredSpotsToRefMatAction(ActionEvent event) {
         squidProject.updateFilterForRefMatSpotNames(
-                filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+                filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
         updateReferenceMaterialsList(true);
     }
 
     @FXML
     private void setFilteredSpotsToConcRefMatAction(ActionEvent event) {
         squidProject.updateFilterForConcRefMatSpotNames(
-                filterSpotNameText.getText().toUpperCase(Locale.US).trim());
+                filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
         updateConcReferenceMaterialsList(true);
     }
 
@@ -363,6 +484,23 @@ public class SpotManagerController implements Initializable {
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
+
+        updateViewRM();
+
+    }
+
+    private void updateViewRM() {
+        refMatModelComboBox.getSelectionModel().select(squidProject.getReferenceMaterialModel());
+        refMatModelComboBox.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
+        viewRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
+        viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+    }
+
+    private void updateViewCM() {
+        concRefMatModelComboBox.getSelectionModel().select(squidProject.getConcentrationReferenceMaterialModel());
+        concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
+        viewCMmodelButton.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
+        viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
     }
 
     private void updateConcReferenceMaterialsList(boolean updateTaskStatus) {
@@ -387,6 +525,7 @@ public class SpotManagerController implements Initializable {
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
         }
 
+        updateViewCM();
     }
 
     @FXML
@@ -401,9 +540,21 @@ public class SpotManagerController implements Initializable {
 
             // refresh textbox in case "DUP" is removed or created
             selectedSpotNameText.setText(((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).getValue());
-            
+
             squidProject.getTask().setChanged(true);
             squidProject.getTask().setPrawnChanged(true);
         }
+    }
+
+    @FXML
+    private void viewRMmodelButton(ActionEvent event) {
+        ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getReferenceMaterialModel();
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+    }
+
+    @FXML
+    private void viewCMmodelButton(ActionEvent event) {
+        ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getConcentrationReferenceMaterialModel();
+        parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
     }
 }

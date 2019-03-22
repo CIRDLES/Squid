@@ -111,13 +111,9 @@ public class TaskManagerController implements Initializable {
     @FXML
     private CheckBox autoExcludeSpotsCheckBox;
     @FXML
-    private ComboBox<ParametersModel> refMatModelComboBox;
-    @FXML
     private ComboBox<ParametersModel> commonPbModelComboBox;
     @FXML
     private ComboBox<ParametersModel> physConstModelComboBox;
-    @FXML
-    private ComboBox<ParametersModel> concRefMatModelComboBox;
     @FXML
     private ToggleGroup primaryAgeToggleGroup;
     @FXML
@@ -214,27 +210,17 @@ public class TaskManagerController implements Initializable {
         SpinnerValueFactory<Double> valueFactoryU
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrU(), 0.05);
         assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
-        assignedExternalErrUSpinner.valueProperty().addListener(new ChangeListener<Double>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Double> observable,//
-                    Double oldValue, Double newValue) {
-                task.setExtPErrTh(assignedExternalErrUSpinner.getValue());
-                taskAuditTextArea.setText(task.printTaskAudit());
-            }
+        assignedExternalErrUSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable, //
+                Double oldValue, Double newValue) -> {
+            task.setExtPErrU(newValue);
         });
 
         SpinnerValueFactory<Double> valueFactoryTh
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrTh(), 0.05);
         assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
-        assignedExternalErrThSpinner.valueProperty().addListener(new ChangeListener<Double>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Double> observable,//
-                    Double oldValue, Double newValue) {
-                task.setExtPErrU(assignedExternalErrThSpinner.getValue());
-                taskAuditTextArea.setText(task.printTaskAudit());
-            }
+        assignedExternalErrThSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable, //
+                Double oldValue, Double newValue) -> {
+            task.setExtPErrTh(newValue);
         });
 
         // samples
@@ -244,12 +230,26 @@ public class TaskManagerController implements Initializable {
         delimeterComboBox.getSelectionModel().select(task.getDelimiterForUnknownNames());
         delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
-                    final String oldvalue, final String newvalue) {
-                task.setDelimiterForUnknownNames(newvalue);
+                    final String oldValue, final String newValue) {
+                task.setDelimiterForUnknownNames(newValue);
             }
         });
 
         populateDirectives();
+    }
+
+    class MyConverter extends StringConverter<Double> {
+
+        @Override
+        public String toString(Double object) {
+            return object + "";
+        }
+
+        @Override
+        public Double fromString(String string) {
+            return Double.parseDouble(string);
+        }
+
     }
 
     /**
@@ -376,29 +376,6 @@ public class TaskManagerController implements Initializable {
     };
 
     private void setUpParametersModelsComboBoxes() {
-        // ReferenceMaterials
-        refMatModelComboBox.setConverter(new ParameterModelStringConverter());
-        refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
-        refMatModelComboBox.getSelectionModel().select(task.getReferenceMaterialModel());
-
-        refMatModelComboBox.valueProperty()
-                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    task.setReferenceMaterial(newValue);
-                    task.setChanged(true);
-                    task.setupSquidSessionSpecsAndReduceAndReport();
-                });
-
-        // ConcentrationReferenceMaterials
-        concRefMatModelComboBox.setConverter(new ParameterModelStringConverter());
-        concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
-        concRefMatModelComboBox.getSelectionModel().select(task.getConcentrationReferenceMaterialModel());
-
-        concRefMatModelComboBox.valueProperty()
-                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    task.setConcentrationReferenceMaterial(newValue);
-                    task.setChanged(true);
-                    task.setupSquidSessionSpecsAndReduceAndReport();
-                });
 
         // PhysicalConstantsModels
         physConstModelComboBox.setConverter(new ParameterModelStringConverter());
@@ -491,6 +468,11 @@ public class TaskManagerController implements Initializable {
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
         // this will cause weighted mean expressions to be changed with boolean flag
         task.updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
+    }
+
+    @FXML
+    private void refreshModelsAction(ActionEvent event) {
+        task.refreshParametersFromModels();
     }
 
 }

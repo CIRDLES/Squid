@@ -20,10 +20,12 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -76,6 +78,8 @@ public abstract class Function
     protected String[] labelsForInputValues = new String[]{};
 
     protected String definition;
+    
+    protected boolean summaryCalc;
 
     /**
      *
@@ -436,6 +440,15 @@ public abstract class Function
         return retVal;
     }
 
+    protected String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET){
+        StringBuilder retVal = new StringBuilder();
+        for (int i = 0; i < childrenET.size(); i++) {
+            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
+        }
+        
+        return retVal.toString();
+    }
+    
     /**
      * @return the name
      */
@@ -481,12 +494,12 @@ public abstract class Function
      */
     @Override
     public String[][] getLabelsForOutputValues() {
-        return labelsForOutputValues;
+        return clone2dArray(labelsForOutputValues);
     }
 
     @Override
     public String[] getLabelsForInputValues() {
-        return labelsForInputValues;
+        return labelsForInputValues.clone();
     }
 
     @Override
@@ -494,4 +507,11 @@ public abstract class Function
         return definition;
     }
 
+    
+    /**
+     * @return the summaryCalc
+     */
+    public boolean isSummaryCalc() {
+        return summaryCalc;
+    }
 }

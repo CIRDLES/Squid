@@ -77,7 +77,6 @@
                                                               spacing="15.0" AnchorPane.leftAnchor="10.0"
                                                               AnchorPane.topAnchor="0.0">
                                                             <children>
-
                                                                 <Button fx:id="refMatDataNotationButton"
                                                                         maxHeight="30.0" minHeight="30.0"
                                                                         mnemonicParsing="false"
@@ -111,14 +110,12 @@
                                                         <HBox alignment="CENTER_LEFT" spacing="15.0"
                                                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
-
                                                                 <Button fx:id="refMatCorrNotationButton"
                                                                         maxHeight="30.0" minHeight="30.0"
                                                                         mnemonicParsing="false"
                                                                         onAction="#refMatCorrNotationOnAction"
                                                                         prefHeight="30.0" prefWidth="200"
                                                                         text="Use Standard Notation"/>
-
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
                                                                         <Label text="SigFigs:"/>
@@ -144,7 +141,6 @@
                                                         <HBox alignment="CENTER_LEFT" spacing="15.0"
                                                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
-
                                                                 <Button fx:id="refMatCovNotationButton" maxHeight="30.0"
                                                                         minHeight="30.0" mnemonicParsing="false"
                                                                         onAction="#refMatCovNotationOnAction"
@@ -178,7 +174,6 @@
                                                               spacing="15.0" AnchorPane.leftAnchor="10.0"
                                                               AnchorPane.topAnchor="0.0">
                                                             <children>
-
                                                                 <Button fx:id="refMatConcentrationsNotationButton"
                                                                         maxHeight="30.0" minHeight="30.0"
                                                                         mnemonicParsing="false"
@@ -200,23 +195,35 @@
                                                 </AnchorPane>
                                             </content>
                                         </Tab>
-                                        <Tab text="Comment and Ref">
+                                        <Tab text="238-U/235-U">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea fx:id="refMatReferencesArea" layoutX="430.0"
-                                                                  prefWidth="400.0" promptText="add references here"
-                                                                  wrapText="true" AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.topAnchor="20.0"/>
-                                                        <TextArea fx:id="refMatCommentsArea" layoutX="10.0"
-                                                                  layoutY="104.0" prefHeight="200.0" prefWidth="400.0"
-                                                                  promptText="add comments here" wrapText="true"
-                                                                  AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.topAnchor="20.0"/>
-                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments"
-                                                               AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0"/>
-                                                        <Label layoutX="430.0" layoutY="245.0" text="References"
-                                                               AnchorPane.topAnchor="0.0"/>
+                                                        <TableView fx:id="UUTable" layoutX="14.0" layoutY="22.0"
+                                                                   prefHeight="170.0" prefWidth="200.0"
+                                                                   AnchorPane.bottomAnchor="5.0"
+                                                                   AnchorPane.leftAnchor="5.0"
+                                                                   AnchorPane.rightAnchor="5.0"
+                                                                   AnchorPane.topAnchor="30.4"/>
+                                                        <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0"
+                                                              spacing="15.0" AnchorPane.leftAnchor="10.0"
+                                                              AnchorPane.topAnchor="0.0">
+                                                            <children>
+                                                                <Button fx:id="UUNotationButton"
+                                                                        maxHeight="30.0" minHeight="30.0"
+                                                                        mnemonicParsing="false"
+                                                                        onAction="#UUNotationOnAction"
+                                                                        prefHeight="30.0" prefWidth="200"
+                                                                        text="Use Standard Notation"/>
+                                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                                    <children>
+                                                                        <Label text="SigFigs:"/>
+                                                                        <Spinner fx:id="UUSigFigSpinner"
+                                                                                 prefWidth="80.0"/>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </HBox>
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -283,6 +290,27 @@
                                                             </HBox>
                                                         </children>
                                                     </HBox>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
+                                        <Tab text="Comment and Ref">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TextArea fx:id="refMatReferencesArea" layoutX="430.0"
+                                                                  prefWidth="400.0" promptText="add references here"
+                                                                  wrapText="true" AnchorPane.bottomAnchor="5.0"
+                                                                  AnchorPane.topAnchor="20.0"/>
+                                                        <TextArea fx:id="refMatCommentsArea" layoutX="10.0"
+                                                                  layoutY="104.0" prefHeight="200.0" prefWidth="400.0"
+                                                                  promptText="add comments here" wrapText="true"
+                                                                  AnchorPane.bottomAnchor="5.0"
+                                                                  AnchorPane.topAnchor="20.0"/>
+                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments"
+                                                               AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0"/>
+                                                        <Label layoutX="430.0" layoutY="245.0" text="References"
+                                                               AnchorPane.topAnchor="0.0"/>
+                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                         </Tab>

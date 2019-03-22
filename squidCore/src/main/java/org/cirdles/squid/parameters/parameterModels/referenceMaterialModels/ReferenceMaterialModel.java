@@ -40,7 +40,6 @@ public class ReferenceMaterialModel extends ParametersModel {
     private ConcurrentMap<String, BigDecimal> parDerivTerms;
     private boolean referenceDates;
 
-
     public ReferenceMaterialModel() {
         super();
         referenceDates = false;
@@ -213,8 +212,8 @@ public class ReferenceMaterialModel extends ParametersModel {
     public void calculateApparentDates() {
         if (!referenceDates) {
 
-            ParametersModel defaultPhysConstModel =
-                    PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+            ParametersModel defaultPhysConstModel
+                    = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
             ValueModel lambda232 = defaultPhysConstModel//
                     .getDatumByName(Lambdas.LAMBDA_232.getName());
 
@@ -300,8 +299,8 @@ public class ReferenceMaterialModel extends ParametersModel {
             dates[0] = new Age206_238r();
             getDates()[0].calculateValue(
                     new ValueModel[]{
-                            r206_238r,
-                            lambda238}, parDerivTerms);
+                        r206_238r,
+                        lambda238}, parDerivTerms);
             if (parDerivTerms.containsKey("dAge206_238r__dR206_238r")) {
                 dates[0].setOneSigma(//
                         parDerivTerms.get("dAge206_238r__dR206_238r") //
@@ -312,11 +311,11 @@ public class ReferenceMaterialModel extends ParametersModel {
             dates[1] = new Age207_206r();
             getDates()[1].calculateValue(
                     new ValueModel[]{
-                            r238_235s,
-                            r207_206r,
-                            dates[0],
-                            lambda235,
-                            lambda238}, parDerivTerms);
+                        r238_235s,
+                        r207_206r,
+                        dates[0],
+                        lambda235,
+                        lambda238}, parDerivTerms);
             if (parDerivTerms.containsKey("dAge207_206r__dR207_206r")) {
                 dates[1].setOneSigma(//
                         parDerivTerms.get("dAge207_206r__dR207_206r")//
@@ -327,8 +326,8 @@ public class ReferenceMaterialModel extends ParametersModel {
             dates[2] = new Age207_235r();
             getDates()[2].calculateValue(
                     new ValueModel[]{
-                            r207_235r,
-                            lambda235}, parDerivTerms);
+                        r207_235r,
+                        lambda235}, parDerivTerms);
             if (parDerivTerms.containsKey("dAge207_235r__dR207_235r")) {
                 dates[2].setOneSigma(//
                         parDerivTerms.get("dAge207_235r__dR207_235r")//
@@ -339,8 +338,8 @@ public class ReferenceMaterialModel extends ParametersModel {
             dates[3] = new Age208_232r();
             getDates()[3].calculateValue(
                     new ValueModel[]{
-                            r208_232r,
-                            lambda232}, parDerivTerms);
+                        r208_232r,
+                        lambda232}, parDerivTerms);
             if (parDerivTerms.containsKey("dAge208_232r__dR208_232r")) {
                 dates[3].setOneSigma(//
                         parDerivTerms.get("dAge208_232r__dR208_232r")//
@@ -348,6 +347,22 @@ public class ReferenceMaterialModel extends ParametersModel {
                                 .multiply(r208_232r.getOneSigmaABS()));
             }
         }
+    }
+
+    public boolean hasAtLeastOneNonZeroApparentDate() {
+        boolean retVal = false;
+        for (int i = 0; i < dates.length; i++) {
+            retVal = retVal || dates[i].getValue().compareTo(BigDecimal.ZERO) != 0;
+        }
+        return retVal;
+    }
+
+    public boolean hasAtLeastOneNonZeroConcentration() {
+        boolean retVal = false;
+        for (int i = 0; i < concentrations.length; i++) {
+            retVal = retVal || concentrations[i].getValue().compareTo(BigDecimal.ZERO) != 0;
+        }
+        return retVal;
     }
 
     /**
@@ -362,7 +377,7 @@ public class ReferenceMaterialModel extends ParametersModel {
             if (dates[i].hasPositiveValue()) {
                 retVal += dates[i].getName() + " : "
                         + dates[i].formatValueAndTwoSigmaForPublicationSigDigMode( //
-                        "ABS", -6, 2) //
+                                "ABS", -6, 2) //
                         + " (2\u03C3)  Ma\n";
             }
         }

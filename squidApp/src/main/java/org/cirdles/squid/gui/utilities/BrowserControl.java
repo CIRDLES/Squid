@@ -15,7 +15,11 @@
  */
 package org.cirdles.squid.gui.utilities;
 
-import java.awt.Desktop;
+import javafx.stage.Window;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.SquidUI;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,14 +28,12 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 /**
- *
  * @author James F. Bowring
  */
 public class BrowserControl {
 
-    public static void showURI(String location) {
+    public static void showURI(String location, Window ownerWindow) {
         try {
-            Desktop desktop = java.awt.Desktop.getDesktop();
             URI oURL = null;
             if (location.contains("http")) {
                 oURL = new URI(location);
@@ -40,10 +42,19 @@ public class BrowserControl {
                 File file = new File(location);
                 oURL = file.toURI();
             }
-            desktop.browse(oURL);
+
+            if (!isLinuxOrUnixOperatingSystem()) {
+                java.awt.Desktop.getDesktop().browse(oURL);
+            } else {
+                Runtime.getRuntime().exec("xdg-open " + oURL);
+            }
         } catch (URISyntaxException | IOException e) {
-            // act dumb for now
+            SquidMessageDialog.showWarningDialog("An error ocurred:\n" + e.getMessage(), ownerWindow);
         }
+    }
+
+    public static void showURI(String location) {
+        showURI(location, SquidUI.primaryStageWindow);
     }
 
     public static String urlEncode(String text) {
@@ -52,5 +63,18 @@ public class BrowserControl {
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static String getOperatingSystem() {
+        return System.getProperty("os.name");
+    }
+
+    public static boolean isLinuxOrUnixOperatingSystem() {
+        return getOperatingSystem().toLowerCase().matches(".*(nix|nux).*");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("OS: " + getOperatingSystem());
+        System.out.println("Is Linux or Unix: " + isLinuxOrUnixOperatingSystem());
     }
 }

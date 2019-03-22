@@ -7,40 +7,36 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <VBox fx:id="sessionVBox" minHeight="640.0" minWidth="1000.0" prefHeight="640.0" prefWidth="1200.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
    <children>
       <HBox minHeight="10.0" prefHeight="10.0" prefWidth="200.0" />
-      <HBox translateY="5.0">
+      <HBox prefHeight="30.0" prefWidth="1200.0" translateY="5.0">
          <children>
             <Label fx:id="titleLabel" text="Task &gt; Manage Task" translateX="25.0" />
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" spacing="20.0">
+      <HBox maxHeight="5.0" minHeight="5.0" prefHeight="5.0" prefWidth="200.0" />
+      <HBox alignment="BASELINE_LEFT" prefHeight="35.0" prefWidth="1200.0" spacing="20.0">
          <children>
-            <Label style="-fx-font-size: 14;" text="Session Spot Name Audit" />
-            <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#duplicatesChecked" text="Display Duplicates Only: note that spot name duplicates are suffixed with '-DUP-n'" textFill="#ee3704">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </CheckBox>
+            <Label style="-fx-font-size: 16; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="Session Spot Name Audit" translateY="2.0" />
+            <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#duplicatesChecked" prefHeight="18.0" prefWidth="575.0" style="-fx-font-family: SansSerif; -fx-font-weight: normal;" text="Display Duplicates Only: note that spot name duplicates are suffixed with '-DUP-n'" textFill="#ee3704" />
          </children>
          <padding>
             <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
          </padding>
       </HBox>
-      <HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="35.0">
          <children>
-            <Label prefHeight="28.0" prefWidth="289.0" style="-fx-font-size: 14;" text="     Select Name Delimeter OR # Chars:  " />
+            <Label prefHeight="28.0" prefWidth="266.0" style="-fx-font-size: 14; -fx-font-family: SanSerif;" text="     Select Name Delimeter OR # Chars:  " />
             <ComboBox fx:id="delimeterComboBox" prefHeight="28.0" prefWidth="65.0" style="-fx-font-size: 14; -fx-font-weight: bold;" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets left="-5.0" right="-5.0" />
                </HBox.margin></ComboBox>
-            <Label fx:id="summaryLabel" prefHeight="28.0" prefWidth="864.0" style="-fx-font-size: 14;" text="   Summary:" />
+            <Label fx:id="summaryLabel" prefHeight="28.0" prefWidth="864.0" style="-fx-font-size: 14;" text="   Summary:" translateX="10.0" />
          </children>
       </HBox>
-      <TreeView fx:id="prawnAuditTreeCheckBox" layoutX="10.0" layoutY="40.0" prefHeight="582.0" prefWidth="1197.0" style="-fx-background-color: #f4f4f4;">
+      <TreeView fx:id="prawnAuditTreeCheckBox" layoutX="10.0" layoutY="40.0" prefHeight="534.0" prefWidth="1200.0" style="-fx-background-color: #f4f4f4;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
