@@ -307,6 +307,8 @@ public class ParametersManagerGUIController implements Initializable {
     private Units physConstDataUnits;
     private Units refDatesUnits;
 
+    public static ParametersModel selectedReferenceMaterialModel = null;
+
     /**
      * Initializes the controller class.
      *
@@ -376,12 +378,18 @@ public class ParametersManagerGUIController implements Initializable {
 
         squidLabDataStage.focusedProperty().addListener(listener -> {
             if (squidLabDataStage.isFocused()) {
-                if (chosenTab.equals(ParametersTab.physConst)) {
-                    rootTabPane.getSelectionModel().select(physConstTab);
-                } else if (chosenTab.equals(ParametersTab.refMat)) {
-                    rootTabPane.getSelectionModel().select(refMatTab);
-                } else if (chosenTab.equals(ParametersTab.commonPb)) {
-                    rootTabPane.getSelectionModel().select(commonPbTab);
+                switch (chosenTab) {
+                    case physConst:
+                        rootTabPane.getSelectionModel().select(physConstTab);
+                        break;
+                    case refMat:
+                        rootTabPane.getSelectionModel().select(refMatTab);
+                        break;
+                    case commonPb:
+                        rootTabPane.getSelectionModel().select(commonPbTab);
+                        break;
+                    default:
+                        break;
                 }
 
                 int selectedIndex;
@@ -391,7 +399,11 @@ public class ParametersManagerGUIController implements Initializable {
                     physConstCB.getSelectionModel().select(selectedIndex);
                 }
                 if (!isEditingRefMat) {
-                    selectedIndex = refMatCB.getSelectionModel().getSelectedIndex();
+                    if (selectedReferenceMaterialModel != null) {
+                        selectedIndex = refMatModels.indexOf(selectedReferenceMaterialModel);
+                    } else {
+                        selectedIndex = refMatCB.getSelectionModel().getSelectedIndex();
+                    }
                     setUpRefMatCBItems();
                     refMatCB.getSelectionModel().select(selectedIndex);
                 }
@@ -622,8 +634,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
-                                           ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
-                                           ParametersModel model, int precision) {
+            ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
+            ParametersModel model, int precision) {
         if (obList.size() > 0) {
             List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns = new ArrayList<>();
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
@@ -789,8 +801,8 @@ public class ParametersManagerGUIController implements Initializable {
                 newBigDec = new BigDecimal(newValue);
             }
             if (table.equals(refDatesTable) || table.equals(physConstDataTable)) {
-                BigDecimal operand = new BigDecimal((table.equals(refDatesTable) ?
-                        getRefDatesDivisorOrMultiplier() : getPhyConstDataDivisorOrMultiplier()));
+                BigDecimal operand = new BigDecimal((table.equals(refDatesTable)
+                        ? getRefDatesDivisorOrMultiplier() : getPhyConstDataDivisorOrMultiplier()));
                 valMod.setValue(newBigDec.multiply(operand));
                 mod.setValue(format.format(round(valMod.getValue(), precision).divide(operand)));
                 mod.setOneSigmaABS(format.format(round(valMod.getOneSigmaABS(), precision).divide(operand)));
@@ -840,8 +852,8 @@ public class ParametersManagerGUIController implements Initializable {
                 newBigDec = new BigDecimal(newValue);
             }
             if (table.equals(refDatesTable) || table.equals(physConstDataTable)) {
-                BigDecimal operand = new BigDecimal((table.equals(refDatesTable) ?
-                        getRefDatesDivisorOrMultiplier() : getPhyConstDataDivisorOrMultiplier()));
+                BigDecimal operand = new BigDecimal((table.equals(refDatesTable)
+                        ? getRefDatesDivisorOrMultiplier() : getPhyConstDataDivisorOrMultiplier()));
                 valMod.setOneSigma(newBigDec.multiply(operand));
                 valMod.setUncertaintyType("ABS");
                 mod.setValue(format.format(round(valMod.getValue(), precision).divide(operand)));
@@ -892,8 +904,8 @@ public class ParametersManagerGUIController implements Initializable {
                 newBigDec = new BigDecimal(newValue);
             }
             if (table.equals(refDatesTable) || table.equals(physConstDataTable)) {
-                BigDecimal operand = new BigDecimal((table.equals(refDatesTable) ?
-                        getRefDatesDivisorOrMultiplier() : getPhyConstDataDivisorOrMultiplier()));
+                BigDecimal operand = new BigDecimal((table.equals(refDatesTable)
+                        ? getRefDatesDivisorOrMultiplier() : getPhyConstDataDivisorOrMultiplier()));
                 valMod.setOneSigma(newBigDec);
                 valMod.setUncertaintyType("PCT");
                 mod.setValue(format.format(round(valMod.getValue(), precision).divide(operand)));
@@ -1177,7 +1189,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpTextFields(TextField model, String modelName, TextField lab, String labName, TextField ver, String version,
-                                 TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
+            TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
         model.setText(modelName);
         lab.setText(labName);
         ver.setText(version);
@@ -1905,8 +1917,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpMenuItems(boolean isEditing, boolean isEditable, Menu fileMenu, MenuItem saveAndReg,
-                                MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
-                                MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
+            MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
+            MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
         fileMenu.setDisable(isEditing);
         saveAndReg.setDisable(!isEditing);
         remCurr.setDisable(!isEditable || isEditing);
@@ -2330,74 +2342,74 @@ public class ParametersManagerGUIController implements Initializable {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
 
         refMatDataSigFigs.setValueFactory(valueFactory);
-        refMatDataSigFigs.valueProperty().addListener(value ->
-                setUpRefMatData()
+        refMatDataSigFigs.valueProperty().addListener(value
+                -> setUpRefMatData()
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         UUSigFigSpinner.setValueFactory(valueFactory);
-        UUSigFigSpinner.valueProperty().addListener(value ->
-                setUpUUData()
+        UUSigFigSpinner.valueProperty().addListener(value
+                -> setUpUUData()
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatConcSigFigs.setValueFactory(valueFactory);
-        refMatConcSigFigs.valueProperty().addListener(value ->
-                setUpConcentrations()
+        refMatConcSigFigs.valueProperty().addListener(value
+                -> setUpConcentrations()
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstDataSigFigs.setValueFactory(valueFactory);
-        physConstDataSigFigs.valueProperty().addListener(value ->
-                setUpPhysConstData()
+        physConstDataSigFigs.valueProperty().addListener(value
+                -> setUpPhysConstData()
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstCorrSigFigs.setValueFactory(valueFactory);
-        physConstCorrSigFigs.valueProperty().addListener(value ->
-                corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, physConstCorrSigFigs.getValue(), physConstCorrNotation)
+        physConstCorrSigFigs.valueProperty().addListener(value
+                -> corrCovPrecisionOrNotationAction(physConstModel, physConstCorrTable, physConstCorrSigFigs.getValue(), physConstCorrNotation)
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         physConstCovSigFigs.setValueFactory(valueFactory);
-        physConstCovSigFigs.valueProperty().addListener(value ->
-                corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, physConstCovSigFigs.getValue(), physConstCovNotation)
+        physConstCovSigFigs.valueProperty().addListener(value
+                -> corrCovPrecisionOrNotationAction(physConstModel, physConstCovTable, physConstCovSigFigs.getValue(), physConstCovNotation)
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatCorrSigFigs.setValueFactory(valueFactory);
-        refMatCorrSigFigs.valueProperty().addListener(value ->
-                corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, refMatCorrSigFigs.getValue(), refMatCorrNotation)
+        refMatCorrSigFigs.valueProperty().addListener(value
+                -> corrCovPrecisionOrNotationAction(refMatModel, refMatCorrTable, refMatCorrSigFigs.getValue(), refMatCorrNotation)
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refMatCovSigFigs.setValueFactory(valueFactory);
-        refMatCovSigFigs.valueProperty().addListener(value ->
-                corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, refMatCovSigFigs.getValue(), refMatCovNotation)
+        refMatCovSigFigs.valueProperty().addListener(value
+                -> corrCovPrecisionOrNotationAction(refMatModel, refMatCovTable, refMatCovSigFigs.getValue(), refMatCovNotation)
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         refDatesSigFigSpinner.setValueFactory(valueFactory);
-        refDatesSigFigSpinner.valueProperty().addListener(value ->
-                setUpRefDates()
+        refDatesSigFigSpinner.valueProperty().addListener(value
+                -> setUpRefDates()
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         commonPbDataSigFigs.setValueFactory(valueFactory);
-        commonPbDataSigFigs.valueProperty().addListener(value ->
-                setUpCommonPbData()
+        commonPbDataSigFigs.valueProperty().addListener(value
+                -> setUpCommonPbData()
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         commonPbCorrSigFigs.setValueFactory(valueFactory);
-        commonPbCorrSigFigs.valueProperty().addListener(value ->
-                corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, commonPbCorrSigFigs.getValue(), commonPbCorrNotation)
+        commonPbCorrSigFigs.valueProperty().addListener(value
+                -> corrCovPrecisionOrNotationAction(commonPbModel, commonPbCorrTable, commonPbCorrSigFigs.getValue(), commonPbCorrNotation)
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
         commonPbCovSigFigs.setValueFactory(valueFactory);
-        commonPbCovSigFigs.valueProperty().addListener(value ->
-                corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, commonPbCovSigFigs.getValue(), commonPbCovNotation)
+        commonPbCovSigFigs.valueProperty().addListener(value
+                -> corrCovPrecisionOrNotationAction(commonPbModel, commonPbCovTable, commonPbCovSigFigs.getValue(), commonPbCovNotation)
         );
     }
 
@@ -2426,7 +2438,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void corrCovPrecisionOrNotationAction(ParametersModel model,
-                                                  TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
+            TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
 
         ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
 
@@ -2846,7 +2858,6 @@ public class ParametersManagerGUIController implements Initializable {
         setUpPhysConstData();
     }
 
-
     public enum Units {
         a, ka, ma
     }
@@ -2859,7 +2870,7 @@ public class ParametersManagerGUIController implements Initializable {
         private SimpleStringProperty oneSigmaPCT;
 
         public DataModel(String name, String value,
-                         String oneSigmaABS, String oneSigmaPCT) {
+                String oneSigmaABS, String oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
             this.value = new SimpleStringProperty(trimTrailingZeroes(value));
             this.oneSigmaABS = new SimpleStringProperty(trimTrailingZeroes(oneSigmaABS));
@@ -2905,8 +2916,8 @@ public class ParametersManagerGUIController implements Initializable {
         private CheckBox isMeasured;
 
         public RefMatDataModel(String name, String value,
-                               String oneSigmaABS, String oneSigmaPCT,
-                               boolean isMeasured) {
+                String oneSigmaABS, String oneSigmaPCT,
+                boolean isMeasured) {
             super(name, value, oneSigmaABS, oneSigmaPCT);
             this.isMeasured = new CheckBox();
             this.isMeasured.setSelected(isMeasured);
