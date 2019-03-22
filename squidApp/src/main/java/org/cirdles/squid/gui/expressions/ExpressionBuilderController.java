@@ -16,36 +16,7 @@
 package org.cirdles.squid.gui.expressions;
 
 import com.google.common.collect.Lists;
-
 import javafx.beans.property.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -85,6 +56,7 @@ import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.ExpressionPublisher;
@@ -119,15 +91,11 @@ import static javafx.scene.paint.Color.RED;
 import static org.cirdles.squid.constants.Squid3Constants.*;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardContextMenu;
-
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.*;
 import static org.cirdles.squid.tasks.expressions.functions.Function.*;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
-
-import org.cirdles.squid.tasks.Task;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 
 
 /**
@@ -2695,21 +2663,21 @@ public class ExpressionBuilderController implements Initializable {
                         ExpressionTreeInterface expTree = ex.getExpressionTree();
                         tooltip = new Tooltip(
                                 (isCustom ? "Custom expression: " : "Expression: ")
-                                + "  " + ex.getName()
-                                + "\n  Targets: "
-                                + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
-                                + (expTree.isSquidSwitchSTReferenceMaterialCalculation() ? "R" : "")
-                                + (expTree.isSquidSwitchSAUnknownCalculation() ? "U" : "")
-                                + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation() ? "Summary " : "")
-                                + (ex.isSquidSwitchNU() ? "NU-switched " : "")
-                                + (expTree.isSquidSpecialUPbThExpression() ? "Built-In" : "")
-                                + "\n\nExpression string: "
-                                + ex.getExcelExpressionString()
-                                + "\n"
-                                + uncertainty
-                                + (ex.amHealthy() ? createPeekForTooltip(ex) : customizeExpressionTreeAudit(ex).trim())
-                                + "\nNotes:\n"
-                                + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                                        + "  " + ex.getName()
+                                        + "\n  Targets: "
+                                        + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
+                                        + (expTree.isSquidSwitchSTReferenceMaterialCalculation() ? "R" : "")
+                                        + (expTree.isSquidSwitchSAUnknownCalculation() ? "U" : "")
+                                        + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation() ? "Summary " : "")
+                                        + (ex.isSquidSwitchNU() ? "NU-switched " : "")
+                                        + (expTree.isSquidSpecialUPbThExpression() ? "Built-In" : "")
+                                        + "\n\nExpression string: "
+                                        + ex.getExcelExpressionString()
+                                        + "\n"
+                                        + uncertainty
+                                        + (ex.amHealthy() ? createPeekForTooltip(ex) : customizeExpressionTreeAudit(ex).trim())
+                                        + "\nNotes:\n"
+                                        + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                         if (!ex.amHealthy()) {
                             tooltip.setGraphic(imageView);
                         }
