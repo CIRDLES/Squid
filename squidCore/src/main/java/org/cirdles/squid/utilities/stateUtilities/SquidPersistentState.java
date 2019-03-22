@@ -731,6 +731,9 @@ public class SquidPersistentState implements Serializable {
     }
 
     public List<String> getMRUOPFileList() {
+        if(MRUOPFileList == null) {
+            MRUOPFileList = new ArrayList<>();
+        }
         return MRUOPFileList;
     }
 
@@ -739,6 +742,9 @@ public class SquidPersistentState implements Serializable {
     }
 
     public String getMRUOPFileFolderPath() {
+        if(MRUOPFileFolderPath == null) {
+            MRUOPFileFolderPath = "";
+        }
         return MRUOPFileFolderPath;
     }
 
