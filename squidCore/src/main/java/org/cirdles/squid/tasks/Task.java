@@ -322,8 +322,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.extPErrTh = taskDesign.getExtPErrTh();
 
         this.physicalConstantsModel = taskDesign.getPhysicalConstantsModel();
-        this.referenceMaterialModel = taskDesign.getReferenceMaterialModel();
-        this.concentrationReferenceMaterialModel = taskDesign.getConcentrationReferenceMaterialModel();
+        this.referenceMaterialModel = new ReferenceMaterialModel();
+        this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
         this.commonPbModel = taskDesign.getCommonPbModel();
 
         this.specialSquidFourExpressionsMap = taskDesign.getSpecialSquidFourExpressionsMap();
@@ -749,6 +749,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    @Override
     public void refreshParametersFromModels() {
         List<ParametersModel> models = SquidLabData.getExistingSquidLabData().getCommonPbModels();
         commonPbModel = findModelByName(models, commonPbModel);
@@ -758,12 +759,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         physicalConstantsModel = findModelByName(models, physicalConstantsModel);
         physicalConstantsModelChanged = true;
 
-        models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
-        referenceMaterialModel = findModelByName(models, referenceMaterialModel);
-        referenceMaterialModelChanged = true;
-
-        concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
-        concentrationReferenceMaterialModelChanged = true;
+//        models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
+//        referenceMaterialModel = findModelByName(models, referenceMaterialModel);
+//        referenceMaterialModelChanged = true;
+//
+//        concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
+//        concentrationReferenceMaterialModelChanged = true;
 
         updateParametersFromModels();
     }
@@ -818,7 +819,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 Expression exp = updatedReferenceMaterialExpressionsIterator.next();
                 removeExpression(exp, false);
                 addExpression(exp, false);
-                updateAffectedExpressions(exp, false);
+                //updateAffectedExpressions(exp, false);
             }
             referenceMaterialModelChanged = false;
         }
@@ -831,7 +832,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 Expression exp = updatedConcReferenceMaterialExpressionsIterator.next();
                 removeExpression(exp, false);
                 addExpression(exp, false);
-                updateAffectedExpressions(exp, false);
+                //updateAffectedExpressions(exp, false);
             }
             concentrationReferenceMaterialModelChanged = false;
         }
@@ -1719,6 +1720,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 spotsForExpression = referenceMaterialSpots;
             }
 
+            if (spotsForExpression == null){
+                spotsForExpression  = new ArrayList<>();
+            }
             // now evaluate expressionTree
             try {
                 evaluateExpressionForSpotSet(expression, spotsForExpression);
