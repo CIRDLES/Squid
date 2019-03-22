@@ -73,6 +73,10 @@ import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
+
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
+import org.cirdles.squid.tasks.Task;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
@@ -1367,18 +1371,20 @@ public class SquidUIController implements Initializable {
             }
 
             if (refMat == null) {
-                task.setReferenceMaterialModel(squidLabData.getRefMatDefault());
+                task.setReferenceMaterialModel(new ReferenceMaterialModel());
             } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
                 squidLabData.addReferenceMaterial(refMat);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
+            squidProject.setReferenceMaterialModel(task.getReferenceMaterialModel());
 
             if (refMatConc == null) {
-                task.setConcentrationReferenceMaterialModel(squidLabData.getRefMatConcDefault());
+                task.setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
             } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
                 squidLabData.addReferenceMaterial(refMatConc);
                 squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
             }
+            squidProject.setConcentrationReferenceMaterialModel(task.getConcentrationReferenceMaterialModel());
 
             if (commonPbModel == null) {
                 task.setCommonPbModel(squidLabData.getCommonPbDefault());
@@ -1386,6 +1392,8 @@ public class SquidUIController implements Initializable {
                 squidLabData.addcommonPbModel(commonPbModel);
                 squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
             }
+            
+            squidLabData.storeState();
         }
     }
 

@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" prefHeight="640.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="720.0" minWidth="1225.0" prefHeight="720.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
   <columnConstraints>
     <ColumnConstraints halignment="RIGHT" hgrow="NEVER" percentWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
@@ -30,19 +30,20 @@
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
     <RowConstraints valignment="CENTER" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
-    <RowConstraints percentHeight="32.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="15.0" prefHeight="15.0" valignment="TOP" vgrow="NEVER" />
+    <RowConstraints valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="10.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="15.0" prefHeight="15.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
     <RowConstraints maxHeight="296.0" minHeight="21.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="296.0" minHeight="5.0" prefHeight="5.0" valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="836.0" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
-            <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="816.0" text="Task Designer: Set Defaults for new Tasks" />
-            <ToolBar prefHeight="43.0" prefWidth="243.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
+            <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="717.0" text="Task Designer: Set Defaults for new Tasks" />
+            <ToolBar prefHeight="43.0" prefWidth="346.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
               <items>
                 <Button mnemonicParsing="false" onAction="#newTaskFromThisDesignAction" text="New Task from this Design" />
               </items>
@@ -95,22 +96,12 @@
             <RowConstraints vgrow="NEVER" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
             <Label style="-fx-font-size: 14;" text="Normalise Ion Counts for SBM?" />
             <Label style="-fx-font-size: 14;" text="Ratio Calculation Method:" GridPane.rowIndex="1" />
             <Label style="-fx-font-size: 14;" text="Preferred index isotope:" GridPane.rowIndex="3" />
             <Label layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
-            <Label style="-fx-font-size: 14;" text="Default Reference Material Models:" GridPane.rowIndex="5" />
-            <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
-               <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="66.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Ref Mat:" textAlignment="RIGHT" />
-                  <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Reference Material Model" />
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Conc Ref Mat:" textAlignment="RIGHT" translateX="10.0" />
-                  <ComboBox fx:id="concRefMatModelComboBox" layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="325.0" promptText="Concentration Reference Material Model" translateX="10.0" />
-               </children>
-            </HBox>
             <HBox alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <RadioButton id="PB_204" fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
@@ -154,7 +145,7 @@
                   <Insets left="5.0" />
                </padding>
             </HBox>
-            <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
                   <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="66.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Def Comm Pb:" textAlignment="RIGHT" wrapText="true" />
                   <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
@@ -162,7 +153,7 @@
                   <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
                </children>
             </HBox>
-            <Label style="-fx-font-size: 14;" text="Default Parameter Models:" GridPane.rowIndex="6" />
+            <Label style="-fx-font-size: 14;" text="Default Parameter Models:" GridPane.rowIndex="5" />
          </children>
       </GridPane>
       <VBox GridPane.rowIndex="11">
