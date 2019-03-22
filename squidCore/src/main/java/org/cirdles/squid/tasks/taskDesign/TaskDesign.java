@@ -53,8 +53,6 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
  */
 public class TaskDesign implements Serializable {
 
-    // NOTE: java.utils.Properties should be considered for use here JFB
-    // Jan 2019 - considered and rejected as too simplistic
     // Class variables
     protected static final long serialVersionUID = -936841271782482788L;
 
@@ -84,9 +82,7 @@ public class TaskDesign implements Serializable {
     protected Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
     
     protected ParametersModel physicalConstantsModel;
-    protected ParametersModel referenceMaterialModel;
     protected ParametersModel commonPbModel;
-    protected ParametersModel concentrationReferenceMaterialModel;
 
     /**
      * Creates a new instance of TaskDesign
@@ -118,8 +114,6 @@ public class TaskDesign implements Serializable {
         this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
         
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
-        this.referenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatDefault();
-        this.concentrationReferenceMaterialModel = SquidLabData.getExistingSquidLabData().getRefMatConcDefault();
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         // Default to blank  
@@ -465,20 +459,6 @@ public class TaskDesign implements Serializable {
     }
 
     /**
-     * @return the referenceMaterialModel
-     */
-    public ParametersModel getReferenceMaterialModel() {
-        return referenceMaterialModel;
-    }
-
-    /**
-     * @param referenceMaterialModel the referenceMaterialModel to set
-     */
-    public void setReferenceMaterialModel(ParametersModel referenceMaterialModel) {
-        this.referenceMaterialModel = referenceMaterialModel;
-    }
-
-    /**
      * @return the commonPbModel
      */
     public ParametersModel getCommonPbModel() {
@@ -490,19 +470,5 @@ public class TaskDesign implements Serializable {
      */
     public void setCommonPbModel(ParametersModel commonPbModel) {
         this.commonPbModel = commonPbModel;
-    }
-
-    /**
-     * @return the concentrationReferenceMaterialModel
-     */
-    public ParametersModel getConcentrationReferenceMaterialModel() {
-        return concentrationReferenceMaterialModel;
-    }
-
-    /**
-     * @param concentrationReferenceMaterialModel the concentrationReferenceMaterialModel to set
-     */
-    public void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel) {
-        this.concentrationReferenceMaterialModel = concentrationReferenceMaterialModel;
     }
 }

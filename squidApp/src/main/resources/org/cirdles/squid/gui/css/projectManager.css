@@ -223,7 +223,7 @@
     -fx-border-width: 2;
     -fx-background-radius: 0;
     -fx-background-color: Secondary;
-    -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "SansSerif";
     -fx-font-size: 11pt;
     -fx-text-fill: whitesmoke;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
