@@ -87,7 +87,7 @@ public class RunsViewModel {
 
         @Override
         public boolean test(PrawnFile.Run run) {
-            return run.getPar().get(0).getValue().toUpperCase(Locale.US).trim().startsWith(spotName);
+            return run.getPar().get(0).getValue().toUpperCase(Locale.ENGLISH).trim().startsWith(spotName);
         }
     }
 
@@ -108,7 +108,22 @@ public class RunsViewModel {
             }
         }
     };
+    
+        static class ShrimpFractionAbbreviatedListCell extends ListCell<PrawnFile.Run> {
 
+        @Override
+        protected void updateItem(PrawnFile.Run run, boolean empty) {
+            super.updateItem(run, empty);
+            if (run == null || empty) {
+                setText(null);
+            } else {
+                setText(
+                        String.format("%1$-" + 20 + "s", run.getPar().get(0).getValue()) // name
+                        + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(0).getValue())//date
+                        + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(1).getValue()));
+            }
+        }
+    };
     /**
      * @return the viewableShrimpRuns
      */

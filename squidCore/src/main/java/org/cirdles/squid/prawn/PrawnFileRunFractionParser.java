@@ -129,8 +129,8 @@ public class PrawnFileRunFractionParser {
             shrimpFraction.setStageX(stageX);
             shrimpFraction.setStageY(stageY);
             shrimpFraction.setStageZ(stageZ);
-            shrimpFraction.setQtlY(qt1Y);
-            shrimpFraction.setQtlZ(qt1Z);
+            shrimpFraction.setQt1Y(qt1Y);
+            shrimpFraction.setQt1Z(qt1Z);
             shrimpFraction.setPrimaryBeam(primaryBeam);
 
             shrimpFraction.setCountTimeSec(countTimeSec);
@@ -157,14 +157,14 @@ public class PrawnFileRunFractionParser {
 
             // determine reference material status
             if (referenceMaterialNameFilter.length() > 0) {
-                if (fractionID.toUpperCase(Locale.US).startsWith(referenceMaterialNameFilter.toUpperCase(Locale.US))) {
+                if (fractionID.toUpperCase(Locale.US).startsWith(referenceMaterialNameFilter.toUpperCase(Locale.ENGLISH))) {
                     shrimpFraction.setReferenceMaterial(true);
                 }
             }
 
             // determine concentration reference material status
             if (concentrationReferenceMaterialNameFilter.length() > 0) {
-                if (fractionID.toUpperCase(Locale.US).startsWith(concentrationReferenceMaterialNameFilter.toUpperCase(Locale.US))) {
+                if (fractionID.toUpperCase(Locale.US).startsWith(concentrationReferenceMaterialNameFilter.toUpperCase(Locale.ENGLISH))) {
                     shrimpFraction.setConcentrationReferenceMaterial(true);
                 }
             }

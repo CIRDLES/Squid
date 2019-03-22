@@ -22,9 +22,12 @@ import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 
 import static org.cirdles.topsoil.variable.Variables.*;
@@ -39,12 +42,12 @@ public class TopsoilDataFactory {
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
 
         // default is for reference materials
-        String ratioBase75 = "207*/235";
-        String ratioBase68 = "206*/238";
+        String ratioBase75 = R207PB_235U_RM;
+        String ratioBase68 = R206PB_238U_RM;
         String errCorr = ERR_CORREL_RM;
         if (isUnknown) {
             ratioBase75 = R207PB_235U;
-            ratioBase68 = "206*/238S";
+            ratioBase68 = R206PB_238U;
             errCorr = ERR_CORREL;
         }
 
@@ -56,10 +59,10 @@ public class TopsoilDataFactory {
     public static Map<String, Object> prepareTeraWasserburgDatum(
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
         // jan 2019 - there is a naming problem we are working on
-        // default is for reference materials
-        String ratioBase86 = R238U_206PB;
-        String ratioBase76 = R207PB_206PB_RM;
-        String errCorr = ERR_CORREL_RM;
+        // TW is not defined for reference materials
+        String ratioBase86 = "";
+        String ratioBase76 = "";
+        String errCorr = "";
         if (isUnknown) {
             ratioBase86 = R238U_206PB;
             ratioBase76 = R207PB_206PB;

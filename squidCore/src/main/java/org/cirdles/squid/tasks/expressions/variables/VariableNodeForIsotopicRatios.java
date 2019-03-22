@@ -120,6 +120,11 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                     } else if (uncertaintyDirective.compareTo("±") == 0) {
                         values[0] = org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1], 12);
                     }
+                } else {
+                    // return 0 for uncertainty if none exists
+                    if (uncertaintyDirective.length() > 0){
+                        values[0] = 0.0;
+                    }
                 }
                 retVal[i] = convertArrayToObjects(values);
             }

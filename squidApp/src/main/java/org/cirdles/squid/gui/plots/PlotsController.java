@@ -46,6 +46,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -64,10 +65,10 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_AGE_U_PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.WTDAV_PREFIX;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_AGE_U_PB;
 
 /**
  *
@@ -84,7 +85,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     private ToolBar plotToolBar;
 
     private TreeView<SampleTreeNodeInterface> spotsTreeViewCheckBox = new CheckTreeView<>();
-    private TreeView<String> spotsTreeViewString = new TreeView<String>();
+    private TreeView<String> spotsTreeViewString = new TreeView<>();
 
     private static ObservableList<SampleTreeNodeInterface> fractionNodes;
     private static PlotDisplayInterface rootPlot;
@@ -128,20 +129,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     }
     public static PlotTypes plotTypeSelected = PlotTypes.CONCORDIA;
 
-    public static enum SpotTypes {
-        REFERENCE_MATERIAL("REFERENCE MATERIALS"),
-        UNKNOWN("UNKNOWNS");
-
-        private String plotType;
-
-        private SpotTypes(String plotType) {
-            this.plotType = plotType;
-        }
-
-        public String getPlotType() {
-            return plotType;
-        }
-    }
     public static SpotTypes fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
 
     @Override
@@ -172,9 +159,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         if (fractionTypeSelected.compareTo(SpotTypes.UNKNOWN) == 0) {
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getUnknownSpots();
             mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
-            // case of no sample names chosen
-            if (mapOfSpotsBySampleNames.isEmpty()) {
-                mapOfSpotsBySampleNames.put("Super Sample", allUnknownOrRefMatShrimpFractions);
+            // case of sample names chosen
+            if (mapOfSpotsBySampleNames.size() > 1) {
+                mapOfSpotsBySampleNames.remove(SpotTypes.UNKNOWN.getPlotType());
             }
         } else {
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getReferenceMaterialSpots();
@@ -215,8 +202,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 Iterator<TreeItem<SampleTreeNodeInterface>> mySamplesIterator = mySamples.iterator();
                 while (mySamplesIterator.hasNext()) {
 
-                    CheckBoxTreeItem<SampleTreeNodeInterface> mySampleItem = 
-                            (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
+                    CheckBoxTreeItem<SampleTreeNodeInterface> mySampleItem
+                            = (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
                     mySampleItem.setSelected(newValue);
                 }
                 plot = rootPlot;
@@ -340,20 +327,23 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     @Override
     public void refreshPlot() {
-        topsoilPlotNode = plot.displayPlotAsNode();
-        plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
-        AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
-        AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+        try {
+            topsoilPlotNode = plot.displayPlotAsNode();
+            plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
+            AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
+            AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+            
+            VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
+            VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
+            VBox.setVgrow(plotVBox, Priority.NEVER);//ALWAYS);
 
-        VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
-        VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
-        VBox.setVgrow(plotVBox, Priority.NEVER);//ALWAYS);
-
-        plotToolBar.getItems().clear();
-        plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
-        plotToolBar.setPadding(Insets.EMPTY);
+            plotToolBar.getItems().clear();
+            plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
+            plotToolBar.setPadding(Insets.EMPTY);
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -384,8 +374,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 correction + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + calibrConstAgeBaseName.replace("/", "") + "_Age_RM",  // TODO: FIX THIS HACK
-                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(REF_AGE_U_PB).getValues()[0][0],
+                correction + calibrConstAgeBaseName.replace("/", "") + "_Age_RM", // TODO: FIX THIS HACK
+                squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(REFRAD_AGE_U_PB).getValues()[0][0],
                 this);//559.1 * 1e6);
 
         refreshPlot();
@@ -508,7 +498,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 plotFlavorOneRadioButton.setText("Wetherill Concordia");
                 plotFlavorTwoRadioButton.setText("Tera-Wasserburg");
                 plotFlavorOneRadioButton.setDisable(false);
-                plotFlavorTwoRadioButton.setDisable(false);
+                plotFlavorTwoRadioButton.setDisable(fractionTypeSelected.compareTo(SpotTypes.REFERENCE_MATERIAL) == 0);
 
                 corr7_RadioButton.setVisible(false);
                 corr8_RadioButton.setVisible(true);

@@ -16,6 +16,9 @@ hs_err_pid*
 build/
 /Squid/.nb-gradle/
 
+# Maven
+target/
+
 # Netbeans
 nb-configuration.xml
 nbactions.xml
@@ -40,6 +43,8 @@ test_*
 *.zip
 *.squid
 *.xls
+*.pdf
+
 EXPRESSION.HTML
 squidApp/LudwigLibraryJavadoc/
 squidApp/Schema/
@@ -48,6 +53,8 @@ squidCore/Schema/
 LudwigLibraryJavadoc/
 Schema/
 /Schema/
+squidApp/Squid3_Reports_v?.?.?
+
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
@@ -68,6 +75,9 @@ Schema/
 !squidWeb/src/main/resources/org/cirdles/squid/tasks/squidTask25/*.xls
 
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
+
+!squidApp/pomX.xml
+!squidCore/pomX.xml
 
 
 # MACOS

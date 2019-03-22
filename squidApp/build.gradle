@@ -23,8 +23,8 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 dependencies {
     compile project(":squidCore")
 
-    compile 'com.github.cirdles.topsoil:app:-SNAPSHOT'
-    compile 'com.github.cirdles.topsoil:core:-SNAPSHOT'
+    compile 'com.github.BryceBarrett.Topsoil:app:TW-JS-SNAPSHOT'
+    compile 'com.github.BryceBarrett.Topsoil:core:TW-JS-SNAPSHOT'
 
 }
 

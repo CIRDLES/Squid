@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
@@ -26,22 +27,22 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainPane" dividerPositions="0.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="702.0" prefWidth="1220.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
+<SplitPane fx:id="mainPane" dividerPositions="0.25" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="702.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.expressions.ExpressionBuilderController">
    <items>
       <SplitPane fx:id="leftSplitPane" dividerPositions="0.75" maxWidth="500.0" minWidth="275.0" orientation="VERTICAL" styleClass="backgroundCalamari">
          <items>
             <VBox styleClass="backgroundCalamari">
                <children>
-                  <HBox prefHeight="27.0" prefWidth="275.0" spacing="10.0" style="-fx-background-color: #eefbfb;">
+                  <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="275.0" spacing="10.0" style="-fx-background-color: #eefbfb;">
                      <children>
-                        <Label style="-fx-font-size: 12;" text="Expressions by:" translateY="2.0" />
-                        <RadioButton id="NAME" mnemonicParsing="false" onAction="#expressionSortToggleAction" selected="true" style="-fx-font-size: 10;" text="Name" translateY="7.0">
+                        <Label style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Expressions by:" translateY="2.0" />
+                        <RadioButton id="NAME" mnemonicParsing="false" onAction="#expressionSortToggleAction" selected="true" style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Name" translateY="5.0">
                            <toggleGroup>
                               <ToggleGroup fx:id="expressionsSortToggleGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton id="EXEC" mnemonicParsing="false" onAction="#expressionSortToggleAction" style="-fx-font-size: 10;" text="Exec" toggleGroup="$expressionsSortToggleGroup" translateY="7.0" />
-                        <RadioButton id="TARGET" mnemonicParsing="false" onAction="#expressionSortToggleAction" style="-fx-font-size: 10;" text="Target" toggleGroup="$expressionsSortToggleGroup" translateY="7.0" />
+                        <RadioButton id="EXEC" mnemonicParsing="false" onAction="#expressionSortToggleAction" style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Exec" toggleGroup="$expressionsSortToggleGroup" translateY="5.0" />
+                        <RadioButton id="TARGET" mnemonicParsing="false" onAction="#expressionSortToggleAction" style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Target" toggleGroup="$expressionsSortToggleGroup" translateY="5.0" />
                      </children>
                      <padding>
                         <Insets left="5.0" />
@@ -49,80 +50,86 @@
                   </HBox>
                   <Accordion fx:id="expressionsAccordion" VBox.vgrow="SOMETIMES">
                      <panes>
-                        <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" text="Custom Expressions">
+                        <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Custom Expressions">
                            <content>
                               <ListView fx:id="customExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0" text="NU-switched Expressions with Uncts">
+                        <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="NU-switched Expressions with Uncts">
                            <content>
                               <ListView fx:id="nuSwitchedExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0" text="Built-In Expressions">
+                        <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Built-In Expressions">
                            <content>
                               <ListView fx:id="builtInExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" text="Ratios with Uncertainties">
+                        <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Ratios with Uncertainties">
                            <content>
                               <ListView fx:id="ratioExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12;" text="Reference Material Values (see Task Mgr)">
+                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="Reference Material Values (see Task Mgr)">
                            <content>
                               <ListView fx:id="referenceMaterialsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" text="Parameters (see Task Mgr)">
+                        <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Parameters (see Task Mgr)">
                            <content>
                               <ListView fx:id="parametersListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" text="Unhealthy Expressions">
+                        <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" style="-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;" text="Unhealthy Expressions / Mismatched Targets ">
                            <content>
                               <ListView fx:id="brokenExpressionsListView" />
                            </content>
                         </TitledPane>
                      </panes>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </Accordion>
                </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </VBox>
             <VBox prefHeight="149.0" prefWidth="275.0">
                <children>
-                  <HBox style="-fx-background-color: #eefbfb;">
+                  <HBox alignment="CENTER" style="-fx-background-color: #eefbfb;">
                      <children>
-                        <Label style="-fx-font-size: 12;" text="Entities" />
+                        <Label style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Expression Building Blocks" />
                      </children>
                   </HBox>
                   <Accordion fx:id="othersAccordion" nodeOrientation="LEFT_TO_RIGHT">
                      <panes>
-                        <TitledPane fx:id="constantsTitledPane" animated="false" text="Constants and Numbers">
+                        <TitledPane fx:id="constantsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Constants and Numbers">
                            <content>
                               <ListView fx:id="constantsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="operationsTitledPane" animated="false" text="Operations">
+                        <TitledPane fx:id="operationsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Operations">
                            <content>
                               <ListView fx:id="operationsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="mathFunctionsTitledPane" animated="false" text="Math Functions">
+                        <TitledPane fx:id="mathFunctionsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Math Functions">
                            <content>
                               <ListView fx:id="mathFunctionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="squidFunctionsTitledPane" animated="false" expanded="false" text="Squid Functions">
+                        <TitledPane fx:id="squidFunctionsTitledPane" animated="false" expanded="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Squid Functions">
                            <content>
                               <ListView fx:id="squidFunctionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="logicFunctionsTitledPane" animated="false" text="Logic Functions">
+                        <TitledPane fx:id="logicFunctionsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Logic Functions">
                            <content>
                               <ListView fx:id="logicFunctionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="presentationTitledPane" animated="false" layoutX="10.0" layoutY="172.0" text="Presentation">
+                        <TitledPane fx:id="presentationTitledPane" animated="false" layoutX="10.0" layoutY="172.0" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Presentation">
                            <content>
                               <ListView fx:id="presentationListView" />
                            </content>
@@ -140,29 +147,12 @@
          <children>
             <ToolBar VBox.vgrow="NEVER">
                <items>
-                  <VBox fx:id="toolBarVBox" alignment="CENTER_LEFT">
-                     <children>
-                        <HBox spacing="5.0" VBox.vgrow="ALWAYS">
-                           <children>
-                              <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create blank" HBox.hgrow="NEVER" />
-                              <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Copy selected" />
-                              <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
-                              <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
-                              <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#howToUseAction" text="HowTo Videos" HBox.hgrow="NEVER" />
-                           </children>
-                        </HBox>
-                        <HBox fx:id="toolBarHBox" alignment="CENTER_LEFT" spacing="6.0">
-                           <children>
-                              <Label text="Drag &amp; drop mode:" />
-                              <RadioButton fx:id="dragndropLeftRadio" mnemonicParsing="false" text="Insert left" />
-                              <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" text="Replace" />
-                              <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" text="Insert right" />
-                              <Label fx:id="modeLabel" text="View" visible="false" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
+                  <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create new" />
+                  <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Create copy" />
+                  <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
+                  <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
+                  <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#showDependencyGraphsAction" text="Show Dependency Graphs" translateX="100.0" />
                </items>
             </ToolBar>
             <VBox fx:id="editorVBox" VBox.vgrow="ALWAYS">
@@ -170,26 +160,37 @@
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
                         <Label minWidth="140.0" opacity="0.99" text="Expression name:" />
-                        <TextField fx:id="expressionNameTextField" maxWidth="400.0" minWidth="120.0" opacity="0.99" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="expressionNameTextField" maxWidth="400.0" minWidth="120.0" opacity="0.99" promptText="type your new expression name here" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
-                        <Insets bottom="5.0" left="7.0" right="7.0" top="10.0" />
+                        <Insets bottom="5.0" left="7.0" right="7.0" />
                      </VBox.margin>
                   </HBox>
-                  <FlowPane alignment="CENTER_LEFT" hgap="15.0" vgap="5.0">
+                  <FlowPane alignment="CENTER_LEFT" hgap="15.0" prefHeight="30.0" style="-fx-background-color: #eefbfb; -fx-border-width: 0.25; -fx-border-color: black;" vgap="5.0">
                      <children>
-                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" opacity="0.99" text="Reference Material" />
-                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" opacity="0.99" text="Unknown Samples" />
-                        <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" opacity="0.99" text="Conc RefMat" />
-                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" opacity="0.99" text="Summary Calculation" />
-                        <CheckBox fx:id="NUSwitchCheckBox" layoutX="601.0" layoutY="10.0" mnemonicParsing="false" onAction="#NUSwitchCheckBoxAction" opacity="0.99" text="NU Switch" />
-                        <CheckBox fx:id="specialUPbThSwitchCheckBox" disable="true" layoutX="433.0" layoutY="10.0" mnemonicParsing="false" onAction="#specialUPbThCheckBoxAction" opacity="0.99" text="Built-in Expression" />
+                        <CheckBox fx:id="refMatSwitchCheckBox" mnemonicParsing="false" onAction="#referenceMaterialCheckBoxAction" style="-fx-text-fill: red; -fx-font-family: SansSerif; -fx-font-weight: 600;" text="Reference Material">
+                           <FlowPane.margin>
+                              <Insets left="2.0" />
+                           </FlowPane.margin></CheckBox>
+                        <CheckBox fx:id="unknownsSwitchCheckBox" mnemonicParsing="false" onAction="#unknownSamplesCheckBoxAction" style="-fx-text-fill: red; -fx-font-family: SansSerif; -fx-font-weight: 600;" text="Unknown Samples" />
+                        <ComboBox fx:id="unknownGroupsComboBox" onAction="#unknownGroupsComboBoxAction" opacity="0.99" prefHeight="20.0" prefWidth="142.0" promptText="UNKNOWNS" style="-fx-background-color: #eefbfb; -fx-border-color: red;">
+                           <FlowPane.margin>
+                              <Insets />
+                           </FlowPane.margin>
+                        </ComboBox>
+                        <CheckBox fx:id="concRefMatSwitchCheckBox" mnemonicParsing="false" onAction="#concRefMatCheckBoxAction" style="-fx-font-family: SansSerif; -fx-font-weight: 600; -fx-font-size: 13;" text="Conc RefMat" />
+                        <CheckBox fx:id="summaryCalculationSwitchCheckBox" layoutX="316.0" layoutY="10.0" mnemonicParsing="false" onAction="#summaryCalculationCheckBoxAction" style="-fx-font-family: SansSerif; -fx-font-size: 13; -fx-font-weight: 600;" text="Summary Calculation" />
+                        <CheckBox fx:id="NUSwitchCheckBox" disable="true" layoutX="601.0" layoutY="10.0" mnemonicParsing="false" onAction="#NUSwitchCheckBoxAction" style="-fx-font-family: SansSerif; -fx-font-size: 13; -fx-font-weight: 600;" text="NU Switch">
+                           <FlowPane.margin>
+                              <Insets />
+                           </FlowPane.margin></CheckBox>
+                        <CheckBox fx:id="specialUPbThSwitchCheckBox" disable="true" layoutX="433.0" layoutY="10.0" mnemonicParsing="false" onAction="#specialUPbThCheckBoxAction" style="-fx-font-family: SansSerif; -fx-font-weight: 600;" text="Built-in" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="5.0" left="7.0" right="7.0" />
                      </VBox.margin>
                   </FlowPane>
-                  <SplitPane dividerPositions="0.25" orientation="VERTICAL" styleClass="backgroundCalamari" VBox.vgrow="ALWAYS">
+                  <SplitPane dividerPositions="0.2785234899328859" orientation="VERTICAL" styleClass="backgroundCalamari" VBox.vgrow="ALWAYS">
                      <items>
                         <VBox>
                            <children>
@@ -198,7 +199,7 @@
                                     <Insets left="2.0" />
                                  </VBox.margin>
                                  <children>
-                                    <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: hold t + hover a node to show detail">
+                                    <Text fx:id="hintHoverText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: hold t as you hover over a node to show detail">
                                        <font>
                                           <Font size="11.0" />
                                        </font>
@@ -248,7 +249,7 @@
                               </AnchorPane>
                               <HBox>
                                  <children>
-                                    <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                    <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="500.0" HBox.hgrow="ALWAYS">
                                        <children>
                                           <Button fx:id="expressionCopyBtn" mnemonicParsing="false" onAction="#expressionCopyAction" text="Copy exp">
                                              <tooltip>
@@ -265,9 +266,23 @@
                                           <Button fx:id="expressionRedoBtn" mnemonicParsing="false" onAction="#expressionRedoAction" text="Redo" />
                                        </children>
                                     </HBox>
-                                    <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                    <HBox fx:id="toolBarHBox" alignment="CENTER" prefHeight="31.0" prefWidth="247.0" spacing="6.0">
                                        <children>
-                                          <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" text="Edit as text" />
+                                          <RadioButton fx:id="dragndropLeftRadio" mnemonicParsing="false" prefWidth="80.0" style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Insert left">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+                                          </RadioButton>
+                                          <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" prefWidth="70.0" style="-fx-font-family: SansSerif; -fx-font-size: 12;" text="Replace" />
+                                          <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" prefWidth="80.0" style="-fx-font-family: SansSerif; -fx-font-size: 12;" text="Insert right" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="122.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" prefHeight="31.0" prefWidth="138.0" text="Edit as text" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -301,11 +316,11 @@
                                     </TitledPane>
                                  </children>
                               </AnchorPane>
-                              <SplitPane fx:id="smallSplitPane" dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0">
+                              <SplitPane fx:id="smallSplitPane" dividerPositions="0.4738598442714127" prefHeight="200.0" prefWidth="200.0">
                                  <items>
                                     <AnchorPane>
                                        <children>
-                                          <TitledPane fx:id="auditPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" text="Audit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TitledPane fx:id="auditPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" style="-fx-font-family: SansSerif;" text="Audit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <content>
                                                  <AnchorPane>
                                                      <padding>
@@ -321,7 +336,7 @@
                                     </AnchorPane>
                                     <AnchorPane>
                                        <children>
-                                          <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" text="Peek" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" style="-fx-font-family: SanSerif;" text="Peek (Display Context: Ages in Ma, concentrations in ppm)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <content>
                                                 <TabPane fx:id="spotTabPane" style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
                                                   <tabs>
@@ -332,7 +347,7 @@
                                                                     <Insets bottom="0" left="0" right="0" top="0" />                 
                                                                 </padding>
                                                                 <children>
-                                                                    <TextArea fx:id="rmPeekTextArea" editable="false" style="-fx-font-family: Courier New; -fx-font-size: 11;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                    <TextArea fx:id="rmPeekTextArea" editable="false" style="-fx-font-family: Monospaced; -fx-font-size: 11;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                                 </children>
                                                             </AnchorPane>
                                                          </content>
@@ -344,7 +359,7 @@
                                                                     <Insets bottom="0" left="0" right="0" top="0" />                 
                                                                 </padding>
                                                                 <children>
-                                                                    <TextArea fx:id="unPeekTextArea" editable="false" style="-fx-font-family: Courier New; -fx-font-size: 11;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                    <TextArea fx:id="unPeekTextArea" editable="false" style="-fx-font-family: Monospaced; -fx-font-size: 11;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                                 </children>
                                                             </AnchorPane>
                                                          </content>
@@ -371,6 +386,9 @@
                                                   </tabs>
                                                 </TabPane>
                                              </content>
+                                             <font>
+                                                <Font name="SansSerif Bold" size="13.0" />
+                                             </font>
                                           </TitledPane>
                                        </children>
                                     </AnchorPane>

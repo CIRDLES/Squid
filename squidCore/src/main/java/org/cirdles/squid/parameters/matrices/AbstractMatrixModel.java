@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -106,7 +107,7 @@ public abstract class AbstractMatrixModel implements Serializable {
      *
      * @return
      */
-    public String ToStringWithLabels () {
+    public String toStringWithLabels () {
         String formatCell = "%1$-23s";
 
         String retVal = String.format( formatCell, "MATRIX#=" + getLevelName() );
@@ -306,7 +307,7 @@ public abstract class AbstractMatrixModel implements Serializable {
      * @return
      */
     protected String createPartialDerivName ( String variableName ) {
-        return "d" + variableName.substring( 0, 1 ).toUpperCase() + variableName.substring( 1 );
+        return "d" + variableName.substring( 0, 1 ).toUpperCase(Locale.ENGLISH) + variableName.substring( 1 );
     }
 //    private void readObject ( ObjectInputStream stream ) throws IOException,
 //            ClassNotFoundException {

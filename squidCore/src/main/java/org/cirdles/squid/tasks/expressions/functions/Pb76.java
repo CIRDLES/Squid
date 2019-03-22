@@ -22,10 +22,9 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
  *
@@ -34,7 +33,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 @XStreamAlias("Operation")
 public class Pb76 extends Function {
 
-////    private static final long serialVersionUID = -6711265919551953531L;
+    private static final long serialVersionUID = 5804850944957406185L;
+
     /**
      * Ludwig specifies Return radiogenic 207Pb/206Pb (secular equilibrium). All
      * calculations in annum.
@@ -74,12 +74,12 @@ public class Pb76 extends Function {
         try {
             double[] pb207_206Age = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
 
-            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
+            double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
             double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];
             double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] pb76 = org.cirdles.ludwig.isoplot3.Pub.pb76(pb207_206Age[0],
-                    lambda235, lambda238, PRESENT_R238_235S);
+                    lambda235, lambda238, present238U235U);
             retVal = new Object[][]{{pb76[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0}};
@@ -100,9 +100,7 @@ public class Pb76 extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

@@ -22,10 +22,9 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
  *
@@ -82,11 +81,11 @@ public class AgePb76WithErr extends Function {
 
             double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];
             double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
-            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
+            double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
 
             double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(pb207_206Ratio[0],
                     pb207_206Unct1Sigma[0],
-                    lambda235, lambda238, PRESENT_R238_235S);
+                    lambda235, lambda238, present238U235U);
             retVal = new Object[][]{{agePb76[0], agePb76[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
@@ -107,9 +106,7 @@ public class AgePb76WithErr extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

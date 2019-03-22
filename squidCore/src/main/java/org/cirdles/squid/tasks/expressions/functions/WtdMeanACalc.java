@@ -80,11 +80,45 @@ public class WtdMeanACalc extends Function {
         precedence = 4;
         rowCount = 3;
         colCount = 7;
+        summaryCalc = true;
         labelsForOutputValues = new String[][]{
             {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability", "externalFlag"},
             {"LargeRej Indices"},
             {"WmeanRej Indices"}};
         labelsForInputValues = new String[]{"numbers", "oneSigmaPercentUncertainties", "noUPbConstAutoReject", "pbCanDriftCorr"};
+        definition = "Evaluates, for the Standard Reference Material, the weighted mean (and\n"
+                + DEF_TAB + "associated parameters) of a set of common-Pb corrected calibration\n"
+                + DEF_TAB + "constant values. This mean is the value to which all spot-by-spot\n"
+                + DEF_TAB + "calibration constants determined for the unknowns will be calibrated, and\n"
+                + DEF_TAB + "all spot-by-spot, 'directly-calculated daughter/parent dates' (i.e.\n"
+                + DEF_TAB + "206Pb/238U and/or 208Pb/232Th as appropriate) are calculated from there,\n"
+                + DEF_TAB + "because SHRIMP (and secondary ion mass spectrometry in general) is an\n"
+                + DEF_TAB + "indirect dating technique. Thus this is a critical step.\n"
+                + DEF_TAB + "\n"
+                + DEF_TAB + "We modify Ludwig's VBA version so that the input is any set of values and\n"
+                + DEF_TAB + "oneSigmaPercentUncertainties but plan for it to be called separately for\n"
+                + DEF_TAB + "each of the 5 flavors of calibration constants, named here:\n"
+                + DEF_TAB + "4-corr206/238, 7-corr206/238, 8-corr206/238, 4-corr208/232,\n"
+                + DEF_TAB + "7-corr208/232.\n"
+                + DEF_TAB + "\n"
+                + DEF_TAB + "In a break with Squid3 architecture, in order to preserve the results of\n"
+                + DEF_TAB + "Squid25, the uncertainties input to this function are 1-sigma percent.\n"
+                + DEF_TAB + "After the large rejection stage, the uncertainties are converted to\n"
+                + DEF_TAB + "absolute for the balance of the calculations and 1-sigma absolute values\n"
+                + DEF_TAB + "are returned per Squid3 architecture.\n"
+                + DEF_TAB + "\n"
+                + DEF_TAB + "Note: the following values displayed in Squid25 can be calculated from\n"
+                + DEF_TAB + "the outputs of this function.\n"
+                + DEF_TAB + "\n"
+                + DEF_TAB + "1sigma%errorOfMean = err68 / mean * 100\n"
+                + DEF_TAB + "\n"
+                + DEF_TAB + "95%-conf. err. of mean(%) = err95 / mean * 100\n"
+                + DEF_TAB + "\n"
+                + DEF_TAB + "if externalFlag = 1.0, otherwise zero 1s external spot-to-spot error =\n"
+                + DEF_TAB + "1-sigmaAbs / mean * 100\n"
+                + DEF_TAB + "\n"
+                + DEF_TAB + "Returns double[3][], where the indices listed in [1] and [2] are\n"
+                + DEF_TAB + "zero-based rather than the Squid25 1-based values.\n";
     }
 
     /**
@@ -143,9 +177,7 @@ public class WtdMeanACalc extends Function {
                 + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 
@@ -191,8 +223,8 @@ public class WtdMeanACalc extends Function {
         // create a double array - selectionArray - that works as a boolean array with 1s for active values and 0s for Large errrejected
         double[] selectionArray = new double[countOfValues];
         // create two index arrays to return rejected indices
-        double[] largeErrRejIndexArray = new double[0];
-        double[] wmErrRejIndexArray = new double[0];
+        double[] largeErrRejIndexArray;
+        double[] wmErrRejIndexArray;
 
         // first get fdNmad of uncertainty column 
         double medianEr = median(oneSigmaPctUnct);
@@ -278,7 +310,7 @@ public class WtdMeanACalc extends Function {
 
             retVal = new double[][]{ww[0], largeErrRejIndexArray, wmErrRejIndexArray};
         }
-        
+
         return retVal;
 
     }

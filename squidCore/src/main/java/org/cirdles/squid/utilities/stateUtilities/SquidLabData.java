@@ -14,6 +14,7 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
@@ -26,6 +27,8 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 public class SquidLabData implements Serializable {
 
     private static final long serialVersionUID = -6819591137651731346L;
+
+    public static final String SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1 = "Squid 2.5 Physical Constants Model";
 
     private List<ParametersModel> referenceMaterials;
     private List<ParametersModel> physicalConstantsModels;
@@ -47,7 +50,7 @@ public class SquidLabData implements Serializable {
         commonPbModels = CommonPbModel.getDefaultModels();
         commonPbModels.sort(new ParametersModelComparator());
 
-        physConstDefault = PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0");
+        physConstDefault = PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0");
         refMatDefault = ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0");
         refMatConcDefault = ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0");
         commonPbDefault = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
@@ -63,7 +66,7 @@ public class SquidLabData implements Serializable {
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
             if (file.exists() && !file.isDirectory()) {
                 retVal = SquidLabData.deserialize(file);
-                if (retVal == null){
+                if (retVal == null) {
                     // bad labdata
                     retVal = new SquidLabData();
                 }
@@ -146,6 +149,28 @@ public class SquidLabData implements Serializable {
 
     public List<ParametersModel> getReferenceMaterials() {
         return referenceMaterials;
+    }
+
+    public List<ParametersModel> getReferenceMaterialsWithNonZeroDate() {
+        List<ParametersModel> filteredRM = new ArrayList<>();
+        for (ParametersModel pm : referenceMaterials) {
+            if (((ReferenceMaterialModel) pm).hasAtLeastOneNonZeroApparentDate()) {
+                filteredRM.add(pm);
+            }
+        }
+
+        return filteredRM;
+    }
+
+    public List<ParametersModel> getReferenceMaterialsWithNonZeroConcentrations() {
+        List<ParametersModel> filteredRM = new ArrayList<>();
+        for (ParametersModel pm : referenceMaterials) {
+            if (((ReferenceMaterialModel) pm).hasAtLeastOneNonZeroConcentration()) {
+                filteredRM.add(pm);
+            }
+        }
+
+        return filteredRM;
     }
 
     public void setReferenceMaterials(List<ParametersModel> referenceMaterials) {

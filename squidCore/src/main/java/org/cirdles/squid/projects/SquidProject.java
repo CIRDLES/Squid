@@ -30,10 +30,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
+import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.op.OPFileHandler;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
@@ -42,7 +46,6 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
 import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
@@ -52,6 +55,7 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
  *
@@ -79,6 +83,9 @@ public final class SquidProject implements Serializable {
 
     private static boolean projectChanged;
 
+    private ParametersModel referenceMaterialModel;
+    private ParametersModel concentrationReferenceMaterialModel;
+
     public SquidProject() {
         this.prawnFileHandler = new PrawnXMLFileHandler(this);
         this.projectName = "NO_NAME";
@@ -90,12 +97,18 @@ public final class SquidProject implements Serializable {
 
         this.sessionDurationHours = 0.0;
 
-        projectChanged = false;
+        this.projectChanged = false;
+
+        this.referenceMaterialModel = new ReferenceMaterialModel();
+        this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
+        this.task.setReferenceMaterialModel(this.referenceMaterialModel);
+        this.task.setConcentrationReferenceMaterialModel(this.concentrationReferenceMaterialModel);
 
         this.filtersForUnknownNames = new HashMap<>();
-        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
+        this.delimiterForUnknownNames
+                = SquidPersistentState.getExistingPersistentState().getTaskDesign().getDelimiterForUnknownNames();
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -136,7 +149,10 @@ public final class SquidProject implements Serializable {
     public void createNewTask() {
         this.task = new Task(
                 "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
+        this.task.setReferenceMaterialModel(referenceMaterialModel);
+        this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
         this.task.setChanged(true);
+        this.task.applyDirectives();
         initializeTaskAndReduceData();
     }
 
@@ -167,7 +183,7 @@ public final class SquidProject implements Serializable {
 
         this.task = new Task(
                 taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
-        this.task.setType(taskSquid25.getTaskType());
+        this.task.setTaskType(taskSquid25.getTaskType());
         this.task.setDescription(taskSquid25.getTaskDescription());
         this.task.setProvenance(taskSquid25.getSquidTaskFileName());
         this.task.setAuthorName(taskSquid25.getAuthorName());
@@ -179,8 +195,9 @@ public final class SquidProject implements Serializable {
         this.task.setFiltersForUnknownNames(filtersForUnknownNames);
         this.task.setParentNuclide(taskSquid25.getParentNuclide());
         this.task.setDirectAltPD(taskSquid25.isDirectAltPD());
-
-        this.task.generateBuiltInExpressions();
+        
+        this.task.setReferenceMaterialModel(referenceMaterialModel);
+        this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
 
         // determine index of background mass as specified in task
         for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
@@ -201,6 +218,8 @@ public final class SquidProject implements Serializable {
                     task25Eqn.isEqnSwitchNU(),
                     false, false);
 
+            expression.setNotes("Custom expression imported from Squid2 task " + taskSquid25.getTaskName() + " .");
+
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
             expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
             expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
@@ -215,10 +234,26 @@ public final class SquidProject implements Serializable {
         List<String> constantNames = taskSquid25.getConstantNames();
         List<String> constantValues = taskSquid25.getConstantValues();
         for (int i = 0; i < constantNames.size(); i++) {
-            double constantDouble = Double.parseDouble(constantValues.get(i));
-            ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
-            task.getNamedConstantsMap().put(constant.getName(), constant);
+
+            // March 2019 moved imported constants to be custom expressions
+            Expression customConstant = this.task.generateExpressionFromRawExcelStyleText(constantNames.get(i),
+                    constantValues.get(i),
+                    false, false, false);
+
+            customConstant.setNotes("Custom constant imported from Squid2 task " + taskSquid25.getTaskName() + " .");
+
+            ExpressionTreeInterface expressionTree = customConstant.getExpressionTree();
+            expressionTree.setSquidSwitchSTReferenceMaterialCalculation(true);
+            expressionTree.setSquidSwitchSAUnknownCalculation(true);
+            expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
+
+            expressionTree.setSquidSwitchSCSummaryCalculation(true);
+            expressionTree.setSquidSpecialUPbThExpression(false);
+            task.getTaskExpressionsOrdered().add(customConstant);
         }
+
+        this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
+        this.task.applyDirectives();
 
         initializeTaskAndReduceData();
     }
@@ -311,6 +346,35 @@ public final class SquidProject implements Serializable {
         prawnFileHandler.writeRawDataFileAsXML(prawnFile, fileName);
     }
 
+    /**
+     * First guess using default delimeter
+     */
+    public void autoDivideSamples() {
+        this.filtersForUnknownNames = new HashMap<>();
+        if (task.getShrimpFractions() != null) {
+            boolean delimiterIsNumber = SampleNameDelimetersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
+            for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
+                // determine flavor
+                int delimeterIndex;
+                if (delimiterIsNumber) {
+                    delimeterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
+                } else {
+                    delimeterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
+                }
+
+                String sampleName = ((delimeterIndex == -1) || (fraction.getFractionID().length() < (delimeterIndex - 1)))
+                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimeterIndex);
+                if (filtersForUnknownNames.containsKey(sampleName)) {
+                    filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
+                } else {
+                    filtersForUnknownNames.put(sampleName, 1);
+                }
+            }
+            task.setFiltersForUnknownNames(filtersForUnknownNames);
+            task.generateMapOfUnknownsBySampleNames();
+        }
+    }
+
     // reports
     public File produceReferenceMaterialCSV(boolean numberStyleIsNumeric)
             throws IOException {
@@ -340,7 +404,7 @@ public final class SquidProject implements Serializable {
             throws IOException {
         File reportTableFile = null;
 
-        List<ShrimpFractionExpressionInterface> spotsBySampleNames = makeListOfUnknownsBySample();
+        List<ShrimpFractionExpressionInterface> spotsBySampleNames = makeListOfUnknownsBySampleName();
         if (spotsBySampleNames.size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("UnknownsBySample", false, task);
             String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, numberStyleIsNumeric);
@@ -358,18 +422,21 @@ public final class SquidProject implements Serializable {
         return reportTableFile;
     }
 
-    public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySample() {
+    /**
+     * Helper method to prepare for reports by sample
+     *
+     * @return
+     */
+    public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySampleName() {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
         List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();
 
-        if (mapOfUnknownsBySampleNames.isEmpty()) {
-            mapOfUnknownsBySampleNames.put("Super Sample", task.getUnknownSpots());
-        }
-
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfUnknownsBySampleNames.entrySet()) {
-            ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
-            listOfUnknownsBySample.add(dummyForSample);
-            listOfUnknownsBySample.addAll(entry.getValue());
+            if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getPlotType()) != 0) {
+                ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
+                listOfUnknownsBySample.add(dummyForSample);
+                listOfUnknownsBySample.addAll(entry.getValue());
+            }
         }
 
         return listOfUnknownsBySample;
@@ -407,13 +474,13 @@ public final class SquidProject implements Serializable {
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
             String spotName = runs.get(i).getPar().get(0).getValue().trim();
-            String spotNameKey = spotName.toUpperCase(Locale.US);
+            String spotNameKey = spotName.toUpperCase(Locale.ENGLISH);
             // remove existing duplicate label in case editing occurred
             int indexDUP = spotName.indexOf("-DUP");
             if (indexDUP > 0) {
                 runs.get(i).getPar().get(0).setValue(spotName.substring(0, spotName.indexOf("-DUP")));
                 spotName = runs.get(i).getPar().get(0).getValue();
-                spotNameKey = spotName.toUpperCase(Locale.US);
+                spotNameKey = spotName.toUpperCase(Locale.ENGLISH);
             }
             if (spotNameCountMap.containsKey(spotNameKey)) {
                 int count = spotNameCountMap.get(spotNameKey);
@@ -613,6 +680,9 @@ public final class SquidProject implements Serializable {
 
     public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+        if (filterForRefMatSpotNames.length() == 0){
+            setReferenceMaterialModel(new ReferenceMaterialModel());
+        }
         if (task != null) {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
         }
@@ -624,6 +694,9 @@ public final class SquidProject implements Serializable {
 
     public void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
         this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+        if (filterForConcRefMatSpotNames.length() == 0){
+            setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
+        }
         if (task != null) {
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         }
@@ -700,6 +773,40 @@ public final class SquidProject implements Serializable {
      */
     public void setDelimiterForUnknownNames(String delimiterForUnknownNames) {
         this.delimiterForUnknownNames = delimiterForUnknownNames;
+    }
+
+    /**
+     * @return the referenceMaterialModel
+     */
+    public ParametersModel getReferenceMaterialModel() {
+        if (referenceMaterialModel == null) {
+            this.referenceMaterialModel = new ReferenceMaterialModel();
+        }
+        return referenceMaterialModel;
+    }
+
+    public void setReferenceMaterialModel(ParametersModel referenceMaterialModel) {
+        if (task != null) {
+            task.setReferenceMaterialModel(referenceMaterialModel);
+        }
+        this.referenceMaterialModel = referenceMaterialModel;
+    }
+
+    /**
+     * @return the concentrationReferenceMaterialModel
+     */
+    public ParametersModel getConcentrationReferenceMaterialModel() {
+        if (concentrationReferenceMaterialModel == null) {
+            this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
+        }
+        return concentrationReferenceMaterialModel;
+    }
+
+    public void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel) {
+        if (task != null) {
+            task.setConcentrationReferenceMaterialModel(referenceMaterialModel);
+        }
+        this.concentrationReferenceMaterialModel = concentrationReferenceMaterialModel;
     }
 
 }

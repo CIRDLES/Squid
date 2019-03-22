@@ -22,13 +22,12 @@ import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
 import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_64;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_74;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_84;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
  *
@@ -93,14 +92,14 @@ public class Pb86radCor7per extends Function {
             double sComm_74 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_74).getValues()[0][0];
             double sComm_84 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_84).getValues()[0][0];
 
-            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
+            double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
             double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235.getName()).getValues()[0][0];
             double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
 
             double[] pb86radCor7per = org.cirdles.ludwig.squid25.PbUTh_2.pb86radCor7per(pb208_206RatioAndUnct[0], pb208_206Unct, pb207_206RatioAndUnct[0], pb207_206Unct,
                     pb6U8tot[0], pb6U8totPerr[0], age7corPb6U8[0],
                     sComm_64, sComm_74, sComm_84,
-                    lambda235, lambda238, PRESENT_R238_235S);
+                    lambda235, lambda238, present238U235U);
 
             retVal = new Object[][]{{pb86radCor7per[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
@@ -122,9 +121,7 @@ public class Pb86radCor7per extends Function {
                 + "<mi>Pb86radCor7per</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

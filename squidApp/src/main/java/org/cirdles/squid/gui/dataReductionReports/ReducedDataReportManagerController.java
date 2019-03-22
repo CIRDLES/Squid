@@ -13,51 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.dataReduction;
+package org.cirdles.squid.gui.dataReductionReports;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.TextArea;
+import org.cirdles.squid.gui.SquidUI;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
  * FXML Controller class
  *
  * @author James F. Bowring
  */
-public class ReductionManagerController implements Initializable {
+public class ReducedDataReportManagerController implements Initializable {
 
     @FXML
-    private AnchorPane calamariTabAnchorPane;
-    @FXML
-    private ToggleGroup toggleGroupRatioCalcMethod;
-    @FXML
-    private Button reduceDataButton;
-    @FXML
-    private ProgressIndicator reduceDataProgressIndicator;
+    private TextArea reportTextArea;
 
     /**
      * Initializes the controller class.
-     *
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+      
+        reportTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
+         // todo: fix demeters law violation
+        squidProject.getTask().produceSummaryReportsForGUI();
+        reportTextArea.setText(
+                squidProject.getPrawnFileHandler().getReportsEngine()
+                        .produceCalamariReportByFlavor(SquidUI.calamariReportFlavor).replaceAll(",", ""));
     }
-
-    @FXML
-    private void handleReduceDataButtonAction(ActionEvent event) {
-
-//        if (squidProject.getPrawnFileHandler().currentPrawnFileLocationIsFile()) {
-//            squidProject.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
-//            squidProject.reduceAndReport();
-//        }
-    }
-
 }

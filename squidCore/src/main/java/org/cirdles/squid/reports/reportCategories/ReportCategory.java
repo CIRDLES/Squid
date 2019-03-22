@@ -37,6 +37,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
 
 /**
  *
@@ -107,7 +108,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             }
             categoryColumns = new ReportColumn[generatedReportCategorySpecs.length];
             for (int i = 0; i < categoryColumns.length; i++) {
-                categoryColumns[i] = SetupReportColumn(i, generatedReportCategorySpecs[i]);
+                categoryColumns[i] = setupReportColumn(i, generatedReportCategorySpecs[i]);
             }
         } else if (reportCategorySpecs[0][6].compareToIgnoreCase("<RATIOS_ARRAY>") == 0) {
             // special case of generation
@@ -142,7 +143,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             }
             categoryColumns = new ReportColumn[generatedReportCategorySpecsList.size()];
             for (int i = 0; i < categoryColumns.length; i++) {
-                categoryColumns[i] = SetupReportColumn(i, generatedReportCategorySpecsList.get(i));
+                categoryColumns[i] = setupReportColumn(i, generatedReportCategorySpecsList.get(i));
             }
         } else if (reportCategorySpecs[0][6].compareToIgnoreCase("<RM_EXPRESSIONS_ARRAY>") == 0) {
             // special case of generation
@@ -180,7 +181,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             }
             categoryColumns = new ReportColumn[generatedReportCategorySpecsList.size()];
             for (int i = 0; i < categoryColumns.length; i++) {
-                categoryColumns[i] = SetupReportColumn(i, generatedReportCategorySpecsList.get(i));
+                categoryColumns[i] = setupReportColumn(i, generatedReportCategorySpecsList.get(i));
             }
         } else {
 
@@ -196,6 +197,11 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                             = produceColumnSQUID_TH_U_EQN_NAME(reportCategorySpecs[specIndex], colIndex, isDirect, has232);
                     categoryColumnList.addAll(categoryColumnListSQUID_TH_U_EQN_NAME);
                     colIndex = colIndex + categoryColumnListSQUID_TH_U_EQN_NAME.size();
+                } else if (reportCategorySpecs[specIndex][6].compareToIgnoreCase("<SQUID_PPM_PARENT_EQN_NAME_U>") == 0) {
+                    List<ReportColumnInterface> categoryColumnListSQUID_PPM_PARENT_EQN_NAME_U
+                            = produceColumnSQUID_PPM_PARENT_EQN_NAME_U(reportCategorySpecs[specIndex], colIndex, isDirect, has232);
+                    categoryColumnList.addAll(categoryColumnListSQUID_PPM_PARENT_EQN_NAME_U);
+                    colIndex = colIndex + categoryColumnListSQUID_PPM_PARENT_EQN_NAME_U.size();
                 } else if (reportCategorySpecs[specIndex][6].compareToIgnoreCase("<SQUID_PPM_PARENT_EQN_NAME_TH>") == 0) {
                     List<ReportColumnInterface> categoryColumnListSQUID_PPM_PARENT_EQN_NAME_TH
                             = produceColumnSQUID_PPM_PARENT_EQN_NAME_TH(reportCategorySpecs[specIndex], colIndex, isDirect, has232);
@@ -217,7 +223,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                     categoryColumnList.addAll(categoryColumnListCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA);
                     colIndex = colIndex + categoryColumnListCORR_8_PRIMARY_CALIB_CONST_PCT_DELTA.size();
                 } else {
-                    categoryColumnList.add(SetupReportColumn(colIndex, reportCategorySpecs[specIndex]));
+                    categoryColumnList.add(setupReportColumn(colIndex, reportCategorySpecs[specIndex]));
                     colIndex++;
                 }
             }
@@ -257,29 +263,80 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         // perm1 and 3
         if (!isDirect) {
             columnSpec[1] = "204corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[1] = "207corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             // perm 1 only
             if (!has232) {
                 columnSpec[1] = "208corr";
-                categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
                 colIndex++;
             }
         } else {
             // perm2 and 4
             columnSpec[1] = "204corr";
             columnSpec[6] = PB4CORR + TH_U_EXP_RM;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[1] = "207corr";
             columnSpec[6] = PB7CORR + TH_U_EXP_RM;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
+            colIndex++;
+        }
+        return categoryColumnList;
+    }
+
+    private List<ReportColumnInterface> produceColumnSQUID_PPM_PARENT_EQN_NAME_U(
+            String[] specs, int myColIndex, boolean isDirect, boolean has232) {
+        List<ReportColumnInterface> categoryColumnList = new ArrayList<>();
+        int colIndex = myColIndex;
+
+        String[] columnSpec = new String[]{
+            "",
+            "204corr",
+            "U",
+            "(ppm)",
+            "",
+            specs[5],
+            U_CONCEN_PPM_RM,
+            specs[7],
+            specs[8],
+            specs[9],
+            specs[10],
+            specs[11],
+            specs[12],
+            specs[13], "false", "false"};
+        // perm1 and 3
+        if (!isDirect) {
+            columnSpec[1] = "204corr";
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
+            colIndex++;
+
+            columnSpec[1] = "207corr";
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
+            colIndex++;
+
+//            // perm 1 only
+//            if (!has232) {
+//                columnSpec[1] = "208corr";
+//                categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
+//                colIndex++;
+//            }
+        } else {
+            // perm2 and 4
+            columnSpec[1] = "204corr";
+            columnSpec[6] = PB4CORR + U_CONCEN_PPM_RM;
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
+            colIndex++;
+
+            columnSpec[1] = "207corr";
+            columnSpec[6] = PB7CORR + U_CONCEN_PPM_RM;
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
         return categoryColumnList;
@@ -308,29 +365,29 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         // perm1 and 3
         if (!isDirect) {
             columnSpec[1] = "204corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[1] = "207corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             // perm 1 only
             if (!has232) {
                 columnSpec[1] = "208corr";
-                categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
                 colIndex++;
             }
         } else {
             // perm2 and 4
             columnSpec[1] = "204corr";
             columnSpec[6] = PB4CORR + TH_CONCEN_PPM_RM;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[1] = "207corr";
             columnSpec[6] = PB7CORR + TH_CONCEN_PPM_RM;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
         return categoryColumnList;
@@ -356,29 +413,29 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             // perm 1 only
             if (!has232) {
                 columnSpec[0] = "208corr";
-                categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
                 colIndex++;
             }
         } else {
             // perm2 and 4
             columnSpec[0] = "204corr";
             columnSpec[6] = PB4CORR + OVER_COUNT_4_6_8;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
             columnSpec[6] = PB7CORR + OVER_COUNT_4_6_8;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
         return categoryColumnList;
@@ -404,29 +461,29 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             // perm 1 only
             if (!has232) {
                 columnSpec[0] = "208corr";
-                categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
                 colIndex++;
             }
         } else {
             // perm2 and 4
             columnSpec[0] = "204corr";
             columnSpec[6] = PB4CORR + OVER_COUNTS_PERSEC_4_8;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
             columnSpec[6] = PB7CORR + OVER_COUNTS_PERSEC_4_8;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
         return categoryColumnList;
@@ -452,35 +509,35 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             // perm 1 only
             if (!has232) {
                 columnSpec[0] = "208corr";
-                categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+                categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
                 colIndex++;
             }
         } else {
             // perm2 and 4
             columnSpec[0] = "204corr";
             columnSpec[6] = PB4CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
             columnSpec[0] = "207corr";
             columnSpec[6] = PB7CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-            categoryColumnList.add(SetupReportColumn(colIndex, columnSpec));
+            categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
         }
         return categoryColumnList;
     }
 
-    private ReportColumnInterface SetupReportColumn(int index, String[] specs) {
+    private ReportColumnInterface setupReportColumn(int index, String[] specs) {
 
         ReportColumnInterface retVal = new ReportColumn(//
                 specs[0], // displayname1

@@ -50,7 +50,10 @@ public class SqBiweight extends Function {
         rowCount = 1;
         colCount = 3;
         labelsForOutputValues = new String[][]{{"Biwt Mean", "Biwt Sigma", "\u00B195%conf"}};
-        labelsForInputValues = new String[]{"variableNumbers","tuningConstant"};
+        labelsForInputValues = new String[]{"variableNumbers", "tuningConstant"};
+        summaryCalc = true;
+        definition = "Provides the functionality of Squid's sqBiweight and biWt by calculating\n"
+                + "   TukeysBiweight and returning mean, sigma, and 95% confidence.";
     }
 
     /**
@@ -94,9 +97,7 @@ public class SqBiweight extends Function {
                 + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

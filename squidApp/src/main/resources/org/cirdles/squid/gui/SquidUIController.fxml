@@ -40,22 +40,23 @@
             <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
           </items>
         </Menu>
-            <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="PrawnFile">
+            <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="Data">
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Reference Materials" />
                 <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Manage Sample Naming" />
                   <MenuItem fx:id="auditRawDataMenuItem" mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Prawn File as ..." />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="choosePrawnFileMenuItem" mnemonicParsing="false" onAction="#choosePrawnFileMenuItemAction" text="Replace Project Prawn File with ..." />
+                  <SeparatorMenuItem fx:id="dataSeparatorMenuItem" mnemonicParsing="false" />
+                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Data as Prawn File ..." />
+                  <MenuItem fx:id="choosePrawnFileMenuItem" mnemonicParsing="false" onAction="#choosePrawnFileMenuItemAction" text="Replace Project Data with data from another Prawn File ..." />
               </items>
             </Menu>
             <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Current Task" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem fx:id="newSquid3TaskMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskMenuItemAction" text="New Squid Task" />
+                  <MenuItem mnemonicParsing="false" onAction="#showTaskDesignerAction" text="Task Designer" />
+                <MenuItem fx:id="newSquid3TaskFromPrefsMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskFromPrefsMenuItemAction" text="New Squid Task from Task Designer" visible="false" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Squid Task from Task Library" />
                   <MenuItem fx:id="importSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Load Squid Task from Squid 3  Task '.xml' File" />
                   <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="New Squid Task from Squid 2.* Task Excel File" />
@@ -67,7 +68,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Manage Isotopes" />
                   <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Manage Ratios" />
-                  <Menu disable="true" mnemonicParsing="false" text="Load a Default Ratio Set">
+                  <Menu disable="true" mnemonicParsing="false" text="Load a Default Ratio Set" visible="false">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
                         <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
@@ -80,7 +81,6 @@
         <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Manage Expressions" />
-                  <MenuItem mnemonicParsing="false" onAction="#manageExpressionsMenuItemAction" text="Manage Expressions - Deprecated" visible="false" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
                   <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />
@@ -93,7 +93,7 @@
         </Menu>
             <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
               <items>
-                  <Menu mnemonicParsing="false" text="Built-in Report Tables">
+                  <Menu mnemonicParsing="false" text="Quick View Report Tables">
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
                           <items>
@@ -107,7 +107,6 @@
                               <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
                           </items>
                         </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Custom Report Tables">
@@ -129,6 +128,7 @@
                         </Menu>
                     </items>
                   </Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
               </items>
             </Menu>
             <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
@@ -154,7 +154,6 @@
             </Menu>
             <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Resources">
               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#showPreferencesManagerAction" text="User Preferences" />
                   <Menu mnemonicParsing="false" text="Parameter Models">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
@@ -175,7 +174,7 @@
                       <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Developer Tools">
+                  <Menu mnemonicParsing="false" text="Developer Tools" visible="false">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#listBuiltinExpressionsAction" text="List Built-in Expressions" />
                     </items>

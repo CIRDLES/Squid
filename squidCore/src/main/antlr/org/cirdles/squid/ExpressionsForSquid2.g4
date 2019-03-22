@@ -22,7 +22,7 @@
 grammar ExpressionsForSquid2;
 
 @header {
-    package org.cirdles.squid;
+   package org.cirdles.squid; //- this causes problems with maven by wrtiitng twice
 } 
 
 /*file:   (functionDecl | varDecl)+ ;
@@ -55,8 +55,9 @@ stat:   block
 // http://meri-stuff.blogspot.com/2011/09/antlr-tutorial-expression-language.html
 
 expr:   FUNCTION WS* '(' exprList+ WS* ')'    // func call like f(), f(x), f(1,2) switched ? to + to require 1 arg min
+    |   expr expr
     |   '(' expr ')'
-    |   ID '[' INT ']'         // array index like a[i], a[i][j]
+//    |   ID '[' INT ']'         // array index like a[i], a[i][j] see below
     |   '-' expr                // unary minus
     |   '!' expr                // boolean not
     |   expr ('*'|'/') expr
@@ -140,7 +141,7 @@ FUNCTION :
     V A L U E M O D E L 
 ;
 
-ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT ']');       // array index like a[i]
+ARRAY_CALL : (ID | NAMED_EXPRESSION) ((' ')* '[' INT ']' (' ')*);       // array index like a[1]
 
 //NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.')* PARENS* (' %err')* '"' ']' ;
 NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.' | '_' | '%' | '-')* PARENS* (' %err')* '"' ']' ;

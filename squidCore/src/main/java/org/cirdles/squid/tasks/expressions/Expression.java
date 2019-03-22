@@ -45,6 +45,12 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
+import org.cirdles.squid.tasks.Task;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsAliased.BUILTIN_EXPRESSION_ALIASEDNAMES;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
+import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
 
 /**
  *
@@ -54,6 +60,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     private static final long serialVersionUID = 2614344042503810733L;
 
+    public static final String MSG_POORLY_FORMED_EXPRESSION = "Expression missing or poorly formed.";
+
     private String name;
     private String excelExpressionString;
     private boolean squidSwitchNU;
@@ -61,9 +69,11 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     private boolean parameterValue;
     private ExpressionTreeInterface expressionTree;
     private String notes;
+    private String sourceModelNameAndVersion;
 
     private transient String parsingStatusReport;
     private transient List<String> argumentAudit;
+    private transient List<String> targetAudit;
 
     /**
      * Needed for XML unmarshal
@@ -82,16 +92,6 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             boolean squidSwitchNU,
             boolean referenceMaterialValue,
             boolean parameterValue) {
-        this(expressionTree, excelExpressionString, squidSwitchNU, referenceMaterialValue, parameterValue, "");
-    }
-
-    public Expression(
-            ExpressionTreeInterface expressionTree,
-            String excelExpressionString,
-            boolean squidSwitchNU,
-            boolean referenceMaterialValue,
-            boolean parameterValue,
-            String notes) {
 
         this.name = expressionTree.getName();
         this.excelExpressionString = excelExpressionString;
@@ -101,7 +101,10 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         this.expressionTree = expressionTree;
         this.parsingStatusReport = "";
         this.argumentAudit = new ArrayList<>();
-        this.notes = notes;
+        this.targetAudit = new ArrayList<>();
+
+        this.notes = "";
+        this.sourceModelNameAndVersion = "";
     }
 
     @Override
@@ -133,9 +136,34 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public boolean amHealthy() {
         boolean retVal = false;
         if (expressionTree != null) {
-            retVal = expressionTree.amHealthy();
+            retVal = expressionTree.amHealthy() && (haveMatchedTargetSpots() == 0);
         }
         return retVal;
+    }
+
+    /**
+     *
+     * @return -1 = no match, 0 = match, 1 = mismatch
+     */
+    private int haveMatchedTargetSpots() {
+        int goalTargetBits = expressionTree.makeTargetBits();
+        int targetBits = expressionTree.auditTargetMatchingII(goalTargetBits);
+
+        // make sure summary referes to correct target
+        if ((targetBits > 0) && expressionTree.isSquidSwitchSCSummaryCalculation()) {
+            if (expressionTree.isSquidSwitchSTReferenceMaterialCalculation() || expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
+                if (targetBits != 2) {
+                    targetBits = 3;
+                }
+            }
+            if (expressionTree.isSquidSwitchSAUnknownCalculation()) {
+                if (targetBits != 1) {
+                    targetBits = 3;
+                }
+            }
+        }
+
+        return ((goalTargetBits == 0) ? -1 : ((goalTargetBits > targetBits)) ? 1 : 0);
     }
 
     @Override
@@ -173,6 +201,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
         xstream.alias("ExpressionTree", ExpressionTreeInterface.class);
+        xstream.alias("ExpressionTree", ExpressionTreeParsedFromExcelString.class);
 
         xstream.registerConverter(new ExpressionXMLConverter());
         xstream.alias("Expression", Expression.class);
@@ -184,20 +213,73 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public void parseOriginalExpressionStringIntoExpressionTree(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
         ExpressionParser expressionParser = new ExpressionParser(namedExpressionsMap);
-        expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
+        if (excelExpressionString != null) {
+            expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
+        }
+    }
+
+    /**
+     *
+     * @param expressionName the value of expressionName
+     * @param expressionString the value of expressionString
+     * @param namedExpressionsMap the value of namedExpressionsMap
+     * @return 
+     */
+    public static Expression makeExpressionForAudit(
+            String expressionName, final String expressionString, Map<String, ExpressionTreeInterface> namedExpressionsMap) {
+        Expression exp = new Expression(expressionName, expressionString);
+
+        exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+
+        ExpressionTreeInterface expTree = exp.getExpressionTree();
+
+        expTree.setSquidSwitchSTReferenceMaterialCalculation(true);
+        expTree.setSquidSwitchSAUnknownCalculation(true);
+        expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
+        expTree.setSquidSwitchSCSummaryCalculation(false);
+        expTree.setSquidSpecialUPbThExpression(true);
+        expTree.setUnknownsGroupSampleName(UNKNOWN.getPlotType());
+
+        // to detect ratios of interest
+        if (expTree instanceof BuiltInExpressionInterface) {
+            ((BuiltInExpressionInterface) expTree).buildExpression();
+        }
+
+        return exp;
     }
 
     public String produceExpressionTreeAudit() {
-
         String auditReport = "";
         if (!((ExpressionTreeInterface) expressionTree).isValid()) {
-            auditReport
-                    += "Errors occurred in parsing:\n" + ((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
+            if (((ExpressionTree) expressionTree).getOperation() == null) {
+                auditReport
+                        += MSG_POORLY_FORMED_EXPRESSION;
+            } else {
+                auditReport
+                        += "Errors occurred in parsing:\n"
+                        + ((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
+            }
         } else {
             auditExpressionTreeDependencies();
+            auditExpressionTreeTargetCompatibility();
+
+            int match = haveMatchedTargetSpots();
+
+            auditReport
+                    += "Target Spots: "
+                    + (String) ((match == -1) ? "MISSING - Please select" : ((match == 1))
+                                    ? "NOT MATCHED" : "MATCHED");
+            if (targetAudit.size() > 0) {
+                auditReport += "\nTarget Spots Audit:\n";
+                for (String audit : targetAudit) {
+                    auditReport += audit + "\n";
+                }
+                auditReport += "\n";
+            }
+            
             auditReport
                     += "Expression healthy: "
-                    + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.US);
+                    + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.ENGLISH);
             if (argumentAudit.size() > 0) {
                 auditReport += "\nAudit:\n";
                 for (String audit : argumentAudit) {
@@ -213,6 +295,15 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         }
 
         return auditReport;
+    }
+
+    private void auditExpressionTreeTargetCompatibility() {
+        if (((ExpressionTreeInterface) expressionTree).isValid()) {
+            if (expressionTree instanceof ExpressionTree) {
+                this.targetAudit = new ArrayList<>();
+                ((ExpressionTree) expressionTree).auditExpressionTreeTargetMatching(targetAudit);
+            }
+        }
     }
 
     private void auditExpressionTreeDependencies() {
@@ -243,10 +334,12 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public String buildShortSignatureString() {
         StringBuilder signature = new StringBuilder();
         if (((ExpressionTree) expressionTree).isValid()) {
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? SUPERSCRIPT_R_FOR_REFMAT
-                    : ((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation() ? SUPERSCRIPT_C_FOR_CONCREFMAT : SUPERSCRIPT_SPACE);
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? SUPERSCRIPT_U_FOR_UNKNOWN : SUPERSCRIPT_SPACE);
-            signature.append(" ");
+            if (!(referenceMaterialValue || parameterValue)) {
+                signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? SUPERSCRIPT_R_FOR_REFMAT
+                        : ((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation() ? SUPERSCRIPT_C_FOR_CONCREFMAT : SUPERSCRIPT_SPACE);
+                signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? SUPERSCRIPT_U_FOR_UNKNOWN : SUPERSCRIPT_SPACE);
+                signature.append(" ");
+            }
             signature.append(name);
         } else {
             signature.append("  Parsing Error! ").append(name);
@@ -270,14 +363,37 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String getNotes() {
-        if (notes == null) {
-            notes = "";
+        if (this.expressionTree.isSquidSpecialUPbThExpression()) {
+            notes = BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(name);
         }
+        if (this.isParameterValue()
+                || this.isReferenceMaterialValue()) {
+            notes = "from Model: " + sourceModelNameAndVersion + "\n\n" + BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(name);
+        }
+
+        if (notes == null) {
+            notes = "none yet provided";
+        }
+
         return notes;
     }
 
     public void setNotes(String comments) {
         this.notes = comments;
+    }
+
+    /**
+     * @return the sourceModelNameAndVersion
+     */
+    public String getSourceModelNameAndVersion() {
+        return sourceModelNameAndVersion;
+    }
+
+    /**
+     * @param sourceModelNameAndVersion the sourceModelNameAndVersion to set
+     */
+    public void setSourceModelNameAndVersion(String sourceModelNameAndVersion) {
+        this.sourceModelNameAndVersion = sourceModelNameAndVersion;
     }
 
     /**
@@ -371,5 +487,13 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public boolean isCustom() {
         return !getExpressionTree().isSquidSpecialUPbThExpression();// && !isSquidSwitchNU();
+    }
+
+    public boolean isAgeExpression() {
+        return name.toUpperCase(Locale.ENGLISH).contains("AGE");
+    }
+
+    public boolean aliasedExpression() {
+        return BUILTIN_EXPRESSION_ALIASEDNAMES.contains(this.name);
     }
 }

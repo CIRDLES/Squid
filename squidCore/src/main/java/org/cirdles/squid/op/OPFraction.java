@@ -1,5 +1,7 @@
 package org.cirdles.squid.op;
 
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
+
 public class OPFraction {
     //in 2d arrays the columns are scans and the rows are measurements
 
@@ -23,11 +25,11 @@ public class OPFraction {
     }
 
     public double[][] getTotalSBM() {
-        return totalSBM;
+        return clone2dArray( totalSBM);
     }
 
     public void setTotalSBM(double[][] totalSBM) {
-        this.totalSBM = totalSBM;
+        this.totalSBM = clone2dArray(totalSBM);
     }
 
     public String getName() {
@@ -71,27 +73,27 @@ public class OPFraction {
     }
 
     public double[] getCountTimeSec() {
-        return countTimeSec;
+        return countTimeSec.clone();
     }
 
     public void setCountTimeSec(double[] countTimeSec) {
-        this.countTimeSec = countTimeSec;
+        this.countTimeSec = countTimeSec.clone();
     }
 
     public double[][] getTimeStampSec() {
-        return timeStampSec;
+        return clone2dArray(timeStampSec);
     }
 
     public void setTimeStampSec(double[][] timeStampSec) {
-        this.timeStampSec = timeStampSec;
+        this.timeStampSec = clone2dArray(timeStampSec);
     }
 
     public double[][] getTotalCounts() {
-        return totalCounts;
+        return clone2dArray(totalCounts);
     }
 
     public void setTotalCounts(double[][] totalCounts) {
-        this.totalCounts = totalCounts;
+        this.totalCounts = clone2dArray(totalCounts);
     }
 
     public int getSbmZeroCPS() {

@@ -41,13 +41,13 @@ import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
+import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
 import static org.cirdles.squid.web.ZipUtility.extractZippedFile;
 import org.xml.sax.SAXException;
 
@@ -120,7 +120,7 @@ public class SquidReportingService {
 
             // hard-wired for now
             squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
-            squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel("GA Physical Constants Model Squid 2", "1.0"));
+            squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
             File squidTaskFile = taskFilePath.toFile();
 
             squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
@@ -135,7 +135,7 @@ public class SquidReportingService {
             task.setSelectedIndexIsotope(preferredIndexIsotope);
 
             // process task           
-            task.applyTaskIsotopeLabelsToMassStations();
+            task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
 
             Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
             Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
