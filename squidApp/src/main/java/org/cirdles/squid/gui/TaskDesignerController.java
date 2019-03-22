@@ -122,10 +122,6 @@ public class TaskDesignerController implements Initializable {
     @FXML
     private TextField labNameTextField;
     @FXML
-    private ComboBox<ParametersModel> refMatModelComboBox;
-    @FXML
-    private ComboBox<ParametersModel> concRefMatModelComboBox;
-    @FXML
     private RadioButton pb204RadioButton;
     @FXML
     private ToggleGroup toggleGroupIsotope;
@@ -659,33 +655,6 @@ public class TaskDesignerController implements Initializable {
 
     private void setUpParametersModelsComboBoxes() {
         // does double duty setting labdata defaults
-        // ReferenceMaterials
-        refMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
-        refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
-        refMatModelComboBox.getSelectionModel().select(taskDesigner.getReferenceMaterialModel());
-
-        refMatModelComboBox.valueProperty()
-                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    if ((newValue != null) && (oldValue != null)) {
-                        squidLabData.setRefMatDefault(newValue);
-                        squidLabData.storeState();
-                        taskDesigner.setReferenceMaterialModel(newValue);
-                    }
-                });
-
-        // ConcentrationReferenceMaterials
-        concRefMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
-        concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterials()));
-        concRefMatModelComboBox.getSelectionModel().select(taskDesigner.getConcentrationReferenceMaterialModel());
-
-        concRefMatModelComboBox.valueProperty()
-                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    if ((newValue != null) && (oldValue != null)) {
-                        squidLabData.setRefMatConcDefault(newValue);
-                        squidLabData.storeState();
-                        taskDesigner.setConcentrationReferenceMaterialModel(newValue);
-                    }
-                });
 
         // PhysicalConstantsModels
         physConstModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
