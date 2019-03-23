@@ -4,9 +4,7 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.antlr.v4.misc.MutableInt;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.scilab.forge.jlatexmath.TeXFormula;
 
@@ -21,6 +19,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -148,12 +147,12 @@ public class ExpressionPublisher {
             StringBuilder string = new StringBuilder();
             string.append(getStartHTML());
 
-            File imageFolder = new File(file.getAbsolutePath() + "ExpressionsImages");
-            imageFolder.mkdir();
+            // File imageFolder = new File(file.getAbsolutePath() + "ExpressionsImages");
+            //imageFolder.mkdir();
 
             for (int i = 0; i < expressions.size(); i++) {
                 Expression exp = expressions.get(i);
-                BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
+                /*BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
                 File imageFile = new File(imageFolder.getPath() + File.separator + FileNameFixer.fixFileName(exp.getName()) + ".png");
                 boolean imageCreated;
                 try {
@@ -172,7 +171,12 @@ public class ExpressionPublisher {
                             + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                             + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
                 }
-                string.append(getExpressionBottomHTML(exp, task));
+                string.append(getExpressionBottomHTML(exp, task));*/
+                BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
+                if (enterWidths) {
+                    widths[i] = image.getWidth();
+                }
+                string.append(getFullExpressionHTML(image, exp, task));
             }
             string.append(getEndHTML());
 
@@ -198,9 +202,41 @@ public class ExpressionPublisher {
         return createHTMLDocumentFromExpression(file, exp, task, null);
     }
 
+    public static byte[] imageToByteArray(BufferedImage image) {
+        byte[] retVal = null;
+        if (image != null) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                ImageIO.write(image, "png", baos);
+                baos.flush();
+                retVal = baos.toByteArray();
+                baos.close();
+            } catch (IOException e) {
+            }
+        }
+        return retVal;
+    }
+
+    public static String getBase64Image(BufferedImage image) {
+        byte[] bytes = imageToByteArray(image);
+        return bytes == null ? "" : Base64.getEncoder().encodeToString(bytes);
+    }
+
+    public static String getSourceImageHTML(BufferedImage image) {
+        return "data:image/png;base64, " + getBase64Image(image);
+    }
+
+    public static String getFullExpressionHTML(BufferedImage image, Expression exp, TaskInterface task) {
+        return getExpressionTopHTML(exp) + "<img src=\"" + getSourceImageHTML(image) + "\" alt=\"Image not available\" "
+                + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
+                + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n"
+                + getExpressionBottomHTML(exp, task);
+    }
+
+
     public static boolean createHTMLDocumentFromExpression(File file, Expression exp, TaskInterface task, MutableInt width) {
         if (file != null && exp != null) {
-            BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
+            /*BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
             File imageFile = new File(file.getAbsolutePath() + FileNameFixer.fixFileName(exp.getName()) + ".png");
             boolean imageCreated;
             try {
@@ -208,6 +244,7 @@ public class ExpressionPublisher {
                 if (width != null) {
                     width.v = image.getWidth();
                 }
+
                 imageCreated = true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -222,8 +259,15 @@ public class ExpressionPublisher {
                         + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                         + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n");
             }
-            string.append(getExpressionBottomHTML(exp, task));
+            string.append(getExpressionBottomHTML(exp, task));*/
+            StringBuilder string = new StringBuilder();
 
+            string.append(getStartHTML());
+            BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
+            if (width != null) {
+                width.v = image.getWidth();
+            }
+            string.append(getFullExpressionHTML(image, exp, task));
             string.append(getEndHTML());
 
             boolean worked;
