@@ -2908,7 +2908,7 @@ public class ExpressionBuilderController implements Initializable {
         // if the replacement expression does not change its name or
         // if this is a new expression, we need the low-impact route
         // of just recreating and re-evaluating this expression
-        // otherwise with a new name we need the full expressions list reevaluated
+        // otherwise with a new name we need the full expressions list re-evaluated
         // first detect if user should have used SummaryCalculation choice
         if (((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getOperation().isSummaryCalc()
                 && !summaryCalculationSwitchCheckBox.isSelected()) {
@@ -2929,6 +2929,8 @@ public class ExpressionBuilderController implements Initializable {
         //Removes the old expression if the name has been changed
         if (currentMode.get().equals(Mode.EDIT) && !exp.getName().equalsIgnoreCase(selectedExpression.get().getName())) {
             task.removeExpression(selectedExpression.get(), false);
+            task.addExpression(exp, true);
+        } else if (task.getMissingExpressionsByName().contains(exp.getName().toUpperCase(Locale.ENGLISH))) {
             task.addExpression(exp, true);
         } else {
             task.addExpression(exp, false);

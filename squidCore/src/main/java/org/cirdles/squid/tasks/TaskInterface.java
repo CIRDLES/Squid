@@ -673,4 +673,9 @@ public interface TaskInterface {
      public void generateMapOfUnknownsBySampleNames();
      
      public void refreshParametersFromModels();
+     /**
+     * @return the missingExpressionsByName
+     */
+    public List<String> getMissingExpressionsByName();
+     
 }

@@ -14,251 +14,252 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="720.0" minWidth="1230.0" prefHeight="720.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
-  <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="Project">
-          <items>
-                  <MenuItem fx:id="projectManagerMenuItem" mnemonicParsing="false" onAction="#projectManagerMenuItemAction" text="Manage Project" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-                  <Menu mnemonicParsing="false" text="New Squid Project">
+<VBox minHeight="750.0" minWidth="1230.0" prefHeight="750.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+    <children>
+        <MenuBar VBox.vgrow="NEVER">
+            <menus>
+                <Menu mnemonicParsing="false" text="Project">
                     <items>
-                        <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="From a single Prawn XML file" />
-                        <MenuItem fx:id="newSquidProjectByJoinMenuItem" mnemonicParsing="false" onAction="#newSquidProjectByJoinAction" text="By Joining two Prawn XML files" />
-                        <SeparatorMenuItem />
-                        <MenuItem fx:id="newSquidProjectFromOPFileMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromOPFileAction" text="(Beta) From OP File" />
+                        <MenuItem fx:id="projectManagerMenuItem" mnemonicParsing="false" onAction="#projectManagerMenuItemAction" text="Manage Project" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu mnemonicParsing="false" text="New Squid Project">
+                            <items>
+                                <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="From a single Prawn XML file" />
+                                <MenuItem fx:id="newSquidProjectByJoinMenuItem" mnemonicParsing="false" onAction="#newSquidProjectByJoinAction" text="By Joining two Prawn XML files" />
+                                <SeparatorMenuItem />
+                                <MenuItem fx:id="newSquidProjectFromOPFileMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromOPFileAction" text="(Beta) From OP File" />
+                                <Menu fx:id="openRecentOPFileMenu" mnemonicParsing="false" text="(Beta) From Recent OP File" />
+                            </items>
+                        </Menu>
+                        <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
+                        <Menu fx:id="openRecentSquidProjectMenu" mnemonicParsing="false" text="Open Recent Squid Project" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="saveSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveSquidProjectMenuItemAction" text="Save Squid Project" />
+                        <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid Project as ..." />
+                        <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" onAction="#closeSquidProjectMenuItemClose" text="Close Squid Project" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
                     </items>
-                  </Menu>
-            <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
-            <Menu fx:id="openRecentSquidProjectMenu" mnemonicParsing="false" text="Open Recent Squid Project" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="saveSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveSquidProjectMenuItemAction" text="Save Squid Project" />
-            <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid Project as ..." />
-            <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" onAction="#closeSquidProjectMenuItemClose" text="Close Squid Project" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
-          </items>
-        </Menu>
-            <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="Data">
-              <items>
-                  <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Reference Materials" />
-                <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Manage Sample Naming" />
-                  <MenuItem fx:id="auditRawDataMenuItem" mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
-                  <SeparatorMenuItem fx:id="dataSeparatorMenuItem" mnemonicParsing="false" />
-                  <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Data as Prawn File ..." />
-                  <MenuItem fx:id="choosePrawnFileMenuItem" mnemonicParsing="false" onAction="#choosePrawnFileMenuItemAction" text="Replace Project Data with data from another Prawn File ..." />
-              </items>
-            </Menu>
-            <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
-              <items>
-                  <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Current Task" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#showTaskDesignerAction" text="Task Designer" />
-                <MenuItem fx:id="newSquid3TaskFromPrefsMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskFromPrefsMenuItemAction" text="New Squid Task from Task Designer" visible="false" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Squid Task from Task Library" />
-                  <MenuItem fx:id="importSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Load Squid Task from Squid 3  Task '.xml' File" />
-                  <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="New Squid Task from Squid 2.* Task Excel File" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="exportSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Export Squid3 Task to '.xml' File" />
-              </items>
-            </Menu>
-            <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Isotopes &amp; Ratios">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Manage Isotopes" />
-                  <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Manage Ratios" />
-                  <Menu disable="true" mnemonicParsing="false" text="Load a Default Ratio Set" visible="false">
+                </Menu>
+                <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="Data">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
-                        <MenuItem mnemonicParsing="false" onAction="#default10SpeciesRatioSetAction" text="10 Species" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="11 Species" />
+                        <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Reference Materials" />
+                        <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Manage Sample Naming" />
+                        <MenuItem fx:id="auditRawDataMenuItem" mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
+                        <SeparatorMenuItem fx:id="dataSeparatorMenuItem" mnemonicParsing="false" />
+                        <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Data as Prawn File ..." />
+                        <MenuItem fx:id="choosePrawnFileMenuItem" mnemonicParsing="false" onAction="#choosePrawnFileMenuItemAction" text="Replace Project Data with data from another Prawn File ..." />
                     </items>
-                  </Menu>
-              </items>
-            </Menu>
-        <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
-          <items>
-                  <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Manage Expressions" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
-                  <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />
-                  <Menu fx:id="openRecentExpressionFileMenu" mnemonicParsing="false" text="Load Recent Expression from xml File" />
-              <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#importCustomExpressionsOnAction" text="Import Custom Expressions from Folder" />
-              <MenuItem mnemonicParsing="false" onAction="#exportCustomExpressionsOnAction" text="Export Custom Expressions to Folder" />
+                </Menu>
+                <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Current Task" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#showTaskDesignerAction" text="Task Designer" />
+                        <MenuItem fx:id="newSquid3TaskFromPrefsMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskFromPrefsMenuItemAction" text="New Squid Task from Task Designer" visible="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Squid Task from Task Library" />
+                        <MenuItem fx:id="importSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Load Squid Task from Squid 3  Task '.xml' File" />
+                        <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="New Squid Task from Squid 2.* Task Excel File" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="exportSquid3TaskMenuItem" disable="true" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Export Squid3 Task to '.xml' File" />
+                    </items>
+                </Menu>
+                <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Isotopes &amp; Ratios">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Manage Isotopes" />
+                        <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Manage Ratios" />
+                        <Menu disable="true" mnemonicParsing="false" text="Load a Default Ratio Set" visible="false">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
+                                <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
+                                <MenuItem mnemonicParsing="false" onAction="#default10SpeciesRatioSetAction" text="10 Species" />
+                                <MenuItem disable="true" mnemonicParsing="false" text="11 Species" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+                <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#expressionBuilderMenuItemAction" text="Manage Expressions" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Load Expression from Library" />
+                        <MenuItem mnemonicParsing="false" onAction="#loadExpressionFromXMLFileMenuItemAction" text="Load Expression from xml File" />
+                        <Menu fx:id="openRecentExpressionFileMenu" mnemonicParsing="false" text="Load Recent Expression from xml File" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#importCustomExpressionsOnAction" text="Import Custom Expressions from Folder" />
+                        <MenuItem mnemonicParsing="false" onAction="#exportCustomExpressionsOnAction" text="Export Custom Expressions to Folder" />
 
-          </items>
-        </Menu>
-            <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
-              <items>
-                  <Menu mnemonicParsing="false" text="Quick View Report Tables">
+                    </items>
+                </Menu>
+                <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Quick View Report Tables">
+                            <items>
+                                <Menu mnemonicParsing="false" text="Reference Materials">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="within Spots" />
+                                        <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="per Spot" />
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Unknowns">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="within Spots" />
+                                        <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
+                                    </items>
+                                </Menu>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Custom Report Tables">
+                            <items>
+                                <Menu mnemonicParsing="false" text="Reference Materials">
+                                    <items>
+                                        <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
+                                        <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
+                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableReferenceMaterials" text="Report Table - per Squid 3" />
+                                    </items>
+                                </Menu>
+                                <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns">
+                                    <items>
+                                        <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
+                                        <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
+                                        <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Report Table - by Sample for ET_Redux" />
+                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" />
+                                    </items>
+                                </Menu>
+                            </items>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
+                    </items>
+                </Menu>
+                <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
-                          <items>
-                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="within Spots" />
-                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="per Spot" />
-                          </items>
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
+                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialWMAction" text="Weighted Means" />
+                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
-                          <items>
-                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="within Spots" />
-                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
-                          </items>
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
+                            </items>
+                        </Menu>
+                        <MenuItem disable="true" mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" visible="false" />
+                    </items>
+                </Menu>
+                <Menu disable="true" mnemonicParsing="false" text="Archiving">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                </Menu>
+                <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Resources">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Parameter Models">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
+                                <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
+                                <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Online Resources">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
+                                <MenuItem mnemonicParsing="false" onAction="#showSquid3GithubRepo" text="Squid3 GitHub Repository" />
+                                <MenuItem mnemonicParsing="false" onAction="#showSquid3DevNotes" text="Squid3 Development Notes" />
+                                <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Javadoc">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Developer Tools" visible="false">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#listBuiltinExpressionsAction" text="List Built-in Expressions" />
+                            </items>
                         </Menu>
                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Custom Report Tables">
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <Menu mnemonicParsing="false" text="Reference Materials">
-                           <items>
-                            <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
-                              <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
-                               <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableReferenceMaterials" text="Report Table - per Squid 3" />
-                           </items>
-                        </Menu>
-                        <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns">
-                          <items>
-                              <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
-                              <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
-                              <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Report Table - by Sample for ET_Redux" />
-                              <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" />
-                          </items>
-                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
+                        <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
+                        <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
                     </items>
-                  </Menu>
-                  <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
-              </items>
-            </Menu>
-            <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
-              <items>
-                  <Menu mnemonicParsing="false" text="Reference Materials">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
-                        <MenuItem mnemonicParsing="false" onAction="#referenceMaterialWMAction" text="Weighted Means" />
-                    </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Unknowns">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
-                    </items>
-                  </Menu>
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" visible="false" />
-              </items>
-            </Menu>
-            <Menu disable="true" mnemonicParsing="false" text="Archiving">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-              </items>
-            </Menu>
-            <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Resources">
-              <items>
-                  <Menu mnemonicParsing="false" text="Parameter Models">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
-                        <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
-                      <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
-                    </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Online Resources">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
-                      <MenuItem mnemonicParsing="false" onAction="#showSquid3GithubRepo" text="Squid3 GitHub Repository" />
-                        <MenuItem mnemonicParsing="false" onAction="#showSquid3DevNotes" text="Squid3 Development Notes" />
-                        <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
-                    </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Javadoc">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
-                    </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Developer Tools" visible="false">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#listBuiltinExpressionsAction" text="List Built-in Expressions" />
-                    </items>
-                  </Menu>
-              </items>
-            </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-                  <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
-                  <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
-            <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-      <AnchorPane fx:id="mainPane" style="-fx-background-color: #3a4c88;" stylesheets="@css/projectManager.css" VBox.vgrow="ALWAYS">
-         <children>
-            <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <center>
-                  <ImageView fx:id="squidImageView" fitHeight="333.0" fitWidth="350.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@images/SquidLogo.png" />
-                     </image>
-                     <viewport>
-                        <Rectangle2D />
-                     </viewport>
-                  </ImageView>
-               </center>
-               <bottom>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <VBox alignment="CENTER">
-                           <children>
-                              <Label fx:id="chinese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="墨斗鱼" />
-                              <Label layoutX="10.0" layoutY="10.0" style="-fx-text-fill: white;" text="Chinese" />
-                           </children>
-                        </VBox>
-                        <VBox alignment="CENTER" layoutX="584.0" layoutY="10.0">
-                           <children>
-                              <Label fx:id="japanese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="いか" />
-                              <Label style="-fx-text-fill: white;" text="Japanese" />
-                           </children>
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                        </VBox>
-                        <VBox alignment="CENTER" layoutX="605.0" layoutY="10.0">
-                           <children>
-                              <Label fx:id="korean" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="오징어" />
-                              <Label style="-fx-text-fill: white;" text="Korean" />
-                           </children>
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                        </VBox>
-                        <VBox alignment="CENTER" layoutX="734.0" layoutY="10.0">
-                           <children>
-                              <Label fx:id="polish" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="200.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="kałamarnica" />
-                              <Label style="-fx-text-fill: white;" text="Polish" />
-                           </children>
-                        </VBox>
-                        <VBox alignment="CENTER" layoutX="823.0" layoutY="10.0">
-                           <children>
-                              <Label fx:id="portuguese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="lula" />
-                              <Label style="-fx-text-fill: white;" text="Portuguese" />
-                           </children>
-                        </VBox>
-                        <VBox alignment="CENTER" layoutX="912.0" layoutY="10.0">
-                           <children>
-                              <Label fx:id="russian" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="кальмар" />
-                              <Label style="-fx-text-fill: white;" text="Russian" />
-                           </children>
-                        </VBox>
-                        <VBox alignment="CENTER" layoutX="1001.0" layoutY="10.0">
-                           <children>
-                              <Label fx:id="spanish" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="calamar" />
-                              <Label style="-fx-text-fill: white;" text="Spanish" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-               </bottom>
-            </BorderPane>
-         </children>
-      </AnchorPane>
-  </children>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <AnchorPane fx:id="mainPane" style="-fx-background-color: #3a4c88;" stylesheets="@css/projectManager.css" VBox.vgrow="ALWAYS">
+            <children>
+                <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <center>
+                        <ImageView fx:id="squidImageView" fitHeight="333.0" fitWidth="350.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/SquidLogo.png" />
+                            </image>
+                            <viewport>
+                                <Rectangle2D />
+                            </viewport>
+                        </ImageView>
+                    </center>
+                    <bottom>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                            <children>
+                                <VBox alignment="CENTER">
+                                    <children>
+                                        <Label fx:id="chinese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="墨斗鱼" />
+                                        <Label layoutX="10.0" layoutY="10.0" style="-fx-text-fill: white;" text="Chinese" />
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER" layoutX="584.0" layoutY="10.0">
+                                    <children>
+                                        <Label fx:id="japanese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="いか" />
+                                        <Label style="-fx-text-fill: white;" text="Japanese" />
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets left="20.0" />
+                                    </HBox.margin>
+                                </VBox>
+                                <VBox alignment="CENTER" layoutX="605.0" layoutY="10.0">
+                                    <children>
+                                        <Label fx:id="korean" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="오징어" />
+                                        <Label style="-fx-text-fill: white;" text="Korean" />
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets left="20.0" />
+                                    </HBox.margin>
+                                </VBox>
+                                <VBox alignment="CENTER" layoutX="734.0" layoutY="10.0">
+                                    <children>
+                                        <Label fx:id="polish" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="200.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="kałamarnica" />
+                                        <Label style="-fx-text-fill: white;" text="Polish" />
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER" layoutX="823.0" layoutY="10.0">
+                                    <children>
+                                        <Label fx:id="portuguese" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="lula" />
+                                        <Label style="-fx-text-fill: white;" text="Portuguese" />
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER" layoutX="912.0" layoutY="10.0">
+                                    <children>
+                                        <Label fx:id="russian" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="кальмар" />
+                                        <Label style="-fx-text-fill: white;" text="Russian" />
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER" layoutX="1001.0" layoutY="10.0">
+                                    <children>
+                                        <Label fx:id="spanish" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="160.0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-family: SansSerif;" text="calamar" />
+                                        <Label style="-fx-text-fill: white;" text="Spanish" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </bottom>
+                </BorderPane>
+            </children>
+        </AnchorPane>
+    </children>
 </VBox>
