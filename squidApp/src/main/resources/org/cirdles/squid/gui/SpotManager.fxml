@@ -84,11 +84,11 @@
                               </Label>
                               <VBox prefHeight="148.0" prefWidth="373.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <HBox spacing="10.0">
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
                                        <children>
                                           <Label fx:id="rmCountLabel" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
-                                          <Label text="RM Spots selected using filter: " />
-                                          <Label fx:id="rmFilterLabel" style="-fx-font-weight: bold;" text="filter" />
+                                          <Label style="-fx-font-size: 15;" text="RM Spots selected using filter: " />
+                                          <Label fx:id="rmFilterLabel" prefHeight="28.0" style="-fx-font-weight: bold;" text="filter" />
                                        </children>
                                     </HBox>
                                     <Label fx:id="headerLabelRefMat" style="-fx-font-size: 12;" text="Header label" />
@@ -162,11 +162,11 @@
                               </Label>
                               <VBox VBox.vgrow="ALWAYS">
                                  <children>
-                                    <HBox spacing="10.0">
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
                                        <children>
                                           <Label fx:id="concrmCountLabel" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
-                                          <Label text="CRM Spots selected using filter: " />
-                                          <Label fx:id="concrmFilterLabel" style="-fx-font-weight: bold;" text="filter" />
+                                          <Label prefHeight="28.0" style="-fx-font-size: 15;" text="CRM Spots selected using filter: " />
+                                          <Label fx:id="concrmFilterLabel" prefHeight="28.0" style="-fx-font-weight: bold;" text="filter" />
                                        </children>
                                     </HBox>
                                     <Label fx:id="headerLabelConcRefMat" style="-fx-font-size: 12;" text="Header label" />
