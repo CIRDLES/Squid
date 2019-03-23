@@ -110,8 +110,6 @@ public class ExpressionBuilderController implements Initializable {
 
     //BUTTONS
     @FXML
-    private Button saveExpressionHTMLButton;
-    @FXML
     private Button expressionCopyBtn;
     @FXML
     private Button expressionPasteBtn;
@@ -374,22 +372,6 @@ public class ExpressionBuilderController implements Initializable {
 
     private final ObjectProperty<Mode> currentMode = new SimpleObjectProperty<>(Mode.EDIT);
 
-    @FXML
-    private void showDependencyGraphsAction(ActionEvent event) {
-        try {
-            Files.write(
-                    Paths.get("DEPENDENCIES.HTML"),
-                    ("<html><pre>"
-                            + task.printExpressionRequiresGraph(selectedExpression.getValue())
-                            + "\n\n"
-                            + task.printExpressionProvidesGraph(selectedExpression.getValue())
-                            + "</pre></html>").getBytes());
-
-            BrowserControl.showURI("DEPENDENCIES.HTML");
-        } catch (IOException iOException) {
-        }
-    }
-
     private enum Mode {
 
         EDIT("Edit"),
@@ -621,9 +603,9 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    public void saveExpressionHTMLOnAction(ActionEvent actionEvent) {
+    public void showExpressionDetailsOnAction(ActionEvent actionEvent) {
         Expression exp = makeExpression(expressionNameTextField.getText(), expressionString.get());
-        File expressionFile = new File("Expression_HTML.html");
+        File expressionFile = new File("Expression_Details.html");
         ExpressionPublisher.createHTMLDocumentFromExpression(expressionFile, exp, squidProject.getTask());
         BrowserControl.showURI(expressionFile.getAbsolutePath());
     }

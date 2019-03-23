@@ -152,7 +152,7 @@
                   <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
                   <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
                   <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#showDependencyGraphsAction" text="Show Dependency Graphs" translateX="100.0" />
+                  <Button mnemonicParsing="false" onAction="#showExpressionDetailsOnAction" text="Show Expression Details" />
                </items>
             </ToolBar>
             <VBox fx:id="editorVBox" VBox.vgrow="ALWAYS">
@@ -310,7 +310,6 @@
                                                 </Text>
                                                 <CheckBox fx:id="showGraphCheckBox" mnemonicParsing="false" selected="true" text="Show here" />
                                                 <CheckBox fx:id="graphBrowserCheckBox" mnemonicParsing="false" text="Show in browser" />
-                                                <Button fx:id="saveExpressionHTMLButton" mnemonicParsing="false" onAction="#saveExpressionHTMLOnAction" text="Show HTML" />
                                              </children>
                                           </HBox>
                                        </graphic>
