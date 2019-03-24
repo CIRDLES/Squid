@@ -29,14 +29,14 @@ public class ExpressionPublisher {
     private static final double IMAGE_DPI = 200.0;
     private static final double SIZE_MULTIPLIER = .4;
 
-    public static String removeMathMLStyling(String input) {
+    private static String removeMathMLStyling(String input) {
         String output = input.replaceAll("(<.*(mstyle|mspace).*>|&nbsp;)", "");
         output = output.replaceAll("&times;", "*");
         output = output.replaceAll("&ExponentialE;", "e");
         return output;
     }
 
-    public static String getLatexFromMathML(String input, boolean hasStyling) {
+    private static String getLatexFromMathML(String input, boolean hasStyling) {
         String retVal;
         if (hasStyling) {
             input = removeMathMLStyling(input);
@@ -111,10 +111,10 @@ public class ExpressionPublisher {
                 + "<input type=\"checkbox\" " + ((exp.isReferenceMaterialValue()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>RefMat</label>"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
-                + "<label>Unknown</label>"
+                + "<label>" + ((exp.isCustom()) ? exp.getExpressionTree().getUnknownsGroupSampleName() : "Unknown") + "</label>"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>Conc RefMat</label>"
-                + "<label style=\"font: 18px arial\">Target:</label>"
+                + "<label style=\"font: 18px arial\">  Type:</label>"
                 + "<input type=\"checkbox\" " + ((exp.isSquidSwitchNU()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>NU</label>"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
@@ -127,8 +127,8 @@ public class ExpressionPublisher {
 
     private static String getExpressionBottomHTML(Expression exp, TaskInterface task) {
         return "<h3>Excel Expression String:</h3><p>" + exp.getExcelExpressionString() + "</p>\n"
-                + "<h3>Notes:</h3><p>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n"
-                + ((task != null) ? "<pre>" + task.printExpressionRequiresGraph(exp)
+                + "<h3>Notes:</h3>\n<p>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n"
+                + ((task != null) ? "<h3>Dependencies:</h3>\n" + "<pre>" + task.printExpressionRequiresGraph(exp)
                 + "</pre>\n" + "<pre>" + task.printExpressionProvidesGraph(exp) + "</pre>" : "").replaceAll("\n", "<br/>");
     }
 
@@ -202,7 +202,7 @@ public class ExpressionPublisher {
         return createHTMLDocumentFromExpression(file, exp, task, null);
     }
 
-    public static byte[] imageToByteArray(BufferedImage image) {
+    private static byte[] imageToByteArray(BufferedImage image) {
         byte[] retVal = null;
         if (image != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -217,16 +217,16 @@ public class ExpressionPublisher {
         return retVal;
     }
 
-    public static String getBase64Image(BufferedImage image) {
+    private static String getBase64Image(BufferedImage image) {
         byte[] bytes = imageToByteArray(image);
         return bytes == null ? "" : Base64.getEncoder().encodeToString(bytes);
     }
 
-    public static String getSourceImageHTML(BufferedImage image) {
+    private static String getSourceImageHTML(BufferedImage image) {
         return "data:image/png;base64, " + getBase64Image(image);
     }
 
-    public static String getFullExpressionHTML(BufferedImage image, Expression exp, TaskInterface task) {
+    private static String getFullExpressionHTML(BufferedImage image, Expression exp, TaskInterface task) {
         return getExpressionTopHTML(exp) + "<img src=\"" + getSourceImageHTML(image) + "\" alt=\"Image not available\" "
                 + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                 + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n"
