@@ -156,6 +156,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardContextMenu;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.tasks.expressions.operations.Value;
 
 /**
  * FXML Controller class
@@ -2977,7 +2978,9 @@ public class ExpressionBuilderController implements Initializable {
         // of just recreating and re-evaluating this expression
         // otherwise with a new name we need the full expressions list re-evaluated
         // first detect if user should have used SummaryCalculation choice
-        if (((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getOperation().isSummaryCalc()
+        OperationOrFunctionInterface operation = ((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getOperation();
+        if ((operation.isSummaryCalc()
+                ||(operation instanceof Value))
                 && !summaryCalculationSwitchCheckBox.isSelected()) {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "Squid recommends choosing the Summary Calculation switch ... make it so?",
