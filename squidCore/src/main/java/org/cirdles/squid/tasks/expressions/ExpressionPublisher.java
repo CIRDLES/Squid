@@ -67,7 +67,7 @@ public class ExpressionPublisher {
         return formula.createBufferedImage(1, 20, Color.BLACK, Color.WHITE);
     }
 
-    private static String getStartHTML() {
+    private static String getStartHTML(boolean isGroup) {
         return "<!DOCTYPE html>\n"
                 + "<HTML lang=\"en\">\n<head>\n<meta charset=\"utf-8\"/>\n"
                 + "<title>Squid Expressions</title>\n"
@@ -95,7 +95,7 @@ public class ExpressionPublisher {
                 + "}\n"
                 + "</style>\n"
                 + "</head>\n<body>\n"
-                + "<h1>Expressions</h1>\n";
+                + ((isGroup) ? "<h1>Expressions</h1>\n" : "");
     }
 
     private static String getEndHTML() {
@@ -126,7 +126,7 @@ public class ExpressionPublisher {
     }
 
     private static String getExpressionBottomHTML(Expression exp, TaskInterface task) {
-        return "<h3>Excel Expression String:</h3><p>" + exp.getExcelExpressionString() + "</p>\n"
+        return "<h3>Excel Expression String:</h3>\n<p>" + exp.getExcelExpressionString() + "</p>\n"
                 + "<h3>Notes:</h3>\n<p>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n"
                 + ((task != null) ? "<h3>Dependencies:</h3>\n" + "<pre>" + task.printExpressionRequiresGraph(exp)
                 + "</pre>\n" + "<pre>" + task.printExpressionProvidesGraph(exp) + "</pre>" : "").replaceAll("\n", "<br/>");
@@ -145,7 +145,7 @@ public class ExpressionPublisher {
             boolean enterWidths = widths != null;
 
             StringBuilder string = new StringBuilder();
-            string.append(getStartHTML());
+            string.append(getStartHTML(true));
 
             // File imageFolder = new File(file.getAbsolutePath() + "ExpressionsImages");
             //imageFolder.mkdir();
@@ -223,7 +223,7 @@ public class ExpressionPublisher {
     }
 
     private static String getSourceImageHTML(BufferedImage image) {
-        return "data:image/png;base64, " + getBase64Image(image);
+        return "data:image/png;base64," + getBase64Image(image);
     }
 
     private static String getFullExpressionHTML(BufferedImage image, Expression exp, TaskInterface task) {
@@ -232,7 +232,6 @@ public class ExpressionPublisher {
                 + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n"
                 + getExpressionBottomHTML(exp, task);
     }
-
 
     public static boolean createHTMLDocumentFromExpression(File file, Expression exp, TaskInterface task, MutableInt width) {
         if (file != null && exp != null) {
@@ -262,7 +261,7 @@ public class ExpressionPublisher {
             string.append(getExpressionBottomHTML(exp, task));*/
             StringBuilder string = new StringBuilder();
 
-            string.append(getStartHTML());
+            string.append(getStartHTML(false));
             BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
             if (width != null) {
                 width.v = image.getWidth();
