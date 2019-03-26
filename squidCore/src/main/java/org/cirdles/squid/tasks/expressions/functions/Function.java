@@ -78,7 +78,7 @@ public abstract class Function
     protected String[] labelsForInputValues = new String[]{};
 
     protected String definition;
-    
+
     protected boolean summaryCalc;
 
     /**
@@ -124,6 +124,7 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("sqrt", "sqrt");
         MATH_FUNCTIONS_MAP.put("ln", "ln");
         MATH_FUNCTIONS_MAP.put("max", "max");
+        MATH_FUNCTIONS_MAP.put("min", "min");
         MATH_FUNCTIONS_MAP.put("abs", "abs");
         MATH_FUNCTIONS_MAP.put("average", "average");
         MATH_FUNCTIONS_MAP.put("count", "count");
@@ -338,13 +339,20 @@ public abstract class Function
 //    public static OperationOrFunctionInterface lookup() {
 //        return new SpotNodeLookupFunction();
 //    }
-
     /**
      *
      * @return
      */
     public static OperationOrFunctionInterface max() {
         return new Max();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface min() {
+        return new Min();
     }
 
     /**
@@ -440,15 +448,15 @@ public abstract class Function
         return retVal;
     }
 
-    protected String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET){
+    protected String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET) {
         StringBuilder retVal = new StringBuilder();
         for (int i = 0; i < childrenET.size(); i++) {
             retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
         }
-        
+
         return retVal.toString();
     }
-    
+
     /**
      * @return the name
      */
@@ -507,7 +515,6 @@ public abstract class Function
         return definition;
     }
 
-    
     /**
      * @return the summaryCalc
      */
