@@ -108,7 +108,7 @@ public class ExpressionPublisher {
                 + "<div class=\"right\">\n" + (exp.isCustom() ? "Custom" : "Built-in") + "</div>\n"
                 + "</div>\n"
                 + "<label style=\"font: 18px arial\">Target: </label>\n"
-                + "<input type=\"checkbox\" " + ((exp.isReferenceMaterialValue()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
+                + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>RefMat</label>"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>" + ((exp.isCustom()) ? exp.getExpressionTree().getUnknownsGroupSampleName() : "Unknown") + "</label>"
