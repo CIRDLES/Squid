@@ -516,7 +516,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (String sampleName : filtersForUnknownNames.keySet()) {
             List<ShrimpFractionExpressionInterface> filteredList
                     = unknownSpots.stream()
-                            .filter(spot -> spot.getFractionID().startsWith(sampleName))
+                            .filter(spot -> spot.getFractionID().toUpperCase(Locale.ENGLISH).startsWith(sampleName.toUpperCase(Locale.ENGLISH)))
                             .collect(Collectors.toList());
             if (filteredList.size() > 0) {
                 mapOfUnknownsBySampleNames.put(sampleName, filteredList);

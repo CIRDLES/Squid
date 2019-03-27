@@ -90,7 +90,7 @@ public class SessionAuditController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         sampleNameDelimeter = squidProject.getDelimiterForUnknownNames();
-        
+
         prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         setUpPrawnAuditTreeView(false);
@@ -351,22 +351,19 @@ public class SessionAuditController implements Initializable {
 
     private void refreshView() {
         prawnAuditTreeCheckBox.refresh();
-        if (hasDuplicates) {
-            summaryLabel.setText("  Please remove duplicate spot names.");
-        } else {
-            int totalCount = 0;
-            for (String name : workingListOfSelectedNames.keySet()) {
-                totalCount += workingListOfSelectedNames.get(name);
-            }
-            summaryLabel.setText(
-                    "  Sample count = "
-                    + workingListOfSelectedNames.size()
-                    + "  Covering "
-                    + totalCount
-                    + " of "
-                    + prawnAuditTreeCheckBox.getRoot().getValue().getCountOfIncludedSpots()
-                    + " spots");
+        int totalCount = 0;
+        for (String name : workingListOfSelectedNames.keySet()) {
+            totalCount += workingListOfSelectedNames.get(name);
         }
+        summaryLabel.setText(
+                "  Sample count = "
+                + workingListOfSelectedNames.size()
+                + "  Covering "
+                + totalCount
+                + " of "
+                + prawnAuditTreeCheckBox.getRoot().getValue().getCountOfIncludedSpots()
+                + " spots."
+                + (hasDuplicates ? "  Please remove duplicate spot names." : ""));
 
         squidProject.getTask().setChanged(true);
     }

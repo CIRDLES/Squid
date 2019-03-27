@@ -363,7 +363,7 @@ public final class SquidProject implements Serializable {
                 }
 
                 String sampleName = ((delimeterIndex == -1) || (fraction.getFractionID().length() < (delimeterIndex - 1)))
-                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimeterIndex);
+                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimeterIndex).toUpperCase(Locale.ENGLISH);
                 if (filtersForUnknownNames.containsKey(sampleName)) {
                     filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
                 } else {
