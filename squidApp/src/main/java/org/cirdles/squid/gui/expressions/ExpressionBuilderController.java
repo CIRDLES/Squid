@@ -156,6 +156,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardContextMenu;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.tasks.expressions.operations.Value;
 
 /**
  * FXML Controller class
@@ -347,8 +348,6 @@ public class ExpressionBuilderController implements Initializable {
     private HBox graphTitleHbox;
     @FXML
     private HBox toolBarHBox;
-    @FXML
-    private VBox toolBarVBox;
     @FXML
     private VBox selectSpotsVBox;
     @FXML
@@ -2977,9 +2976,11 @@ public class ExpressionBuilderController implements Initializable {
         // if the replacement expression does not change its name or
         // if this is a new expression, we need the low-impact route
         // of just recreating and re-evaluating this expression
-        // otherwise with a new name we need the full expressions list reevaluated
+        // otherwise with a new name we need the full expressions list re-evaluated
         // first detect if user should have used SummaryCalculation choice
-        if (((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getOperation().isSummaryCalc()
+        OperationOrFunctionInterface operation = ((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getOperation();
+        if ((operation.isSummaryCalc()
+                ||(operation instanceof Value))
                 && !summaryCalculationSwitchCheckBox.isSelected()) {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "Squid recommends choosing the Summary Calculation switch ... make it so?",
@@ -2998,6 +2999,8 @@ public class ExpressionBuilderController implements Initializable {
         //Removes the old expression if the name has been changed
         if (currentMode.get().equals(Mode.EDIT) && !exp.getName().equalsIgnoreCase(selectedExpression.get().getName())) {
             task.removeExpression(selectedExpression.get(), false);
+            task.addExpression(exp, true);
+        } else if (task.getMissingExpressionsByName().contains(exp.getName().toUpperCase(Locale.ENGLISH))) {
             task.addExpression(exp, true);
         } else {
             task.addExpression(exp, false);

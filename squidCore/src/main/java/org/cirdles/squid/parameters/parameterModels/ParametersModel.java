@@ -50,7 +50,7 @@ public abstract class ParametersModel implements
     protected boolean isEditable;
 
     public ParametersModel() {
-        this("new model");
+        this("NONE");
     }
 
     public ParametersModel(String modelName) {
