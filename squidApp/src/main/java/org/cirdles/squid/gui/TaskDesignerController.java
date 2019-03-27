@@ -225,7 +225,6 @@ public class TaskDesignerController implements Initializable {
 
         addBtn.setOnMouseClicked((event) -> {
             taskDesigner.addRatioName(numLabel.getText() + "/" + denLabel.getText());
-            //undoRatiosList.remove(VBOX???
             namedExpressionsMap = taskDesigner.buildNamedExpressionsMap();
             populateRatios();
             refreshExpressionAudits();
@@ -799,8 +798,9 @@ public class TaskDesignerController implements Initializable {
                 addBtn.setDisable(true);
                 List<String> masses = new ArrayList<>();
                 masses.addAll(REQUIRED_NOMINAL_MASSES);
-                masses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
                 masses.addAll(taskDesigner.getNominalMasses());
+                masses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
+                Collections.sort(masses);
                 addNumeratorVBox.getChildren().clear();
                 addDenominatorVBox.getChildren().clear();
                 for (String mass : masses) {
@@ -926,10 +926,10 @@ public class TaskDesignerController implements Initializable {
             squidProject.createNewTask();
             squidProject.getTask().updateTaskFromTaskDesign(
                     SquidPersistentState.getExistingPersistentState().getTaskDesign());
-            MenuItem menuItemTaskManager = ((MenuBar)SquidUI.primaryStage.getScene()
+            MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                     .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
             menuItemTaskManager.fire();
-        
+
         } else {
             SquidMessageDialog.showInfoDialog(
                     "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
