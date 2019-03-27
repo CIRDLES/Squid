@@ -22,6 +22,7 @@ public class ParametersManagerTests {
         BigDecimal num = new BigDecimal(Double.MAX_VALUE);
 
         ParametersModel mod = new ReferenceMaterialModel();
+        mod.setModelName("a;sldkfjal;sdkfja;lskdfja;slkdfjas;ldkfj");
         Task task = new Task();
         task.setReferenceMaterialModel(mod);
         mod.getValues()[4].setValue(num);
@@ -36,6 +37,7 @@ public class ParametersManagerTests {
         BigDecimal num = new BigDecimal(Double.MAX_VALUE);
 
         ParametersModel mod = new CommonPbModel();
+        mod.setModelName("a;sldkfja;sldkfj;alskdfjsja;sldkfj");
         Task task = new Task();
         task.setCommonPbModel(mod);
         mod.getValues()[4].setValue(num);
@@ -50,6 +52,7 @@ public class ParametersManagerTests {
         BigDecimal num = new BigDecimal(Double.MAX_VALUE);
 
         ParametersModel mod = new PhysicalConstantsModel();
+        mod.setModelName("a;sldkfja;lskdfjsd;alskdfj;alskdfjf");
         Task task = new Task();
         task.setPhysicalConstantsModel(mod);
         mod.getValues()[4].setValue(num);
