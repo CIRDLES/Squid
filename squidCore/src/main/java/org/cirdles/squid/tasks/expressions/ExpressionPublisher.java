@@ -69,33 +69,63 @@ public class ExpressionPublisher {
 
     private static String getStartHTML(boolean isGroup) {
         return "<!DOCTYPE html>\n"
-                + "<HTML lang=\"en\">\n<head>\n<meta charset=\"utf-8\"/>\n"
-                + "<title>Squid Expressions</title>\n"
-                + "<style>\n"
-                + "h1   {color: black;}\n"
-                + "h2   {color: black}\n"
-                + "p    {color: black;}\n"
-                + ".header {\n"
-                + "    display: table;\n"
-                + "    table-layout: auto;\n"
-                + "}\n"
-                + ".header > div {\n"
-                + "    display: table-cell;\n"
-                + "}"
-                + ".left {\n"
-                + "    font-size: 24px;\n"
-                + "    font-family: arial;\n"
-                + "    font-weight: bold;\n"
-                + "    padding-right: 200px\n"
-                + "}\n"
-                + ".right {\n"
-                + "    font-size: 20px;\n"
-                + "    font-family: arial;\n"
-                + "    font-weight: normal;\n"
-                + "}\n"
-                + "</style>\n"
-                + "</head>\n<body>\n"
-                + ((isGroup) ? "<h1>Expressions</h1>\n" : "");
+                + "<HTML lang=\"en\">\n<head>\n" +
+                "    <meta charset=\"utf-8\"/>\n" +
+                "    <title>Squid Expressions</title>\n" +
+                "    <style>\n" +
+                "        h1 {\n" +
+                "            padding-left: 30px;\n" +
+                "        }\n" +
+                "\n" +
+                "        h2 {\n" +
+                "            padding-left: 30px;\n" +
+                "        }\n" +
+                "\n" +
+                "        p {\n" +
+                "            padding-left: 40px;\n" +
+                "        }\n" +
+                "\n" +
+                "        h3 {\n" +
+                "            padding-left: 30px;\n" +
+                "        }\n" +
+                "\n" +
+                "        pre {\n" +
+                "            padding-left: 40px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .header {\n" +
+                "            display: table;\n" +
+                "            table-layout: auto;\n" +
+                "            padding-left: 30px;\n" +
+                "            padding-bottom: 15px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .header > div {\n" +
+                "            display: table-cell;\n" +
+                "        }\n" +
+                "\n" +
+                "        .left {\n" +
+                "            font-size: 24px;\n" +
+                "            font-family: arial;\n" +
+                "            font-weight: bold;\n" +
+                "            padding-right: 200px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .right {\n" +
+                "            font-size: 20px;\n" +
+                "            font-family: arial;\n" +
+                "            font-weight: normal;\n" +
+                "        }\n" +
+                "\n" +
+                "        img {\n" +
+                "            border: 1px solid black;\n" +
+                "            padding: 5px;\n" +
+                "            margin-left: 30px;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                ((isGroup) ? "<h1>Expressions</h1>\n" : "");
     }
 
     private static String getEndHTML() {
@@ -104,19 +134,19 @@ public class ExpressionPublisher {
 
     private static String getExpressionTopHTML(Expression exp) {
         return "<div class=\"header\">\n"
-                + "<div class=\"left\">" + exp.getName() + "</div>\n"
-                + "<div class=\"right\">\n" + (exp.isCustom() ? "Custom" : "Built-in") + "</div>\n"
+                + "    <div class=\"left\">" + exp.getName() + "</div>\n"
+                + "    <div class=\"right\">" + (exp.isCustom() ? "Custom" : "Built-in") + "</div>\n"
                 + "</div>\n"
-                + "<label style=\"font: 18px arial\">Target: </label>\n"
+                + "<label style=\"font: 18px arial; margin-left: 30px;\">Target:</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
-                + "<label>RefMat</label>"
+                + "<label>RefMat</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
-                + "<label>" + ((exp.isCustom()) ? exp.getExpressionTree().getUnknownsGroupSampleName() : "Unknown") + "</label>"
+                + "<label>" + ((exp.isCustom()) ? exp.getExpressionTree().getUnknownsGroupSampleName() : "Unknown") + "</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
-                + "<label>Conc RefMat</label>"
-                + "<label style=\"font: 18px arial\">  Type:</label>"
+                + "<label>Conc RefMat</label>\n"
+                + "<label style=\"font: 18px arial; padding-left: 5px;\">Type:</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.isSquidSwitchNU()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
-                + "<label>NU</label>"
+                + "<label>NU</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>Summary<br/><br/></label>\n";
     }
@@ -128,8 +158,8 @@ public class ExpressionPublisher {
     private static String getExpressionBottomHTML(Expression exp, TaskInterface task) {
         return "<h3>Excel Expression String:</h3>\n<p>" + exp.getExcelExpressionString() + "</p>\n"
                 + "<h3>Notes:</h3>\n<p>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n"
-                + ((task != null) ? "<h3>Dependencies:</h3>\n" + "<pre>" + task.printExpressionRequiresGraph(exp)
-                + "</pre>\n" + "<pre>" + task.printExpressionProvidesGraph(exp) + "</pre>" : "").replaceAll("\n", "<br/>");
+                + ((task != null) ? "<h3>Dependencies:</h3>\n" + "<pre>" + task.printExpressionRequiresGraph(exp).replaceAll("\n", "<br/>")
+                + "</pre>\n" + "<pre>" + task.printExpressionProvidesGraph(exp).replaceAll("\n", "<br/>") + "</pre>" : "");
     }
 
     public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions) {
