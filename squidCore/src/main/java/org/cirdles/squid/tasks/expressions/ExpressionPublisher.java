@@ -2,10 +2,8 @@ package org.cirdles.squid.tasks.expressions;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.antlr.v4.misc.MutableInt;
-import org.cirdles.commons.util.ResourceExtractor;
+import org.cirdles.squid.parameters.util.DateHelper;
 import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.scilab.forge.jlatexmath.TeXFormula;
 
 import javax.imageio.ImageIO;
@@ -93,6 +91,10 @@ public class ExpressionPublisher {
                 "            padding-left: 40px;\n" +
                 "        }\n" +
                 "\n" +
+                "        footer {\n" +
+                "            padding-left: 40px;\n" +
+                "        }\n" +
+                "\n" +
                 "        .header {\n" +
                 "            display: table;\n" +
                 "            table-layout: auto;\n" +
@@ -155,22 +157,28 @@ public class ExpressionPublisher {
         return getExpressionBottomHTML(exp, null);
     }
 
-    private static String getExpressionBottomHTML(Expression exp, TaskInterface task) {
+    private static String getExpressionBottomHTML(Expression exp, SquidProject project) {
         return "<h3>Excel Expression String:</h3>\n<p>" + exp.getExcelExpressionString() + "</p>\n"
                 + "<h3>Notes:</h3>\n<p>" + (exp.getNotes().trim().isEmpty() ? "No notes" : exp.getNotes()).replaceAll("\n", "<br/>") + "</p>\n"
-                + ((task != null) ? "<h3>Dependencies:</h3>\n" + "<pre>" + task.printExpressionRequiresGraph(exp).replaceAll("\n", "<br/>")
-                + "</pre>\n" + "<pre>" + task.printExpressionProvidesGraph(exp).replaceAll("\n", "<br/>") + "</pre>" : "");
+                + ((project != null && project.getTask() != null) ? "<h3>Dependencies:</h3>\n" + "<pre>" + project.getTask().printExpressionRequiresGraph(exp).replaceAll("\n", "<br/>")
+                + "</pre>\n" + "<pre>" + project.getTask().printExpressionProvidesGraph(exp).replaceAll("\n", "<br/>") + "</pre>\n" : "");
     }
 
-    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions) {
-        return createHTMLDocumentFromExpressions(file, expressions, null);
+    private static String getExpressionFooterHTML(Expression exp, SquidProject project) {
+        return "<footer>\n"
+                + "    <label>Generated on: " + DateHelper.getCurrentDate() + "</label>\n" +
+                ((project != null) ?
+                        ((project.getTask() != null) ?
+                                ((project.getTask().getName() != null && !project.getTask().getName().isEmpty()) ? "    <label>| Task Name: " + project.getTask().getName() + "</label>\n" : "")
+                                        + ((project.getTask().getLabName() != null && !project.getTask().getLabName().isEmpty()) ? "    <label>| Lab Name: " + project.getTask().getLabName() + "</label>\n" : "")
+                                        + ((project.getTask().getAuthorName() != null && !project.getTask().getAuthorName().isEmpty()) ? "    <label>| Author: " + project.getTask().getAuthorName() + "</label>\n" : "") : "")
+                                + ((project.getProjectName() != null && !project.getProjectName().isEmpty()) ? "    <label>| Project Name: " + project.getProjectName() + "</label>\n" : "")
+                                + ((project.getAnalystName() != null && !project.getAnalystName().isEmpty()) ? "    <label>| Analyst Name: " + project.getAnalystName() + "</label>\n" : "") : "")
+                + "</footer>\n";
+
     }
 
-    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions, TaskInterface task) {
-        return createHTMLDocumentFromExpressions(file, expressions, task, null);
-    }
-
-    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions, TaskInterface task, Integer[] widths) {
+    public static boolean createHTMLDocumentFromExpressions(File file, List<Expression> expressions, SquidProject project, Integer[] widths) {
         if (file != null && expressions != null) {
             boolean enterWidths = widths != null;
 
@@ -206,7 +214,7 @@ public class ExpressionPublisher {
                 if (enterWidths) {
                     widths[i] = image.getWidth();
                 }
-                string.append(getFullExpressionHTML(image, exp, task));
+                string.append(getFullExpressionHTML(image, exp, project));
             }
             string.append(getEndHTML());
 
@@ -222,14 +230,6 @@ public class ExpressionPublisher {
             return worked;
         }
         return false;
-    }
-
-    public static boolean createHTMLDocumentFromExpression(File file, Expression exp) {
-        return createHTMLDocumentFromExpression(file, exp, null);
-    }
-
-    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, TaskInterface task) {
-        return createHTMLDocumentFromExpression(file, exp, task, null);
     }
 
     private static byte[] imageToByteArray(BufferedImage image) {
@@ -256,14 +256,19 @@ public class ExpressionPublisher {
         return "data:image/png;base64," + getBase64Image(image);
     }
 
-    private static String getFullExpressionHTML(BufferedImage image, Expression exp, TaskInterface task) {
+    private static String getFullExpressionHTML(BufferedImage image, Expression exp, SquidProject project) {
         return getExpressionTopHTML(exp) + "<img src=\"" + getSourceImageHTML(image) + "\" alt=\"Image not available\" "
                 + "width=\"" + (int) (image.getWidth() * SIZE_MULTIPLIER + .5) + "\" "
                 + "height=\"" + (int) (image.getHeight() * SIZE_MULTIPLIER + .5) + "\"" + "/>\n"
-                + getExpressionBottomHTML(exp, task);
+                + getExpressionBottomHTML(exp, project)
+                + getExpressionFooterHTML(exp, project);
     }
 
-    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, TaskInterface task, MutableInt width) {
+    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, SquidProject project) {
+        return createHTMLDocumentFromExpression(file, exp, project, null);
+    }
+
+    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, SquidProject project, MutableInt width) {
         if (file != null && exp != null) {
             /*BufferedImage image = (BufferedImage) createImageFromMathML(exp.getExpressionTree().toStringMathML(), true);
             File imageFile = new File(file.getAbsolutePath() + FileNameFixer.fixFileName(exp.getName()) + ".png");
@@ -296,7 +301,7 @@ public class ExpressionPublisher {
             if (width != null) {
                 width.v = image.getWidth();
             }
-            string.append(getFullExpressionHTML(image, exp, task));
+            string.append(getFullExpressionHTML(image, exp, project));
             string.append(getEndHTML());
 
             boolean worked;
@@ -365,17 +370,6 @@ public class ExpressionPublisher {
         }
         htmlFile.delete();
         return retVal;
-    }
-
-    public static void main(String[] argv) {
-        ResourceExtractor squidProjectExtractor = new ResourceExtractor(SquidProject.class);
-        File squidFile = squidProjectExtractor.extractResourceAsFile("Z626611PKPERM1.squid");
-        SquidProject project = (SquidProject) SquidSerializer.getSerializedObjectFromFile(squidFile.getAbsolutePath(), false);
-        Expression exp = project.getTask().getExpressionByName("Hf1sabserr");
-        createHTMLDocumentFromExpression(new File("test.html"), exp, null);
-        //createHTMLDocumentFromExpressions(new File("testgroup.html"), project.getTask().getTaskExpressionsOrdered(), null);
-        createPDFFromExpression(new File("test.pdf"), exp);
-        //createPDFFromExpressions(new File("testgroup.pdf"), project.getTask().getTaskExpressionsOrdered());
     }
 
 }
