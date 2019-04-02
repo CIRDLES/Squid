@@ -50,7 +50,7 @@ public class SqBiweight extends Function {
         rowCount = 1;
         colCount = 3;
         labelsForOutputValues = new String[][]{{"Biwt Mean", "Biwt Sigma", "\u00B195%conf"}};
-        labelsForInputValues = new String[]{"variableNumbers", "tuningConstant"};
+        labelsForInputValues = new String[]{"variableNumbers", "tuningConstant, use 6 as default"};
         summaryCalc = true;
         definition = "Provides the functionality of Squid's sqBiweight and biWt by calculating\n"
                 + "   TukeysBiweight and returning mean, sigma, and 95% confidence.";

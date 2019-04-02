@@ -43,6 +43,8 @@ public class If extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Conditional"}};
         labelsForInputValues = new String[]{"condition", "expressionIfTrue", "expressionIfFalse"};
+        definition = "Checks whether a condition is met, \n 
+        and returns one value if true, another if false" ;
     }
 
     /**

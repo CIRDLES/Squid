@@ -43,6 +43,7 @@ public class Max extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"maximum"}};
         labelsForInputValues = new String[]{"number1", "number2"};
+        definition = "Returns largest number in a set of values";
     }
 
     /**

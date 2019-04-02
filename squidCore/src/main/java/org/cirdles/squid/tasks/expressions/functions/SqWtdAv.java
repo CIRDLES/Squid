@@ -53,7 +53,7 @@ public class SqWtdAv extends Function {
         summaryCalc = true;
         definition = "Provides the basic functionality of Squid's sqWtdAv by calculating\n"
                 + "   WeightedAverage and returning intMean, intSigmaMean, MSWD, probability,\n"
-                + "   intErr68, intMeanErr95.";
+                + "   intErr68, intMeanErr95. Input must be ValueModel - variable+error";
     }
 
     /**

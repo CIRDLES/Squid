@@ -43,6 +43,7 @@ public class Min extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"minimum"}};
         labelsForInputValues = new String[]{"number1", "number2"};
+        definition = "Returns smallest number in a set of values";
     }
 
     /**

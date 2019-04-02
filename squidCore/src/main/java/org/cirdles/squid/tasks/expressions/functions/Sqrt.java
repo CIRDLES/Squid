@@ -42,6 +42,7 @@ public class Sqrt extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Sqrt"}};
         labelsForInputValues = new String[]{"number"};
+        definition = "Returns the square root of a number";
     }
 
     /**
