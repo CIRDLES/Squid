@@ -2,6 +2,7 @@ package org.cirdles.squid.tasks.expressions;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.antlr.v4.misc.MutableInt;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.util.DateHelper;
 import org.cirdles.squid.projects.SquidProject;
 import org.scilab.forge.jlatexmath.TeXFormula;
@@ -122,7 +123,7 @@ public class ExpressionPublisher {
                 "        img {\n" +
                 "            border: 1px solid black;\n" +
                 "            padding: 5px;\n" +
-                "            margin-left: 30px;\n" +
+                "            margin-left: 40px;\n" +
                 "        }\n" +
                 "    </style>\n" +
                 "</head>\n" +
@@ -143,7 +144,7 @@ public class ExpressionPublisher {
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>RefMat</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
-                + "<label>" + ((exp.isCustom()) ? exp.getExpressionTree().getUnknownsGroupSampleName() : "Unknown") + "</label>\n"
+                + "<label>" + ((exp.isCustom()) ? "sample: " + exp.getExpressionTree().getUnknownsGroupSampleName().replaceAll(Squid3Constants.SpotTypes.UNKNOWN.getPlotType(), "all") : "Unknown") + "</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>Conc RefMat</label>\n"
                 + "<label style=\"font: 18px arial; padding-left: 5px;\">Type:</label>\n"
