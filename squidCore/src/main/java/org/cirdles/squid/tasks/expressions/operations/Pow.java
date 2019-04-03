@@ -33,7 +33,7 @@ public class Pow extends Operation {
      *
      */
     public Pow() {
-        name = "power";
+        name = "pow";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
