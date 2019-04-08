@@ -1117,11 +1117,29 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
     }
 
+    private String showLongfilePath(String path) {
+        String retVal = "";
+        String[] pathParts = path.split(File.separator);
+        for (int i = 0; i < pathParts.length; i++) {
+            retVal += pathParts[i] + (i < (pathParts.length - 1) ? File.separator : "") + "\n";
+            for (int j = 0; j < i; j++) {
+                retVal += "  ";
+            }
+        }
+
+        return retVal;
+    }
+
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceReferenceMaterialCSV(true);
         if (reportTableFile != null) {
-            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            SquidMessageDialog.showInfoDialog(
+                    "File saved as:\n\n"
+                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                    primaryStageWindow);
+
+            //BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showInfoDialog(
                     "There are no reference materials chosen.\n\n",
@@ -1133,7 +1151,11 @@ public class SquidUIController implements Initializable {
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceUnknownsCSV(true);
         if (reportTableFile != null) {
-            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            SquidMessageDialog.showInfoDialog(
+                    "File saved as:\n\n"
+                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                    primaryStageWindow);
+            //BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showInfoDialog(
                     "There are no Unknowns chosen.\n\n",
@@ -1165,7 +1187,7 @@ public class SquidUIController implements Initializable {
             SquidMessageDialog.showInfoDialog(
                     "There are no Reference Material spots chosen.\n\n",
                     primaryStageWindow);
-        } else if (!((ReferenceMaterialModel)squidProject.getTask().getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate()) {
+        } else if (!((ReferenceMaterialModel) squidProject.getTask().getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate()) {
             SquidMessageDialog.showInfoDialog(
                     "There is no Reference Material Model chosen.\n\n",
                     primaryStageWindow);
