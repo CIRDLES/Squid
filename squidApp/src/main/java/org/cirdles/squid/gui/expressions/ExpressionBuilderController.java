@@ -610,9 +610,8 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     public void showExpressionDetailsOnAction(ActionEvent actionEvent) {
-        Expression exp = makeExpression(expressionNameTextField.getText(), expressionString.get());
         File expressionFile = new File("Expression_Details.html");
-        ExpressionPublisher.createHTMLDocumentFromExpression(expressionFile, exp, squidProject);
+        ExpressionPublisher.createHTMLDocumentFromExpression(expressionFile, selectedExpression.getValue(), squidProject);
         BrowserControl.showURI(expressionFile.getAbsolutePath());
     }
 
