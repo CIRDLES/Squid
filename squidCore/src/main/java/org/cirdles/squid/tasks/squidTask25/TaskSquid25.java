@@ -161,7 +161,7 @@ public class TaskSquid25 implements Serializable {
                 String[] secondaryUThPbEqn = lines[firstRow + 23].split("\t");
                 if (secondaryUThPbEqn.length > 1) {
                     taskSquid25.specialSquidFourExpressionsMap.put(
-                            primaryUThEqnOtherName, prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]));
+                            primaryUThEqnOtherName, prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]));
                 }
 
                 String[] ThUEqn = lines[firstRow + 24].split("\t");

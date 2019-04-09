@@ -429,7 +429,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
-                            + message,
+                    + message,
                     primaryStageWindow);
         }
     }
@@ -482,7 +482,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
-                            + message,
+                    + message,
                     primaryStageWindow);
         }
     }
@@ -493,9 +493,9 @@ public class SquidUIController implements Initializable {
 
         SquidMessageDialog.showInfoDialog(
                 "To join two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
-                        + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
-                        + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
-                        + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
+                + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
+                + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
+                + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
                 primaryStageWindow);
 
         try {
@@ -517,7 +517,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open and join the selected files:\n\n"
-                            + message,
+                    + message,
                     primaryStageWindow);
         }
 
@@ -721,7 +721,7 @@ public class SquidUIController implements Initializable {
         // present warning if needed
         if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Reference Materials and "
-                            + "Sample names using the Data menu.\n",
+                    + "Sample names using the Data menu.\n",
                     null);
         }
 
@@ -1117,11 +1117,29 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
     }
 
+    private String showLongfilePath(String path) {
+        String retVal = "";
+        String[] pathParts = path.split(File.separator);
+        for (int i = 0; i < pathParts.length; i++) {
+            retVal += pathParts[i] + (i < (pathParts.length - 1) ? File.separator : "") + "\n";
+            for (int j = 0; j < i; j++) {
+                retVal += "  ";
+            }
+        }
+
+        return retVal;
+    }
+
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceReferenceMaterialCSV(true);
         if (reportTableFile != null) {
-            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            SquidMessageDialog.showInfoDialog(
+                    "File saved as:\n\n"
+                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                    primaryStageWindow);
+
+            //BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showInfoDialog(
                     "There are no reference materials chosen.\n\n",
@@ -1133,7 +1151,11 @@ public class SquidUIController implements Initializable {
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceUnknownsCSV(true);
         if (reportTableFile != null) {
-            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            SquidMessageDialog.showInfoDialog(
+                    "File saved as:\n\n"
+                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                    primaryStageWindow);
+            //BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showInfoDialog(
                     "There are no Unknowns chosen.\n\n",
@@ -1156,8 +1178,23 @@ public class SquidUIController implements Initializable {
     private void launchPlots() {
         mainPane.getChildren().remove(topsoilPlotUI);
         squidProject.getTask().buildSquidSpeciesModelList();
-        launchVisualizations();
-        showUI(topsoilPlotUI);
+        // if ratios list not populated or no ref mat chosen show warning
+        if (squidProject.getTask().getSquidRatiosModelList().isEmpty()) {
+            SquidMessageDialog.showInfoDialog(
+                    "Please use the 'Isotopes & Ratios' menu to manage isotopes so reduction can proceed.\n\n",
+                    primaryStageWindow);
+        } else if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
+            SquidMessageDialog.showInfoDialog(
+                    "There are no Reference Material spots chosen.\n\n",
+                    primaryStageWindow);
+        } else if (!((ReferenceMaterialModel) squidProject.getTask().getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate()) {
+            SquidMessageDialog.showInfoDialog(
+                    "There is no Reference Material Model chosen.\n\n",
+                    primaryStageWindow);
+        } else {
+            launchVisualizations();
+            showUI(topsoilPlotUI);
+        }
     }
 
     @FXML
@@ -1344,7 +1381,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected Prawn File:\n\n"
-                            + message,
+                    + message,
                     primaryStageWindow);
         }
     }
@@ -1392,7 +1429,7 @@ public class SquidUIController implements Initializable {
                 squidLabData.addcommonPbModel(commonPbModel);
                 squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
             }
-            
+
             squidLabData.storeState();
         }
     }
@@ -1433,9 +1470,9 @@ public class SquidUIController implements Initializable {
         } else {
             SquidMessageDialog.showInfoDialog(
                     "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                            + " masses, but the Task Designer specifies "
-                            + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
-                            + ".",
+                    + " masses, but the Task Designer specifies "
+                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                    + ".",
                     null);
         }
     }
