@@ -1,47 +1,22 @@
 /*
-* Copyright 2018 James F. Bowring and CIRDLES.org.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
+ * Copyright 2018 James F. Bowring and CIRDLES.org.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.cirdles.squid.gui.expressions;
 
 import com.google.common.collect.Lists;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -53,53 +28,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.SingleSelectionModel;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import static javafx.scene.paint.Color.RED;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontSmoothingType;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.*;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -109,54 +49,60 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_C_FOR_CONCREFMAT;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_R_FOR_REFMAT;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_U_FOR_UNKNOWN;
+import org.cirdles.squid.constants.Squid3Constants.*;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUI;
-import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.ExpressionPublisher;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
-import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
+import org.cirdles.squid.tasks.expressions.expressionTrees.*;
 import org.cirdles.squid.tasks.expressions.functions.Function;
-import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
-import static org.cirdles.squid.tasks.expressions.functions.Function.LOGIC_FUNCTIONS_MAP;
-import static org.cirdles.squid.tasks.expressions.functions.Function.MATH_FUNCTIONS_MAP;
-import static org.cirdles.squid.tasks.expressions.functions.Function.SQUID_FUNCTIONS_MAP;
+import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
-import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_DEFAULT_FONTSIZE;
-import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MAX_FONTSIZE;
-import static org.cirdles.squid.gui.constants.Squid3GuiConstants.EXPRESSION_BUILDER_MIN_FONTSIZE;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
-import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
-import static org.cirdles.squid.gui.SquidUI.HEALTHY;
-import static org.cirdles.squid.gui.SquidUI.PEEK_LIST_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.SquidUI.UNHEALTHY;
-import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
-import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static javafx.scene.paint.Color.RED;
+import static org.cirdles.squid.constants.Squid3Constants.*;
+import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardContextMenu;
+
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.*;
+import static org.cirdles.squid.tasks.expressions.functions.Function.*;
+import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
+
+
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.operations.Value;
+
 
 /**
  * FXML Controller class
@@ -432,22 +378,6 @@ public class ExpressionBuilderController implements Initializable {
 
     private final ObjectProperty<Mode> currentMode = new SimpleObjectProperty<>(Mode.EDIT);
 
-    @FXML
-    private void showDependencyGraphsAction(ActionEvent event) {
-        try {
-            Files.write(
-                    Paths.get("DEPENDENCIES.HTML"),
-                    ("<html><pre>"
-                            + task.printExpressionRequiresGraph(selectedExpression.getValue())
-                            + "\n\n"
-                            + task.printExpressionProvidesGraph(selectedExpression.getValue())
-                            + "</pre></html>").getBytes());
-
-            BrowserControl.showURI("DEPENDENCIES.HTML");
-        } catch (IOException iOException) {
-        }
-    }
-
     private enum Mode {
 
         EDIT("Edit"),
@@ -502,7 +432,7 @@ public class ExpressionBuilderController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         task = squidProject.getTask();
-        // update 
+        // update
         task.setupSquidSessionSpecsAndReduceAndReport();
 
         initPropertyBindings();
@@ -676,6 +606,13 @@ public class ExpressionBuilderController implements Initializable {
 
         //Prevent from clipping
         expressionTextFlow.maxWidthProperty().bind(expressionPane.widthProperty());
+    }
+
+    @FXML
+    public void showExpressionDetailsOnAction(ActionEvent actionEvent) {
+        File expressionFile = new File("Expression_Details.html");
+        ExpressionPublisher.createHTMLDocumentFromExpression(expressionFile, selectedExpression.getValue(), squidProject);
+        BrowserControl.showURI(expressionFile.getAbsolutePath());
     }
 
     @FXML
@@ -2638,10 +2575,10 @@ public class ExpressionBuilderController implements Initializable {
                         if (fn != null) {
                             tooltip = new Tooltip(
                                     "Function: " + fn.getName()
-                                    + "\n\n" + fn.getArgumentCount()
-                                    + " argument(s): " + fn.printInputValues().trim()
-                                    + "\nOutputs: " + fn.printOutputValues().trim()
-                                    + "\nDefinition: " + fn.getDefinition().trim());
+                                            + "\n\n" + fn.getArgumentCount()
+                                            + " argument(s): " + fn.printInputValues().trim()
+                                            + "\nOutputs: " + fn.printOutputValues().trim()
+                                            + "\nDefinition: " + fn.getDefinition().trim());
                         }
                     }
                     break;
@@ -2713,21 +2650,21 @@ public class ExpressionBuilderController implements Initializable {
                         ExpressionTreeInterface expTree = ex.getExpressionTree();
                         tooltip = new Tooltip(
                                 (isCustom ? "Custom expression: " : "Expression: ")
-                                + "  " + ex.getName()
-                                + "\n  Targets: "
-                                + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
-                                + (expTree.isSquidSwitchSTReferenceMaterialCalculation() ? "R" : "")
-                                + (expTree.isSquidSwitchSAUnknownCalculation() ? "U" : "")
-                                + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation() ? "Summary " : "")
-                                + (ex.isSquidSwitchNU() ? "NU-switched " : "")
-                                + (expTree.isSquidSpecialUPbThExpression() ? "Built-In" : "")
-                                + "\n\nExpression string: "
-                                + ex.getExcelExpressionString()
-                                + "\n"
-                                + uncertainty
-                                + (ex.amHealthy() ? createPeekForTooltip(ex) : customizeExpressionTreeAudit(ex).trim())
-                                + "\nNotes:\n"
-                                + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                                        + "  " + ex.getName()
+                                        + "\n  Targets: "
+                                        + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
+                                        + (expTree.isSquidSwitchSTReferenceMaterialCalculation() ? "R" : "")
+                                        + (expTree.isSquidSwitchSAUnknownCalculation() ? "U" : "")
+                                        + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation() ? "Summary " : "")
+                                        + (ex.isSquidSwitchNU() ? "NU-switched " : "")
+                                        + (expTree.isSquidSpecialUPbThExpression() ? "Built-In" : "")
+                                        + "\n\nExpression string: "
+                                        + ex.getExcelExpressionString()
+                                        + "\n"
+                                        + uncertainty
+                                        + (ex.amHealthy() ? createPeekForTooltip(ex) : customizeExpressionTreeAudit(ex).trim())
+                                        + "\nNotes:\n"
+                                        + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                         if (!ex.amHealthy()) {
                             tooltip.setGraphic(imageView);
                         }
@@ -2905,7 +2842,7 @@ public class ExpressionBuilderController implements Initializable {
     /**
      * Creates a new expression from the modifications.
      *
-     * @param expressionName the value of expressionName
+     * @param expressionName   the value of expressionName
      * @param expressionString the value of expressionString
      */
     private Expression makeExpression(String expressionName, final String expressionString) {
@@ -3658,10 +3595,10 @@ public class ExpressionBuilderController implements Initializable {
                         setText(operationOrFunction);
                         Tooltip t
                                 = createFloatingTooltip(getText()
-                                        .replaceAll("(:.*|\\(.*\\))$", "").trim()
-                                        .replaceAll("Tab", VISIBLETABPLACEHOLDER)
-                                        .replaceAll("New line", VISIBLENEWLINEPLACEHOLDER)
-                                        .replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
+                                .replaceAll("(:.*|\\(.*\\))$", "").trim()
+                                .replaceAll("Tab", VISIBLETABPLACEHOLDER)
+                                .replaceAll("New line", VISIBLENEWLINEPLACEHOLDER)
+                                .replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });
