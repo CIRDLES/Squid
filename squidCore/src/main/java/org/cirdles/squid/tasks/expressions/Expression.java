@@ -494,6 +494,6 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public boolean aliasedExpression() {
-        return BUILTIN_EXPRESSION_ALIASEDNAMES.contains(this.name);
+        return false; //BUILTIN_EXPRESSION_ALIASEDNAMES.contains(this.name);
     }
 }
