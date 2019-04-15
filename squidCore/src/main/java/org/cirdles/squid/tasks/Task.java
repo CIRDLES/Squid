@@ -236,6 +236,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected Map<String, List<String>> providesExpressionsGraph;
     protected Map<String, List<String>> requiresExpressionsGraph;
+    protected List<String> missingExpressionsByName;
 
     public Task() {
         this("New Task", null, null);
@@ -322,8 +323,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.extPErrTh = taskDesign.getExtPErrTh();
 
         this.physicalConstantsModel = taskDesign.getPhysicalConstantsModel();
-        this.referenceMaterialModel = taskDesign.getReferenceMaterialModel();
-        this.concentrationReferenceMaterialModel = taskDesign.getConcentrationReferenceMaterialModel();
+        this.referenceMaterialModel = new ReferenceMaterialModel();
+        this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
         this.commonPbModel = taskDesign.getCommonPbModel();
 
         this.specialSquidFourExpressionsMap = taskDesign.getSpecialSquidFourExpressionsMap();
@@ -337,8 +338,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.concentrationTypeEnum = URANIUM;
 
-        providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.missingExpressionsByName = new ArrayList<>();
 
         generateConstants();
         generateParameters();
@@ -514,7 +516,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (String sampleName : filtersForUnknownNames.keySet()) {
             List<ShrimpFractionExpressionInterface> filteredList
                     = unknownSpots.stream()
-                            .filter(spot -> spot.getFractionID().startsWith(sampleName))
+                            .filter(spot -> spot.getFractionID().toUpperCase(Locale.ENGLISH).startsWith(sampleName.toUpperCase(Locale.ENGLISH)))
                             .collect(Collectors.toList());
             if (filteredList.size() > 0) {
                 mapOfUnknownsBySampleNames.put(sampleName, filteredList);
@@ -749,6 +751,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    @Override
     public void refreshParametersFromModels() {
         List<ParametersModel> models = SquidLabData.getExistingSquidLabData().getCommonPbModels();
         commonPbModel = findModelByName(models, commonPbModel);
@@ -758,13 +761,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         physicalConstantsModel = findModelByName(models, physicalConstantsModel);
         physicalConstantsModelChanged = true;
 
-        models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
-        referenceMaterialModel = findModelByName(models, referenceMaterialModel);
-        referenceMaterialModelChanged = true;
-
-        concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
-        concentrationReferenceMaterialModelChanged = true;
-
+//        models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
+//        referenceMaterialModel = findModelByName(models, referenceMaterialModel);
+//        referenceMaterialModelChanged = true;
+//
+//        concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
+//        concentrationReferenceMaterialModelChanged = true;
         updateParametersFromModels();
     }
 
@@ -780,7 +782,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return retVal;
     }
 
-    private void updateParametersFromModels() {
+    public void updateParametersFromModels() {
         boolean doUpdateAll
                 = commonPbModelChanged || physicalConstantsModelChanged || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
 
@@ -818,7 +820,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 Expression exp = updatedReferenceMaterialExpressionsIterator.next();
                 removeExpression(exp, false);
                 addExpression(exp, false);
-                updateAffectedExpressions(exp, false);
+                //updateAffectedExpressions(exp, false);
             }
             referenceMaterialModelChanged = false;
         }
@@ -831,7 +833,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 Expression exp = updatedConcReferenceMaterialExpressionsIterator.next();
                 removeExpression(exp, false);
                 addExpression(exp, false);
-                updateAffectedExpressions(exp, false);
+                //updateAffectedExpressions(exp, false);
             }
             concentrationReferenceMaterialModelChanged = false;
         }
@@ -1340,6 +1342,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         applyTaskIsotopeLabelsToMassStations();
         changed = true;
         SquidProject.setProjectChanged(true);
+        prepareParametersAndRatios();
+        assembleNamedExpressionsMap();
+
         updateAllExpressions(true);
         processAndSortExpressions();
 
@@ -1719,6 +1724,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 spotsForExpression = referenceMaterialSpots;
             }
 
+            if (spotsForExpression == null) {
+                spotsForExpression = new ArrayList<>();
+            }
             // now evaluate expressionTree
             try {
                 evaluateExpressionForSpotSet(expression, spotsForExpression);
@@ -1972,26 +1980,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // prep graphs
         requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        missingExpressionsByName = new ArrayList<>();
 
         for (Expression exp : taskExpressionsOrdered) {
-            if (true) {
-                List<String> calledExpressions = buildExpressionRequiresGraph(exp);
-                requiresExpressionsGraph.put(exp.getName(), calledExpressions);
 
-                // work in reverse to build providesExpressionsGraph
-                List<String> callingExpressions;
-                for (String called : calledExpressions) {
-                    if (providesExpressionsGraph.containsKey(called)) {
-                        callingExpressions = providesExpressionsGraph.get(called);
-                    } else {
-                        callingExpressions = new ArrayList<>();
-                        providesExpressionsGraph.put(called, callingExpressions);
-                    }
-                    if (!callingExpressions.contains(exp.getName())) {
-                        callingExpressions.add(exp.getName());
-                    }
+            List<String> calledExpressions = buildExpressionRequiresGraph(exp);
+            requiresExpressionsGraph.put(exp.getName(), calledExpressions);
+
+            // work in reverse to build providesExpressionsGraph
+            List<String> callingExpressions;
+            for (String called : calledExpressions) {
+                if (providesExpressionsGraph.containsKey(called)) {
+                    callingExpressions = providesExpressionsGraph.get(called);
+                } else {
+                    callingExpressions = new ArrayList<>();
+                    providesExpressionsGraph.put(called, callingExpressions);
+                }
+                if (!callingExpressions.contains(exp.getName())) {
+                    callingExpressions.add(exp.getName());
                 }
             }
+
         }
     }
 
@@ -2020,6 +2029,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     && (child.getName().compareTo("TRUE") != 0)) {
                 if (!calledExpressions.contains(calledName)) {
                     calledExpressions.add(calledName);
+                }
+            }
+
+            // see ExpressionParser.java - this is where missing expressions go
+            if (calledName.startsWith(MISSING_EXPRESSION_STRING)) {
+                String missingExpressionName = (String) ((ConstantNode) child).getValue();
+                if (!missingExpressionsByName.contains(missingExpressionName.toUpperCase(Locale.ENGLISH))) {
+                    missingExpressionsByName.add(missingExpressionName.toUpperCase(Locale.ENGLISH));
                 }
             }
             walkExpressionTreeRequires(child, calledExpressions);
@@ -2788,7 +2805,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setReferenceMaterialModel(ParametersModel refMat) {
         if (refMat instanceof ReferenceMaterialModel) {
-            referenceMaterialModelChanged = !referenceMaterialModel.equals(refMat);
+            referenceMaterialModelChanged = referenceMaterialModel == null || !referenceMaterialModel.equals(refMat);
             referenceMaterialModel = (ReferenceMaterialModel) refMat;
         }
     }
@@ -2888,6 +2905,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             buildExpressionDependencyGraphs();
         }
         return requiresExpressionsGraph;
+    }
+
+    /**
+     * @return the missingExpressionsByName
+     */
+    public List<String> getMissingExpressionsByName() {
+        if (missingExpressionsByName == null) {
+            missingExpressionsByName = new ArrayList<>();
+        }
+        return missingExpressionsByName;
     }
 
 }

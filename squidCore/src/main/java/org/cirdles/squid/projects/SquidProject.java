@@ -36,6 +36,8 @@ import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.op.OPFileHandler;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
@@ -81,6 +83,9 @@ public final class SquidProject implements Serializable {
 
     private static boolean projectChanged;
 
+    private ParametersModel referenceMaterialModel;
+    private ParametersModel concentrationReferenceMaterialModel;
+
     public SquidProject() {
         this.prawnFileHandler = new PrawnXMLFileHandler(this);
         this.projectName = "NO_NAME";
@@ -92,9 +97,14 @@ public final class SquidProject implements Serializable {
 
         this.sessionDurationHours = 0.0;
 
-        projectChanged = false;
+        this.projectChanged = false;
+
+        this.referenceMaterialModel = new ReferenceMaterialModel();
+        this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
+        this.task.setReferenceMaterialModel(this.referenceMaterialModel);
+        this.task.setConcentrationReferenceMaterialModel(this.concentrationReferenceMaterialModel);
 
         this.filtersForUnknownNames = new HashMap<>();
         this.delimiterForUnknownNames
@@ -139,6 +149,8 @@ public final class SquidProject implements Serializable {
     public void createNewTask() {
         this.task = new Task(
                 "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
+        this.task.setReferenceMaterialModel(referenceMaterialModel);
+        this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
         this.task.setChanged(true);
         this.task.applyDirectives();
         initializeTaskAndReduceData();
@@ -183,6 +195,9 @@ public final class SquidProject implements Serializable {
         this.task.setFiltersForUnknownNames(filtersForUnknownNames);
         this.task.setParentNuclide(taskSquid25.getParentNuclide());
         this.task.setDirectAltPD(taskSquid25.isDirectAltPD());
+        
+        this.task.setReferenceMaterialModel(referenceMaterialModel);
+        this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
 
         // determine index of background mass as specified in task
         for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
@@ -219,9 +234,6 @@ public final class SquidProject implements Serializable {
         List<String> constantNames = taskSquid25.getConstantNames();
         List<String> constantValues = taskSquid25.getConstantValues();
         for (int i = 0; i < constantNames.size(); i++) {
-//            double constantDouble = Double.parseDouble(constantValues.get(i));
-//            ConstantNode constant = new ConstantNode(constantNames.get(i), constantDouble);
-//            task.getNamedConstantsMap().put(constant.getName(), constant);
 
             // March 2019 moved imported constants to be custom expressions
             Expression customConstant = this.task.generateExpressionFromRawExcelStyleText(constantNames.get(i),
@@ -351,7 +363,7 @@ public final class SquidProject implements Serializable {
                 }
 
                 String sampleName = ((delimeterIndex == -1) || (fraction.getFractionID().length() < (delimeterIndex - 1)))
-                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimeterIndex);
+                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimeterIndex).toUpperCase(Locale.ENGLISH);
                 if (filtersForUnknownNames.containsKey(sampleName)) {
                     filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
                 } else {
@@ -668,6 +680,9 @@ public final class SquidProject implements Serializable {
 
     public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+        if (filterForRefMatSpotNames.length() == 0){
+            setReferenceMaterialModel(new ReferenceMaterialModel());
+        }
         if (task != null) {
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
         }
@@ -679,6 +694,9 @@ public final class SquidProject implements Serializable {
 
     public void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
         this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+        if (filterForConcRefMatSpotNames.length() == 0){
+            setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
+        }
         if (task != null) {
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         }
@@ -755,6 +773,40 @@ public final class SquidProject implements Serializable {
      */
     public void setDelimiterForUnknownNames(String delimiterForUnknownNames) {
         this.delimiterForUnknownNames = delimiterForUnknownNames;
+    }
+
+    /**
+     * @return the referenceMaterialModel
+     */
+    public ParametersModel getReferenceMaterialModel() {
+        if (referenceMaterialModel == null) {
+            this.referenceMaterialModel = new ReferenceMaterialModel();
+        }
+        return referenceMaterialModel;
+    }
+
+    public void setReferenceMaterialModel(ParametersModel referenceMaterialModel) {
+        if (task != null) {
+            task.setReferenceMaterialModel(referenceMaterialModel);
+        }
+        this.referenceMaterialModel = referenceMaterialModel;
+    }
+
+    /**
+     * @return the concentrationReferenceMaterialModel
+     */
+    public ParametersModel getConcentrationReferenceMaterialModel() {
+        if (concentrationReferenceMaterialModel == null) {
+            this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
+        }
+        return concentrationReferenceMaterialModel;
+    }
+
+    public void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel) {
+        if (task != null) {
+            task.setConcentrationReferenceMaterialModel(referenceMaterialModel);
+        }
+        this.concentrationReferenceMaterialModel = concentrationReferenceMaterialModel;
     }
 
 }
