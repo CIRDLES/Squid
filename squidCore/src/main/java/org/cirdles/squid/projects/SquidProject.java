@@ -804,7 +804,7 @@ public final class SquidProject implements Serializable {
 
     public void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel) {
         if (task != null) {
-            task.setConcentrationReferenceMaterialModel(referenceMaterialModel);
+            task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
         }
         this.concentrationReferenceMaterialModel = concentrationReferenceMaterialModel;
     }

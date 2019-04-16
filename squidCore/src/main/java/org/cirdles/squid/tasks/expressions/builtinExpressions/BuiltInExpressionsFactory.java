@@ -545,7 +545,7 @@ public abstract class BuiltInExpressionsFactory {
                 concentrationExpressionsOrdered.add(expressionPpmTh_RM);
 
                 Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
-                        "[\"" + TH_CONCEN_PPM_RM + "\"]/[\"" + TH_U_EXP + "\"]*" + L1033, true, false, false);
+                        "[\"" + TH_CONCEN_PPM_RM + "\"]/[\"" + TH_U_EXP_RM + "\"]*" + L1033, true, false, false);
                 concentrationExpressionsOrdered.add(expressionPpmURM);
 
             } else {
