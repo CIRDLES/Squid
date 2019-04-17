@@ -152,7 +152,7 @@
                   <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
                   <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
                   <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                  <Button mnemonicParsing="false" onAction="#showExpressionDetailsOnAction" text="Show Expression Details" />
+                  <Button mnemonicParsing="false" onAction="#showExpressionDetailsOnAction" text="Show Expression Details" translateX="150.0" />
                </items>
             </ToolBar>
             <VBox fx:id="editorVBox" VBox.vgrow="ALWAYS">
