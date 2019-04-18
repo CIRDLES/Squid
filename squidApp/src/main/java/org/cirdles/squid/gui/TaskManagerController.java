@@ -271,6 +271,9 @@ public class TaskManagerController implements Initializable {
         boolean directPicked = ((RadioButton) taskManagerGridPane.lookup("#direct")).isSelected();
 
         pb208RadioButton.setVisible(uPicked && !directPicked);
+        if (!pb208RadioButton.isVisible() && task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0) {
+            pb204RadioButton.setSelected(true);
+        }
         boolean perm1 = uPicked && !directPicked;
         boolean perm2 = uPicked && directPicked;
         boolean perm3 = !uPicked && !directPicked;
@@ -306,6 +309,8 @@ public class TaskManagerController implements Initializable {
         parentConcExpressionLabel.setText(parentPPM_ExpressionString);
         parentConcExpressionLabel.setStyle(parentConcExpressionLabel.getStyle()
                 + (makeExpression(PARENT_ELEMENT_CONC_CONST, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
+        
+        updateDirectiveButtons();
     }
 
     private void setupListeners() {
