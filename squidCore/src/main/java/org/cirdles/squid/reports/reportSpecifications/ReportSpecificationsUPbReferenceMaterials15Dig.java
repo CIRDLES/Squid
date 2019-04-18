@@ -81,7 +81,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
      *
      */
     public static final String[][] ReportCategory_CorrectionIndependent = new String[][]{
-        {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", U_CONCEN_PPM_RM, "",//"<SQUID_PPM_PARENT_EQN_NAME_U>"
+        {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", "<SQUID_PPM_PARENT_EQN_NAME_U>", "",//"<SQUID_PPM_PARENT_EQN_NAME_U>"
             "", "true", "false", "15", "", "concentration of U", "false", "false"
         },
         {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", "<SQUID_PPM_PARENT_EQN_NAME_TH>", "",
