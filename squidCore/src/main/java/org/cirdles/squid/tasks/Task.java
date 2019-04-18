@@ -1261,28 +1261,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) {
-        if (squidAllowsAutoExclusionOfSpots != isSquidAllowsAutoExclusionOfSpots()) {
-            if (isPbU()) {
+
                 updateRefMatCalibConstWMeanExpression(PB4COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
                 updateRefMatCalibConstWMeanExpression(PB7COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
                 updateRefMatCalibConstWMeanExpression(PB8COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
-            } else {
                 updateRefMatCalibConstWMeanExpression(PB4COR208_232CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
                 updateRefMatCalibConstWMeanExpression(PB7COR208_232CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
-            }
 
             this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
             changed = true;
             setupSquidSessionSpecsAndReduceAndReport();
-        }
     }
 
     private void updateRefMatCalibConstWMeanExpression(String wmWxpressionName, boolean squidAllowsAutoExclusionOfSpots) {
         Expression wmExp = getExpressionByName(wmWxpressionName);
-        wmExp.setExcelExpressionString(wmExp.getExcelExpressionString()
-                .replaceFirst("(?i)" + String.valueOf(squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH),
-                        String.valueOf(!squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH)));
-        completeUpdateRefMatCalibConstWMeanExpressions(wmExp);
+        if (wmExp != null) {
+            wmExp.setExcelExpressionString(wmExp.getExcelExpressionString()
+                    .replaceFirst("\\s*,\\s*(TRUE|FALSE)\\s*,\\s*",
+                            "," + String.valueOf(!squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH) + ","));
+            completeUpdateRefMatCalibConstWMeanExpressions(wmExp);
+        }
     }
 
     private void completeUpdateRefMatCalibConstWMeanExpressions(Expression listedExp) {
