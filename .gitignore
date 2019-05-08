@@ -90,3 +90,5 @@ squidCore/Hf1sabserr.png
 
 # MACOS
 .DS_Store
+# WINOS
+Thumbs.db
