@@ -147,23 +147,12 @@
          <children>
             <ToolBar VBox.vgrow="NEVER">
                <items>
-                  <VBox fx:id="toolBarVBox" alignment="CENTER_LEFT">
-                     <children>
-                        <HBox spacing="5.0" VBox.vgrow="ALWAYS">
-                           <children>
-                              <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create new" HBox.hgrow="NEVER" />
-                              <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Create copy" />
-                              <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
-                              <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
-                              <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                              <Button alignment="CENTER" mnemonicParsing="false" onAction="#showDependencyGraphsAction" text="Show Dependency Graphs" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets left="140.0" />
-                                 </HBox.margin></Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
+                  <Button fx:id="createExpressionBtn" alignment="CENTER" mnemonicParsing="false" onAction="#newCustomExpressionAction" text="Create new" />
+                  <Button fx:id="copyExpressionIntoCustomBtn" mnemonicParsing="false" onAction="#copyIntoCustomExpressionAction" text="Create copy" />
+                  <Button fx:id="editExpressionBtn" mnemonicParsing="false" onAction="#editCustomExpressionAction" text="Edit" />
+                  <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelAction" text="Cancel" />
+                  <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+                  <Button mnemonicParsing="false" onAction="#showExpressionDetailsOnAction" text="Show Expression Details" translateX="150.0" />
                </items>
             </ToolBar>
             <VBox fx:id="editorVBox" VBox.vgrow="ALWAYS">
@@ -260,7 +249,7 @@
                               </AnchorPane>
                               <HBox>
                                  <children>
-                                    <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                    <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="500.0" HBox.hgrow="ALWAYS">
                                        <children>
                                           <Button fx:id="expressionCopyBtn" mnemonicParsing="false" onAction="#expressionCopyAction" text="Copy exp">
                                              <tooltip>
@@ -277,9 +266,9 @@
                                           <Button fx:id="expressionRedoBtn" mnemonicParsing="false" onAction="#expressionRedoAction" text="Redo" />
                                        </children>
                                     </HBox>
-                                    <HBox fx:id="toolBarHBox" alignment="CENTER" spacing="6.0">
+                                    <HBox fx:id="toolBarHBox" alignment="CENTER" prefHeight="31.0" prefWidth="247.0" spacing="6.0">
                                        <children>
-                                          <RadioButton fx:id="dragndropLeftRadio" mnemonicParsing="false" text="Insert left">
+                                          <RadioButton fx:id="dragndropLeftRadio" mnemonicParsing="false" prefWidth="80.0" style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Insert left">
                                              <opaqueInsets>
                                                 <Insets />
                                              </opaqueInsets>
@@ -287,13 +276,13 @@
                                                 <Insets left="5.0" />
                                              </padding>
                                           </RadioButton>
-                                          <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" text="Replace" />
-                                          <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" text="Insert right" />
+                                          <RadioButton fx:id="dragndropReplaceRadio" mnemonicParsing="false" prefWidth="70.0" style="-fx-font-family: SansSerif; -fx-font-size: 12;" text="Replace" />
+                                          <RadioButton fx:id="dragndropRightRadio" mnemonicParsing="false" prefWidth="80.0" style="-fx-font-family: SansSerif; -fx-font-size: 12;" text="Insert right" />
                                        </children>
                                     </HBox>
-                                    <HBox alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="122.0" HBox.hgrow="ALWAYS">
+                                    <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="122.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" text="Edit as text" />
+                                          <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" prefHeight="31.0" prefWidth="138.0" text="Edit as text" />
                                        </children>
                                     </HBox>
                                  </children>

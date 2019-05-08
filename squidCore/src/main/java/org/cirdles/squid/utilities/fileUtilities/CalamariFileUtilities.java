@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.List;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.tasks.expressions.ExpressionPublisher;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
@@ -44,6 +45,7 @@ public class CalamariFileUtilities {
     private static File physicalConstantsFolder;
     private static File referenceMaterialsFolder;
     private static File commonPbModelsFolder;
+    private static File XSLTMLFolder;
 
     static {
         SQUID_PARAMETER_MODELS_FOLDER.mkdir();
@@ -84,6 +86,40 @@ public class CalamariFileUtilities {
             }
 
         }
+    }
+
+    public static void initXSLTML() {
+        ResourceExtractor extractor = new ResourceExtractor(ExpressionPublisher.class);
+
+        Path listOfXSLTMLFiles = extractor.extractResourceAsPath("listOfXSLTMLFiles.txt");
+        if (listOfXSLTMLFiles != null) {
+            XSLTMLFolder = new File("XSLTML");
+            try {
+                if (XSLTMLFolder.exists()) {
+                    FileUtilities.recursiveDelete(XSLTMLFolder.toPath());
+                }
+                if (XSLTMLFolder.mkdir()) {
+                    List<String> fileNames = Files.readAllLines(listOfXSLTMLFiles, ISO_8859_1);
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        // test for empty string
+                        if (fileNames.get(i).trim().length() > 0) {
+                            File resource = extractor.extractResourceAsFile(fileNames.get(i));
+                            File file = new File(XSLTMLFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+
+                            if (resource.renameTo(file)) {
+                                System.out.println("XSLTML File added: " + fileNames.get(i));
+                            } else {
+                                System.out.println("XSLTML File failed to add: " + fileNames.get(i));
+                            }
+                        }
+                    }
+                }
+            } catch (IOException iOException) {
+                iOException.printStackTrace();
+            }
+
+        }
+
     }
 
     public static void initSampleParametersModels() {

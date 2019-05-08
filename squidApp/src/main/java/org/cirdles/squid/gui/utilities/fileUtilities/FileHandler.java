@@ -15,6 +15,22 @@
  */
 package org.cirdles.squid.gui.utilities.fileUtilities;
 
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
+import org.cirdles.squid.tasks.expressions.functions.Exp;
+import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
+import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
+import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,23 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Window;
-import javax.xml.bind.JAXBException;
-import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
-import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
-import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import org.xml.sax.SAXException;
 
 /**
- *
  * @author James F. Bowring
  */
 public class FileHandler {
@@ -286,7 +288,7 @@ public class FileHandler {
 
         retVal = chooser.showDialog(ownerWindow);
 
-        if(retVal != null) {
+        if (retVal != null) {
             squidPersistentState.setCustomExpressionsFile(retVal);
         }
 
@@ -298,7 +300,7 @@ public class FileHandler {
 
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
-        if(squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()) {
+        if (squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()) {
             chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile().getParentFile());
         } else {
             File userHome = new File(File.separator + System.getProperty("user.home"));
@@ -309,7 +311,7 @@ public class FileHandler {
 
         retVal = chooser.showDialog(ownerWindow);
 
-        if(retVal != null) {
+        if (retVal != null) {
             squidPersistentState.setCustomExpressionsFile(retVal);
         }
 
@@ -368,21 +370,28 @@ public class FileHandler {
         return fileChooser.showSaveDialog(ownerWindow);
     }
 
+    /*
+    public static File saveExpressionHTMLFile(Expression exp, Window ownerWindow) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save Expression HTML File '.html");
+        fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Expression HTML Files", "*.html"));
+        fc.setInitialFileName(FileNameFixer.fixFileName(exp.getName() + ".html"));
+
+        return fc.showSaveDialog(ownerWindow);
+    }
+    */
+
     public static File selectOPFile(Window ownerWindow) throws IOException {
         File retVal;
 
         FileChooser fc = new FileChooser();
         fc.setTitle("Select OP File");
         fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("OP Files", "*.op"));
-        if(squidPersistentState.getOpFile() != null && squidPersistentState.getOpFile().exists()) {
-            fc.setInitialDirectory(squidPersistentState.getOpFile().getParentFile().getAbsoluteFile());
-        }
-
+        File mruFolder = new File(squidPersistentState.getMRUOPFileFolderPath());
+        fc.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
         retVal = fc.showOpenDialog(ownerWindow);
 
-        if(retVal != null) {
-            squidPersistentState.setOpFile(retVal);
-        }
+        squidPersistentState.updateOPFileListMRU(retVal);
 
         return retVal;
     }

@@ -321,12 +321,12 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
             colIndex++;
 
-//            // perm 1 only
-//            if (!has232) {
-//                columnSpec[1] = "208corr";
-//                categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
-//                colIndex++;
-//            }
+            // perm 1 only
+            if (!has232) {
+                columnSpec[1] = "208corr";
+                categoryColumnList.add(setupReportColumn(colIndex, columnSpec));
+                colIndex++;
+            }
         } else {
             // perm2 and 4
             columnSpec[1] = "204corr";

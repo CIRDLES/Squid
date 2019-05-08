@@ -540,12 +540,16 @@ public abstract class BuiltInExpressionsFactory {
                         "[\"" + TH_CONCEN_PPM + "\"]/[\"" + TH_U_EXP + "\"]*" + L1033, false, true, false);
                 concentrationExpressionsOrdered.add(expressionPpmU);
 
+//                Expression expressionPpmTh_RM = buildExpression(TH_CONCEN_PPM_RM,
+//                        "[\"" + U_CONCEN_PPM_RM + "\"]*[\"" + TH_U_EXP_RM + "\"]/" + L1033, true, false, false);
+//                concentrationExpressionsOrdered.add(expressionPpmTh_RM);
+                // see github issue #311 April 2019
                 Expression expressionPpmTh_RM = buildExpression(TH_CONCEN_PPM_RM,
-                        "[\"" + U_CONCEN_PPM_RM + "\"]*[\"" + TH_U_EXP_RM + "\"]/" + L1033, true, false, false);
+                        "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_TH_CONC_PPM, true, false, false);
                 concentrationExpressionsOrdered.add(expressionPpmTh_RM);
 
                 Expression expressionPpmURM = buildExpression(U_CONCEN_PPM_RM,
-                        "[\"" + TH_CONCEN_PPM_RM + "\"]/[\"" + TH_U_EXP + "\"]*" + L1033, true, false, false);
+                        "[\"" + TH_CONCEN_PPM_RM + "\"]/[\"" + TH_U_EXP_RM + "\"]*" + L1033, true, false, false);
                 concentrationExpressionsOrdered.add(expressionPpmURM);
 
             } else {
@@ -555,19 +559,27 @@ public abstract class BuiltInExpressionsFactory {
                 concentrationExpressionsOrdered.add(expressionPpmU);
 
                 Expression expression4corrPpmURM = buildExpression(PB4CORR + U_CONCEN_PPM_RM,
-                        "[\"" + PB4CORR + TH_CONCEN_PPM + "\"]/[\"" + TH_U_EXP + "\"]/" + L9678, true, false, false);
+                        "[\"" + PB4CORR + TH_CONCEN_PPM_RM + "\"]/[\"" + PB4CORR + TH_U_EXP_RM + "\"]/" + L9678, true, false, false);
                 concentrationExpressionsOrdered.add(expression4corrPpmURM);
 
                 Expression expression7corrPpmURM = buildExpression(PB7CORR + U_CONCEN_PPM_RM,
-                        "[\"" + PB7CORR + TH_CONCEN_PPM + "\"]/[\"" + TH_U_EXP + "\"]/" + L9678, true, false, false);
+                        "[\"" + PB7CORR + TH_CONCEN_PPM_RM + "\"]/[\"" + PB7CORR + TH_U_EXP_RM + "\"]/" + L9678, true, false, false);
                 concentrationExpressionsOrdered.add(expression7corrPpmURM);
 
+//                Expression expression4corrPpmTh = buildExpression(PB4CORR + TH_CONCEN_PPM_RM,
+//                        "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + PB4CORR + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
+//                concentrationExpressionsOrdered.add(expression4corrPpmTh);
+//
+//                Expression expression7corrPpmTh = buildExpression(PB7CORR + TH_CONCEN_PPM_RM,
+//                        "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + PB7CORR + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
+//                concentrationExpressionsOrdered.add(expression7corrPpmTh);
+                // see github issue #311 April 2019
                 Expression expression4corrPpmTh = buildExpression(PB4CORR + TH_CONCEN_PPM_RM,
-                        "[\"" + PB4CORR + TH_U_EXP_RM + "\"]*[\"" + PB4CORR + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
+                        "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_TH_CONC_PPM, true, false, false);
                 concentrationExpressionsOrdered.add(expression4corrPpmTh);
 
                 Expression expression7corrPpmTh = buildExpression(PB7CORR + TH_CONCEN_PPM_RM,
-                        "[\"" + PB7CORR + TH_U_EXP_RM + "\"]*[\"" + PB7CORR + U_CONCEN_PPM_RM + "\"]*" + L9678, true, false, false);
+                        "[\"" + PARENT_ELEMENT_CONC_CONST + "\"]/[\"" + AV_PARENT_ELEMENT_CONC_CONST + "\"]*" + REF_TH_CONC_PPM, true, false, false);
                 concentrationExpressionsOrdered.add(expression7corrPpmTh);
 
             }

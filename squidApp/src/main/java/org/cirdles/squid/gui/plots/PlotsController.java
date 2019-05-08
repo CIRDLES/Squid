@@ -33,6 +33,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -46,6 +47,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
@@ -115,6 +117,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     private ToggleGroup plotFlavorToggleGroup;
     @FXML
     private VBox vboxTreeHolder;
+    @FXML
+    private CheckBox autoExcludeSpotsCheckBox;
 
     public static enum PlotTypes {
         CONCORDIA("CONCORDIA"),
@@ -334,7 +338,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
             AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
             AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
-            
+
             VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
             VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
             VBox.setVgrow(plotVBox, Priority.NEVER);//ALWAYS);
@@ -506,8 +510,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
-                plotFlavorOneRadioButton.setText("WtdAv_" + CALIB_CONST_206_238_ROOT + "_CalibConst");
-                plotFlavorTwoRadioButton.setText("WtdAv_" + CALIB_CONST_208_232_ROOT + "_CalibConst");
+                plotFlavorOneRadioButton.setText(CALIB_CONST_206_238_ROOT + "_CalibConst");
+                plotFlavorTwoRadioButton.setText(CALIB_CONST_208_232_ROOT + "_CalibConst");
                 plotFlavorOneRadioButton.setUserData(CALIB_CONST_206_238_ROOT);
                 plotFlavorTwoRadioButton.setUserData(CALIB_CONST_208_232_ROOT);
 
@@ -529,8 +533,58 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
                 corr7_RadioButton.setVisible(true);
 
+                Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope = squidProject.getTask().getSelectedIndexIsotope();
+                switch (selectedIndexIsotope) {
+                    case PB_204:
+                        corr4_RadioButton.setSelected(true);
+                        break;
+                    case PB_207:
+                        corr7_RadioButton.setSelected(true);
+                        break;
+                    case PB_208:
+                        corr8_RadioButton.setSelected(true);
+                }
+
+                autoExcludeSpotsCheckBox.setSelected(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots());
+
                 showWeightedMeanPlot();
         }
+    }
+
+    @FXML
+    private void selectedIsotopeIndexAction(ActionEvent event) {
+        String correction = ((String) ((RadioButton) event.getSource()).getUserData()).substring(0, 1);
+        switch (correction) {
+            case "4":
+                squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+                break;
+            case "7":
+                squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+                break;
+            default:
+                squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
+        }
+
+        squidProject.getTask().setChanged(true);
+
+        switch (plotTypeSelected) {
+            case CONCORDIA:
+            case TERA_WASSERBURG:
+                showConcordiaPlotsOfUnknownsOrRefMat();
+                break;
+            case WEIGHTED_MEAN:
+                showWeightedMeanPlot();
+        }
+    }
+
+    @FXML
+    private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
+
+        squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
+        // this will cause weighted mean expressions to be changed with boolean flag
+        squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
+
+        showWeightedMeanPlot();
     }
 
     private interface SampleTreeNodeInterface {
