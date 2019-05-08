@@ -54,7 +54,14 @@ public class AgePb76 extends Function {
         colCount = 2;
         labelsForInputValues = new String[]{"[\"207/206\"] (includes Ratio and 1\u03C3abs)"};
         labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}}; 
-        definition = "Provides functionality of Isoplot's agePb76 to calculate age and 1\u03C3abs uncertainty from 207/206 ratio and  1\u03C3 abs.";
+        definition
+                = "This function is based on Isoplot's AgePb76, which calculates the 207/206 age from the 207/206 ratio.\n "
+                + DEF_TAB + "However, since Squid3 ratios of interest of the form [\"206/207\"] have an associated uncertainty,\n"
+                + DEF_TAB + "invoking AgePb76([\"206/207\"]) will also return the 1\u03C3 abs uncertainty of the age.\n"
+                + DEF_TAB + "To calculate a 76 age with uncertainty from separate values of ratio and ratio uncertainty,\n"
+                + DEF_TAB + "use the Squid3 function AgePb76WithErr(ratio, unct).\n"
+                + DEF_TAB + "The underlying function is Isoplot's PbPbAge, found at \n"
+                + DEF_TAB + "https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/isoplot3Basic/UPb.bas";
     }
 
     /**
