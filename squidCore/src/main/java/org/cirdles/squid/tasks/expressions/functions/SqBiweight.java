@@ -37,6 +37,7 @@ public class SqBiweight extends Function {
      * Provides the functionality of Squid's sqBiweight and biWt by calculating
      * TukeysBiweight and returning mean, sigma, and 95% confidence and encoding
      * the labels for each cell of the values array produced by eval.
+     * Squid3 prefers Biweight and supports both function names.
      *
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
@@ -44,16 +45,17 @@ public class SqBiweight extends Function {
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/StringUtils.bas
      */
     public SqBiweight() {
-        name = "sqBiweight";
+        name = "Biweight";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 3;
         labelsForOutputValues = new String[][]{{"Biwt Mean", "Biwt Sigma", "\u00B195%conf"}};
-        labelsForInputValues = new String[]{"variableNumbers", "tuningConstant, use 9 as default"};
+        labelsForInputValues = new String[]{"variableNumbers", "tuningConstant, default = 9"};
         summaryCalc = true;
-        definition = "Provides the functionality of Squid's sqBiweight and biWt by calculating\n"
-                + "   TukeysBiweight and returning mean, sigma, and 95% confidence.";
+        definition = "Provides the functionality of Squid2.5's sqBiweight and biWt by calculating\n"
+                + DEF_TAB + "TukeysBiweight and returning mean, sigma, and 95% confidence.\n"
+                + DEF_TAB + "Squid3 recommends using 'Biweight' as an equivalent.";
     }
 
     /**

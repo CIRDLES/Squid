@@ -46,11 +46,10 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLCo
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
-import org.cirdles.squid.tasks.Task;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsAliased.BUILTIN_EXPRESSION_ALIASEDNAMES;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
+import static org.cirdles.squid.tasks.expressions.functions.Function.replaceAliasedFunctionNamesInExpressionString;
 
 /**
  *
@@ -223,7 +222,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
      * @param expressionName the value of expressionName
      * @param expressionString the value of expressionString
      * @param namedExpressionsMap the value of namedExpressionsMap
-     * @return 
+     * @return
      */
     public static Expression makeExpressionForAudit(
             String expressionName, final String expressionString, Map<String, ExpressionTreeInterface> namedExpressionsMap) {
@@ -276,7 +275,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
                 }
                 auditReport += "\n";
             }
-            
+
             auditReport
                     += "Expression healthy: "
                     + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.ENGLISH);
@@ -400,6 +399,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
      * @return the excelExpressionString
      */
     public String getExcelExpressionString() {
+        excelExpressionString = replaceAliasedFunctionNamesInExpressionString(excelExpressionString);
         return excelExpressionString;
     }
 

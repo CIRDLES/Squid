@@ -98,11 +98,9 @@ import static org.cirdles.squid.tasks.expressions.functions.Function.*;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
-
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.operations.Value;
-
 
 /**
  * FXML Controller class
@@ -1611,10 +1609,17 @@ public class ExpressionBuilderController implements Initializable {
         List<String> squidFunctionStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : SQUID_FUNCTIONS_MAP.entrySet()) {
             int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
+            String[] inputLabels = Function.operationFactory(op.getValue()).getLabelsForInputValues();
             StringBuilder args = new StringBuilder();
             args.append(op.getKey()).append("(");
             for (int i = 0; i < argumentCount; i++) {
-                args.append("Arg").append(i).append(i < (argumentCount - 1) ? "," : ")");
+                if ((inputLabels.length > i)  &&   inputLabels[i].indexOf("default") > 0) {
+                    String[] defaultValue = inputLabels[i].split("=");
+                    args.append(defaultValue[1].trim());
+                } else {
+                    args.append("Arg").append(i);
+                }
+                args.append(i < (argumentCount - 1) ? "," : ")");
             }
 
             squidFunctionStrings.add(args.toString());
@@ -2575,10 +2580,10 @@ public class ExpressionBuilderController implements Initializable {
                         if (fn != null) {
                             tooltip = new Tooltip(
                                     "Function: " + fn.getName()
-                                            + "\n\n" + fn.getArgumentCount()
-                                            + " argument(s): " + fn.printInputValues().trim()
-                                            + "\nOutputs: " + fn.printOutputValues().trim()
-                                            + "\nDefinition: " + fn.getDefinition().trim());
+                                    + "\n\n" + fn.getArgumentCount()
+                                    + " argument(s): " + fn.printInputValues().trim()
+                                    + "\nOutputs: " + fn.printOutputValues().trim()
+                                    + "\nDefinition: " + fn.getDefinition().trim());
                         }
                     }
                     break;
@@ -2650,21 +2655,21 @@ public class ExpressionBuilderController implements Initializable {
                         ExpressionTreeInterface expTree = ex.getExpressionTree();
                         tooltip = new Tooltip(
                                 (isCustom ? "Custom expression: " : "Expression: ")
-                                        + "  " + ex.getName()
-                                        + "\n  Targets: "
-                                        + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
-                                        + (expTree.isSquidSwitchSTReferenceMaterialCalculation() ? "R" : "")
-                                        + (expTree.isSquidSwitchSAUnknownCalculation() ? "U" : "")
-                                        + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation() ? "Summary " : "")
-                                        + (ex.isSquidSwitchNU() ? "NU-switched " : "")
-                                        + (expTree.isSquidSpecialUPbThExpression() ? "Built-In" : "")
-                                        + "\n\nExpression string: "
-                                        + ex.getExcelExpressionString()
-                                        + "\n"
-                                        + uncertainty
-                                        + (ex.amHealthy() ? createPeekForTooltip(ex) : customizeExpressionTreeAudit(ex).trim())
-                                        + "\nNotes:\n"
-                                        + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
+                                + "  " + ex.getName()
+                                + "\n  Targets: "
+                                + (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? "C" : "")
+                                + (expTree.isSquidSwitchSTReferenceMaterialCalculation() ? "R" : "")
+                                + (expTree.isSquidSwitchSAUnknownCalculation() ? "U" : "")
+                                + "    Type: " + (expTree.isSquidSwitchSCSummaryCalculation() ? "Summary " : "")
+                                + (ex.isSquidSwitchNU() ? "NU-switched " : "")
+                                + (expTree.isSquidSpecialUPbThExpression() ? "Built-In" : "")
+                                + "\n\nExpression string: "
+                                + ex.getExcelExpressionString()
+                                + "\n"
+                                + uncertainty
+                                + (ex.amHealthy() ? createPeekForTooltip(ex) : customizeExpressionTreeAudit(ex).trim())
+                                + "\nNotes:\n"
+                                + (ex.getNotes().equals("") ? "none" : ex.getNotes()));
                         if (!ex.amHealthy()) {
                             tooltip.setGraphic(imageView);
                         }
@@ -2842,7 +2847,7 @@ public class ExpressionBuilderController implements Initializable {
     /**
      * Creates a new expression from the modifications.
      *
-     * @param expressionName   the value of expressionName
+     * @param expressionName the value of expressionName
      * @param expressionString the value of expressionString
      */
     private Expression makeExpression(String expressionName, final String expressionString) {
@@ -2917,7 +2922,7 @@ public class ExpressionBuilderController implements Initializable {
         // first detect if user should have used SummaryCalculation choice
         OperationOrFunctionInterface operation = ((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getOperation();
         if ((operation.isSummaryCalc()
-                ||(operation instanceof Value))
+                || (operation instanceof Value))
                 && !summaryCalculationSwitchCheckBox.isSelected()) {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "Squid recommends choosing the Summary Calculation switch ... make it so?",
@@ -3595,10 +3600,10 @@ public class ExpressionBuilderController implements Initializable {
                         setText(operationOrFunction);
                         Tooltip t
                                 = createFloatingTooltip(getText()
-                                .replaceAll("(:.*|\\(.*\\))$", "").trim()
-                                .replaceAll("Tab", VISIBLETABPLACEHOLDER)
-                                .replaceAll("New line", VISIBLENEWLINEPLACEHOLDER)
-                                .replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
+                                        .replaceAll("(:.*|\\(.*\\))$", "").trim()
+                                        .replaceAll("Tab", VISIBLETABPLACEHOLDER)
+                                        .replaceAll("New line", VISIBLENEWLINEPLACEHOLDER)
+                                        .replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });

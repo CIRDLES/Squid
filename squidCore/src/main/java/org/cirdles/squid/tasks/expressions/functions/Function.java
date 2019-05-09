@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
@@ -90,8 +91,11 @@ public abstract class Function
     public static final Map<String, String> SQUID_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final Map<String, String> LOGIC_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
+    public static final Map<String, String> ALIASED_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
     static {
 
+        // key is case-insensitive name and value is case-sensitive method name
         SQUID_FUNCTIONS_MAP.put("agePb76", "agePb76");
         SQUID_FUNCTIONS_MAP.put("agePb76WithErr", "agePb76WithErr");
         SQUID_FUNCTIONS_MAP.put("age7corrWithErr", "age7corrWithErr");
@@ -110,6 +114,7 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("concordia", "concordia");
         SQUID_FUNCTIONS_MAP.put("robReg", "robReg");
         SQUID_FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
+        SQUID_FUNCTIONS_MAP.put("Biweight", "sqBiweight");
         SQUID_FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
         SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
 //        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
@@ -133,10 +138,24 @@ public abstract class Function
         FUNCTIONS_MAP.putAll(SQUID_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(LOGIC_FUNCTIONS_MAP);
 
+        ALIASED_FUNCTIONS_MAP.put("sqBiweight", "Biweight");
+
     }
 
     public Function() {
         this.definition = "todo";
+    }
+
+    public static String replaceAliasedFunctionNamesInExpressionString(String excelExpressionString) {
+        String retVal = excelExpressionString;
+        for (Entry<String, String> entry : ALIASED_FUNCTIONS_MAP.entrySet()) {
+            if (retVal != null && retVal.matches(".*(?i)" + entry.getKey() + "(.*)")) {
+                // replace alias
+                retVal = retVal.replaceAll(entry.getKey(), entry.getValue());
+            }
+        }
+        
+        return retVal;
     }
 
     /**
@@ -185,6 +204,14 @@ public abstract class Function
      * @return
      */
     public static OperationOrFunctionInterface sqBiweight() {
+        return new SqBiweight();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface biweight() {
         return new SqBiweight();
     }
 
