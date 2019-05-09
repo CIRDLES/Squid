@@ -43,6 +43,7 @@ public class Ln extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"natLog"}};
         labelsForInputValues = new String[]{"number"};
+        definition = "Returns the natural logarithm of a number";
     }
 
     /**

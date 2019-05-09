@@ -43,6 +43,7 @@ public class And extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Conjuction"}};
         labelsForInputValues = new String[]{"condition1", "condition2"};
+        definition = "Boolean AND: returns TRUE if and only if both arguments are TRUE.";
     }
 
     /**
