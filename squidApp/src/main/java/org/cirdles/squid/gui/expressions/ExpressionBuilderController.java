@@ -1608,21 +1608,23 @@ public class ExpressionBuilderController implements Initializable {
         // Squid Functions ======================================================
         List<String> squidFunctionStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : SQUID_FUNCTIONS_MAP.entrySet()) {
-            int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
-            String[] inputLabels = Function.operationFactory(op.getValue()).getLabelsForInputValues();
-            StringBuilder args = new StringBuilder();
-            args.append(op.getKey()).append("(");
-            for (int i = 0; i < argumentCount; i++) {
-                if ((inputLabels.length > i)  &&   inputLabels[i].indexOf("default") > 0) {
-                    String[] defaultValue = inputLabels[i].split("=");
-                    args.append(defaultValue[1].trim());
-                } else {
-                    args.append("Arg").append(i);
+            if (!ALIASED_FUNCTIONS_MAP.containsKey(op.getKey())) {
+                int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
+                String[] inputLabels = Function.operationFactory(op.getValue()).getLabelsForInputValues();
+                StringBuilder args = new StringBuilder();
+                args.append(op.getKey()).append("(");
+                for (int i = 0; i < argumentCount; i++) {
+                    if ((inputLabels.length > i) && inputLabels[i].indexOf("default") > 0) {
+                        String[] defaultValue = inputLabels[i].split("=");
+                        args.append(defaultValue[1].trim());
+                    } else {
+                        args.append("Arg").append(i);
+                    }
+                    args.append(i < (argumentCount - 1) ? "," : ")");
                 }
-                args.append(i < (argumentCount - 1) ? "," : ")");
-            }
 
-            squidFunctionStrings.add(args.toString());
+                squidFunctionStrings.add(args.toString());
+            }
         }
 
         items = FXCollections.observableArrayList(squidFunctionStrings);

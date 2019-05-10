@@ -37,7 +37,7 @@ public class StdPb86radCor7per extends Function {
     private static final long serialVersionUID = 3474777008380697077L;
 
     /**
-     * Provides the functionality of Squid's StdPb86radCor7per and returning
+     * Provides the functionality of Squid2.5's StdPb86radCor7per and returning
      * radiogenic 208Pb/206Pb %err and encoding the labels for each cell of the
      * values array produced by eval.
      *
@@ -46,14 +46,14 @@ public class StdPb86radCor7per extends Function {
      */
     public StdPb86radCor7per() {
 
-        name = "stdPb86radCor7per";
+        name = "StdPb86radCor7per";
         argumentCount = 4;
         precedence = 10;
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"stdPb86radCor7per"}};
         labelsForInputValues = new String[]{
-            "208/206RatioAnd1\u03C3 abs", "207/206RatioAnd1\u03C3 abs", "radPb86cor7", "pb46cor7"};
+            "208/206 Ratio with 1\u03C3 abs", "207/206 Ratio with 1\u03C3 abs", "per-spot expression for radPb86cor7", "per-spot expression for pb46cor7"};
     }
 
     /**
@@ -110,7 +110,7 @@ public class StdPb86radCor7per extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>StdPb86radCor7per</mi>"
+                + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
         retVal += buildChildrenToMathML(childrenET);

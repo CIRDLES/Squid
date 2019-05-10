@@ -34,14 +34,12 @@ public class Pb206U238rad extends Function {
     private static final long serialVersionUID = -2586058958550228458L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
-     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
-     * values array produced by eval.
+     * Provides the functionality of Squid2.5's pb206U238rad.
+     * Returns the radiogenic 206Pb/238U ratio for the
+     * specified age.
      *
      * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
      */
     public Pb206U238rad() {
 
@@ -51,7 +49,7 @@ public class Pb206U238rad extends Function {
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"206Pb/238U"}};
-        labelsForInputValues = new String[]{"206Pb/238U Age"};
+        labelsForInputValues = new String[]{"per-spot expression for 206Pb/238U Age"};
     }
 
     /**

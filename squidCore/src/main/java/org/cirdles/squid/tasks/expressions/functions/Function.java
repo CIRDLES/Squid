@@ -96,30 +96,31 @@ public abstract class Function
     static {
 
         // key is case-insensitive name and value is case-sensitive method name
-        SQUID_FUNCTIONS_MAP.put("agePb76", "agePb76");
-        SQUID_FUNCTIONS_MAP.put("agePb76WithErr", "agePb76WithErr");
-        SQUID_FUNCTIONS_MAP.put("age7corrWithErr", "age7corrWithErr");
-        SQUID_FUNCTIONS_MAP.put("age8corrWithErr", "age8corrWithErr");
-        SQUID_FUNCTIONS_MAP.put("age7CorrPb8Th2WithErr", "age7CorrPb8Th2WithErr");
-        SQUID_FUNCTIONS_MAP.put("rad8corPb7U5WithErr", "rad8corPb7U5WithErr");
-        SQUID_FUNCTIONS_MAP.put("rad8corConcRho", "rad8corConcRho");
-        SQUID_FUNCTIONS_MAP.put("pb76", "pb76");
-        SQUID_FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
-        SQUID_FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
-        SQUID_FUNCTIONS_MAP.put("pb206U238rad", "pb206U238rad");
-        SQUID_FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
-        SQUID_FUNCTIONS_MAP.put("stdPb86radCor7per", "stdPb86radCor7per");
-        SQUID_FUNCTIONS_MAP.put("pb86radCor7per", "pb86radCor7per");
-        SQUID_FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
-        SQUID_FUNCTIONS_MAP.put("concordia", "concordia");
-        SQUID_FUNCTIONS_MAP.put("robReg", "robReg");
-        SQUID_FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
+        SQUID_FUNCTIONS_MAP.put("AgePb76", "agePb76");
+        SQUID_FUNCTIONS_MAP.put("AgePb76WithErr", "agePb76WithErr");
+        SQUID_FUNCTIONS_MAP.put("Age7corrWithErr", "age7corrWithErr");
+        SQUID_FUNCTIONS_MAP.put("Age8corrWithErr", "age8corrWithErr");
+        SQUID_FUNCTIONS_MAP.put("Age7CorrPb8Th2WithErr", "age7CorrPb8Th2WithErr");
+        SQUID_FUNCTIONS_MAP.put("Rad8corPb7U5WithErr", "rad8corPb7U5WithErr");
+        SQUID_FUNCTIONS_MAP.put("Rad8corConcRho", "rad8corConcRho");
+        SQUID_FUNCTIONS_MAP.put("Pb76", "pb76");
+        SQUID_FUNCTIONS_MAP.put("Pb46cor7", "pb46cor7");
+        SQUID_FUNCTIONS_MAP.put("Pb46cor8", "pb46cor8");
+        SQUID_FUNCTIONS_MAP.put("Pb206U238rad", "pb206U238rad");
+        SQUID_FUNCTIONS_MAP.put("CalculateMeanConcStd", "calculateMeanConcStd");
+        SQUID_FUNCTIONS_MAP.put("StdPb86radCor7per", "stdPb86radCor7per");
+        SQUID_FUNCTIONS_MAP.put("Pb86radCor7per", "pb86radCor7per");
+        SQUID_FUNCTIONS_MAP.put("ConcordiaTW", "concordiaTW");
+        SQUID_FUNCTIONS_MAP.put("Concordia", "concordia");
+        SQUID_FUNCTIONS_MAP.put("RobReg", "robReg");
+        SQUID_FUNCTIONS_MAP.put("SqBiweight", "sqBiweight");
         SQUID_FUNCTIONS_MAP.put("Biweight", "sqBiweight");
-        SQUID_FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
+        SQUID_FUNCTIONS_MAP.put("SqWtdAv", "sqWtdAv");
+        SQUID_FUNCTIONS_MAP.put("WtdAv", "sqWtdAv");
         SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
 //        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
-        SQUID_FUNCTIONS_MAP.put("valueModel", "valueModel");
+        SQUID_FUNCTIONS_MAP.put("ValueModel", "valueModel");
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
         LOGIC_FUNCTIONS_MAP.put("if", "sqIf");
@@ -138,7 +139,8 @@ public abstract class Function
         FUNCTIONS_MAP.putAll(SQUID_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(LOGIC_FUNCTIONS_MAP);
 
-        ALIASED_FUNCTIONS_MAP.put("sqBiweight", "Biweight");
+        ALIASED_FUNCTIONS_MAP.put("SqBiweight", "Biweight");
+        ALIASED_FUNCTIONS_MAP.put("SqWtdAv", "WtdAv");
 
     }
 
@@ -154,7 +156,7 @@ public abstract class Function
                 retVal = retVal.replaceAll(entry.getKey(), entry.getValue());
             }
         }
-        
+
         return retVal;
     }
 
@@ -213,6 +215,22 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface biweight() {
         return new SqBiweight();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface sqWtdAv() {
+        return new SqWtdAv();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface wtdAv() {
+        return new SqWtdAv();
     }
 
     /**
@@ -317,14 +335,6 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface pb86radCor7per() {
         return new Pb86radCor7per();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static OperationOrFunctionInterface sqWtdAv() {
-        return new SqWtdAv();
     }
 
     /**

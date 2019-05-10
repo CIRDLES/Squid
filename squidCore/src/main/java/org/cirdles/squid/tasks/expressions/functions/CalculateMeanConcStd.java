@@ -42,13 +42,13 @@ public class CalculateMeanConcStd extends Function {
      * https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
      */
     public CalculateMeanConcStd() {
-        name = "calculateMeanConcStd";
+        name = "CalculateMeanConcStd";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{AV_PARENT_ELEMENT_CONC_CONST}};
-        labelsForInputValues = new String[]{"numbers"};
+        labelsForInputValues = new String[]{"per-spot expression with concentration values in ppm"};
         summaryCalc = true;
         definition = "Calculates the sum divided by the count, ignoring tiny values < 1.0E-30.";
     }
@@ -102,7 +102,7 @@ public class CalculateMeanConcStd extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>CalculateMeanConcStd</mi>"
+                + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
         retVal += buildChildrenToMathML(childrenET);
