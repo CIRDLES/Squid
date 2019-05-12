@@ -315,8 +315,12 @@ public class ExpressionParser {
                             uncertaintyDirective);
                     retExpTree.copySettings(retExpTreeKnown);
 
-                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
-                        || (retExpTreeKnown instanceof SpotFieldNode)) {
+                } else if (retExpTreeKnown instanceof ShrimpSpeciesNode) {
+                    // make copy
+                    retExpTree = ShrimpSpeciesNode.buildShrimpSpeciesNode(
+                            ((ShrimpSpeciesNode) retExpTreeKnown).getSquidSpeciesModel(), "getTotalCps");
+
+                } else if (retExpTreeKnown instanceof SpotFieldNode) {
                     retExpTree = retExpTreeKnown;
                     retExpTree.setUncertaintyDirective(uncertaintyDirective);
 

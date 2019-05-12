@@ -56,7 +56,6 @@ import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.ExpressionPublisher;
@@ -94,6 +93,7 @@ import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardConte
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.*;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import static org.cirdles.squid.tasks.expressions.functions.Function.*;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -101,6 +101,8 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.operations.Value;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 
 /**
  * FXML Controller class
@@ -224,6 +226,11 @@ public class ExpressionBuilderController implements Initializable {
     private TitledPane ratioExpressionsTitledPane;
 
     @FXML
+    private ListView<SquidSpeciesModel> isotopesExpressionsListView;
+    @FXML
+    private TitledPane isotopeExpressionsTitledPane;
+
+    @FXML
     private ListView<String> operationsListView;
     @FXML
     private TitledPane operationsTitledPane;
@@ -234,9 +241,10 @@ public class ExpressionBuilderController implements Initializable {
     private TitledPane mathFunctionsTitledPane;
 
     @FXML
-    private ListView<String> squidFunctionsListView;
+    private ListView<String> squidFunctionsCommonListView;
+
     @FXML
-    private TitledPane squidFunctionsTitledPane;
+    private ListView<String> squidFunctionsListView;
 
     @FXML
     private ListView<String> logicFunctionsListView;
@@ -402,7 +410,6 @@ public class ExpressionBuilderController implements Initializable {
     List<Expression> removedExpressions = new ArrayList<>();
 
     private Expression selectedBeforeCreateOrCopy;
-    private boolean expressionIsCopied;
 
     boolean changeFromUndoRedo = false;
 
@@ -480,7 +487,8 @@ public class ExpressionBuilderController implements Initializable {
         unknownsSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         concRefMatSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         //specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
-        summaryCalculationSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
+        summaryCalculationSwitchCheckBox.disableProperty()
+                .bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         NUSwitchCheckBox.setDisable(true);//NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
 
         unknownGroupsComboBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
@@ -575,8 +583,6 @@ public class ExpressionBuilderController implements Initializable {
                 leftSplitPane.setDividerPositions(1.0);
             }
 
-            //reset expressionIsCopied
-            expressionIsCopied = false;
         });
 
         leftSplitPane.getDividers().get(0).positionProperty().addListener((o, ol, n) -> {
@@ -833,7 +839,7 @@ public class ExpressionBuilderController implements Initializable {
 
         //RATIOS
         ratioExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        ratioExpressionsListView.setCellFactory(new ExpressionTreeCellFactory());
+        ratioExpressionsListView.setCellFactory(new SquidRatiosModelCellFactory());
         ratioExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         ratioExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidRatiosModel>() {
             @Override
@@ -857,12 +863,41 @@ public class ExpressionBuilderController implements Initializable {
 
         populateRatiosListView();
 
+        //ISOTOPES
+        isotopesExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        isotopesExpressionsListView.setCellFactory(new SquidSpeciesModelCellFactory());
+        isotopesExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        isotopesExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidSpeciesModel>() {
+            @Override
+            public void changed(ObservableValue<? extends SquidSpeciesModel> observable, SquidSpeciesModel oldValue, SquidSpeciesModel newValue) {
+                if (newValue != null) {
+                    if (currentMode.get().equals(Mode.VIEW)) {
+                        Expression expr = new Expression(
+                                task.getNamedExpressionsMap().get(newValue.getIsotopeName()),
+                                "TotalCPS([\"" + newValue.getIsotopeName() + "\"])", false, false, false);
+                        expr.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                        expr.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                        expr.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                        selectedExpressionIsEditable.set(false);
+                        selectedExpressionIsBuiltIn.set(false);
+                        selectedExpression.set(expr);
+                    }
+                    selectInAllPanes(null, false);
+                }
+            }
+        });
+
+        populateIsotopesListView();
+
         //OPERATIONS AND FUNCTIONS
         operationsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         operationsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
 
         mathFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         mathFunctionsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
+
+        squidFunctionsCommonListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        squidFunctionsCommonListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
 
         squidFunctionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         squidFunctionsListView.setCellFactory(new StringCellFactory(dragOperationOrFunctionSource));
@@ -988,6 +1023,7 @@ public class ExpressionBuilderController implements Initializable {
         if (found) {
             //If found in the expressions then it is not a ratio
             ratioExpressionsListView.getSelectionModel().clearSelection();
+            isotopesExpressionsListView.getSelectionModel().clearSelection();
         }
     }
 
@@ -1224,7 +1260,6 @@ public class ExpressionBuilderController implements Initializable {
             selectedExpression.set(exp);
             currentMode.set(Mode.CREATE);
             refreshSaved();
-            expressionIsCopied = true;
             expressionNameTextField.requestFocus();
         }
     }
@@ -1574,6 +1609,17 @@ public class ExpressionBuilderController implements Initializable {
         ratioExpressionsListView.setItems(items);
     }
 
+    private void populateIsotopesListView() {
+        List<SquidSpeciesModel> isotopesList = task.getSquidSpeciesModelList();
+
+        ObservableList<SquidSpeciesModel> items = FXCollections.observableArrayList(isotopesList);
+        items = items.sorted((isotope1, isotope2) -> {
+            return isotope1.getIsotopeName().compareToIgnoreCase(isotope2.getIsotopeName());
+        });
+
+        isotopesExpressionsListView.setItems(items);
+    }
+
     private void populateOperationOrFunctionListViews() {
         // operations ==========================================================
         List<String> operationStrings = new ArrayList<>();
@@ -1605,6 +1651,35 @@ public class ExpressionBuilderController implements Initializable {
         items = items.sorted();
         mathFunctionsListView.setItems(items);
 
+        // Squid Common Functions ======================================================
+        List<String> squidCommonFunctionStrings = new ArrayList<>();
+        for (Map.Entry<String, String> op : SQUID_COMMMON_FUNCTIONS_MAP.entrySet()) {
+            if (!ALIASED_FUNCTIONS_MAP.containsKey(op.getKey())) {
+                int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
+                String[] inputLabels = Function.operationFactory(op.getValue()).getLabelsForInputValues();
+                StringBuilder args = new StringBuilder();
+                args.append(op.getKey()).append("(");
+                for (int i = 0; i < argumentCount; i++) {
+                    if ((inputLabels.length > i) && inputLabels[i].indexOf("default") > 0) {
+                        String[] defaultValue = inputLabels[i].split("=");
+                        args.append(defaultValue[1].trim());
+                    } else {
+                        args.append("Arg").append(i);
+                    }
+                    args.append(i < (argumentCount - 1) ? "," : ")");
+                }
+
+                squidCommonFunctionStrings.add(args.toString());
+            }
+        }
+
+        items = FXCollections.observableArrayList(squidCommonFunctionStrings);
+        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+        items = items.sorted((String func1, String func2) -> {
+            return intuitiveStringComparator.compare(func1, func2);
+        });
+        squidFunctionsCommonListView.setItems(items);
+
         // Squid Functions ======================================================
         List<String> squidFunctionStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : SQUID_FUNCTIONS_MAP.entrySet()) {
@@ -1628,7 +1703,6 @@ public class ExpressionBuilderController implements Initializable {
         }
 
         items = FXCollections.observableArrayList(squidFunctionStrings);
-        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
         items = items.sorted((String func1, String func2) -> {
             return intuitiveStringComparator.compare(func1, func2);
         });
@@ -1949,7 +2023,20 @@ public class ExpressionBuilderController implements Initializable {
         boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("LAMBDA2");
         boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("CONCEN");
 
-        String[][] labels = clone2dArray(((ExpressionTree) spotSummary.getExpressionTree()).getOperation().getLabelsForOutputValues());
+        String[][] labels;
+        OperationOrFunctionInterface op = ((ExpressionTree) spotSummary.getExpressionTree()).getOperation();
+        if (op instanceof Value) {
+            if (((ExpressionTree) spotSummary.getExpressionTree()).getLeftET() instanceof ShrimpSpeciesNode) {
+                labels = new String[][]{{"TotalCPS"}};
+            } else if (((ExpressionTree) spotSummary.getExpressionTree()).getLeftET() instanceof ConstantNode) {
+                labels = new String[][]{{"Constant"}};
+            } else {
+                labels = new String[][]{{"Value"}};
+            }
+        } else {
+            labels = clone2dArray(op.getLabelsForOutputValues());
+        }
+
         if (isAge) {
             labels[0][0] = "Age (Ma)";
             if (labels[0].length > 1) {
@@ -2065,9 +2152,13 @@ public class ExpressionBuilderController implements Initializable {
                     } else {
                         resultLabels = new String[][]{{contextAgeFieldName}, {}};
                     }
+                } else if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof ConstantNode) {
+                    resultLabels = new String[][]{{"Constant"}, {}};
+                } else if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof SpotFieldNode) {
+                    resultLabels = new String[][]{{((ExpressionTree) expTree).getChildrenET().get(0).getName()}, {}};
                 } else {
-                    // i.e., ConstantNode
-                    resultLabels = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
+                    // ShrimpSpeciesNode
+                    resultLabels = new String[][]{{"TotalCPS"}, {}};
                 }
             } else if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
                 // Check for functions of species
@@ -2126,6 +2217,20 @@ public class ExpressionBuilderController implements Initializable {
                         }
                         sb.append("\n");
                     }
+                } else if (((ExpressionTree) expTree).getOperation() instanceof Value) {
+                    // case of isotope
+                    for (ShrimpFractionExpressionInterface spot : spots) {
+                        sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+                        double[][] results
+                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+                        for (int i = 0; i < results[0].length; i++) {
+                            try {
+                                sb.append(String.format("%1$-23s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                            } catch (Exception e) {
+                            }
+                        }
+                        sb.append("\n");
+                    }
                 } else {
                     // case of ratio
                     for (ShrimpFractionExpressionInterface spot : spots) {
@@ -2173,6 +2278,29 @@ public class ExpressionBuilderController implements Initializable {
                         sb.append("\n");
                     }
                 }
+            }
+        } else {
+            // null operation ==> SquidSpeciesNode            
+            sb.append(String.format("%1$-23s", "TotalCPS"));
+            sb.append("\n");
+            for (ShrimpFractionExpressionInterface spot : spots) {
+                sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
+                // make copy
+                ExpressionTreeInterface expTreeSpecies = ShrimpSpeciesNode.buildShrimpSpeciesNode(
+                        ((ShrimpSpeciesNode) expTree).getSquidSpeciesModel(), "getTotalCps");
+                ((Task) task).evaluateTaskExpression(expTreeSpecies);
+                try {
+                    double[][] results
+                            = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTreeSpecies)).toArray(double[][]::new);
+                    for (int i = 0; i < results[0].length; i++) {
+                        try {
+                            sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                        } catch (Exception e) {
+                        }
+                    }
+                } catch (Exception e) {
+                }
+                sb.append("\n");
             }
         }
 
@@ -2826,7 +2954,7 @@ public class ExpressionBuilderController implements Initializable {
                 exp = selectedExpression.get();
             }
 
-            ((Task) task).evaluateTaskExpression(exp);
+            ((Task) task).evaluateTaskExpression(exp.getExpressionTree());
             boolean localAmHealthy = exp.amHealthy() && (exp.getName().length() > 0);
             auditTextArea.setText(customizeExpressionTreeAudit(exp));
             auditPane.setTextFill(localAmHealthy ? Paint.valueOf("black") : Paint.valueOf("red"));
@@ -2923,9 +3051,12 @@ public class ExpressionBuilderController implements Initializable {
         // otherwise with a new name we need the full expressions list re-evaluated
         // first detect if user should have used SummaryCalculation choice
         OperationOrFunctionInterface operation = ((ExpressionTreeBuilderInterface) exp.getExpressionTree()).getOperation();
-        if ((operation.isSummaryCalc()
+        if ((operation != null) && (operation.isSummaryCalc()
                 || (operation instanceof Value))
-                && !summaryCalculationSwitchCheckBox.isSelected()) {
+                && !summaryCalculationSwitchCheckBox.isSelected()
+                && !(((ExpressionTree) exp.getExpressionTree()).getLeftET() instanceof ShrimpSpeciesNode)
+                && !(((ExpressionTree) exp.getExpressionTree()).getLeftET() instanceof VariableNodeForIsotopicRatios)
+                && !(((ExpressionTree) exp.getExpressionTree()).getLeftET() instanceof SpotFieldNode)) {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "Squid recommends choosing the Summary Calculation switch ... make it so?",
                     ButtonType.YES,
@@ -3453,7 +3584,7 @@ public class ExpressionBuilderController implements Initializable {
 
     }
 
-    private class ExpressionTreeCellFactory implements Callback<ListView<SquidRatiosModel>, ListCell<SquidRatiosModel>> {
+    private class SquidRatiosModelCellFactory implements Callback<ListView<SquidRatiosModel>, ListCell<SquidRatiosModel>> {
 
         @Override
         public ListCell<SquidRatiosModel> call(ListView<SquidRatiosModel> param) {
@@ -3579,6 +3710,133 @@ public class ExpressionBuilderController implements Initializable {
         }
 
     }
+
+    private class SquidSpeciesModelCellFactory implements Callback<ListView<SquidSpeciesModel>, ListCell<SquidSpeciesModel>> {
+
+        @Override
+        public ListCell<SquidSpeciesModel> call(ListView<SquidSpeciesModel> param) {
+            ListCell<SquidSpeciesModel> cell = new ListCell<SquidSpeciesModel>() {
+                @Override
+                public void updateItem(SquidSpeciesModel expression, boolean empty) {
+
+                    super.updateItem(expression, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(expression.getIsotopeName());
+                        Tooltip t = createFloatingTooltip("[\"" + getText() + "\"]");
+                        setOnMouseEntered((event) -> {
+                            showToolTip(event, this, t);
+                        });
+                        setOnMouseExited((event) -> {
+                            hideToolTip(t, this);
+                        });
+                        setOnMouseMoved((event) -> {
+                            showToolTip(event, this, t);
+                        });
+                    }
+                }
+            };
+
+            updateCellMode(currentMode.get(), cell);
+
+            currentMode.addListener((observable, oldValue, newValue) -> {
+                updateCellMode(newValue, cell);
+            });
+
+            expressionsAccordion.expandedPaneProperty().addListener((observable, oldValue, newValue) -> {
+                updateCellMode(currentMode.get(), cell);
+            });
+
+            return cell;
+        }
+
+        private void showToolTip(MouseEvent event, ListCell<SquidSpeciesModel> cell, Tooltip t) {
+            if (t != null) {
+                if (keyMap.get(KeyCode.T)) {
+                    t.show(cell, event.getScreenX() + 10, event.getScreenY() + 10);
+                } else {
+                    hideToolTip(t, cell);
+                }
+            }
+        }
+
+        private void hideToolTip(Tooltip t, ListCell<SquidSpeciesModel> cell) {
+            if (t != null) {
+                t.hide();
+            }
+            switch (currentMode.get()) {
+                case VIEW:
+                    cell.setCursor(Cursor.HAND);
+                    break;
+                case CREATE:
+                case EDIT:
+                    cell.setCursor(Cursor.OPEN_HAND);
+            }
+        }
+
+        private void updateCellMode(Mode mode, ListCell<SquidSpeciesModel> cell) {
+            switch (mode) {
+                case VIEW:
+                    setCellModeView(cell);
+                    break;
+                case CREATE:
+                case EDIT:
+                    setCellModeEditCreate(cell);
+            }
+        }
+
+        private void setCellModeView(ListCell<SquidSpeciesModel> cell) {
+            cell.setOnDragDetected(event -> {
+                //Nothing
+            });
+
+            cell.setOnDragDone((event) -> {
+                //Nothing
+            });
+
+            cell.setOnMousePressed((event) -> {
+                //Nothing
+            });
+
+            cell.setOnMouseReleased((event) -> {
+                //Nothing
+            });
+
+            cell.setCursor(Cursor.DEFAULT);
+        }
+
+        private void setCellModeEditCreate(ListCell<SquidSpeciesModel> cell) {
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
+                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString("TotalCPS([\"" + cell.getItem().getIsotopeName() + "\"])");
+                    db.setContent(cc);
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnDragDone((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setOnMousePressed((event) -> {
+                if (!cell.isEmpty()) {
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnMouseReleased((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setCursor(Cursor.OPEN_HAND);
+        }
+
+    } // end SquidSpeciesModelCellFactory
 
     private class StringCellFactory implements Callback<ListView<String>, ListCell<String>> {
 

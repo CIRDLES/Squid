@@ -267,9 +267,10 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             auditReport
                     += "Target Spots: "
                     + (String) ((match == -1) ? "MISSING - Please select" : ((match == 1))
-                                    ? "NOT MATCHED" : "MATCHED");
+                                    ? "NOT MATCHED" : "MATCHED")
+                    + "\n";
             if (targetAudit.size() > 0) {
-                auditReport += "\nTarget Spots Audit:\n";
+                auditReport += "Target Spots Audit:\n";
                 for (String audit : targetAudit) {
                     auditReport += audit + "\n";
                 }
