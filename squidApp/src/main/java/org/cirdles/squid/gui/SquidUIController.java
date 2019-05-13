@@ -1371,6 +1371,8 @@ public class SquidUIController implements Initializable {
                 squidProject.getTask().setChanged(true);
                 squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
                 squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
+                squidProject.autoDivideSamples();
+                squidProject.setProjectName("NEW PROJECT");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
             }

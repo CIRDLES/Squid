@@ -65,14 +65,19 @@
                               <ListView fx:id="builtInExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="ratioExpressionsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Ratios with Uncertainties">
+                        <TitledPane animated="false" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Ratios with Uncertainties">
                            <content>
                               <ListView fx:id="ratioExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="isotopeExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="79.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Isotopes (Species)">
+                        <TitledPane animated="false" layoutX="10.0" layoutY="79.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Isotopes (Species)">
                            <content>
                               <ListView fx:id="isotopesExpressionsListView" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="10.0" layoutY="102.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Spot Metadata Fields">
+                           <content>
+                              <ListView fx:id="spotMetaDataExpressionsListView" />
                            </content>
                         </TitledPane>
                         <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="Reference Material Values (see Task Mgr)">
@@ -109,7 +114,7 @@
                   </HBox>
                   <Accordion fx:id="othersAccordion" nodeOrientation="LEFT_TO_RIGHT">
                      <panes>
-                        <TitledPane fx:id="constantsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Constants and Numbers">
+                        <TitledPane animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Constants and Numbers">
                            <content>
                               <ListView fx:id="constantsListView" />
                            </content>
@@ -119,7 +124,7 @@
                               <ListView fx:id="operationsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="mathFunctionsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Math Functions">
+                        <TitledPane animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Math Functions">
                            <content>
                               <ListView fx:id="mathFunctionsListView" />
                            </content>
@@ -134,12 +139,12 @@
                               <ListView fx:id="squidFunctionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="logicFunctionsTitledPane" animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Logic Functions">
+                        <TitledPane animated="false" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Logic Functions">
                            <content>
                               <ListView fx:id="logicFunctionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane fx:id="presentationTitledPane" animated="false" layoutX="10.0" layoutY="172.0" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Presentation">
+                        <TitledPane animated="false" layoutX="10.0" layoutY="172.0" style="-fx-font-family: SansSerif; -fx-font-weight: bold; -fx-font-size: 12;" text="Presentation">
                            <content>
                               <ListView fx:id="presentationListView" />
                            </content>
