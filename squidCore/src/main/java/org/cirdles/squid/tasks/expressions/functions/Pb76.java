@@ -52,7 +52,7 @@ public class Pb76 extends Function {
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"207/206"}};
-        labelsForInputValues = new String[]{"207/206 Age"};
+        labelsForInputValues = new String[]{"per-spot expression for 207/206 Age"};
     }
 
     /**

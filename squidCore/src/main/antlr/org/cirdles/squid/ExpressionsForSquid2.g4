@@ -129,9 +129,10 @@ FUNCTION :
     S Q R T |
     R O B R E G |
     S Q B I W E I G H T |
+    B I W E I G H T |
     S Q W T D A V |
+    W T D A V |
     T O T A L C P S |
-    L O O K U P |
     M A X |
     M I N |
     A B S |

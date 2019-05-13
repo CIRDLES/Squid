@@ -36,7 +36,7 @@ public class AgePb76WithErr extends Function {
     private static final long serialVersionUID = 1356960783530914047L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
+     * Provides the functionality of Squid2.5's agePb76 by calling pbPbAge and
      * returning "Age" and "AgeErr" and encoding the labels for each cell of the
      * values array produced by eval.
      *

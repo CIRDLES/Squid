@@ -37,7 +37,7 @@ public class ConcordiaTW extends Function {
     private static final long serialVersionUID = -1637184737851510733L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
+     * Provides the functionality of Squid2.5's agePb76 by calling pbPbAge and
      * returning "Age" and "AgeErr" and encoding the labels for each cell of the
      * values array produced by eval.
      *
@@ -47,13 +47,13 @@ public class ConcordiaTW extends Function {
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
     public ConcordiaTW() {
-        name = "concordiaTW";
+        name = "ConcordiaTW";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 4;
         labelsForOutputValues = new String[][]{{"Raw Conc Age", "1\u03C3 abs", "MSWD Conc", "Prob Conc"}};
-        labelsForInputValues = new String[]{"ratioXAnd1\u03C3 abs", "ratioYAnd1\u03C3 abs"};
+        labelsForInputValues = new String[]{"ratioX with 1\u03C3 abs", "ratioY with 1\u03C3 abs"};
     }
 
     /**

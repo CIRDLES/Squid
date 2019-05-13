@@ -33,7 +33,7 @@ public class SqWtdAv extends Function {
     private static final long serialVersionUID = 2338965097822849460L;
 
     /**
-     * Provides the basic functionality of Squid's sqWtdAv by calculating
+     * Provides the basic functionality of Squid2.5's sqWtdAv by calculating
      * WeightedAverage and returning intMean, intSigmaMean, MSWD, probability,
      * intErr68, intMeanErr95 and encoding the labels for each cell of the
      * values array produced by eval.
@@ -44,12 +44,13 @@ public class SqWtdAv extends Function {
      * https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/isoplot3Basic/Means.bas
      */
     public SqWtdAv() {
-        name = "sqWtdAv";
+        name = "WtdAv";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 6;
         labelsForOutputValues = new String[][]{{"intMean", "intSigmaMean", "MSWD", "probability", "intErr68", "intMeanErr95"}};
+        labelsForInputValues = new String[]{"per-spot expression with values and uncertainties"};
         summaryCalc = true;
         definition = "Provides the basic functionality of Squid's sqWtdAv by calculating\n"
                 + "   WeightedAverage and returning intMean, intSigmaMean, MSWD, probability,\n"
