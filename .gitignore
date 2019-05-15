@@ -54,7 +54,8 @@ LudwigLibraryJavadoc/
 Schema/
 /Schema/
 squidApp/Squid3_Reports_v?.?.?
-squidApp/XSLTML
+squidApp/XSLTML/
+XSLTML/
 
 
 squidCore/expressionsImages

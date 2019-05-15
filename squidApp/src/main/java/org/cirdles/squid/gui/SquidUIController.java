@@ -534,6 +534,7 @@ public class SquidUIController implements Initializable {
                     squidPersistentState.updateProjectListMRU(projectFile);
                     SquidUI.updateStageTitle(projectFile.getAbsolutePath());
                     buildProjectMenuMRU();
+                    launchProjectManager();
                 }
 
             } catch (IOException ex) {
@@ -628,6 +629,7 @@ public class SquidUIController implements Initializable {
                 }
             });
             SquidProject.setProjectChanged(false);
+            launchProjectManager();
         }
     }
 
