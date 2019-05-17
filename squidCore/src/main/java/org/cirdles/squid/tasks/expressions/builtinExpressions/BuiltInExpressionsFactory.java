@@ -217,12 +217,24 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         spotLookupFields.put(expHours.getName(), expHours);
+
         ExpressionTreeInterface expQt1Y = buildSpotNode("getQt1Y");
         spotLookupFields.put(expQt1Y.getName(), expQt1Y);
+
         ExpressionTreeInterface expQt1Z = buildSpotNode("getQt1Z");
         spotLookupFields.put(expQt1Z.getName(), expQt1Z);
+
         ExpressionTreeInterface expPrimaryBeam = buildSpotNode("getPrimaryBeam");
         spotLookupFields.put(expPrimaryBeam.getName(), expPrimaryBeam);
+
+        ExpressionTreeInterface expStageX = buildSpotNode("getStageX");
+        spotLookupFields.put(expStageX.getName(), expStageX);
+
+        ExpressionTreeInterface expStageY = buildSpotNode("getStageY");
+        spotLookupFields.put(expStageY.getName(), expStageY);
+
+        ExpressionTreeInterface expStageZ = buildSpotNode("getStageZ");
+        spotLookupFields.put(expStageZ.getName(), expStageZ);
 
         // special case for BKG to provide for lookup in built-in expressions returning ZERO if no BKG
         ShrimpSpeciesNode spm
