@@ -1170,7 +1170,11 @@ public class SquidUIController implements Initializable {
     private void unknownsBySampleReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceUnknownsBySampleForETReduxCSV(true);
         if (reportTableFile != null) {
-            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            SquidMessageDialog.showInfoDialog(
+                    "File saved as:\n\n"
+                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                    primaryStageWindow);
+//            BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showInfoDialog(
                     "There are no Unknowns chosen.\n\n",
