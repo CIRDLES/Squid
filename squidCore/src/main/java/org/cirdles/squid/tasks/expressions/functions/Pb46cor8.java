@@ -37,24 +37,21 @@ public class Pb46cor8 extends Function {
     private static final long serialVersionUID = 6770836871819373387L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
-     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
-     * values array produced by eval.
+     * Provides the functionality of Squid2.5's pb46cor8. Returns 204Pb/206Pb
+     * required to force 206Pb/238U-208Pb/232Th ages to concordance.
      *
      * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
      */
     public Pb46cor8() {
 
-        name = "pb46cor8";
+        name = "Pb46cor8";
         argumentCount = 3;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb46cor8"}};
-        labelsForInputValues = new String[]{"208/206RatioAnd1\u03C3 abs","232Th/238U","208corr206Pb/238UAge"};
+        labelsForInputValues = new String[]{"208/206RatioAnd1\u03C3 abs", "232Th/238U", "208corr206Pb/238UAge"};
     }
 
     /**
@@ -89,10 +86,10 @@ public class Pb46cor8 extends Function {
             double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] pb46cor8 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor8(
-                    pb208_206RatioAndUnct[0], 
-                    thU[0], 
-                    sComm_64, 
-                    sComm_84, 
+                    pb208_206RatioAndUnct[0],
+                    thU[0],
+                    sComm_64,
+                    sComm_84,
                     pb208corr206_238Age[0], lambda232, lambda238);
             retVal = new Object[][]{{pb46cor8[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
@@ -111,7 +108,7 @@ public class Pb46cor8 extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>Pb46cor8</mi>"
+                + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
         retVal += buildChildrenToMathML(childrenET);

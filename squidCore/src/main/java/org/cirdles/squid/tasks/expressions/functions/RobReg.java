@@ -32,7 +32,7 @@ public class RobReg extends Function {
     private static final long serialVersionUID = -198041668841495965L;
 
     /**
-     * Provides the functionality of Squid's robReg by calling robustReg2 and
+     * Provides the functionality of Squid2.5's robReg by calling robustReg2 and
      * returning "Slope", "SlopeErr", "Y-Intercept", "Y-IntErr" and encoding the
      * labels for each cell of the values array produced by eval.
      *
@@ -40,13 +40,13 @@ public class RobReg extends Function {
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
      */
     public RobReg() {
-        name = "robReg";
+        name = "RobReg";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 4;
         labelsForOutputValues = new String[][]{{"Slope", "SlopeErr", "Y-Intercept", "Y-IntErr"}};
-        labelsForInputValues = new String[]{"xNumbers", "yNumbers"};
+        labelsForInputValues = new String[]{"per-spot expression for 'X'", "per-spot expression for 'Y'"};
         summaryCalc = true;
         definition = "Provides the functionality of Squid's robReg by calling robustReg2 and\n"
                 + "   returning \"Slope\", \"SlopeErr\", \"Y-Intercept\", \"Y-IntErr\".";
@@ -93,7 +93,7 @@ public class RobReg extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>RobReg</mi>"
+                + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
         retVal += buildChildrenToMathML(childrenET);

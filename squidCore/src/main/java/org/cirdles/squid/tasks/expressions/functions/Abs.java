@@ -43,6 +43,7 @@ public class Abs extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"absolute"}};
         labelsForInputValues = new String[]{"number"};
+        definition = "Returns the absolute value of a number.";
     }
 
     /**

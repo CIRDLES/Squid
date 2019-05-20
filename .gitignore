@@ -54,7 +54,8 @@ LudwigLibraryJavadoc/
 Schema/
 /Schema/
 squidApp/Squid3_Reports_v?.?.?
-squidApp/XSLTML
+squidApp/XSLTML/
+XSLTML/
 
 
 squidCore/expressionsImages
@@ -90,3 +91,5 @@ squidCore/Hf1sabserr.png
 
 # MACOS
 .DS_Store
+# WINOS
+Thumbs.db

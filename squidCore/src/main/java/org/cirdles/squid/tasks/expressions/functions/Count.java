@@ -37,13 +37,13 @@ public class Count extends Function {
      *
      */
     public Count() {
-        name = "count";
+        name = "Count";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"count"}};
-        labelsForInputValues = new String[]{"numbers"};
+        labelsForInputValues = new String[]{"per-spot expression"};
         summaryCalc = true;
         definition = "Returns a count of spots targeted by the expression.";
     }

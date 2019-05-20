@@ -38,24 +38,21 @@ public class Pb46cor7 extends Function {
     private static final long serialVersionUID = 8731067364281915559L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
-     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
-     * values array produced by eval.
+     * Provides the functionality of Squid2.5's pb46cor7. Returns 204Pb/206Pb
+     * required to force 206Pb/238U-207Pb/206Pb ages to concordance.
      *
      * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
      */
     public Pb46cor7() {
 
-        name = "pb46cor7";
+        name = "Pb46cor7";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb46cor7"}};
-        labelsForInputValues = new String[]{"207/206RatioAnd1\u03C3 abs", "207corr206Pb/238UAge"};
+        labelsForInputValues = new String[]{"207/206Ratio with 1\u03C3 abs", "per-spot expression for 207corr206Pb/238UAge"};
     }
 
     /**
@@ -79,7 +76,7 @@ public class Pb46cor7 extends Function {
         try {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] pb207corr206_238Age = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
-            
+
             double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_64).getValues()[0][0];
             double sComm_74 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_74).getValues()[0][0];
 
@@ -110,7 +107,7 @@ public class Pb46cor7 extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>Pb46cor7</mi>"
+                + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
         retVal += buildChildrenToMathML(childrenET);

@@ -62,6 +62,8 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
@@ -105,7 +107,6 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
@@ -113,11 +114,12 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST_WM;
@@ -126,7 +128,30 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateOverCountExpressions;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePlaceholderExpressions;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.overCountMeans;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.samRadiogenicCols;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel;
+import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
@@ -443,16 +468,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void generateConstants() {
         Map<String, ExpressionTreeInterface> constants = BuiltInExpressionsFactory.generateConstants();
+        this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         namedConstantsMap.putAll(constants);
     }
 
     private void generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = BuiltInExpressionsFactory.generateParameters();
+        this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         namedParametersMap.putAll(parameters);
     }
 
     private void generateSpotLookupFields() {
         Map<String, ExpressionTreeInterface> spotLookupFields = BuiltInExpressionsFactory.generateSpotLookupFields();
+        this.namedSpotLookupFieldsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         namedSpotLookupFieldsMap.putAll(spotLookupFields);
     }
 
@@ -1140,7 +1168,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         } else {
             namedExpressionsMap.put(exp.getName(), exp.getExpressionTree());
             buildExpressionDependencyGraphs();
-            evaluateTaskExpression(exp);
+            evaluateTaskExpression(exp.getExpressionTree());
             List<String> evaluated = new ArrayList<>();
             evaluated.add(exp.getName());
             evaluateDependentExpressions(evaluated, exp.getName());
@@ -1153,7 +1181,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             for (String providedToName : providedTo) {
                 if (!evaluated.contains(providedToName)) {
                     evaluated.add(providedToName);
-                    evaluateTaskExpression(getExpressionByName(providedToName));
+                    evaluateTaskExpression(getExpressionByName(providedToName).getExpressionTree());
                     evaluateDependentExpressions(evaluated, providedToName);
                 }
             }
@@ -1261,28 +1289,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) {
-        if (squidAllowsAutoExclusionOfSpots != isSquidAllowsAutoExclusionOfSpots()) {
-            if (isPbU()) {
+
                 updateRefMatCalibConstWMeanExpression(PB4COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
                 updateRefMatCalibConstWMeanExpression(PB7COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
                 updateRefMatCalibConstWMeanExpression(PB8COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
-            } else {
                 updateRefMatCalibConstWMeanExpression(PB4COR208_232CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
                 updateRefMatCalibConstWMeanExpression(PB7COR208_232CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
-            }
 
             this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
             changed = true;
             setupSquidSessionSpecsAndReduceAndReport();
-        }
     }
 
     private void updateRefMatCalibConstWMeanExpression(String wmWxpressionName, boolean squidAllowsAutoExclusionOfSpots) {
         Expression wmExp = getExpressionByName(wmWxpressionName);
-        wmExp.setExcelExpressionString(wmExp.getExcelExpressionString()
-                .replaceFirst("(?i)" + String.valueOf(squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH),
-                        String.valueOf(!squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH)));
-        completeUpdateRefMatCalibConstWMeanExpressions(wmExp);
+        if (wmExp != null) {
+            wmExp.setExcelExpressionString(wmExp.getExcelExpressionString()
+                    .replaceFirst("\\s*,\\s*(TRUE|FALSE)\\s*,\\s*",
+                            "," + String.valueOf(!squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH) + ","));
+            completeUpdateRefMatCalibConstWMeanExpressions(wmExp);
+        }
     }
 
     private void completeUpdateRefMatCalibConstWMeanExpressions(Expression listedExp) {
@@ -1512,6 +1538,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             namedExpressionsMap.put(entry.getKey(), entry.getValue());
         }
 
+        generateSpotLookupFields();
         for (Map.Entry<String, ExpressionTreeInterface> entry : namedSpotLookupFieldsMap.entrySet()) {
             namedExpressionsMap.put(entry.getKey(), entry.getValue());
         }
@@ -1702,12 +1729,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         });
 
         for (Expression expression : taskExpressionsOrdered) {
-            evaluateTaskExpression(expression);
+            evaluateTaskExpression(expression.getExpressionTree());
         }
     }
 
-    public void evaluateTaskExpression(Expression expression) {
-        ExpressionTreeInterface expressionTree = expression.getExpressionTree();
+    /**
+     *
+     * @param expressionTree the value of expressionTree2
+     */
+    public void evaluateTaskExpression(ExpressionTreeInterface expressionTree) {
 
         if (expressionTree.amHealthy()) {// && expressionTree.isRootExpressionTree()) {
             // determine subset of spots to be evaluated - default = all
@@ -1729,24 +1759,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
             // now evaluate expressionTree
             try {
-                evaluateExpressionForSpotSet(expression, spotsForExpression);
+                evaluateExpressionForSpotSet(expressionTree, spotsForExpression);
             } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
-                //System.out.println("Out of bounds at evaluateTaskExpressions");
+
             }
         }
     }
 
-    /**
-     *
-     * @param expressionTree
-     * @param spotsForExpression
-     * @throws SquidException
-     */
     private void evaluateExpressionForSpotSet(
-            Expression expression,
+            ExpressionTreeInterface expressionTree, 
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
-
-        ExpressionTreeInterface expressionTree = expression.getExpressionTree();
 
         // determine taskType of expressionTree
         // Summary expression test
@@ -1756,11 +1778,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             // May 2018 new logic to support user rejecting some fractions in summary calculations - Weighted Mean for now
             SpotSummaryDetails spotSummaryDetails;
-            if (taskExpressionsEvaluationsPerSpotSet.containsKey(expression.getName())) {
-                spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expression.getName());
+            if (taskExpressionsEvaluationsPerSpotSet.containsKey(expressionTree.getName())) {
+                spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionTree.getName());
             } else {
                 spotSummaryDetails = new SpotSummaryDetails(expressionTree);
-                taskExpressionsEvaluationsPerSpotSet.put(expression.getName(), spotSummaryDetails);
+                taskExpressionsEvaluationsPerSpotSet.put(expressionTree.getName(), spotSummaryDetails);
             }
 
             // if the spotsForExpression are the same, then preserve list of indices of rejected
@@ -1834,14 +1856,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void evaluateExpressionForSpot(
-            ExpressionTreeInterface expression,
+            ExpressionTreeInterface expressionTree,
             ShrimpFractionExpressionInterface spot) throws SquidException {
 
-        if (((ExpressionTree) expression).hasRatiosOfInterest()) {
+        if (((ExpressionTree) expressionTree).hasRatiosOfInterest()) {
             // case of Squid switch "NU"
             ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
             TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel
-                    = expressionEvaluator.evaluateTaskExpressionsPerSpotPerScan(this, expression, spot);
+                    = expressionEvaluator.evaluateTaskExpressionsPerSpotPerScan(this, expressionTree, spot);
 
             // save scan-specific results
             List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated = spot.getTaskExpressionsForScansEvaluated();
@@ -1855,17 +1877,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
 
             Map<ExpressionTreeInterface, double[][]> taskExpressionsPerSpot = spot.getTaskExpressionsEvaluationsPerSpot();
-            if (taskExpressionsPerSpot.containsKey(expression)) {
-                taskExpressionsPerSpot.remove(expression);
+            if (taskExpressionsPerSpot.containsKey(expressionTree)) {
+                taskExpressionsPerSpot.remove(expressionTree);
             }
-            spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
+            spot.getTaskExpressionsEvaluationsPerSpot().put(expressionTree, value);
 
         } else {
             List<ShrimpFractionExpressionInterface> singleSpot = new ArrayList<>();
             singleSpot.add(spot);
             try {
-                double[][] value = convertObjectArrayToDoubles(expression.eval(singleSpot, this));
-                spot.getTaskExpressionsEvaluationsPerSpot().put(expression, value);
+                double[][] value = convertObjectArrayToDoubles(expressionTree.eval(singleSpot, this));
+                spot.getTaskExpressionsEvaluationsPerSpot().put(expressionTree, value);
             } catch (SquidException squidException) {
 //                //System.out.println(squidException.getMessage() + " while processing " + expressionTree.getName());
             }
