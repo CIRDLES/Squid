@@ -534,6 +534,7 @@ public class SquidUIController implements Initializable {
                     squidPersistentState.updateProjectListMRU(projectFile);
                     SquidUI.updateStageTitle(projectFile.getAbsolutePath());
                     buildProjectMenuMRU();
+                    launchProjectManager();
                 }
 
             } catch (IOException ex) {
@@ -628,6 +629,7 @@ public class SquidUIController implements Initializable {
                 }
             });
             SquidProject.setProjectChanged(false);
+            launchProjectManager();
         }
     }
 
@@ -1168,7 +1170,11 @@ public class SquidUIController implements Initializable {
     private void unknownsBySampleReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceUnknownsBySampleForETReduxCSV(true);
         if (reportTableFile != null) {
-            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            SquidMessageDialog.showInfoDialog(
+                    "File saved as:\n\n"
+                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                    primaryStageWindow);
+//            BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showInfoDialog(
                     "There are no Unknowns chosen.\n\n",

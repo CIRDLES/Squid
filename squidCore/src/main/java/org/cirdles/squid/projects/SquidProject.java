@@ -409,7 +409,7 @@ public final class SquidProject implements Serializable {
             ReportSettingsInterface reportSettings = new ReportSettings("UnknownsBySample", false, task);
             String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, numberStyleIsNumeric);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, projectName + "_UnknownsBySampleReportTableForET_Redux.csv");
+                    report, projectName + "_UnknownsBySampleReportTableForET_ReduxAndTopsoil.csv");
         }
         return reportTableFile;
     }

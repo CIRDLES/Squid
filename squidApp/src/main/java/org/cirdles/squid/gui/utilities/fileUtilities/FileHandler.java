@@ -75,13 +75,16 @@ public class FileHandler {
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
         File initDirectory = new File(squidPersistentState.getMRUProjectFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
-        fileChooser.setInitialFileName(squidProject.getProjectName().toUpperCase(Locale.ENGLISH) + ".squid");
+//        fileChooser.setInitialFileName(squidProject.getProjectName().toUpperCase(Locale.ENGLISH) + ".squid");
+        fileChooser.setInitialFileName(squidProject.getProjectName() + ".squid");
 
         File projectFileNew = fileChooser.showSaveDialog(ownerWindow);
 
         if (projectFileNew != null) {
             SquidProject.setProjectChanged(false);
             retVal = projectFileNew;
+            // capture squid project file name from file for project itself
+            squidProject.setProjectName(projectFileNew.getName().substring(0, projectFileNew.getName().lastIndexOf(".")));
             ProjectFileUtilities.serializeSquidProject(squidProject, projectFileNew.getCanonicalPath());
         }
 

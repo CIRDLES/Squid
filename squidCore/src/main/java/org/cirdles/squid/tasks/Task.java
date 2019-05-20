@@ -468,16 +468,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void generateConstants() {
         Map<String, ExpressionTreeInterface> constants = BuiltInExpressionsFactory.generateConstants();
+        this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         namedConstantsMap.putAll(constants);
     }
 
     private void generateParameters() {
         Map<String, ExpressionTreeInterface> parameters = BuiltInExpressionsFactory.generateParameters();
+        this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         namedParametersMap.putAll(parameters);
     }
 
     private void generateSpotLookupFields() {
         Map<String, ExpressionTreeInterface> spotLookupFields = BuiltInExpressionsFactory.generateSpotLookupFields();
+        this.namedSpotLookupFieldsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         namedSpotLookupFieldsMap.putAll(spotLookupFields);
     }
 
@@ -1535,6 +1538,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             namedExpressionsMap.put(entry.getKey(), entry.getValue());
         }
 
+        generateSpotLookupFields();
         for (Map.Entry<String, ExpressionTreeInterface> entry : namedSpotLookupFieldsMap.entrySet()) {
             namedExpressionsMap.put(entry.getKey(), entry.getValue());
         }
