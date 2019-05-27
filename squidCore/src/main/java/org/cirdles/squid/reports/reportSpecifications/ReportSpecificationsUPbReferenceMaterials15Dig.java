@@ -132,7 +132,7 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR208_232AGE_RM, "ABS",
-            "", "true", "false", "4", "true", "", "false", "false"
+            "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + TOTAL_206_238_RM, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
