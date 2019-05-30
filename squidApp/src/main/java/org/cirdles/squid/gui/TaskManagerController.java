@@ -139,7 +139,7 @@ public class TaskManagerController implements Initializable {
     @FXML
     private Spinner<Double> assignedExternalErrThSpinner;
     @FXML
-    private ComboBox<String> delimeterComboBox;
+    private ComboBox<String> delimiterComboBox;
 
     /**
      * Initializes the controller class.
@@ -224,11 +224,11 @@ public class TaskManagerController implements Initializable {
         });
 
         // samples
-        ObservableList<String> delimetersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimetersEnum.names());
-        delimeterComboBox.setItems(delimetersList);
+        ObservableList<String> delimitersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimitersEnum.names());
+        delimiterComboBox.setItems(delimitersList);
         // set value before adding listener
-        delimeterComboBox.getSelectionModel().select(task.getDelimiterForUnknownNames());
-        delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        delimiterComboBox.getSelectionModel().select(task.getDelimiterForUnknownNames());
+        delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                     final String oldValue, final String newValue) {
                 task.setDelimiterForUnknownNames(newValue);

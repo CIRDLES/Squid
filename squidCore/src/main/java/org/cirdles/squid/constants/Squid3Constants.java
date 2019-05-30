@@ -221,7 +221,7 @@ public final class Squid3Constants {
         return UnitConversions.get(unit);
     }
 
-    public static enum SampleNameDelimetersEnum {
+    public static enum SampleNameDelimitersEnum {
 
         HYPHEN("-", false),
         DOT(".", false),
@@ -240,7 +240,7 @@ public final class Squid3Constants {
         private final String name;
         private final boolean number;
 
-        private SampleNameDelimetersEnum(String name, boolean isNumeric) {
+        private SampleNameDelimitersEnum(String name, boolean isNumeric) {
             this.name = name;
             this.number = isNumeric;
         }
@@ -264,9 +264,9 @@ public final class Squid3Constants {
             return names;
         }
 
-        public static SampleNameDelimetersEnum getByName(String name) {
-            SampleNameDelimetersEnum retVal = null;
-            for (SampleNameDelimetersEnum delim : SampleNameDelimetersEnum.values()) {
+        public static SampleNameDelimitersEnum getByName(String name) {
+            SampleNameDelimitersEnum retVal = null;
+            for (SampleNameDelimitersEnum delim : SampleNameDelimitersEnum.values()) {
                 if (delim.name.equals(name)) {
                     retVal = delim;
                 }

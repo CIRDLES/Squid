@@ -74,8 +74,8 @@
       <Label text="Samples:" GridPane.rowIndex="4" />
       <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <children>
-            <Label prefHeight="28.0" prefWidth="234.0" style="-fx-font-size: 14;" text="Select Name Delimeter OR # Chars:  " />
-            <ComboBox fx:id="delimeterComboBox" prefHeight="28.0" prefWidth="65.0" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+            <Label prefHeight="28.0" prefWidth="234.0" style="-fx-font-size: 14;" text="Select Name Delimiter OR # Chars:  " />
+            <ComboBox fx:id="delimiterComboBox" prefHeight="28.0" prefWidth="65.0" style="-fx-font-size: 14; -fx-font-weight: bold;" />
          </children>
       </HBox>
       <VBox GridPane.rowIndex="6">
