@@ -145,7 +145,7 @@
                   <Insets left="5.0" />
                </padding>
             </HBox>
-            <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
                   <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="66.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Def Comm Pb:" textAlignment="RIGHT" wrapText="true" />
                   <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />

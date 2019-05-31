@@ -112,17 +112,17 @@
                   <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
                   <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Minimum external 1sigma % err for 206Pb/238U:" translateX="20.0" />
                   <Spinner fx:id="assignedExternalErrUSpinner" editable="true" prefHeight="27.0" prefWidth="70.0" translateX="25.0" />
-                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text=" for 208Pb/232Th:" translateX="35.0" />
-                  <Spinner fx:id="assignedExternalErrThSpinner" editable="true" prefHeight="27.0" prefWidth="70.0" translateX="40.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text=" for 208Pb/232Th:" translateX="33.0" />
+                  <Spinner fx:id="assignedExternalErrThSpinner" editable="true" prefHeight="27.0" prefWidth="70.0" translateX="35.0" />
                </children>
             </HBox>
-            <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
-                  <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="65.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Def Comm Pb:" textAlignment="RIGHT" wrapText="true" />
-                  <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="310.0" promptText="Common Lead Model" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="29.0" prefWidth="71.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Def Comm Pb:" textAlignment="RIGHT" wrapText="true" />
+                  <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
                   <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="65.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
-                  <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="310.0" promptText="Physical Constants Model" translateX="10.0" />
-                  <Button mnemonicParsing="false" onAction="#refreshModelsAction" prefHeight="27.0" prefWidth="65.0" style="-fx-padding: 0 0 0 0;" text="Refresh">
+                  <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
+                  <Button mnemonicParsing="false" onAction="#refreshModelsAction" prefHeight="27.0" prefWidth="65.0" style="-fx-padding: 0 0 0 0;" text="Refresh" translateX="-10.0">
                      <HBox.margin>
                         <Insets left="30.0" />
                      </HBox.margin>
