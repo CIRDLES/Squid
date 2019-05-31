@@ -229,6 +229,7 @@ public class TaskManagerController implements Initializable {
         // set value before adding listener
         delimiterComboBox.getSelectionModel().select(task.getDelimiterForUnknownNames());
         delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
             public void changed(ObservableValue<? extends String> ov,
                     final String oldValue, final String newValue) {
                 task.setDelimiterForUnknownNames(newValue);

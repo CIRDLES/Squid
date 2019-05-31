@@ -36,7 +36,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="15.0" prefHeight="15.0" valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
-    <RowConstraints maxHeight="296.0" minHeight="21.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="296.0" minHeight="5.0" prefHeight="5.0" valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
@@ -86,7 +86,7 @@
       </VBox>
       <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
         <columnConstraints>
-          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="259.0" minWidth="243.0" prefWidth="259.0" />
+          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="210.0" minWidth="210.0" prefWidth="210.0" />
           <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0" />
         </columnConstraints>
         <rowConstraints>
@@ -136,10 +136,10 @@
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
-                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Assigned external 1sigma % err for Uranium:" translateX="20.0" />
-                  <Spinner fx:id="assignedExternalErrUSpinner" prefHeight="27.0" prefWidth="75.0" translateX="25.0" />
-                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="for Thorium:" translateX="35.0" />
-                  <Spinner fx:id="assignedExternalErrThSpinner" prefHeight="27.0" prefWidth="75.0" translateX="40.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Minimum external 1sigma % err for for 206Pb/238U:" translateX="20.0" />
+                  <Spinner fx:id="assignedExternalErrUSpinner" minWidth="70.0" prefHeight="27.0" prefWidth="70.0" translateX="25.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text=" for 208Pb/232Th:" translateX="35.0" />
+                  <Spinner fx:id="assignedExternalErrThSpinner" minWidth="70.0" prefHeight="27.0" prefWidth="70.0" translateX="40.0" />
                </children>
                <padding>
                   <Insets left="5.0" />
@@ -220,7 +220,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="127.0" style="-fx-font-size: 12;" text="Primary Age:" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="167.0" style="-fx-font-size: 12;" text="Primary daughter/parent ratio:" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
@@ -235,7 +235,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="182.0" style="-fx-font-size: 12;" text="Calculate 208Pb/232Th:" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="182.0" style="-fx-font-size: 12;" text="Calculate secondary d/p ratio:" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2">

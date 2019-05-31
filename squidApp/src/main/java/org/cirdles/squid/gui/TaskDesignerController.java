@@ -637,7 +637,10 @@ public class TaskDesignerController implements Initializable {
         if (tooltip != null) {
             tooltip.hide();
             if (event.isShiftDown()) {
-                tooltip.show(textField, 225, 225);
+                // force calculation of tolltip extents
+                tooltip.show(textField, event.getScreenX() - 50, event.getScreenY() - tooltip.getHeight() - 50);
+                tooltip.hide();
+                tooltip.show(textField, event.getScreenX() - 50, event.getScreenY() - tooltip.getHeight() - 50);
             }
         }
     }
