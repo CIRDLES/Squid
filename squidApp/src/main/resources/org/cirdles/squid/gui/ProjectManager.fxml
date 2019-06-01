@@ -25,7 +25,7 @@
       </HBox>
       <HBox spacing="10.0">
          <children>
-            <Label text="Prawn source file:" />
+            <Label text="Data source file:" />
             <TextField fx:id="orignalPrawnFileName" prefHeight="27.0" prefWidth="775.0" promptText="name of selected Prawn XML or OP file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
